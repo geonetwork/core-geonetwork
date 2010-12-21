@@ -3,37 +3,30 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
 
-	<xsl:include href="metadata-iso19115.xsl"/>
-	<xsl:include href="metadata-iso19139.xsl"/>
-	<xsl:include href="metadata-iso19110.xsl"/>
-	<xsl:include href="metadata-fgdc-std.xsl"/>
-	<xsl:include href="metadata-dublin-core.xsl"/>
-	
-	<!--
-	hack to extract geonet URI; I know, I could have used a string constant like
-	<xsl:variable name="geonetUri" select="'http://www.fao.org/geonetwork'"/>
-	but this is more interesting
-	-->
-	<xsl:variable name="geonetNodeSet"><geonet:dummy/></xsl:variable>
-
-	<xsl:variable name="geonetUri">
-		<xsl:value-of select="namespace-uri(exslt:node-set($geonetNodeSet)/*)"/>
-	</xsl:variable>
-
-	<xsl:variable name="currTab">
-		<xsl:choose>
-			<xsl:when test="/root/gui/currTab"><xsl:value-of select="/root/gui/currTab"/></xsl:when>
-			<xsl:otherwise>simple</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+	<xsl:include href="blanks/metadata-schema01.xsl"/>
+	<xsl:include href="blanks/metadata-schema02.xsl"/>
+	<xsl:include href="blanks/metadata-schema03.xsl"/>
+	<xsl:include href="blanks/metadata-schema04.xsl"/>
+	<xsl:include href="blanks/metadata-schema05.xsl"/>
+	<xsl:include href="blanks/metadata-schema06.xsl"/>
+	<xsl:include href="blanks/metadata-schema07.xsl"/>
+	<xsl:include href="blanks/metadata-schema08.xsl"/>
+	<xsl:include href="blanks/metadata-schema09.xsl"/>
+	<xsl:include href="blanks/metadata-schema10.xsl"/>
+	<xsl:include href="blanks/metadata-schema11.xsl"/>
+	<xsl:include href="blanks/metadata-schema12.xsl"/>
+	<xsl:include href="blanks/metadata-schema13.xsl"/>
+	<xsl:include href="blanks/metadata-schema14.xsl"/>
+	<xsl:include href="blanks/metadata-schema15.xsl"/>
+	<xsl:include href="blanks/metadata-schema16.xsl"/>
+	<xsl:include href="blanks/metadata-schema17.xsl"/>
+	<xsl:include href="blanks/metadata-schema18.xsl"/>
+	<xsl:include href="blanks/metadata-schema19.xsl"/>
+	<xsl:include href="blanks/metadata-schema20.xsl"/>
 
 	<xsl:template mode="schema" match="*">
 		<xsl:choose>
 			<xsl:when test="string(geonet:info/schema)!=''"><xsl:value-of select="geonet:info/schema"/></xsl:when>
-			<xsl:when test="name(.)='Metadata'">iso19115</xsl:when>
-			<xsl:when test="local-name(.)='MD_Metadata'">iso19139</xsl:when>
-			<xsl:when test="local-name(.)='FC_FeatureCatalogue'">iso19110</xsl:when>
-			<xsl:when test="name(.)='metadata'">fgdc-std</xsl:when>
 			<xsl:otherwise>UNKNOWN</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -49,9 +42,6 @@
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
 		
-		<!--
-		[schema:<xsl:value-of select="$schema"/>]
-		-->
 		<xsl:choose>
 			<!-- subtemplate -->
 			<xsl:when test="geonet:info/isTemplate='s'">
@@ -61,89 +51,35 @@
 				</metadata>
 			</xsl:when>
 
-			<!-- ISO 19115 -->
-			<xsl:when test="$schema='iso19115'">
-				<xsl:call-template name="iso19115Brief"/>
-			</xsl:when>
+			<!-- create XML fragment with name of schema Brief template to 
+					 select plus all info in /root and the metadata we are
+					 handling - 
 
-			<!-- ISO 19139 -->
-			<xsl:when test="starts-with($schema,'iso19139')">
-				<xsl:call-template name="iso19139Brief"/>
-			</xsl:when>
-			
-			<!-- ISO 19110 -->
-			<xsl:when test="$schema='iso19110'">
-				<xsl:call-template name="iso19110Brief"/>
-			</xsl:when>
+					 eg. 
+					 /iso19139Brief 
+					 /root
+					 /metadata
 
-			<!-- FGDC -->
-			<xsl:when test="$schema='fgdc-std'">
-				<xsl:call-template name="fgdc-stdBrief"/>
-			</xsl:when>
+					 The idea is that we get to dynamically call the template
+					 we want but all templates can still find gui info on /root
+					 Also no need to do a choose on $schema - makes it easier for
+					 plugin schemas to just work
 
-			<!-- Dublin core -->
-			<xsl:when test="$schema='dublin-core' or $schema='csw-record'">
-				<xsl:call-template name="dublin-coreBrief"/>
-			</xsl:when>
-
-			<!-- default, no schema-specific formatting -->
+					 All schema definitions need to define the Brief template eg.
+					 iso19139Brief and unpack the metadata from /metadata -->
 			<xsl:otherwise>
-				<metadata>
-					<xsl:apply-templates mode="copy" select="*"/>
-				</metadata>
+				<xsl:variable name="briefSchemaCallBack">
+					<xsl:element name="{concat($schema,'Brief')}"/>
+					<xsl:copy-of select="/root"/>
+					<xsl:element name="metadata">
+						<xsl:copy-of select="."/>
+					</xsl:element>
+				</xsl:variable>
+
+				<xsl:apply-templates select="exslt:node-set($briefSchemaCallBack/*[1])"/>
 			</xsl:otherwise>
 
 		</xsl:choose>
-	</xsl:template>
-
-	<!--
-	creates a thumbnail image, possibly with a link to larger image
-	-->
-	<xsl:template name="thumbnail">
-		<xsl:param name="metadata"/>
-
-		<xsl:choose>
-
-			<!-- small thumbnail -->
-			<xsl:when test="$metadata/image[@type='thumbnail']">
-
-				<xsl:choose>
-
-					<!-- large thumbnail link -->
-					<xsl:when test="$metadata/image[@type='overview']">
-						<a href="javascript:popWindow('{$metadata/image[@type='overview']}')">
-							<img src="{$metadata/image[@type='thumbnail']}" alt="{/root/gui/strings/thumbnail}"/>
-						</a>
-					</xsl:when>
-
-					<!-- no large thumbnail -->
-					<xsl:otherwise>
-						<img src="{$metadata/image[@type='thumbnail']}" alt="{/root/gui/strings/thumbnail}"/>
-					</xsl:otherwise>
-				</xsl:choose>
-
-			</xsl:when>
-
-			<!-- unknown thumbnail (usually a url so limit size) -->
-			<xsl:when test="$metadata/image[@type='unknown']">
-				<img src="{$metadata/image[@type='unknown']}" alt="{/root/gui/strings/thumbnail}" height="180" width="180"/>
-			</xsl:when>
-
-			<!-- papermaps thumbnail -->
-			<!-- FIXME
-			<xsl:when test="/root/gui/paperMap and string(dataIdInfo/idCitation/presForm/PresFormCd/@value)='mapHardcopy'">
-				<a href="PAPERMAPS-URL">
-					<img src="{/root/gui/paperMap}" alt="{/root/gui/strings/paper}" title="{/root/gui/strings/paper}"/>
-				</a>
-			</xsl:when>
-			-->
-
-			<!-- no thumbnail -->
-			<xsl:otherwise>
-				<img src="{/root/gui/locUrl}/images/nopreview.gif" alt="{/root/gui/strings/thumbnail}"/>
-			</xsl:otherwise>
-		</xsl:choose>
-		<br/>
 	</xsl:template>
 
 	<!--
@@ -151,6 +87,8 @@
 	-->
 	<xsl:template name="buttons" match="*">
 		<xsl:param name="metadata" select="."/>
+		<xsl:param name="ownerbuttonsonly" select="false()"/>
+
 		<!-- Title is truncated if longer than maxLength.  -->
 		<xsl:variable name="maxLength" select="'40'"/>
 
@@ -168,17 +106,21 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		&#160;
-		<!-- create button -->
-		<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
-			<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
-		</xsl:if>
-		<xsl:if test="
+		<xsl:if test="not($ownerbuttonsonly) and 
+	 /root/gui/schemalist/name[.=$metadata/geonet:info/schema]/@edit='true'">
+			&#160;
+			<!-- create button -->
+			<xsl:variable name="duplicate" select="concat(/root/gui/strings/duplicate,': ',$ltitle)"/>
+			<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
+				<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
+			</xsl:if>
+			<xsl:if test="
 			(/root/gui/env/harvester/enableEditing = 'true' and geonet:info/isHarvested = 'y' and geonet:info/edit='true')
 			or (geonet:info/isHarvested = 'n' and geonet:info/edit='true')">
-			<!-- edit button -->
-			&#160;
-			<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
+				<!-- edit button -->
+				&#160;
+				<button class="content" onclick="load('{/root/gui/locService}/metadata.edit?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
+			</xsl:if>
 		</xsl:if>
 		
 		<!-- delete button -->
@@ -210,117 +152,34 @@
 				</xsl:if>
 				
 				<!-- Create child option only for iso19139 schema based metadata -->
+				<xsl:variable name="duplicateChild" select="concat(/root/gui/strings/createChild,': ',$ltitle)"/>
 				<xsl:if test="contains(geonet:info/schema, 'iso19139')">
-					<button onclick="load('{/root/gui/locService}/metadata.duplicate.form?uuid={$metadata/geonet:info/uuid}&amp;child=y')"><xsl:value-of select="/root/gui/strings/createChild"/></button>
+					<button onclick="doOtherButton('{/root/gui/locService}/metadata.duplicate.form?uuid={$metadata/geonet:info/uuid}&amp;child=y','{$duplicateChild}',600)"><xsl:value-of select="/root/gui/strings/createChild"/></button>
 				</xsl:if>	
 			</div>
 		</xsl:if>
 	</xsl:template>
 
-	<!--
-	editor left tab
-	-->
-	<xsl:template name="tab">
-		<xsl:param name="schema">
-			<xsl:apply-templates mode="schema" select="."/>
-		</xsl:param>
-		<xsl:param name="tabLink"/>
-		
-		<table width="100%">
-			<!-- Tab visibility is managed in config-gui.xml -->
-			<!-- simple tab -->
-			<xsl:if test="/root/gui/config/metadata-tab/simple">
-				<xsl:call-template name="displayTab">
-					<xsl:with-param name="tab"     select="'simple'"/>
-					<xsl:with-param name="text"    select="/root/gui/strings/simpleTab"/>
-					<xsl:with-param name="tabLink" select="$tabLink"/>
-				</xsl:call-template>
-			</xsl:if>
-			
-			<!--  complete tab(s) -->
-			<xsl:choose>
-				<!-- hide complete tab for subtemplates -->
-				<xsl:when test="geonet:info[isTemplate='s']"/>
-				<xsl:otherwise>
-				
-					<!-- metadata type-specific complete tab -->
-					<xsl:choose>
-						
-						<!-- ISO 19115 -->
-						<xsl:when test="$schema='iso19115'">
-							<xsl:call-template name="iso19115CompleteTab">
-								<xsl:with-param name="tabLink" select="$tabLink"/>
-							</xsl:call-template>
-						</xsl:when>
-						
-						<!-- ISO 19139 -->
-						<xsl:when test="starts-with($schema,'iso19139')">
-							<xsl:call-template name="iso19139CompleteTab">
-								<xsl:with-param name="tabLink" select="$tabLink"/>
-								<xsl:with-param name="schema" select="$schema"/>
-							</xsl:call-template>
-						</xsl:when>
-						
-						<!-- default, no schema-specific formatting -->
-						<xsl:otherwise>
-							<xsl:call-template name="completeTab">
-								<xsl:with-param name="tabLink" select="$tabLink"/>
-							</xsl:call-template>
-						</xsl:otherwise>
-						
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-			
-			<!-- xml tab -->
-			<xsl:if test="/root/gui/config/metadata-tab/xml">
-				<xsl:call-template name="displayTab">
-					<xsl:with-param name="tab"     select="'xml'"/>
-					<xsl:with-param name="text"    select="/root/gui/strings/xmlTab"/>
-					<xsl:with-param name="tabLink" select="$tabLink"/>
-				</xsl:call-template>
-			</xsl:if>
-		</table>
-	</xsl:template>
-	
-	<!--
-	default complete tab template
-	-->
-	<xsl:template name="completeTab">
-		<xsl:param name="tabLink"/>
-		
-		<xsl:call-template name="displayTab">
-			<xsl:with-param name="tab"     select="'metadata'"/>
-			<xsl:with-param name="text"    select="/root/gui/strings/completeTab"/>
-			<xsl:with-param name="tabLink" select="$tabLink"/>
-		</xsl:call-template>
-	</xsl:template>
-	
-	<!--
-	shows a tab
-	-->
-	<xsl:template name="displayTab">
-		<xsl:param name="tab"/>
-		<xsl:param name="text"/>
-		<xsl:param name="indent"/>
-		<xsl:param name="tabLink"/>
-		
-		<xsl:variable name="currTab" select="/root/gui/currTab"/>
-	
-		<tr><td class="banner-login">
-			<xsl:value-of select="$indent"/>
-			
-			<xsl:choose>
-				<!-- not active -->
-				<xsl:when test="$tabLink=''"><font class="banner-passive"><xsl:value-of select="$text"/></font></xsl:when>
-				
-				<!-- selected -->
-				<xsl:when test="$currTab=$tab"><font class="banner-active"><xsl:value-of select="$text"/></font></xsl:when>
-				
-				<!-- not selected -->
-				<xsl:otherwise><a class="palette" href="javascript:doTabAction('{$tabLink}','{$tab}')"><xsl:value-of select="$text"/></a></xsl:otherwise>
-			</xsl:choose>
-		</td></tr>
-	</xsl:template>
-	
+
+    <!-- Create a div with class name set to extentViewer in 
+        order to generate a new map.  -->
+
+    <xsl:template name="showMap">
+        <xsl:param name="edit" />
+        <xsl:param name="coords"/>
+        <!-- Indicate which drawing mode is used (ie. bbox or polygon) -->
+        <xsl:param name="mode"/>
+        <xsl:param name="targetPolygon"/>
+        <xsl:param name="watchedBbox"/>
+        <xsl:param name="eltRef"/>
+        <div class="extentViewer" style="width:{/root/gui/config/map/metadata/width}; height:{/root/gui/config/map/metadata/height};" 
+            edit="{$edit}" 
+            target_polygon="{$targetPolygon}" 
+            watched_bbox="{$watchedBbox}" 
+            elt_ref="{$eltRef}"
+            mode="{$mode}">
+            <div style="display:none;" id="coords_{$eltRef}"><xsl:value-of select="$coords"/></div>
+        </div>
+    </xsl:template>
+
 </xsl:stylesheet>

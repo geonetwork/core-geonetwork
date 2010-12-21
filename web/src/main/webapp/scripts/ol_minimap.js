@@ -19,13 +19,13 @@
 Ext.namespace('GeoNetwork');
 
 // create application
-GeoNetwork.miniapp = function() {
+GeoNetwork.miniapp = function(extentBox) {
     // private vars:
     var toolbar, viewport;
 
     var miniMap;
     
-    var synchMinimap;
+    var synchMinimaps = [];
     
     var extentBox;
   
@@ -72,7 +72,7 @@ GeoNetwork.miniapp = function() {
     /**
      * Creates the minimap map toolbar
      */
-    var createToolbar = function() {
+    var createToolbar = function(extentBoxIds) {
         toolbar = [];
 
         action = new GeoExt.Action({
@@ -128,18 +128,20 @@ GeoNetwork.miniapp = function() {
         toolbar.push("-");
 
         extentBox = new GeoNetwork.Control.ExtentBox({
-                minxelement: Ext.get('westBL'), 
-                maxxelement: Ext.get('eastBL'),
-                minyelement: Ext.get('southBL'),
-                maxyelement: Ext.get('northBL')
-                });
+                minxelement: Ext.get(extentBoxIds.westBL), 
+                maxxelement: Ext.get(extentBoxIds.eastBL),
+                minyelement: Ext.get(extentBoxIds.southBL),
+                maxyelement: Ext.get(extentBoxIds.northBL)
+         });
 
         
         extentBox.events.register("finishBox", null, function(evt) {
              regionControl.selectedIndex=1;
              
-             if (synchMinimap) {
-                synchMinimap.synch(regionControl.selectedIndex);
+             if (synchMinimaps) {
+						 	for (var i = 0; i < synchMinimaps.length; i++) {
+                synchMinimaps[i].synch(regionControl.selectedIndex, extentBox);
+							}
              }
         });
         
@@ -171,8 +173,8 @@ GeoNetwork.miniapp = function() {
      * Creates the map viewport
      *
      */
-    var createViewport = function(miniMapDiv) {	 
-        createToolbar();
+    var createViewport = function(miniMapDiv, extentBoxIds) {	 
+        createToolbar(extentBoxIds);
          
         var mapPanel = new GeoExt.MapPanel({
             id: "mini_mappanel_" + miniMapDiv,
@@ -191,13 +193,18 @@ GeoNetwork.miniapp = function() {
     var clearExtentBox = function clearExtentBox() {
         if (extentBox) {
             extentBox.clear();
+						// surprisingly the Ext set({value:''}) method doesn't work!?
+						extentBox.minxelement.dom.value = '';
+						extentBox.minyelement.dom.value = '';
+						extentBox.maxxelement.dom.value = '';
+						extentBox.maxyelement.dom.value = '';
             miniMap.zoomToMaxExtent();
         }
     }
 
     // public space:
     return {
-        init: function(miniMapDiv, regionControl, layers, mapOptions) {
+        init: function(miniMapDiv, regionControl, layers, mapOptions, extentBoxIds) {
             if (!$(miniMapDiv)) return;
             Ext.QuickTips.init();
 
@@ -209,14 +216,14 @@ GeoNetwork.miniapp = function() {
                 createWmsLayer(layers[i][0],layers[i][1],layers[i][2],layers[i][3]);
             }           
            
-            createViewport(miniMapDiv);
+            createViewport(miniMapDiv, extentBoxIds);
             addMapControls();
             miniMap.zoomToMaxExtent();
 
-            Ext.EventManager.on(Ext.get("westBL"), 'change', updateMap);
-            Ext.EventManager.on(Ext.get("eastBL"), 'change', updateMap);
-            Ext.EventManager.on(Ext.get("southBL"), 'change', updateMap);
-            Ext.EventManager.on(Ext.get("northBL"), 'change', updateMap);
+            Ext.EventManager.on(Ext.get(extentBoxIds.westBL),  'change', updateMap);
+            Ext.EventManager.on(Ext.get(extentBoxIds.eastBL),  'change', updateMap);
+            Ext.EventManager.on(Ext.get(extentBoxIds.southBL), 'change', updateMap);
+            Ext.EventManager.on(Ext.get(extentBoxIds.northBL), 'change', updateMap);
         },
 
         /**
@@ -240,13 +247,20 @@ GeoNetwork.miniapp = function() {
             return miniMap;
         },
         
-        synch: function(regionIndex) {
+        synch: function(regionIndex, eBox) {
             $(regionControl).selectedIndex = regionIndex;
+						if (eBox && extentBox) {
+							extentBox.minxelement.set({value: eBox.minxelement.getValue()});
+							extentBox.minyelement.set({value: eBox.minyelement.getValue()});
+							extentBox.maxxelement.set({value: eBox.maxxelement.getValue()});
+							extentBox.maxyelement.set({value: eBox.maxyelement.getValue()});
+						}
+
             updateMap(false);
         },
         
         setSynchMinimap: function (minimap) {
-            synchMinimap = minimap; 
+            synchMinimaps.push(minimap); 
         },
         
         addWmsLayer: function(name, url, params, options) {
@@ -258,5 +272,6 @@ GeoNetwork.miniapp = function() {
 
 GeoNetwork.minimapSimpleSearch = new GeoNetwork.miniapp();
 GeoNetwork.minimapAdvancedSearch = new GeoNetwork.miniapp();
+GeoNetwork.minimapRemoteSearch = new GeoNetwork.miniapp();
 
 //Ext.onReady(GeoNetwork.miniapp.init, GeoNetwork.miniapp);

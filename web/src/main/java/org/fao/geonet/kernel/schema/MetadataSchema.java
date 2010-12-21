@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel.schema;
 
+import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.File;
@@ -51,8 +52,11 @@ public class MetadataSchema
 	private String	schemaDir;
 	private String	primeNS;
 	private String[] schematronRules;
+	private boolean canEdit = false;
 
 	private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
+
+	private List<Element> rootAppInfoElements;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -68,6 +72,20 @@ public class MetadataSchema
 	//---
 	//--- API methods
 	//---
+	//---------------------------------------------------------------------------
+
+	public boolean canEdit()
+	{
+		return canEdit;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public void setCanEdit(boolean canEdit)
+	{
+		this.canEdit = canEdit;
+	}
+
 	//---------------------------------------------------------------------------
 
 	public void setName(String inName)
@@ -330,6 +348,16 @@ public class MetadataSchema
 
 	private void setSchematronRules(String[] schematronRules) {
 		this.schematronRules = schematronRules;
+	}
+
+	// -- this info for profile detection methods
+
+	public void setRootAppInfoElements(List<Element> rootAppInfoElements) {
+		this.rootAppInfoElements = rootAppInfoElements;
+	}
+	
+	public List<Element> getSchemaAppInfoElements() {
+		return rootAppInfoElements;
 	}
 }
 

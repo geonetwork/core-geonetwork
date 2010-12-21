@@ -67,24 +67,32 @@ public class Forward implements Service
 		String username = (acc == null) ? null : Util.getParam(acc, "username");
 		String password = (acc == null) ? null : Util.getParam(acc, "password");
 
-		List list = par.getChildren();
+		List<Element> list = par.getChildren();
 
 		if (list.size() == 0)
 			throw new MissingParameterEx("<request>", par);
 
-		params = (Element) list.get(0);
-
 		XmlRequest req = new XmlRequest(new URL(url));
 
-		//--- does we need to authenticate?
+		//--- do we need to authenticate?
 
 		if (username != null)
 			authenticate(req, username, password, type);
 
 		Lib.net.setupProxy(context, req);
-		req.setRequest(params);
 
-		return req.execute();
+		if (list.size() == 1) {
+			params = (Element) list.get(0);
+			req.setRequest(params); 
+		} else {
+			for (int i = 0; i < list.size();i++) {
+				Element elem = (Element) list.get(i);
+				req.addParam(elem.getName(), elem.getText());
+			}
+		}
+
+		Element result = req.execute();
+		return result;
 	}
 
 	//--------------------------------------------------------------------------

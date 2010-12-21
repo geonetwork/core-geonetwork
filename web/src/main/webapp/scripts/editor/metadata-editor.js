@@ -130,24 +130,6 @@ function doTabAction(action, tab)
 	doAction(action);
 }
 
-function doCommonsAction(action, name, licenseurl, type, id)
-{
-	var top = findPos($(id));
-	setBunload(false);
-  document.mainForm.name.value = name;
-  document.mainForm.licenseurl.value = licenseurl;
-  document.mainForm.type.value = type;
-	document.mainForm.position.value = top;
-  doAction(action);
-}
-
-function doResetCommonsAction(action, name, licenseurl, type, id, ref)
-{
-	$(ref).value = '';
-	document.mainForm.ref.value = '';
-	doCommonsAction(action, name, licenseurl, type, id);
-}
-
 function getControlsFromElement(el) {
     var id = el.getAttribute('id');
 	elButtons = $('buttons_'+id);
@@ -491,7 +473,7 @@ function doSaveAction(action,validateAction)
 					}
 					
 					setBunload(false);
-					location.replace(getGNServiceURL('metadata.show?id='+metadataId));
+					location.replace(getGNServiceURL('metadata.show?id='+metadataId+'&skipPopularity=y'));
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
@@ -919,8 +901,12 @@ function initCalendar() {
 	    	if (formatEl) {
 	    		format = formatEl.value;
 	    	}
-	    	
-			var value = Ext.getDom(id + '_cal').value;
+	    
+			var calId = Ext.getDom(id + '_cal');
+			var value = ''
+			if (calId) {
+				value = Ext.getDom(id + '_cal').value;
+			}
 			var showTime = (format.indexOf('T')==-1?false:true);
 			
 			if (showTime) {

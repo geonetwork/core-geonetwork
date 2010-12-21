@@ -154,13 +154,12 @@ public class LuceneConfig {
 
 			if (version == null) {
 				try {
-					int v = Integer.valueOf(version + "00");
-					LUCENE_VERSION = new Version("LUCENE_" + version, v);
+					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Failed to set Lucene version to: " + version
 									+ ". Set to default LUCENE_29.");
-					LUCENE_VERSION = new Version("LUCENE_29", 29000);
+					LUCENE_VERSION = Version.valueOf("LUCENE_29");
 				}
 			}
 

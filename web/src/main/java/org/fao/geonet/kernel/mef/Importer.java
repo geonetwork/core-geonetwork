@@ -422,7 +422,7 @@ public class Importer {
 					
 					id.add(index, dm.insertMetadataExt(dbms, schema, md.get(index),
 							iLocalId, source, createDate, changeDate, uuid, context
-									.getUserSession().getUserIdAsInt(), groupId,
+									.getUserSession().getUserIdAsInt(), groupId, "",
 							isTemplate));
 					insertedWithLocalId = true;
 				}

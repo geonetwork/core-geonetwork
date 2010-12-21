@@ -111,19 +111,17 @@ public class SpatialIndexWriter
      * @param schemasDir
      *            the base directory that contains the different metadata
      *            schemas
-     * @param type
-     *            the type of the metadata that is being passed in
      * @param metadata
      *            the metadata
      */
-    public void index(String schemasDir, String type, String id,
+    public void index(String schemaDir, String id,
             Element metadata) throws Exception
     {
         _lock.lock();
         try {
             _index = null;
             Geometry geometry = extractGeometriesFrom(
-                    schemasDir, type, metadata, _parser);
+                    schemaDir, metadata, _parser);
 
             if (geometry != null) {
                 FeatureCollection features = FeatureCollections.newCollection();
@@ -243,12 +241,11 @@ public class SpatialIndexWriter
      * Extracts a Geometry Collection from metadata default visibility for
      * testing access.
      */
-    static MultiPolygon extractGeometriesFrom(String schemasDir, String type,
+    static MultiPolygon extractGeometriesFrom(String schemaDir, 
             Element metadata, Parser parser) throws Exception
     {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
                 .setLevel(Level.SEVERE);
-        File schemaDir = new File(schemasDir, type);
         String sSheet = new File(schemaDir, "extract-gml.xsl")
                 .getAbsolutePath();
         Element transform = Xml.transform(metadata, sSheet);

@@ -12,18 +12,17 @@ import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeQuery;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.SearchResult.Relation;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
-
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -183,6 +182,39 @@ public class LuceneQueryBuilder {
 			}
 		}
 		return booleanClause;
+	}
+
+	private BooleanQuery selectorTextField(List<Element> selectors, String luceneIndexField, BooleanQuery query) {
+		if (selectors != null && selectors.size() > 0) {
+			for (Element selector : selectors) {
+				BooleanQuery allSelectorsQuery = new BooleanQuery();
+				BooleanClause.Occur allSelectorsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+
+				String selectorStr = selector.getText();
+				if (StringUtils.hasText(selectorStr)) {
+     			BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+       		// TODO: Check separator
+       		String[] tokens = StringUtils.delimitedListToStringArray(selectorStr, " or ");
+       		for (String token : tokens) {
+       			token = token.trim();
+        		if (token.startsWith("\"")) {
+        			token = token.substring(1);
+        		}
+        		if (token.endsWith("\"")) {
+          		token = token.substring(0, token.length() - 1);
+        		}
+        		//
+        		TermQuery termQuery = new TermQuery(new Term(luceneIndexField, token));
+        		BooleanClause clause = new BooleanClause(termQuery, occur);
+        		allSelectorsQuery.add(clause);
+       		}
+				}
+				if (allSelectorsQuery.clauses().size() > 0) {
+					query.add(allSelectorsQuery, allSelectorsOccur);
+				}
+			}
+		}
+		return query;
 	}
 
 	public Query build(Element request) {
@@ -491,21 +523,22 @@ public class LuceneQueryBuilder {
 			BooleanQuery categoriesQuery = new BooleanQuery();
 			BooleanClause.Occur categoriesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			BooleanClause categoriesClause = null;
-            for (Element category1 : categories) {
-                String category = category1.getText();
-                if (category != null) {
-                    category = category.trim();
-                    if (category.length() > 0) {
-                        BooleanClause categoryClause = notRequiredTextField(category, LuceneIndexField.CAT, similarity);
-                        if (categoryClause != null) {
-                            if (categoriesClause == null) {
-                                categoriesClause = new BooleanClause(categoriesQuery, categoriesOccur);
-                            }
-                            categoriesQuery.add(categoryClause);
-                        }
-                    }
-                }
-            }
+			for(Iterator<Element> i = categories.iterator(); i.hasNext();) {
+				String category = i.next().getText();
+				if(category != null){
+					category = category.trim();
+					if(category.length() > 0) {
+			      Query subQuery = textFieldToken(category, LuceneIndexField.CAT, similarity);
+						BooleanClause categoryClause = new BooleanClause(subQuery, categoriesOccur);
+						if(categoryClause != null) {
+							if(categoriesClause == null) {
+								categoriesClause = new BooleanClause(categoriesQuery, categoriesOccur);
+							}
+							categoriesQuery.add(categoryClause);
+						}
+					}
+				}
+			}
 			if(categoriesClause != null) {
 				query.add(categoriesClause);
 			}
@@ -567,35 +600,16 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur temporalExtentOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 
-			Term lowerTerm = null;
-			Term upperTerm = null;
-			RangeQuery temporalRangeQuery;
+						TermRangeQuery temporalRangeQuery;
 
-			// temporal extent start is within search extent
-            if(extFrom != null) {
-				lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN , extFrom);
-			}
-			if(extTo != null) {
-				upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN, extTo);
-			}
-			temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
-			BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
-			
-            temporalExtentQuery.add(temporalRangeQueryClause);
-
+						// temporal extent start is within search extent
+						temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
+						BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+						
+       			temporalExtentQuery.add(temporalRangeQueryClause);
 
             // or temporal extent end is within search extent
-            lowerTerm = null;
-			upperTerm = null;
-
-            if(extFrom != null) {
-				lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extFrom);
-			}
-
-			if(extTo != null) {
-				upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END, extTo);
-			}
-            temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+            temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
             temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
@@ -604,18 +618,12 @@ public class LuceneQueryBuilder {
             if((extTo != null && extTo.length() > 0) && (extFrom != null && extFrom.length() > 0)) {
                 BooleanQuery bq = new BooleanQuery();
 
-                lowerTerm = null;
-                upperTerm = null;
-                lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extTo);
-                temporalRangeQuery = new RangeQuery(lowerTerm, null, true);
+                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 bq.add(temporalRangeQueryClause);
 
-                lowerTerm = null;
-                upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom);
-
-                temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 bq.add(temporalRangeQueryClause);
 
@@ -749,38 +757,7 @@ public class LuceneQueryBuilder {
         //
         // themekey
         //
-        @SuppressWarnings("unchecked")
-        List<Element> themeKeys = (List<Element>)request.getChildren("themekey");
-        if(themeKeys != null && themeKeys.size() > 0) {
-            for (Element themeKey1 : themeKeys) {
-                BooleanQuery allkeywordsQuery = new BooleanQuery();
-                BooleanClause.Occur allKeywordsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-
-                String themeKey = themeKey1.getText();
-                if (StringUtils.hasText(themeKey)) {
-                    BooleanClause.Occur keywordOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-                    // TODO: Check separator
-                    String[] tokens = StringUtils.delimitedListToStringArray(themeKey, " or ");
-                    for (String token : tokens) {
-                        token = token.trim();
-                        if (token.startsWith("\"")) {
-                            token = token.substring(1);
-                        }
-                        if (token.endsWith("\"")) {
-                            token = token.substring(0, token.length() - 1);
-                        }
-                        //
-                        TermQuery keywordQuery = new TermQuery(new Term(LuceneIndexField.KEYWORD, token));
-                        BooleanClause keywordClause = new BooleanClause(keywordQuery, keywordOccur);
-                        allkeywordsQuery.add(keywordClause);
-                    }
-                }
-
-                if (allkeywordsQuery.clauses().size() > 0) {
-                    query.add(allkeywordsQuery, allKeywordsOccur);
-                }
-            }
-        }
+				query = selectorTextField((List<Element>)request.getChildren("themekey"), LuceneIndexField.KEYWORD, query);
 
 		//
 		// digital and paper maps
@@ -820,15 +797,35 @@ public class LuceneQueryBuilder {
 		}
 
 		//
+		// taxon
+		//
+		query = selectorTextField((List<Element>)request.getChildren("taxon"), LuceneIndexField.TAXON, query);
+
+		//
+		// credit
+		//
+		query = selectorTextField((List<Element>)request.getChildren("credit"), LuceneIndexField.CREDIT, query);
+
+		//
+		// dataparam
+		//
+		query = selectorTextField((List<Element>)request.getChildren("dataparam"), LuceneIndexField.DATAPARAM, query);
+
+		//
 		// bounding box
 		//
-		String eastBL = request.getChildText("eastBL");
-		String westBL = request.getChildText("westBL");
-		String northBL = request.getChildText("northBL");
-		String southBL = request.getChildText("southBL");
+		String eastBL = request.getChildTextTrim("eastBL");
+		String westBL = request.getChildTextTrim("westBL");
+		String northBL = request.getChildTextTrim("northBL");
+		String southBL = request.getChildTextTrim("southBL");
 		String relation = request.getChildText("relation");
 
-		addBoundingBoxQuery(query, relation, eastBL, westBL, northBL, southBL);
+		if (!("".equals(eastBL) ||
+		      "".equals(westBL) ||
+					"".equals(southBL) ||
+					"".equals(northBL)) ) {
+			addBoundingBoxQuery(query, relation, eastBL, westBL, northBL, southBL);
+		}
 
 //		DEBUG
 //		System.out.println("\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
@@ -927,21 +924,15 @@ public class LuceneQueryBuilder {
 	private void addTextRangeQuery(BooleanQuery query, String dateTo,
 			String dateFrom, String luceneIndexField) {
 		if((dateTo != null && dateTo.length() > 0) || (dateFrom != null && dateFrom.length() > 0)) {
-			Term lowerTerm = null;
-			Term upperTerm = null;
-			RangeQuery rangeQuery;
-			if(dateFrom != null) {
-				lowerTerm = new Term(luceneIndexField, dateFrom);
-			}
+			TermRangeQuery rangeQuery;
 			if(dateTo != null) {
 				// while the 'from' parameter can be short (like yyyy-mm-dd)
 				// the 'until' parameter must be long to match
 				if(dateTo.length() == 10) {
 					dateTo = dateTo + "T23:59:59";
 				}
-				upperTerm = new Term(luceneIndexField, dateTo);
 			}
-			rangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+			rangeQuery = new TermRangeQuery(luceneIndexField, dateFrom, dateTo, true, true);
 			BooleanClause.Occur dateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			BooleanClause dateRangeClause = new BooleanClause(rangeQuery, dateOccur);
 			query.add(dateRangeClause);

@@ -110,6 +110,7 @@ public final class Jeeves
 		public static final String ADDED   = "added";
 		public static final String REMOVED = "removed";
 		public static final String UPDATED = "updated";
+		public static final String GUI_SERVICE  = "guiService";
 	}
 
 	//--------------------------------------------------------------------------

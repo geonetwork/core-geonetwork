@@ -114,7 +114,9 @@
 			</class>
 
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
-				<call name="mdresults" class=".services.main.Result" />
+				<call name="mdresults" class=".services.main.Result" >
+					<param name="range" value="1000" /> <!-- too many causes problems -->
+				</call>
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
 			</output>
 		</service>
@@ -128,9 +130,7 @@
 		
 		<service name="pdf.present">
 			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-				<param name="range" value="all" />
+				<param name="range" value="1000" /> <!-- too many causes problems -->
 			</class>
 			
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">

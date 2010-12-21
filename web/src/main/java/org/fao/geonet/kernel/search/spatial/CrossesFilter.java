@@ -46,7 +46,7 @@ public class CrossesFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public CrossesFilter(Query query, Element request, Geometry geom,
+    public CrossesFilter(Query query, Geometry geom,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
         super(query, geom, featureSource, index);

@@ -29,11 +29,12 @@ import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.utils.Util;
 import jeeves.utils.XmlFileCacher;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -64,9 +65,7 @@ public class Info implements Service {
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getDataManager();
-
-		String langCode = context.getLanguage();
+		SchemaManager scm = gc.getSchemamanager();
 
 		Element response = new Element("response");
 
@@ -75,10 +74,10 @@ public class Info implements Service {
 			String name = elem.getName();
 
 			if (name.equals("element"))
-				response.addContent(handleElement(dm, langCode, elem));
+				response.addContent(handleElement(scm, elem, context));
 
 			else if (name.equals("codelist"))
-				response.addContent(handleCodelist(dm, langCode, elem));
+				response.addContent(handleCodelist(scm, elem, context));
 
 			else
 				throw new BadParameterEx("element", name);
@@ -93,158 +92,113 @@ public class Info implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	private Element handleElement(DataManager dm, String langCode, Element elem)
-			throws Exception {
-		return handleObject(dm, langCode, elem, "labels.xml");
+	private Element handleElement(SchemaManager scm, Element elem, ServiceContext context) throws Exception {
+		return handleObject(scm, elem, "labels.xml", context);
 	}
 
 	// --------------------------------------------------------------------------
 
-	private Element handleCodelist(DataManager dm, String langCode, Element elem)
-			throws Exception {
-		return handleObject(dm, langCode, elem, "codelists.xml");
+	private Element handleCodelist(SchemaManager scm, Element elem, ServiceContext context) throws Exception {
+		return handleObject(scm, elem, "codelists.xml", context);
 	}
 
 	// --------------------------------------------------------------------------
 
-	private Element handleObject(DataManager dm, String langCode, Element elem,
-			String fileName) throws BadInputEx, OperationAbortedEx {
+	private Element handleObject(SchemaManager scm, Element elem, String fileName, ServiceContext servContext) throws Exception {
 		String schema = Util.getAttrib(elem, "schema");
 		String name = Util.getAttrib(elem, "name");
-		String context = Util.getAttrib(elem, "context", "");
+		String parent = Util.getAttrib(elem, "context", "");
 		String isoType = Util.getAttrib(elem, "isoType", "");
-        String fullContext = Util.getAttrib(elem, "fullContext", "");
+		String xpath = Util.getAttrib(elem, "fullContext", "");
 
-		name = normalizeNamespace(elem, name);
-		context = normalizeNamespace(elem, context);
-		isoType = normalizeNamespace(elem, isoType);
-        fullContext = normalizeNamespace(elem, fullContext);
+		name = findNamespace(elem, name, scm, schema);
+		parent = findNamespace(elem, parent, scm, schema);
+		isoType = findNamespace(elem, isoType, scm, schema);
 
 		if (name == null)
 			return buildError(elem, UNKNOWN_NAMESPACE);
 
-		if (!dm.existsSchema(schema))
+		if (!scm.existsSchema(schema))
 			return buildError(elem, UNKNOWN_SCHEMA);
 
-        return getHelp(dm, langCode, elem, fileName, schema, name, context, fullContext,
-				isoType);
+		
+		return getHelp(scm, elem, fileName, schema, name, parent, xpath, isoType, servContext);
 	}
 
-	private Element getHelp(DataManager dm, String langCode, Element elem,
-            String fileName, String schema, String name, String context,  String fullContext,
-			String isoType) throws BadInputEx, OperationAbortedEx {
-		File file = getFile(langCode, schema, fileName);
+	// --------------------------------------------------------------------------
 
-		if (file == null)
+	private Element getHelp(SchemaManager scm, Element elem,
+			String fileName, String schema, String name, String parent,
+			String xpath, String isoType, ServiceContext context) 
+			throws Exception {
+
+		XmlFile xf = scm.getSchemaInfo(schema).get(fileName);  
+
+		if (xf == null)
 			throw new OperationAbortedEx("File not found for : " + schema + "/"
 					+ fileName);
 
-		XmlFileCacher xfc = cache.get(file);
+		Element entries = xf.exec(new Element("junk"), context);
 
-		if (xfc == null) {
-			xfc = new XmlFileCacher(file);
-			cache.put(file, xfc);
-		}
-
-		try {
-			Element entries = xfc.get();
-
-            // Check fullContext
-			for (Object o : entries.getChildren()) {
-				Element currElem = (Element) o;
-				String currName = currElem.getAttributeValue("name");
-				String currContext = currElem.getAttributeValue("context");
-
-				currName = normalizeNamespace(entries, currName);
-
-				if (currName == null)
-					throw new OperationAbortedEx("No namespace found for : "
-							+ currName);
-
-				if (currContext != null && context != null && isoType != null) {
-					currContext = normalizeNamespace(entries, currContext);
-
-					if (name.equals(currName)
-							&& (fullContext.equals(currContext) || isoType
-									.equals(currContext)))
-						return (Element) currElem.clone();
-				} else if (name.equals(currName)
-                        && (currContext != null) && fullContext.equals(currContext))
-					return (Element) currElem.clone();
-
+		Element result = checkEntries(scm, schema, entries, xpath, name, isoType);
+		if (result == null) {
+			result = checkEntries(scm, schema, entries, parent, name, isoType);
+			if (result == null) {
+				if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
+					result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType, context);
+				} else {
+					return buildError(elem, NOT_FOUND);
+				}
 			}
-
-            // Check context
-            for (Object o : entries.getChildren()) {
-                Element currElem = (Element) o;
-                String currName = currElem.getAttributeValue("name");
-                String currContext = currElem.getAttributeValue("context");
-
-                currName = normalizeNamespace(entries, currName);
-
-                if (currName == null)
-                    throw new OperationAbortedEx("No namespace found for : "
-                            + currName);
-
-                if (currContext != null && context != null && isoType != null) {
-                    currContext = normalizeNamespace(entries, currContext);
-
-                    if (name.equals(currName)
-                            && (context.equals(currContext) || isoType
-                                    .equals(currContext)))
-                        return (Element) currElem.clone();
-                } else if (name.equals(currName))
-                    return (Element) currElem.clone();
-
-            }
-
-			if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
-				return getHelp(dm, langCode, elem, fileName, "iso19139", name,
-                        context, fullContext, isoType);
-			} else
-				return buildError(elem, NOT_FOUND);
-		} catch (Exception e) {
-            e.printStackTrace();
-			throw new OperationAbortedEx("Can't load xml file : " + file
-					+ " element name:" + name, e);
 		}
+
+		return result;
 	}
 
 	// --------------------------------------------------------------------------
 
-	private String normalizeNamespace(Element elem, String name) {
+	private Element checkEntries(SchemaManager scm, String schema, Element entries, String context, String name, String isoType) throws Exception {
+
+		for (Object o : entries.getChildren()) {
+			Element currElem = (Element) o;
+			String currName = currElem.getAttributeValue("name");
+			String currContext = currElem.getAttributeValue("context");
+
+			currName = findNamespace(entries, currName, scm, schema);
+
+			if (currName == null) {
+				throw new OperationAbortedEx("No namespace found for : " + currName);
+			}
+
+			if (currContext != null && context != null && isoType != null) {
+				currContext = findNamespace(entries, currContext, scm, schema);
+
+				if (name.equals(currName) && (context.equals(currContext) || isoType.equals(currContext))) {
+					return (Element) currElem.clone();
+				}
+			} else if (name.equals(currName)) {
+				return (Element) currElem.clone();
+			}
+		}
+
+		return null; // no match found
+
+	}
+
+	// --------------------------------------------------------------------------
+
+	private String findNamespace(Element elem, String name, SchemaManager scm, String schema) {
 		int pos = name.indexOf(':');
 
-		if (pos == -1)
-			return name;
+		if (pos == -1) return name;
 
 		String prefix = name.substring(0, pos);
 
-		Namespace ns = elem.getNamespace(prefix);
+		String nsURI = scm.getNamespaceURI(schema, prefix);
 
-		if (ns == null)
-			return null;
+		if (nsURI == null) return null;
 
-		return ns.getURI() + name.substring(pos);
-	}
-
-	// --------------------------------------------------------------------------
-
-	private File getFile(String langCode, String schema, String fileName) {
-		File file = new File(appPath + "xml/schemas/" + schema + "/loc/"
-				+ langCode + "/" + fileName);
-
-		if (file.exists())
-			return file;
-
-		// --- let's try the default language 'en'
-		file = new File(appPath + "xml/schemas/" + schema + "/loc/"
-				+ Geonet.DEFAULT_LANGUAGE + "/" + fileName);
-
-		if (file.exists())
-			return file;
-
-		return null;
+		return nsURI + name.substring(pos);
 	}
 
 	// --------------------------------------------------------------------------
@@ -269,8 +223,6 @@ public class Info implements Service {
 	// --------------------------------------------------------------------------
 
 	private String appPath;
-
-	private Map<File, XmlFileCacher> cache = new HashMap<File, XmlFileCacher>();
 }
 
 // =============================================================================

@@ -47,12 +47,14 @@ public class RepositoryInfo {
        private String dn;
        private String name;
 			 private String code;
+			 private String serverCode;
 			 private String classname;
        
-       private RepositoryInfo(String dn, String name, String code, String classname) {
+       private RepositoryInfo(String dn, String name, String code, String serverCode, String classname) {
                this.name=name;
                this.dn=dn;
 							 this.code=code;
+							 this.serverCode=serverCode;
 							 this.classname = classname;
        }
        
@@ -68,12 +70,16 @@ public class RepositoryInfo {
                return code;
        }
        
+       public String getServerCode() {
+               return serverCode;
+       }
+       
        public String getClassName() {
                return classname;
        }
        
        public String toString() {
-               return getName()+":"+getDn()+":"+getCode()+":"+getClassName();
+               return getName()+":"+getDn()+":"+getCode()+":"+getServerCode()+":"+getClassName();
        }
        
        
@@ -100,8 +106,8 @@ public class RepositoryInfo {
 				Log.debug(Geonet.Z3950, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
 				while (colit.hasNext()) {
 					CollectionDescriptionDBO oneCol = colit.next();
-					Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+ssd.getCode());
-					ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), ssd.getCode(), ssd.getClassName()) ) ;                               
+					Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+oneCol.getLocalId()+":"+ssd.getCode());
+					ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), oneCol.getLocalId(), ssd.getCode(), ssd.getClassName()) ) ;                               
 				}
      	}
 		}

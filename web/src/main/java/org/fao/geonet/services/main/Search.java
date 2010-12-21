@@ -73,14 +73,6 @@ public class Search implements Service
 		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
 		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 
-		Element title = elData.getChild(Geonet.SearchResult.TITLE);
-		Element abstr = elData.getChild(Geonet.SearchResult.ABSTRACT);
-		Element any   = elData.getChild(Geonet.SearchResult.ANY);
-        Element phrase   = elData.getChild(Geonet.SearchResult.PHRASE);
-        Element or    = elData.getChild(Geonet.SearchResult.OR);
-        Element without  = elData.getChild(Geonet.SearchResult.WITHOUT);
-        Element all   = elData.getChild(Geonet.SearchResult.ALL);
-
 		// Parse bbox & assign to four *BL params
 		Element bbox  = elData.getChild(Geonet.SearchResult.BBOX);
 		Element westBL = elData.getChild(Geonet.SearchResult.WEST_BL);
@@ -124,6 +116,9 @@ public class Search implements Service
 		else        searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, elData, _config);
+		if (remote && (searcher.getSize() == 0)) { // do it again for Z3950
+			searcher.search(context, params, _config);
+		}
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
 		context.info("Getting summary");

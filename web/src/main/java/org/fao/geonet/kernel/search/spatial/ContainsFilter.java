@@ -46,7 +46,7 @@ public class ContainsFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public ContainsFilter(Query query, Element request, Geometry geom,
+    public ContainsFilter(Query query, Geometry geom,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
         super(query, geom, featureSource, index);

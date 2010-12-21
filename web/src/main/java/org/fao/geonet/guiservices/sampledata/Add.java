@@ -25,27 +25,31 @@ package org.fao.geonet.guiservices.sampledata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * A simple service that add the sample mef files in the samples
- * directory.
+ * A simple service that adds sample data mef files from each schemas 
+ * sample-data directory.
  * 
  */
 public class Add implements Service {
-	String sampleDirectoryPath;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		sampleDirectoryPath = appPath + "/WEB-INF/classes/setup/samples";
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	/**
 	 * 
@@ -56,27 +60,51 @@ public class Add implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
+		String schemaList = Util.getParam(params, Params.SCHEMA, "");
 		String serviceStatus = "true";
+		String serviceError  = "";
 		
 		Element result = new Element(Jeeves.Elem.RESPONSE);
 
-        Log.info(Geonet.DATA_MANAGER, "Loading sample data");
-		File samplesDirectory = new File(sampleDirectoryPath);
-		File sampleFiles[] = samplesDirectory.listFiles();
-    
-        for (File file : sampleFiles) {
-            if ((!file.isDirectory()) && (file.getName().endsWith(".mef"))) {
-                try {
-                    MEFLib.doImport(params, context, file, "");
-                } catch (Exception e) {
-                    serviceStatus = "false";
-                    Log.error(Geonet.DATA_MANAGER,
-                            "Error loading sample data: " + e.getMessage());
-                }
-            }
-        }
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager schemaMan = gc.getSchemamanager();
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        result.setAttribute("status", serviceStatus);
+		String schemas[] = schemaList.split(",");
+
+		for (String schemaName : schemas) {
+    	Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "+schemaName);
+			String schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
+			if (schemaDir == null) {
+				Log.error(Geonet.DATA_MANAGER, "Skipping - No sample data?");
+				continue;
+			}
+
+      Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: " + schemaDir);
+			File sampleDataFiles[] = new File(schemaDir).listFiles();
+			List<File> sampleDataFilesList = new ArrayList<File>();
+
+			if (sampleDataFiles != null) {
+				for (File file : sampleDataFiles) 
+					if (file.getName().endsWith(".mef")) 
+						sampleDataFilesList.add(file);
+			}
+
+    	for (File file : sampleDataFilesList) {
+        try {
+         	Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
+         	MEFLib.doImport(params, context, file, "");
+					dbms.commit();
+         } catch (Exception e) {
+         	serviceStatus = "false";
+					serviceError = e.getMessage() + " whilst loading " + file;
+         	Log.error(Geonet.DATA_MANAGER, "Error loading sample data: " + e.getMessage());
+				 }
+			}
+		}
+
+    result.setAttribute("status", serviceStatus);
+    result.setAttribute("error", serviceError);
 		return result;        
 	}
 }

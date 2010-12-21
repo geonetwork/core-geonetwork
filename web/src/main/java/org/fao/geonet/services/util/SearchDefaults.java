@@ -56,7 +56,7 @@ public class SearchDefaults {
 			{ Geonet.SearchResult.REMOTE, Geonet.Text.OFF },
 			{ Geonet.SearchResult.TIMEOUT, "20" },
 			{ Geonet.SearchResult.HITS_PER_PAGE, "10" },
-			{ Geonet.SearchResult.SIMILARITY, ".8" },
+			{ Geonet.SearchResult.SIMILARITY, "1" },
 			{ Geonet.SearchResult.OUTPUT, Geonet.SearchResult.Output.FULL },
 			{ Geonet.SearchResult.SORT_BY, Geonet.SearchResult.SortBy.RELEVANCE },
 			{ Geonet.SearchResult.SORT_ORDER, "" },

@@ -42,6 +42,8 @@ function runCsvSearch() {
  *
  * If run on selection run pdf.selection.search
  * to retrieve the PDF document and clean current selection.
+ * NOTE: cleaning current selection breaks new widget apps so don't do it for
+ * now
  *
  * If not, use the pdf.search service.
  */
@@ -54,7 +56,7 @@ function runPdfSearch(onSelection) {
 		}
 
 		location.replace (serviceUrl);
-		metadataselect(0, 'remove-all');
+	//	metadataselect(0, 'remove-all');
 	} else {
 	    if (document.cookie.indexOf("search=advanced")!=-1)
 	        runAdvancedSearch("pdf");
@@ -70,23 +72,7 @@ function runSimpleSearch(type)
 
 	setSort();
 
-	var pars = "any=" + encodeURIComponent($('any') .value);
-
-	var region = $('region_simple').value;
-	if(region!="")
-  {
-		pars += "&"+im_mm_getURLselectedbbox();
-		pars += fetchParam('relation');
-		pars += "&attrset=geo";
-		if(region!="userdefined")
-		{
-		pars += fetchParam('region');
-	}
-	}
-	pars += fetchParam('sortBy');
-	pars += fetchParam('sortOrder');
-	pars += fetchParam('hitsPerPage');
-	pars += fetchParam('output');
+	var pars = $('simple_search_form').serialize(true);
 
 	if (type == "pdf")
        gn_searchpdf(pars);
@@ -95,34 +81,32 @@ function runSimpleSearch(type)
 	   gn_search(pars);
 }
 
+function resetWherePars() {
+
+  setParam('region_simple',null);
+	// Clear also region in advanced and remote search to keep synch
+	setParam('region',null);
+	setParam('region_remote',null);
+    
+  setParam('relation','overlaps');	
+  setParam('relation_remote','overlaps');	
+
+	resetMinimaps();
+}
+
 function resetSimpleSearch()
 {
 /* make sure all values are completely reset (instead of just using the default
    form.reset that would only return to the values stored in the session */
-    setParam('any','');
-    setParam('relation','overlaps');	
-    setParam('region_simple',null);
-	// Clear also region in advanced search to keep synch
-	setParam('region',null);
-    
-    $('northBL').value='90';
-    $('southBL').value='-90';
-    $('eastBL').value='180';
-    $('westBL').value='-180';
+		var form = $('simple_search_form');
+    form.reset();
 
-	resetMinimaps();
+		resetWherePars();
 	
-    // FIXME: maybe we should zoom back to a fullExtent (not to the whole world)
-    //im_mm_redrawAoI();
-    //im_mm_zoomToAoI();
-    setParam('sortBy',      'relevance');
-    setParam('sortBy_simple',      'relevance');
-    setParam('sortOrder',   '');
-    setParam('hitsPerPage', '10');
-    setParam('hitsPerPage_simple', '10');
-    setParam('output',      'full');
-    setParam('output_simple',      'full');
-
+    setParam(form['sortBy'],      'relevance');
+    setParam(form['sortOrder'],   '');
+    setParam(form['hitsPerPage'], '10');
+    setParam(form['output'],      'full');
 }
 
 
@@ -140,27 +124,50 @@ function resetMinimaps() {
         var pnl = Ext.getCmp('mini_mappanel_ol_minimap2');
         pnl.map.setCenter(pnl.center, pnl.zoom);
     }	
+
+	GeoNetwork.minimapRemoteSearch.clearExtentBox();
+    minimap =  GeoNetwork.minimapRemoteSearch.getMap();
+    if (minimap) {
+        var pnl = Ext.getCmp('mini_mappanel_ol_minimap3');
+        pnl.map.setCenter(pnl.center, pnl.zoom);
+    }	
 }
+
+
 /********************************************************************
 *
-*  Toggling between simple/advanced search
+*  Toggling between simple/advanced/remote search
 *
 ********************************************************************/
 
-function showAdvancedSearch()
+function showAdvancedSearch(search)
 {
-	closeSearch('simple_search_pnl');
-	openSearch('advanced_search_pnl');
+	openSearch('advanced_search_panel');
 	document.cookie = "search=advanced";
 	initAdvancedSearch();
+	if (search == 'true') {
+		runAdvancedSearch();
+	}
 }
 
-function showSimpleSearch()
+function showSimpleSearch(search)
 {
-	closeSearch('advanced_search_pnl');
-	openSearch('simple_search_pnl');
+	openSearch('simple_search_panel');
 	document.cookie = "search=default";
 	initSimpleSearch();
+	if (search == 'true') {
+		runSimpleSearch();
+	}
+}
+
+function showRemoteSearch(search)
+{
+	openSearch('remote_search_panel');
+	document.cookie = "search=remote";
+	initRemoteSearch();
+	if (search == 'true') {
+		runRemoteSearch();
+	}
 }
 
 function openSearch(s)
@@ -187,6 +194,7 @@ function closeSearch(s)
 	}
 }
 
+
 /**********************************************************
 ***
 ***		ADVANCED SEARCH
@@ -201,73 +209,29 @@ function initAdvancedSearch()
 	initCalendar();
 	}
 
+function getWherePars(region, relation, northBL, southBL, eastBL, westBL) {
+	var pars;
+	var region = $(region).value;
+	if(region!="")
+  {
+		pars += "&attrset=geo";
+		pars += "&"+im_mm_getURLselectedbbox(northBL, southBL, eastBL, westBL);
+		pars += fetchParam(relation);
+		if(region!="userdefined") {
+			pars += fetchParam(region);
+		}
+	}
+}
+
 function runAdvancedSearch(type)
 {
-    if (type != "pdf")
+  if (type != "pdf")
 	   preparePresent();
 
 	setSort();
 
-	//var pars = "any=" + encodeURIComponent($('any') .value);
-    var pars = fetchParam('all');
-	pars += fetchParam('phrase');
-	pars += fetchParam('or');
-	pars += fetchParam('without');
-	pars += fetchParam('title');
-	pars += fetchParam('abstract');
-	pars += fetchParam('themekey');
-	pars += fetchRadioParam('similarity');
+	var pars = $('advanced_search_form').serialize();
 
-	var region = $('region').value;
-	if(region!="")
-  {
-		pars += "&attrset=geo";
-		pars += "&"+im_mm_getURLselectedbbox();
-		pars += fetchParam('relation');
-		if(region!="userdefined")
-		{
-		pars += fetchParam('region');
-	}
-	}
-
-	if($('radfrom1').checked)
-	{
-		pars += fetchParam('dateFrom');
-		pars += fetchParam('dateTo');
-	}
-
-	if($('radfromext1').checked)
-	{
-		pars += fetchParam('extFrom');
-		pars += fetchParam('extTo');
-	}
-
-	pars += fetchParam('group');
-	pars += fetchParam('category');
-	pars += fetchParam('siteId');
-
-	pars += fetchBoolParam('digital');
-	pars += fetchBoolParam('paper');
-	pars += fetchBoolParam('dynamic');
-	pars += fetchBoolParam('download');
-	pars += fetchParam('protocol').toLowerCase();
-	pars += fetchParam('template');
-	pars += fetchParam('sortBy');
-	pars += fetchParam('sortOrder');
-	pars += fetchParam('hitsPerPage');
-	pars += fetchParam('output');
-
-     //Inspire
-    pars += fetchParam('inspireannex');
-    pars += addINSPIREThemes();
-
-	var inspire = $('inspire');
-
-    if (inspire) {
-        if (inspire.checked) pars += "&inspire=true";
-    }
-    // Inspire
-    
     if (type == "pdf")
        gn_searchpdf(pars);
     else
@@ -277,61 +241,112 @@ function runAdvancedSearch(type)
 
 function resetAdvancedSearch()
 {
-/* make sure all values are completely reset (instead of just using the default
-   form.reset that would only return to the values stored in the session */
-	//setParam('any','');
-    setParam('all','');
-	setParam('phrase', '');
-	setParam('or', '');
-	setParam('without', '');
-	setParam('title','');
-	setParam('abstract','');
-	setParam('themekey','');
-	var radioSimil = document.getElementsByName('similarity');
+	var form = $('advanced_search_form');
+	form.reset();
+	radioSimil = form['similarity'];
 	radioSimil[1].checked=true;
-	setParam('relation','overlaps');
 
-    setParam('region',null);
-	// Clear also region in simple search to keep synch
-	setParam('region_simple',null);
-	
-	$('northBL').value='90';
-	$('southBL').value='-90';
-	$('eastBL').value='180';
-	$('westBL').value='-180';
-	
-	resetMinimaps();
+	resetWherePars();
 
-	setParam('dateFrom','');
-	setParam('dateTo','');
-	$('radfrom0').checked=true;
-	$('radfrom1').disabled='disabled';
-	setParam('extFrom','');
-	setParam('extTo','');
-	$('radfromext1').disabled='disabled';
-	setParam('group','');
-	setParam('category','');
-	setParam('siteId','');
-	$('digital') .checked = false;
-	$('paper')   .checked = false;
-	$('dynamic') .checked = false;
-	$('download').checked = false;
-	setParam('protocol',    '');
-	setParam('template',    'n');
- 	setParam('sortBy',      'relevance');
-    setParam('sortBy_simple',      'relevance');
-    setParam('sortOrder',   '');
-    setParam('hitsPerPage', '10');
-    setParam('hitsPerPage_simple', '10');
-    setParam('output',      'full');
-    setParam('output_simple',      'full');
+	setBoolParam(form['radfrom0'],true);
+	form['radfrom1'].disable();
+	form['radfromext1'].disable();
+ 	setParam(form['sortBy'],      'relevance');
+  setParam(form['hitsPerPage'], '10');
+  setParam(form['output'],      'full');
 
+	// reset the selectors so that new searches are done to fill them
+	selectorIds = [];
 
     // reset INSPIRE options
     resetInspireOptions();
     // End reset INSPIRE options    
 
 }
+
+/**********************************************************
+***
+***		REMOTE SEARCH
+***
+**********************************************************/
+
+function initRemoteSearch() {}
+
+function resetRemoteSearch() {
+
+	var form = $('remote_search_form');
+	form.reset();
+
+	resetWherePars();
+
+ 	setParam(form['hitsPerPage'], '10');
+	setBoolParam(form['serverhtml'], false);
+ 	setParam(form['timeout'],'20');
+ 	setParam(form['profile'],'');
+	deselectAllServers(form);
+}
+
+function profileSelected()
+{
+	var form = $('remote_search_form');
+	var serverList = form['profile'];
+	var serverArray = serverList.split(' ');
+	deselectAllServers(form);
+	for (var i=0; i < serverArray.length; i++)
+		selectServer(serverArray[i]);
+}
+	
+function deselectAllServers(form)
+{
+	var rservers = form['servers'];
+	for (var i=0; i < rservers.length; i++)
+		rservers.options[i].selected = false;
+}
+	
+function selectServer(server)
+{
+	var form = $('remote_search_form');
+	var rservers = form['servers'];
+	for (var i=0; i < rservers.length; i++) {
+		if (rservers.options[i].value == server) {
+			rservers.options[i].selected = true;
+		}
+	}
+}
+		
+function checkRemoteFields()
+{
+	var pars = $('remote_search_form').serialize(true);
+
+	if (isWhitespace(pars['or']) && isWhitespace(pars['title']) && isWhitespace(pars['abstract']) && isWhitespace(pars['themekey']) && isWhitespace(pars['region'])) {
+		alert(translate("noSearchCriteria"));
+		return false;
+	}
+	if (pars['servers'].length == 0) {
+		alert(translate("noServer"));
+		return false;
+	}
+	return true;
+}
+		
+function runRemoteSearch(type) 
+{
+	if (checkRemoteFields()) {
+		if (type != "pdf") preparePresent('remote');
+
+		var pars = $('remote_search_form').serialize();
+		pars += '&remote=on&attrset=geo';
+
+		if (type == "pdf") {
+			pars = pars.replace(/hitsPerPage=\d{2,3}/, 'hitsPerPage=1000');
+			location.replace(getGNServiceURL('pdf.search') + "?" + pars);
+		} else {
+			// Load results via AJAX
+			gn_search(pars);    
+		}
+	}
+}
+
 
 /**********************************************************
 ***
@@ -463,16 +478,6 @@ function rateMetadata_OK(xmlRes)
 *** GET BOUNDINGBOX COORDINATES FOR A REGION
 ********************************************************************/
 
-function doRegionSearchSimple() {
-  doRegionSearch('region_simple');
-  $('region').value = $('region_simple').value;
-}
-
-function doRegionSearchAdvanced() {
-  doRegionSearch('region');
-  $('region_simple').value = $('region').value;
-}
-
 function doRegionSearch(regionlist)
 {
     var region = $(regionlist).value;
@@ -483,88 +488,80 @@ function doRegionSearch(regionlist)
         $('southBL').value='-90';
         $('eastBL').value='180';
         $('westBL').value='-180';
+        $('northBL_remote').value='90';
+        $('southBL_remote').value='-90';
+        $('eastBL_remote').value='180';
+        $('westBL_remote').value='-180';
+        $('northBL_simple').value='90';
+        $('southBL_simple').value='-90';
+        $('eastBL_simple').value='180';
+        $('westBL_simple').value='-180';
 
-		GeoNetwork.minimapSimpleSearch.updateExtentBox();
-		GeoNetwork.minimapAdvancedSearch.updateExtentBox();
+				GeoNetwork.minimapSimpleSearch.updateExtentBox();
+				GeoNetwork.minimapAdvancedSearch.updateExtentBox();
+				GeoNetwork.minimapRemoteSearch.updateExtentBox();
 
-        //im_mm_redrawAoI();
-        //im_mm_zoomToAoI();
     }  else if (region=="userdefined") {
 		// Do nothing. AoI is set by the user
-    } else
-    {
+    } else {
         getRegion(region);
     }
+
+		$('region').value = $(regionlist).value;
+		$('region_remote').value = $(regionlist).value;
+		$('region_simple').value = $(regionlist).value;
 }
 
 function getRegion(region)
 {
-    if(region)
-        var pars = "id="+region;
+    if (region) 
+			var pars = "id="+region;
 
     var myAjax = new Ajax.Request(
         getGNServiceURL('xml.region.get'),
         {
             method: 'get',
             parameters: pars,
-            onSuccess: getRegion_complete,
+            onSuccess: function(req) {
+    					//Response received
+    					var node = req.responseXML;
+    					var northcc = xml.evalXPath(node, 'response/record/north');
+    					var southcc = xml.evalXPath(node, 'response/record/south');
+    					var eastcc = xml.evalXPath(node, 'response/record/east');
+    					var westcc = xml.evalXPath(node, 'response/record/west');
+
+    					$('northBL').value=northcc;
+    					$('southBL').value=southcc;
+    					$('eastBL').value=eastcc;
+    					$('westBL').value=westcc;
+    					$('northBL_remote').value=northcc;
+    					$('southBL_remote').value=southcc;
+    					$('eastBL_remote').value=eastcc;
+    					$('westBL_remote').value=westcc;
+    					$('northBL_simple').value=northcc;
+    					$('southBL_simple').value=southcc;
+    					$('eastBL_simple').value=eastcc;
+    					$('westBL_simple').value=westcc;
+
+							GeoNetwork.minimapSimpleSearch.updateExtentBox();
+							GeoNetwork.minimapAdvancedSearch.updateExtentBox();
+							GeoNetwork.minimapRemoteSearch.updateExtentBox();
+	
+						},
             onFailure: getRegion_error
         }
     );
 }
 
-function getRegion_complete(req) {
-    //Response received
-    var node = req.responseXML;
-    var northcc = xml.evalXPath(node, 'response/record/north');
-    var southcc = xml.evalXPath(node, 'response/record/south');
-    var eastcc = xml.evalXPath(node, 'response/record/east');
-    var westcc = xml.evalXPath(node, 'response/record/west');
-
-    $('northBL').value=northcc;
-    $('southBL').value=southcc;
-    $('eastBL').value=eastcc;
-    $('westBL').value=westcc;
-
-	GeoNetwork.minimapSimpleSearch.updateExtentBox();
-	GeoNetwork.minimapAdvancedSearch.updateExtentBox();
-	
-    //im_mm_redrawAoI();
-    //im_mm_zoomToAoI();
-}
 
 function getRegion_error() {
     alert(translate("error"));
 }
 
-function updateAoIFromForm() {
-  var nU = Number($('northBL').value);
-  var sU = Number($('southBL').value);
-  var eU = Number($('eastBL').value);
-  var wU = Number($('westBL').value);
-
-  if (nU < sU) { alert(translate("northSouth")); }
-  else if (nU > 90) { alert(translate("north90")); }
-  else if (sU < -90) { alert(translate("south90")); }
-  else if (eU < wU) { alert(translate("eastWest")); }
-  else if (eU > 180) { alert(translate("east180")); }
-  else if (wU < -180) { alert(translate("west180")); }
-  else
-  {
-    im_mm_redrawAoI();
-    im_mm_zoomToAoI();
-    $('updateBB').style.visibility="hidden";
-  }
-}
-
 function AoIrefresh() {
+	$('region_simple').value="userdefined";
+	$('region_remote').value="userdefined";
   $('region').value="userdefined";
-  $('updateBB').style.visibility="visible";
-}
-
-// Update the dropdown list
-function im_mm_aoiUpdated(bUpdate) {
-	$('region').value="userdefined";
 }
 
 function runRssSearch()
@@ -752,7 +749,8 @@ function a(msg) {
 }
 
 function gn_search_error(req) {
-	alert("ERROR " + req.responseText);
+	//alert("ERROR " + req.responseText);
+	Modalbox.show(req.responseText,{title: 'Search Error', width: 600} );
     $('loadingMD') .hide();
 	return -1;
 }
@@ -794,6 +792,25 @@ function runCategorySearch(category)
 /**********************************************************
 *** Search helper functions
 **********************************************************/
+
+function fetchMultipleParam(p)
+{
+  var pL = $(p);
+  var param = "&"+p+"=";
+  if (!pL)
+    return param;
+  else {
+    var pars = "";
+    for (i = 0;i < pL.length;i++) {
+      if (pL.options[i].selected) {
+        var t = pL.options[i].value;
+        pars += param+encodeURIComponent(t);
+      }
+    }
+    if (pars == "") return param;
+    else return pars;
+  }
+}
 
 function fetchParam(p)
 {
@@ -855,64 +872,67 @@ function setParam(p, val)
   if (pL) pL.value = val;
 }
 
+function setBoolParam(p, val)
+{
+  var pL = $(p);
+	if (pL) pL.checked = val;
+}
+
 /**********************************************************
-*** Keywords
+*** Selectors for keywords, title, credit etc
 **********************************************************/
 
-  var keyordsSelected = false;
+	function addQuote (id,li){
+    $(id).value = '"'+li.innerHTML+'"';
+	}
 
-  function addQuote (li){
-  $("themekey").value = '"'+li.innerHTML+'"';
-  }
+	var selectorIds = [];
 
   /**
    * Place popup according to input element position.
    * Load list of keywords
-   *
+   * 
    * @param el
    * @param pop
    * @return
    */
-  function popKeyword(el, pop){
+  function popSelector(el, popId, selectorId, service, input){
+
+		var pop = $(popId);
     if (pop.style.display == "block") {
         pop.style.display = "none";
         return false;
     }
-
-    //pop.style.top = el.cumulativeOffset().top + el.getHeight();
-    //pop.style.left = el.cumulativeOffset().left;
+                
+    pop.style.top = el.cumulativeOffset().top + el.getHeight();
+    pop.style.left = el.cumulativeOffset().left;
     pop.style.width = '250px'; //el.getWidth();
     pop.style.display = "block";
 
-	if (!keyordsSelected){
-		new Ajax.Updater("keywordSelector","portal.search.keywords?mode=selector&keyword="+$("themekey").value);
-		keyordsSelected = true;
-	}
+ 		if (!(selectorId in selectorIds) || $(selectorId).empty()) {
+			selectorIds[selectorId] = true;
+			new Ajax.Updater(selectorId,service+"="+$(input).value);
+		}
   }
 
-  function keywordCheck(k, check){
+  function selectorCheck(k, check, input, prep){
 	k = '"'+ k + '"';
 	//alert (k+"-"+check);
 	if (check){	// add the keyword to the list
-		if ($("themekey").value != '') // add the "or" keyword
-			$("themekey").value += ' or '+ k;
-		else
-			$("themekey").value = k;
+		if ($(input).value != '') {// add the prep keyword
+			$(input).value += ' '+prep+' '+k;
+		} else {
+			$(input).value = k;
+		}
 	}else{ // Remove that keyword
-		$("themekey").value = $("themekey").value.replace(' or '+ k, '');
-		$("themekey").value = $("themekey").value.replace(k, '');
-		pos = $("themekey").value.indexOf(" or ");
+		$(input).value = $(input).value.replace(' '+prep+' '+ k, '');
+		$(input).value = $(input).value.replace(k, '');
+		pos = $(input).value.indexOf(' '+prep+' ');
 		if (pos == 0){
-			$("themekey").value = $("themekey").value.substring (4, $("themekey").value.length);
+			$(input).value = $(input).value.substring (prep.length + 2, $(input).value.length);
 		}
 	}
   }
-
-
- /*sets date string (user defined 'from' date to Now()) in advanced search [0: any;1: after; 2: change sel
-
- Function extracted by the current FAO site and adapted
- */
 
 function setDates(what)
 {
@@ -1260,9 +1280,8 @@ function clearNode(node)
 	}			
 }
 
-function im_mm_getURLselectedbbox()
+function im_mm_getURLselectedbbox(northBL, southBL, eastBL, westBL)
 {
-
     return "geometry=POLYGON(( " + $("westBL").value + " "  + $("northBL").value + ", " +
             $("eastBL").value + " " + $("northBL").value + ", " +
             $("eastBL").value + " " + $("southBL").value + ", " +

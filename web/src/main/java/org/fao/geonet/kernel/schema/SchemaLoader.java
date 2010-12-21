@@ -29,6 +29,7 @@ package org.fao.geonet.kernel.schema;
 
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -89,7 +90,7 @@ public class SchemaLoader
 	{
 		ssOverRides = new SchemaSubstitutions(xmlSubstitutionsFile);
 
-		if (xmlSchemaFile.startsWith("_")) return new MetadataSchema();
+		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema();
 
 		//--- PHASE 1 : pre-processing
 		//---
@@ -123,10 +124,27 @@ public class SchemaLoader
             }
         }
 
-		//--- PHASE 3 : add namespaces and elements
+		//--- PHASE 3 : get appinfo, add namespaces and elements
 
 		MetadataSchema mds = new MetadataSchema();
 		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
+
+
+				List<Element> annotation = elFirst.getChildren("annotation", Geonet.XSD_NAMESPACE);
+
+				if (annotation!=null) {
+					List<Element> allAppInfo = new ArrayList<Element>();
+
+					for (Element currAnnotation: annotation) {
+						List<Element> currAppInfo = currAnnotation.getChildren("appinfo",Geonet.XSD_NAMESPACE);
+
+						if (currAppInfo != null) {
+							allAppInfo.addAll(currAppInfo);
+						}
+					}
+					mds.setRootAppInfoElements(allAppInfo);
+				}
+
         for (ElementInfo ei : alElementFiles) {
             mds.addNS(ei.targetNSPrefix, ei.targetNS);
         }
@@ -329,6 +347,8 @@ public class SchemaLoader
 			mds.addType(cte.name, mdt);
 		}
 
+		// now set the schema to be editable and return
+		mds.setCanEdit(true);
 		return mds;
 	}
 	

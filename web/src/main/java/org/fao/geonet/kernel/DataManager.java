@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
@@ -87,16 +88,21 @@ public class DataManager
 	/** initializes the search manager and index not-indexed metadata
 	  */
 
-	public DataManager(ServiceContext context, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String appPath) throws Exception
+	public DataManager(ServiceContext context, SchemaManager scm, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String appPath) throws Exception
 	{
 		searchMan = sm;
 		accessMan = am;
 		settingMan= ss;
-        servContext=context;
+		schemaMan = scm;
+		editLib = new EditLib(schemaMan);
+    servContext=context;
 
 		this.baseURL = baseURL;
         this.dataDir = dataDir;
 		this.appPath = appPath;
+
+		stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
+
 
 		XmlSerializer.setSettingManager(ss);
 
@@ -254,7 +260,7 @@ public class DataManager
 
 	    Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
 
-	    indexMetadata(dbms, id, searchMan, false);
+	    indexMetadata(dbms, id, searchMan, schemaMan, false);
 	}
 
 	//--------------------------------------------------------------------------
@@ -273,23 +279,23 @@ public class DataManager
 
 	public void indexMetadataGroup(Dbms dbms, String id) throws Exception {
 		Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
-		indexMetadata(dbms, id, searchMan, true);
+		indexMetadata(dbms, id, searchMan, schemaMan, true);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public static void indexMetadata(Dbms dbms, String id, SearchManager sm) throws Exception
+	public static void indexMetadata(Dbms dbms, String id, SearchManager sm, SchemaManager scm) throws Exception
 	{
-		indexMetadata(dbms, id, sm, false);
+		indexMetadata(dbms, id, sm, scm, false);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public static void indexMetadata(Dbms dbms, String id, SearchManager sm, boolean indexGroup) throws Exception
+	public static void indexMetadata(Dbms dbms, String id, SearchManager sm, SchemaManager scm, boolean indexGroup) throws Exception
 	{
 		try
 		{
-			indexMetadataI(dbms, id, sm, indexGroup);
+			indexMetadataI(dbms, id, sm, scm, indexGroup);
 		}
 		catch (Exception e)
 		{
@@ -300,7 +306,7 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	private static void indexMetadataI(Dbms dbms, String id, SearchManager sm, boolean indexGroup) throws Exception
+	private static void indexMetadataI(Dbms dbms, String id, SearchManager sm, SchemaManager schemaMan, boolean indexGroup) throws Exception
 	{
 		Vector<Element> moreFields = new Vector<Element>();
 
@@ -354,7 +360,7 @@ public class DataManager
 		moreFields.add(makeField("_source",      source,      true, true, false));
 		moreFields.add(makeField("_isTemplate",  isTemplate,  true, true, false));
 		moreFields.add(makeField("_title",       title,       true, true, false));
-		moreFields.add(makeField("_uuid",        uuid,        true, true, false));
+		moreFields.add(makeField("_uuid",        uuid,        true, true, true));
 		moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
 		moreFields.add(makeField("_owner",       owner,       true, true, false));
 		moreFields.add(makeField("_dummy",       "0",        false, true, false));
@@ -387,9 +393,9 @@ public class DataManager
         }
 
 		if (indexGroup) {
-			sm.indexGroup(schema, md, id, moreFields, isTemplate, title);
+			sm.indexGroup(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
 		} else {
-			sm.index(schema, md, id, moreFields, isTemplate, title);
+			sm.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
 		}
 	}
 
@@ -434,44 +440,81 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public void addSchema(String id, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutesFile) throws Exception
-	{
-		editLib.addSchema(id, xmlSchemaFile, xmlSuggestFile, xmlSubstitutesFile);
-	}
-
-	//--------------------------------------------------------------------------
-
 	public MetadataSchema getSchema(String name)
 	{
-		return editLib.getSchema(name);
+		return schemaMan.getSchema(name);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public Set<String> getSchemas()
 	{
-		return editLib.getSchemas();
+		return schemaMan.getSchemas();
 	}
 
 	//--------------------------------------------------------------------------
 
 	public boolean existsSchema(String name)
 	{
-		return editLib.existsSchema(name);
+		return schemaMan.existsSchema(name);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public String getSchemaDir(String name)
 	{
-		return editLib.getSchemaDir(name);
+		return schemaMan.getSchemaDir(name);
+	}
+
+	//--------------------------------------------------------------------------
+	// Use this validate method for XML documents with dtd
+	public void validate(String schema, Document doc) throws Exception
+	{
+		Xml.validate(doc);	
+	}
+
+	//--------------------------------------------------------------------------
+	// Use this validate method for XML documents with xsd validation
+	public void validate(String schema, Element md) throws Exception
+	{
+		String schemaLoc = md.getAttributeValue("schemaLocation", Geonet.XSI_NAMESPACE);
+		Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of "+schemaLoc);
+		if (schemaLoc == null) schemaLoc = "";
+
+		if (schema == null) {
+			// must use schemaLocation 
+			Xml.validate(md);
+		} else {
+			// if schemaLocation use that
+			if (!schemaLoc.equals("")) { 
+				Xml.validate(md);
+			// otherwise use supplied schema name 
+			} else {
+				Xml.validate(getSchemaDir(schema) + Geonet.File.SCHEMA, md);
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void validate(String schema, Element md) throws Exception
+	public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception
 	{
-		Xml.validate(editLib.getSchemaDir(schema) + Geonet.File.SCHEMA, md);
+		String schemaLoc = md.getAttributeValue("schemaLocation", Geonet.XSI_NAMESPACE);
+		Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of "+schemaLoc);
+		if (schemaLoc == null) schemaLoc = "";
+
+		if (schema == null) {
+			// must use schemaLocation 
+			return Xml.validateInfo(md, eh);
+		} else {
+			// if schemaLocation use that
+			if (!schemaLoc.equals("")) { 
+				return Xml.validateInfo(md, eh);
+			// otherwise use supplied schema name 
+			} else {
+				return Xml.validateInfo(getSchemaDir(schema) + Geonet.File.SCHEMA, md, eh);
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -489,7 +532,13 @@ public class DataManager
 			return record.getChildText("schemaid");
 		}
 	}
-	
+
+	//--------------------------------------------------------------------------
+
+	public Element enumerateTree(Element md) throws Exception {
+		editLib.enumerateTree(md);
+		return md;
+	}
 
 	//--------------------------------------------------------------------------
 	/**
@@ -576,7 +625,7 @@ public class DataManager
 		Element xsdErrors;
 		
 		try {
-		    xsdErrors = Xml.validateInfo(schemaDir + Geonet.File.SCHEMA,
+		    xsdErrors = validateInfo(schemaDir + Geonet.File.SCHEMA,
 				md, errorHandler);
 		}catch (Exception e) {
 		    xsdErrors = JeevesException.toElement(e);
@@ -625,7 +674,7 @@ public class DataManager
 
 	public String extractUUID(String schema, Element md) throws Exception
 	{
-		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.EXTRACT_UUID;
+		String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_UUID;
 		String uuid       = Xml.transform(md, styleSheet).getText().trim();
 
 		Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '"+ uuid +"' for schema '"+ schema +"'");
@@ -653,7 +702,7 @@ public class DataManager
 
 		//--- do an XSL  transformation
 
-		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.SET_UUID;
+		String styleSheet = getSchemaDir(schema) + Geonet.File.SET_UUID;
 
 		return Xml.transform(root, styleSheet);
 	}
@@ -664,6 +713,20 @@ public class DataManager
 		return dbms.select(query, harvestingSource).getChildren();
 	}
 
+	//--------------------------------------------------------------------------
+
+	public Element extractSummary(Element md) throws Exception
+	{
+		String styleSheet = stylePath + Geonet.File.METADATA_BRIEF;
+		Element summary       = Xml.transform(md, styleSheet);
+
+		Log.debug(Geonet.DATA_MANAGER, "Extracted summary '\n"+Xml.getString(summary));
+
+		//--- needed to detach md from the document
+		md.detach();
+
+		return summary;
+	}
 
 	//--------------------------------------------------------------------------
 
@@ -842,95 +905,29 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
+	public String autodetectSchema(Document doc)
+	{
+		return autodetectSchema(doc.getRootElement());
+	}
+
+	//--------------------------------------------------------------------------
+		
 	public String autodetectSchema(Element md)
 	{
-		Namespace nons= Namespace.NO_NAMESPACE;
-		
-		Namespace metadatadRootElemenNSUri = md.getNamespace();
-
-		List<Namespace> metadataAdditionalNS = md.getAdditionalNamespaces();
 		
 		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
 				 + "'\n * with namespace:'" + md.getNamespace()
-				 + "\n * with additional namespaces:" + metadataAdditionalNS.toString());
-		
-		if (md.getName().equals("Record") && md.getNamespace().equals(Csw.NAMESPACE_CSW)) {
-			return "csw-record";
-		} else if (md.getNamespace().equals(nons)) {
-			if (md.getName().equals("Metadata")) {
-				return "iso19115";
-			}
-
-			/* there are some other suggested container names,
-			 * like <dc>, <dublinCore>, <resource>, <record> and <metadata>
-			 * We may need to also check for those on import and export
-			 */
-			if (md.getName().equals("simpledc")) {
-				return "dublin-core";
-			}
-			if (md.getName().equals("metadata")) {
-				return "fgdc-std";
-			}
-		} else if (metadataAdditionalNS.contains(Csw.NAMESPACE_GMD)
-				|| metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
-			// Here we have an iso19139 or an ISO profil
-			
-			// the root element will have different namespace (element name
-			// and additionnal namespace).
-			// this is important for profiles which usually need to override the top level
-			// element for proper definition 
-			// eg. mcp:MD_Metadata versus wmo:MD_Metadata
-			//
-			// But profil for france does not override top level element. But only sub
-			// elements.
-			// 
-			// we suppose that the root element declare the prime namespace of the profil
-			// declared as targetNamespace of schema.xsd.
-			// eg. <gmd:MD_Metadata  xmlns:gmd="http://www.isotc211.org/2005/gmd
-			//	 xmlns:fra="http://www.cnig.gouv.fr/2005/fra" ...
-			
-			// FIXME : Issue if :
-			// eg. <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd ..;
-			//	 <fra:FRA_DataIdentification xmlns:fra="http://www.cnig.gouv.fr/2005/fra">
-			// if profil specific namespace only declared on sub elements and not on root.
-
-			
-			for (String schema : getSchemas()) {
-				MetadataSchema mds = getSchema(schema);
-				String primeNs = mds.getPrimeNS();
-
-				// Check if gmd is not the root element namespace
-				// and root element as a namespace which is
-				// defined in one schema, we have an ISO profil
-				// and current schema is ok. 
-				if (metadatadRootElemenNSUri.getURI().equals(primeNs) && 
-						!metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
-					return schema;
-				}
-				
-				// Check if a prime namespace exists in all
-				// additional namespaces of the root element
-				for (Namespace ns : metadataAdditionalNS) {
-                    if (ns.equals(Csw.NAMESPACE_CSW) || ns.equals(Csw.NAMESPACE_GFC)) continue;
-                    
-					if (ns.getURI().equals(primeNs) &&
-							metadatadRootElemenNSUri.equals(Csw.NAMESPACE_GMD)) {
-						return schema;
-					}
-				}
-			}
-			
-			// Default schema name is 
-			return "iso19139";
-		}
-		return null;
+				 + "\n * with additional namespaces:" + md.getAdditionalNamespaces().toString());
+		String schema =  schemaMan.autodetectSchema(md);
+		Log.debug(Geonet.DATA_MANAGER, "Schema detected was "+schema);
+		return schema;
 	}
-    //--------------------------------------------------------------------------
-    public void updateDisplayOrder(Dbms dbms, String id, String displayOrder) throws Exception {
-        String query = "UPDATE Metadata SET displayOrder = ? WHERE id = ?";
-        dbms.execute(query, new Integer(displayOrder), new  Integer(id));
-    }
-
+		
+  //--------------------------------------------------------------------------
+  public void updateDisplayOrder(Dbms dbms, String id, String displayOrder) throws Exception {
+    String query = "UPDATE Metadata SET displayOrder = ? WHERE id = ?";
+    dbms.execute(query, new Integer(displayOrder), new  Integer(id));
+  }
 
 	//--------------------------------------------------------------------------
 
@@ -1059,8 +1056,8 @@ public class DataManager
 		//--- generate a new metadata id
 		int id = sf.getSerial(dbms, "Metadata");
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid,
-										 owner, groupOwner, "n");
+		return insertMetadataExt(dbms, schema, md, id, source, createDate, 
+											changeDate, uuid, owner, groupOwner, "", "n");
 	}
 
 	//--------------------------------------------------------------------------
@@ -1081,8 +1078,8 @@ public class DataManager
 		if (isTemplate.equals("n"))
 			md = updateFixedInfoExisting(schema, Integer.toString(id), md, uuid);
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, changeDate, uuid,
-										 owner, groupOwner, isTemplate);
+		return insertMetadataExt(dbms, schema, md, id, source, createDate, 
+											changeDate, uuid, owner, groupOwner, "", isTemplate);
 	}
 
 	//--------------------------------------------------------------------------
@@ -1091,7 +1088,8 @@ public class DataManager
 
 	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
 											  String source, String createDate, String changeDate,
-											  String uuid, int owner, String groupOwner, String isTemplate) throws Exception
+											  String uuid, int owner, String groupOwner, 
+												String docType, String isTemplate) throws Exception
 	{
 		if (source == null)
 			source = getSiteID();
@@ -1102,7 +1100,7 @@ public class DataManager
 		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
 
 	    String record = XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
-											 changeDate, isTemplate, null, owner, groupOwner);
+										 changeDate, isTemplate, null, owner, groupOwner, docType);
 
         // Notifies the metadata change to metatada notifier service
         notifyMetadataChange(dbms, md, id + "");
@@ -1333,7 +1331,7 @@ public class DataManager
 		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
 		
 		Element child = null;
-		MetadataSchema mds = editLib.getSchema(schema);
+		MetadataSchema mds = getSchema(schema);
 		
 		if (childName != null) {
 			if (childName.equals("geonet:attribute")) {
@@ -1469,6 +1467,7 @@ public class DataManager
 		// if we don't need a child then create a geonet:null element
 		if (result == null) {
 			result = new Element(Edit.RootChild.NULL, Edit.NAMESPACE);
+			result.addContent(info);
 		}
 
 		//--- reattach the info element to the metadata
@@ -2129,6 +2128,23 @@ public class DataManager
 		searchMan.delete("_id", id+"");
 	}
 
+	public synchronized void deleteMetadataGroup(Dbms dbms, String id) throws Exception
+	{
+		//--- remove operations
+		deleteMetadataOper(dbms, id, false);
+
+		//--- remove categories
+		deleteAllMetadataCateg(dbms, id);
+
+		dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", new Integer(id));
+
+		//--- remove metadata
+		XmlSerializer.delete(dbms, "Metadata", id);
+
+		//--- update search criteria
+		searchMan.deleteGroup("_id", id+"");
+	}
+
 	//--------------------------------------------------------------------------
 	/** Remove all operations stored for a metadata
 	  */
@@ -2173,7 +2189,7 @@ public class DataManager
 
 		//--- do an XSL  transformation
 
-		String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.EXTRACT_THUMBNAILS;
+		String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_THUMBNAILS;
 
 		Element result = Xml.transform(md, styleSheet);
 		result.addContent(new Element("id").setText(id));
@@ -2253,6 +2269,51 @@ public class DataManager
 
 		//--- update search criteria
 		indexMetadata(dbms, id);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void setDataCommons(Dbms dbms, String id, String licenseurl, String imageurl, String jurisdiction, String licensename, String type) throws Exception
+	{
+		Element env = new Element("env");
+		env.addContent(new Element("imageurl").setText(imageurl));
+		env.addContent(new Element("licenseurl").setText(licenseurl));
+		env.addContent(new Element("jurisdiction").setText(jurisdiction));
+		env.addContent(new Element("licensename").setText(licensename));
+		env.addContent(new Element("type").setText(type));
+
+		manageCommons(dbms,id,env,Geonet.File.SET_DATACOMMONS);
+	}
+
+	//--------------------------------------------------------------------------
+
+	public void setCreativeCommons(Dbms dbms, String id, String licenseurl, String imageurl, String jurisdiction, String licensename, String type) throws Exception
+	{
+		Element env = new Element("env");
+		env.addContent(new Element("imageurl").setText(imageurl));
+		env.addContent(new Element("licenseurl").setText(licenseurl));
+		env.addContent(new Element("jurisdiction").setText(jurisdiction));
+		env.addContent(new Element("licensename").setText(licensename));
+		env.addContent(new Element("type").setText(type));
+
+		manageCommons(dbms,id,env,Geonet.File.SET_CREATIVECOMMONS);
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void manageCommons(Dbms dbms, String id, Element env,
+										  String styleSheet) throws Exception
+	{
+		Element md = XmlSerializer.select(dbms, "Metadata", id);
+
+		if (md == null)
+			return;
+
+		md.detach();
+
+		String schema = getMetadataSchema(dbms, id);
+
+		transformMd(dbms,id,md,env,schema,styleSheet);
 	}
 
 	//--------------------------------------------------------------------------
@@ -2475,7 +2536,6 @@ public class DataManager
         return unregisteredMetadata;
     }
 
-
     //--------------------------------------------------------------------------
 
     /**
@@ -2602,7 +2662,7 @@ public class DataManager
 	        result.addContent(env);
 
 	        //--- do an XSLT transformation using update-fixed-info.xsl
-	        String styleSheet = editLib.getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+	        String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
              result = Xml.transform(result, styleSheet);
             return result;
         }
@@ -2690,7 +2750,7 @@ public class DataManager
 
 			// --- do an XSL transformation
 
-			String styleSheet = editLib.getSchemaDir(parentSchema)
+			String styleSheet = getSchemaDir(parentSchema)
 					+ Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO;
 			Element childForUpdate = new Element("root");
 			childForUpdate = Xml.transform(rootEl, styleSheet, params);
@@ -2811,7 +2871,7 @@ public class DataManager
 		String host    = settingMan.getValue("system/server/host");
 		String port    = settingMan.getValue("system/server/port");
 		addElement(info, Edit.Info.Elem.BASEURL, "http://" + host + (port == "80" ? "" : ":" + port) + baseURL);
-
+		addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en" );
 		return info;
 	}
 
@@ -2981,17 +3041,21 @@ public class DataManager
 
 	private String baseURL;
 
-	private EditLib editLib = new EditLib();
+	private EditLib editLib;
 
 	private AccessManager  accessMan;
 	private SearchManager  searchMan;
 	private SettingManager settingMan;
+	private SchemaManager  schemaMan;
 	private HarvestManager harvestMan;
-    private ServiceContext servContext;
+  private String dataDir;
+  private ServiceContext servContext;
 
-    private String dataDir;
 	private String appPath;
 	private boolean rebuilding = false;
+
+	private String stylePath;
+	private static String FS = File.separator;
 }
 
 //=============================================================================

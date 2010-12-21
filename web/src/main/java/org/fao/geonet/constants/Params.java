@@ -31,7 +31,10 @@ package org.fao.geonet.constants;
 public class Params
 {
 	public static final String ACCESS       = "access";
+	public static final String BTN          = "btn";
 	public static final String CATEGORY     = "category";
+	public static final String CHOICE             = "choice";
+	public static final String JURISDICTION       = "jurisdiction";
 	public static final String CHILD        = "child";
 	public static final String COMMENTS     = "comments";
 	public static final String SUBJECT      = "subject";
@@ -54,8 +57,10 @@ public class Params
     public static final String CHILD_UUID   = "childUuid";
 	public static final String UUID         = "uuid";
 	public static final String URI          = "uri";
+	public static final String URL          = "url";
 	public static final String NAME         = "name";
 	public static final String OPERATION    = "operation";
+	public static final String ORIGINALCHOICE     = "originalchoice";
 	public static final String ORG          = "org";
 	public static final String OVERWRITE    = "overwrite";
 	public static final String PASSWORD     = "password";
@@ -100,6 +105,9 @@ public class Params
 	public static final String CREATE_SMALL         = "createSmall";
 	public static final String SMALL_SCALING_DIR    = "smallScalingDir";
 	public static final String SMALL_SCALING_FACTOR = "smallScalingFactor";
+
+	public static final String THUMBNAIL    = "thumbnail";
+	public static final String RESOURCES    = "resources";
 
 	public class Access
 	{

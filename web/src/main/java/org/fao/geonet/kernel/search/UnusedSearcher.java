@@ -30,6 +30,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
+import org.jdom.Document;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -102,6 +103,12 @@ class UnusedSearcher extends MetaSearcher
 		makeSummary();
 
 		initSearchRange(context);
+	}
+
+	//--------------------------------------------------------------------------------
+
+	public List<Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+		throw new UnsupportedOperationException("Not supported by Unused searcher");
 	}
 
 	//--------------------------------------------------------------------------

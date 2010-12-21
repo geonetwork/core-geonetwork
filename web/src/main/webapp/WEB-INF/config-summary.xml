@@ -5,6 +5,9 @@
 		<hits>
 			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string" max="100"/>            			
 		</hits>
+    <titles>
+      <item name="title" plural="titles" indexKey="title" order="freq" type="string" max="100"/>
+    </titles>
 		<results>
 			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string" max="100"/>			
 		</results>

@@ -102,11 +102,6 @@ public class SelectionSearch implements Service
 			context.debug("List of selected uuids: " + uuids);
 			params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
 
-			// if not going to restore last search, destroy selection
-			if (restoreLastSearch.equals("no")) {
-				sm.close();
-				sm = null;
-			}
 		} 
 		
 		// perform the search and save search result into session

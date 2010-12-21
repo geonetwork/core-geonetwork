@@ -29,8 +29,10 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
@@ -94,6 +96,8 @@ public class ListIdentifiers extends AbstractTokenLister
 	private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager   sm = gc.getSchemamanager();
 
 		String query = "SELECT uuid, schemaId, changeDate FROM Metadata WHERE id=?";
 
@@ -113,7 +117,7 @@ public class ListIdentifiers extends AbstractTokenLister
 		//--- try to disseminate format if not by schema then by conversion
 
 		if (!prefix.equals(schema)) {
-			if (!Lib.existsConverter(schema, context.getAppPath(), prefix)) {
+			if (!Lib.existsConverter(sm.getSchemaDir(schema), prefix)) {
 				return null;
 			}
 		}

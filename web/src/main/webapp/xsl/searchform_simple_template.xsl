@@ -4,8 +4,9 @@
 	exclude-result-prefixes="xsl geonet">
 
 
-	<xsl:template name="geofields">
+	<xsl:template name="simple_search_panel">
 		
+	 <form name="simple_search_form" id="simple_search_form">
 		<div style="border-bottom: 1px solid">
 		
 			<!-- What --> 
@@ -22,21 +23,20 @@
 				<div id="ol_minimap1" style="margin-left: 60px; margin-top:5px"></div>
 						
 				<xsl:comment>COORDS</xsl:comment>
-				<!-- Share the hidden fields in advanced search map -->
-				<!--input type="hidden" class="content" id="northBL" name="northBL"  size="7"
+
+				<input type="hidden" class="content" id="northBL_simple" name="northBL"  size="7"
 					value="{/root/gui/searchDefaults/northBL}"/>
-				<input type="hidden" class="content" id="westBL" name="westBL" size="7"
+				<input type="hidden" class="content" id="westBL_simple" name="westBL" size="7"
 					value="{/root/gui/searchDefaults/westBL}"/>
-				<input type="hidden" class="content" id="eastBL" name="eastBL" size="7"
+				<input type="hidden" class="content" id="eastBL_simple" name="eastBL" size="7"
 					value="{/root/gui/searchDefaults/eastBL}"/>
-				<input type="hidden" class="content" id="southBL" name="southBL" size="7"
+				<input type="hidden" class="content" id="southBL_simple" name="southBL" size="7"
 					value="{/root/gui/searchDefaults/southBL}"/>
-				<input type="hidden" class="content" id="relation" name="relation" size="7"
-					value="overlaps"/-->
+				<input type="hidden" class="content" id="relation_simple" name="relation" size="7" value="overlaps"/>
 							
 				<div style="margin-left: 60px; margin-top:5px">
 					<!-- Region -->
-					<select class="content" name="region_simple" id="region_simple" onchange="javascript:doRegionSearchSimple();">
+					<select class="content" name="region_simple" id="region_simple" onchange="javascript:doRegionSearch(this.id);">
 							<option value="">
 							<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -88,13 +88,10 @@
 				</table>		
 			</div>
 			
-			<!-- Links to Reset fields, Advanced Search and Options panel --> 
+			<!-- Links to Reset fields and Options panel --> 
 			<div style="padding-left:10px;padding-top:5px;" align="right">
 				<a onClick="resetSimpleSearch();" style="cursor:pointer; padding-right:10px; padding-left:10px;">
 					<xsl:value-of select="/root/gui/strings/reset"/>
-				</a>
-				<a onClick="showAdvancedSearch()" style="cursor:pointer;">
-					<xsl:value-of select="/root/gui/strings/extended"/>
 				</a>
 			</div>
 			
@@ -159,10 +156,11 @@
 			</div>
 		
 		</div>
+	 </form>
 					
-		<script language="JavaScript" type="text/javascript">
+	 <script language="JavaScript" type="text/javascript">
 			Event.observe('any', 		'keypress',	gn_anyKeyObserver);
-		</script>
+	 </script>
 	</xsl:template>
 
 </xsl:stylesheet>

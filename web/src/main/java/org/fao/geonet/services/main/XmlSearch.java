@@ -94,7 +94,6 @@ public class XmlSearch implements Service
 		searcher.search(context, elData, _config);
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-		
 		if (!"0".equals(Util.getParam(params, "summaryOnly", "0"))) {
 			return searcher.getSummary();
 		} else {

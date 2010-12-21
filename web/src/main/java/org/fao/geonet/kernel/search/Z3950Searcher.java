@@ -31,7 +31,9 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
 import org.jzkit.search.LandscapeSpecification;
@@ -47,8 +49,6 @@ import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
 import org.jzkit.search.util.ResultSet.IRResultSetStatus;
 import org.jzkit.service.z3950server.ZSetInfo;
 import org.springframework.context.ApplicationContext;
-import org.w3c.dom.Document;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -59,6 +59,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -76,7 +77,8 @@ class Z3950Searcher extends MetaSearcher
 	//public final static int COMPLETE  = SearchTask.TASK_COMPLETE;
 	//public final static int IDLE      = SearchTask.TASK_IDLE;
 
-	private SearchManager _sm;
+	private SchemaManager _schemaMan;
+	private SearchManager _searchMan;
 	private String        _styleSheetName;
 	private int size = 0;
 	private int status = 0;
@@ -90,9 +92,10 @@ class Z3950Searcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 	// constructor
-	public Z3950Searcher(SearchManager sm, String styleSheetName)
+	public Z3950Searcher(SearchManager searchMan, SchemaManager schemaMan, String styleSheetName)
 	{
-		_sm             = sm;
+		_schemaMan      = schemaMan;
+		_searchMan      = searchMan;
 		_styleSheetName = styleSheetName;
 	}
 
@@ -110,7 +113,7 @@ class Z3950Searcher extends MetaSearcher
 		if (query == null) { 
 			request.addContent(Lib.db.select(dbms, "Regions", "region"));
 
-			Element xmlQuery = _sm.transform(_styleSheetName, request);
+			Element xmlQuery = _searchMan.transform(_styleSheetName, request);
 
 			Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING XML QUERY:\n"+ Xml.getString(xmlQuery));
 			query = newQuery(xmlQuery);
@@ -133,7 +136,8 @@ class Z3950Searcher extends MetaSearcher
 			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'timeout' parameter parameter: " + sTimeout); }
 		}
 		String sHtml  = request.getChildText("serverhtml");
-		_html = sHtml.equals("on");
+		if (sHtml == null) _html = false;
+		else _html = sHtml.equals("on");
 
 		// perform the search
 		// initialize the collection
@@ -182,18 +186,35 @@ class Z3950Searcher extends MetaSearcher
 	//-----------------------------------------------------------------------------
 
 	public Element present(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+		List<Document> docs = presentDocuments(srvContext, request, config);
+		Element response = new Element("response");
+		response.setAttribute("from",  getFrom()+"");
+		response.setAttribute("to",    getTo()+"");
+
+		for (Document doc : docs) { // get root element and add schema
+			Element md = (Element)doc.getRootElement().detach();
+			if (!md.getName().equals("summary")) {
+				Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+				if (info.getChild(Edit.Info.Elem.SCHEMA) == null) {
+					addElement(info, Edit.Info.Elem.SCHEMA, _schemaMan.autodetectSchema(md));
+				}
+			}
+			response.addContent(md);
+		}
+		return response;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public List<Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
 		Log.debug(Geonet.SEARCH_ENGINE, "Presenting Z39.50 record for request:\n" + Xml.getString(request));
 		updateSearchRange(request);
 
 		// get results
-		Element response =  new Element("response");
-		response.setAttribute("from",  getFrom()+"");
-		response.setAttribute("to",    getTo()+""); 
-
-		Log.debug(Geonet.SEARCH_ENGINE, "Range is from:"+ getFrom() +", to:"+getTo());
+		List<Document> response = new ArrayList<Document>();
 
 		Element summary = makeSummary();
-		response.addContent(summary);
+		response.add(new Document(summary));
 
 		if (getTo() > 0)
 		{
@@ -211,7 +232,10 @@ class Z3950Searcher extends MetaSearcher
 			InformationFragment frags[] = res.records;
 
 			// FIXME: we may not get all the records we want back sometimes!
-			int theLimit = Math.min(getPageSize(),frags.length);
+			int fragsLength = 0;
+			if (frags != null) fragsLength = frags.length;
+			int theLimit = Math.min(getPageSize(),fragsLength);
+
 			for (int i = 0; i < theLimit; i++) {
 				InformationFragment fraghtml = null;
 				if (_html) {
@@ -221,20 +245,19 @@ class Z3950Searcher extends MetaSearcher
 				try {
 					DOMBuilder builder = new DOMBuilder();
 	
-					org.w3c.dom.Document doc = (Document)frag.getOriginalObject();
-					org.w3c.dom.Element  el  = doc.getDocumentElement();
-					Element md = builder.build(el);
-					md.detach();
+					org.w3c.dom.Document doc = (org.w3c.dom.Document)frag.getOriginalObject();
+					Document jDoc = builder.build(doc);
+					Element md = jDoc.getRootElement();
 
 					String elementFileName = "none";
 					String htmlError = "";
 					if (_html) {
 						Object docObj = fraghtml.getOriginalObject();
 						if (docObj instanceof org.w3c.dom.Document) {
-							org.w3c.dom.Document dochtml = (Document)fraghtml.getOriginalObject();	
+							org.w3c.dom.Document dochtml = (org.w3c.dom.Document)fraghtml.getOriginalObject();	
 							String fileid = UUID.randomUUID().toString();
-							String filename = srvContext.getAppPath()+_sm.getHtmlCacheDir()+File.separator+fileid+".html";
-							elementFileName = srvContext.getBaseUrl()+"/"+_sm.getHtmlCacheDir()+"/"+fileid+".html";
+							String filename = srvContext.getAppPath()+_searchMan.getHtmlCacheDir()+File.separator+fileid+".html";
+							elementFileName = srvContext.getBaseUrl()+"/"+_searchMan.getHtmlCacheDir()+"/"+fileid+".html";
 							File outHtmlFile = new File(filename);
 							try {
 								Transformer xformer = TransformerFactory.newInstance().newTransformer();
@@ -258,6 +281,7 @@ class Z3950Searcher extends MetaSearcher
 					addElement(info, Edit.Info.Elem.ID,     (getFrom() + i)+"");
 					addElement(info, Edit.Info.Elem.SERVER, frag.getSourceRepositoryID());
 					addElement(info, Edit.Info.Elem.COLLECTION, frag.getSourceCollectionName());
+					addElement(info, Edit.Info.Elem.SCHEMA, _schemaMan.autodetectSchema(md));
 					if (_html) {
 						Element html = new Element(Edit.Info.Elem.HTML).setText(elementFileName);
 						if (!htmlError.equals("")) html.setAttribute("error", htmlError);
@@ -265,8 +289,9 @@ class Z3950Searcher extends MetaSearcher
 					}
 
 					md.addContent(info);
+					Log.debug(Geonet.SEARCH_ENGINE, "Add info element of "+Xml.getString(info));
 
-					response.addContent(md);
+					response.add(jDoc);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					Element error = new Element("error");
@@ -275,7 +300,7 @@ class Z3950Searcher extends MetaSearcher
 					error.setAttribute("id",      (getFrom() + i)+"");
 					error.setAttribute("message", ex.getClass().getName() + ": " + ex.getMessage());
 					Log.error(Geonet.SEARCH_ENGINE, "Exception raised during Z3950 search and retrieval "+" Server: "+error.getAttributeValue("server")+" id: "+error.getAttributeValue("id"));
-					response.addContent(error);
+					response.add(new Document(error));
 				}
 			}
 
@@ -283,10 +308,9 @@ class Z3950Searcher extends MetaSearcher
 			for (int i = theLimit; i < getPageSize();i++) {
 				Element error = new Element("error");
 				error.setAttribute("message", "Unable to retrieve record "+(getFrom()+i));
-				response.addContent(error);
+				response.add(new Document(error));
 			}
 		}
-		Log.debug(Geonet.SEARCH_ENGINE, "Presented metadata is:\n" + Xml.getString(response));
 
 		return response;
 	}

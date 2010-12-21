@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.util.Version;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.jdom.DefaultJDOMFactory;
@@ -29,7 +30,7 @@ public class LuceneQueryTest extends TestCase {
 	public LuceneQueryTest(String name) throws Exception {
 		super(name);
 
-	_analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer());
+		_analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer());
     _analyzer.addAnalyzer("_uuid", new GeoNetworkAnalyzer());
     _analyzer.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
     _analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
@@ -765,7 +766,8 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(request);
 		// verify query
-		assertEquals("+(+(_cat:hoeperdepoep)) +_isTemplate:n", query.toString());
+		assertEquals("+(+_cat:hoeperdepoep) +_isTemplate:n", query.toString());
+
 	}
 
     /**
@@ -894,7 +896,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(request);
 		// verify query
-		assertEquals("+(+(_cat:hoeperdepoep) +(_cat:zat _cat:op _cat:de _cat:stoep)) +_isTemplate:n", query.toString());
+		assertEquals("+(+_cat:hoeperdepoep +_cat:zat op de stoep) +_isTemplate:n", query.toString());
 	}
 
 	/**

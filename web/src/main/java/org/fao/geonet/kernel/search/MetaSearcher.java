@@ -28,7 +28,9 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.util.SearchDefaults;
+import org.jdom.Document;
 import org.jdom.Element;
+import java.util.List;
 
 //--------------------------------------------------------------------------------
 // interface to search metadata
@@ -45,6 +47,8 @@ public abstract class MetaSearcher
 	public abstract void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception;
 
 	public abstract Element present(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception;
+
+	public abstract List<Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception;
 
 	public abstract int getSize();
 

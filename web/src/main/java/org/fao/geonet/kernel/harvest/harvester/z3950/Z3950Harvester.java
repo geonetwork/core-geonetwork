@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2009 Swisstopo
+//===	Copyright (C) 2009 GeoNetwork
 //===
 //===	This program is free software; you can redistribute it and/or modify
 //===	it under the terms of the GNU General Public License as published by
@@ -21,21 +21,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
-
 
 /**
  * {@link Z3950Harvester} needs to be configured in xml/repositories.xml.tem in
@@ -64,6 +67,8 @@ public class Z3950Harvester extends AbstractHarvester {
 
 		icon.delete();
 		Lib.sources.delete(dbms, params.uuid);
+
+		// FIXME: Should also delete the categories we have created for servers
 	}
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx,
@@ -134,14 +139,30 @@ public class Z3950Harvester extends AbstractHarvester {
 	protected void doAddInfo(Element node) {
 		// --- if the harvesting is not started yet, we don't have any info
 
-		if (result == null)
-			return;
+		if (serverResults.getNumberOfResults() == 0) return;
 
 		// --- ok, add proper info
 
 		Element info = node.getChild("info");
 		Element res = new Element("result");
+		Z3950Result result = new Z3950Result();
 
+		// --- total stats per server and store in result
+
+		Map<String,Z3950Result> results = serverResults.getAllServerResults();
+		for ( Z3950Result serverRes : results.values()) {
+			result.totalMetadata 			+= serverRes.totalMetadata;
+			result.addedMetadata 			+= serverRes.addedMetadata;
+			result.updatedMetadata 		+= serverRes.updatedMetadata;
+			result.unchangedMetadata 	+= serverRes.unchangedMetadata;
+			result.unknownSchema			+= serverRes.unknownSchema;
+			result.unretrievable			+= serverRes.unretrievable;
+			result.badFormat					+= serverRes.badFormat;
+			result.doesNotValidate		+= serverRes.doesNotValidate;
+			result.couldNotInsert			+= serverRes.couldNotInsert;
+		}
+		result.locallyRemoved = serverResults.locallyRemoved;
+		
 		// --- put here harvesting information after it has been executed
 
 		add(res, "total", result.totalMetadata);
@@ -153,6 +174,7 @@ public class Z3950Harvester extends AbstractHarvester {
 		add(res, "unretrievable", result.unretrievable);
 		add(res, "badFormat", result.badFormat);
 		add(res, "doesNotValidate", result.doesNotValidate);
+		add(res, "couldNotInsert", result.couldNotInsert);
 
 		info.addContent(res);
 	}
@@ -161,11 +183,11 @@ public class Z3950Harvester extends AbstractHarvester {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
-		result = h.harvest();
+		serverResults = h.harvest();
 	}
 
 	private Z3950Params params;
-	private Z3950Result result;
+	private Z3950ServerResults serverResults = new Z3950ServerResults(); 
 }
 
 // =============================================================================
@@ -175,12 +197,40 @@ class Z3950Result {
 	public int addedMetadata;
 	public int updatedMetadata;
 	public int unchangedMetadata;
-	public int locallyRemoved;
 	public int unknownSchema;
+	public int locallyRemoved;
 	public int unretrievable;
 	public int badFormat;
 	public int doesNotValidate;
+	public int couldNotInsert;
 }
+
+class Z3950ServerResults {
+	private Map <String,Z3950Result> serverResults = new HashMap<String,Z3950Result>();
+
+	public int locallyRemoved;
+
+	public Z3950Result getServerResult(String serverName) {
+		Z3950Result result = serverResults.get(serverName);
+		if (result == null) {
+			result = new Z3950Result();
+			serverResults.put(serverName,result);
+		}
+		return result;
+	}
+
+	public Map getAllServerResults() {
+		return serverResults;
+	}
+
+	public int getNumberOfResults() {
+		return serverResults.size();
+	}
+}
+
+
+
+
 
 // =============================================================================
 

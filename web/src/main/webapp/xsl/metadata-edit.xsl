@@ -4,10 +4,10 @@
 	exclude-result-prefixes="geonet">
 
 	<!--
-	edit metadata form  
+	edit metadata form 
 	-->
 	<xsl:include href="edit.xsl"/>
-	<xsl:include href="metadata.xsl"/> 
+	<xsl:include href="metadata.xsl"/>
 
 	<xsl:template mode="css" match="/">
 		<xsl:call-template name="geoCssHeader"/>

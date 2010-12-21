@@ -31,18 +31,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -51,12 +56,19 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
 
 import jeeves.exceptions.XSDValidationErrorEx;
+
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
+
 
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+
+import org.apache.xml.resolver.tools.CatalogResolver;
+
+import org.jdom.Content;
+import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -68,6 +80,7 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -77,15 +90,30 @@ import org.xml.sax.helpers.DefaultHandler;
 /** General class of useful static methods
   */
 
-public final class Xml
+public final class Xml 
 {
-	/**
-    * Default constructor.
-    * Builds a Xml.
-    */
-   private Xml() {}
-   
+
+	private static Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+
    //--------------------------------------------------------------------------
+
+	private static SAXBuilder getSAXBuilder(boolean validate) {
+
+		Resolver resolver = ResolverWrapper.getInstance();
+		SAXBuilder builder = new SAXBuilder(validate);
+		builder.setEntityResolver(resolver.getXmlResolver());
+
+		return builder;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static void resetResolver() {
+		Resolver resolver = ResolverWrapper.getInstance();
+		resolver.reset();
+	}
+
+	//--------------------------------------------------------------------------
 	//---
 	//--- Load API
 	//---
@@ -214,6 +242,22 @@ public final class Xml
 	}
 
 	//--------------------------------------------------------------------------
+
+	private static class JeevesURIResolver implements URIResolver {
+
+  	public Source resolve(String href, String base) throws TransformerException {
+		 Resolver resolver = ResolverWrapper.getInstance();
+		 CatalogResolver catResolver = resolver.getCatalogResolver();
+		 Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
+     Source s = catResolver.resolve(href, base);
+		 if (s != null) {
+		 	Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
+		 }
+		 return s;
+		}
+	}
+
+	//--------------------------------------------------------------------------
 	/** Transform an xml tree putting the result to a stream with optional parameters */
 
 	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
@@ -226,6 +270,7 @@ public final class Xml
 		// stylesheet so switch it off but trap any exceptions because this
 		// code is run on transformers other than saxon 
 		TransformerFactory transFact = TransformerFactory.newInstance();
+		transFact.setURIResolver(new JeevesURIResolver());
 		try {
 			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
@@ -245,6 +290,23 @@ public final class Xml
 			}
 			t.transform(srcXml, result);
 		}
+	}
+
+	//--------------------------------------------------------------------------
+	/** Clear the cache used in the stylesheet transformer factory. This will
+	  * only work for the GeoNetwork Caching stylesheet transformer factory. 
+		* This is a no-op for other transformer factories.
+		*/
+
+	public static void clearTransformerFactoryStylesheetCache() {
+		TransformerFactory transFact = TransformerFactory.newInstance();
+		try {
+			Method cacheMethod = transFact.getClass().getDeclaredMethod("clearCache", null);
+			cacheMethod.invoke(transFact, new Object[0]);
+		} catch (Exception e) {
+			System.out.println("Failed to find/invoke clearCache method - continuing ("+e.getMessage()+")");
+		}
+
 	}
 
    // --------------------------------------------------------------------------
@@ -274,6 +336,7 @@ public final class Xml
 
    // Step 4: Setup JAXP using identity transformer
    TransformerFactory factory = TransformerFactory.newInstance();
+	 factory.setURIResolver(new JeevesURIResolver());
    Source xslt = new StreamSource(new File(styleSheetPath));
 		try {
 			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
@@ -324,6 +387,15 @@ public final class Xml
 	/** Converts an xml element to a string */
 
 	public static String getString(Element data)
+	{
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+		return outputter.outputString(data);
+	}
+
+	//---------------------------------------------------------------------------
+
+	public static String getString(DocType data)
 	{
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
@@ -532,26 +604,76 @@ public final class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Validates an xml document with respect to an xml schema described by .xsd file path */
+	/** Validates an XML document using the hints in the DocType (DTD validation)
+      or schemaLocation attribute hint */
 
-	
+	public synchronized static void validate(Document doc) throws Exception {
+		if (doc.getDocType() != null) { // assume DTD validation
+			SAXBuilder builder = getSAXBuilder(true);	
+			Document document = builder.build(new StringReader(getString(doc))); 
+		} 
+
+		Element xml = doc.getRootElement();
+		if (xml != null) {  // try XSD validation
+			String schemaLoc = xml.getAttributeValue("schemaLocation", xsiNS);
+			if (schemaLoc == null || schemaLoc.equals("")) {
+				throw new IllegalArgumentException("XML document missing/blank schemaLocation hints or DocType dtd - cannot validate");
+			}
+			validate(xml);
+		} else {
+			throw new IllegalArgumentException("XML document is missing root element - cannot validate");
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/** Validates an XML document using the hints in the schemaLocation 
+	    attribute */
+	public synchronized static void validate(Element xml) throws Exception {
+		Schema schema = factory().newSchema();
+		ErrorHandler eh = new ErrorHandler();
+		validateRealGuts(schema, xml, eh);
+	}
+
+	//---------------------------------------------------------------------------
+	/** Validates an xml document with respect to an xml schema described by 
+      .xsd file path */
 	public static void validate(String schemaPath, Element xml) throws Exception
 	{
 		Element xsdXPaths = validateInfo(schemaPath,xml);
 		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s)", xsdXPaths);
 	}
 
-	public static void validate(Element xml) throws Exception 
+	//---------------------------------------------------------------------------
+	/** Validates an xml document with respect to schemaLocation hints */
+	public static Element validateInfo(Element xml) throws Exception
 	{
-		//NOTE: Create a schema object without schema file name so that schemas
-		//will be obtained from whatever locations are provided in the document
-		//including over the net
-
-		Schema schema = factory().newSchema();             
 		ErrorHandler eh = new ErrorHandler();
+		Schema schema = factory().newSchema();
 		validateRealGuts(schema, xml, eh);
+		if (eh.errors()) {
+			return eh.getXPaths();
+		} else {
+			return null;
+		}
 	}
 
+	//---------------------------------------------------------------------------
+	/** Validates an xml document with respect to schemaLocation hints using 
+	    supplied error handler */
+	public static Element validateInfo(Element xml, ErrorHandler eh) throws Exception
+	{
+		Schema schema = factory().newSchema();
+		validateRealGuts(schema, xml, eh);
+		if (eh.errors()) {
+			return eh.getXPaths();
+		} else {
+			return null;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/** Validates an xml document with respect to an xml schema described by 
+	    .xsd file path */
 	public static Element validateInfo(String schemaPath, Element xml) throws Exception
 	{
 		ErrorHandler eh = new ErrorHandler();
@@ -563,6 +685,9 @@ public final class Xml
 		}
 	}
 
+	//---------------------------------------------------------------------------
+	/** Validates an xml document with respect to an xml schema described by 
+	    .xsd file path using supplied error handler*/
 	public static Element validateInfo(String schemaPath, Element xml, ErrorHandler eh)
 			throws Exception {
 		validateGuts(schemaPath, xml, eh);
@@ -573,17 +698,30 @@ public final class Xml
 		}
 	}
 	
+	//---------------------------------------------------------------------------
+	/** Called by validation methods that supply an xml schema described by 
+	    .xsd file path */
 	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
 		StreamSource schemaFile = new StreamSource(new File(schemaPath));
 		Schema schema = factory().newSchema(schemaFile);
 		validateRealGuts(schema, xml, eh);
 	}
 
+	//---------------------------------------------------------------------------
+	/** Called by all validation methods to do the real guts of the validation 
+	    job */
 	private static void validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
+
+		Resolver resolver = ResolverWrapper.getInstance();
+
 		ValidatorHandler vh = schema.newValidatorHandler();
+		String nullStr = null;
+		vh.setResourceResolver(resolver.getXmlResolver());
 		vh.setErrorHandler(eh);
+
 		SAXOutputter so = new SAXOutputter(vh);
 		eh.setSo(so);
+
 		so.output(xml);
 	} 
 

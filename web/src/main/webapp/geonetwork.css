@@ -81,6 +81,9 @@ a.no-help:hover {
 	background-repeat:no-repeat;
 
 	padding:0 0 3px 7px;
+	text-align: left;
+	text-transform: uppercase;
+	font-weight: bold;
 
 }
 
@@ -279,6 +282,31 @@ a.content, button.content {
 	text-shadow: gray 2px 2px 3px;
 }
 
+.downloadsummary {
+  margin: 0px;
+}
+
+.downloadsummary button.content, button.dscontent {
+  font-family: Verdana;
+  font-size: 9pt;
+  font-weight: bold;
+  min-width: 10.2em;
+  width: 10.2em;
+  max-width: 400px;
+  cursor: pointer;
+  cursor: hand;
+  border: 1px solid #064367; /* moved here from tr since IE accepts it only here */
+  text-shadow: 2px 1px 1px #062347 !important;
+  color: #FDFDFD;
+  background-color: #4784b8;
+}
+
+button.dscontent {
+  min-width: 12.2em;
+  width: 12.2em;
+  max-width: 600px;
+}
+
 button.content img.icon {
     width: 15px;
     height: 15px;
@@ -308,18 +336,44 @@ td.padded p {
     padding-bottom:2px;
 }
 
-legend.block-legend {
-	font-weight: bold;
-}
-
 fieldset.metadata-block {
-	padding: 5px;
-    border: 1px #266397 solid;
+    margin-top: 30px;
+	border-top: 3px #266397 solid;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right: 3px #266397 solid;
 }
 
 fieldset.metadata-block * fieldset {
-    border: 1px #266397 solid;
+	margin-top: 2px;
+	border: 1px #266397 solid;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	padding: 2px;
 }
+
+fieldset.metadata-block legend {
+    text-transform:uppercase;
+	font-weight: bold;
+	font-size:large;
+}
+
+fieldset.metadata-block * legend {
+    font-size:medium;
+    text-transform: none;
+}
+
+fieldset.metadata-block * fieldset * legend {
+    font-size:small;
+    text-transform: none;
+}
+
+
+legend span div {
+    font-size:x-small;
+    text-transform: none;
+}
+
 
 /*******************************************************************************
 footer
@@ -617,6 +671,14 @@ div.keywordResults ul {
 div.keywordResults ul li {
         margin: 4px;
 		list-style-type:none;
+}
+
+span.searchHelpFrame {
+        background: #fff;
+    position: relative;
+    border-style: solid;
+    margin: 2px;
+    padding: 2px;
 }
 
 div.legend {
@@ -1024,7 +1086,7 @@ div.row {
 span.labelField {
     display: table-cell;
     display: inline-block;
-    width: 90px;
+    width: 180px;
     vertical-align: top;
     font-size: 0.9em;
 }
@@ -1208,6 +1270,85 @@ div.pageList {
 #content h1, #content h2, #content h3 {
     margin-bottom: 6px;
     margin-top: 8px;
+}
+
+/*******************************************************************************
+tabs
+*******************************************************************************/
+
+		#tabs{
+        margin-left: 4px;
+        padding: 0;
+        background: transparent;
+        voice-family: "\"}\"";
+        voice-family: inherit;
+        padding-left: 5px;
+    }
+    #tabs ul{
+        font: bold 11px Arial, Verdana, sans-serif;
+        margin:0;
+        padding:0;
+        list-style:none;
+    }
+    #tabs li{
+        display:inline;
+        margin:0 2px 0 0;
+        padding:0;
+        /* text-transform:uppercase; */
+    }
+    #tabs a{
+        float:left;
+        background:#A3BBE6 url(images/tabs_left.gif) no-repeat left top;
+        margin:0 2px 0 0;
+        padding:0 0 1px 3px;
+        text-decoration:none;
+    }
+    #tabs a span{
+        float:left;
+        display:block;
+        background: transparent url(images/tabs_right.gif) no-repeat right top;
+        padding:4px 9px 2px 6px;
+    }
+    #tabs a span{float:none;}
+    #tabs a:hover {background-color: #7E94B9;color: white;}
+    #tabs a:hover span{background-color: #7E94B9;}
+    #tabHeaderActive span, #tabHeaderActive a { background-color: #42577B; color:#fff;}
+    .tabContent {
+        clear:both;
+        border:2px solid #42577B;
+				border-left-style: none;
+				border-right-style: none;
+        /* padding-top:2px; */
+        background-color:#FFF;
+    }
+
+div.table-container {
+	  width: 80%;
+	  margin: auto;
+		padding:0;
+		display: table;
+}
+
+div.table-row  {
+   display: table-row;
+}
+
+div.table-left {
+		width: 33%;
+		padding:1em;
+		display: table-cell;
+}
+
+div.table-right {
+		width: 33%;
+		padding:1em;
+    display: table-cell;
+}
+
+div.table-middle {
+		width: 33%;
+		padding: 1em;
+    display: table-cell;
 }
 
 .Bt{

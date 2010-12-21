@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import jeeves.JeevesJCS;
+import jeeves.JeevesProxyInfo;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -44,12 +45,15 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
+import jeeves.utils.ProxyInfo;
+import jeeves.utils.XmlResolver;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
@@ -65,6 +69,7 @@ import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
+import org.fao.geonet.util.ThreadPool;
 import org.geotools.data.DataStore;
 import org.geotools.data.postgis.PostgisDataStoreFactory;
 import org.geotools.data.shapefile.indexed.IndexType;
@@ -94,6 +99,8 @@ public class Geonetwork implements ApplicationHandler
 	private ThesaurusManager 	thesaurusMan;
 	private String						SPATIAL_INDEX_FILENAME    = "spatialindex";
 	static final String				IDS_ATTRIBUTE_NAME        = "id";
+	private ThreadPool        threadPool;
+	private String   FS         = File.separator;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -124,8 +131,10 @@ public class Geonetwork implements ApplicationHandler
 		ServerLib sl = new ServerLib(path);
 		String version = sl.getVersion();
 		String subVersion = sl.getSubVersion();
-		
+
 		logger.info("Initializing GeoNetwork " + version +  "." + subVersion +  " ...");
+
+		setProps(path);
 
 		// Init directory path
 		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
@@ -171,12 +180,21 @@ public class Geonetwork implements ApplicationHandler
 		
 		
 		JeevesJCS.setConfigFilename(path+"WEB-INF/classes/cache.ccf");
-		// force cache to be config'd so shutdown hook works correctly
-		JeevesJCS.getInstance(Processor.XLINK_JCS);
+		// force caches to be config'd so shutdown hook works correctly
+		JeevesJCS jcsDummy = JeevesJCS.getInstance(Processor.XLINK_JCS);
+		jcsDummy = JeevesJCS.getInstance(XmlResolver.XMLRESOLVER_JCS);
 
 		
+
 		// --- Check current database and create database if an emty one is found
 		Dbms dbms = initDatabase(context);
+
+		//------------------------------------------------------------------------
+		//--- initialize thread pool 
+
+		logger.info("  - Thread Pool...");
+
+		threadPool = new ThreadPool();
 
 		//------------------------------------------------------------------------
 		//--- initialize settings subsystem
@@ -185,6 +203,16 @@ public class Geonetwork implements ApplicationHandler
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
+		//--- load proxy information from settings into Jeeves
+		ProxyInfo pi = JeevesProxyInfo.getInstance();
+		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+		if (useProxy) {
+			String  proxyHost      = settingMan.getValue("system/proxy/host");
+			String  proxyPort      = settingMan.getValue("system/proxy/port");
+			String  username       = settingMan.getValue("system/proxy/username");
+			String  password       = settingMan.getValue("system/proxy/password");
+			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
+		}
 		
 		// --- Migrate database if an old one is found
 		migrateDatabase(dbms, settingMan, version, subVersion);
@@ -242,17 +270,28 @@ public class Geonetwork implements ApplicationHandler
 		}
 
 		//------------------------------------------------------------------------
+		//--- initialize SchemaManager
+
+		logger.info("  - Schema manager...");
+
+		String schemaPluginsDir = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMAPLUGINS_DIR);
+		SchemaManager schemaMan = new SchemaManager(path, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
+
+		//------------------------------------------------------------------------
 		//--- initialize search and editing
 
 		logger.info("  - Search...");
 
+		boolean logSpatialObject = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_SPATIAL_OBJECTS));
+		String luceneTermsToExclude = "";
+		luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 		LuceneConfig lc = new LuceneConfig(path + luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
         
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, summaryConfigXmlFile, lc, dataStore, new SettingInfo(settingMan));
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, lc, logSpatialObject, luceneTermsToExclude, dataStore, new SettingInfo(settingMan), schemaMan);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -270,26 +309,7 @@ public class Geonetwork implements ApplicationHandler
 		if (!_htmlCacheDir.isAbsolute()) {
 			htmlCacheDir = path + htmlCacheDir;
 		}
-		DataManager dataMan = new DataManager(context, searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, path);
-
-		String schemasDir = path + Geonet.Path.SCHEMAS;
-		String saSchemas[] = new File(schemasDir).list();
-
-		if (saSchemas == null)
-			throw new Exception("Cannot scan schemas directory : " +schemasDir);
-		else
-		{
-			for(int i=0; i<saSchemas.length; i++)
-				if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith("."))
-				{
-					logger.info("    Adding xml schema : " +saSchemas[i]);
-					String schemaFile  = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA;
-					String suggestFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
-					String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
-
-					dataMan.addSchema(saSchemas[i], schemaFile, suggestFile, substitutesFile);
-				}
-		}
+		DataManager dataMan = new DataManager(context, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, path);
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
@@ -329,6 +349,7 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.accessMan   = accessMan;
 		gnContext.dataMan     = dataMan;
 		gnContext.searchMan   = searchMan;
+		gnContext.schemaMan   = schemaMan;
 		gnContext.config      = handlerConfig;
 		gnContext.catalogDis  = catalogDis;
 		gnContext.settingMan  = settingMan;
@@ -336,7 +357,8 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.thesaurusMan= thesaurusMan;
 		gnContext.oaipmhDis   = oaipmhDis;
 		gnContext.app_context = app_context;
-        gnContext.metadataNotifierMan = metadataNotifierMan;
+    gnContext.metadataNotifierMan = metadataNotifierMan;
+		gnContext.threadPool  = threadPool;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 
@@ -533,6 +555,39 @@ public class Geonetwork implements ApplicationHandler
         }
     }
 	
+	/**
+	 * Set system properties to those required
+	 * @param path webapp path
+	 */
+	private void setProps(String path) {
+
+		String webapp = path + "WEB-INF" + FS;
+
+		//--- Set xml.catalog.files property
+		//--- this is critical to schema support so must be set correctly
+		String catalogProp = System.getProperty("xml.catalog.files");
+		if (catalogProp == null) catalogProp = "";
+		if (!catalogProp.equals("")) {
+			logger.info("Overriding xml.catalog.files property (was set to "+catalogProp+")");
+		} 
+		catalogProp = webapp + "oasis-catalog.xml" + ";" + webapp + "schemaplugin-uri-catalog.xml";
+		System.setProperty("xml.catalog.files", catalogProp);
+		logger.info("xml.catalog.files property set to "+catalogProp);
+
+		//--- Set mime-mappings
+		String mimeProp = System.getProperty("mime-mappings");
+		if (mimeProp == null) mimeProp = "";
+		if (!mimeProp.equals("")) {
+			logger.info("Overriding mime-mappings property (was set to "+mimeProp+")");
+		} 
+		mimeProp = webapp + "mime-types.properties";
+		System.setProperty("mime-mappings", mimeProp);
+		logger.info("mime-mappings property set to "+mimeProp);
+
+		return;
+	}
+		
+		
 	//---------------------------------------------------------------------------
 	//---
 	//--- Stop

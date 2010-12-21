@@ -46,7 +46,7 @@ public class IntersectionFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public IntersectionFilter(Query query, Element request, Geometry geom,
+    public IntersectionFilter(Query query, Geometry geom,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
         super(query, geom, featureSource, index);

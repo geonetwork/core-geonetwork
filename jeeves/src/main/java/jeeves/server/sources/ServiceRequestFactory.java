@@ -93,7 +93,10 @@ public final class ServiceRequestFactory
 		srvReq.setDebug       (extractDebug(url));
 		srvReq.setLanguage    (extractLanguage(url));
 		srvReq.setService     (extractService(url));
-		srvReq.setAddress     (req.getRemoteAddr());
+		String ip = req.getRemoteAddr();
+		String forwardedFor = req.getHeader("x-forwarded-for");
+		if (forwardedFor != null) ip = forwardedFor;
+		srvReq.setAddress     (ip);
 		srvReq.setOutputStream(res.getOutputStream());
 
 		//--- discover the input/output methods

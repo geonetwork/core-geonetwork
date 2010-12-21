@@ -8,23 +8,17 @@
 	exclude-result-prefixes="gco gmd dc exslt geonet"
     >
 
-	<!-- 
+	<!--
 	show metadata form
 	-->
 	
-	<xsl:include href="main.xsl"/>
+	<xsl:include href="edit.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 	
 	<xsl:variable name="host" select="/root/gui/env/server/host" />
 	<xsl:variable name="port" select="/root/gui/env/server/port" />
 	<xsl:variable name="baseURL" select="concat('http://',$host,':',$port,/root/gui/url)" />
 	<xsl:variable name="serverUrl" select="concat('http://',$host,':',$port,/root/gui/locService)" />
-	
-	
-	<xsl:template mode="css" match="/">
-		<xsl:call-template name="geoCssHeader"/>
-		<xsl:call-template name="ext-ux-css"/>
-	</xsl:template>
 	
 	<!--
 	additional scripts

@@ -23,31 +23,31 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.HitCollector;
+import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.Query;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.jdom.Element;
-import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import java.io.IOException;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * This filter filters out all documents that do not intersect the requested
@@ -61,8 +61,8 @@ public class FullScanFilter extends SpatialFilter
     private static final long serialVersionUID = 1114543251684147194L;
     private Set<String>       _matches;
 
-    public FullScanFilter(Query query, Element request, Geometry geom,
-            FeatureSource<FeatureType, Feature> featureSource, SpatialIndex index) throws IOException
+    public FullScanFilter(Query query, Geometry geom,
+            FeatureSource featureSource, SpatialIndex index) throws IOException
     {
         super(query, geom, featureSource, index);
     }
@@ -79,9 +79,19 @@ public class FullScanFilter extends SpatialFilter
 
         final Set<String> matches = loadMatches();
 
-        new IndexSearcher(reader).search(_query, new HitCollector()
+        new IndexSearcher(reader).search(_query, new Collector()
         {
-            public final void collect(int doc, float score)
+						private int docBase;
+
+						// ignore scorer
+						public void setScorer(Scorer scorer) {}
+
+						// accept docs out of order (for a BitSet it doesn't matter)
+						public boolean acceptsDocsOutOfOrder() {
+							return true;
+						}
+
+            public final void collect(int doc)
             {
                 Document document;
                 try {
@@ -93,6 +103,10 @@ public class FullScanFilter extends SpatialFilter
                     throw new RuntimeException(e);
                 }
             }
+
+						public void setNextReader(IndexReader reader, int docBase) {
+							this.docBase = docBase;
+						}
         });
         return bits;
     }

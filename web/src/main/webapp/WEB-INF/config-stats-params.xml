@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : config-stats-params.xml
+    Created on : April 16, 2009, 2:45 PM
+    Author     : nicolas
+    Description:
+        defines some runtime parameters for statistics pages:
+            mdPopularityLimit: Defines the max number of results to display for `
+            `                  this stat in the wep page
+
+-->
+
+<statistics>
+    <mdPopularityLimit>25</mdPopularityLimit>
+    <tagCloudLimit>6</tagCloudLimit>
+</statistics>

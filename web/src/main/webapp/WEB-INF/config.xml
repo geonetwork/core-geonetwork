@@ -20,19 +20,16 @@
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
 			<xml name="countries" file="xml/countries.xml" />
-			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="labels.xml" />
-			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="codelists.xml" />
-			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="labels.xml" />
-			<xml name="iso19139" base="xml/schemas/iso19139/loc" file="codelists.xml" />
-		    <xml name="iso19110" base="xml/schemas/iso19110/loc" file="labels.xml" />
-		    <xml name="iso19110" base="xml/schemas/iso19110/loc" file="codelists.xml" />
-		    <xml name="fgdc-std" base="xml/schemas/fgdc-std/loc" file="labels.xml" />
-			<xml name="dublin-core" base="xml/schemas/dublin-core/loc" file="labels.xml" />
-			<xml name="csw-record" base="xml/schemas/csw-record/loc" file="labels.xml" />			
+
 			<call name="session" class="jeeves.guiservices.session.Get" />
 			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
-		    <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
+			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
+
+			<!-- this service adds labels and codelists from all schemas -->
+			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
+
+	    <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
 
 		<!-- service not found -->
@@ -139,7 +136,6 @@
 			</config>
 		</resource>
 	    
-	    
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- postgresql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -165,8 +161,7 @@
 			</config>
 		</resource>
 
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- sqlserver 2008 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -189,16 +184,17 @@
 	<appHandler class="org.fao.geonet.Geonetwork">
 		<param name="luceneDir" value="WEB-INF/lucene" />
 		<param name="dataDir" value="WEB-INF/data" />
-		
+
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />
 		
-		<param name="licenseDir" value="WEB-INF/licenses" /> 
-		
-	  	<param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-    	<param name="guiConfig" value="WEB-INF/config-gui.xml" />        
-    	<param name="luceneConfig" value="WEB-INF/config-lucene.xml" />        
-		
+		<param name="schemaPluginsDir" value="../../schemaPlugins" />
+
+		<param name="licenseDir" value="WEB-INF/licenses" />
+	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
+    <param name="guiConfig" value="WEB-INF/config-gui.xml" />        
+    <param name="luceneConfig" value="WEB-INF/config-lucene.xml" />        
+
 		<!-- Preferred schema parameter is used on import
 			when a ZIP or MEF file is imported with more than one
 			xml files. For example, export produce one file for
@@ -210,8 +206,15 @@
 		-->
 		<param name="preferredSchema" value="iso19139" />
 		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
+		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
 
-        <param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" /> />
+		<!-- search statistics stuff -->
+		<!-- true to log into DB WKT of spatial objects involved in a search operation
+		CAUTION ! this can lead to HUGE database and CSV export if detailed geo objects are used:
+		several Gb for instance...-->
+		<param name="statLogSpatialObjects" value="false" />
+		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
+		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
 	</appHandler>
 
 	<!-- ====================================================================== -->
@@ -231,6 +234,9 @@
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories" />
+				</call>
 
 				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
 					<param name="maxItems" value="10" />
@@ -273,10 +279,10 @@
  			</class>
 
  			<output forward="main.present.embedded" />
-			
+
 			<error id="unauthorized" sheet="xml-error.xsl" statusCode="403">
 				<xml name="error" file="xml/unauthorized.xml" />
-			</error>				
+			</error>
  		</service>
 
 		<service name="main.search.suggest">
@@ -323,6 +329,24 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="main.searchform.advanced.embedded">
+			<output sheet="searchform_advanced.xsl">
+				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+				<call name="keywords" class=".guiservices.keywords.Get" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="categories" class=".services.category.List" />
+				<call name="regions" class=".guiservices.regions.Get" />
+				<call name="sources" class=".guiservices.util.Sources" />
+				<call name="repositories" class=".services.main.Info">
+					<param name="type" value="z3950repositories" />
+				</call>
+				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="main.searchform.remote.embedded">
 			<output sheet="searchform_advanced.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
@@ -672,7 +696,7 @@
 			<class name=".services.notifications.Save" />
 			<output forward="admin" />
 		</service>
-		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -736,21 +760,12 @@
 			<class name=".services.config.Get" />
 		</service>
 
-		<service name="xml.config.info">
-			<class name=".services.config.GetInfo" />
-		</service>
-		
-		<service name="config.info">
-			<class name=".services.config.GetInfo" />
-			<output sheet="config/info.xsl">
-				<xml name="config" file="xml/config.xml" />
-			</output>
-		</service>
-		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="lucene.config.reload">
 			<class name=".services.config.Reload" />
 		</service>
-		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.config.set">
@@ -763,6 +778,21 @@
 		<service name="xml.config.doActions">
 			<class name=".services.config.DoActions" />
 		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.config.info">
+			<class name=".services.config.GetInfo" />
+		</service>
+ 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="config.info">
+			<class name=".services.config.GetInfo" />
+			<output sheet="config/info.xsl">
+				<xml name="config" file="xml/config.xml" />
+			</output>
+		</service>	
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Localization                                                  -->
@@ -1068,16 +1098,17 @@
 		   <output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
 		</service>
 		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- index languages -->
+		<service name="index.languages.get">
+			<class name=".guiservices.stopwords.Get" />
+			<output sheet="indexlanguages.xslt" />
+		</service>
 
-        <!-- index languages -->
-        <service name="index.languages.get">
-            <class name=".guiservices.stopwords.Get" />
-            <output sheet="indexlanguages.xslt" />
-        </service>
-        <service name="index.languages.set">
-            <class name=".guiservices.stopwords.Set" />
-            <output sheet="indexlanguages.xslt" />
-        </service>
+		<service name="index.languages.set">
+			<class name=".guiservices.stopwords.Set" />
+			<output sheet="indexlanguages.xslt" />
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- relation services -->
@@ -1241,11 +1272,12 @@
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
+	<include>config-statistics.xml</include>
+	<include>config-geoserverpublisher.xml</include>
 	<include>config-test.xml</include>
 	<include>config-csw.xml</include>
 	<include>config-sru.xml</include>
-	<include>config-geoserverpublisher.xml</include>
-	
+
 	<!-- ====================================================================== -->
 
 </geonet>

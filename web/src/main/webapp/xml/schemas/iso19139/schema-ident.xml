@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.osgeo.org/geonetwork/schemas/geonet_schema" schemaLocation="http://www.osgeo.org/geonetwork/schemas/geonet_schema http://www.osgeo.org/geonetwork/schemas/geonet_schema/geonet_schema.xsd">
+	<name>iso19139</name>
+	<id>3f95190a-dde4-11df-8626-001c2346de4c</id>
+	<version>1.0</version>
+	<autodetect xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+		<elements>
+			<gmd:metadataStandardName>
+				<gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
+			</gmd:metadataStandardName>
+			<gmd:metadataStandardVersion>
+				<gco:CharacterString>1.0</gco:CharacterString>
+			</gmd:metadataStandardVersion>
+		</elements>
+	</autodetect>
+</schema>

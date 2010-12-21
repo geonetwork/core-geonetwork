@@ -13,6 +13,7 @@
 			<xsl:otherwise>10</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:variable name="remote" select="/root/response/summary/@type='remote'"/>
 	
 	<!-- ================================================================================== -->
 	<!-- page content -->
@@ -23,6 +24,7 @@
 		<div id="search-results-content">		
 		<!--table  width="100%" height="100%" id="search-results-content"-->
 
+			<xsl:variable name="error" select="/root/response/summary/@status='Failure'"/>
 			<xsl:variable name="count" 	select="/root/response/summary/@count"/>
 			<xsl:variable name="from" 		select="/root/response/@from"/>
 			<xsl:variable name="to" 		select="/root/response/@to"/>
@@ -32,22 +34,33 @@
 			<!-- title -->
 			<xsl:call-template name="formTitle">
 				<xsl:with-param name="title">
-					<xsl:value-of select="/root/gui/strings/resultsMatching"/>
-					&#160;
-					<xsl:value-of select="$from"/>-<xsl:value-of select="$to"/>/<xsl:value-of select="$count"/>
-					&#160;
-					(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>),
-					&#160;
-					<span id="nbselected">
-						<xsl:choose>
-							<xsl:when test="/root/response/@selected">
-								<xsl:value-of select="/root/response/@selected"/> 
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="count(//geonet:info[selected='true'])"/>
-							</xsl:otherwise>                            
-						</xsl:choose>
-					</span> <xsl:value-of select="/root/gui/strings/selected"/> 
+					<xsl:choose>
+            <xsl:when test="$error and $remote" >
+              <font class="error">
+                <xsl:text>Remote Search Failed!</xsl:text>
+              </font>
+            </xsl:when>
+            <xsl:otherwise>
+							<xsl:value-of select="/root/gui/strings/resultsMatching"/>
+							&#160;
+							<xsl:value-of select="$from"/>-<xsl:value-of select="$to"/>/<xsl:value-of select="$count"/>
+							&#160;
+							(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>)
+							<xsl:if test="$remote=false()">
+								,&#160;
+								<span id="nbselected">
+								<xsl:choose>
+									<xsl:when test="/root/response/@selected">
+										<xsl:value-of select="/root/response/@selected"/> 
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="count(//geonet:info[selected='true'])"/>
+									</xsl:otherwise>                            
+								</xsl:choose>
+								</span> <xsl:value-of select="/root/gui/strings/selected"/> 
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:with-param>
 				<xsl:with-param name="indent" select="50"/>
 			</xsl:call-template>
@@ -84,10 +97,10 @@
 					<xsl:copy-of select="$title"/>
 					
 				</div>		
-							
 				<xsl:if test="/root/response/summary/@count > 0">
 					<!-- filtered search, massive actions and print pdf - - -->
 					<div style="float:right;">	
+					 <xsl:if test="$remote=false()">
 						<xsl:value-of select="/root/gui/strings/select" />
 						<xsl:choose>
 							<xsl:when test="number(/root/response/summary/@count) > number(/root/gui/config/selectionmanager/maxrecords)">
@@ -144,8 +157,12 @@
 							<button onclick="load('{/root/gui/locService}/mef.export?uuid=&amp;format=full&amp;version=2')"><xsl:value-of select="/root/gui/strings/export"/></button>
                             <button onclick="runCsvSearch()"><xsl:value-of select="/root/gui/strings/exportText"/></button>
 						</div>
+					 </xsl:if>
+					 <xsl:if test="$remote=true()">
+						<a href="#" onclick="runRemoteSearch('pdf');"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
+					 </xsl:if>
 						
-						<xsl:if test="/root/response/summary/@count > 1">
+						<xsl:if test="/root/response/summary/@count > 1 and $remote=false()">
 							<div style="margin-top:10px;" align="right">
 							&#xA0;<xsl:value-of select="/root/gui/strings/sortBy"/>&#xA0;
 							
@@ -219,24 +236,51 @@
 
 	<xsl:template name="hits">
 		<xsl:comment>HITS</xsl:comment>		
-		<xsl:variable name="remote" select="/root/response/summary/@type='remote'"/>
 		<xsl:for-each select="/root/response/*[name(.)!='summary']">
-		
-			<xsl:variable name="md">
-				<xsl:apply-templates mode="brief" select="."/>
-			</xsl:variable>
+
+<!-- cope with errors - usually from Z servers with badly formed XML -->
+
+		<xsl:choose>
+			<xsl:when test="name(.)='error'">
+				<xsl:call-template name="formSeparator"/>
+				<xsl:call-template name="formContent">
+					<xsl:with-param name="content">
+						<xsl:choose>
+							<xsl:when test="@server">
+								<xsl:variable name="collection" select="@collection"/>
+								<xsl:variable name="repocode" select="substring-before(@server,':')"/>
+								<xsl:variable name="name" select="/root/gui/repositories/z3950repositories/repository[id/@code=$collection and id/serverCode=$repocode]/label"/>
+									<font class="error"><xsl:value-of select="@id"/><xsl:value-of select="/root/gui/strings/metadataBadResponse1"/><xsl:text> </xsl:text><xsl:value-of select="@server"/><xsl:text> </xsl:text>(<i><xsl:value-of select="$name"/></i>).<xsl:text> </xsl:text><xsl:value-of select="/root/gui/strings/metadataBadResponse2"/></font>
+							</xsl:when>
+							<xsl:otherwise>
+								<div align="left">
+									<font class="error"><xsl:value-of select="@message"/></font>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
+
+<!-- normal records -->
+
+			<xsl:otherwise>
+				<xsl:variable name="md">
+					<xsl:apply-templates mode="brief" select="."/>
+				</xsl:variable>
 			
-			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-			<!--			<xsl:call-template name="formSeparator"/> -->
-			<xsl:call-template name="formContent">
-				<xsl:with-param name="content">
-					<xsl:call-template name="hit">
-						<xsl:with-param name="metadata" select="$metadata"/>
-						<xsl:with-param name="remote"   select="$remote"/>
-					</xsl:call-template>
-				</xsl:with-param>
-				<xsl:with-param name="indent" select="50"/>
-			</xsl:call-template>
+				<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+				<xsl:call-template name="formContent">
+					<xsl:with-param name="content">
+						<xsl:call-template name="hit">
+							<xsl:with-param name="metadata" select="$metadata"/>
+						</xsl:call-template>
+					</xsl:with-param>
+					<xsl:with-param name="indent" select="50"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+
 		</xsl:for-each>
 	</xsl:template>
 	
@@ -246,7 +290,6 @@
 
 	<xsl:template name="hit">
 		<xsl:param name="metadata"/>
-		<xsl:param name="remote"/>
 
 		<xsl:comment>Single metadata in results</xsl:comment>
 		<div class="hit">
@@ -278,22 +321,23 @@
 								<xsl:variable name="port" select="substring-before($rest,'/')"/>
 								<xsl:variable name="db" select="substring-after($rest,'/')"/>
 								<!-- Title -->
-								<div class="hittitle">
-									<xsl:variable name="isSelected" select="$metadata/geonet:info/selected" />
+								<div class="arrow">
 									<xsl:choose>
-										<xsl:when test="$isSelected='true'">	
-											<input class="checkbox_results"  type="checkbox" id="chk{geonet:info/id}" name="chk{geonet:info/id}" onclick="javascript:selectobject('metadata.select','search-results-content','{geonet:info/uuid}', this.checked)"  checked="true"/>
+										<xsl:when test="/root/gui/config/search/use-separate-window-for-editor-viewer">
+                      <span onclick="popEditorViewer('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple','{$metadata/geonet:info/id}')" style="cursor:hand;cursor:pointer;text-decoration:underline;"><xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/></span>
 										</xsl:when>
 										<xsl:otherwise>
-											<input class="checkbox_results" type="checkbox" onclick="javascript:selectobject('metadata.select','search-results-content','{geonet:info/uuid}', this.checked)"/>				
+											<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
+												<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>
+											</a>
 										</xsl:otherwise>
 									</xsl:choose>
-									<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
-										<xsl:value-of select="concat($metadata/geonet:info/id,' - ',$metadata/title)"/>
-									</a>
-									<xsl:variable name="server" select="$metadata/geonet:info/server"/>
-									<xsl:variable name="name" select="/root/gui/repositories/Collection[@collection_dn=$server]/@collection_name"/>
-									<font class="green-neg"><xsl:value-of select="$name"/></font>
+								</div>
+								<div class="hittext_middle">
+									<xsl:variable name="repocode" select="substring-before($metadata/geonet:info/server,':')"/>
+                  <xsl:variable name="collection" select="$metadata/geonet:info/collection"/>
+									<xsl:variable name="name" select="/root/gui/repositories/z3950repositories/repository[id/@code=$collection and id/@serverCode=$repocode]/label"/>
+									<font class="error"><xsl:value-of select="$name"/></font>
 								</div>
 							</xsl:when>
 							<xsl:otherwise>
@@ -347,7 +391,7 @@
                                         </xsl:otherwise>
 									</xsl:choose>
 								</div>
-								
+
 								<!-- Title -->
 								<div class="hittitle">
 									<xsl:variable name="isSelected" select="$metadata/geonet:info/selected" />
@@ -360,9 +404,16 @@
 										</xsl:otherwise>
 									</xsl:choose>
 									<!-- <input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" /> -->
-									<a href="metadata.show?id={$metadata/geonet:info/id}&amp;currTab={name(/root/gui/config/metadata-tab/*[@default])}">
-										<xsl:value-of select="$metadata/title"/>
-									</a>
+									<xsl:choose>
+										<xsl:when test="/root/gui/config/search/use-separate-window-for-editor-viewer">
+											<span onclick="popEditorViewer('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab={name(/root/gui/config/metadata-tab/*[@default])}','{$metadata/geonet:info/id}')" style="cursor:hand;cursor:pointer;text-decoration:underline;"><xsl:value-of select="$metadata/title"/></span>
+										</xsl:when>
+										<xsl:otherwise>
+											<a href="metadata.show?id={$metadata/geonet:info/id}&amp;currTab={name(/root/gui/config/metadata-tab/*[@default])}">
+												<xsl:value-of select="$metadata/title"/>
+											</a>
+										</xsl:otherwise>
+									</xsl:choose>
 								</div>
 
 							</xsl:otherwise>
@@ -389,13 +440,56 @@
 					
 					<!-- keywords -->
 					<xsl:if test="$metadata/keyword">
+						<xsl:variable name="keywords">
+							<xsl:for-each select="$metadata/keyword">
+								<xsl:if test="position() &gt; 1">,  </xsl:if>
+								<xsl:value-of select="."/>
+							</xsl:for-each>
+						</xsl:variable>
+
 						<div class="hittext_keywords">
 							<div class="caption"><xsl:value-of select="/root/gui/strings/keywords"/></div>
 							<div class="keywords">
-								<xsl:for-each select="$metadata/keyword">
-									<xsl:if test="position() &gt; 1">,	</xsl:if>
-									<xsl:value-of select="."/>
-								</xsl:for-each>
+								<xsl:choose>
+									<!-- show a maximum of $maxKeywords characters in the keywords -->
+									<xsl:when test="string-length ($keywords) &gt; $maxKeywords">
+										<xsl:value-of select="substring ($keywords, 0, $maxKeywords)"/>...
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$keywords"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</div>
+					</xsl:if>
+
+					<!-- schema -->
+					<xsl:if test="$metadata/geonet:info/schema">
+						<div class="hittext_middle">
+							<div class="caption"><xsl:value-of select="/root/gui/strings/schema"/></div>
+							<div class="abstract1">
+								<xsl:value-of select="$metadata/geonet:info/schema"/>
+							</div>
+						</div>
+					</xsl:if>
+
+					<xsl:if test="normalize-space($metadata/geoBox) or $metadata/temporalExtent">
+						<div class="hittext_middle">
+							<div class="caption"><xsl:value-of select="/root/gui/strings/extent"/></div>
+							<div class="abstract1">
+								<xsl:if test="normalize-space($metadata/geoBox)">
+									<xsl:call-template name="boundingBox">
+										<xsl:with-param name="geoBox" select="$metadata/geoBox"/>
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="$metadata/geoBox and $metadata/temporalExtent">
+									&#160;&#160;
+								</xsl:if>
+								<xsl:if test="$metadata/temporalExtent">
+									<xsl:call-template name="timeSpan">
+										<xsl:with-param name="temporalExtent" select="$metadata/temporalExtent"/>
+									</xsl:call-template>
+								</xsl:if>
 							</div>
 						</div>
 					</xsl:if>
@@ -428,53 +522,62 @@
 			
 			<div class="buttons">
 				<div class="buttonsleft">
-					<!-- view metadata button -->
-					<xsl:if test="$metadata/geonet:info/view='true'">
-						<xsl:choose>
-							<xsl:when test="$remote=true()">
-								<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple')" title="{/root/gui/strings/show}">
-									<xsl:value-of select="/root/gui/strings/show"/>
-								</button>
-							</xsl:when>
-							<xsl:otherwise>
-								<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})" title="{/root/gui/strings/show}">
-									<img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
-								</button>
-								<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;" title="{/root/gui/strings/show}">
-									<img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
-								</button>
-								<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;" title="{/root/gui/strings/show}">
-									<xsl:value-of select="/root/gui/strings/loading"/>
-								</button>
-							</xsl:otherwise>
-						</xsl:choose>
+					<xsl:if test="not(/root/gui/config/search/use-separate-window-for-editor-viewer)">
+						<!-- view metadata button -->
+						<xsl:if test="$metadata/geonet:info/view='true'">
+							<xsl:choose>
+								<xsl:when test="$remote=true()">
+									<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple')" title="{/root/gui/strings/show}">
+										<xsl:value-of select="/root/gui/strings/show"/>
+									</button>
+								</xsl:when>
+								<xsl:otherwise>
+									<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})" title="{/root/gui/strings/show}">
+										<img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
+									</button>
+									<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;" title="{/root/gui/strings/show}">
+										<img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
+									</button>
+									<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;" title="{/root/gui/strings/show}">
+										<xsl:value-of select="/root/gui/strings/loading"/>
+									</button>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:if>
 					</xsl:if>
 		
 					<!-- download data button -->
-					<xsl:if test="$metadata/geonet:info/download='true'">
-						&#160;
-						<xsl:choose>
-							<xsl:when test="count($metadata/link[@type='download'])>1">
-								<xsl:choose>
-									<xsl:when test="$remote=true()">
-										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')" title="{/root/gui/strings/download}">
-											<xsl:value-of select="/root/gui/strings/download"/>
-										</button>
-									</xsl:when>
-									<xsl:otherwise>
-										<button class="content" onclick="load('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=distribution')" title="{/root/gui/strings/download}">
-											<xsl:value-of select="/root/gui/strings/download"/>
-										</button>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
-							<xsl:when test="count($metadata/link[@type='download'])=1 and $metadata/link[@type='download'] != ''">
-								<button class="content" onclick="load('{$metadata/link[@type='download']}')" title="{/root/gui/strings/download}">
-									<xsl:value-of select="/root/gui/strings/download"/>
-								</button>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:if>
+					<xsl:choose>
+						<!-- add download button if have download privilege and downloads are available -->
+						<xsl:when test="$metadata/geonet:info/download='true' and count($metadata/link[@type='download'])>0">
+							<xsl:call-template name="download-button">
+								<xsl:with-param name="metadata" select="$metadata"/>
+								<xsl:with-param name="remote" select="$remote"/>
+							</xsl:call-template>
+						</xsl:when>
+						<!-- or when the metadata has associated data url's -->
+						<xsl:when test="count($metadata/link[@type='dataurl'])>0">
+							<xsl:call-template name="download-button">
+								<xsl:with-param name="metadata" select="$metadata"/>
+								<xsl:with-param name="remote" select="$remote"/>
+							</xsl:call-template>
+							<!-- notify whether additional downloads would be available if logged in -->
+							<xsl:if test="$metadata/geonet:info/guestdownload='true' and 
+													/root/gui/session/userId='' and
+													count($metadata/link[@type='download'])>0">
+								&#160;
+								<xsl:copy-of select="/root/gui/strings/guestDownloadExtra/node()"/>
+							</xsl:if>
+						</xsl:when>
+						
+						<!-- or notify that downloads would be available if logged in when downloads available to GUEST -->
+						<xsl:when test="$metadata/geonet:info/guestdownload='true' and 
+													/root/gui/session/userId='' and
+													count($metadata/link[@type='download'])>0">
+							&#160;
+							<xsl:copy-of select="/root/gui/strings/guestDownload/node()"/>
+						</xsl:when>
+					</xsl:choose>
 
 					<!-- dynamic map button -->
 					<xsl:if test="$metadata/geonet:info/dynamic='true'">
@@ -516,11 +619,21 @@
 					</xsl:if>
 
 				</div>
-				
+			
 				<div class="buttonsright">
-					<xsl:call-template name="buttons">
-						<xsl:with-param name="metadata" select="$metadata"/>
-					</xsl:call-template>
+					<xsl:choose>
+						<xsl:when test="/root/gui/config/search/use-separate-window-for-editor-viewer">
+							<xsl:call-template name="buttons">
+								<xsl:with-param name="metadata" select="$metadata"/>
+								<xsl:with-param name="ownerbuttonsonly" select="true()"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="buttons">
+								<xsl:with-param name="metadata" select="$metadata"/>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</div>
 
@@ -535,6 +648,83 @@
 			</div>
 	</xsl:template>
 	
+	<xsl:template name="download-button">
+		<xsl:param name="metadata"/>
+		<xsl:param name="remote"/>
+		
+		&#160;
+		<xsl:choose>
+			<xsl:when test="$remote=false()">
+			    <xsl:variable name="dataDownloads" select="count($metadata/link[@type='download' and not(ends-with(@protocol,'downloadother'))]|$metadata/link[@type='dataurl'])"/>
+			    <xsl:choose>
+			    	<xsl:when test="$dataDownloads>0">
+						<button class="content" onclick="javascript:runFileDownloadSummary('{$metadata/geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
+							<xsl:value-of select="/root/gui/strings/dataDownload"/>
+						</button>
+					</xsl:when>
+			    	<xsl:otherwise>
+						<button class="content" onclick="javascript:runFileDownloadSummary('{$metadata/geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
+							<xsl:value-of select="/root/gui/strings/download"/>
+						</button>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="/root/gui/config/search/use-separate-window-for-editor-viewer">
+						<button class="content" onclick="popEditorViewer('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution','{$metadata/geonet:info/id}')" title="{/root/gui/strings/download}">
+							<xsl:value-of select="/root/gui/strings/download"/>
+						</button>
+					</xsl:when>
+					<xsl:otherwise>
+						<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution','{$metadata/geonet:info/id}')" title="{/root/gui/strings/download}">
+							<xsl:value-of select="/root/gui/strings/download"/>
+						</button>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="boundingBox">
+		<xsl:param name="geoBox"/>
+		
+		<xsl:value-of select="/root/gui/strings/geographicExtent"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="/root/gui/strings/westBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="$geoBox/westBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="/root/gui/strings/southBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="$geoBox/southBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="/root/gui/strings/eastBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="$geoBox/eastBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="/root/gui/strings/northBL"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="$geoBox/northBL"/>
+	</xsl:template>
+	
+	<xsl:template name="timeSpan">
+		<xsl:param name="temporalExtent"/>
+	
+		<xsl:variable name="label" select="/root/gui/strings/temporalExtent"/>
+		<xsl:variable name="separator" select="/root/gui/strings/rangeSeparator"/>
+		
+		<xsl:for-each select="$temporalExtent">
+			<xsl:value-of select="$label"/>
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="begin"/>
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="$separator"/>
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="end"/>
+			&#160;&#160;
+		</xsl:for-each>
+	</xsl:template>
 	
 	<!-- ================================================================================== -->
 	<!-- list of pages -->

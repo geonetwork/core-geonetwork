@@ -400,11 +400,11 @@ public class XmlRequest
 		{
 			httpMethod = new GetMethod();
 
-			if (query != null)
+			if (!("".equals(query)))
 				httpMethod.setQueryString(query);
 
 			else if (alSimpleParams.size() != 0)
-				httpMethod.setQueryString(alSimpleParams.toArray(new NameValuePair[1]));
+				httpMethod.setQueryString(alSimpleParams.toArray(new NameValuePair[alSimpleParams.size()]));
 
 			httpMethod.addRequestHeader("Accept", !useSOAP ? "application/xml" : "application/soap+xml");
 			httpMethod.setFollowRedirects(true);

@@ -48,4 +48,7 @@ public class LuceneIndexField {
     public static final String DIGITAL = "digital";
     public static final String PAPER = "paper";
 	public static final String SERVICE_TYPE = "serviceType";
+	public static final String TAXON = "taxon:name";
+	public static final String CREDIT = "credit";
+	public static final String DATAPARAM = "dataparam";
 }

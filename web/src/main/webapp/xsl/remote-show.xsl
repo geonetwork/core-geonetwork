@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="geonet">
 
-	<xsl:include href="main.xsl"/>
+	<xsl:include href="edit.xsl"/>
 	<xsl:include href="metadata.xsl"/>
 
 	<!--
@@ -49,7 +49,7 @@
 					<table width="100%">
 							<xsl:variable name="collection" select="geonet:info/collection"/>
 							<xsl:variable name="repocode" select="substring-before(geonet:info/server,':')"/>
-							<xsl:variable name="name" select="/root/gui/repositories/z3950repositories/repository[id/@code=$repocode and (substring-after(id,'/')=$collection or id=$collection)]/label"/>
+							<xsl:variable name="name" select="/root/gui/repositories/z3950repositories/repository[id/@code=$collection and id/@serverCode=$repocode]/label"/>
 							
 							<tr><td class="padded-content">
 							<h1>

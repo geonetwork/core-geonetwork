@@ -68,6 +68,124 @@ function get_cookie ( cookie_name )
 		msgWindow.focus()
 	}
 
+	var ViewEditWindow = Class.create({
+		initialize: function(pane, id) {
+			this.pane = pane;
+			this.id = id;
+		},
+		editing: function() {
+			if (this.pane && this.pane.closed) return false;
+			if (this.pane.$('editForm')) return true;
+			else return false;
+		},
+		focus: function() {
+			this.pane.focus();
+		},
+		close: function() {
+			this.pane.close();
+		}
+	});
+
+	var viewEditWindows = [];
+
+	function findWindow(id) {
+		for (var i = 0, len = viewEditWindows.length; i < len; ++i) {
+			var item = viewEditWindows[i];
+			if (item.id == id) return item;
+		}
+		return null;
+	}
+
+	function popEditorViewer(a, id)
+	{
+		var viewEdit = findWindow(id);
+		if (viewEdit && viewEdit.editing()) {
+			viewEdit.focus();
+			alert(i18n('editorInUse'));
+			return;
+		} 
+
+		var addToArray = false;
+		if (viewEdit == null) addToArray = true;
+
+		viewEdit = new ViewEditWindow(window.open(a,"MetadataEditorViewer"+id,"location=no, toolbar=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=900, height=700"),id);
+		viewEdit.focus();
+		if (addToArray) viewEditWindows.push(viewEdit);
+
+	}
+
+	function checkEditorAndClose() {
+		for (var i = 0, len = viewEditWindows.length; i < len; ++i) {
+			var item = viewEditWindows[i];
+			if (item.editing()) {
+				item.focus()
+				alert(i18n('editorInUse'));
+				return false;
+			}
+			item.close();
+		}
+		return true;
+	}
+
+	function checkReset() {
+		if (confirm(i18n('resetWarning'))) {
+			if (checkEditorAndClose()) return true;
+		} 
+		return false;
+	}
+	
+	function doCreateCheck(service, form, closeCurrent) {
+		descs = $('groups').getValue();
+		if (descs.length == 0) {
+			alert("Please select at least one group!");
+			return;
+		}
+		doCreate(service, form, closeCurrent);
+	}
+
+	function doCreate(action, form, closeCurrent) {
+		// serialize form, submit to action 
+		var myAjax = new Ajax.Request(
+			getGNServiceURL(action),
+			{
+				method: 'post',
+				parameters: $(form).serialize(true),
+				onSuccess: function(req) {
+					// get uuid of created metadata
+					var node = req.responseXML;
+					if (node == null) {
+						alert("Create metadata failed: "+node);
+						return;
+					}
+					var id = xml.evalXPath(node, 'response/id');
+					if (id == null) {
+						alert("Create metadata failed: "+node);
+						return;
+					}
+					// popEditorViewer with the metadata id in it
+					popEditorViewer(getGNServiceURL('metadata.edit?id='+id), id);
+					if (closeCurrent) self.close();
+				},
+				onFailure: function(req) {
+					alert("ERROR: could not create new metadata from server ("+action+")");
+				}
+			}
+		);
+	}
+
+	function popCreateWindow(a)
+	{
+		createWindow=window.open(a,"CreateMetadataWindow","location=no, toolbar=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=800, height=600")
+		createWindow.focus()
+	}
+
+	function popAdminWindow(a)
+	{
+
+		adminWindow=window.open(a,"AdminWindow","location=no, toolbar=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=800, height=600")
+		adminWindow.focus()
+	}
+
 // Forms
 	function goSubmit(form_name) {
 		document.forms[form_name].submit();
@@ -344,8 +462,57 @@ function get_cookie ( cookie_name )
 		);
 	}
 	
-	
-	
+/**********************************************************
+***
+***		BANNER MENU ACTIONS EXCLUDING LOGIN/LOGOUT
+***
+**********************************************************/
+
+	var adminWindow;
+
+	function doBannerButton(url, title, modal, width, height)
+	{
+		if (modal == '1') {
+			if (height != null && height > 0) {
+				Modalbox.show(url,{ params: { modal: ''}, title: title, height: height, width: width});
+			} else {
+				Modalbox.show(url,{ params: { modal: ''}, title: title, width: width});
+			}
+		} else {
+			location.replace(url);
+		}
+		return true;
+	}
+
+	// Same as doBannerButton but afterhide we close adminWindow 
+	function doAdminBannerButton(url, title, modal, width, height)
+	{
+		if (modal == '1') {
+			Modalbox.show(url,{ params: { modal: ''}, title: title, height: height, width: width, evalScripts: true, afterHide: function() { if (adminWindow) adminWindow.close(); }});
+		} else {
+			location.replace(url);
+		}
+		return true;
+	}
+
+	var ViewEditWindow = Class.create({
+		initialize: function(pane, id) {
+			this.pane = pane;
+			this.id = id;
+		},
+		editing: function() {
+			if (this.pane && this.pane.closed) return false;
+			if (this.pane.$('editForm')) return true;
+			else return false;
+		},
+		focus: function() {
+			this.pane.focus();
+		},
+		close: function() {
+			this.pane.close();
+		}
+	});
+
 	
 
 /**
@@ -406,4 +573,157 @@ function toggleFieldset(btn, elem) {
 		elem.style.display='block';
 		btn.addClassName('downBt');
 	}
+}
+
+/**
+ * Add templates and sample data in Admin Menu
+ *
+ */
+
+function addTemplate(msgSelectSomething) {
+                          
+	var url = "metadata.templates.add.default?schema=";
+	var selectedSchemas = $('metadata.templates.select');
+	var params = "";
+	for (i = 0;i < selectedSchemas.length;i++) {
+		if (selectedSchemas.options[i].selected) {
+			if (params != "") params += ",";
+				params += selectedSchemas.options[i].value;
+		}
+	}
+
+	if (params == "") {
+		alert(msgSelectSomething);
+		return;
+	} else {
+		url = url + params;
+	}
+				
+	var wait = 'waitTpl';
+	var btn = 'tplBtn';
+	$(wait).style.display = 'block';
+	$(btn).style.display = 'none';
+				
+	var http = new Ajax.Request(
+				url, 
+				{
+						method: 'get', 
+						parameters: null,
+						onComplete: function(originalRequest){},
+						onLoaded: function(originalRequest){},
+						onSuccess: function(originalRequest){                                       
+							// get the XML root item
+							var root = originalRequest.responseXML.documentElement;
+							var resp = root.getAttribute('status');
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';
+
+							if (resp == "true")
+								alert ("ok");
+							else
+								alert(translate('error'));
+
+							var selectedSchemas = $('metadata.templates.select');
+							for (i = 0;i < selectedSchemas.length;i++) {
+								selectedSchemas.options[i].selected = false 
+							}
+						},
+						onFailure: function(originalRequest){
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';
+							alert(msgFailed);
+				}
+	});
+}
+            
+function addSampleData(msgSelectSomething, msgFailedAddSampleMetadata, msgSuccessAddSampleMetadata) {
+	var url = "metadata.samples.add?file_type=mef&uuidAction=overwrite&schema=";
+	var selectedSchemas = $('metadata.sampledata.select');
+	var params = "";
+
+	for (i = 0;i < selectedSchemas.length;i++) {
+		if (selectedSchemas.options[i].selected) {
+			if (params != "") params += ",";
+			params += selectedSchemas.options[i].value;
+		}
+	}
+
+	if (params == "") {
+		alert(msgSelectSomething);
+		return;
+	} else {
+		url = url + params;
+	}
+				
+	var wait = 'waitSamples';
+	var btn = 'tplSamples';
+	$(wait).style.display = 'block';
+	$(btn).style.display = 'none';
+				
+	var http = new Ajax.Request(
+					url, 
+					{
+						method: 'get', 
+						parameters: null,
+						onComplete: function(originalRequest){},
+						onLoaded: function(originalRequest){},
+						onSuccess: function(originalRequest){                                       
+							// get the XML root item
+							var root = originalRequest.responseXML.documentElement;
+							var resp = root.getAttribute('status');
+							var error = root.getAttribute('error');
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';
+
+							if (resp == "true")
+								alert (msgSuccessAddSampleMetadata);
+							else
+								alert(translate('error')+": "+error);
+
+							var selectedSchemas = $('metadata.sampledata.select');
+							for (i = 0;i < selectedSchemas.length;i++) {
+								selectedSchemas.options[i].selected = false 
+							}
+						},
+						onFailure: function(originalRequest){
+							$(wait).style.display = 'none';
+							$(btn).style.display = 'block';							
+                            alert(msgFailedAddSampleMetadata);
+						}
+	});
+}
+
+function idxOperation(service, wait, btn, warning)
+{
+	if (warning && !confirm(i18n('doYouReallyWantToDoThis'))) return;
+
+	var url = Env.locService + '/' + service;
+	$(wait).style.display = 'block';
+	$(btn).style.display = 'none';
+	var http = new Ajax.Request(
+					    url, 
+					    {
+					      method: 'get', 
+					      parameters: null,
+					      onComplete: function(originalRequest){},
+					      onLoaded: function(originalRequest){},
+					      onSuccess: function(originalRequest){                                       
+					        // get the XML root item
+   					        var root = originalRequest.responseXML.documentElement;
+					
+					        var resp = root.getElementsByTagName('status')[0].firstChild.nodeValue;
+					        $(wait).style.display = 'none';
+					        $(btn).style.display = 'block';
+					        if (resp == "true")
+  					          alert (i18n('metadata.admin.index.success'));
+					        else
+ 					          alert(msgFailed);
+					      },
+					      onFailure: function(originalRequest){
+					        $(wait).style.display = 'none';
+					        $(btn).style.display = 'block';
+					        alert(i18n('metadata.admin.index.failed'));
+					      }
+					    }
+	);
 }

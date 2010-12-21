@@ -200,7 +200,7 @@ public class Info implements Service
 	//--- ZRepositories
 	//--------------------------------------------------------------------------
 
-	private Element getZRepositories(ServiceContext context, SettingManager sm) throws Exception
+	public Element getZRepositories(ServiceContext context, SettingManager sm) throws Exception
 	{
 		boolean z3950Enable   = sm.getValue("system/z3950/enable").equals("true");
 
@@ -212,7 +212,7 @@ public class Info implements Service
 			if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet") ) {
 				continue; // skip Local GeoNetwork Z server if not enabled
 			} else {
-				response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode()));
+				response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode(),repo.getServerCode()));
 			}
 		}
 
@@ -302,17 +302,18 @@ public class Info implements Service
 
 	private Element buildRecord(String id, String name)
 	{
-		return buildRecord(id, name, null);
+		return buildRecord(id, name, null, null);
 	}
 
 	//--------------------------------------------------------------------------
 
-	private Element buildRecord(String id, String name, String code)
+	private Element buildRecord(String id, String name, String code, String serverCode)
 	{
 		Element el = new Element("record");
 
 		Element idE = new Element("id").setText(id);
 		if (code != null) idE.setAttribute("code", code);
+		if (serverCode != null) idE.setAttribute("serverCode", serverCode);
 		el.addContent(idE);
 		el.addContent(new Element("name").setText(name));
 

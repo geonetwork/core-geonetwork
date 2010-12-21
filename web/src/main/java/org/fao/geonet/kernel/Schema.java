@@ -1,0 +1,179 @@
+package org.fao.geonet.kernel;
+
+import jeeves.server.dispatchers.guiservices.XmlFile;
+
+import org.fao.geonet.kernel.schema.MetadataSchema;
+
+import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+	* A bean representing the basic information for a Schema
+	*
+	* @author Simon Pigot
+	*/
+
+public class Schema {
+
+	private String id;
+
+	/**
+		* Get id of this schema  
+		*
+		*/
+	public String getId() { return id; }
+
+	/**
+		* Set id of this schema
+		*
+		* @param id UUID of this schema
+		*
+		*/
+	public void setId(String id) { 
+		this.id = id; 
+	}
+
+	private String version;
+
+	/**
+		* Get version of this schema  
+		*
+		*/
+	public String getVersion() { return version; }
+
+	/**
+		* Set version of this schema
+		*
+		* @param version version string of this schema
+		*
+		*/
+	public void setVersion(String version) { 
+		this.version = version; 
+	}
+
+	private List<Element> autodetectElements = new ArrayList<Element>();
+
+	/**
+		* Get List of XML elements that describes how to detect metadata records
+		* that belong to this schema
+		*
+		*/
+	public List<Element> getAutodetectElements() { return autodetectElements; }
+
+	/**
+		* Set List of XML elements that describes how to detect metadata records
+		* that belong to this schema
+		*
+		* @param autodetectElements List of JDOM elements
+		*
+		*/
+	public void setAutodetectElements(List<Element> autodetectElements) { 
+		this.autodetectElements = autodetectElements; 
+	}
+
+	private Map<String, XmlFile> schemaInfo = new HashMap<String, XmlFile>();
+
+	/**
+		* Get map of localized xml files describing schema elements - at present 
+		* these are labels, codelists and strings and are hashed on the name of 
+		* the localized file
+		*
+		*/
+	public Map<String, XmlFile> getInfo() { return schemaInfo; }
+
+	/**
+		* Set map of localized xml files describing schema elements - at present 
+		* these are labels, codelists and strings and are hashed on the name of 
+		* the localized file
+		*
+		* @param schemaInfo Map containing schema information for each file
+		*
+		*/
+	public void setInfo(Map<String, XmlFile> schemaInfo) { 
+		this.schemaInfo = schemaInfo;
+	}
+
+	private String dir;
+
+	/**
+		* Get file system directory in which schema resides - used by methods
+		* that need to access xslt files in the schema directory
+		*
+		*/
+	public String getDir() { return dir; }
+
+	/**
+		* Set file system directory in which schema resides
+		*
+		* @param schemaDir file system directory in which schema resides
+		*
+		*/
+	public void setDir(String dir) { 
+		this.dir = dir; 
+	}
+
+	private MetadataSchema mds;
+
+	/**
+		* Get MetadataSchema object that describes the XML schema for the editor
+		*
+		*/
+	public MetadataSchema getMetadataSchema() { return mds; }
+
+	/**
+		* Set MetadataSchema object that describes the XML schema for the editor
+		*
+		* @param mds the MetadataSchema object describing the XML schema
+		*
+		*/
+	public void setMetadataSchema(MetadataSchema mds) { 
+		this.mds = mds; 
+	}
+
+	private SchemaSuggestions sugg;
+
+	/**
+		* Get SchemaSuggestions object that describes the suggested elements 
+		* for this schema (used by the editor)
+		*
+		*/
+	public SchemaSuggestions getSuggestions() { return sugg; };
+
+	/**
+		* Set SchemaSuggestions object that describes the suggested elements 
+		* for this schema (used by the editor)
+		*
+		* @param sugg the SchemaSuggestions object describing the schema suggestions
+		*
+		*/
+	public void setSuggestions(SchemaSuggestions sugg) { 
+		this.sugg = sugg; 
+	}
+
+	private boolean plugin = false;
+
+	/**
+		* Get boolean which states whether the schema is a plugin schema or not
+		*
+		*/
+	public boolean isPluginSchema() { return plugin; }
+
+	/**
+		* Set boolean which states whether the schema is a plugin schema or not
+		*
+		* @param plugin boolean set to true if schema is a plugin schema 
+		*
+		*/
+	public void setPluginSchema(boolean plugin) {
+		this.plugin = plugin; 
+	}
+
+}
+
+
+
+

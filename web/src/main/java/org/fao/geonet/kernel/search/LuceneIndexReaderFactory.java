@@ -2,6 +2,8 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.utils.Log;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.FSDirectory;
+
 import org.fao.geonet.constants.Geonet;
 
 import java.io.File;
@@ -27,8 +29,8 @@ public class LuceneIndexReaderFactory {
 	// Constructor
 
   public LuceneIndexReaderFactory(File dir) throws IOException {
-    currentReader = IndexReader.open(dir, true);
-    warm();
+    currentReader = IndexReader.open(FSDirectory.open(dir), true);
+    warm(currentReader);
 	}
 
 
@@ -50,7 +52,7 @@ public class LuceneIndexReaderFactory {
 	//===========================================================================
 	// Private Methods
 
-  private void warm() {}                                
+  private void warm(IndexReader reader) {}                                
 
   private synchronized void startReopen() throws InterruptedException {
     while (reopening) {
@@ -74,7 +76,7 @@ public class LuceneIndexReaderFactory {
     try {
        IndexReader newReader = currentReader.reopen(); 
        if (newReader != currentReader) {
-				warm();
+				warm(newReader);
        	swapReader(newReader);
 				Log.debug(Geonet.SEARCH_ENGINE, "Thread "+Thread.currentThread().getId()+": reopened IndexReader");
 			}

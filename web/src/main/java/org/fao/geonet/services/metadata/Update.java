@@ -85,6 +85,8 @@ public class Update implements Service
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
 
 		if (!forget) {
+			dataMan.setTemplateExt(dbms, Integer.parseInt(id), isTemplate, title);
+
 			if (data != null) {
 				Element md = Xml.loadString(data, false);
 
@@ -94,7 +96,6 @@ public class Update implements Service
 				EditUtils.updateContent(params, context, false, true);
 			}
 
-			dataMan.setTemplate(dbms, Integer.parseInt(id), isTemplate, title);
 		}
 
 		//-----------------------------------------------------------------------

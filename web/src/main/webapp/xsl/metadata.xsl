@@ -6,80 +6,54 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:svrl="http://purl.oclc.org/dsdl/svrl" 
-	exclude-result-prefixes="exslt xlink gco gmd geonet svrl">
+	xmlns:date="http://exslt.org/dates-and-times"
+	xmlns:saxon="http://saxon.sf.net/"
+	extension-element-prefixes="saxon"
+	exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon">
 
 	<xsl:import href="text-utilities.xsl"/>
+	<xsl:include href="metadata-tab-utils.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<!-- main schema switch -->
+	<!-- main schema mode selector -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
+
 	<xsl:template mode="elementEP" match="*|@*">
 		<xsl:param name="schema">
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded" />
-		
-		<xsl:choose>
-		
-			<!-- ISO 19115 -->
-			<xsl:when test="$schema='iso19115'">
-				<xsl:apply-templates mode="iso19115" select="." >
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				<xsl:with-param name="embedded" select="$embedded" />
-				</xsl:apply-templates>
-			</xsl:when>
-			
-			<!-- ISO 19139 and profiles -->
-			<xsl:when test="starts-with($schema,'iso19139')">
-				<xsl:apply-templates mode="iso19139" select="." >
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="embedded" select="$embedded" />
-				</xsl:apply-templates>
-			</xsl:when>
-			
-			<!-- ISO 19110 -->
-			<xsl:when test="$schema='iso19110'">
-				<xsl:apply-templates mode="iso19110" select="." >
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="embedded" select="$embedded" />
-				</xsl:apply-templates>
-			</xsl:when>
-			
-			<!-- FGDC -->
-			<xsl:when test="$schema='fgdc-std'">
-				<xsl:apply-templates mode="fgdc-std" select="." >
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				<xsl:with-param name="embedded" select="$embedded" />
-				</xsl:apply-templates>
-			</xsl:when>
 
-			<!-- Dublin Core -->
-			<xsl:when test="$schema='dublin-core'">
-				<xsl:apply-templates mode="dublin-core" select="." >
+		<xsl:variable name="schemaTemplate" select="concat('metadata-',$schema)"/>
+		<saxon:call-template name="{$schemaTemplate}"> 
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+			<xsl:with-param name="embedded" select="$embedded" />
+			<xsl:with-param name="usedot" select="true()"/>
+			<xsl:fallback>
+				<xsl:message>Fall back as no saxon:call-template exists</xsl:message>
+
+				<xsl:variable name="metadataMode">
+					<xsl:element name="{$schemaTemplate}"/>
+					<xsl:copy-of select="/root"/>
+					<xsl:element name="metadata">
+						<xsl:attribute name="ref">
+							<xsl:value-of select="geonet:element/@ref"/>
+						</xsl:attribute>
+					</xsl:element>
+				</xsl:variable>
+
+				<xsl:apply-templates select="exslt:node-set($metadataMode/*[1])">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
-				<xsl:with-param name="embedded" select="$embedded" />
+					<xsl:with-param name="embedded" select="$embedded" />
 				</xsl:apply-templates>
-			</xsl:when>
-		
-			<!-- default, no schema-specific formatting -->
-			<xsl:otherwise>
-				<xsl:apply-templates mode="element" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				<xsl:with-param name="embedded" select="$embedded" />
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-		
+			</xsl:fallback>
+		</saxon:call-template>
+
 	</xsl:template>
 
 	<!--
@@ -1032,7 +1006,6 @@
         <xsl:if test="count(. | ../@*) = count(../@*)">/@<xsl:value-of select="name()" /></xsl:if>
     </xsl:template>
 
-
     <xsl:template name="getTitleColor">
         <xsl:param name="name"/>
         <xsl:param name="schema"/>
@@ -1050,24 +1023,21 @@
 
                     <!-- Name with context in current schema -->
                     <xsl:variable name="colorTitleWithContext"
-                                  select="string(/root/gui/*[name(.)=$schema]
-                                  /element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]
-                                  /label_color)"/>
+                                  select="string(/root/gui/schemas/*[name(.)=$schema]/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/label_color)"/>
 
                     <!-- Name with context in base schema -->
                     <xsl:variable name="colorTitleWithContextIso"
-                        select="string(/root/gui/iso19139/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]
-                        /label_color)"/>
+                        select="string(/root/gui/schemas/iso19139/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/label_color)"/>
 
                     <!-- Name in current schema -->
-                    <xsl:variable name="colorTitle" select="string(/root/gui/*[name(.)=$schema]/element[@name=$name and not(@context)]/label_color)"/>
+                    <xsl:variable name="colorTitle" select="string(/root/gui/schemas/*[name(.)=$schema]/element[@name=$name and not(@context)]/label_color)"/>
 
                     <xsl:choose>
 
                         <xsl:when test="normalize-space($colorTitle)='' and
                                         normalize-space($colorTitleWithContext)='' and
                                         normalize-space($colorTitleWithContextIso)=''">
-                            <xsl:value-of select="string(/root/gui/iso19139/element[@name=$name]/label_color)"/>
+                            <xsl:value-of select="string(/root/gui/schemas/iso19139/element[@name=$name]/label_color)"/>
                         </xsl:when>
                         <xsl:when test="normalize-space($colorTitleWithContext)='' and
                                         normalize-space($colorTitleWithContextIso)=''">
@@ -1082,7 +1052,7 @@
                 <!-- otherwise just get the title out of the approriate schema help file -->
 
                 <xsl:otherwise>
-                    <xsl:value-of select="string(/root/gui/*[name(.)=$schema]/element[@name=$name]/label_color)"/>
+                    <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/element[@name=$name]/label_color)"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -1119,24 +1089,21 @@
 
                     <!-- Name with context in current schema -->
                     <xsl:variable name="schematitleWithContext"
-                                  select="string(/root/gui/*[name(.)=$schema]
-                                  /element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]
-                                  /label)"/>
+                                  select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/label)"/>
 
                     <!-- Name with context in base schema -->
                     <xsl:variable name="schematitleWithContextIso"
-                        select="string(/root/gui/iso19139/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]
-                        /label)"/>
+                        select="string(/root/gui/schemas/iso19139/labels/element[@name=$name and (@context=$fullContext or @context=$context or @context=$contextIsoType)]/label)"/>
 
                     <!-- Name in current schema -->
-                    <xsl:variable name="schematitle" select="string(/root/gui/*[name(.)=$schema]/element[@name=$name and not(@context)]/label)"/>
+                    <xsl:variable name="schematitle" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/label)"/>
 
                     <xsl:choose>
 
                         <xsl:when test="normalize-space($schematitle)='' and
                                         normalize-space($schematitleWithContext)='' and
                                         normalize-space($schematitleWithContextIso)=''">
-                            <xsl:value-of select="string(/root/gui/iso19139/element[@name=$name]/label)"/>
+                            <xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name=$name]/label)"/>
                         </xsl:when>
                         <xsl:when test="normalize-space($schematitleWithContext)='' and
                                         normalize-space($schematitleWithContextIso)=''">
@@ -1152,7 +1119,7 @@
                 <!-- otherwise just get the title out of the approriate schema help file -->
 
                 <xsl:otherwise>
-                    <xsl:value-of select="string(/root/gui/*[name(.)=$schema]/element[@name=$name]/label)"/>
+                    <xsl:value-of select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name]/label)"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -1210,7 +1177,7 @@
 					<items>
 						<xsl:for-each select="geonet:element/geonet:text">
 							<xsl:variable name="choiceValue" select="string(@value)"/>							
-							<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+							<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
 							
 							<item>
 								<value>
@@ -1376,10 +1343,10 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- not editable text/codelists -->
-				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $name]/entry[code=$value]/label"/>
+				<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code=$value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
-					<xsl:when test="starts-with($schema,'iso19139')">
+					<xsl:when test="starts-with($schema,'iso19139')"> 
 						<xsl:apply-templates mode="localised" select="..">
 							<xsl:with-param name="langId" select="$langId"></xsl:with-param>
 						</xsl:apply-templates>
@@ -1388,6 +1355,22 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getAttributeName">
+		<xsl:param name="name"/>
+		<!-- build attribute name (in place of standard attribute name) as a 
+		     work-around to deal with qualified attribute names like gml:id
+		     which if not modified will cause JDOM errors on update because of the
+				 way in which changes to ref'd elements are parsed as XML -->
+		<xsl:choose>
+	    <xsl:when test="contains($name,':')">
+	      <xsl:value-of select="concat(substring-before($name,':'),'COLON',substring-after($name,':'))"/>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <xsl:value-of select="$name"/>
+	    </xsl:otherwise>
+	  </xsl:choose>
 	</xsl:template>
 
 	<!--
@@ -1412,15 +1395,10 @@
 		     which if not modified will cause JDOM errors on update because of the
 				 way in which changes to ref'd elements are parsed as XML -->
 		<xsl:variable name="updatename">
-		  <xsl:choose>
-	        <xsl:when test="contains($name,':')">
-	          <xsl:value-of select="concat(substring-before($name,':'),'COLON',substring-after($name,':'))"/>
-	        </xsl:when>
-	        <xsl:otherwise>
-	          <xsl:value-of select="$name"/>
-	        </xsl:otherwise>
-	      </xsl:choose>
-	    </xsl:variable>
+			<xsl:call-template name="getAttributeName">
+				<xsl:with-param name="name" select="$name"/>
+			</xsl:call-template>
+	  </xsl:variable>
     	<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
 		
 		<xsl:choose>
@@ -1440,7 +1418,7 @@
 							<xsl:attribute name="value"><xsl:value-of select="$choiceValue"/></xsl:attribute>
 
 							<!-- codelist in edit mode -->
-							<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $parent]/entry[code=$choiceValue]/label"/>
+							<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $parent]/entry[code=$choiceValue]/label"/>
 							<xsl:choose>
 								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
 								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
@@ -1464,7 +1442,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- codelist in view mode -->
-				<xsl:variable name="label" select="/root/gui/*[name(.)=$schema]/codelist[@name = $parent]/entry[code = $value]/label"/>
+				<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]//codelists/codelist[@name = $parent]/entry[code = $value]/label"/>
 				<xsl:choose>
 					<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
 					<xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
@@ -1707,7 +1685,7 @@
 		<xsl:choose>
 			
 			<!-- has children -->
-			<xsl:when test="*">
+			<xsl:when test="count(*)>1">
 				<xsl:call-template name="showXMLStartTag"/>
 				<dl>
 					<xsl:for-each select="*">
@@ -1816,7 +1794,11 @@
 		</xsl:for-each>
 	</xsl:template>
 
-
+	<!--
+	prevent drawing of geonet:* elements
+	-->
+	<xsl:template mode="showXMLElement" match="geonet:*"/>
+	<xsl:template mode="editXMLElement" match="geonet:*"/>
 
 	<!-- Create an helper list for the current input element.
 		Current input could be an element or an attribute (eg. uom). 

@@ -65,9 +65,11 @@
 				</form>
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
-				<button class="content" onclick="goReset('feedbackf')"><xsl:value-of select="/root/gui/strings/reset"/></button>
-				&#160;
-				<button class="content" onclick="processSubmit()"><xsl:value-of select="/root/gui/strings/accept"/></button>
+				<div align="center">
+					<button class="content" onclick="goReset('feedbackf')"><xsl:value-of select="/root/gui/strings/reset"/></button>
+					&#160;
+					<button class="content" onclick="processSubmit()"><xsl:value-of select="/root/gui/strings/accept"/></button>
+				</div>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>

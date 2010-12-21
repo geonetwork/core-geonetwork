@@ -135,8 +135,8 @@
  
  <!-- Add an option to be able to toggle all fieldsets
   in view and edit mode. -->
- <!--metadata-view-toggleTab/-->
-
+ <!-- metadata-view-toggleTab/-->
+ 
  <!-- Actions configuration
  -->
  <editor-actions>
@@ -180,6 +180,10 @@
   <!-- Display or not keyword selection panel in advanced search panel 
    <keyword-selection-panel/> 
   -->
+	<!--
+	<use-separate-window-for-editor-viewer/>
+	<use-modal-box-for-banner-functions/>
+	-->
  </search>
 	
 	

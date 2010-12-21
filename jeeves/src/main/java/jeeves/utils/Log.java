@@ -51,6 +51,7 @@ public final class Log
 	public static final String DBMS      = JEEVES+ ".dbms";
 	public static final String DBMSPOOL	 = JEEVES+ ".dbmspool";
 	public static final String XLINK_PROCESSOR = JEEVES+ ".xlinkprocessor";
+	public static final String XML_RESOLVER = JEEVES+ ".xmlresolver";
 
 	public final class Dbms
 	{

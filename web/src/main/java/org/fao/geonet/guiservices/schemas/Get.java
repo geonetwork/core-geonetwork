@@ -28,7 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -47,12 +47,26 @@ public class Get implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getDataManager();
+		SchemaManager schemaMan = gc.getSchemamanager();
 
-		Element schemas = new Element("schemas");
+		Element schemas = new Element("schemalist");
 
-		for(String schema : dataMan.getSchemas())
-			schemas.addContent(new Element("name").setText(schema));
+		for (String schema : schemaMan.getSchemas()) {
+			Element elem = new Element("name").setText(schema);
+			// is it a plugin schema?
+			if (schemaMan.isPluginSchema(schema)) {
+				elem.setAttribute("plugin","true");
+			} else {
+				elem.setAttribute("plugin","false");
+			}
+			// is it editable?
+			if (schemaMan.getSchema(schema).canEdit()) {
+				elem.setAttribute("edit","true");
+			} else {
+				elem.setAttribute("edit","false");
+			}
+			schemas.addContent(elem);
+		}
 
 		return schemas;
 	}

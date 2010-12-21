@@ -30,8 +30,10 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.requests.ListRecordsRequest;
@@ -100,6 +102,8 @@ public class ListRecords extends AbstractTokenLister
 	private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager   sm = gc.getSchemamanager();
 
 		String query = "SELECT uuid, schemaId, changeDate, data FROM Metadata WHERE id=?";
 
@@ -121,13 +125,14 @@ public class ListRecords extends AbstractTokenLister
 
 		//--- try to disseminate format
 
+		String schemaDir = sm.getSchemaDir(schema);
 		if (prefix.equals(schema)) {
-			String schemaUrl = Lib.getSchemaUrl(context, "xml/schemas/" + schema + "/schema.xsd");
+			String schemaUrl = Lib.getSchemaUrl(context, schemaDir);
 			String schemaLoc = md.getNamespace().getURI() +" "+ schemaUrl;
 			md.setAttribute("schemaLocation", schemaLoc, OaiPmh.Namespaces.XSI);
 		} else {
-			if (Lib.existsConverter(schema, context.getAppPath(), prefix)) {
-				md = Lib.transform(schema, md, uuid, changeDate, context.getAppPath(), prefix);
+			if (Lib.existsConverter(schemaDir, prefix)) {
+				md = Lib.transform(schemaDir, md, uuid, changeDate, prefix);
 			} else {
 				return null;
 			}

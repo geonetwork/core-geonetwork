@@ -23,7 +23,11 @@
 
 package org.fao.geonet.constants;
 
+import javax.xml.XMLConstants;
+
 import jeeves.constants.Jeeves;
+
+import org.jdom.Namespace;
 
 //=============================================================================
 
@@ -31,6 +35,9 @@ public class Geonet
 {
 	public static final String CONTEXT_NAME = "contextName";
 	public static final String DEFAULT_LANGUAGE = "en";
+	public static final Namespace XSD_NAMESPACE = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
+	public static final Namespace XSI_NAMESPACE = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+	public static final Namespace OASIS_CATALOG_NAMESPACE = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
 	
 	//--------------------------------------------------------------------------
 	//--- container for file names
@@ -49,10 +56,15 @@ public class Geonet
 		public static final String EXTRACT_UUID        = "extract-uuid.xsl";
 		public static final String SET_UUID            = "set-uuid.xsl";
 		public static final String EXTRACT_THUMBNAILS  = "extract-thumbnails.xsl";
+		public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
+		public static final String SET_DATACOMMONS     = "set-datacommons.xsl";
 		public static final String SET_THUMBNAIL       = "set-thumbnail.xsl";
 		public static final String UNSET_THUMBNAIL     = "unset-thumbnail.xsl";
 		public static final String SCHEMA_SUGGESTIONS  = "schema-suggestions.xml";
 		public static final String SCHEMA_SUBSTITUTES  = "schema-substitutes.xml";
+		public static final String SCHEMA_ID           = "schema-ident.xml";
+		public static final String SCHEMA_OASIS        = "oasis-catalog.xml";
+		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
 		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
@@ -62,6 +74,9 @@ public class Geonet
 		public static final String LICENSE_ANNEX       = "license-annex.html";
 		public static final String LICENSE_ANNEX_XSL   = "metadata-license-annex.xsl";
 		public static final String METADATA_BRIEF      = "metadata-brief.xsl";
+		public static final String METADATA_BASEBLANK  = "blanks/metadata-schema00.xsl";
+		public static final String METADATA_BLANK			 = "blanks/metadata-schema";
+		public static final int METADATA_MAX_BLANKS 	 = 20;
 	}
 
 	public class SchemaPath
@@ -433,12 +448,17 @@ public class Geonet
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
 		public static final String LICENSE_DIR      = "licenseDir";
 		public static final String DATA_DIR         = "dataDir";
+		public static final String SCHEMAPLUGINS_DIR= "schemaPluginsDir";
 		public static final String CODELIST_DIR  	  = "codeListDir";
 		public static final String DIR              = "dir";
 		public static final String SUMMARY_CONFIG   = "summaryConfig";
 		public static final String LUCENE_CONFIG    = "luceneConfig";
 		public static final String GUI_CONFIG       = "guiConfig";
 		public static final String JZKITCONFIG      = "jzkitConfig";
+		public static final String PREFERRED_SCHEMA = "preferredSchema";
+		public static final String STAT_LOG_SPATIAL_OBJECTS  = "statLogSpatialObjects";
+		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
+        
 	}
 
 	//--------------------------------------------------------------------------
@@ -473,6 +493,7 @@ public class Geonet
 	public static final String HARVESTER    = GEONETWORK + ".harvester";
 	public static final String SETTINGS     = GEONETWORK + ".settings";
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
+	public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
 	public static final String DB			= GEONETWORK + ".database";
 	public static final String THESAURUS_MAN= GEONETWORK + ".thesaurus-man";
 	public static final String SEARCH_ENGINE= GEONETWORK + ".search";
@@ -491,6 +512,9 @@ public class Geonet
 	public static final String SRU_SEARCH   = SRU + ".search";
 	public static final String OAI          = GEONETWORK + ".oai";
 	public static final String OAI_HARVESTER = OAI + ".provider";
+  // keys for logging search log
+	public static final String SEARCH_LOGGER= GEONETWORK + ".search-logger";
+	public static final String THREADPOOL = GEONETWORK + ".threadpool";
 	
 	//--------------------------------------------------------------------------
 	//--- services

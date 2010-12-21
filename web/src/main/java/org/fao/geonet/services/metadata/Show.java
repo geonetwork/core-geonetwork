@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -63,6 +64,9 @@ public class Show implements Service
 
 		skip = params.getValue("skipInfo", "n");
 		skipInfo = skip.equals("y");
+
+		skip = params.getValue("addRefs", "n");
+		addRefs = skip.equals("y");
 	}
 
 	//--------------------------------------------------------------------------
@@ -90,6 +94,11 @@ public class Show implements Service
 		DataManager   dm = gc.getDataManager();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
+
+		if (!skipPopularity) { // skipPopularity could be a URL param as well
+			String skip = Util.getParam(params, "skipPopularity", "n");
+			skipPopularity = skip.equals("y");
+		}
 		
 		if (id == null)
 			throw new MetadataNotFoundEx("Metadata not found.");
@@ -99,8 +108,8 @@ public class Show implements Service
 		//-----------------------------------------------------------------------
 		//--- get metadata
 		
-		boolean addEditing = false;
 		Element elMd;
+		boolean addEditing = false;
 		if (!skipInfo) {
 			elMd = dm.getMetadata(context, id, addEditing);
 		} else {
@@ -108,6 +117,10 @@ public class Show implements Service
 		}
 
 		if (elMd == null) throw new MetadataNotFoundEx(id);
+
+		if (addRefs) { // metadata.show for GeoNetwork needs geonet:element 
+			elMd = dm.enumerateTree(elMd);
+		}
 
 		//
 		// setting schemaLocation
@@ -151,6 +164,7 @@ public class Show implements Service
 
 	private boolean skipPopularity;
 	private boolean skipInfo;
+	private boolean addRefs;
 }
 //=============================================================================
 

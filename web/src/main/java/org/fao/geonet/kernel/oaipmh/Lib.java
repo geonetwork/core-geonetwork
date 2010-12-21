@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -74,23 +75,26 @@ public class Lib
 
 	//---------------------------------------------------------------------------
 
-	public static String getSchemaUrl(ServiceContext context, String relativePath)
+	public static String getSchemaUrl(ServiceContext context, String schemaDir)
 	{
 		SettingInfo si = new SettingInfo(context);
 
-		return si.getSiteUrl() + context.getBaseUrl() +"/"+ relativePath;
+		schemaDir = schemaDir.replace('\\','/');
+		String appPath = context.getAppPath().replace('\\','/');
+		String relativePath = StringUtils.substringAfter(schemaDir,context.getAppPath()); 
+		return si.getSiteUrl() + context.getBaseUrl() + relativePath;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public static boolean existsConverter(String schema, String appPath, String prefix) {
-		 File f = new File(appPath + Geonet.Path.SCHEMAS + schema + "/convert/" + prefix + ".xsl");
+	public static boolean existsConverter(String schemaDir, String prefix) {
+		 File f = new File(schemaDir + "convert/" + prefix + ".xsl");
 		 return f.exists();
 	}
 
 	//--------------------------------------------------------------------------
 
-	public static Element transform(String schema, Element md, String uuid, String changeDate, String appPath, String targetFormat) throws Exception {
+	public static Element transform(String schemaDir, Element md, String uuid, String changeDate, String targetFormat) throws Exception {
 
 		//--- setup environment
 
@@ -107,7 +111,7 @@ public class Lib
 
 		//--- do an XSL transformation
 
-		String styleSheet = appPath + Geonet.Path.SCHEMAS +schema + "/convert/" + targetFormat + ".xsl";
+		String styleSheet = schemaDir + "/convert/" + targetFormat + ".xsl";
 
 		return Xml.transform(root, styleSheet);
 	}

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -32,12 +33,11 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.document.MapFieldSelector;
@@ -55,7 +55,7 @@ import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.Sort;
@@ -64,6 +64,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -71,6 +72,7 @@ import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
+import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.JODAISODate;
@@ -87,6 +89,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,6 +122,11 @@ public class LuceneSearcher extends MetaSearcher
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
 	
+	/** Filter geometry object WKT, used in the logger
+	  * ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
+	  */
+	private String _geomWKT = null;
+
 	//--------------------------------------------------------------------------------
 	// constructor
 	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, LuceneConfig luceneConfig)
@@ -145,13 +153,23 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
+		SearcherLogger searchLogger = new SearcherLogger(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude());
+
 		_reader = _sm.getIndexReader();
 		computeQuery(srvContext, request, config);
 		initSearchRange(srvContext);
 		performQuery(getFrom()-1, getTo());
+		searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
 	}
 
 	//--------------------------------------------------------------------------------
+
+	public List<org.jdom.Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+		throw new UnsupportedOperationException("Not supported by Lucene searcher");
+	}
+
+	//--------------------------------------------------------------------------------
+
 
 	/**
 	 * @return		An empty response if no result or a list of results. Return
@@ -374,6 +392,9 @@ public class LuceneSearcher extends MetaSearcher
 		
 		Geometry geometry = getGeometry(request);
         if (geometry != null) {
+						if (_sm.getLogSpatialObject()) {
+							_geomWKT = geometry.toText();
+						}
             _filter = new CachingWrapperFilter(_sm.getSpatial().filter(_query, geometry, request));
         }
         
@@ -384,6 +405,8 @@ public class LuceneSearcher extends MetaSearcher
 
 		_sort = makeSort(Collections.singletonList(Pair.read(sortBy, sortOrder)));
 		
+		_resultType = config.getValue(Geonet.SearchResult.RESULT_TYPE, Geonet.SearchResult.ResultType.HITS);
+		/* resultType is not specified in search params - it's in config?
 		Content child = request.getChild(Geonet.SearchResult.RESULT_TYPE);
         if (child == null) {
             _resultType = Geonet.SearchResult.ResultType.HITS;
@@ -391,6 +414,7 @@ public class LuceneSearcher extends MetaSearcher
         else {
             _resultType = child.getValue();
         }
+			*/
 	}
 
 	//---------------------------------------------------------------------------
@@ -582,14 +606,15 @@ public class LuceneSearcher extends MetaSearcher
 			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
 			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
 			boolean inclusive  = "true".equals(sInclusive);
+
 			LuceneConfigNumericField fieldConfig = numericFieldSet.get(fld);
 			if (fieldConfig != null) {
 				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(null, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType());
 			} else {
-				Term lowerTerm = (lowerTxt == null ? null : new Term(fld, analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet)));
-				Term upperTerm = (upperTxt == null ? null : new Term(fld, analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet)));
-	
-				returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
+				lowerTxt = (lowerTxt == null ? null : analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
+				upperTxt = (upperTxt == null ? null : analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
+
+				returnValue = new TermRangeQuery(fld, lowerTxt, upperTxt, inclusive, inclusive);
 			}
 		}
 		else if (name.equals("DateRangeQuery"))
@@ -830,6 +855,7 @@ public class LuceneSearcher extends MetaSearcher
 
 			// -- prepare
 			HashMap<String,HashMap<String,Object>> summaryConfigValues = getSummaryConfig(summaryConfig, resultType, maxSummaryKeys);
+			Log.debug(Geonet.SEARCH_ENGINE, "ResultType is "+resultType+", SummaryKeys are "+summaryConfigValues);
 			HashMap<String,HashMap<String,Integer>> summaryMaps = prepareSummaryMaps(summaryConfigValues.keySet());
 
 			// -- get all hits from search to build the summary
@@ -866,15 +892,14 @@ public class LuceneSearcher extends MetaSearcher
 		addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
 		addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
 		addElement(info, Edit.Info.Elem.SOURCE,      source);
-		
-		List<Field> fields = doc.getFields();
-        for (Field field : fields) {
-            String name = field.name();
-            String value = field.stringValue();
-            if (name.equals("_cat")) {
-                addElement(info, Edit.Info.Elem.CATEGORY, value);
-            }
-        }
+	
+		List<Fieldable> fields = doc.getFields();
+    for (Iterator<Fieldable> i = fields.iterator(); i.hasNext(); ) {
+      Fieldable field = i.next();
+      String name  = field.name();
+      String value = field.stringValue();
+      if (name.equals("_cat")) addElement(info, Edit.Info.Elem.CATEGORY, value);
+    }	
 		md.addContent(info);
 		return md;
 	}
@@ -933,7 +958,7 @@ public class LuceneSearcher extends MetaSearcher
 			MapFieldSelector selector = new MapFieldSelector(fieldnames); 
 
 			File luceneDir = new File(indexPath);
-			IndexReader reader = IndexReader.open(luceneDir);
+			IndexReader reader = IndexReader.open(FSDirectory.open(luceneDir), true);
       Searcher searcher = new IndexSearcher(reader);
 
 			Map<String,String> values = new HashMap<String,String>();
@@ -988,13 +1013,12 @@ public class LuceneSearcher extends MetaSearcher
 		if ((requestStr.startsWith("\"") && requestStr.endsWith("\""))) phrase = true;
 		
 		TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
+		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
 		List<String> tokenList = new ArrayList<String>();
 		try {
-			while (true) {
-				Token token = ts.next();
-				if (token == null) break;
-				tokenList.add(token.termText());
+			while (ts.incrementToken()) {
+				tokenList.add(termAtt.term());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

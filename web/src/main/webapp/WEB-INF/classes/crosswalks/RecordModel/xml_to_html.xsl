@@ -15,8 +15,8 @@
 	<xsl:include href="../../../../xsl/main.xsl"/>
 	<xsl:include href="../../../../xsl/metadata.xsl"/>
 	
-	<xsl:variable name="baseurl" select="//geonet:info/baseurl"/>
-	<xsl:variable name="locserv" select="//geonet:info/locserv"/>
+	<xsl:variable name="baseurl" select="//geonet:info/baseUrl"/>
+	<xsl:variable name="locserv" select="//geonet:info/locService"/>
 
 	<xsl:template match="/">
 		<xsl:apply-templates mode="doit" select="*"/>

@@ -23,16 +23,19 @@
 
 package org.fao.geonet.services.config;
 
+import jeeves.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.ProxyInfo;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -76,7 +79,8 @@ public class DoActions implements Service
 	private void doActions(ServiceContext context) throws Exception {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager		dataMan = gc.getDataManager();
-		SettingInfo si = new SettingInfo(gc.getSettingManager());
+		SettingManager settingMan = gc.getSettingManager();
+		SettingInfo si = new SettingInfo(settingMan);
 
 		try {
 			if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
@@ -89,7 +93,18 @@ public class DoActions implements Service
 			throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
 		}
 		
-		// should also restart the Z server?
+		// Load proxy information into Jeeves
+		ProxyInfo pi = JeevesProxyInfo.getInstance();
+		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+		if (useProxy) {
+			String  proxyHost      = settingMan.getValue("system/proxy/host");
+			String  proxyPort      = settingMan.getValue("system/proxy/port");
+			String  username       = settingMan.getValue("system/proxy/username");
+			String  password       = settingMan.getValue("system/proxy/password");
+			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
+		}
+
+		// FIXME: should also restart the Z server?
 	}
 
 }

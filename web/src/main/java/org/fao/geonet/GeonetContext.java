@@ -26,12 +26,14 @@ package org.fao.geonet;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.springframework.context.ApplicationContext;
 
@@ -42,6 +44,7 @@ public class GeonetContext
 	/* package */ DataManager       dataMan;
 	/* package */ AccessManager     accessMan;
 	/* package */ SearchManager     searchMan;
+	/* package */ SchemaManager     schemaMan;
 	/* package */ ServiceConfig     config;
 	/* package */ CatalogDispatcher catalogDis;
 	/* package */ SettingManager    settingMan;
@@ -49,7 +52,8 @@ public class GeonetContext
 	/* package */ ThesaurusManager  thesaurusMan;
 	/* package */ OaiPmhDispatcher  oaipmhDis;
 	/* package */ ApplicationContext app_context;
-    /* package */ MetadataNotifierManager metadataNotifierMan;
+  /* package */ MetadataNotifierManager metadataNotifierMan;
+	/* package */ ThreadPool        threadPool;
 
 	//---------------------------------------------------------------------------
 	/*package*/ GeonetContext() {}
@@ -58,6 +62,7 @@ public class GeonetContext
 	public DataManager       getDataManager()       { return dataMan;      }
 	public AccessManager     getAccessManager()     { return accessMan;    }
 	public SearchManager     getSearchmanager()     { return searchMan;    }
+	public SchemaManager     getSchemamanager()     { return schemaMan;    }
 	public ServiceConfig     getHandlerConfig()     { return config;       }
 	public CatalogDispatcher getCatalogDispatcher() { return catalogDis;   }
 	public SettingManager    getSettingManager()    { return settingMan;   }
@@ -65,8 +70,8 @@ public class GeonetContext
 	public ThesaurusManager  getThesaurusManager()  { return thesaurusMan; }
 	public OaiPmhDispatcher  getOaipmhDispatcher()  { return oaipmhDis;    }
 	public ApplicationContext  getApplicationContext() { return app_context; }
-
-    public MetadataNotifierManager getMetadataNotifier() { return metadataNotifierMan; }
+  public MetadataNotifierManager getMetadataNotifier() { return metadataNotifierMan; }
+	public ThreadPool        getThreadPool()        { return threadPool;   }
 
 	//---------------------------------------------------------------------------
 

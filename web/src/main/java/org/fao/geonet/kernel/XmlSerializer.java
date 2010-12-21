@@ -141,7 +141,7 @@ public class XmlSerializer
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, int owner, String groupOwner) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner, groupOwner);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner, groupOwner, "");
 	}
 
 	//--------------------------------------------------------------------------
@@ -150,7 +150,7 @@ public class XmlSerializer
 										 String source, String uuid, String isTemplate,
 										 String title, int owner, String groupOwner) throws SQLException
 	{
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner);
+		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner, "");
 	}
 
 	//--------------------------------------------------------------------------
@@ -158,7 +158,7 @@ public class XmlSerializer
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String createDate,
 										 String changeDate, String isTemplate, String title,
-										 int owner, String groupOwner) throws SQLException
+										 int owner, String groupOwner, String docType) throws SQLException
 	{
 	
 		if (resolveXLinks()) Processor.removeXLink(xml);
@@ -173,8 +173,9 @@ public class XmlSerializer
 
 		fixCR(xml);
 
-		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, uuid, isTemplate, isHarvested, root, owner");
-		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, "+
+															"uuid, isTemplate, isHarvested, root, owner, doctype");
+		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 
 		Vector<Serializable> args = new Vector<Serializable>();
 		args.add(serial);
@@ -188,6 +189,7 @@ public class XmlSerializer
 		args.add("n");
 		args.add(xml.getQualifiedName());
 		args.add(owner);
+		args.add(docType);
 
 		if (groupOwner != null) {
 			fields.append(", groupOwner");

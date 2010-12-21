@@ -27,7 +27,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -39,6 +39,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,21 +61,19 @@ public class ListMetadataFormats implements OaiPmhService
 		ListMetadataFormatsRequest  req = (ListMetadataFormatsRequest) request;
 		ListMetadataFormatsResponse res = new ListMetadataFormatsResponse();
 
-		String uuid = req.getIdentifier();
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager   sm = gc.getSchemamanager();
 
+		String uuid = req.getIdentifier();
 		if (uuid != null)
 		{
 			String schema = Lib.getMetadataSchema(context, uuid);
-
-			res.addFormat(getSchemaInfo(context, schema));
+			res.addFormat(getSchemaInfo(context, sm, schema));
 		}
 		else
 		{
-			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			DataManager   dm = gc.getDataManager();
-
-			for (String schema : dm.getSchemas())
-				res.addFormat(getSchemaInfo(context, schema));
+			for (String schema : sm.getSchemas())
+				res.addFormat(getSchemaInfo(context, sm, schema));
 		}
 
 		for (MetadataFormat mdf : getDefaultFormats(context)) {
@@ -90,21 +89,29 @@ public class ListMetadataFormats implements OaiPmhService
 	//---
 	//---------------------------------------------------------------------------
 
-	private MetadataFormat getSchemaInfo(ServiceContext context, String name) throws IOException, JDOMException
+	private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) throws IOException, JDOMException
 	{
-		String schemaFile = SCHEMA_PATH + name + "/schema.xsd";
+		String schemaFile = sm.getSchemaDir(name) + "schema.xsd";
 
-		//--- extract namespace
+		//--- extract namespace if schema.xsd file exists (could be DTD schema)
 
-		Element elem   = Xml.loadFile(context.getAppPath() + schemaFile);
-		String  nsPref = elem.getAttributeValue("targetNamespace");
+		String nsPref = null;
+		boolean schemaExists = new File(schemaFile).exists();
+		if (schemaExists) {
+			Element elem   = Xml.loadFile(schemaFile);
+			nsPref = elem.getAttributeValue("targetNamespace");
+		}
 
 		//--- create object
 
 		MetadataFormat mf = new MetadataFormat();
 
 		mf.prefix    = name;
-		mf.schema    = Lib.getSchemaUrl(context, schemaFile);
+		if (schemaExists) {
+			mf.schema    = Lib.getSchemaUrl(context, schemaFile);
+		} else {
+			mf.schema		 = "";
+		}
 		mf.namespace = Namespace.getNamespace(nsPref != null ? nsPref : "");
 
 		return mf;
@@ -131,7 +138,6 @@ public class ListMetadataFormats implements OaiPmhService
 	//---
 	//---------------------------------------------------------------------------
 
-	private static final String SCHEMA_PATH = "xml/schemas/";
 	private static final String DEFAULT_SCHEMAS_FILE = "xml/validation/oai/schemas.xml";
 }
 

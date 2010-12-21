@@ -41,6 +41,14 @@
         <!-- Sample data -->
 		<allow service="metadata.samples.add"/>
         
+    <!-- Metadata schema operations -->
+		<allow service="metadata.schema.add"/>
+		<allow service="metadata.schema.add.form"/>
+		<allow service="metadata.schema.update"/>
+		<allow service="metadata.schema.update.form"/>
+		<allow service="metadata.schema.delete"/>
+		<allow service="metadata.schema.delete.form"/>
+
 		<!-- Edit the context sensitive help -->
 		<allow service="help.edit.form"/>
 		<allow service="help.update"/>
@@ -88,9 +96,29 @@
 		<allow service="metadata.admin.index.rebuildxlinks"/>
 		<allow service="metadata.admin.index.optimize"/>
 
-        <!-- index languages-->
-        <allow service="index.languages.get"/>
-        <allow service="index.languages.set"/>
+		<!-- Search statistics facilities -->
+		<allow service="stat.main"/>
+		<allow service="stat.numberOfSearchByMonth"/>
+		<allow service="stat.searchesNoHit"/>
+    <allow service="stat.uniqueIP"/>
+    <allow service="stat.graphByDate"/>
+    <allow service="stat.lastMonthSummary"/>
+    <allow service="stat.mostSearchedKeyword"/>
+    <allow service="stat.mostSearchedCategory"/>
+    <allow service="stat.simpleAdvancedSearch"/>
+    <allow service="stat.mdPopularity"/>
+    <allow service="stat.requests.csv"/>
+    <allow service="stat.params.csv"/>
+    <allow service="stat.tagCloud"/>
+    <allow service="stat.groupPopularity"/>
+		<allow service="stat.categoryPopularity"/>
+    <allow service="stat.catalogPopularity"/>
+    <allow service="stat.deleteTmpGraphics"/>
+    <allow service="stat.tableExport"/>
+
+    <!-- index languages-->
+    <allow service="index.languages.get"/>
+    <allow service="index.languages.set"/>
 		
 		<!-- Test i18n - under administrator for performance reasons -->
 		<allow service="test.i18n"/>
@@ -246,6 +274,7 @@
 		<allow service="main.home"/>
 		<allow service="main.searchform.simple.embedded"/> <!--  ETj -->		
 		<allow service="main.searchform.advanced.embedded"/> <!--  ETj -->		
+		<allow service="main.searchform.remote.embedded"/>
 		<allow service="main.search.embedded"/> <!--  ETj -->
 		<allow service="main.search"/> <!-- Enables OpenSearch HTML responses -->
 		<allow service="main.search.suggest"/>
@@ -316,6 +345,8 @@
 		<allow service="portal.search"/>
 		<allow service="portal.opensearch"/>
 		<allow service="portal.search.keywords"/>
+		<allow service="portal.search.credits"/>
+		<allow service="portal.search.titles"/>
 		<allow service="portal.search.present"/>
 		<allow service="portal.present"/>
 		<allow service="portal.full"/>

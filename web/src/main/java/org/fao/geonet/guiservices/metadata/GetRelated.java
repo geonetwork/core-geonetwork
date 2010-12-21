@@ -76,6 +76,8 @@ public class GetRelated implements Service {
 		String from = Util.getParam(params, "from", "1");
 		String to = Util.getParam(params, "to", "1000");
 
+		Log.info(Geonet.SEARCH_ENGINE, "GuiService param is "+_config.getValue("guiService"));
+
 		Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 		int id;
 		String uuid;

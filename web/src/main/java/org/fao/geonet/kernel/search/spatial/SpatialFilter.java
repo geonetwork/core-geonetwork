@@ -22,18 +22,26 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.TopologyException;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.utils.Log;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.Collector;
+import org.apache.lucene.util.DocIdBitSet;
+import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
@@ -44,9 +52,11 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
@@ -56,23 +66,22 @@ import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import java.io.IOException;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.TopologyException;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 public abstract class SpatialFilter extends Filter
 {
     private static final long     serialVersionUID = -6221744013750827050L;
+    private static SimpleFeatureType FEATURE_TYPE;
 
     static {
         SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
         builder.add(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, Geometry.class,DefaultGeographicCRS.WGS84);
         builder.setDefaultGeometry(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME);
         builder.setName(SpatialIndexWriter.SPATIAL_INDEX_TYPENAME);
+        FEATURE_TYPE = builder.buildFeatureType();
     }
     
     
@@ -88,7 +97,7 @@ public abstract class SpatialFilter extends Filter
     private boolean warned = false;
 
     protected SpatialFilter(Query query, Geometry geom,
-                            FeatureSource featureSource, SpatialIndex index) throws IOException
+            FeatureSource featureSource, SpatialIndex index) throws IOException
     {
         _query = query;
         _geom = geom;
@@ -108,10 +117,10 @@ public abstract class SpatialFilter extends Filter
     protected SpatialFilter(Query query, Envelope bounds,
             FeatureSource featureSource, SpatialIndex index) throws IOException
     {
-        this(query, JTS.toGeometry(bounds),featureSource,index);
+        this(query,JTS.toGeometry(bounds),featureSource,index);
     }
 
-    public BitSet bits(final IndexReader reader) throws IOException
+    public DocIdSet getDocIdSet(final IndexReader reader) throws IOException
     {
         final BitSet bits = new BitSet(reader.maxDoc());
 
@@ -119,11 +128,11 @@ public abstract class SpatialFilter extends Filter
         final Set<FeatureId> matches = new HashSet<FeatureId>();
         final Map<FeatureId,Integer> docIndexLookup = new HashMap<FeatureId,Integer>();
         
-        new IndexSearcher(reader).search(_query, new Collector()
-        {
+        new IndexSearcher(reader).search(_query, new Collector() {
 						private int docBase;
+            private Document document;
 
-						//ignore scorer
+						// ignore scorer
 						public void setScorer(Scorer scorer) {}
 
 						// accept docs out of order (for a BitSet it doesn't matter)
@@ -131,20 +140,19 @@ public abstract class SpatialFilter extends Filter
 							return true;
 						}
 
-            public final void collect(int doc)
-            {
-								doc = doc + docBase;
-                try {
-                    Document document = reader.document(doc, _selector);
-                    String key = document.get("_id");
-                    FeatureId featureId = unrefinedSpatialMatches.get(key); 
-                    if (featureId!=null) {
-                        matches.add(featureId);
-                        docIndexLookup.put(featureId, doc);
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+						public void collect(int doc) {
+							doc = doc + docBase;	
+              try {
+                 document = reader.document(doc, _selector);
+                 String key = document.get("_id");
+                 FeatureId featureId = unrefinedSpatialMatches.get(key); 
+                 if (featureId!=null) {
+                   matches.add(featureId);
+                   docIndexLookup.put(featureId, doc);
+                 }
+              } catch (Exception e) {
+                 throw new RuntimeException(e);
+              }
             }
 
 						public void setNextReader(IndexReader reader, int docBase) {
@@ -153,9 +161,9 @@ public abstract class SpatialFilter extends Filter
         });
         
         if( matches.isEmpty() ){
-            return bits;
-        }else{
-            return applySpatialFilter(matches,docIndexLookup,bits);
+            return new DocIdBitSet(bits);
+        } else {
+            return new DocIdBitSet(applySpatialFilter(matches,docIndexLookup,bits));
         }
     }
 
@@ -249,8 +257,9 @@ public abstract class SpatialFilter extends Filter
         PropertyName geomPropertyName = _filterFactory.property(geomAttName);
 
         Literal geomExpression = _filterFactory.literal(_geom);
-        return createGeomFilter(_filterFactory,
+        org.opengis.filter.Filter filter = createGeomFilter(_filterFactory,
                 geomPropertyName, geomExpression);
+        return filter;
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,

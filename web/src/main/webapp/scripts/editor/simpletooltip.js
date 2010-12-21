@@ -81,18 +81,9 @@ function getHtmlTip(node)
 
 //=========================================================================
 /**
- * FIXME : Here you need to add any namespace required by metadata schema.
- * How could we define required namespace from registered schemas in the catalogue ?
  */
 var toolTipRequestTemp =
-'<request xmlns:gmd="http://www.isotc211.org/2005/gmd"'+
-'         xmlns:gts="http://www.isotc211.org/2005/gts"'+ 
-'         xmlns:srv="http://www.isotc211.org/2005/srv"'+ 
-'         xmlns:gml="http://www.opengis.net/gml"'+
-'         xmlns:gfc="http://www.isotc211.org/2005/gfc"' +
-'         xmlns:gco="http://www.isotc211.org/2005/gco"'+
-'         xmlns:dct="http://purl.org/dc/terms/"'+
-'         xmlns:dc ="http://purl.org/dc/elements/1.1/">'+
+'<request>'+ 
 '   <element schema="{SCHEMA}" name="{NAME}" context="{CONTEXT}" fullContext="{FULLCONTEXT}" isoType="{ISOTYPE}"/>'+
 '</request>';
 

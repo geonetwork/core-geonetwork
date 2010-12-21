@@ -55,10 +55,8 @@ import java.util.Vector;
 
 public class EditLib
 {
-    private Hashtable<String, Integer> htVersions   = new Hashtable<String, Integer>(1000);
-	private Hashtable<String, MetadataSchema> htSchemas    = new Hashtable<String, MetadataSchema>();
-	private Hashtable<String, String> htSchemaDirs = new Hashtable<String, String>();
-	private Hashtable<String, SchemaSuggestions> htSchemaSugg = new Hashtable<String, SchemaSuggestions>();
+  private Hashtable<String, Integer> htVersions   = new Hashtable<String, Integer>(1000);
+	private SchemaManager scm;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -69,11 +67,9 @@ public class EditLib
 	/** Init structures
 	  */
 
-	public EditLib()
-	{
-
-        htVersions.clear();
-		htSchemas .clear();
+	public EditLib(SchemaManager scm) {
+		this.scm = scm;
+    htVersions.clear();
 	}
 
 	//--------------------------------------------------------------------------
@@ -82,61 +78,7 @@ public class EditLib
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Loads the metadata schema from disk and adds it to the pool
-	  */
-
-	public void addSchema(String name, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile) throws Exception
-	{
-		String path = new File(xmlSchemaFile).getParent() +"/";
-
-		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
-		mds.setName(name);
-		mds.setSchemaDir(path);
-		mds.loadSchematronRules();
-		htSchemas   .put(name, mds);
-		htSchemaDirs.put(name, path);
-		htSchemaSugg.put(name, new SchemaSuggestions(xmlSuggestFile));
-	}
-
-	//--------------------------------------------------------------------------
-
-	public MetadataSchema getSchema(String name)
-	{
-		MetadataSchema schema = htSchemas.get(name);
-
-		if (schema == null)
-			throw new IllegalArgumentException("Schema not registered : " + name);
-
-		return schema;
-	}
-
-	//--------------------------------------------------------------------------
-
-	public String getSchemaDir(String name)
-	{
-		String dir = htSchemaDirs.get(name);
-
-		if (dir == null)
-			throw new IllegalArgumentException("Schema not registered : " + name);
-
-		return dir;
-	}
-
-	//--------------------------------------------------------------------------
-
-	public Set<String> getSchemas()	
-	{
-		return htSchemas.keySet();
-	}
-
-	//--------------------------------------------------------------------------
-
-	public boolean existsSchema(String name)
-	{
-		return htSchemas.containsKey(name);
-	}
-
-    //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 	/** Expands a metadata adding all information needed for editing.
 	  */
 
@@ -151,7 +93,7 @@ public class EditLib
 	{
 		Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + jeeves.utils.Xml.getString(md));
 		enumerateTree(md,id,parent);
-		expandTree(getSchema(schema), md);
+		expandTree(scm.getSchema(schema), md);
 		Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
 	}
 
@@ -189,12 +131,12 @@ public class EditLib
 
 	public void fillElement(String schema, Element parent, Element md) throws Exception
 	{
-		fillElement(getSchema(schema), getSchemaSuggestions(schema), parent, md);
+		fillElement(scm.getSchema(schema), scm.getSchemaSuggestions(schema), parent, md);
 	}
 
 	public void fillElement(String schema, String parentName, Element md) throws Exception
 	{
-		fillElement(getSchema(schema), getSchemaSuggestions(schema), parentName, md);
+		fillElement(scm.getSchema(schema), scm.getSchemaSuggestions(schema), parentName, md);
 	}
 
 	//--------------------------------------------------------------------------
@@ -271,7 +213,7 @@ public class EditLib
 		Log.debug(Geonet.EDITORADDELEMENT,"#### - child qname = " + qname); 
 
 		String name   = getUnqualifiedName(qname);
-		String ns     = getNamespace(qname, el, getSchema(schema));
+		String ns     = getNamespace(qname, el, scm.getSchema(schema));
 		String prefix = getPrefix(qname);
 		String parentName = getParentNameFromChild(el); 
 		
@@ -289,8 +231,8 @@ public class EditLib
 
 		Element child = new Element(name, prefix, ns);
 
-		MetadataSchema    mdSchema = getSchema(schema);
-		SchemaSuggestions mdSugg   = getSchemaSuggestions(schema);
+		MetadataSchema    mdSchema = scm.getSchema(schema);
+		SchemaSuggestions mdSugg   = scm.getSchemaSuggestions(schema);
 
 		String typeName = mdSchema.getElementType(el.getQualifiedName(),parentName);
 
@@ -343,7 +285,7 @@ public class EditLib
 	public void addFragment(String schema, Element el, String qname, String fragment) throws Exception {
 
 		String name = getUnqualifiedName(qname);
-		String ns = getNamespace(qname, el, getSchema(schema));
+		String ns = getNamespace(qname, el, scm.getSchema(schema));
 		String prefix = getPrefix(qname);
 		String parentName = getParentNameFromChild(el);
 
@@ -361,7 +303,7 @@ public class EditLib
 			
 		}
 		
-		MetadataSchema mdSchema = getSchema(schema);
+		MetadataSchema mdSchema = scm.getSchema(schema);
 		String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
  		MetadataType type = mdSchema.getTypeInfo(typeName);
  		
@@ -566,7 +508,7 @@ public class EditLib
         boolean hasContent = false;
 		Vector<Element> holder = new Vector<Element>();
 
-		MetadataSchema mdSchema = getSchema(schema);
+		MetadataSchema mdSchema = scm.getSchema(schema);
 		String chUQname = getUnqualifiedName(chName);
 		String chPrefix = getPrefix(chName);
 		String chNS     = getNamespace(chName, md, mdSchema);
@@ -614,7 +556,7 @@ public class EditLib
 	
 		String name = md.getQualifiedName();
 		String parentName = getParentNameFromChild(md);
-		MetadataSchema mdSchema = getSchema(schema);
+		MetadataSchema mdSchema = scm.getSchema(schema);
 		String typeName = mdSchema.getElementType(name,parentName);
 		MetadataType thisType = mdSchema.getTypeInfo(typeName);
 
@@ -1112,7 +1054,7 @@ public class EditLib
 
 		String childQName = child.getQualifiedName();
 
-		MetadataSchema mds = getSchema(schema);
+		MetadataSchema mds = scm.getSchema(schema);
 		MetadataType mdt = getType(mds, parent);
 		
 		int min = -1, max = -1;
@@ -1132,7 +1074,7 @@ public class EditLib
 	private Element createElement(MetadataSchema schema, String parent, String qname, String childNS, int min, int max) throws Exception {
 
 		Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
-		SchemaSuggestions mdSugg   = getSchemaSuggestions(schema.getName());
+		SchemaSuggestions mdSugg   = scm.getSchemaSuggestions(schema.getName());
 		
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, getUnqualifiedName(qname)));
 		child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX, getPrefix(qname)));
@@ -1287,18 +1229,6 @@ public class EditLib
 
 			md.addContent(attribute);
 		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	private SchemaSuggestions getSchemaSuggestions(String name)
-	{
-		SchemaSuggestions sugg = htSchemaSugg.get(name);
-
-		if (sugg == null)
-			throw new IllegalArgumentException("Schema suggestions not registered : " + name);
-
-		return sugg;
 	}
 
 }

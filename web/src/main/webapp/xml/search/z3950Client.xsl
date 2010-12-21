@@ -5,34 +5,12 @@ xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 <xsl:import href="parser.xsl"/>
 
 <!--
-computes bounding box values
+bounding box values
 -->
-<xsl:variable name="region" select="string(/request/region)"/>
-<xsl:variable name="regionData" select="/request/regions/*[string(id)=$region]"/>
-<xsl:variable name="westBL">
-	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/west"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/westBL"/></xsl:otherwise>
-	</xsl:choose>
-</xsl:variable>
-<xsl:variable name="eastBL">
-	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/east"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/eastBL"/></xsl:otherwise>
-	</xsl:choose>
-</xsl:variable>
-<xsl:variable name="southBL">
-	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/south"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/southBL"/></xsl:otherwise>
-	</xsl:choose>
-</xsl:variable>
-<xsl:variable name="northBL">
-	<xsl:choose>
-		<xsl:when test="$region"><xsl:value-of select="$regionData/north"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="/request/northBL"/></xsl:otherwise>
-	</xsl:choose>
-</xsl:variable>
+<xsl:variable name="westBL" select="/request/westBL"/>
+<xsl:variable name="eastBL" select="/request/eastBL"/>
+<xsl:variable name="southBL" select="/request/southBL"/>
+<xsl:variable name="northBL" select="/request/northBL"/>
 
 <!--
 compiles a request into a Z39.50 query
@@ -54,7 +32,7 @@ compiles a request into a Z39.50 query
 		
 		<!-- any -->
 		<xsl:call-template name="textField">
-			<xsl:with-param name="expr" select="/request/any"/>
+			<xsl:with-param name="expr" select="/request/any|/request/or"/>
 			<xsl:with-param name="use"  select="1016"/> <!-- any -->
 		</xsl:call-template>
 		
@@ -65,7 +43,7 @@ compiles a request into a Z39.50 query
 		</xsl:call-template>
 
 		<!-- bounding box -->
-		<xsl:if test="$region">
+		<xsl:if test="$northBL != 'NaN' and $southBL != 'NaN' and $eastBL != 'NaN' and $westBL != 'NaN' and normalize-space(/request/region)!=''">
 			<xsl:choose>
 				
 				<!-- equal -->

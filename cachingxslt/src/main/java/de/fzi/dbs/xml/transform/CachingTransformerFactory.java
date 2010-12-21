@@ -37,6 +37,18 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
   /** Active writers count. */
   protected static int activeWriters = 0;
 
+	/**
+	 * Clear the stylesheet cache. This is not part of the 
+	 * JAXP TransformerFactoryImpl so users should test for existence of this 
+	 * method before calling otherwise JAXP compatibility will be broken.
+	 *
+	 */
+	public void clearCache() {
+    beforeWrite();
+    templatesCache.clear();
+    afterWrite();
+	}
+
   /**
    * Process the source into a Transformer object. If source is a StreamSource
    * with <code>systemID</code> pointing to a file, transformer is produced

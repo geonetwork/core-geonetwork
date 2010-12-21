@@ -39,6 +39,7 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -148,9 +149,10 @@ public class SearchController
 		//--- get metadata from DB
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		Element  res = gc.getDataManager().getMetadata(context, id, false); 
+
+		SchemaManager scm = gc.getSchemamanager();
 		
-		if (res==null)
-		    return null;
+		if (res==null) return null;
 
 		String schema = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
 					.getChildText(Edit.Info.Elem.SCHEMA);
@@ -180,16 +182,10 @@ public class SearchController
 		else if (outSchema == OutputSchema.ISO_PROFILE)
 			prefix = "iso";
 		else {
-			// FIXME ISO PROFIL : Use declared primeNS in current node.
-			prefix = "fra";
-			if (!schema.contains("iso19139")){
-				// FIXME : should we return null or an exception in that case and which exception
-				throw new InvalidParameterValueEx("outputSchema not supported for metadata " + 
-						id + " schema.", schema);
-			}
+			throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
 		}
 	
-		String schemaDir  = context.getAppPath() +"xml"+ FS +"csw"+ FS +"schemas"+ FS +schema+ FS;
+		String schemaDir  = scm.getSchemaCSWPresentDir(schema)+ FS;
 		String styleSheet = schemaDir + prefix +"-"+ setName +".xsl";
 
 		HashMap<String, String> params = new HashMap<String, String>();

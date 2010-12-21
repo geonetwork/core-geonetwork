@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+<!-- OASIS CATALOG FOR GEONETWORK TO REMAP VARIOUS XML IDs -->
+
+	<!-- This used to be done in Java code, but with the use of these 
+			 maps you can customise this to suit yourself. -->
+
+	<!-- Each schema has an oasis-catalog file for remapping individual
+	     xsd schemaLocation hints -->
+
+	<!-- remap utils-fn.xsl included in schematrons to the correct place
+	     relative to this catalog file -->
+
+	<uri    name="../../../xsl/utils-fn.xsl"
+					uri="../xsl/utils-fn.xsl"/>
+
+</catalog>

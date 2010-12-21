@@ -24,6 +24,7 @@
 package jeeves.server.dispatchers.guiservices;
 
 import jeeves.constants.ConfigFile;
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -55,6 +56,12 @@ public class Call implements GuiService
 
 		if (clas.startsWith("."))
 			clas = pack + clas;
+
+		//--- let everyone else know that this is a guiservice
+		Element guiService = new Element("param");
+		guiService.setAttribute(Jeeves.Attr.NAME, Jeeves.Text.GUI_SERVICE);
+		guiService.setAttribute(Jeeves.Attr.VALUE, "yes");
+		config.addContent(guiService);
 
 		serviceObj = (Service) Class.forName(clas).newInstance();
 		serviceObj.init(appPath, new ServiceConfig(config.getChildren()));

@@ -34,7 +34,18 @@
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon-dom</artifactId>
+    </dependency>
+		<dependency>
+			<groupId>jfreechart</groupId>
+			<artifactId>jfreechart</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jcommons</groupId>
+			<artifactId>jcommons</artifactId>
+		</dependency>
     <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>openrdf-model</artifactId>
@@ -303,7 +314,7 @@
       <artifactId>netcdf</artifactId>
       <version>4.0.patch</version>
     </dependency>
-    <dependency>
+		<dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
       <version>2.1</version>

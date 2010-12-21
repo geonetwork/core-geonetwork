@@ -47,11 +47,14 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
@@ -108,14 +111,12 @@ public class SearchManager
     public static final String NON_SPATIAL_DIR = "/nonspatial";
     
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
-	private static final String SCHEMA_STYLESHEETS_DIR_PATH = "xml/schemas";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
 
 	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
     private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
 
 	private final File _stylesheetsDir;
-	private final File _schemasDir;
     private static String _stopwordsDir;
 	private final Element _summaryConfig;
 	private LuceneConfig _luceneConfig;
@@ -125,6 +126,9 @@ public class SearchManager
      * Used when adding documents to the Lucene index, and also to analyze query terms at search time.
      */
 	private static PerFieldAnalyzerWrapper _analyzer;
+	private String         _luceneTermsToExclude;
+	private boolean        _logSpatialObject;
+	private SchemaManager  _scm;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private String _htmlCacheDir;
     private Spatial _spatial;
@@ -313,22 +317,26 @@ public class SearchManager
      *
 	 * @param appPath
 	 * @param luceneDir
+   * @param htmlCacheDir
+   * @param dataDir
 	 * @param summaryConfigXmlFile
+   * @param luceneConfigXmlFile
+   * @param logSpatialObject
+   * @param luceneTermsToExclude
 	 * @param dataStore
-     * @param si
-     *
+	 * @param si
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir,
-			String summaryConfigXmlFile, LuceneConfig lc, DataStore dataStore, SettingInfo si) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, String summaryConfigXmlFile, LuceneConfig lc, boolean logSpatialObject, String luceneTermsToExclude, DataStore dataStore, SettingInfo si, SchemaManager scm) throws Exception
 	{
+		_scm = scm;
+
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 
 		_luceneConfig = lc;
         _settingInfo = si;
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
-		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
         _stopwordsDir = appPath + STOPWORDS_DIR_PATH;
 
         _inspireEnabled = si.getInspireEnabled();
@@ -350,6 +358,9 @@ public class SearchManager
      _luceneDir.getParentFile().mkdirs();
 
      _spatial = new Spatial(dataStore);
+
+		 _logSpatialObject = logSpatialObject;
+		 _luceneTermsToExclude = luceneTermsToExclude;
 
 		initLucene();
 		initZ3950();
@@ -513,7 +524,7 @@ public class SearchManager
 		switch (type)
 		{
 			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _luceneConfig);
-			case Z3950:  return new Z3950Searcher(this, stylesheetName);
+			case Z3950:  return new Z3950Searcher(this, _scm, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 
 			default:     throw new Exception("unknown MetaSearcher type: " + type);
@@ -542,9 +553,6 @@ public class SearchManager
 	 * deinitializes the Z3950 client searcher.
 	 */
 	private void endZ3950() {
-//		if (_hssSearchable != null) {
-//      // nothing done ??
-//		}
 	}
 
 	//-----------------------------------------------------------------------------
@@ -553,13 +561,24 @@ public class SearchManager
 		return _htmlCacheDir;
 	}
 
+	//-----------------------------------------------------------------------------
+
+	public boolean getLogSpatialObject() {
+		return _logSpatialObject;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	public String getLuceneTermsToExclude() {
+		return _luceneTermsToExclude;
+	}
+
 	//--------------------------------------------------------------------------------
 	// indexing methods
 
 	/**
 	 * Indexes a metadata record.
-     *
-	 * @param type
+	 * @param schemaDir
 	 * @param metadata
 	 * @param id
 	 * @param moreFields
@@ -567,19 +586,19 @@ public class SearchManager
 	 * @param title
 	 * @throws Exception
 	 */
-	public void index(String type, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
+	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
 	{
 		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from index");
 		_indexWriter.openWriter();
 		try {
-			Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title, false);
+			Document doc = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
 			_indexWriter.addDocument(doc);
 		} finally {
 			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
 			_indexWriter.closeWriter();
 		}
 
-		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
+		_spatial.writer().index(schemaDir, id, metadata);
 	}
 
     /**
@@ -595,7 +614,7 @@ public class SearchManager
     /**
      * TODO javadoc.
      *
-     * @param type
+     * @param schemaDir
      * @param metadata
      * @param id
      * @param moreFields
@@ -603,12 +622,12 @@ public class SearchManager
      * @param title
      * @throws Exception
      */
-	public void indexGroup(String type, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
+	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
 	{
-		Document doc = buildIndexDocument(type, metadata, id, moreFields, isTemplate, title, true);
+		Document doc = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, true);
 		_indexWriter.addDocument(doc);
 
-		_spatial.writer().index(_schemasDir.getPath(), type, id, metadata);
+		_spatial.writer().index(schemaDir, id, metadata);
 	}
 
     /**
@@ -639,7 +658,7 @@ public class SearchManager
     /**
      * TODO javadoc.
      *
-     * @param type
+     * @param schemaDir
      * @param metadata
      * @param id
      * @param moreFields
@@ -649,7 +668,7 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-    private Document buildIndexDocument(String type, Element metadata, String id, List<Element> moreFields, String isTemplate, String title, boolean group) throws Exception
+    private Document buildIndexDocument(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title, boolean group) throws Exception
 	{
 
 		Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
@@ -672,7 +691,7 @@ public class SearchManager
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
 					+ Xml.getString(metadata));
 
-            xmlDoc = getIndexFields(type, metadata);
+            xmlDoc = getIndexFields(schemaDir, metadata);
 
 			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
 					+ Xml.getString(xmlDoc));
@@ -948,24 +967,20 @@ public class SearchManager
     /**
      * TODO javadoc.
      *
-     * @param schema
+     * @param schemaDir
      * @param xml
      * @return
      * @throws Exception
      */
-	Element getIndexFields(String schema, Element xml) throws Exception {
-		File schemaDir = new File(_schemasDir, schema);
+	Element getIndexFields(String schemaDir, Element xml) throws Exception {
 
 		try {
-			String styleSheet = new File(schemaDir, "index-fields.xsl")
-					.getAbsolutePath();
-            Map<String,String> params = new HashMap<String, String>();
-            params.put("inspire", Boolean.toString(_inspireEnabled));
-
+			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
+      Map<String,String> params = new HashMap<String, String>();
+      params.put("inspire", Boolean.toString(_inspireEnabled));
 			return Xml.transform(xml, styleSheet, params);
 		} catch (Exception e) {
-			Log.error(Geonet.INDEX_ENGINE,
-					"Indexing stylesheet contains errors : " + e.getMessage());
+			Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
 	}
@@ -1026,8 +1041,8 @@ public class SearchManager
 		boolean badIndex = true;
 		if (!rebuild) {
 			try {
-				IndexReader indexReader = IndexReader.open(_luceneDir);
-				indexReader.close();
+				IndexReader reader = IndexReader.open(FSDirectory.open(_luceneDir));
+				reader.close();
 				badIndex = false;
 			} catch (Exception e) {
 				Log.error(Geonet.INDEX_ENGINE,
@@ -1039,7 +1054,7 @@ public class SearchManager
 		if (rebuild || badIndex) {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
 			if (_spatial != null) _spatial.writer().reset();
-			IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, true);
+			IndexWriter writer = new IndexWriter(FSDirectory.open(_luceneDir), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
 			writer.close();
 		}
 
@@ -1234,6 +1249,7 @@ public class SearchManager
                 // types.put(Geonet.SearchResult.Relation.CONTAINS,
                 // constructor(DWithinFilter.class));
             } catch (Exception e) {
+								e.printStackTrace();
                 throw new RuntimeException("Unable to create types mapping", e);
             }
             _types = Collections.unmodifiableMap(types);
@@ -1463,9 +1479,12 @@ public class SearchManager
      * @throws NoSuchMethodException
      */
     private static Constructor<? extends SpatialFilter> constructor(
-            Class<? extends SpatialFilter> clazz) throws SecurityException, NoSuchMethodException {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class, Element.class, Geometry.class,
-                FeatureSource.class, SpatialIndex.class);
+            Class<? extends SpatialFilter> clazz) throws SecurityException,
+            NoSuchMethodException
+    {
+        return clazz.getConstructor(org.apache.lucene.search.Query.class,
+                Geometry.class, FeatureSource.class,
+                SpatialIndex.class);
     }
 
 }

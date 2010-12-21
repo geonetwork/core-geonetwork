@@ -119,6 +119,8 @@ public class JeevesServlet extends HttpServlet
 	private void execute(HttpServletRequest req, HttpServletResponse res) throws IOException
 	{
 		String ip = req.getRemoteAddr();
+		String forwardedFor = req.getHeader("x-forwarded-for");
+		if (forwardedFor != null) ip = forwardedFor;
 
 		Log.info (Log.REQUEST, "==========================================================");
 		Log.info (Log.REQUEST, "HTML Request (from "+ ip +") : "+ req.getRequestURI());
@@ -130,6 +132,11 @@ public class JeevesServlet extends HttpServlet
 //		Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
 //		Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
 
+//		for (Enumeration e = req.getHeaderNames(); e.hasMoreElements();) {
+//			String theHeader = (String)e.nextElement();
+//			Log.debug(Log.REQUEST, "Got header: "+theHeader);	
+//			Log.debug(Log.REQUEST, "With value: "+req.getHeader(theHeader));
+//		}
 		HttpSession httpSession = req.getSession();
 		Log.debug(Log.REQUEST, "Session id is "+httpSession.getId());
 		UserSession session     = (UserSession) httpSession.getAttribute("session");

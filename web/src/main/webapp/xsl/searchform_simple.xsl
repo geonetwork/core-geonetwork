@@ -8,7 +8,7 @@
 	<xsl:variable name="lang" select="/root/gui/language"/>
 	
 	<xsl:template match="/">
-		<xsl:call-template name="geofields"/>
+		<xsl:call-template name="simple_search_panel"/>
 	</xsl:template>
 
 </xsl:stylesheet>

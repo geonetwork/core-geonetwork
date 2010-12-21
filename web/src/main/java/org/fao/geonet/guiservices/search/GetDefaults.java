@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.search;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 

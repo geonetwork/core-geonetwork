@@ -97,7 +97,14 @@
 				Modalbox.show(url,{title: title, width: width, height: 400});
 				return true;
 			}
-			
+		
+			function doEdit(url, id)
+			{
+				// we might add some sort of visual indicator to suggest that a 
+				// record is being edited later
+				load(url);
+			}
+
 			function doAction(action)
 			{
 				document.mainForm.action = action;

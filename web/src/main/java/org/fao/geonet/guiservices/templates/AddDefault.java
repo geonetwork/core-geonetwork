@@ -35,6 +35,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 import java.io.File;
@@ -44,21 +45,18 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * A simple service that add all metadata templates available in templates
- * directory.
+ * A simple service that add all metadata templates available from schemas 
+ * being handled in the SchemaManager
  * 
  */
 public class AddDefault implements Service {
-	String templateDirectoryPath;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		templateDirectoryPath = appPath + "/WEB-INF/classes/setup/templates";
 	}
 
 	/**
 	 * 
-	 * schemaList is a list of comma separated schemas to load, if null will
-	 * load all schema.
+	 * schemaList is a list of comma separated schemas to load
 	 * 
 	 * @return A report on the template import with information about the status
 	 *         of the insertion operation (failed|loaded).
@@ -70,34 +68,29 @@ public class AddDefault implements Service {
 		String serviceStatus = "true";
 		
 		Element result = new Element(Jeeves.Elem.RESPONSE);
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		DataManager dataMan = gc.getDataManager();
+		SchemaManager schemaMan = gc.getSchemamanager();
 
 		String siteId = gc.getSiteId();
-        int owner = context.getUserSession().getUserIdAsInt();
+    int owner = context.getUserSession().getUserIdAsInt();
 
-        Log.info(Geonet.DATA_MANAGER, "Loading default templates");
-		List<File> schemaDirectoriesList = new ArrayList<File>();
-		File templateDirectory = new File(templateDirectoryPath);
-		File schemaDirectories[] = templateDirectory.listFiles();
+    Log.info(Geonet.DATA_MANAGER, "Loading templates for schemas "+schemaList);
+		String schemas[] = schemaList.split(",");
 
-		if (schemaDirectories != null)
-            schemaDirectoriesList.addAll(Arrays.asList(schemaDirectories));
+		for (String schemaName : schemas) {
 
-		for (File schemaDir : schemaDirectories) {
-			String schemaName = schemaDir.getName();
-
-			// --- skip '.svn' folders and other hidden files
-			if (!schemaName.startsWith(".")
-					&& (schemaList.indexOf(schemaName) != -1 || "".equals(schemaList))
-			) {
 				Element schema = new Element(schemaName);
 
-				File templateFiles[] = schemaDir.listFiles();
+				String schemaDir = schemaMan.getSchemaTemplatesDir(schemaName);
+				if (schemaDir == null) {
+					Log.error(Geonet.DATA_MANAGER, "Skipping - No templates?");
+					continue;
+				}
+
+				File templateFiles[] = new File(schemaDir).listFiles();
 				List<File> templateFilesList = new ArrayList<File>();
 
 				if (templateFiles != null) {
@@ -144,7 +137,6 @@ public class AddDefault implements Service {
 					schema.addContent(template);
 				}
 				result.addContent(schema);
-			}
 		}
 		result.setAttribute("status", serviceStatus);
 		return result;
