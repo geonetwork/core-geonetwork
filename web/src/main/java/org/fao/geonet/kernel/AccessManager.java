@@ -342,6 +342,32 @@ public class AccessManager
 		return false;
 	}
 
+    /**
+     * Returns whether a particular metadata is visible to group 'all'.
+     * @param dbms
+     * @param metadataId
+     * @return
+     * @throws Exception
+     */
+    public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
+        // group 'all' has the magic id 1.
+        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = " + metadataId;
+        Element result = dbms.select(query);
+        if(result == null) {
+            return false;
+        }
+        else {
+            List<Element> records = result.getChildren("record");
+            for(Element record : records) {
+                String operationId = record.getChildText("operationid");
+                if(operationId != null && operationId.equals(OPER_VIEW))  {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
 	public boolean hasEditPermission(ServiceContext context, String id) throws Exception
 	{
 

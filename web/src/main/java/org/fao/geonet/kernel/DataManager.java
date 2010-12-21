@@ -2718,6 +2718,13 @@ public class DataManager
 			addElement(info, Edit.Info.Elem.OWNER, "true");
 		}
 
+        if(accessMan.isVisibleToAll(dbms, id)) {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
+        }
+        else {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
+        }
+
 		// add owner name
 		query = "SELECT username FROM Users WHERE id = " + owner;
 		Element record = dbms.select(query).getChild("record");

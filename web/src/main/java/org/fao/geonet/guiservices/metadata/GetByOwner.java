@@ -91,12 +91,12 @@ public class GetByOwner implements Service {
         }
 
         Element result = dbms.select(query);
+
         _response = new Element("response");
 
         for (Iterator iter = result.getChildren().iterator(); iter.hasNext();) {
             Element rec = (Element)iter.next();
             String  id = rec.getChildText("id");
-
             Element md = gc.getDataManager().getMetadata(context, id, false);
             _response.addContent(md);
         }
