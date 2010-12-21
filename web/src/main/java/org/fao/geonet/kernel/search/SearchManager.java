@@ -105,6 +105,8 @@ public class SearchManager
 	public static final int Z3950 = 2;
 	public static final int UNUSED = 3;
 
+    public static final String NON_SPATIAL_DIR = "/nonspatial";
+    
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
 	private static final String SCHEMA_STYLESHEETS_DIR_PATH = "xml/schemas";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
@@ -341,9 +343,9 @@ public class SearchManager
 		_htmlCacheDir = htmlCacheDir;
 
 
-        _luceneDir = new File(luceneDir + "/nonspatial");
+		_luceneDir = new File(luceneDir + NON_SPATIAL_DIR);
 
-		if (!_luceneDir.isAbsolute()) _luceneDir = new File(luceneDir+ "/nonspatial");
+		if (!_luceneDir.isAbsolute()) _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
 
      _luceneDir.getParentFile().mkdirs();
 
@@ -370,6 +372,9 @@ public class SearchManager
 		createAnalyzer(_settingInfo);
 	}
 
+	public LuceneConfig getCurrentLuceneConfiguration () {
+		return _luceneConfig;
+	}
 	//-----------------------------------------------------------------------------
 
     /**
