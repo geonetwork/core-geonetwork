@@ -446,14 +446,16 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M61</sch:title>
 		<sch:rule context="//gmd:MD_Metadata/gmd:hierarchyLevel|//*[@gco:isoType='gmd:MD_Metadata']/gmd:hierarchyLevel">
-			<sch:let name="hl" value="(gmd:MD_ScopeCode/@codeListValue!='' and gmd:MD_ScopeCode/@codeListValue!='dataset') and 
+			<sch:let name="hl" value="count(../gmd:hierarchyLevel/gmd:MD_ScopeCode[@codeListValue='dataset' or @codeListValue=''])=0 and 
 				(not(../gmd:hierarchyLevelName) or ../gmd:hierarchyLevelName/@gco:nilReason)"/>
+			<sch:let name="resourceType" value="string-join(../gmd:hierarchyLevel/*/@codeListValue, ',')"/>
+			
 			<sch:assert
 				test="$hl = false()"
 				>$loc/strings/alert.M61</sch:assert>
 			<sch:report
 				test="$hl = false()"
-				><sch:value-of select=" $loc/strings/report.M61"/> "<sch:value-of select="../gmd:hierarchyLevelName"/>"</sch:report>
+				><sch:value-of select=" $loc/strings/report.M61"/> "<sch:value-of select="$resourceType"/>"</sch:report>
 		</sch:rule>
 	</sch:pattern>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="geonetwork-schematron" default="schematron">
+<project name="geonetwork-schematron" default="inspire">
 
 	<property name="schematronDir" value="." description="Schematron directory" />
 	<property name="buildDir" value=".build" description="Build directory" />
@@ -34,7 +34,7 @@
 		<echo message="Cleanning schema: ${schema}."/>
 		
 		<delete verbose="true">
-			<fileset dir="${schemaDir}/${schema}/" includes="schematron-rules-*.xsl" />
+			<fileset dir="${schemaDir}/${schema}/" includes="schematron-rules-*.xsl*" />
 			<fileset dir="${schemaDir}/${schema}/loc" includes="**/schematron-rules-*.xml" />
 		</delete>
 	</target>
@@ -95,6 +95,7 @@
 		<ant target="publish-schematron">
 			<property name="rules" value="inspire" />
 			<property name="schema" value="iso19139" />
+			<property name="disabled" value=".disabled" />
 		</ant>
 	</target>
 
@@ -142,8 +143,9 @@
 	<target name="publish-schematron" description="Publish stylesheets for schematron reporting in a schema">
 		<property name="rules" value="" />
 		<property name="schema" value="" />
+		<property name="disabled" value="" />
 		<echo level="info" message=" - copy rules: ${rules} to schema: ${schema}" />
-		<copy description="Copy schematron XSLT to ${schema} schema." todir="${schemaDir}/${schema}" verbose="true">
+		<copy description="Copy schematron XSLT to ${schema} schema." tofile="${schemaDir}/${schema}/schematron-rules-${rules}.xsl${disabled}" verbose="true">
 			<fileset dir="${buildDir}" includes="schematron-rules-${rules}.xsl" />
 		</copy>
 

@@ -174,7 +174,7 @@
     <report.M45.ac><div>Limitation on public access (accessConstraints) found:</div></report.M45.ac>
     <report.M45.class><div>Limitation on public access (classification) found:</div></report.M45.class>
     <alert.M45.or><div>The value of 'accessConstraints' must be 'otherRestrictions', 
-        if there are instances of 'otherConstraints' expressing limitations on public access.</div></alert.M45.or>
+    	if there are instances of 'otherConstraints' expressing limitations on public access. Check access constraints list and other constraints text field.</div></alert.M45.or>
     <report.M45.or><div>Limitation on public access (otherConstraints) found:</div></report.M45.or>
     <alert.M45.us><div>Conditions applying to access and use is missing</div></alert.M45.us>
     <report.M45.us><div>Conditions applying to access and use found:</div></report.M45.us>

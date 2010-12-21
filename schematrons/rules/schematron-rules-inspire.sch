@@ -68,7 +68,7 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/identification</sch:title>
 		
-		<sch:rule context="//gmd:identificationInfo[1]/*/gmd:citation/gmd:CI_Citation">
+		<sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
 			<!-- Title -->
 			<sch:let name="noResourceTitle" value="not(gmd:title) or gmd:title/@gco:nilReason='missing'"/>
 			<sch:let name="resourceTitle" value="gmd:title/*/text()"/>
@@ -79,24 +79,16 @@ USA.
 			</sch:report>
 			
 			
-			
-			<!-- Unique identifier -->
-			<sch:let name="resourceIdentifier" value="gmd:identifier and not(gmd:identifier[*/gmd:code/@gco:nilReason='missing'])"/>
-			<sch:let name="resourceIdentifier_code" value="gmd:identifier/*/gmd:code/*/text()"/>
-			<sch:let name="resourceIdentifier_codeSpace" value="gmd:identifier/*/gmd:codeSpace/*/text()"/>
-			
-			<sch:assert test="$resourceIdentifier"><sch:value-of select="$loc/strings/alert.M38/div"/></sch:assert>
-			<sch:report test="$resourceIdentifier_code"><sch:value-of select="$loc/strings/report.M38/div"/>
-				<sch:value-of select="$resourceIdentifier_code"/>
-			</sch:report>
-			<sch:report test="$resourceIdentifier_codeSpace"><sch:value-of select="$loc/strings/report.M38.codespace/div"/>
-				<sch:value-of select="$resourceIdentifier_codeSpace"/>
-			</sch:report>
-			
 		</sch:rule>
 		
 		
-		<!-- Online resource -->
+		<!-- Online resource 
+			Conditional for spatial dataset and spatial dataset
+			series: Mandatory if a URL is available to obtain
+			IR more information on the resources and/or access Obligation / condition related services.
+			• Conditional for services: Mandatory if linkage to the
+			service is available
+		-->
 		<sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource">
 			<sch:let name="resourceLocator" value="gmd:linkage/*/text()"/>
 			<sch:let name="noResourceLocator" value="normalize-space(gmd:linkage/gmd:URL)='' 
@@ -114,11 +106,11 @@ USA.
 		
 		
 		<!-- Resource type -->
-		<sch:rule context="//gmd:MD_Metadata/gmd:hierarchyLevel[1]">
-			<sch:let name="resourceType_present" value="*/@codeListValue='dataset'
-				or */@codeListValue='series'
-				or */@codeListValue='service'"/>
-			<sch:let name="resourceType" value="normalize-space(*/@codeListValue)"/>
+		<sch:rule context="//gmd:MD_Metadata">
+			<sch:let name="resourceType_present" value="gmd:hierarchyLevel/*/@codeListValue='dataset'
+				or gmd:hierarchyLevel/*/@codeListValue='series'
+				or gmd:hierarchyLevel/*/@codeListValue='service'"/>
+			<sch:let name="resourceType" value="string-join(gmd:hierarchyLevel/*/@codeListValue, ',')"/>
 			
 			<sch:assert test="$resourceType_present">
 				<sch:value-of select="$loc/strings/alert.M37/div"/>
@@ -148,6 +140,7 @@ USA.
 				<sch:value-of select="$resourceAbstract"/>
 			</sch:report>
 			
+			
 		</sch:rule>
 	</sch:pattern>	
 	
@@ -158,13 +151,13 @@ USA.
 			<sch:title>$loc/strings/dataIdentification</sch:title>
 			
 		<sch:rule context="//gmd:MD_DataIdentification[
-			normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'series'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'dataset'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '']|
+			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']|
 			//*[@gco:isoType='gmd:MD_DataIdentification' and (
-			normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'series'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'dataset'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '')]">
+			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]">
 			<!-- resource language is only conditional for 'dataset' and 'series'. 
 			-->			
 			<sch:let name="resourceLanguage" value="normalize-space(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue)"/>
@@ -193,6 +186,22 @@ USA.
 			<sch:report test="not($noTopic)">
 				<sch:value-of select="$loc/strings/report.M39/div"/><sch:value-of select="$topic"/></sch:report>
 			
+			
+			
+			
+			<!-- Unique identifier -->
+			<sch:let name="resourceIdentifier" value="gmd:citation/gmd:CI_Citation/gmd:identifier 
+				and not(gmd:citation/gmd:CI_Citation/gmd:identifier[*/gmd:code/@gco:nilReason='missing'])"/>
+			<sch:let name="resourceIdentifier_code" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/*/text()"/>
+			<sch:let name="resourceIdentifier_codeSpace" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:codeSpace/*/text()"/>
+			
+			<sch:assert test="$resourceIdentifier"><sch:value-of select="$loc/strings/alert.M38/div"/></sch:assert>
+			<sch:report test="$resourceIdentifier_code"><sch:value-of select="$loc/strings/report.M38/div"/>
+				<sch:value-of select="$resourceIdentifier_code"/>
+			</sch:report>
+			<sch:report test="$resourceIdentifier_codeSpace"><sch:value-of select="$loc/strings/report.M38.codespace/div"/>
+				<sch:value-of select="$resourceIdentifier_codeSpace"/>
+			</sch:report>
 		</sch:rule>
 	</sch:pattern>
 		
@@ -236,13 +245,11 @@ USA.
 		<sch:title>$loc/strings/theme</sch:title>
 	
 		<sch:rule context="//gmd:MD_DataIdentification|
-			//*[@gco:isoType='gmd:MD_DataIdentification']|
-			//srv:SV_ServiceIdentification|
-			//*[@gco:isoType='srv:SV_ServiceIdentification']">
+			//*[@gco:isoType='gmd:MD_DataIdentification']">
 			<!-- Check that INSPIRE theme are available.
 				Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
 			-->
-			<sch:let name="inspire-thesaurus" value="document('../../codelist/external/thesauri/theme/inspire-theme.rdf')"/>
+			<sch:let name="inspire-thesaurus" value="document(concat($dataDir, '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
 			<sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE Theme thesaurus is not available. -->
@@ -252,6 +259,9 @@ USA.
 			</sch:assert>
 			
 			
+			<sch:let name="thesaurus_name" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:title/*/text()"/>
+			<sch:let name="thesaurus_date" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
+			<sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
 			<sch:let name="keyword" 
 				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString"/>
 			<sch:let name="inspire-theme-found" 
@@ -262,7 +272,9 @@ USA.
 			<sch:report test="$inspire-theme-found > 0">
 				<sch:value-of select="$inspire-theme-found"/> <sch:value-of select="$loc/strings/report.M40/div"/>
 			</sch:report>
-			
+			<sch:report test="$thesaurus_name">Thesaurus:
+				<sch:value-of select="$thesaurus_name"/>, <sch:value-of select="$thesaurus_date"/> (<sch:value-of select="$thesaurus_dateType"/>)
+			</sch:report>
 			<!-- TODO : We should check GEMET Thesaurus reference and date is set. -->
 		</sch:rule>
 
@@ -276,7 +288,7 @@ USA.
 			<!-- Check that INSPIRE service taxonomy is available.
 				Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
 			-->
-			<sch:let name="inspire-thesaurus" value="document('../../codelist/external/thesauri/theme/inspire-service-taxonomy.rdf')"/>
+			<sch:let name="inspire-thesaurus" value="document(concat($dataDir, '/codelist/external/thesauri/theme/inspire-service-taxonomy.rdf'))"/>
 			<sch:let name="inspire-st" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE thesaurus is not available. -->
@@ -306,11 +318,25 @@ USA.
 	
 	<sch:pattern>
 		<sch:title>$loc/strings/geo</sch:title>
-		<sch:rule context="//gmd:hierarchyLevel[1]/*[@codeListValue ='dataset'] | //gmd:hierarchyLevel[1]/*[@codeListValue ='series']">
-			<sch:let name="west" value="number(//gmd:identificationInfo[1]/*/gmd:extent/*/gmd:geographicElement/*/gmd:westBoundLongitude/gco:Decimal/text())"/>
-			<sch:let name="east" value="number(//gmd:identificationInfo[1]/*/gmd:extent/*/gmd:geographicElement/*/gmd:eastBoundLongitude/gco:Decimal/text())"/>
-			<sch:let name="north" value="number(//gmd:identificationInfo[1]/*/gmd:extent/*/gmd:geographicElement/*/gmd:northBoundLatitude/gco:Decimal/text())"/>
-			<sch:let name="south" value="number(//gmd:identificationInfo[1]/*/gmd:extent/*/gmd:geographicElement/*/gmd:southBoundLatitude/gco:Decimal/text())"/>
+		
+		<sch:rule context="//gmd:MD_DataIdentification[
+			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '']
+			/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox
+			|
+			//*[@gco:isoType='gmd:MD_DataIdentification' and (
+			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'series'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'dataset'
+			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]
+			/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox
+			">
+		
+			<sch:let name="west" value="number(gmd:westBoundLongitude/gco:Decimal/text())"/>
+			<sch:let name="east" value="number(gmd:eastBoundLongitude/gco:Decimal/text())"/>
+			<sch:let name="north" value="number(gmd:northBoundLatitude/gco:Decimal/text())"/>
+			<sch:let name="south" value="number(gmd:southBoundLatitude/gco:Decimal/text())"/>
+			
 			<!-- assertions and report -->
 			<sch:assert test="(-180.00 &lt;= $west) and ( $west &lt;= 180.00)"><sch:value-of select="$loc/strings/alert.M41.W/div"/></sch:assert>
 			<sch:report test="(-180.00 &lt;= $west) and ( $west &lt;= 180.00)"><sch:value-of select="$loc/strings/report.M41.W/div"/>
@@ -329,12 +355,14 @@ USA.
 				<sch:value-of select="$north"/>
 			</sch:report>
 		</sch:rule>
-		<sch:rule context="//gmd:hierarchyLevel[1]/*[@codeListValue ='service']">
-			<sch:let name="west" value="number(//gmd:identificationInfo[1]/*/srv:extent/*/gmd:geographicElement/*/gmd:westBoundLongitude/gco:Decimal/text())"/>
-			<sch:let name="east" value="number(//gmd:identificationInfo[1]/*/srv:extent/*/gmd:geographicElement/*/gmd:eastBoundLongitude/gco:Decimal/text())"/>
-			<sch:let name="north" value="number(//gmd:identificationInfo[1]/*/srv:extent/*/gmd:geographicElement/*/gmd:northBoundLatitude/gco:Decimal/text())"/>
-			<sch:let name="south" value="number(//gmd:identificationInfo[1]/*/srv:extent/*/gmd:geographicElement/*/gmd:southBoundLatitude/gco:Decimal/text())"/>
-			<!-- assertions and report -->
+		<sch:rule context="//srv:SV_ServiceIdentification[
+			../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = 'service']
+			/srv:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+			<sch:let name="west" value="number(gmd:westBoundLongitude/gco:Decimal/text())"/>
+			<sch:let name="east" value="number(gmd:eastBoundLongitude/gco:Decimal/text())"/>
+			<sch:let name="north" value="number(gmd:northBoundLatitude/gco:Decimal/text())"/>
+			<sch:let name="south" value="number(gmd:southBoundLatitude/gco:Decimal/text())"/>
+			<!-- report only but we should do assert if outOfBounds ? TODO -->
 			<sch:report test="(-180.00 &lt;= $west) and ( $west &lt;= 180.00)"><sch:value-of select="$loc/strings/report.M41.W/div"/>
 				<sch:value-of select="$west"/>
 			</sch:report>
@@ -405,8 +433,8 @@ USA.
 	
 	<sch:pattern>
 		<sch:title>$loc/strings/quality</sch:title>
-		<sch:rule context="//gmd:DQ_DataQuality[../gmd:identificationInfo/gmd:MD_DataIdentification
-			or ../gmd:identificationInfo/*/@gco:isoType = 'gmd:MD_DataIdentification']">
+		<sch:rule context="//gmd:DQ_DataQuality[../../gmd:identificationInfo/gmd:MD_DataIdentification
+			or ../../gmd:identificationInfo/*/@gco:isoType = 'gmd:MD_DataIdentification']">
 			<sch:let name="lineage" value="not(gmd:lineage/gmd:LI_Lineage/gmd:statement) or (gmd:lineage//gmd:statement/@gco:nilReason)"/>
 			<sch:assert test="not($lineage)"
 				>$loc/strings/alert.M43/div</sch:assert>
@@ -467,30 +495,51 @@ USA.
 			</sch:assert>
 			
 			
-			
+			<!-- If the value of accessConstraints is otherRestrictions
+				there shall be instances of otherConstraints expressing
+				limitations on public access. This is because the
+				limitations on public access required by the INSPIRE
+				Directive may need the use of free text, and
+				otherConstraints is the only element allowing this data
+				type
+			-->
 			<sch:let name="accessConstraints" 
-				value="(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions') 
-				and	(not(gmd:resourceConstraints/*/gmd:otherConstraints)
-				or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing'])"/>
-			<sch:let name="otherConstraint" 
+				value="
+				count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])&gt;0 
+				and (
+				not(gmd:resourceConstraints/*/gmd:otherConstraints)     
+				or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing']
+				)"/>
+			<sch:let name="otherConstraints" 
+				value="
+				gmd:resourceConstraints/*/gmd:otherConstraints and
+				gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString!='' and 
+				count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])=0
+				"/>
+			<sch:let name="otherConstraintInfo" 
 				value="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
+			
 			<sch:assert test="not($accessConstraints)">
 				<sch:value-of select="$loc/strings/alert.M45.or/div"/>
 			</sch:assert>
-			<sch:report test="not($accessConstraints)">
+			<sch:assert test="not($otherConstraints)">
+				<sch:value-of select="$loc/strings/alert.M45.or/div"/>
+			</sch:assert>
+			<sch:report test="$otherConstraintInfo!='' and not($accessConstraints) and not($otherConstraints)">
 				<sch:value-of select="$loc/strings/report.M45.or/div"/>
-				<sch:value-of select="$otherConstraint"/>
+				<sch:value-of select="$otherConstraintInfo"/>
 			</sch:report>
 			
 		</sch:rule>
+		
 		
 		
 		<sch:rule context="//gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:*|
 			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:resourceConstraints/gmd:*|
 			//srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:*|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints/gmd:*">
-			<sch:let name="accessConstraints" value="normalize-space(gmd:accessConstraints/*/@codeListValue)"/>
-			<sch:let name="classification" value="normalize-space(gmd:classification/*/@codeListValue)"/>
+			<sch:let name="accessConstraints" value="string-join(gmd:accessConstraints/*/@codeListValue, ', ')"/>
+			<sch:let name="classification" value="string-join(gmd:classification/*/@codeListValue, ', ')"/>
 			<sch:let name="otherConstraints" value="gmd:otherConstraints/gco:CharacterString/text()"/>
 			<sch:report test="$accessConstraints!=''">
 				<sch:value-of select="$loc/strings/report.M45.ac/div"/>
@@ -509,7 +558,7 @@ USA.
 			<sch:let name="useLimitation" value="gmd:resourceConstraints/*/gmd:useLimitation/*/text()"/>
 			<sch:let name="useLimitation_count" value="count(gmd:resourceConstraints/*/gmd:useLimitation/*/text())"/>
 			<sch:assert test="$useLimitation_count">
-				<sch:value-of select="$loc/strings/alert.M45.ul/div"/>A
+				<sch:value-of select="$loc/strings/alert.M45.ul/div"/>
 			</sch:assert>
 			<sch:report test="$useLimitation_count">
 				<sch:value-of select="$loc/strings/report.M45.ul/div"/>
@@ -534,7 +583,9 @@ USA.
 			</sch:report>
 		</sch:rule>
 		
-		<sch:rule context="//gmd:MD_DataIdentification/gmd:pointOfContact|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:pointOfContact">
+		<sch:rule context="//gmd:identificationInfo/*/gmd:pointOfContact
+			|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:pointOfContact
+			|//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:pointOfContact">
 			<sch:let name="missing" value="not(*/gmd:organisationName) 
 				or (*/gmd:organisationName/@gco:nilReason) 
 				or not(*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
