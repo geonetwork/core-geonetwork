@@ -96,6 +96,10 @@
         <script type="text/javascript" language="JavaScript1.2">
         // Load layers defined in config file
         var backgroundLayers = [];
+
+        // Map viewer options to use in main map viewer and in editor map viewer
+        var mapOptions =  <xsl:value-of select='/root/gui/config/mapViewer/@options'/>;
+
         <xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
         backgroundLayers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
         </xsl:for-each>
