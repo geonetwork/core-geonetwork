@@ -422,6 +422,8 @@ public class LuceneQueryBuilder {
         //
 
         Set<String> groups = luceneQueryInput.getGroups();
+        String editable$ = luceneQueryInput.getEditable();
+        boolean editable = StringUtils.hasText(editable$) && editable$.equals("true");
 
         BooleanQuery groupsQuery = new BooleanQuery();
         boolean groupsQueryEmpty = true;
@@ -430,11 +432,13 @@ public class LuceneQueryBuilder {
             for (String group : groups) {
                 group = group.trim();
                 if (group.length() > 0) {
+                    if(! editable) {
                     // add to view 
                     TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group));
                     BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
                     groupsQueryEmpty = false;
                     groupsQuery.add(viewClause);
+                    }
                     // add to edit
                     TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, group));
                     BooleanClause editClause = new BooleanClause(editQuery, groupOccur);

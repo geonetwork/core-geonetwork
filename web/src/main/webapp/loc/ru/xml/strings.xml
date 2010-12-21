@@ -1015,7 +1015,7 @@
     <mapViewer>Просмотр карт</mapViewer>
 
     <uuid>Unique identifier</uuid>    
-
+    <mymetadata>мой метаданных</mymetadata>
     <addremove>Добавить / удалить</addremove>
     <enabled>включен</enabled>
     <notifications>Уведомление на удаленные цели</notifications>

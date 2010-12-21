@@ -1044,6 +1044,24 @@ public class LuceneQueryTest extends TestCase {
 	}
 
 	/**
+	 * 'editable' parameter true.
+	 */
+	public void testEditableTrue() {
+		// create request object
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("editable");
+		any.addContent("true");
+		request.addContent(any);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+		// build lucene query
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(lQI);
+		// verify query
+		assertEquals("+_isTemplate:n", query.toString());
+	}
+
+	/**
 	 * 'featured' parameter true.
 	 */
 	public void testFeaturedTrue() {

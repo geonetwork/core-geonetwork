@@ -161,6 +161,17 @@
 							</tr>
 						</xsl:if>
 
+						<tr>
+							<td class="padded">
+								<a href="{/root/gui/locService}/main.search?hitsPerPage=10&amp;editable=true" style="text-transform:capitalize;">
+									<xsl:value-of select="/root/gui/strings/mymetadata"/>
+								</a>
+							</td>
+							<td class="padded">
+								<xsl:value-of select="/root/gui/strings/mymetadata"/>
+							</td>
+						</tr>						
+
 						<xsl:if test="/root/gui/services/service/@name='transfer.ownership'">
 							<tr>
 								<td class="padded"><a href="{/root/gui/locService}/transfer.ownership"><xsl:value-of select="/root/gui/strings/transferOwnership"/></a></td>

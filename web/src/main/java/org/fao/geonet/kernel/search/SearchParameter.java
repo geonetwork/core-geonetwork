@@ -82,6 +82,7 @@ public class SearchParameter {
     public static final String NORTHBL = "northBL";
     public static final String SOUTHBL = "southBL";
     public static final String RELATION = "relation";
+    public static final String EDITABLE = "editable";
     
 
 }

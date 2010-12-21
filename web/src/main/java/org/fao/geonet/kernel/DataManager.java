@@ -43,6 +43,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -2910,7 +2911,55 @@ public class DataManager
 		dbms.execute("UPDATE Metadata SET groupOwner=? WHERE id=?", Integer
 				.parseInt(grpId), Integer.parseInt(mdId));
 	}
-	
+
+    public Element getCswCapabilitiesInfo(Dbms dbms)
+          throws Exception {
+
+        return dbms.select("SELECT * FROM CswServerCapabilitiesInfo");
+    }
+
+
+    public CswCapabilitiesInfo getCswCapabilitiesInfo(Dbms dbms, String language)
+        throws Exception {
+
+        CswCapabilitiesInfo cswCapabilitiesInfo = new CswCapabilitiesInfo();
+        cswCapabilitiesInfo.setLangId(language);
+
+        Element capabilitiesInfoRecord = dbms.select("SELECT * FROM CswServerCapabilitiesInfo WHERE langId = ?", language);
+
+        List<Element> records = capabilitiesInfoRecord.getChildren();
+        for(Element record : records) {
+            String field = record.getChild("field").getText();
+            String label = record.getChild("label").getText();
+
+            if (field.equals("title")) {
+                cswCapabilitiesInfo.setTitle(label);
+
+            } else if (field.equals("abstract")) {
+                cswCapabilitiesInfo.setAbstract(label);
+
+            } else if (field.equals("fees")) {
+                cswCapabilitiesInfo.setFees(label);
+
+            } else if (field.equals("accessConstraints")) {
+                cswCapabilitiesInfo.setAccessConstraints(label);
+            }
+        }
+
+        return cswCapabilitiesInfo;
+    }
+
+    public void saveCswCapabilitiesInfo(Dbms dbms, CswCapabilitiesInfo cswCapabilitiesInfo)
+            throws Exception {
+
+        String langId = cswCapabilitiesInfo.getLangId();
+
+        dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getTitle(), langId, "title");
+        dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getAbstract(), langId, "abstract");
+        dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getFees(), langId, "fees");
+        dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?",  cswCapabilitiesInfo.getAccessConstraints(), langId, "accessConstraints");
+    }
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables

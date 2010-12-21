@@ -1013,7 +1013,7 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>    
-
+    <mymetadata>我的元数据</mymetadata>
     <addremove>添加/删除</addremove>
     <enabled>启用</enabled>
     <notifications>远程目标的通知</notifications>
@@ -1029,5 +1029,4 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
-    
 </strings>

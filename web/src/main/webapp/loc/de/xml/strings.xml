@@ -1008,7 +1008,7 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>    
-
+    <mymetadata>meine Metadaten</mymetadata>
     <addremove>Hinzufügen / Entfernen</addremove>
     <enabled>Aktiviert</enabled>
     <notifications>Mitteilung an ferne Ziele</notifications>

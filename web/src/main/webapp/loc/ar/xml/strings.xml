@@ -1022,7 +1022,7 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>    
-
+    <mymetadata>بلدي الفوقية</mymetadata>
     <addremove>إضافة / إزالة</addremove>
     <enabled>مكن</enabled>
     <notifications>إخطار إلى أهداف بعيدة</notifications>
@@ -1038,5 +1038,4 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
-
 </strings>

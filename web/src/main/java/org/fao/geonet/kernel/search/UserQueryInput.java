@@ -81,6 +81,7 @@ public class UserQueryInput {
     private String northBL;
     private String southBL;
     private String relation;
+    private String editable;
     
     /**
      * Creates this from a JDOM element.
@@ -164,7 +165,7 @@ public class UserQueryInput {
         setNorthBL(jdom.getChildText(SearchParameter.NORTHBL));
         setSouthBL(jdom.getChildText(SearchParameter.SOUTHBL));
         setRelation(jdom.getChildText(SearchParameter.RELATION));
-
+        setEditable(jdom.getChildText(SearchParameter.EDITABLE));
         
     }
 
@@ -598,5 +599,13 @@ public class UserQueryInput {
 
     public void setRelation(String relation) {
         this.relation = relation;
+    }
+    
+    public String getEditable() {
+        return editable;
+    }
+
+    public void setEditable(String editable) {
+        this.editable = editable;
     }
 }
