@@ -157,10 +157,10 @@ var extentMap = {
 		                                extentMap.mainProj, extentMap.wgsProj);
 	
 		                            var wsen = this.watchedBbox.split(',');	// Here we don't round coordinates to store full value
-		                            Ext.get("_" + wsen[0]).dom.value = bounds.left;
-		                            Ext.get("_" + wsen[1]).dom.value = bounds.bottom;
-		                            Ext.get("_" + wsen[2]).dom.value = bounds.right;
-		                            Ext.get("_" + wsen[3]).dom.value = bounds.top;
+		                            Ext.get("_" + wsen[0]).dom.value = boundsReproj.left;
+		                            Ext.get("_" + wsen[1]).dom.value = boundsReproj.bottom;
+		                            Ext.get("_" + wsen[2]).dom.value = boundsReproj.right;
+		                            Ext.get("_" + wsen[3]).dom.value = boundsReproj.top;
 		
 		                            // Refresh all inputs
 		                            extentMap.watchRadios(this.watchedBbox, this.eltRef);
@@ -377,12 +377,18 @@ var extentMap = {
     createMap: function() {
     	OpenLayers.ImgPath = "../../scripts/openlayers/img/";
     	
+		// Set main projection same as map viewer projection
+    	extentMap.mainProj = new OpenLayers.Projection(mapOptions.projection);
+
     	// TODO : how to define one common map with background in config file.
-    	var options = {
+    	/*var options = {
     		    units: extentMap.units,
     		    projection: extentMap.mainProjCode,
     		    theme: null
-    		};
+    		}; */
+
+    	var options = mapOptions;
+    	options.theme = null;
     	
         var map = extentMap.map = new OpenLayers.Map(
         		options
@@ -434,6 +440,9 @@ var extentMap = {
         	},
         	scope: extentMap.vectorLayer
         });
+
+        map.zoomToMaxExtent();
+
         return map;
     },
 
@@ -460,7 +469,10 @@ var extentMap = {
 
     updateBbox: function(map, targetBbox, eltRef, mainProj) {
     	var vectorLayer = map.getLayersByName("VectorLayer")[0]; // That supposed that only one vector layer is on the map
+    	// In map projection
     	var bounds;
+    	// In WGS84 projection
+    	var boundsProjected;
     	var wsen = targetBbox.split(',');
     	
     	// Update bbox from main projection information
@@ -472,11 +484,19 @@ var extentMap = {
             values[3] = Ext.get("_" + wsen[3]).getValue();
             
             bounds = OpenLayers.Bounds.fromArray(values);
+			boundsProjected = bounds.clone();
             
             // TODO : reproject if another projection is used
-            if (extentMap.mainProj != extentMap.wgsProj) {
+            /*if (extentMap.mainProj != extentMap.wgsProj) {
             	bounds = bounds.clone().transform(
             			extentMap.mainProj, extentMap.wgsProj);
+            }*/
+
+            boundsProjected = bounds.clone();
+
+            // Always reproject to WGS84
+ 			if (extentMap.mainProj != extentMap.wgsProj) {
+            	boundsProjected.transform(extentMap.mainProj, wgsProj);
             }	
             
     	} else {
@@ -494,7 +514,19 @@ var extentMap = {
             		toProj = radio[i].value;
             }
             
-            if (toProj != extentMap.mainProjCode) {
+			var selProj = new OpenLayers.Projection(toProj);
+			boundsProjected = bounds.clone();
+
+			// Always reproject to WGS84
+			if (selProj != extentMap.wgsProj) {
+	            boundsProjected.transform(selProj, extentMap.wgsProj);
+    		}
+
+    		// Bounds in map projection to draw rectangle
+    		bounds.transform(selProj,  extentMap.mainProj);
+
+
+            /*if (toProj != extentMap.mainProjCode) {
                 // the bounds read from the input text fields are
                 // equal to main projection, transform them before updating the input
                 // hidden fields
@@ -510,15 +542,52 @@ var extentMap = {
                 values[1] = b.bottom;
                 values[2] = b.right;
                 values[3] = b.top;
-            }
+            }*/
 
-            // Set main projection coordinates
-            Ext.get("_" + wsen[0]).dom.value = bounds.left;
-            Ext.get("_" + wsen[1]).dom.value = bounds.bottom;
-            Ext.get("_" + wsen[2]).dom.value = bounds.right;
-            Ext.get("_" + wsen[3]).dom.value = bounds.top;
     	}
     	
+        // Set main projection coordinates (WGS84)
+        Ext.get("_" + wsen[0]).dom.value = boundsProjected.left;
+    	Ext.get("_" + wsen[1]).dom.value = boundsProjected.bottom;
+        Ext.get("_" + wsen[2]).dom.value = boundsProjected.right;
+        Ext.get("_" + wsen[3]).dom.value = boundsProjected.top;
+
+    	// Validate fields content
+    	Ext.get(wsen[0]).dom.onkeyup();
+    	Ext.get(wsen[1]).dom.onkeyup();
+    	Ext.get(wsen[2]).dom.onkeyup();
+    	Ext.get(wsen[3]).dom.onkeyup();
+
+       	// Draw new bounds
+        var feature = new OpenLayers.Feature.Vector(bounds.toGeometry());
+        vectorLayer.destroyFeatures();
+        vectorLayer.addFeatures(feature);
+
+        extentMap.zoomToFeatures(map, vectorLayer);
+
+        // Update all inputs
+        extentMap.watchRadios(targetBbox, eltRef);
+
+    },
+
+    // Regions extents are in WGS84
+    updateBboxForRegion: function(map, targetBbox, eltRef) {
+    	var vectorLayer = map.getLayersByName("VectorLayer")[0]; // That supposed that only one vector layer is on the map
+    	// In map projection
+    	var bounds;
+    	var wsen = targetBbox.split(',');
+
+        // Update bbox from main projection information (values from regions extents in WGS84)
+        var values = new Array(wsen.length);
+        values[0] = Ext.get("_" + wsen[0]).getValue();
+        values[1] = Ext.get("_" + wsen[1]).getValue();
+        values[2] = Ext.get("_" + wsen[2]).getValue();
+        values[3] = Ext.get("_" + wsen[3]).getValue();
+        bounds = OpenLayers.Bounds.fromArray(values);
+
+        // Bounds in map projection to draw rectangle
+        bounds.transform(extentMap.wgsProj,  extentMap.mainProj);
+
     	// Validate fields content
     	Ext.get(wsen[0]).dom.onkeyup();
     	Ext.get(wsen[1]).dom.onkeyup();
@@ -559,9 +628,12 @@ var extentMap = {
                 l + "," + b + "," + r + "," + t
             );
 
-            if (!toProj.equals(extentMap.mainProj)) {
+            /*if (!toProj.equals(extentMap.mainProj)) {
                 bounds.transform(extentMap.mainProj, toProj);
-            }
+            }*/
+
+            var wgsProj = new OpenLayers.Projection("EPSG:4326");
+            bounds.transform(wgsProj, toProj);
 
             if (w != "") {
                 w = bounds.left.toFixed(digits) + "";
@@ -585,8 +657,9 @@ var extentMap = {
         $$('input.proj').each(function(input) {
         	if (input.id.indexOf(eltRef) != -1) {
 	        	// According to current selection, update coordinates
-	        	if (input.checked)
+	        	if (input.checked) {
 	        		updateInputTextFields(watchedBbox, new OpenLayers.Projection(input.value), extentMap.digits);		
+				}
 	        	
 	        	Ext.get(input.id).on('click', function() {
 	                updateInputTextFields(watchedBbox, new OpenLayers.Projection(input.value), extentMap.digits);
