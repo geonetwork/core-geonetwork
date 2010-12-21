@@ -243,6 +243,9 @@ input.content, select.content, textarea.content {
 	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
 }
 
+textarea.md {
+    resize: both !important;
+}
 
 .checkbox_results {
 	font-family: Verdana;
