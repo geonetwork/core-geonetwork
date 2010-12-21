@@ -97,13 +97,17 @@
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/> 
 			</xsl:apply-templates>
-	
+			
 			<Field name="any" store="false" index="true">
 				<xsl:attribute name="string">
-					<xsl:apply-templates select="/simpledc" mode="allText"/>
+					<xsl:value-of select="normalize-space(string(/simpledc))"/>
+					<xsl:text> </xsl:text>
+					<xsl:for-each select="//*/@*">
+						<xsl:value-of select="concat(., ' ')"/>
+					</xsl:for-each>
 				</xsl:attribute>
 			</Field>
-	
+			
 			<!-- locally searchable fields -->
 			
 			<!-- defaults to true -->
@@ -121,17 +125,6 @@
 		<xsl:param name="index" select="'true'"/>
 		
 	   <Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
-	</xsl:template>
-	
-	<!-- ========================================================================================= -->
-	
-	<!--allText -->
-	<xsl:template match="*" mode="allText">
-		<xsl:for-each select="@*"><xsl:value-of select="concat(string(.),' ')"/></xsl:for-each>
-		<xsl:choose>
-			<xsl:when test="*"><xsl:apply-templates select="*" mode="allText"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="concat(string(.),' ')"/></xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>

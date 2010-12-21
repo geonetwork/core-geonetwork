@@ -139,7 +139,17 @@
 					<xsl:apply-templates select="/Metadata" mode="allText"/>
 				</xsl:attribute>
 			</Field>
-	
+			
+			<Field name="any" store="false" index="true">
+				<xsl:attribute name="string">
+					<xsl:value-of select="normalize-space(string(/Metadata))"/>
+					<xsl:text> </xsl:text>
+					<xsl:for-each select="//*/@value">
+						<xsl:value-of select="concat(., ' ')"/>
+					</xsl:for-each>
+				</xsl:attribute>
+			</Field>
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === locally searchable fields === -->
 			
@@ -183,15 +193,4 @@
 		<Field name="{$name}" string="{string(.)}" store="true" index="true"/>
 	</xsl:template>
 	
-	<!-- ========================================================================================= -->
-
-	<!--allText -->
-	<xsl:template match="*" mode="allText">
-		<xsl:for-each select="@*"><xsl:value-of select="concat(string(.),' ')"/></xsl:for-each>
-		<xsl:choose>
-			<xsl:when test="*"><xsl:apply-templates select="*" mode="allText"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="concat(string(.),' ')"/></xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 </xsl:stylesheet>

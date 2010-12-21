@@ -62,14 +62,17 @@
 			<!-- === all text === -->
 			<Field name="any" store="false" index="true">
 				<xsl:attribute name="string">
-					<xsl:apply-templates select="/gfc:FC_FeatureCatalogue" mode="allText"/>
+					<xsl:value-of select="normalize-space(string(/gfc:FC_FeatureCatalogue))"/>
+					<xsl:text> </xsl:text>
+					<xsl:for-each select="//@codeListValue">
+						<xsl:value-of select="concat(., ' ')"/>
+					</xsl:for-each>
 				</xsl:attribute>
 			</Field>
-
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Metadata type (iso19110 is used to describe attribute datasets) === -->
 			<Field name="type" string="model" store="true" index="true"/>
-
 
 		</Document>
 	</xsl:template>
@@ -83,41 +86,6 @@
 		<xsl:param name="index" select="'true'"/>
 
 		<Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
-	</xsl:template>
-
-	<!-- ========================================================================================= -->
-
-	<!-- codelist element, indexed, not stored nor tokenized -->
-	<xsl:template match="*[./*/@value]">
-		<xsl:param name="name" select="name(.)"/>
-
-		<Field name="{$name}" string="{*/@value}" store="false" index="true"/>
-	</xsl:template>
-
-	<!-- ========================================================================================= -->
-
-	<!-- latlon coordinates + 360, zero-padded, indexed, not stored, not tokenized -->
-	<xsl:template match="*" mode="latLon">
-		<xsl:param name="name" select="name(.)"/>
-
-		<Field name="{$name}" string="{string(.) + 360}" store="true" index="true"/>
-	</xsl:template>
-
-	<!-- ========================================================================================= -->
-
-	<!--allText -->
-	<xsl:template match="*" mode="allText">
-		<xsl:for-each select="@*">
-			<xsl:value-of select="concat(string(.),' ')"/>
-		</xsl:for-each>
-		<xsl:choose>
-			<xsl:when test="*">
-				<xsl:apply-templates select="*" mode="allText"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat(string(.),' ')"/>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>

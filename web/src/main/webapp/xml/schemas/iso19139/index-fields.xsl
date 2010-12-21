@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<xsl:stylesheet version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet version="2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
 										xmlns:gco="http://www.isotc211.org/2005/gco"
 										xmlns:gml="http://www.opengis.net/gml"
 										xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -143,11 +142,9 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
-            <xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>
-            <xsl:variable name="upper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
 			<xsl:for-each select="*/gmd:MD_Keywords">
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
-                    <xsl:variable name="keywordLower" select="translate(string(.),$upper,$lower)"/>
+                    <xsl:variable name="keywordLower" select="lower-case(.)"/>
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
 					
                     <xsl:if test="$inspire='true'">
@@ -404,11 +401,15 @@
 
 		<Field name="any" store="false" index="true">
 			<xsl:attribute name="string">
-				<xsl:apply-templates select="." mode="allText"/>
+				<xsl:value-of select="normalize-space(string(.))"/>
+				<xsl:text> </xsl:text>
+				<xsl:for-each select="//@codeListValue">
+					<xsl:value-of select="concat(., ' ')"/>
+				</xsl:for-each>
 			</xsl:attribute>
 		</Field>
-
-		<xsl:apply-templates select="." mode="codeList"/>
+				
+		<!--<xsl:apply-templates select="." mode="codeList"/>-->
 		
 	</xsl:template>
 
@@ -420,52 +421,41 @@
 		
 		<Field name="{$name}" string="{*/@codeListValue}" store="false" index="true"/>		
 	</xsl:template>
-
+	
 	<!-- ========================================================================================= -->
 	
 	<xsl:template match="*" mode="codeList">
 		<xsl:apply-templates select="*" mode="codeList"/>
-	</xsl:template>
+		</xsl:template>
 	
 	<!-- ========================================================================================= -->
 	<!-- latlon coordinates indexed as numeric. -->
 	
 	<xsl:template match="*" mode="latLon">
-	
-		<xsl:for-each select="gmd:westBoundLongitude">
-			<Field name="westBL" string="{string(gco:Decimal)}" store="true" index="true"/>
+		<xsl:variable name="format" select="'##.00'"></xsl:variable>
+		<xsl:for-each select="gmd:westBoundLongitude">			
+			<xsl:if test="number(gco:Decimal)">
+				<Field name="westBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
+			</xsl:if>
 		</xsl:for-each>
 	
 		<xsl:for-each select="gmd:southBoundLatitude">
-			<Field name="southBL" string="{string(gco:Decimal)}" store="true" index="true"/>
+			<xsl:if test="number(gco:Decimal)">
+				<Field name="southBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
+			</xsl:if>
 		</xsl:for-each>
 	
 		<xsl:for-each select="gmd:eastBoundLongitude">
-			<Field name="eastBL" string="{string(gco:Decimal)}" store="true" index="true"/>
+			<xsl:if test="number(gco:Decimal)">
+				<Field name="eastBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
+			</xsl:if>
 		</xsl:for-each>
 	
 		<xsl:for-each select="gmd:northBoundLatitude">
-			<Field name="northBL" string="{string(gco:Decimal)}" store="true" index="true"/>
-		</xsl:for-each>
-	
+			<xsl:if test="number(gco:Decimal)">
+				<Field name="northBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
+			</xsl:if>
+		</xsl:for-each>	
 	</xsl:template>
-
-	<!-- ========================================================================================= -->
-	<!--allText -->
-	
-	<xsl:template match="*" mode="allText">
-		<xsl:for-each select="@*">
-			<xsl:if test="name(.) != 'codeList' ">
-				<xsl:value-of select="concat(string(.),' ')"/>
-			</xsl:if>	
-		</xsl:for-each>
-
-		<xsl:choose>
-			<xsl:when test="*"><xsl:apply-templates select="*" mode="allText"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="concat(string(.),' ')"/></xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!-- ========================================================================================= -->
 
 </xsl:stylesheet>

@@ -50,13 +50,17 @@
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
-	
-			<Field name="any" store="false" index="true" token="true">
+			
+			<Field name="any" store="false" index="true">
 				<xsl:attribute name="string">
-					<xsl:apply-templates select="/metadata" mode="allText"/>
+					<xsl:value-of select="normalize-space(string(/metadata))"/>
+					<xsl:text> </xsl:text>
+					<xsl:for-each select="//*/@*">
+						<xsl:value-of select="concat(., ' ')"/>
+					</xsl:for-each>
 				</xsl:attribute>
 			</Field>
-	
+			
 			<!-- locally searchable fields -->
 			
 			<!-- digital data format defaults to true. Even if that doesn't make a lot of sense -->
@@ -87,15 +91,4 @@
 		<Field name="{$name}" string="{string(.)}" store="true" index="true" token="false"/>
 	</xsl:template>
 	
-	<!-- ========================================================================================= -->
-	
-	<!--allText -->
-	<xsl:template match="*" mode="allText">
-		<xsl:for-each select="@*"><xsl:value-of select="concat(string(.),' ')"/></xsl:for-each>
-		<xsl:choose>
-			<xsl:when test="*"><xsl:apply-templates select="*" mode="allText"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="concat(string(.),' ')"/></xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 </xsl:stylesheet>
