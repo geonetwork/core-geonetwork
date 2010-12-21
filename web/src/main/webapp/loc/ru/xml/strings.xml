@@ -673,6 +673,8 @@ ISO 19115 не позволяет иметь более одного.
 	<surName>Фамилия</surName>
 	<systemConfig>Конфигурация системы</systemConfig>
 	<systemConfigDes>Позволяет изменить основные параметры системы</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Шаблон</template>
 	<Term>Term</Term>
 	<thanks>Спасибо за Ваши усилия. GeoNetwork</thanks>

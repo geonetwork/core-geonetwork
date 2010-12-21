@@ -668,6 +668,8 @@
 	<surName>Last Name</surName>
 	<systemConfig>System configuration</systemConfig>
 	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Template</template>
 	<Term>Term</Term>
 	<thanks>Thank you for your effort. The GeoNetwork</thanks>

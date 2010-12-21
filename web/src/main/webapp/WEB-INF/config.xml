@@ -736,6 +736,17 @@
 			<class name=".services.config.Get" />
 		</service>
 
+		<service name="xml.config.info">
+			<class name=".services.config.GetInfo" />
+		</service>
+		
+		<service name="config.info">
+			<class name=".services.config.GetInfo" />
+			<output sheet="config/info.xsl">
+				<xml name="config" file="xml/config.xml" />
+			</output>
+		</service>
+		
 		<service name="lucene.config.reload">
 			<class name=".services.config.Reload" />
 		</service>

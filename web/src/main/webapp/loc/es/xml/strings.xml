@@ -668,6 +668,8 @@
 	<surName>Apellidos</surName>
 	<systemConfig>Configuración del sistema</systemConfig>
 	<systemConfigDes>Permite cambiar algunos parámetros del sistema</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Plantilla de metadatos</template>
 	<Term>Término</Term>
 	<thanks>Gracias por su trabajo, el equipo GeoNetwork</thanks>

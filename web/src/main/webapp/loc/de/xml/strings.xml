@@ -666,6 +666,8 @@
 	<surName>Nachname</surName>
 	<systemConfig>Systemkonfiguration</systemConfig>
 	<systemConfigDes>Änderung von Systemeinstellungen</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Vorlage</template>
 	<Term>Ausdruck</Term>
 	<thanks>Thank you for your effort. The GeoNetwork</thanks>

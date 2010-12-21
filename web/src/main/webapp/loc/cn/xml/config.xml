@@ -326,5 +326,26 @@
 		</tip>
 	</tips>
 	
+	<data.dir>Data directory:</data.dir>
+	<xslt.factory>XSLT factory:</xslt.factory>
+	<java.vm.name>JVM name:</java.vm.name>
+	<java.vm.vendor>JVM vendor:</java.vm.vendor>
+	<java.version>JVM version:</java.version>
+	<os.arch>System architecture:</os.arch>
+	<os.name>System name:</os.name>
+	<mem.total>Total memory:</mem.total>
+	<mem.free>Total free memory:</mem.free>
+	<index.size.lucene>Lucene index size (ko):</index.size.lucene>
+	<index.size>Total index size (ko):</index.size>
+	<index.path>Index directory:</index.path>
+	<index>Lucene index information</index>
+	<main>System information</main>
+	<catalogue>Catalogue information</catalogue>
+	<system>Catalogue configuration</system>
+	<siteId>Catalogue identifier:</siteId>
+	<version>Version:</version>
+	<subVersion>Sub-version:</subVersion>
+	<index.lucene.config>Lucene configuration:</index.lucene.config>
+	<db.url>Database:</db.url>	
 </strings>
 

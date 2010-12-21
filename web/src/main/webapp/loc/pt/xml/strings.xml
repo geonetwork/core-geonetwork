@@ -671,6 +671,8 @@
 	<surName>Apelido</surName>
 	<systemConfig>Configuração da sistema</systemConfig>
 	<systemConfigDes>Permite alterer alguns parâmetros da sistema</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Modelo</template>
 	<Term>Termo</Term>
 	<thanks>Muito obrigado pelo seu esforço! O GeoNetwork</thanks>

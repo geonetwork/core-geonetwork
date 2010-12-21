@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<!-- 
+	Display system information panel.
+	-->
+	<xsl:include href="../main.xsl"/>
+
+	<xsl:template name="content">
+		<xsl:call-template name="formLayout">
+			<xsl:with-param name="title" select="/root/gui/strings/systemInfo"/>
+
+			<xsl:with-param name="content">
+				<xsl:apply-templates mode="block" select="/root/info/*"/>
+			</xsl:with-param>
+			<xsl:with-param name="buttons"></xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template mode="block" match="system|catalogue|main|index">
+		<fieldset style="text-align:left;">
+			<xsl:variable name="tag" select="name(.)"/>
+			<legend><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></legend>
+			<xsl:for-each select="*">
+				<xsl:sort order="ascending" select="name(.)"/>
+				<xsl:apply-templates mode="info" select="."/>
+			</xsl:for-each>		
+		</fieldset>
+	</xsl:template>
+	
+	
+	<xsl:template mode="info" match="main/*|index/*|catalogue/*|siteId|version|subVersion">
+		<xsl:variable name="tag" select="name(.)"/>
+		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></label> <span class="info"><xsl:value-of select=".|value"/></span><br/>
+	</xsl:template>
+	
+	<xsl:template mode="info" match="index/index.lucene.config">
+		<xsl:variable name="tag" select="name(.)"/>
+		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></label> 
+		<div class="info" style="overflow:auto;width:600px !important;">
+			<pre><xsl:value-of select="."/></pre></div><br/>
+	</xsl:template>
+	
+	<xsl:template mode="info" match="*">
+		<xsl:apply-templates mode="info" select="*"/>
+	</xsl:template>
+</xsl:stylesheet>

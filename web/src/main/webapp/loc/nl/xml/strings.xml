@@ -685,6 +685,8 @@
 	<surName>Achternaam</surName>
 	<systemConfig>Systeem configuratie</systemConfig>
 	<systemConfigDes>Hiermee kunt u de systeemconfiguratie aanpassen</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Template</template>
 	<Term>Zoekterm</Term>
 	<thanks>Bedankt voor uw inspanningen.</thanks>

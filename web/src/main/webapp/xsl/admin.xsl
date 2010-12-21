@@ -125,6 +125,7 @@
 		<xsl:call-template name="formLayout">
 			<xsl:with-param name="title" select="/root/gui/strings/admin"/>
 			<xsl:with-param name="content">
+				
 				<table width="100%" class="text-aligned-left">
 				
 					<!-- metadata services -->
@@ -280,6 +281,13 @@
 							<tr>
 								<td class="padded"><a href="{/root/gui/locService}/config"><xsl:value-of select="/root/gui/strings/systemConfig"/></a></td>
 								<td class="padded"><xsl:value-of select="/root/gui/strings/systemConfigDes"/></td>
+							</tr>
+						</xsl:if>
+						
+						<xsl:if test="/root/gui/services/service/@name='config.info'">
+							<tr>
+								<td class="padded"><a href="config.info"><xsl:value-of select="/root/gui/strings/systemInfo"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/systemInfoDes"/></td>
 							</tr>
 						</xsl:if>
 						

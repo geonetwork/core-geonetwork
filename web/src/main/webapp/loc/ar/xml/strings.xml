@@ -672,6 +672,8 @@
 	<surName>الاسم الأخير</surName>
 	<systemConfig>System configuration</systemConfig>
 	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>قالب</template>
 	<Term>Term</Term>
 	<thanks>شكرا لمجهودك</thanks>

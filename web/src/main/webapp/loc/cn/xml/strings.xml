@@ -668,6 +668,8 @@
 	<surName>姓</surName>
 	<systemConfig>System configuration</systemConfig>
 	<systemConfigDes>Allows to change some system's parameters</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>模板</template>
 	<Term>Term</Term>
 	<thanks>谢谢你们辛勤的努力。 GeoNetwork</thanks>

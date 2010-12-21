@@ -671,6 +671,8 @@
 	<surName>Nom</surName>
 	<systemConfig>Configuration du système</systemConfig>
 	<systemConfigDes>Permet de modifier quelques paramètres systèmes</systemConfigDes>
+	<systemInfo>Information système</systemInfo>
+	<systemInfoDes>Consultation des informations sur le catalogue, l'index, Java, le système d'exploitation</systemInfoDes>
 	<template>Modèle</template>
 	<Term>Terme</Term>
 	<thanks>Merci</thanks>

@@ -78,6 +78,8 @@
 
 		<allow service="config"/>
 		<allow service="xml.config.get"/>
+		<allow service="xml.config.info"/>
+		<allow service="config.info"/>
 		<allow service="xml.config.set"/>
 		<allow service="xml.config.doActions"/>
 		<allow service="lucene.config.reload"/>

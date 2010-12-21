@@ -329,6 +329,27 @@
 			If set, XLinks to metadata fragments in records will be resolved.
 		</tip>
 	</tips>
-
+	
+	<data.dir>Répertoire des données :</data.dir>
+	<xslt.factory>XSLT factory :</xslt.factory>
+	<java.vm.name>JVM nom :</java.vm.name>
+	<java.vm.vendor>JVM vendeur :</java.vm.vendor>
+	<java.version>JVM version :</java.version>
+	<os.arch>Système / architecture :</os.arch>
+	<os.name>Système / nom :</os.name>
+	<mem.total>Mémoire totale :</mem.total>
+	<mem.free>Mémoire disponible :</mem.free>
+	<index.size.lucene>Taille de l'index Lucene (ko):</index.size.lucene>
+	<index.size>Taille totale de l'index (ko):</index.size>
+	<index.path>Répertoire de l'index :</index.path>
+	<index>Information sur l'index Lucene</index>
+	<main>Information sur le système</main>
+	<catalogue>Information sur le catalogue</catalogue>
+	<system>Configuration du catalogue</system>
+	<siteId>Identifiant du catalogue :</siteId>
+	<version>Version :</version>
+	<subVersion>Sous-version :</subVersion>
+	<index.lucene.config>Configuration Lucene :</index.lucene.config>
+	<db.url>Base de données :</db.url>
 </strings>
 
