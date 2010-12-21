@@ -233,6 +233,7 @@ class CswResult
 	public int locallyRemoved;
 	public int unknownSchema;
 	public int unretrievable;
+    public int doesNotValidate;	    
 }
 
 //=============================================================================

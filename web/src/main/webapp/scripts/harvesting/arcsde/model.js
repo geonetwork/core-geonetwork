@@ -85,6 +85,10 @@ var updateTemp =
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
 
+'    <content>'+
+'      <validate>{VALIDATE}</validate>'+
+'    </content>'+
+
 '    <privileges>'+
 '       {PRIVIL_LIST}'+
 '    </privileges>'+

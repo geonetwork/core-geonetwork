@@ -187,6 +187,20 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					result.badFormat++;
 				}
 				else {
+
+                    // validate it here if requested
+                    if (params.validate) {
+                        try {
+                            Xml.validate(iso19139);
+                        }
+                        // invalid: skip this one
+                        catch (Exception x) {
+                            System.out.println("Cannot validate XML, ignoring. Error was: "+ x.getMessage());
+                            result.doesNotValidate++;
+                            continue;
+                        }
+                    }
+
 					//
 					// add / update the metadata from this harvesting result
 					//
