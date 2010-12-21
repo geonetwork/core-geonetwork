@@ -26,7 +26,7 @@ CREATE TABLE MetadataNotifications
 
 ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
 
-INSERT INTO settings VALUES (85, 80, 'uidAttr', 'uid');
+INSERT INTO Settings VALUES (85, 80, 'uidAttr', 'uid');
 INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
 INSERT INTO Settings VALUES (241,240,'enable','true');
 INSERT INTO Settings VALUES (800,1,'indexlanguages',NULL);

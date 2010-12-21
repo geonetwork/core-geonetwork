@@ -7265,7 +7265,7 @@ INSERT INTO Settings VALUES (81,80,'use','false');
 INSERT INTO Settings VALUES (82,80,'host',NULL);
 INSERT INTO Settings VALUES (83,80,'port',NULL);
 INSERT INTO Settings VALUES (84,80,'defaultProfile','RegisteredUser');
-INSERT INTO settings VALUES (85,80,'uidAttr','uid');
+INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
 INSERT INTO Settings VALUES (86,80,'distinguishedNames',NULL);
 INSERT INTO Settings VALUES (87,80,'userAttribs',NULL);
 INSERT INTO Settings VALUES (90,1,'selectionmanager',NULL);
