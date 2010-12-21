@@ -23,20 +23,27 @@
 
 package jeeves.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.net.URL;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.List;
-import java.util.UUID;
+import jeeves.exceptions.XSDValidationErrorEx;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.FeatureKeys;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.SAXOutputter;
+import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -48,26 +55,20 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
-import jeeves.exceptions.XSDValidationErrorEx;
-import org.apache.fop.apps.FopFactory;
-import org.apache.fop.apps.Fop;
-import org.apache.fop.apps.MimeConstants;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.Namespace;
-import org.jdom.output.SAXOutputter;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.transform.JDOMResult;
-import org.jdom.transform.JDOMSource;
-import org.jdom.xpath.XPath;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
-import net.sf.saxon.FeatureKeys;
-import net.sf.saxon.Configuration;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -216,7 +217,7 @@ public class Xml
 		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
 		// stylesheet so switch it off but trap any exceptions because this
 		// code is run on transformers other than saxon 
-		TransformerFactory transFact = TransformerFactory.newInstance();
+        TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
 		try {
 			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
@@ -264,7 +265,8 @@ public class Xml
    Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
 
    // Step 4: Setup JAXP using identity transformer
-   TransformerFactory factory = TransformerFactory.newInstance();
+   TransformerFactory factory = TransformerFactoryFactory.getTransformerFactory();
+
    Source xslt = new StreamSource(new File(styleSheetPath));
 		try {
 			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);

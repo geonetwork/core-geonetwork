@@ -8,7 +8,29 @@ package org.fao.geonet.kernel.search;
  */
 public class LuceneIndexField {
 
+    /**
+     * Groups allowed to view.
+     */
 	public static final String _OP0 = "_op0";
+    /**
+     * Groups allowed to download.
+     */
+    public static final String _OP1 = "_op1";
+    /**
+     * Groups allowed to edit.
+     */
+    public static final String _OP2 = "_op2";
+    /**
+     * Groups allowed to be notified.
+     */
+    public static final String _OP3 = "_op3";
+    /**
+     * Groups allowed "dynamic".
+     */
+    public static final String _OP5 = "_op5";
+    /**
+     * Groups allowed to feature.
+     */
 	public static final String _OP6 = "_op6";
 	public static final String ABSTRACT = "abstract";
 	public static final String ANY = "any";
@@ -16,6 +38,9 @@ public class LuceneIndexField {
 	public static final String CHANGE_DATE = "changeDate";
 	public static final String DUMMY = "_dummy";
 	public static final String EAST = "eastBL";
+    /**
+     * Not used in search.
+     */
 	public static final String GROUP_OWNER = "_groupOwner";
     public static final String INSPIRE_ANNEX = "inspireannex";
     public static final String INSPIRE_THEME = "inspiretheme";

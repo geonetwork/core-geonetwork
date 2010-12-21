@@ -27,6 +27,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -55,7 +56,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
@@ -63,7 +63,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
-import static java.lang.Integer.*;
+import static java.lang.Integer.parseInt;
 
 //--------------------------------------------------------------------------------
 // search metadata remotely using Z39.50
@@ -237,7 +237,7 @@ class Z3950Searcher extends MetaSearcher
 							elementFileName = srvContext.getBaseUrl()+"/"+_sm.getHtmlCacheDir()+"/"+fileid+".html";
 							File outHtmlFile = new File(filename);
 							try {
-								Transformer xformer = TransformerFactory.newInstance().newTransformer();
+								Transformer xformer = TransformerFactoryFactory.getTransformerFactory().newTransformer();
 								xformer.setOutputProperty(OutputKeys.METHOD, "text");
 								Source source = new DOMSource(dochtml);
 								Result result = new StreamResult(outHtmlFile.toURI().getPath());

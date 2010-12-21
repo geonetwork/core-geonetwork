@@ -27,13 +27,6 @@
 
 package jeeves.server;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-import javax.servlet.ServletException;
-import javax.xml.transform.TransformerFactory;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
@@ -47,10 +40,23 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
+import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Element;
+
+import javax.servlet.ServletException;
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 //=============================================================================
 
@@ -120,7 +126,8 @@ public class JeevesEngine
 
 			info("Java version : "+ System.getProperty("java.vm.version"));
 			info("Java vendor  : "+ System.getProperty("java.vm.vendor"));
-			info("XSLT factory : "+ TransformerFactory.newInstance().newTransformer().getClass().getName());
+
+            setupXSLTTransformerFactory();
 
 			info("Path    : "+ appPath);
 			info("BaseURL : "+ baseUrl);
@@ -178,6 +185,46 @@ public class JeevesEngine
 			throw new ServletException("Exception raised", e);
 		}
 	}
+
+    /**
+     * Looks up the implementation of XSLT factory defined in META-INF/services/javax.xml.transform.TransformerFactory and instantiates
+     * that implementation. This way, a conflicting setting in System Properties is overridden for this application only.
+     *
+     * @throws IOException
+     * @throws TransformerConfigurationException
+     */
+    private void setupXSLTTransformerFactory() throws IOException, TransformerConfigurationException {
+        InputStream in = null;
+        try {
+            in = this.getClass().getClassLoader().getResourceAsStream("META-INF/services/javax.xml.transform.TransformerFactory");
+            if(in != null) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = br.readLine()) != null)   {
+                    if(line != null || line.length() == 0) {
+                        warning("Malformed definition of XSLT transformer (in: META-INF/services/javax.xml.transform.TransformerFactory).");
+                    }
+                    TransformerFactoryFactory.init(line);
+                    break;
+                }
+                in.close();
+            }
+            else {
+                warning("Definition of XSLT transformer not found (tried: META-INF/services/javax.xml.transform.TransformerFactory)");
+            }
+        }
+        catch(IOException x) {
+            error(x.getMessage());
+            x.printStackTrace();
+        }
+        finally {
+            if(in != null) {
+                in.close();
+            }
+        }
+        info("XSLT factory: "+ TransformerFactoryFactory.getTransformerFactory().getClass().getName());
+    }
+
 
 	//---------------------------------------------------------------------------
 
