@@ -29,7 +29,7 @@ CREATE TABLE MetadataNotifications
 ALTER TABLE Settings ALTER COLUMN value TYPE text;
 ALTER TABLE Metadata ADD displayorder int;
 
-INSERT INTO settings VALUES (85,80,'uidAttr','uid');
+INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
 INSERT INTO Settings VALUES (90,1,'selectionmanager',NULL);
 INSERT INTO Settings VALUES (91,90,'maxrecords','1000');
 INSERT INTO Settings VALUES (210,1,'localrating',NULL);
