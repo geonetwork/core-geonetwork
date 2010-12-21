@@ -704,7 +704,7 @@ public class LuceneQueryBuilder {
                     while (st.hasMoreTokens()) {
                         String phraseElement = st.nextToken();
                         phraseElement = phraseElement.trim().toLowerCase();
-                        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, phraseElement));
+                        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, LuceneSearcher.analyzeQueryText(LuceneIndexField.INSPIRE_THEME, phraseElement, _analyzer, _tokenizedFieldSet)));
                     }
                     inspireThemesQuery.add(phraseQuery, phraseOccur);
                 }
