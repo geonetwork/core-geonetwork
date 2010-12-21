@@ -26,4 +26,8 @@
 		<!--Field name="subject"/-->
 	</tokenized>
 
+	<numeric>
+		<Field name="denominator" type="integer" />
+	</numeric>
+
 </config>

@@ -74,6 +74,10 @@ import java.util.StringTokenizer;
 public class CatalogSearcher {
 	private Element _summaryConfig;
 	private HashSet<String> _tokenizedFieldSet;
+    private Set<String> _integerFieldSet;
+    private Set<String> _longFieldSet;
+    private Set<String> _floatFieldSet;
+    private Set<String> _doubleFieldSet;
 	private FieldSelector _selector;
 	private Query         _query;
 	private IndexReader   _reader;
@@ -103,6 +107,39 @@ public class CatalogSearcher {
 						_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
 					}
 				}
+                Element numericFields = config.getChild("numeric");
+                // build numeric field sets
+                for ( int i = 0; i < numericFields.getContentSize(); i++ ) {
+                    Object o = numericFields.getContent(i);
+                    if (o instanceof Element) {
+                        Element elem = (Element)o;
+                        if(elem.getAttributeValue("type").equals("integer")) {
+                            if(_integerFieldSet == null) {
+                                _integerFieldSet = new HashSet<String>();
+                            }
+                            _integerFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                        if(elem.getAttributeValue("type").equals("long")) {
+                            if(_longFieldSet == null) {
+                                _longFieldSet = new HashSet<String>();
+                            }
+                            _longFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                        if(elem.getAttributeValue("type").equals("float")) {
+                            if(_floatFieldSet == null) {
+                                _floatFieldSet = new HashSet<String>();
+                            }
+                            _floatFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                        if(elem.getAttributeValue("type").equals("double")) {
+                            if(_doubleFieldSet == null) {
+                                _doubleFieldSet = new HashSet<String>();
+                            }
+                            _doubleFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                    }
+                }
+
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(
@@ -338,7 +375,8 @@ public class CatalogSearcher {
 		if (luceneExpr != null) {
 			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
         }
-		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr, SearchManager.getAnalyzer(), _tokenizedFieldSet);
+		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeQuery(luceneExpr, SearchManager.getAnalyzer(),
+                _tokenizedFieldSet, _integerFieldSet, _longFieldSet, _floatFieldSet, _doubleFieldSet);
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
 

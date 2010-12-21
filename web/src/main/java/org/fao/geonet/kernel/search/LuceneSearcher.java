@@ -50,6 +50,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -62,6 +63,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.util.NumericUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -78,6 +80,8 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -111,10 +115,14 @@ public class LuceneSearcher extends MetaSearcher
   private String        _language;
 
 	private HashSet<String>	_tokenizedFieldSet;
+    private Set<String> _integerFieldSet;
+    private Set<String> _longFieldSet;
+    private Set<String> _floatFieldSet;
+    private Set<String> _doubleFieldSet;
 
 	//--------------------------------------------------------------------------------
 	// constructor
-	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, Element tokenizedFields)
+	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, Element tokenizedFields, Element numericFields)
 	{
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
@@ -133,6 +141,38 @@ public class LuceneSearcher extends MetaSearcher
 			if (o instanceof Element) {
 				Element elem = (Element)o;
 				_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
+			}
+		}
+
+        // build numeric field sets
+		for ( int i = 0; i < numericFields.getContentSize(); i++ ) {
+			Object o = numericFields.getContent(i);
+			if (o instanceof Element) {
+				Element elem = (Element)o;
+				if(elem.getAttributeValue("type").equals("integer")) {
+                    if(_integerFieldSet == null) {
+                        _integerFieldSet = new HashSet<String>();
+                    }
+                    _integerFieldSet.add(elem.getAttributeValue("name"));
+                }
+				if(elem.getAttributeValue("type").equals("long")) {
+                    if(_longFieldSet == null) {
+                        _longFieldSet = new HashSet<String>();
+                    }
+                    _longFieldSet.add(elem.getAttributeValue("name"));
+                }
+				if(elem.getAttributeValue("type").equals("float")) {
+                    if(_floatFieldSet == null) {
+                        _floatFieldSet = new HashSet<String>();                        
+                    }
+                    _floatFieldSet.add(elem.getAttributeValue("name"));
+                }
+				if(elem.getAttributeValue("type").equals("double")) {
+                    if(_doubleFieldSet == null) {
+                        _doubleFieldSet = new HashSet<String>();
+                    }
+                    _doubleFieldSet.add(elem.getAttributeValue("name"));
+                }
 			}
 		}
 	}
@@ -324,7 +364,8 @@ public class LuceneSearcher extends MetaSearcher
                 // Construct Lucene query (XSLT)
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
 				Log.debug(Geonet.SEARCH_ENGINE, "XML query:\n"+ Xml.getString(xmlQuery));
-				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet);
+				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet, _integerFieldSet,
+                        _longFieldSet, _floatFieldSet, _doubleFieldSet );
 			}
             else {
                 // Construct Lucene query (Java)
@@ -514,7 +555,9 @@ public class LuceneSearcher extends MetaSearcher
      * @throws Exception hmm
      */
 	@SuppressWarnings({"deprecation"})
-    public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet) throws Exception
+    public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet,
+                                  Set<String> integerFieldSet, Set<String> longFieldSet, Set<String> floatFieldSet,
+                                  Set<String> doubleFieldSet) throws Exception
 	{
 		String name = xmlQuery.getName();
 		Query returnValue;
@@ -523,7 +566,21 @@ public class LuceneSearcher extends MetaSearcher
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
 			String txt = analyzeQueryText(fld, xmlQuery.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
+            if(integerFieldSet != null && integerFieldSet.contains(fld)) {
+                returnValue = new TermQuery(new Term(fld, NumericUtils.intToPrefixCoded(Integer.parseInt(txt))));
+            }
+            else if(longFieldSet != null && longFieldSet.contains(fld)) {
+                returnValue = new TermQuery(new Term(fld, NumericUtils.longToPrefixCoded(Long.parseLong(txt))));
+            }
+            else if(floatFieldSet != null && floatFieldSet.contains(fld)) {
+                returnValue = new TermQuery(new Term(fld, NumericUtils.floatToPrefixCoded(Float.parseFloat(txt))));
+            }
+            else if(doubleFieldSet != null && doubleFieldSet.contains(fld)) {
+                returnValue = new TermQuery(new Term(fld, NumericUtils.doubleToPrefixCoded(Double.parseDouble(txt))));
+            }
+            else {
 			returnValue = new TermQuery(new Term(fld, txt));
+		}
 		}
 		else if (name.equals("FuzzyQuery"))
 		{
@@ -565,12 +622,57 @@ public class LuceneSearcher extends MetaSearcher
 			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
 			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
 			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
-			boolean inclusive  = "true".equals(sInclusive);
+			boolean inclusive  = Boolean.parseBoolean(sInclusive);
 
+            if(integerFieldSet != null && integerFieldSet.contains(fld)) {
+                Integer min = null;
+                if(lowerTxt != null) {
+                    min = Integer.parseInt(lowerTxt);
+                }
+                Integer max = null;
+                if(upperTxt != null) {
+                    max = Integer.parseInt(lowerTxt);
+                }
+                returnValue = NumericRangeQuery.newIntRange(fld, min, max, inclusive, inclusive);
+            }
+            else if(longFieldSet != null && longFieldSet.contains(fld)) {
+                Long min = null;
+                if(lowerTxt != null) {
+                    min = Long.parseLong(lowerTxt);
+                }
+                Long max = null;
+                if(upperTxt != null) {
+                    max = Long.parseLong(lowerTxt);
+                }
+                returnValue = NumericRangeQuery.newLongRange(fld, min, max, inclusive, inclusive);
+            }
+            else if(floatFieldSet != null && floatFieldSet.contains(fld)) {
+                Float min = null;
+                if(lowerTxt != null) {
+                    min = Float.parseFloat(lowerTxt);
+                }
+                Float max = null;
+                if(upperTxt != null) {
+                    max = Float.parseFloat(lowerTxt);
+                }
+                returnValue = NumericRangeQuery.newFloatRange(fld, min, max, inclusive, inclusive);
+            }
+            else if(doubleFieldSet != null && doubleFieldSet.contains(fld)) {
+                Double min = null;
+                if(lowerTxt != null) {
+                    min = Double.parseDouble(lowerTxt);
+                }
+                Double max = null;
+                if(upperTxt != null) {
+                    max = Double.parseDouble(lowerTxt);
+                }
+                returnValue = NumericRangeQuery.newDoubleRange(fld, min, max, inclusive, inclusive);
+            }
+            else {
 			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet)));
 			Term upperTerm = (upperTxt == null ? null : new Term(fld, analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet)));
-
 			returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
+		}
 		}
 		else if (name.equals("DateRangeQuery"))
 		{
@@ -595,7 +697,7 @@ public class LuceneSearcher extends MetaSearcher
                 Element xmlSubQuery;
                 if (subQueries != null && subQueries.size() != 0) {
                     xmlSubQuery = subQueries.get(0);
-                    query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet), occur);
+                    query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet, integerFieldSet, longFieldSet, floatFieldSet, doubleFieldSet), occur);
                 }
             }
 			BooleanQuery.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better

@@ -37,6 +37,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
+import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -50,8 +51,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
 import org.fao.geonet.kernel.search.spatial.EqualsFilter;
-import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
+import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
@@ -111,6 +112,7 @@ public class SearchManager
     private static String _stopwordsDir;
 	private final Element  _summaryConfig;
 	private final Element  _tokenizedFields;
+	private final Element  _numericFields;    
 	private File           _luceneDir;
 	private static PerFieldAnalyzerWrapper _analyzer;
 	private String         _htmlCacheDir;
@@ -225,6 +227,7 @@ public class SearchManager
 
 		Element luceneConfig = Xml.loadStream(new FileInputStream(new File(appPath,luceneConfigXmlFile)));
 		_tokenizedFields = luceneConfig.getChild("tokenized");
+        _numericFields = luceneConfig.getChild("numeric");
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
@@ -400,7 +403,7 @@ public class SearchManager
 	{
 		switch (type)
 		{
-			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _tokenizedFields);
+			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _tokenizedFields, _numericFields);
 			case Z3950:  return new Z3950Searcher(this, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 
@@ -1005,9 +1008,13 @@ public class SearchManager
                 String sStore = field.getAttributeValue("store");
                 String sIndex = field.getAttributeValue("index");
                 String sToken = field.getAttributeValue("token");
+                String sNumeric = field.getAttributeValue("numeric");
+
                 boolean bStore = sStore != null && sStore.equals("true");
                 boolean bIndex = sIndex != null && sIndex.equals("true");
                 boolean token = sToken != null && sToken.equals("true");
+                boolean bNumberic = sNumeric != null;
+                
                 Field.Store store;
                 if (bStore) {
                     store = Field.Store.YES;
@@ -1025,8 +1032,26 @@ public class SearchManager
                 if (!bIndex) {
                     index = Field.Index.NO;
                 }
+
+                if(bNumberic) {
+					NumericField nf = new NumericField(name, store, bIndex);
+
+					if (sNumeric.equals("int")) {
+						nf.setIntValue(new Integer(string).intValue());
+					} else if (sNumeric.equals("long")) {
+						nf.setLongValue(new Long(string).longValue());
+					} else if (sNumeric.equals("float")) {
+						nf.setFloatValue(new Float(string).floatValue());
+					} else if (sNumeric.equals("double")) {
+						nf.setDoubleValue(new Double(string).doubleValue());
+					}
+
+					doc.add(nf);
+
+				} else {
                 doc.add(new Field(name, string, store, index));
             }
+        }
         }
 		return doc;
 	}

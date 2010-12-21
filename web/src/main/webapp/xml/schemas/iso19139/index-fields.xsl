@@ -59,7 +59,6 @@
 					<Field name="identifier" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 	                
-	
 				<xsl:for-each select="gmd:title/gco:CharacterString">
 					<Field name="title" string="{string(.)}" store="true" index="true" token="true"/>
                     <!-- not tokenized title for sorting -->
@@ -102,6 +101,7 @@
 						<Field name="paper" string="true" store="true" index="true" token="false"/>
 					</xsl:if>
 				</xsl:for-each>
+
 			</xsl:for-each>
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -219,7 +219,7 @@
 
 			<xsl:for-each select="gmd:spatialResolution/gmd:MD_Resolution">
 				<xsl:for-each select="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer">
-					<Field name="denominator" string="{string(.)}" store="true" index="true" token="false"/>
+					<Field name="denominator" string="{string(.)}" store="true" index="true" token="false" numeric="int"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:distance/gco:Distance">
