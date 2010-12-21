@@ -3,6 +3,7 @@
     xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:ows="http://www.opengis.net/ows" xmlns:ogc="http://www.opengis.net/ogc"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:inspire_ds="http://inspire.europa.eu/networkservice/discovery"
     xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
 
     <ows:ServiceIdentification>
@@ -194,8 +195,21 @@
         <ows:Constraint name="PostEncoding">
             <ows:Value>SOAP</ows:Value>
         </ows:Constraint>
-        
+
+        <ows:ExtendedCapabilities>
+		<inspire_ds:ExtendedCapabilities>
+    		<inspire_ds:Languages>
+
+            <!--
+            List of supported languages
+            -->
+
+			</inspire_ds:Languages>
+			<inspire_ds:CurrentLanguage>$INSPIRE_LOCALE</inspire_ds:CurrentLanguage>
+		</inspire_ds:ExtendedCapabilities>
+    </ows:ExtendedCapabilities>
     </ows:OperationsMetadata>
+    
     <ogc:Filter_Capabilities>
         <ogc:Spatial_Capabilities>
             <ogc:GeometryOperands>

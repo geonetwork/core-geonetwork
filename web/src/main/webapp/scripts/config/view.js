@@ -124,27 +124,6 @@ ConfigView.prototype.setData = function(data)
 	$('indexoptimizer.interval.hour').value = data['INDEXOPTIMIZER_INTERVAL_HOUR'];
 	$('indexoptimizer.interval.min').value  = data['INDEXOPTIMIZER_INTERVAL_MIN'];
 	
-	$('csw.enable').checked = data['CSW_ENABLE'] == 'true';
-	$('csw.contactId').value           = data['CSW_CONTACTID'];
-	$('csw.individualName').value      = data['CSW_INDIVIDUALNAME'];
-	$('csw.positionName').value        = data['CSW_POSITIONNAME'];
-	$('csw.voice').value               = data['CSW_VOICE'];
-	$('csw.facsimile').value           = data['CSW_FACSIMILE'];
-	$('csw.deliveryPoint').value       = data['CSW_DELIVERYPOINT'];
-	$('csw.city').value                = data['CSW_CITY'];
-	$('csw.administrativeArea').value  = data['CSW_ADMINAREA'];
-	$('csw.postalCode').value          = data['CSW_POSTALCODE'];
-	$('csw.country').value             = data['CSW_COUNTRY'];
-	$('csw.email').value               = data['CSW_EMAIL'];
-	$('csw.hoursOfService').value      = data['CSW_HOURSOFSERVICE'];
-	$('csw.contactInstructions').value = data['CSW_INSTRUCTIONS'];
-	$('csw.role').value                = data['CSW_ROLE'];
-	$('csw.title').value               = data['CSW_TITLE'];
-	$('csw.abstract').value            = data['CSW_ABSTRACT'];
-	$('csw.fees').value                = data['CSW_FEES'];
-	$('csw.accessConstraints').value   = data['CSW_ACCESS'];
-    $('csw.metadataPublic').checked    = data['CSW_METADATA_PUBLIC'] == 'true';
-    
 	$('clickablehyperlinks.enable').checked = data['CLICKABLE_HYPERLINKS'] == 'true';
 
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
@@ -236,27 +215,6 @@ ConfigView.prototype.getData = function()
 		INDEXOPTIMIZER_INTERVAL_HOUR: $('indexoptimizer.interval.hour').value,
 		INDEXOPTIMIZER_INTERVAL_MIN:  $('indexoptimizer.interval.min') .value,
 
-		CSW_ENABLE : $('csw.enable').checked,
-		CSW_CONTACTID       : $('csw.contactId').value,
-		CSW_INDIVIDUALNAME  : $('csw.individualName').value,
-		CSW_POSITIONNAME    : $('csw.positionName').value,
-		CSW_VOICE           : $('csw.voice').value,
-		CSW_FACSIMILE       : $('csw.facsimile').value,
-		CSW_DELIVERYPOINT   : $('csw.deliveryPoint').value,
-		CSW_CITY            : $('csw.city').value,
-		CSW_ADMINAREA       : $('csw.administrativeArea').value,
-		CSW_POSTALCODE      : $('csw.postalCode').value,
-		CSW_COUNTRY         : $('csw.country').value,
-		CSW_EMAIL           : $('csw.email').value,
-		CSW_HOURSOFSERVICE  : $('csw.hoursOfService').value,
-		CSW_INSTRUCTIONS    : $('csw.contactInstructions').value,
-		CSW_ROLE            : $('csw.role').value,
-		CSW_TITLE           : $('csw.title').value,
-		CSW_ABSTRACT        : $('csw.abstract').value,
-		CSW_FEES            : $('csw.fees').value,
-		CSW_ACCESS          : $('csw.accessConstraints').value,
-        CSW_METADATA_PUBLIC  : $('csw.metadataPublic').checked,
-        
 		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
 		
 		LOCAL_RATING : $('localrating.enable').checked,

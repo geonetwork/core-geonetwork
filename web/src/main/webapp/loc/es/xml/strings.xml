@@ -1019,5 +1019,16 @@
     <enabled>Habilitado</enabled>
     <notifications>Notificación a los objetivos a distancia</notifications>
     <url>URL</url>
+
+    <cswServer>CSW server</cswServer>
+    <cswServerDes>CSW Server configuration</cswServerDes>
+    <cswServerConfig>CSW Server configuration</cswServerConfig>
+    <cswServerEnable>Enable</cswServerEnable>
+    <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
+    <cswServerTitle>Title</cswServerTitle>
+    <cswServerAbstract>Abstract</cswServerAbstract>
+    <cswServerFees>Fees</cswServerFees>
+    <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
+    <cswServerContact>Contact</cswServerContact>
     
 </strings>

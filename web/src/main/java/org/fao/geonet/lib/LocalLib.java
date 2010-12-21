@@ -43,6 +43,19 @@ public class LocalLib
 	//---
 	//-----------------------------------------------------------------------------
 
+    public Map<String, String> getLanguagesIso(Dbms dbms) throws SQLException
+	{
+		Map<String, String> hm = new HashMap<String, String>();
+
+		for (Object obj : dbms.select("SELECT * FROM Languages").getChildren())
+		{
+			Element lang = (Element) obj;
+			hm.put(lang.getChildText("id"), lang.getChildText("isocode"));
+		}
+
+		return hm;
+	}
+
 	public Map<String, String> getLanguages(Dbms dbms) throws SQLException
 	{
 		HashMap<String, String> hm = new HashMap<String, String>();

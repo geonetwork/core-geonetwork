@@ -43,6 +43,7 @@ CREATE TABLE Languages
   (
     id    varchar(5),
     name  varchar(32)   not null,
+    isocode varchar(3)  not null,
 
     primary key(id)
   );
@@ -303,6 +304,7 @@ CREATE TABLE MetadataNotifiers
     primary key(id)
   );
 
+
 -- ======================================================================
 
 CREATE TABLE MetadataNotifications
@@ -318,3 +320,20 @@ CREATE TABLE MetadataNotifications
 
     foreign key(notifierId) references MetadataNotifiers(id)
   );
+
+-- ======================================================================
+
+CREATE TABLE CswServerCapabilitiesInfo
+  (
+    idField   int,
+    langId    varchar(5)    not null,
+    field     varchar(32)   not null,
+    label     varchar(96),
+
+    primary key(idField),
+
+    foreign key(langId) references Languages(id)
+  );
+  
+-- ======================================================================
+

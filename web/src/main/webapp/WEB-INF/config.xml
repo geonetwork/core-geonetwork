@@ -959,6 +959,34 @@
 			<class name=".services.main.CswDispatcher" />
 		</service>
 
+
+        <service name="csw.config.get">
+            <class name=".guiservices.csw.Get" />
+
+            
+            <output sheet="csw/config.xsl">
+                <call name="languages" class=".guiservices.languages.Get" />
+
+                <call name="users" class="jeeves.services.db.Select">
+					<param name="db" value="main-db" />
+					<param name="query" value="SELECT * FROM Users ORDER BY name" />
+				</call>
+            </output>
+        </service>
+
+        <service name="csw.config.set">
+            <class name=".guiservices.csw.Set" />
+
+            <output sheet="csw/config.xsl">
+                <call name="languages" class=".guiservices.languages.Get" />
+
+                <call name="users" class="jeeves.services.db.Select">
+					<param name="db" value="main-db" />
+					<param name="query" value="SELECT * FROM Users ORDER BY name" />
+				</call>
+            </output>
+        </service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
 

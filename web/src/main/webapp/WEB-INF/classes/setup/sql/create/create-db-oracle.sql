@@ -38,6 +38,7 @@ CREATE TABLE Languages
   (
     id    varchar(5),
     name  varchar(32)   not null,
+    isocode varchar(3)  not null,
     primary key(id)
   );
 
@@ -260,6 +261,19 @@ CREATE TABLE MetadataNotifications
     primary key(metadataId,notifierId)
   );
 
+
+REM ======================================================================
+
+CREATE TABLE CswServerCapabilitiesInfo
+  (
+    idField   int,
+    langId    varchar(5)    not null,
+    field     varchar(32)   not null,
+    label     varchar(96),
+
+    primary key(idField)
+  );
+
 REM ======================================================================
 
 REM CREATE INDEX MetadataNDX1 ON Metadata(uuid);
@@ -288,3 +302,4 @@ ALTER TABLE Settings ADD FOREIGN KEY (parentId) REFERENCES Settings (id);
 ALTER TABLE UserGroups ADD FOREIGN KEY (userId) REFERENCES Users (id);
 ALTER TABLE UserGroups ADD FOREIGN KEY (groupId) REFERENCES Groups (id);
 ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
+ALTER TABLE CswServerCapabilitiesInfo ADD FOREIGN KEY (langId) REFERENCES Languages (id);

@@ -89,6 +89,11 @@
         <allow service="index.languages.get"/>
         <allow service="index.languages.set"/>
 		
+
+        <!-- csw config-->
+        <allow service="csw.config.get"/>
+        <allow service="csw.config.set"/>
+
 		<!-- Test i18n - under administrator for performance reasons -->
 		<allow service="test.i18n"/>
 		<allow service="test.i18n.xml"/>
