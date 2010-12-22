@@ -38,14 +38,14 @@
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon-dom</artifactId>
     </dependency>
-		<dependency>
-			<groupId>jfreechart</groupId>
-			<artifactId>jfreechart</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jcommons</groupId>
-			<artifactId>jcommons</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>jfreechart</groupId>
+      <artifactId>jfreechart</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jfree</groupId>
+      <artifactId>jcommon</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>openrdf-model</artifactId>
