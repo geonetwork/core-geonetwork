@@ -14,6 +14,20 @@
     <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>    
     <rebuildIndexMessage>如果你改变这些值，建议您重建Lucene索引。</rebuildIndexMessage>
 	<!-- new strings - SP 2.7 -->
+	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
+  <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
+  <noServer js="true">Please select a server to search</noServer>
+	<canBeViewed>Records published to these groups</canBeViewed>
+  <myGroups>My Groups: </myGroups>
+  <groupSelect>Apply selected groups as owner groups</groupSelect>
+  <cannotBeViewed>Records NOT published to these groups</cannotBeViewed>
+  <regionLong>The bounding box of the resource</regionLong>
+  <regionLong2>the bounding box of</regionLong2>
+  <regionLong3>shown below:</regionLong3>
+	<anyWith>Any - with one of these words</anyWith>
+	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
+	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
+	<anyWithoutWords>Any - without these words</anyWithoutWords>
 	<dataDownload>Data for Download</dataDownload>
 	<addSchema>Add a metadata schema/profile</addSchema>
 	<updateSchema>Update a metadata schema/profile</updateSchema>
