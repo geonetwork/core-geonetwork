@@ -350,13 +350,10 @@ public class Aligner
 
             // validate it here if requested
             if (params.validate) {
-                try {
-                    Xml.validate(response);
-                }
-                // invalid: skip this one
-                catch (Exception x) {
-                    System.out.println("Cannot validate XML, ignoring. Error was: "+ x.getMessage());
+                if(!dataMan.validate(response))  {
+                    log.info("Ignoring invalid metadata with uuid " + uuid);
                     result.doesNotValidate++;
+                    return null;
                 }
             }
             return response;

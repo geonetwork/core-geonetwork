@@ -209,15 +209,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 			}
 
 			// validate it here if requested
-			if (params.validate) {
-				try {
-					Xml.validate(xml);
-				} catch (Exception e) {
-					System.out.println("Cannot validate XML from file " + xmlFile +", ignoring. Error was: "+e.getMessage());
-					result.doesNotValidate++;
-					continue; // skip this one
-				}
-			}
+            if (params.validate) {
+                if(!dataMan.validate(xml))  {
+                    System.out.println("Ignoring invalid metadata from file " + xmlFile);
+                    result.doesNotValidate++;
+                    continue; // skip this one
+                }
+            }
 			
 			// transform using importxslt if not none
 			if (transformIt) {

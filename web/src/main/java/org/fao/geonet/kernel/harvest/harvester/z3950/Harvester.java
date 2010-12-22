@@ -167,17 +167,15 @@ class Harvester {
 				// -- once harvested
 				md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
 
-				// validate it here if requested
-				if (params.validate) {
-					try {
-						Xml.validate(md);
-					} catch (Exception e) {
-						System.out.println("Cannot validate XML, ignoring. Error was: "+e.getMessage());
-						result.doesNotValidate++;
-						continue; // skip this one
-					}
-				}
-			
+                // validate it here if requested
+                if (params.validate) {
+                    if(!dataMan.validate(md))  {
+                        System.out.println("Ignoring invalid metadata.");
+                        result.doesNotValidate++;
+                        continue; // skip this one
+                    }
+                }
+
 				// transform using importxslt if not none
 				if (transformIt) {
 					try {

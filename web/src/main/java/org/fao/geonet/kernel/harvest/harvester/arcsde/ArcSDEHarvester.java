@@ -190,12 +190,8 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
                     // validate it here if requested
                     if (params.validate) {
-                        try {
-                            Xml.validate(iso19139);
-                        }
-                        // invalid: skip this one
-                        catch (Exception x) {
-                            System.out.println("Cannot validate XML, ignoring. Error was: "+ x.getMessage());
+                        if(!dataMan.validate(iso19139))  {
+                            System.out.println("Ignoring invalid metadata with uuid " + uuid);
                             result.doesNotValidate++;
                             continue;
                         }
