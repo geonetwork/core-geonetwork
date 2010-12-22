@@ -1,14 +1,8 @@
 package org.fao.geonet.kernel.search.log;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Vector;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -17,14 +11,19 @@ import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * A class to log Lucene search queries (context, search parameters and search

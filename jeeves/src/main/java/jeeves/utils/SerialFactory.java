@@ -23,13 +23,12 @@
 
 package jeeves.utils;
 
-import java.sql.SQLException;
-import java.util.Hashtable;
-
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
-
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.Hashtable;
 
 //=============================================================================
 

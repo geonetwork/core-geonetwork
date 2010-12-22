@@ -23,15 +23,15 @@
 
 package jeeves.server.sources;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
 import jeeves.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 

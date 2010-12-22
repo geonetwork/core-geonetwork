@@ -23,19 +23,18 @@
 
 package jeeves.server;
 
+import jeeves.constants.Jeeves;
+import jeeves.constants.Profiles;
+import jeeves.utils.Xml;
+import org.jdom.Attribute;
+import org.jdom.Element;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-
-import jeeves.constants.Jeeves;
-import jeeves.constants.Profiles;
-import jeeves.utils.Xml;
-
-import org.jdom.Attribute;
-import org.jdom.Element;
 
 //=============================================================================
 

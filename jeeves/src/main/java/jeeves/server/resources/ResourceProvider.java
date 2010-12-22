@@ -23,9 +23,9 @@
 
 package jeeves.server.resources;
 
-import java.util.Map;
-
 import org.jdom.Element;
+
+import java.util.Map;
 
 //=============================================================================
 

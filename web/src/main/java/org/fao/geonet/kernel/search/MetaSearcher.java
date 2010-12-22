@@ -30,6 +30,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Document;
 import org.jdom.Element;
+
 import java.util.List;
 
 //--------------------------------------------------------------------------------

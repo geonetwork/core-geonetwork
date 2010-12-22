@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.search;
 import jeeves.utils.Log;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
-
 import org.fao.geonet.constants.Geonet;
 
 import java.io.File;

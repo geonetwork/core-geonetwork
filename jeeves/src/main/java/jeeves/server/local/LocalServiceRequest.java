@@ -1,8 +1,8 @@
 package jeeves.server.local;
 
 import jeeves.server.sources.ServiceRequest;
-import jeeves.utils.Xml;
 import jeeves.utils.StringBufferOutputStream;
+import jeeves.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

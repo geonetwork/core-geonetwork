@@ -23,7 +23,7 @@
 
 package jeeves.utils.format;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
 //=============================================================================
 

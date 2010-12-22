@@ -20,7 +20,6 @@
 
 package org.fao.geonet.kernel.search.lucenequeries;
 
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermRangeQuery;
 
 	public class DateRangeQuery extends TermRangeQuery {

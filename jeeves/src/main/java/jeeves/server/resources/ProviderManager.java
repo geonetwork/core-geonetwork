@@ -23,8 +23,9 @@
 
 package jeeves.server.resources;
 
-import java.util.HashMap;
 import org.jdom.Element;
+
+import java.util.HashMap;
 
 //=============================================================================
 

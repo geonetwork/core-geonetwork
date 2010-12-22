@@ -29,7 +29,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.jdom.Element;
 
 //=============================================================================

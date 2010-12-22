@@ -23,10 +23,8 @@
 
 package jeeves.server.dispatchers.guiservices;
 
-import org.jdom.*;
-
-
-import jeeves.server.context.*;
+import jeeves.server.context.ServiceContext;
+import org.jdom.Element;
 
 //=============================================================================
 

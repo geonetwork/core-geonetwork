@@ -23,10 +23,11 @@
 
 package jeeves.utils;
 
-import java.io.File;
-import java.io.IOException;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
+import java.io.File;
+import java.io.IOException;
 
 //=============================================================================
 

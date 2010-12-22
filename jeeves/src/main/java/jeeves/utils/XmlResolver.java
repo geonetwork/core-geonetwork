@@ -1,19 +1,14 @@
 package jeeves.utils;
 
 import jeeves.JeevesJCS;
-
-import java.net.URL;
-import java.net.MalformedURLException;
-
 import org.apache.jcs.access.exception.CacheException;
-
-import org.apache.xerces.util.XMLCatalogResolver;
 import org.apache.xerces.dom.DOMInputImpl;
-
+import org.apache.xerces.util.XMLCatalogResolver;
 import org.jdom.Element;
-
 import org.w3c.dom.ls.LSInput;
-import org.w3c.dom.ls.LSResourceResolver;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /* Resolves system and public ids as well as URIs using oasis catalog
    as per XMLCatalogResolver, but goes further and retrieves any

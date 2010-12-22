@@ -23,9 +23,8 @@
 
 package jeeves.server;
 
-import java.util.Hashtable;
-
 import javax.servlet.http.HttpSession;
+import java.util.Hashtable;
 
 //=============================================================================
 

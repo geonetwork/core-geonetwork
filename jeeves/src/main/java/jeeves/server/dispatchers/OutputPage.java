@@ -23,8 +23,8 @@
 
 package jeeves.server.dispatchers;
 
-import org.jdom.*;
-import jeeves.utils.*;
+import jeeves.utils.Xml;
+import org.jdom.Element;
 
 //=============================================================================
 

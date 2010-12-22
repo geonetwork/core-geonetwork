@@ -23,14 +23,14 @@
 
 package jeeves.utils;
 
+import org.apache.commons.codec.binary.Base64;
+import org.jdom.Element;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.commons.codec.binary.Base64;
-import org.jdom.Element;
 
 //=============================================================================
 

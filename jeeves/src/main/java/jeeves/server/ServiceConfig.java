@@ -23,12 +23,11 @@
 
 package jeeves.server;
 
+import jeeves.constants.ConfigFile;
+import org.jdom.Element;
+
 import java.util.Hashtable;
 import java.util.List;
-
-import jeeves.constants.ConfigFile;
-
-import org.jdom.Element;
 
 //=============================================================================
 

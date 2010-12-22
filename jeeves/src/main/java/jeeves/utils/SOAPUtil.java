@@ -23,12 +23,11 @@
 
 package jeeves.utils;
 
-import java.util.List;
-
 import jeeves.exceptions.MissingParameterEx;
-
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.util.List;
 
 //=============================================================================
 

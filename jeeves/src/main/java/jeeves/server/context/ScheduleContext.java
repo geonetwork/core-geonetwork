@@ -23,11 +23,11 @@
 
 package jeeves.server.context;
 
-import java.util.Hashtable;
-
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
+
+import java.util.Hashtable;
 
 //=============================================================================
 

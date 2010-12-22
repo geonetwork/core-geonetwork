@@ -23,14 +23,14 @@
 
 package org.fao.geonet.kernel.search.function;
 
-import java.io.IOException;
-
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.function.CustomScoreProvider;
 import org.apache.lucene.search.function.CustomScoreQuery;
 import org.fao.geonet.util.ISODate;
+
+import java.io.IOException;
 
 /**
  * Boost recently modified document.

@@ -23,21 +23,18 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import java.io.IOException;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Scorer;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
@@ -45,9 +42,10 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This filter filters out all documents that do not intersect the requested

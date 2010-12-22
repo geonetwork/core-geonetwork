@@ -26,7 +26,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 import org.apache.lucene.search.Query;
 import org.geotools.data.FeatureSource;
-import org.jdom.Element;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;

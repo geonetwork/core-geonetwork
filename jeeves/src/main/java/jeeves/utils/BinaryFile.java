@@ -23,6 +23,15 @@
 
 package jeeves.utils;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.UserInfo;
+import org.globus.ftp.DataSink;
+import org.globus.ftp.FTPClient;
+import org.globus.ftp.Session;
+import org.jdom.Element;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,16 +42,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-
-import org.globus.ftp.DataSink;
-import org.globus.ftp.FTPClient;
-import org.globus.ftp.Session;
-import org.jdom.Element;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.UserInfo;
 
 
 //=============================================================================

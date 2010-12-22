@@ -1,15 +1,14 @@
 package org.fao.geonet.kernel.search.log;
 
+import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import org.fao.geonet.constants.Geonet;
+
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
-
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-
-import org.fao.geonet.constants.Geonet;
 
 /**
  * A bean representing a query request.

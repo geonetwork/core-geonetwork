@@ -23,15 +23,14 @@
 
 package jeeves.server.dispatchers;
 
-import java.util.List;
-import java.util.Vector;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.utils.Util;
-
 import org.jdom.Element;
+
+import java.util.List;
+import java.util.Vector;
 
 //=============================================================================
 

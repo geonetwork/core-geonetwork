@@ -22,9 +22,6 @@
 //==============================================================================
 
 package jeeves.server;
-import java.util.Hashtable;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 import jeeves.constants.ConfigFile;
 import jeeves.exceptions.JeevesException;
@@ -34,8 +31,11 @@ import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
-
 import org.jdom.Element;
+
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 //=============================================================================
 

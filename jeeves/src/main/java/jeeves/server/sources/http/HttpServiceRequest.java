@@ -23,11 +23,10 @@
 
 package jeeves.server.sources.http;
 
-import java.io.IOException;
+import jeeves.server.sources.ServiceRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import jeeves.server.sources.ServiceRequest;
+import java.io.IOException;
 
 //=============================================================================
 

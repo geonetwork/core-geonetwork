@@ -1,12 +1,11 @@
 package org.fao.geonet.kernel.search.log;
 
-import java.sql.SQLException;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
-
 import org.fao.geonet.constants.Geonet;
+
+import java.sql.SQLException;
 
 /** 
  * A bean representing basic information for lucene query (keywords, hits, date, ip.etc)

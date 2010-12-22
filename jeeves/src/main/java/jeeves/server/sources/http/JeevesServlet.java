@@ -23,14 +23,6 @@
 
 package jeeves.server.sources.http;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
@@ -38,6 +30,13 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 //=============================================================================
 
