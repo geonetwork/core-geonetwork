@@ -1,5 +1,8 @@
 package org.fao.geonet.kernel.search;
 
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +26,7 @@ public class StopwordFileParser {
      */
     public static Set<String> parse(String filepath) {
         filepath = filepath + "_stop.txt";
-        System.out.println("StopwordParser parsing file: " + filepath);
+        Log.debug(Geonet.STOPWORD_PARSER, "StopwordParser parsing file: " + filepath);
         Set<String> stopwords = null;
         try {
             File file = new File(filepath);
@@ -46,13 +49,13 @@ public class StopwordFileParser {
             }
             // file does not exist
             else {
-               System.out.println("Did not find requested stopwords file: " + file.getAbsolutePath());
+                Log.warning(Geonet.STOPWORD_PARSER, "Did not find requested stopwords file: " + file.getAbsolutePath());
             }
         }
         catch(IOException x) {
-            System.out.println(x.getMessage());
+            Log.error(Geonet.STOPWORD_PARSER, x.getMessage());
             x.printStackTrace();
-            System.out.println("This exception is swallowed");
+            Log.info(Geonet.STOPWORD_PARSER, "This exception is swallowed");
         }
         return stopwords;
     }
@@ -77,7 +80,7 @@ public class StopwordFileParser {
                     stopwords = new HashSet<String>();
                 }
                 stopwords.add(stopword);
-                System.out.println("Adding stopword: " + stopword);
+                Log.debug(Geonet.STOPWORD_PARSER, "Adding stopword: " + stopword);
             }
         }
         return stopwords;

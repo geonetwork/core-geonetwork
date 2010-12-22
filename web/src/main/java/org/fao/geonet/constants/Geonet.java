@@ -491,6 +491,7 @@ public class Geonet
 	public static final String SRU_SEARCH   = SRU + ".search";
 	public static final String OAI          = GEONETWORK + ".oai";
 	public static final String OAI_HARVESTER = OAI + ".provider";
+    public static final String STOPWORD_PARSER = GEONETWORK + ".stopwordparser";
 	
 	//--------------------------------------------------------------------------
 	//--- services
