@@ -582,7 +582,7 @@
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
     <metadata-samples>Exemple de métadonnées</metadata-samples>
     <metadata-samples-add>Ajouter les exemples</metadata-samples-add>
-    <metadata-samples-add-failed>Echec de l'ajout des exemples</metadata-samples-add-failed>
+    <metadata-samples-add-failed>Echec de l\'ajout des exemples</metadata-samples-add-failed>
     <metadata-samples-add-success>Exemples ajoutés</metadata-samples-add-success>
 	<metadata-template-order>Ordonner les modèles</metadata-template-order>	
 	<metadata-template-order-desc>Ordonner les modèles de saisie</metadata-template-order-desc>
