@@ -12,17 +12,10 @@
 
     <useStopwords>مؤشر يستخدم stopwords وسين لهذه اللغات :</useStopwords>    
     <rebuildIndexMessage>إذا قمت بتغيير هذه القيم ، من المستحسن إعادة إنشاء الفهرس وسين.</rebuildIndexMessage>
-	<!-- new strings - SP 2.7 -->
+	<!-- new strings - 2.7 -->
 	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
   <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
   <noServer js="true">Please select a server to search</noServer>
-	<canBeViewed>Records published to these groups</canBeViewed>
-  <myGroups>My Groups: </myGroups>
-  <groupSelect>Apply selected groups as owner groups</groupSelect>
-  <cannotBeViewed>Records NOT published to these groups</cannotBeViewed>
-  <regionLong>The bounding box of the resource</regionLong>
-  <regionLong2>the bounding box of</regionLong2>
-  <regionLong3>shown below:</regionLong3>
 	<anyWith>Any - with one of these words</anyWith>
 	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
 	<anyWithAllWords>Any - with all of these words</anyWithAllWords>

@@ -193,83 +193,29 @@
 				<!-- Group -->	
 				<xsl:if	test="string(/root/gui/session/userId)!=''">
 					<div class="row">
-						<fieldset>
-							<legend><xsl:value-of select="/root/gui/strings/canBeViewed"/></legend>
-							<table>
-								<tr>
-									<td class="padded" align="left">
-										<xsl:value-of select="/root/gui/strings/myGroups"/>
-									</td>
-									<td class="padded" align="left">
-										<select class="content" name="groups" id="groups" onclick="fixGroups();" multiple="true" size="6">
-											<option value="">
-												<xsl:if test="/root/gui/searchDefaults/groups/group=''">
-													<xsl:attribute name="selected"/>
-												</xsl:if>
-												<xsl:value-of select="/root/gui/strings/any"/>
-											</option>
-											<option value="1">
-												<xsl:if test="/root/gui/searchDefaults/groups/group='1'">
-													<xsl:attribute name="selected"/>
-												</xsl:if>
-												<xsl:text>All</xsl:text>
-											</option>
-											<option value="0">
-												<xsl:if test="/root/gui/searchDefaults/groups/group='0'">
-													<xsl:attribute name="selected"/>
-												</xsl:if>
-												<xsl:text>Intranet</xsl:text>
-											</option>
-											<option value="-1">
-												<xsl:if test="/root/gui/searchDefaults/groups/group='-1'">
-													<xsl:attribute name="selected"/>
-												</xsl:if>
-												<xsl:text>GUEST</xsl:text>
-											</option>
-											<xsl:for-each select="/root/gui/groups/record">
-												<xsl:sort order="ascending" select="name"/>
-												<option value="{id}">
-													<xsl:if test="/root/gui/searchDefaults/groups/group=id">
-														<xsl:attribute name="selected"/>
-													</xsl:if>
-													<xsl:value-of select="name"/>
-												</option>
-											</xsl:for-each>
-										</select>
-									</td>		
-								</tr>
-								<tr style="display:none;">		<!-- disable - too hard to describe -->
-									<td class="padded" colspan="2">
-										<input type="checkbox" name="ownergroups" id="ownergroups">
-											<xsl:if test="/root/gui/searchDefaults/ownergroups='on'">
-												<xsl:attribute name="checked"/>
-											</xsl:if>
-											<label for="ownergroups"><xsl:value-of select="/root/gui/strings/groupSelect"/></label>
-										</input>
-									</td>		
-								</tr>
-								<xsl:variable name="notgroupsDisplay">
-									<xsl:choose>
-										<xsl:when test="/root/gui/searchDefaults/groups/group=''">
-											<xsl:text>display:none;</xsl:text>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:text>display:table-row;</xsl:text>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:variable>
-								<tr style="{$notgroupsDisplay}" id="notgroupsInterface">		
-									<td class="padded" colspan="2">
-										<input type="checkbox" name="notgroups" id="notgroups">
-											<xsl:if test="/root/gui/searchDefaults/notgroups='on' and /root/gui/searchDefaults/groups/group!=''">
-												<xsl:attribute name="checked"/>
-											</xsl:if>
-											<label for="notgroups"><xsl:value-of select="/root/gui/strings/cannotBeViewed"/></label>
-										</input>
-									</td>
-								</tr>
-							</table>
-						</fieldset>
+						<span class="labelField"><xsl:value-of select="/root/gui/strings/group"/></span>
+						
+						<select class="content" name="group" id="group">
+							<option value="">
+								<xsl:if test="/root/gui/searchDefaults/group=''">
+									<xsl:attribute name="selected"/>
+								</xsl:if>
+								<xsl:value-of select="/root/gui/strings/any"/>
+							</option>
+							<xsl:for-each select="/root/gui/groups/record">
+								<xsl:sort order="ascending" select="name"/>
+								<option value="{id}">
+									<!-- after a search, many groups are defined in 
+									searchDefaults (FIXME ?) and the last group in group list
+									was selected by default even if none was
+									used in last search. Only set selected one when only one is define in searchDefaults. -->
+									<xsl:if test="id=/root/gui/searchDefaults/group and count(/root/gui/searchDefaults/group)=1">
+										<xsl:attribute name="selected"/>
+									</xsl:if>
+									<xsl:value-of select="name"/>
+								</option>
+							</xsl:for-each>
+						</select>
 					</div>
 				</xsl:if>
 					
@@ -817,28 +763,6 @@
 	
 	<xsl:comment>MINIMAP</xsl:comment>
 	
-	<xsl:variable name="relationSelect">
-		<xsl:choose>
-			<xsl:when test="$remote">relation_remote</xsl:when>
-			<xsl:otherwise>relation</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-			
-	<div class="row">
-		<span class="labelField"><xsl:value-of select="/root/gui/strings/regionLong"/></span>
-		<select class="content" name="relation" id="{$relationSelect}">
-			<xsl:for-each select="/root/gui/strings/boundingRelation">
-				<option value="{@value}">
-					<xsl:if
-						test="@value=/root/gui/searchDefaults/relation">
-						<xsl:attribute name="selected">selected</xsl:attribute>
-					</xsl:if>
-					<xsl:value-of select="."/>
-				</option>
-			</xsl:for-each>
-		</select>
-	</div>
-
 	<xsl:variable name="regionSelect">
 		<xsl:choose>
 			<xsl:when test="$remote">region_remote</xsl:when>
@@ -874,42 +798,6 @@
 		</xsl:choose>
 	</xsl:variable>
 
-	<!-- regions combobox -->	
-	<div class="row">
-		<span class="labelField"><xsl:value-of select="/root/gui/strings/regionLong2"/></span>
-		<select class="content" name="region" id="{$regionSelect}" onchange="doRegionSearch(this.id);">
-			<option value="">
-				<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
-					<xsl:attribute name="selected">selected</xsl:attribute>
-				</xsl:if>
-				<xsl:value-of select="/root/gui/strings/any"/>
-			</option>
-			<option value="userdefined">
-				<xsl:if test="/root/gui/searchDefaults/theme='_userdefined_'">
-					<xsl:attribute name="selected">selected</xsl:attribute>
-				</xsl:if>
-				<xsl:value-of select="/root/gui/strings/userDefined"/>
-			</option>
-			
-			<xsl:for-each select="/root/gui/regions/record">
-				<xsl:sort select="label/child::*[name() = $mylang]" order="ascending"/>
-				<option value="{id}">
-					<xsl:if test="id=/root/gui/searchDefaults/region">
-						<xsl:attribute name="selected">selected</xsl:attribute>
-					</xsl:if>
-					<xsl:attribute name="value">
-							<xsl:value-of select="id"/>
-					</xsl:attribute>
-					<xsl:value-of select="label/child::*[name() = $mylang]"/>
-				</option>
-			</xsl:for-each>
-		</select>							
-	</div>
-
-	<div class="row">
-		<span class="labelField"><xsl:value-of select="/root/gui/strings/regionLong3"/></span>
-	</div>
-		
 	<!-- Map and coordinates container -->
 	<table id="minimap_root" width="340px">
 		<!-- North -->
@@ -961,7 +849,62 @@
 			</td>
 		</tr>
 	</table>
-				
+			
+	<!-- Bounding box relation -->
+	<xsl:variable name="relationSelect">
+		<xsl:choose>
+			<xsl:when test="$remote">relation_remote</xsl:when>
+			<xsl:otherwise>relation</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+			
+	<div class="row">
+		<span class="labelField"><xsl:value-of select="/root/gui/strings/type"/></span>
+		<select class="content" name="relation" id="{$relationSelect}">
+			<xsl:for-each select="/root/gui/strings/boundingRelation">
+				<option value="{@value}">
+					<xsl:if
+						test="@value=/root/gui/searchDefaults/relation">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="."/>
+				</option>
+			</xsl:for-each>
+		</select>
+	</div>
+
+	<!-- Region -->
+	<div class="row">
+		<span class="labelField"><xsl:value-of select="/root/gui/strings/region"/></span>
+		<select class="content" name="region" id="{$regionSelect}" onchange="doRegionSearch(this.id);">
+			<option value="">
+				<xsl:if test="/root/gui/searchDefaults/theme='_any_'">
+					<xsl:attribute name="selected">selected</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="/root/gui/strings/any"/>
+			</option>
+			<option value="userdefined">
+				<xsl:if test="/root/gui/searchDefaults/theme='_userdefined_'">
+					<xsl:attribute name="selected">selected</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="/root/gui/strings/userDefined"/>
+			</option>
+			
+			<xsl:for-each select="/root/gui/regions/record">
+				<xsl:sort select="label/child::*[name() = $mylang]" order="ascending"/>
+				<option value="{id}">
+					<xsl:if test="id=/root/gui/searchDefaults/region">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:attribute name="value">
+							<xsl:value-of select="id"/>
+					</xsl:attribute>
+					<xsl:value-of select="label/child::*[name() = $mylang]"/>
+				</option>
+			</xsl:for-each>
+		</select>							
+	</div>
+
 </xsl:template>
 
 	<!-- ============================================================ 
