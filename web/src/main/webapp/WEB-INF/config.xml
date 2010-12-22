@@ -977,13 +977,8 @@
         <service name="csw.config.set">
             <class name=".guiservices.csw.Set" />
 
-            <output sheet="csw/config.xsl">
-                <call name="languages" class=".guiservices.languages.Get" />
-
-                <call name="users" class="jeeves.services.db.Select">
-					<param name="db" value="main-db" />
-					<param name="query" value="SELECT * FROM Users ORDER BY name" />
-				</call>
+            <output sheet="admin.xsl">
+                    <call name="services" class="jeeves.guiservices.services.Get" />
             </output>
         </service>
 

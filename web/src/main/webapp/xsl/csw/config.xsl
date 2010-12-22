@@ -82,7 +82,7 @@
                 <tr>
             		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerContact"/></td>
             		<td class="padded">
-            			<select name="csw.contactId" id="csw.contactId" onchange="javascript:updateContact(this.value)">
+            			<select name="csw.contactId" id="csw.contactId">
             				<option value="-1"></option>
             				<xsl:for-each select="/root/gui/users/record">
             					<xsl:sort select="username"/>

@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -43,24 +44,19 @@ public class Set implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
 	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager sm = gc.getSettingManager();
-
         Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
         // Save values in settings
-        saveCswSettings(params, sm, dbms);
+        saveCswServerConfig(params, gc.getSettingManager(), dbms);
 
         // Process parameters and save capabilities information in database
         saveCswCapabilitiesInfo(params, gc, dbms);
 
-        dbms.commit();
-        sm.refresh();
-
         // Build response
-        return buildResponse(sm, gc, dbms);
+        return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
-    private void saveCswSettings(Element params, SettingManager sm, Dbms dbms)
+    private void saveCswServerConfig(Element params, SettingManager sm, Dbms dbms)
             throws Exception {
 
         String cswEnableValue = Util.getParam(params, "csw.enable", "");
@@ -93,32 +89,6 @@ public class Set implements Service {
             // Save item
             gc.getDataManager().saveCswCapabilitiesInfo(dbms, cswCapInfo);
         }
-    }
-
-    private Element buildResponse(SettingManager sm, GeonetContext gc, Dbms dbms)
-            throws Exception {
-
-        boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
-        boolean cswMetadataPublic = sm.getValueAsBool("system/csw/metadataPublic");
-        String cswContactIdValue = sm.getValue("system/csw/contactId");
-        if (cswContactIdValue == null) cswContactIdValue = "-1";
-
-        Element cswCapabilitiesConfig = gc.getDataManager().getCswCapabilitiesInfo(dbms);
-
-        Element cswEnable = new Element("cswEnable");
-        cswEnable.setText(new Boolean(cswEnabled).toString());
-
-        Element cswPublic = new Element("cswMetadataPublic");
-        cswPublic.setText(new Boolean(cswMetadataPublic).toString());
-
-        Element cswContactId = new Element("cswContactId");
-        cswContactId.setText(cswContactIdValue);
-
-        cswCapabilitiesConfig.addContent(cswEnable);
-        cswCapabilitiesConfig.addContent(cswPublic);
-        cswCapabilitiesConfig.addContent(cswContactId);
-
-        return cswCapabilitiesConfig;
     }
 
 }
