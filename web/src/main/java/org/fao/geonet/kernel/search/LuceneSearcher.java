@@ -877,8 +877,13 @@ public class LuceneSearcher extends MetaSearcher
 	{
 		String root       = doc.get("_root");
 		String schema     = doc.get("_schema");
-		String createDate = doc.get("_createDate").toUpperCase();
-		String changeDate = doc.get("_changeDate").toUpperCase();
+
+        String createDate = doc.get("_createDate");
+        if (createDate != null) createDate = createDate.toUpperCase();
+
+        String changeDate = doc.get("_changeDate");
+        if (changeDate != null) changeDate = changeDate.toUpperCase();
+        
 		String source     = doc.get("_source");
 		String uuid       = doc.get("_uuid");
 
