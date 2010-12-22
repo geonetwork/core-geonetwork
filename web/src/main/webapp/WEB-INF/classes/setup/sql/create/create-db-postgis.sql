@@ -30,6 +30,8 @@ CREATE TABLE Settings
     id        int,
     parentId  int,
     name      varchar(32)    not null,
+    isocode varchar(3)  not null,
+        
     value     text,
 
     primary key(id),
@@ -371,6 +373,20 @@ CREATE TABLE MetadataNotifications
   
 -- ======================================================================
 
+CREATE TABLE CswServerCapabilitiesInfo
+  (
+    idField   int,
+    langId    varchar(5)    not null,
+    field     varchar(32)   not null,
+    label     varchar(96),
+
+    primary key(idField),
+
+    foreign key(langId) references Languages(id)
+  );
+
+-- ======================================================================
+  
 CREATE TABLE spatialIndex
   (
 		fid int,

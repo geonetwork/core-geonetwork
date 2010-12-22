@@ -1169,4 +1169,15 @@ ISO 19115 не позволяет иметь более одного.
     <notifications>Уведомление на удаленные цели</notifications>
     <url>единый указатель ресурсов</url>
     
+    <cswServer>CSW server</cswServer>
+    <cswServerDes>CSW Server configuration</cswServerDes>
+    <cswServerConfig>CSW Server configuration</cswServerConfig>
+    <cswServerEnable>Enable</cswServerEnable>
+    <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
+    <cswServerTitle>Title</cswServerTitle>
+    <cswServerAbstract>Abstract</cswServerAbstract>
+    <cswServerFees>Fees</cswServerFees>
+    <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
+    <cswServerContact>Contact</cswServerContact>
+    
 </strings>

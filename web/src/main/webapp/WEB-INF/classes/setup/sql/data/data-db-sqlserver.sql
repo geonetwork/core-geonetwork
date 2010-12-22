@@ -25,6 +25,7 @@ DELETE FROM Groups;
 DELETE FROM Users;
 DELETE FROM OperationsDes;
 DELETE FROM Operations;
+DELETE FROM CswServerCapabilitiesInfo;
 DELETE FROM Languages;
 DELETE FROM Settings;
 DELETE FROM Relations;
@@ -34,14 +35,51 @@ DELETE FROM Relations;
 -- === Table: Languages
 -- ======================================================================
 
-INSERT INTO Languages VALUES ('en','English');
-INSERT INTO Languages VALUES ('fr','French');
-INSERT INTO Languages VALUES ('es','Espanol');
-INSERT INTO Languages VALUES ('ru','Russian');
-INSERT INTO Languages VALUES ('cn','Chinese');
-INSERT INTO Languages VALUES ('de','Deutsch');
-INSERT INTO Languages VALUES ('nl','Nederlands');
-INSERT INTO Languages VALUES ('pt','Português');
+INSERT INTO Languages VALUES ('en','English', 'eng');
+INSERT INTO Languages VALUES ('fr','French', 'fre');
+INSERT INTO Languages VALUES ('es','Espanol', 'esp');
+INSERT INTO Languages VALUES ('ru','Russian', 'rus');
+INSERT INTO Languages VALUES ('cn','Chinese', 'chi');
+INSERT INTO Languages VALUES ('de','Deutsch', 'ger');
+INSERT INTO Languages VALUES ('nl','Nederlands', 'dut');
+INSERT INTO Languages VALUES ('pt','Português', 'por');
+
+-- ======================================================================
+-- === Table: CswServerCapabilitiesInfo
+-- ======================================================================
+
+INSERT INTO CswServerCapabilitiesInfo VALUES (1, 'en', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (2, 'en', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (3, 'en', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (4, 'en', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (5, 'es', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (6, 'es', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (7, 'es', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (8, 'es', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (9, 'nl', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (10, 'nl', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (11, 'nl', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (12, 'nl', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (13, 'cn', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (14, 'cn', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (15, 'cn', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (16, 'cn', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (17, 'de', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (18, 'de', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (19, 'de', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (20, 'de', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (21, 'fr', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (22, 'fr', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (23, 'fr', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (24, 'fr', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (25, 'pt', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (26, 'pt', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (27, 'pt', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (28, 'pt', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (29, 'ru', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (30, 'ru', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (31, 'ru', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (32, 'ru', 'accessConstraints', '');
 
 -- ======================================================================
 -- === Table: Categories
@@ -7277,27 +7315,7 @@ INSERT INTO Settings VALUES (112,87,'profile','profile');
 INSERT INTO Settings VALUES (120,1,'csw',NULL);
 INSERT INTO Settings VALUES (121,120,'enable','true');
 INSERT INTO Settings VALUES (122,120,'contactId',NULL);
-INSERT INTO Settings VALUES (123,120,'individualName',NULL);
-INSERT INTO Settings VALUES (124,120,'positionName',NULL);
-INSERT INTO Settings VALUES (125,120,'contactInfo',NULL);
-INSERT INTO Settings VALUES (126,120,'role',NULL);
-INSERT INTO Settings VALUES (127,120,'title',NULL);
-INSERT INTO Settings VALUES (128,120,'abstract',NULL);
-INSERT INTO Settings VALUES (129,120,'fees',NULL);
-INSERT INTO Settings VALUES (130,120,'accessConstraints',NULL);
 INSERT INTO Settings VALUES (131,120,'metadataPublic','false');
-INSERT INTO Settings VALUES (160,125,'phone',NULL);
-INSERT INTO Settings VALUES (161,125,'address',NULL);
-INSERT INTO Settings VALUES (162,125,'hoursOfService',NULL);
-INSERT INTO Settings VALUES (163,125,'contactInstructions',NULL);
-INSERT INTO Settings VALUES (140,160,'voice',NULL);
-INSERT INTO Settings VALUES (141,160,'facsimile',NULL);
-INSERT INTO Settings VALUES (150,161,'deliveryPoint',NULL);
-INSERT INTO Settings VALUES (151,161,'city',NULL);
-INSERT INTO Settings VALUES (152,161,'administrativeArea',NULL);
-INSERT INTO Settings VALUES (153,161,'postalCode',NULL);
-INSERT INTO Settings VALUES (154,161,'country',NULL);
-INSERT INTO Settings VALUES (155,161,'email',NULL);
 INSERT INTO Settings VALUES (170,1,'shib',NULL);
 INSERT INTO Settings VALUES (171,170,'use','false');
 INSERT INTO Settings VALUES (172,170,'path','/geonetwork/srv/en/shib.user.login');

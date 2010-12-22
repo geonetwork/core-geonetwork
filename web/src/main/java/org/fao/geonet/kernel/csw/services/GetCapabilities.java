@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -36,6 +37,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
+import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -79,17 +81,60 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		checkService(request);
 		checkAcceptVersions(request);
 
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        boolean inspireEnabled = gc.getSettingManager().getValueAsBool("system/inspire/enable", false);
+
+
 		//--- return capabilities
 
 		String FS   = File.separator;
-		String file = context.getAppPath() +"xml"+ FS +"csw"+ FS +"capabilities.xml";
+		String file;
+
+        if (inspireEnabled){
+            file = context.getAppPath() +"xml"+ FS +"csw"+ FS +"capabilities_inspire.xml";
+        } else {
+            file = context.getAppPath() +"xml"+ FS +"csw"+ FS +"capabilities.xml";
+        }
 
 		try
 		{
 			Element capabilities = Xml.loadFile(file);
-			substitute(context, capabilities);
 			setKeywords(capabilities, context);
 			setOperationsParameters(capabilities);
+
+            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+
+            String currentLanguage = context.getLanguage();
+
+            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())            
+            if (inspireEnabled){
+                String isoLangParamValue = request.getAttributeValue("language");
+
+                Map<String, String> langs = Lib.local.getLanguagesIso(dbms);
+
+                if (isoLangParamValue != null) {
+                    // Retrieve GN language id from Iso language id
+                    if (langs.containsValue(isoLangParamValue)) {
+                        for(String k : langs.keySet()) {
+                            if (langs.get(k).equals(isoLangParamValue)) {
+                                currentLanguage = k;
+                            }
+                        }
+                    }
+                }
+
+                setInspireLanguages(capabilities, langs, currentLanguage);
+            }
+
+            CswCapabilitiesInfo cswCapabilitiesInfo = gc.getDataManager().getCswCapabilitiesInfo(dbms, currentLanguage);
+
+            // Retrieve contact data from users table
+            String contactId = gc.getSettingManager().getValue("system/csw/contactId");
+            if ((contactId == null) || (contactId.equals(""))) contactId = "-1";
+            Element contact = dbms.select("SELECT * FROM USERS WHERE id = ?", new Integer(contactId));
+
+            substitute(context, capabilities, cswCapabilitiesInfo,  contact.getChild("record"), currentLanguage);
+
 			handleSections(request, capabilities);
 
 			return capabilities;
@@ -112,11 +157,13 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		String sequence   = params.get("updatesequence");
 		String acceptVers = params.get("acceptversions");
 		String acceptForm = params.get("acceptformats");
+        String language   = params.get("language");
 
 		Element request = new Element(getName(), Csw.NAMESPACE_CSW);
 
 		setAttrib(request, "service",        service);
 		setAttrib(request, "updateSequence", sequence);
+        setAttrib(request, "language",       language);
 
 		fill(request, "AcceptVersions", "Version",      acceptVers, Csw.NAMESPACE_OWS);
 		fill(request, "Sections",       "Section",      sections,   Csw.NAMESPACE_OWS);
@@ -203,7 +250,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 	//---------------------------------------------------------------------------
 
-	private void substitute(ServiceContext context, Element capab) throws Exception
+	private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, Element contact, String langId) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
@@ -215,30 +262,93 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		vars.put("$SERVLET", context.getBaseUrl());
 		
 		// Set CSW contact information
-		vars.put("$IND_NAME", sm.getValue("system/csw/individualName"));
-		vars.put("$POS_NAME", sm.getValue("system/csw/positionName"));
-		vars.put("$VOICE", sm.getValue("system/csw/contactInfo/phone/voice"));
-		vars.put("$FACSCIMILE", sm.getValue("system/csw/contactInfo/phone/facsimile"));
-		vars.put("$DEL_POINT", sm.getValue("system/csw/contactInfo/address/deliveryPoint"));
-		vars.put("$CITY", sm.getValue("system/csw/contactInfo/address/city"));
-		vars.put("$ADMIN_AREA", sm.getValue("system/csw/contactInfo/address/administrativeArea"));
-		vars.put("$POSTAL_CODE", sm.getValue("system/csw/contactInfo/address/postalCode"));
-		vars.put("$COUNTRY", sm.getValue("system/csw/contactInfo/address/country"));
-		vars.put("$EMAIL", sm.getValue("system/csw/contactInfo/address/email"));
-		vars.put("$HOUROFSERVICE", sm.getValue("system/csw/contactInfo/hoursOfService"));
-		vars.put("$CONTACT_INSTRUCTION", sm.getValue("system/csw/contactInfo/contactInstructions"));
-		vars.put("$ROLE", sm.getValue("system/csw/role"));
-		vars.put("$TITLE", sm.getValue("system/csw/title"));
-		vars.put("$ABSTRACT", sm.getValue("system/csw/abstract"));
-		vars.put("$FEES", sm.getValue("system/csw/fees"));
-		vars.put("$ACCESS_CONSTRAINTS", sm.getValue("system/csw/accessConstraints"));
-		vars.put("$LOCALE",context.getLanguage());
+        if (contact != null) {
+            vars.put("$IND_NAME", contact.getChild("name").getValue());
+            vars.put("$POS_NAME", contact.getChild("profile").getValue());
+            vars.put("$VOICE", "");
+            vars.put("$FACSCIMILE", "");
+            vars.put("$DEL_POINT", contact.getChild("address").getValue());
+            vars.put("$CITY", contact.getChild("city").getValue());
+            vars.put("$ADMIN_AREA", contact.getChild("state").getValue());
+            vars.put("$POSTAL_CODE", contact.getChild("zip").getValue());
+            vars.put("$COUNTRY", contact.getChild("country").getValue());
+            vars.put("$EMAIL", contact.getChild("email").getValue());
+            vars.put("$HOUROFSERVICE", "");
+            vars.put("$CONTACT_INSTRUCTION","");
+            vars.put("$ROLE", contact.getChild("kind").getValue());
+        } else {
+            vars.put("$IND_NAME", "");
+            vars.put("$POS_NAME", "");
+            vars.put("$VOICE", "");
+            vars.put("$FACSCIMILE", "");
+            vars.put("$DEL_POINT", "");
+            vars.put("$CITY", "");
+            vars.put("$ADMIN_AREA", "");
+            vars.put("$POSTAL_CODE", "");
+            vars.put("$COUNTRY", "");
+            vars.put("$EMAIL", "");
+            vars.put("$HOUROFSERVICE", "");
+            vars.put("$CONTACT_INSTRUCTION","");
+            vars.put("$ROLE", "");    
+        }
+
+        vars.put("$TITLE", cswCapabilitiesInfo.getTitle());
+        vars.put("$ABSTRACT", cswCapabilitiesInfo.getAbstract());
+        vars.put("$FEES", cswCapabilitiesInfo.getFees());
+        vars.put("$ACCESS_CONSTRAINTS", cswCapabilitiesInfo.getAccessConstraints());
+
+        vars.put("$LOCALE", langId);
 		
 		Lib.element.substitute(capab, vars);
 	}
 	
 	//---------------------------------------------------------------------------
 	
+    private void setInspireLanguages (Element capabilities, Map<String, String> languages, String currLang) {
+        Element inspireExtCapabilities = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS)
+                .getChild("ExtendedCapabilities", Csw.NAMESPACE_OWS)
+                .getChild("ExtendedCapabilities", Csw.NAMESPACE_INSPIRE);
+
+
+        Element inspireLanguages = inspireExtCapabilities.getChild("Languages", Csw.NAMESPACE_INSPIRE);
+
+        // TODO: retrieve from config file
+        String defaultLang = "en";
+
+        try {
+            for(String key : languages.keySet()) {
+                // List of supported languages
+                Element supportedLanguage = new Element("Language", Csw.NAMESPACE_INSPIRE);
+                supportedLanguage.setText(languages.get(key));
+
+                if (key.equalsIgnoreCase(defaultLang)) {
+                    supportedLanguage.setAttribute("default", "true");
+                }
+
+                inspireLanguages.getChildren().add(supportedLanguage);
+            }
+
+            // Current language
+            HashMap<String, String> vars = new HashMap<String, String>();
+            if (languages.containsKey(currLang)) {
+                vars.put("$INSPIRE_LOCALE", languages.get(currLang));
+
+            } else {      
+                vars.put("$INSPIRE_LOCALE", languages.get(defaultLang));
+            }
+
+            Lib.element.substitute(capabilities, vars);
+
+        } catch (Exception ex) {
+            // TODO: handle exception
+            ex.printStackTrace();
+        }
+
+    }
+
+
+	//---------------------------------------------------------------------------
+
 	/**
 	 * Define keyword section of the GetCapabilities
 	 * document according to catalogue content. Reading 

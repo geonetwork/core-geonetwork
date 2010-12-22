@@ -1161,4 +1161,14 @@
     <notifications>远程目标的通知</notifications>
     <url>网址</url>
     
+    <cswServer>CSW server</cswServer>
+    <cswServerDes>CSW Server configuration</cswServerDes>
+    <cswServerConfig>CSW Server configuration</cswServerConfig>
+    <cswServerEnable>Enable</cswServerEnable>
+    <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
+    <cswServerTitle>Title</cswServerTitle>
+    <cswServerAbstract>Abstract</cswServerAbstract>
+    <cswServerFees>Fees</cswServerFees>
+    <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
+    <cswServerContact>Contact</cswServerContact>
 </strings>
