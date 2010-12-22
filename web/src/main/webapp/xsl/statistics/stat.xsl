@@ -6,16 +6,23 @@
 	
 	<xsl:include href="../main.xsl"/>
 
+	<xsl:template mode="css" match="/">
+		<xsl:call-template name="geoCssHeader"/>
+		<xsl:call-template name="ext-ux-css"/>
+	</xsl:template>
+
 	<!--
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<link rel="stylesheet" type="text/css" media="all" href="{/root/gui/url}/scripts/calendar/calendar-blue2.css" title="calendar-blue" />
-		
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/calendar-setup.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/calendar/lang/calendar-en.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<xsl:call-template name="geoHeader"/>
+		<xsl:call-template name="ext-ux"/>
+
+		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
+
 		<script type="text/javascript" language="JavaScript" src="{/root/gui/url}/scripts/swfobject.js"/>
 		<script type="text/javascript" language="JavaScript" src="{/root/gui/url}/scripts/gn_stats.js"/>
 	</xsl:template>
@@ -153,13 +160,24 @@
 				</tr>
 				<tr>
 					<td colspan="3">
-					<table>
+					<table width="100%">
 					<tr>
-						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
+						<xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
+						<!-- <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable> -->
 							
-						<td><xsl:value-of select="/root/gui/strings/stat.dateFrom"/><br/><input type="text" name="dateFrom" id="f_date_from" /></td>
-						<td><xsl:value-of select="/root/gui/strings/stat.dateTo"/><br/><input type="text" name="dateTo" id="f_date_to"  value="{format-dateTime(current-dateTime(),$df)}"/></td>
-						<td>&#160;<br/><input type="button" name="okButton" value="OK" onclick="displayGraphic(document.statForm.dateFrom.value, document.statForm.dateTo.value)"/></td>
+						<td>
+							<xsl:value-of select="/root/gui/strings/stat.dateFrom"/><br/>
+							<div class="cal" id="f_date_from"></div>
+							<input type="hidden" id="f_date_from_format" value="%Y-%m-%d"/>
+							<input type="hidden" id="f_date_from_cal" value=""/>
+						</td>
+						<td>
+							<xsl:value-of select="/root/gui/strings/stat.dateTo"/><br/>
+							<div class="cal" id="f_date_to"></div>
+							<input type="hidden" id="f_date_to_format" value="%Y-%m-%d"/>
+							<input type="hidden" id="f_date_to_cal" value="{format-dateTime(current-dateTime(),$df)}"/>
+						</td>
+						<td>&#160;<br/><input type="button" name="okButton" value="OK" onclick="displayGraphic()"/></td>
 					</tr>
 					</table>
 					</td>

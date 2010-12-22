@@ -64,7 +64,9 @@ function collapseSearch(arrayOfDiv) {
 	}
 }
 
-function displayGraphic(dateFrom, dateTo) {
+function displayGraphic() {
+	var dateFrom = $('f_date_from').value;
+	var dateTo = $('f_date_to').value;
 	if (!dateFrom) {
 		alert("Please choose a date from");
 		return;
@@ -85,26 +87,6 @@ function displayGraphic(dateFrom, dateTo) {
 	var params = "dateFrom=" + dateFrom + "T00:00:00&dateTo=" + dateTo + "T23:59:59&graphicType=" + gt;
 	injectServiceResponse('stat.graphByDate', 'stat.graphicDiv', params);	
 }
-
-var calFrom = "calFrom";
-var calTo = "calTo";
-
-function initCalendar() {
-    calFrom = Calendar.setup({
-        inputField      :    "f_date_from",   // id of the input field
-        ifFormat        :    "%Y-%m-%d",       // format of the input field
-        showsTime       :    false,
-        onUpdate        :    dateChanged
-    });
-    calTo = Calendar.setup({
-        inputField     :    "f_date_to",
-        ifFormat       :    "%Y-%m-%d",
-        showsTime      :    false,
-        onUpdate       :    dateChanged
-    });
-  }
-  
-//ifFormat        :    "%Y-%m-%dT%H:%M:%S",       // format of the input field
 
 // called when a date has changed: ask for a new graphic
 function dateChanged(cal) {
