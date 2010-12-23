@@ -20,8 +20,18 @@
 			</xsl:choose>
 		</xsl:variable>
 			
-		<xsl:variable name="url" select="concat(/root/gui/locService,'/',$service,'?',$args,$modalArg)"/>
 		<xsl:if test="/root/gui/services/service/@name=$service">
+			<xsl:variable name="url">
+				<xsl:choose>
+					<xsl:when test="normalize-space($args)='' and normalize-space($modalArg)=''">
+						<xsl:value-of select="concat(/root/gui/locService,'/',$service)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat(/root/gui/locService,'/',$service,'?',$args,$modalArg)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
 			<tr>
 				<td class="padded">
 					<xsl:choose>
