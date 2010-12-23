@@ -10,7 +10,7 @@ CREATE TABLE MetadataNotifiers
     primary key(id)
   );
 
-REM ======================================================================
+-- ======================================================================
 
 CREATE TABLE MetadataNotifications
   (
@@ -19,13 +19,14 @@ CREATE TABLE MetadataNotifications
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
-    errormsg           long,
+    errormsg           text,
 
-    primary key(metadataId,notifierId)
+    primary key(metadataId,notifierId),
+
+    foreign key(notifierId) references MetadataNotifiers(id)
   );
 
-ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
-ALTER TABLE Settings MODIFY value long;    
+ALTER TABLE Settings ALTER COLUMN value TYPE text;
 ALTER TABLE Metadata ADD displayorder int;
 
 INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
@@ -52,9 +53,9 @@ INSERT INTO Settings VALUES (607,606,'day','0');
 INSERT INTO Settings VALUES (608,606,'hour','24');
 INSERT INTO Settings VALUES (609,606,'min','0');
 INSERT INTO Settings VALUES (700,1,'oai',NULL);
-INSERT INTO Settings VALUES (701,700,'mdmode',1);
-INSERT INTO Settings VALUES (702,700,'tokentimeout',3600);
-INSERT INTO Settings VALUES (703,700,'cachesize',60);
+INSERT INTO Settings VALUES (701,700,'mdmode','1');
+INSERT INTO Settings VALUES (702,700,'tokentimeout','3600');
+INSERT INTO Settings VALUES (703,700,'cachesize','60');
 INSERT INTO Settings VALUES (720,1,'inspire',NULL);
 INSERT INTO Settings VALUES (721,720,'enable','false');
 INSERT INTO Settings VALUES (800,1,'indexlanguages',NULL);
@@ -98,5 +99,64 @@ INSERT INTO Settings VALUES (837,800,'indexlanguage',NULL);
 INSERT INTO Settings VALUES (838,837,'name','swedish');
 INSERT INTO Settings VALUES (839,837,'selected','false');
 
-UPDATE Settings SET value='2.6.1' WHERE name='version';
+-- 2.6.2 changes
+
+CREATE TABLE CswServerCapabilitiesInfo
+  (
+    idField   int,
+    langId    varchar(5)    not null,
+    field     varchar(32)   not null,
+    label     varchar(96),
+
+    primary key(idField),
+
+    foreign key(langId) references Languages(id)
+  );
+
+ALTER TABLE Languages ADD isocode varchar(3);
+
+UPDATE Languages SET isocode = 'eng' where id ='en';
+UPDATE Languages SET isocode = 'fre' where id ='fr';
+UPDATE Languages SET isocode = 'esp' where id ='es';
+UPDATE Languages SET isocode = 'rus' where id ='ru';
+UPDATE Languages SET isocode = 'chi' where id ='cn';
+UPDATE Languages SET isocode = 'ger' where id ='de';
+UPDATE Languages SET isocode = 'dut' where id ='nl';
+UPDATE Languages SET isocode = 'por' where id ='pt';
+
+INSERT INTO CswServerCapabilitiesInfo VALUES (1, 'en', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (2, 'en', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (3, 'en', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (4, 'en', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (5, 'es', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (6, 'es', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (7, 'es', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (8, 'es', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (9, 'nl', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (10, 'nl', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (11, 'nl', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (12, 'nl', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (13, 'cn', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (14, 'cn', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (15, 'cn', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (16, 'cn', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (17, 'de', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (18, 'de', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (19, 'de', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (20, 'de', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (21, 'fr', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (22, 'fr', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (23, 'fr', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (24, 'fr', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (25, 'pt', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (26, 'pt', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (27, 'pt', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (28, 'pt', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (29, 'ru', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (30, 'ru', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (31, 'ru', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (32, 'ru', 'accessConstraints', '');
+
+
+UPDATE Settings SET value='2.6.2' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

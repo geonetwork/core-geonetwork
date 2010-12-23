@@ -7273,7 +7273,7 @@ INSERT INTO Settings VALUES (11,10,'name','dummy');
 INSERT INTO Settings VALUES (12,10,'siteId','dummy');
 INSERT INTO Settings VALUES (13,10,'organization','dummy');
 INSERT INTO Settings VALUES (14,1,'platform',NULL);
-INSERT INTO Settings VALUES (15,14,'version','2.6.1');
+INSERT INTO Settings VALUES (15,14,'version','2.6.2');
 INSERT INTO Settings VALUES (16,14,'subVersion','0');
 INSERT INTO Settings VALUES (20,1,'server',NULL);
 INSERT INTO Settings VALUES (21,20,'host','localhost');
