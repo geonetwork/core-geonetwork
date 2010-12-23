@@ -607,7 +607,7 @@ public class LuceneSearcher extends MetaSearcher
 
 			LuceneConfigNumericField fieldConfig = numericFieldSet.get(fld);
 			if (fieldConfig != null) {
-				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(null, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType());
+				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType());
 			} else {
 				lowerTxt = (lowerTxt == null ? null : analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
 				upperTxt = (upperTxt == null ? null : analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
