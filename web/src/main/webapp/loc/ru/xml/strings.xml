@@ -1159,7 +1159,7 @@ ISO 19115 не позволяет иметь более одного.
     <mapViewer>Просмотр карт</mapViewer>
 
     <uuid>Unique identifier</uuid>    
-
+    <mymetadata>мой метаданных</mymetadata>
     <addremove>Добавить / удалить</addremove>
     <enabled>включен</enabled>
     <notifications>Уведомление на удаленные цели</notifications>

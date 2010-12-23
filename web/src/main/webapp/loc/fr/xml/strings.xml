@@ -1166,7 +1166,7 @@
     <mapViewer>Visualiseur</mapViewer>
 
     <uuid>Identifiant unique</uuid>    
-
+    <mymetadata>mes métadonnées</mymetadata>
     <addremove>Ajouter / Supprimer</addremove>
     <enabled>Activé</enabled>
 	<notifications>Notification de n&#339;uds distants</notifications>

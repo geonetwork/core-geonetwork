@@ -75,6 +75,7 @@ import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.JODAISODate;
+import org.fao.geonet.util.spring.CollectionUtils;
 import org.jdom.Element;
 
 import java.io.File;
@@ -282,14 +283,14 @@ public class LuceneSearcher extends MetaSearcher
 	
 			Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-
-            List<Element> requestedGroups = request.getChildren("group");
+            @SuppressWarnings("unchecked")
+            List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
             Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
             UserSession userSession = srvContext.getUserSession();
-            if (userSession == null
-                    || userSession.getProfile() == null
-                    || ! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
-                if(requestedGroups != null && requestedGroups.size() > 0) {
+            // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
+            if (userSession == null || userSession.getProfile() == null ||
+                    ! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
+                if(!CollectionUtils.isEmpty(requestedGroups)) {
                     for(Element group : requestedGroups) {
                         if(! userGroups.contains(group.getText())) {
                             throw new UnAuthorizedException("You are not authorized to do this.", null);
@@ -298,26 +299,33 @@ public class LuceneSearcher extends MetaSearcher
                 }
             }
 
+            // remove elements from user input that compromise this request
+            request.removeChildren(SearchParameter.OWNER);
+            request.removeChildren(SearchParameter.GROUPOWNER);
+            request.removeChildren(SearchParameter.ISADMIN);
+            request.removeChildren(SearchParameter.ISREVIEWER);
+            request.removeChildren(SearchParameter.ISUSERADMIN);
+
 			// if 'restrict to' is set then don't add any other user/group info
-			if (request.getChild("group") == null) {
+			if (request.getChild(SearchParameter.GROUP) == null) {
 				for (String group : userGroups) {
-					request.addContent(new Element("group").addContent(group));
+					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }
                 String owner = null;
                 if (userSession != null) {
                     owner = userSession.getUserId();
                 }
                 if (owner != null) {
-					request.addContent(new Element("owner").addContent(owner));
+					request.addContent(new Element(SearchParameter.OWNER).addContent(owner));
                 }
-			    //--- in case of an admin we have to show all results
+			    //--- in case of an admin show all results
                 if (userSession != null) {
                     if (userSession.isAuthenticated()) {
                         if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-                            request.addContent(new Element("isAdmin").addContent("true"));
+                            request.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
 }
                         else if (userSession.getProfile().equals(Geonet.Profile.REVIEWER)) {
-                            request.addContent(new Element("isReviewer").addContent("true"));
+                            request.addContent(new Element(SearchParameter.ISREVIEWER).addContent("true"));
 }
                     }
                 }
@@ -325,7 +333,7 @@ public class LuceneSearcher extends MetaSearcher
 
 			//--- handle the time elements
 
-			processTimeRange(request.getChild("dateFrom"), "0000-01-01",request.getChild("dateTo"), "9999-01-01");
+			processTimeRange(request.getChild(SearchParameter.DATEFROM), "0000-01-01", request.getChild(SearchParameter.DATETO), "9999-01-01");
 
 			//--- some other stuff
 
@@ -336,9 +344,23 @@ public class LuceneSearcher extends MetaSearcher
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
 				Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
 				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet, _luceneConfig.getNumericFields());
-			} else {
-		        // Construct Lucene query by Java, not XSLT
-				_query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), _sm.getAnalyzer()).build(request);
+			} 
+            else {
+		        // Construct Lucene query (Java)				
+                LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
+                _query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), _sm.getAnalyzer()).build(luceneQueryInput);
+                Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
+
+                try {
+                    // only for debugging -- might cause NPE is query was wrongly constructed
+                    //Query rw = _query.rewrite(_reader);
+                    //Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
+                    //System.out.println("** rewritten:\n"+ rw);
+                }
+                catch(Throwable x){
+                    Log.warning(Geonet.SEARCH_ENGINE,"Error rewriting Lucene query: " + _query);
+                    //System.out.println("** error rewriting query: "+x.getMessage());
+                }
 			}
 		    
 			// Boosting query
@@ -443,10 +465,10 @@ public class LuceneSearcher extends MetaSearcher
 	 * Default sort by option is RELEVANCE.
 	 * Default sort order option is not reverse order. Reverse order is active 
 	 * if sort order option is set and not null
-     * @param startHit
-     * @param endHit
-     * @return
-     * @throws Exception
+     * @param startHit start
+     * @param endHit end
+     * @return topdocs
+     * @throws Exception hmm
      */
 	private TopDocs performQuery(int startHit, int endHit) throws Exception
 	{
@@ -513,9 +535,9 @@ public class LuceneSearcher extends MetaSearcher
      * 
      * Relevance is the default Lucene sorting mechanism.
      * 
-     * @param sortBy
-     * @param sortOrder
-     * @return
+     * @param sortBy sort field
+     * @param sortOrder sort order
+     * @return sortfield
      */
     private static SortField makeSortField(String sortBy, boolean sortOrder)
     {
@@ -647,7 +669,6 @@ public class LuceneSearcher extends MetaSearcher
 		else throw new Exception("unknown lucene query type: " + name);
 
         Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + returnValue.toString());
-        System.out.println("\n* * makeQuery Lucene Query: " + returnValue.toString() + "\n\n\n");
 		return returnValue;
 	}
 
@@ -658,6 +679,7 @@ public class LuceneSearcher extends MetaSearcher
 		HashMap<String,HashMap<String,Object>> results = new HashMap<String,HashMap<String,Object>>();
 
 		Element resultTypeConfig = summaryConfig.getChild("def").getChild(resultType);
+        @SuppressWarnings("unchecked")
 		List<Element> elements = resultTypeConfig.getChildren();
 
 		for (Element summaryElement : elements) {
@@ -808,9 +830,9 @@ public class LuceneSearcher extends MetaSearcher
 	 * @param langCode	the language code used by SummaryComparator
 	 * @param resultType	the resultType is used to define the type of summary to build according to summary configuration in config-summary.xml.
 	 * @param summaryConfig	the summary configuration
-	 * @param reader
-	 * @param query
-	 * @param cFilter
+	 * @param reader  reader
+	 * @param query   query
+	 * @param cFilter filter
 	 * @param sort	the sort criteria
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
 	 * @param trackDocScores	specifies whether document scores should be tracked and set on the results. 
@@ -820,7 +842,7 @@ public class LuceneSearcher extends MetaSearcher
 	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
 	 * and need to be filtered to return only required hits according to search parameters.
 	 * 
-	 * @throws Exception
+	 * @throws Exception hmm
 	 */
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, int maxSummaryKeys, 
 			String langCode, String resultType, Element summaryConfig, 
@@ -913,10 +935,10 @@ public class LuceneSearcher extends MetaSearcher
 	 * Gets all metadata uuids in current searcher
 	 * </p>
 	 * 
+	 * @param maxHits max hits
 	 * @return current searcher result in "fast" mode
 	 * 
-	 * @throws IOException 
-	 * @throws CorruptIndexException 
+	 * @throws Exception hmm
 	 */
     public List<String>  getAllUuids(int maxHits) throws Exception {
 
@@ -994,7 +1016,7 @@ public class LuceneSearcher extends MetaSearcher
     return values;
   }
 
-	public static String analyzeQueryText(String field, String aText, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet) {
+	public static String analyzeQueryText(String field, String aText, PerFieldAnalyzerWrapper analyzer, Set<String> tokenizedFieldSet) {
 		Log.debug(Geonet.SEARCH_ENGINE, "Analyze field "+field+" : "+aText);
 		if (tokenizedFieldSet.contains(field)) {
 			String analyzedText = analyzeText(field, aText, analyzer);	

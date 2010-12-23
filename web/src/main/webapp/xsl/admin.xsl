@@ -36,7 +36,7 @@
 				<td class="padded">
 					<xsl:choose>
 						<xsl:when test="/root/request/modal">
-							<a onclick="popAdminWindow('{$url}');" href="javascript:void(0);"><xsl:value-of select="$title"/></a>
+							<a onclick="popAdminWindow('{$url}');" href="javascript:void(0);" style="text-transform:capitalize;"><xsl:value-of select="$title"/></a>
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{$url}"><xsl:value-of select="$title"/></a>
@@ -72,6 +72,13 @@
 <xsl:with-param name="title" select="/root/gui/strings/xmlInsertTitle"/>
 <xsl:with-param name="desc" select="/root/gui/strings/xmlInsert"/>
 						</xsl:call-template>
+
+						<xsl:call-template name="addrow">
+<xsl:with-param name="service" select="'{/root/gui/locService}/main.search?hitsPerPage=10&amp;editable=true'"/>
+<xsl:with-param name="title" select="/root/gui/strings/mymetadata"/>
+<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
+						</xsl:call-template>
+
 						
 						<xsl:call-template name="addrow">
 <xsl:with-param name="service" select="'metadata.batchimport.form'"/>

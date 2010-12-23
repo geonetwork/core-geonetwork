@@ -1,7 +1,29 @@
+//==============================================================================
+//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.search;
 
 import jeeves.utils.Log;
-import jeeves.utils.Xml;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -16,29 +38,26 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.SearchResult.Relation;
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.util.spring.CollectionUtils;
 import org.fao.geonet.util.spring.StringUtils;
-import org.jdom.Element;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
  *
- * Builds a Lucene query from a JDOM element representing a search request.
+ * Class to create a Lucene query from a {@link LuceneQueryInput} representing a search request.
  *
  * @author heikki doeleman
  *
  */
 public class LuceneQueryBuilder {
 
-	HashSet<String> _tokenizedFieldSet;
-	PerFieldAnalyzerWrapper _analyzer;
-	HashMap<String, LuceneConfigNumericField> _numericFieldSet;
+	private Set<String> _tokenizedFieldSet;
+	private PerFieldAnalyzerWrapper _analyzer;
+	private Map<String, LuceneConfig.LuceneConfigNumericField> _numericFieldSet;
 	
 	// Lat long bounding box constants
 	static final Double minBoundingLatitudeValue  = -90.0;
@@ -46,7 +65,7 @@ public class LuceneQueryBuilder {
 	static final Double minBoundingLongitudeValue = -180.0;
 	static final Double maxBoundingLongitudeValue = 180.0;
 
-	public LuceneQueryBuilder(HashSet<String> tokenizedFieldSet, HashMap<String, LuceneConfigNumericField> numericFieldSet, PerFieldAnalyzerWrapper analyzer) {
+	public LuceneQueryBuilder(Set<String> tokenizedFieldSet, Map<String, LuceneConfig.LuceneConfigNumericField> numericFieldSet, PerFieldAnalyzerWrapper analyzer) {
 		_tokenizedFieldSet = tokenizedFieldSet;
 		_numericFieldSet = numericFieldSet;
 		_analyzer          = analyzer;
@@ -55,10 +74,10 @@ public class LuceneQueryBuilder {
     /**
      * Creates a query for a string. If the string contains a wildcard, similarity is ignored.
      *
-     * @param string
-     * @param luceneIndexField
-     * @param similarity
-     * @return
+     * @param string string
+     * @param luceneIndexField index field
+     * @param similarity fuzziness
+     * @return query
      */
 	private Query textFieldToken(String string, String luceneIndexField, String similarity) {
         if(string == null) {
@@ -90,6 +109,10 @@ public class LuceneQueryBuilder {
 	/**
 	 * Creates a query for all tokens in the search param. The query must select only results
 	 * where none of the tokens in the search param is present.
+     *
+     * @param searchParam search param
+     * @param luceneIndexField index field
+     * @return boolean clause
 	 */
 	private BooleanClause prohibitedTextField(String searchParam, String luceneIndexField) {
 		BooleanClause booleanClause  = null;
@@ -123,6 +146,11 @@ public class LuceneQueryBuilder {
 	 * Creates a query for all tokens in the search param. 'Not required' does not mean that this is
 	 * not a required search parameter; rather it means that if this parameter is present, the query
 	 * must select results where at least one of the tokens in the search param is present.
+     *
+     * @param searchParam search param
+     * @param luceneIndexField index field
+     * @param similarity fuzziness
+     * @return boolean clause
 	 */
 	private BooleanClause notRequiredTextField(String searchParam, String luceneIndexField, String similarity) {
 		BooleanClause booleanClause  = null;
@@ -148,10 +176,16 @@ public class LuceneQueryBuilder {
 		return booleanClause;
 	}
 
+
 	/**
 	 * Creates a query for all tokens in the search param. 'Required' does not mean that this is
 	 * a required search parameter; rather it means that if this parameter is present, the query
 	 * must select only results where each of the tokens in the search param is present.
+     *
+     * @param searchParam search parameter
+     * @param luceneIndexField index field
+     * @param similarity fuzziness
+     * @return boolean clause
 	 */
 	private BooleanClause requiredTextField(String searchParam, String luceneIndexField, String similarity) {
 		BooleanClause booleanClause  = null;
@@ -185,17 +219,23 @@ public class LuceneQueryBuilder {
 		return booleanClause;
 	}
 
-	private BooleanQuery selectorTextField(List<Element> selectors, String luceneIndexField, BooleanQuery query) {
+    /**
+     *
+     * @param selectors
+     * @param luceneIndexField
+     * @param query
+     * @return
+     */
+	private BooleanQuery selectorTextField(Collection<String> selectors, String luceneIndexField, BooleanQuery query) {
 		if (selectors != null && selectors.size() > 0) {
-			for (Element selector : selectors) {
+			for (String selector : selectors) {
 				BooleanQuery allSelectorsQuery = new BooleanQuery();
 				BooleanClause.Occur allSelectorsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
-				String selectorStr = selector.getText();
-				if (StringUtils.hasText(selectorStr)) {
+				if (StringUtils.hasText(selector)) {
      			BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
        		// TODO: Check separator
-       		String[] tokens = StringUtils.delimitedListToStringArray(selectorStr, " or ");
+       		String[] tokens = StringUtils.delimitedListToStringArray(selector, " or ");
        		for (String token : tokens) {
        			token = token.trim();
         		if (token.startsWith("\"")) {
@@ -218,37 +258,25 @@ public class LuceneQueryBuilder {
 		return query;
 	}
 
-	public Query build(Element request) {
+	public Query build(LuceneQueryInput luceneQueryInput) {
 
-		Log.debug(Geonet.SEARCH_ENGINE, "\n\nLuceneQueryBuilder: request is\n" + Xml.getString(request) + "\n\n");
+		Log.debug(Geonet.SEARCH_ENGINE, "\n\nLuceneQueryBuilder: luceneQueryInput is\n" + luceneQueryInput.toString() + "\n\n");
 //		DEBUG
-//		System.out.println("\n\nLuceneQueryBuilder: request is\n" + Xml.getString(request) + "\n\n");
+		//System.out.println("\n\n** LuceneQueryBuilder: luceneQueryInput is\n" + luceneQueryInput.toString() + "\n\n");
 
 		// top query to hold all sub-queries for each search parameter
 		BooleanQuery query = new BooleanQuery();
 
 		//
-		// hits per page
-		//
-		// nothing happens with it ?
-		// String hitsPerPage = request.getChildText("hitsPerPage");
-
-		//
-		// attrset
-		//
-		// nothing happens with it ?
-		//String attrset = request.getChildText("attrset");
-
-		//
 		// similarity
 		//
 		// this is passed to textfield-query-creating methods
-		String similarity = request.getChildText("similarity");
+		String similarity = luceneQueryInput.getSimilarity();
 
 		//
 		// uuid
 		//
-		String uuidParam = request.getChildText("uuid");
+		String uuidParam = luceneQueryInput.getUuid();
 		if(uuidParam != null) {
 			uuidParam = uuidParam.trim();
 			if(uuidParam.length() > 0) {
@@ -266,7 +294,7 @@ public class LuceneQueryBuilder {
 		//
 		BooleanClause anyClause  = null;
 		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-		String any = request.getChildText("any");
+		String any = luceneQueryInput.getAny();
 		if(any != null && !onlyWildcard(any)) {
 			any = any.trim();
 			if(any.length() > 0) {
@@ -302,7 +330,7 @@ public class LuceneQueryBuilder {
 		//
 		// all -- mapped to same Lucene field as 'any'
 		//
-		BooleanClause allQuery = requiredTextField(request.getChildText("all"), LuceneIndexField.ANY, similarity);
+		BooleanClause allQuery = requiredTextField(luceneQueryInput.getAll(), LuceneIndexField.ANY, similarity);
 		if(allQuery != null) {
 			query.add(allQuery);
 		}
@@ -310,7 +338,7 @@ public class LuceneQueryBuilder {
 		//
 		// or
 		//
-		BooleanClause orQuery = notRequiredTextField(request.getChildText("or"), LuceneIndexField.ANY, similarity);
+		BooleanClause orQuery = notRequiredTextField(luceneQueryInput.getOr(), LuceneIndexField.ANY, similarity);
 		if(orQuery != null) {
 			query.add(orQuery);
 		}
@@ -318,7 +346,7 @@ public class LuceneQueryBuilder {
 		//
 		// without
 		//
-		BooleanClause withoutQuery = prohibitedTextField(request.getChildText("without"), LuceneIndexField.ANY);
+		BooleanClause withoutQuery = prohibitedTextField(luceneQueryInput.getWithout(), LuceneIndexField.ANY);
 		if(withoutQuery != null) {
 			query.add(withoutQuery);
 		}
@@ -326,7 +354,7 @@ public class LuceneQueryBuilder {
 		//
 		// phrase
 		//
-		String phrase = request.getChildText("phrase");
+		String phrase = luceneQueryInput.getPhrase();
 		if(phrase != null) {
 			phrase = phrase.trim();
 			if(phrase.length() > 0) {
@@ -346,13 +374,11 @@ public class LuceneQueryBuilder {
 		//
 		// ISO topic category
 		//
-		@SuppressWarnings("unchecked")
-		List<Element> isoTopicCategories = (List<Element>)request.getChildren("topic-category");
-		if(isoTopicCategories != null && isoTopicCategories.size() > 0) {
+		Set<String> isoTopicCategories = luceneQueryInput.getTopicCategories();
+		if(!CollectionUtils.isEmpty(isoTopicCategories )) {
 			BooleanQuery isoTopicCategoriesQuery = new BooleanQuery();
 			BooleanClause.Occur topicCategoryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-            for (Element isoTopicCategory1 : isoTopicCategories) {
-                String isoTopicCategory = isoTopicCategory1.getText();
+            for (String isoTopicCategory : isoTopicCategories) {
                 isoTopicCategory = isoTopicCategory.trim();
                 if (isoTopicCategory.length() > 0) {
                     // some clients (like GN's GUI) stupidly append a * already. Prevent double stars here:
@@ -372,7 +398,7 @@ public class LuceneQueryBuilder {
 		//
 		// download
 		//
-        String download = request.getChildText("download");
+        String download = luceneQueryInput.getDownload();
         if (StringUtils.hasText(download) && download.equals("on")) {
             BooleanQuery downloadQuery = new BooleanQuery();
 
@@ -389,7 +415,7 @@ public class LuceneQueryBuilder {
 		//
 		// dynamic
 		//
-        String dynamic = request.getChildText("dynamic");
+        String dynamic = luceneQueryInput.getDynamic();
         if (StringUtils.hasText(dynamic) && dynamic.equals("on")) {
             BooleanQuery dynamicQuery = new BooleanQuery();
 
@@ -413,7 +439,7 @@ public class LuceneQueryBuilder {
 		//
 		// protocol
 		//
-		BooleanClause protocolClause = requiredTextField(request.getChildText("protocol"), LuceneIndexField.PROTOCOL, similarity);
+		BooleanClause protocolClause = requiredTextField(luceneQueryInput.getProtocol(), LuceneIndexField.PROTOCOL, similarity);
 		if(protocolClause != null) {
 			query.add(protocolClause);
 		}
@@ -421,116 +447,97 @@ public class LuceneQueryBuilder {
 		//
 		// featured
 		//
-		String featured = request.getChildText("featured");
+		String featured = luceneQueryInput.getFeatured();
 		if(featured != null && featured.equals("true")) {
 			BooleanClause.Occur featuredOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			TermQuery featuredQuery = new TermQuery(new Term(LuceneIndexField._OP6, "1"));
 			BooleanClause featuredClause = new BooleanClause(featuredQuery, featuredOccur);
 			query.add(featuredClause);
+            // featured needs to be visible to all.
 			TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, "1"));
 			BooleanClause viewClause = new BooleanClause(viewQuery, featuredOccur);
 			query.add(viewClause);
 		}
-		else {
-			BooleanQuery groupsQuery = new BooleanQuery();
-			boolean groupsQueryEmpty = true;
-			@SuppressWarnings("unchecked")
-			List<Element> groups = (List<Element>)request.getChildren("group");
-			BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-			if(groups != null && groups.size() > 0) {
-                for (Element group1 : groups) {
-                    String group = group1.getText();
-                    group = group.trim();
-                    if (group.length() > 0) {
-                        TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField._OP0, group));
-                        BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
+
+        //
+        // groups
+        //
+
+        Set<String> groups = luceneQueryInput.getGroups();
+        String editable$ = luceneQueryInput.getEditable();
+        boolean editable = StringUtils.hasText(editable$) && editable$.equals("true");
+
+        BooleanQuery groupsQuery = new BooleanQuery();
+        boolean groupsQueryEmpty = true;
+        BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+        if(!CollectionUtils.isEmpty(groups)) {
+            for (String group : groups) {
+                group = group.trim();
+                if (group.length() > 0) {
+                    if(! editable) {
+                        // add to view
+                        TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group));
+                        BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
                         groupsQueryEmpty = false;
-                        groupsQuery.add(groupClause);
+                        groupsQuery.add(viewClause);
                     }
+                    // add to edit
+                    TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, group));
+                    BooleanClause editClause = new BooleanClause(editQuery, groupOccur);
+                    groupsQueryEmpty = false;
+                    groupsQuery.add(editClause);
                 }
-			}
-			String reviewer = request.getChildText("isReviewer");
-			if(reviewer != null) {
-				if(groups != null && groups.size() > 0) {
-                    for (Element group1 : groups) {
-                        String group = group1.getText();
-                        group = group.trim();
-                        if (group.length() > 0) {
-                            TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, group));
-                            BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
-                            groupsQueryEmpty = false;
-                            groupsQuery.add(groupClause);
-                        }
-                    }
-				}
-			}
-			String userAdmin = request.getChildText("isUserAdmin");
-			if(userAdmin != null) {
-				if(groups != null && groups.size() > 0) {
-                    for (Element group1 : groups) {
-                        String group = group1.getText();
-                        group = group.trim();
-                        if (group.length() > 0) {
-                            TermQuery groupQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, group));
-                            BooleanClause groupClause = new BooleanClause(groupQuery, groupOccur);
-                            groupsQueryEmpty = false;
-                            groupsQuery.add(groupClause);
-                        }
-                    }
-				}
-			}
-			String owner = request.getChildText("owner");
+            }
+        }
+
+        //
+        // owner: this goes in groups query. This way if you are logged in you can retrieve the results you are allowed
+        // to see by your groups, plus any that you own not assigned to any group.
+        //
+        String owner = luceneQueryInput.getOwner();
 			if(owner != null) {
 				TermQuery ownerQuery = new TermQuery(new Term(LuceneIndexField.OWNER, owner));
-				BooleanClause ownerClause = new BooleanClause(ownerQuery, groupOccur);
+            BooleanClause.Occur ownerOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+            BooleanClause ownerClause = new BooleanClause(ownerQuery, ownerOccur);
 				groupsQueryEmpty = false;
 				groupsQuery.add(ownerClause);
 			}
-			String admin = request.getChildText("isAdmin");
-			if(admin != null) {
+
+        //
+        // "dummy" -- to go in groups query, to retrieve everything for Administrator users.
+        //
+        boolean admin = luceneQueryInput.getAdmin();
+        if(admin) {
 				TermQuery adminQuery = new TermQuery(new Term(LuceneIndexField.DUMMY, "0"));
 				BooleanClause adminClause = new BooleanClause(adminQuery, groupOccur);
 				groupsQueryEmpty = false;
 				groupsQuery.add(adminClause);
 			}
+
+
 			if(!groupsQueryEmpty) {
 				BooleanClause.Occur groupsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 				BooleanClause groupsClause = new BooleanClause(groupsQuery, groupsOccur);
 				query.add(groupsClause);
 			}
 
-			@SuppressWarnings("unchecked")
-			List<Element> groupOwners = (List<Element>)request.getChildren("groupOwner");
-			if(groupOwners != null && groupOwners.size() > 0) {
-				BooleanClause.Occur groupOwnerOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-                for (Element groupOwner1 : groupOwners) {
-                    String groupOwner = groupOwner1.getText();
-                    groupOwner = groupOwner.trim();
-                    if (groupOwner.length() > 0) {
-                        TermQuery groupOwnerQuery = new TermQuery(new Term(LuceneIndexField.GROUP_OWNER, groupOwner));
-                        BooleanClause groupOwnerClause = new BooleanClause(groupOwnerQuery, groupOwnerOccur);
-                        query.add(groupOwnerClause);
-                    }
-                }
-			}
-		}
-
 		//
 		// category
 		//
-		@SuppressWarnings("unchecked")
-		List<Element> categories = (List<Element>)request.getChildren("category");
-		if(categories != null && categories.size() > 0) {
+		Set<String> categories = luceneQueryInput.getCategories();
+		if(!CollectionUtils.isEmpty(categories)) {
 			BooleanQuery categoriesQuery = new BooleanQuery();
 			BooleanClause.Occur categoriesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			BooleanClause categoriesClause = null;
-			for(Iterator<Element> i = categories.iterator(); i.hasNext();) {
-				String category = i.next().getText();
+            for (String category : categories) {
 				if(category != null){
 					category = category.trim();
 					if(category.length() > 0) {
-			      Query subQuery = textFieldToken(category, LuceneIndexField.CAT, similarity);
-						BooleanClause categoryClause = new BooleanClause(subQuery, categoriesOccur);
+                        // TODO check: should this be handled using that subQuery ?
+			            //Query subQuery = textFieldToken(category, LuceneIndexField.CAT, similarity);
+						//BooleanClause categoryClause = new BooleanClause(subQuery, categoriesOccur);
+                        BooleanClause categoryClause = notRequiredTextField(category, LuceneIndexField.CAT, similarity);
+
 						if(categoryClause != null) {
 							if(categoriesClause == null) {
 								categoriesClause = new BooleanClause(categoriesQuery, categoriesOccur);
@@ -548,7 +555,7 @@ public class LuceneQueryBuilder {
 		//
 		// template
 		//
-		String isTemplate = request.getChildText("template");
+		String isTemplate = luceneQueryInput.getTemplate();
 		BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 		TermQuery templateQuery;
 		if(isTemplate != null && isTemplate.equals("y")) {
@@ -564,36 +571,35 @@ public class LuceneQueryBuilder {
 
 		// metadata date range
 		addRangeQuery(query, 
-				request.getChildText("dateTo"), 
-				request.getChildText("dateFrom"), 
+				luceneQueryInput.getDateTo(), 
+				luceneQueryInput.getDateFrom(), 
 				LuceneIndexField.CHANGE_DATE);
 
-		// Revision, publication and creation dates may
-		// have been index as temporal extent also.
+		// Revision, publication and creation dates may have been indexed as temporal extent also.
 		// data revision date range
 		addRangeQuery(query, 
-				request.getChildText("revisionDateTo"), 
-				request.getChildText("revisionDateFrom"), 
+				luceneQueryInput.getRevisionDateTo(), 
+				luceneQueryInput.getRevisionDateFrom(), 
 				LuceneIndexField.REVISION_DATE);
 
 		// data publication date range
 		addRangeQuery(query, 
-				request.getChildText("publicationDateTo"), 
-				request.getChildText("publicationDateFrom"), 
+				luceneQueryInput.getPublicationDateTo(), 
+				luceneQueryInput.getPublicationDateFrom(), 
 				LuceneIndexField.PUBLICATION_DATE);
 
 		// data creation date range
 		addRangeQuery(query, 
-				request.getChildText("creationDateTo"), 
-				request.getChildText("creationDateFrom"), 
+				luceneQueryInput.getCreationDateTo(), 
+				luceneQueryInput.getCreationDateFrom(), 
 				LuceneIndexField.CREATE_DATE);
 
 
         //
         // Temporal extent : finds records where temporal extent overlaps the search extent
         //
-        String extTo = request.getChildText("extTo");
-        String extFrom = request.getChildText("extFrom");
+        String extTo = luceneQueryInput.getExtTo();
+        String extFrom = luceneQueryInput.getExtFrom();
 
 
         if((extTo != null && extTo.length() > 0) || (extFrom != null && extFrom.length() > 0)) {
@@ -641,35 +647,35 @@ public class LuceneQueryBuilder {
 
 		// metadataStandardName
 		//
-		BooleanClause metadataStandardNameClause = requiredTextField(request.getChildText("metadataStandardName"), LuceneIndexField.METADATA_STANDARD_NAME, similarity);
+		BooleanClause metadataStandardNameClause = requiredTextField(luceneQueryInput.getMetadataStandardName(), LuceneIndexField.METADATA_STANDARD_NAME, similarity);
 		if(metadataStandardNameClause != null) {
 			query.add(metadataStandardNameClause);
 		}
 
         // schema
         //
-        BooleanClause schemaClause = requiredTextField(request.getChildText("_schema"), LuceneIndexField.SCHEMA, similarity);
+        BooleanClause schemaClause = requiredTextField(luceneQueryInput.get_schema(), LuceneIndexField.SCHEMA, similarity);
         if(schemaClause != null) {
            query.add(schemaClause);
         }
 
         // parentUuid
 		//
-		BooleanClause parentUuidClause = requiredTextField(request.getChildText("parentUuid"), LuceneIndexField.PARENTUUID, similarity);
+		BooleanClause parentUuidClause = requiredTextField(luceneQueryInput.getParentUuid(), LuceneIndexField.PARENTUUID, similarity);
 		if(parentUuidClause != null) {
 			query.add(parentUuidClause);
 		}
 
         // operatesOn
 		//
-		BooleanClause operatesOnClause = requiredTextField(request.getChildText("operatesOn"), LuceneIndexField.OPERATESON, similarity);
+		BooleanClause operatesOnClause = requiredTextField(luceneQueryInput.getOperatesOn(), LuceneIndexField.OPERATESON, similarity);
 		if(operatesOnClause != null) {
 			query.add(operatesOnClause);
 		}
 
 		// serviceType
 		//
-		BooleanClause serviceTypeClause = requiredTextField(request.getChildText("serviceType"), LuceneIndexField.SERVICE_TYPE, similarity);
+		BooleanClause serviceTypeClause = requiredTextField(luceneQueryInput.getServiceType(), LuceneIndexField.SERVICE_TYPE, similarity);
 		if(serviceTypeClause != null) {
 			query.add(serviceTypeClause);
 		}
@@ -677,27 +683,27 @@ public class LuceneQueryBuilder {
 		//
 		// type
 		//
-		BooleanClause typeClause = requiredTextField(request.getChildText("type"), LuceneIndexField.TYPE, similarity);
+		BooleanClause typeClause = requiredTextField(luceneQueryInput.getType(), LuceneIndexField.TYPE, similarity);
 		if(typeClause != null) {
 			query.add(typeClause);
 		}
 
 		
-		addRangeQuery(query, 
-				request.getChildText(LuceneIndexField.DENOMINATOR), 
-				request.getChildText(LuceneIndexField.DENOMINATOR), 
+		addRangeQuery(query,
+				luceneQueryInput.getDenominator(),
+                luceneQueryInput.getDenominator(),
 				LuceneIndexField.DENOMINATOR);
 		
 		addRangeQuery(query, 
-				request.getChildText(LuceneIndexField.DENOMINATOR_FROM), 
-				request.getChildText(LuceneIndexField.DENOMINATOR_TO), 
+                luceneQueryInput.getDenominatorFrom(),
+                luceneQueryInput.getDenominatorTo(),
 				LuceneIndexField.DENOMINATOR);
 		
 		
         //
 		// inspire
 		//
-		String inspire = request.getChildText("inspire");
+		String inspire = luceneQueryInput.getInspire();
 		if(inspire != null) {
 			TermQuery inspireQuery = new TermQuery(new Term(LuceneIndexField.INSPIRE_CAT, inspire));
             BooleanClause.Occur inspireOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
@@ -709,13 +715,14 @@ public class LuceneQueryBuilder {
 		//
 		// inspireTheme
 		//
-		@SuppressWarnings("unchecked")
-		List<Element> inspireThemes = (List<Element>)request.getChildren("inspiretheme");
-		if(inspireThemes != null && inspireThemes.size() > 0) {
+		Set<String> inspireThemes = luceneQueryInput.getInspireThemes();
+
+        //System.out.println("*** inspireThemes size: " + inspireThemes.size());
+
+		if(!CollectionUtils.isEmpty(inspireThemes)) {
 			BooleanQuery inspireThemesQuery = new BooleanQuery();
 			BooleanClause.Occur inspireThemesOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            for (Element inspireTheme1 : inspireThemes) {
-                String inspireTheme = inspireTheme1.getText();
+            for (String inspireTheme : inspireThemes) {
                 inspireTheme = inspireTheme.trim();
                 if (inspireTheme.length() > 0) {
                     // some clients (like GN's GUI) stupidly append a * already. Prevent them here:
@@ -731,7 +738,7 @@ public class LuceneQueryBuilder {
                     while (st.hasMoreTokens()) {
                         String phraseElement = st.nextToken();
                         phraseElement = phraseElement.trim().toLowerCase();
-                        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, phraseElement));
+                        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, LuceneSearcher.analyzeQueryText(LuceneIndexField.INSPIRE_THEME, phraseElement, _analyzer, _tokenizedFieldSet)));
                     }
                     inspireThemesQuery.add(phraseQuery, phraseOccur);
                 }
@@ -742,7 +749,7 @@ public class LuceneQueryBuilder {
 		//
 		// inspireannex
 		//
-		BooleanClause inspireannexQuery = requiredTextField(request.getChildText("inspireannex"), LuceneIndexField.INSPIRE_ANNEX, similarity);
+		BooleanClause inspireannexQuery = requiredTextField(luceneQueryInput.getInspireAnnex(), LuceneIndexField.INSPIRE_ANNEX, similarity);
 		if(inspireannexQuery != null) {
 			query.add(inspireannexQuery);
 		}
@@ -750,7 +757,7 @@ public class LuceneQueryBuilder {
 		//
 		// siteId / source
 		//
-		BooleanClause sourceQuery = requiredTextField(request.getChildText("siteId"), LuceneIndexField.SOURCE, similarity);
+		BooleanClause sourceQuery = requiredTextField(luceneQueryInput.getSiteId(), LuceneIndexField.SOURCE, similarity);
 		if(sourceQuery != null) {
 			query.add(sourceQuery);
 		}
@@ -758,13 +765,13 @@ public class LuceneQueryBuilder {
         //
         // themekey
         //
-				query = selectorTextField((List<Element>)request.getChildren("themekey"), LuceneIndexField.KEYWORD, query);
+				query = selectorTextField(luceneQueryInput.getThemeKeys(), LuceneIndexField.KEYWORD, query);
 
 		//
 		// digital and paper maps
 		//
-		String digital = request.getChildText("digital");
-        String paper = request.getChildText("paper");
+		String digital = luceneQueryInput.getDigital();
+        String paper = luceneQueryInput.getPaper();
 
         // if both are off or both are on then no clauses are added
         if (StringUtils.hasText(digital) && digital.equals("on") && (!StringUtils.hasText(paper) || paper.equals("off"))) {
@@ -784,7 +791,7 @@ public class LuceneQueryBuilder {
 		//
 		// title
 		//
-		BooleanClause titleQuery = requiredTextField(request.getChildText("title"), LuceneIndexField.TITLE, similarity);
+		BooleanClause titleQuery = requiredTextField(luceneQueryInput.getTitle(), LuceneIndexField.TITLE, similarity);
 		if(titleQuery != null) {
 			query.add(titleQuery);
 		}
@@ -792,7 +799,7 @@ public class LuceneQueryBuilder {
 		//
 		// abstract
 		//
-		BooleanClause abstractQuery = requiredTextField(request.getChildText("abstract"), LuceneIndexField.ABSTRACT, similarity);
+		BooleanClause abstractQuery = requiredTextField(luceneQueryInput.getAbstrakt(), LuceneIndexField.ABSTRACT, similarity);
 		if(abstractQuery != null) {
 			query.add(abstractQuery);
 		}
@@ -800,26 +807,26 @@ public class LuceneQueryBuilder {
 		//
 		// taxon
 		//
-		query = selectorTextField((List<Element>)request.getChildren("taxon"), LuceneIndexField.TAXON, query);
+		query = selectorTextField(luceneQueryInput.getTaxons(), LuceneIndexField.TAXON, query);
 
 		//
 		// credit
 		//
-		query = selectorTextField((List<Element>)request.getChildren("credit"), LuceneIndexField.CREDIT, query);
+		query = selectorTextField(luceneQueryInput.getCredits(), LuceneIndexField.CREDIT, query);
 
 		//
 		// dataparam
 		//
-		query = selectorTextField((List<Element>)request.getChildren("dataparam"), LuceneIndexField.DATAPARAM, query);
+		query = selectorTextField(luceneQueryInput.getDataparams(), LuceneIndexField.DATAPARAM, query);
 
 		//
 		// bounding box
 		//
-		String eastBL = request.getChildTextTrim("eastBL");
-		String westBL = request.getChildTextTrim("westBL");
-		String northBL = request.getChildTextTrim("northBL");
-		String southBL = request.getChildTextTrim("southBL");
-		String relation = request.getChildText("relation");
+		String eastBL = luceneQueryInput.getEastBL();
+		String westBL = luceneQueryInput.getWestBL();
+		String northBL = luceneQueryInput.getNorthBL();
+		String southBL = luceneQueryInput.getSouthBL();
+		String relation = luceneQueryInput.getRelation();
 
 		if (!("".equals(eastBL) ||
 		      "".equals(westBL) ||
@@ -829,7 +836,7 @@ public class LuceneQueryBuilder {
 		}
 
 //		DEBUG
-//		System.out.println("\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
+		//System.out.println("\n\n** LuceneQueryBuilder: query is\n" + query + "\n\n");
 		Log.debug(Geonet.SEARCH_ENGINE, "\n\nLuceneQueryBuilder: query is\n" + query + "\n\n");
 
 		return query;
@@ -852,7 +859,7 @@ public class LuceneQueryBuilder {
 		if (from == null && to == null)
 			return;
 		
-		LuceneConfigNumericField type = _numericFieldSet.get(luceneIndexField);
+		LuceneConfig.LuceneConfigNumericField type = _numericFieldSet.get(luceneIndexField);
 		if (type == null) {
 			addTextRangeQuery(query, from, to, luceneIndexField);
 		} else {
@@ -952,7 +959,7 @@ public class LuceneQueryBuilder {
 	 *  
 	 *  If metadata contains multiple bounding boxes invalid results may appear.  
 	 * 
-	 *  If relation is null or is not a known relation type (See {@link Relation}),
+	 *  If relation is null or is not a known relation type (See {@link org.fao.geonet.constants.Geonet.SearchResult.Relation}),
 	 *  overlap is used.
 	 * 
 	 * @param query
@@ -1082,6 +1089,6 @@ public class LuceneQueryBuilder {
 	}
 	
     private boolean onlyWildcard(String s) {
-        return s != null && s.trim().equals("*") ? true : false;
+        return s != null && s.trim().equals("*");
     }
 }
