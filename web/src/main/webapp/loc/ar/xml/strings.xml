@@ -13,6 +13,9 @@
     <useStopwords>مؤشر يستخدم stopwords وسين لهذه اللغات :</useStopwords>    
     <rebuildIndexMessage>إذا قمت بتغيير هذه القيم ، من المستحسن إعادة إنشاء الفهرس وسين.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
+	<simpleSearch>Simple Search</simpleSearch>
+	<advancedSearch>Advanced Search</advancedSearch>
+	<remoteSearch>Remote Search</remoteSearch>
 	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
   <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
   <noServer js="true">Please select a server to search</noServer>

@@ -484,9 +484,16 @@
 		<div id="search_pnl">
 			<div id="tabs">
 				<ul>
-					<li style="margin-left: 1px" id="tabHeader1" class="currenttab"><a href="javascript:void(0)" onClick="doSimpleSearchTab(1,3)"><span>Simple Search</span></a></li>
-					<li id="tabHeader2"><a href="javascript:void(0)" onClick="doAdvancedSearchTab(2,3)"><span>Advanced Search</span></a></li>
-					<li id="tabHeader3"><a href="javascript:void(0)" onClick="doRemoteSearchTab(3,3)"><span>Remote Search</span></a></li>
+					<li style="margin-left: 1px" id="tabHeader1" class="currenttab"><a href="javascript:void(0)" onClick="doSimpleSearchTab(1,3)"><span><xsl:value-of select="/root/gui/strings/simpleSearch"/></span></a></li>
+					<li id="tabHeader2"><a href="javascript:void(0)" onClick="doAdvancedSearchTab(2,3)"><span><xsl:value-of select="/root/gui/strings/advancedSearch"/></span></a></li>
+					<li id="tabHeader3">
+						<a href="javascript:void(0)" onClick="doRemoteSearchTab(3,3)">
+							<xsl:if test="not(/root/gui/config/search/show-remote-search)">
+								<xsl:attribute name="style">display:none;</xsl:attribute>
+							</xsl:if>
+							<span><xsl:value-of select="/root/gui/strings/remoteSearch"/></span>
+						</a>
+					</li>
 				</ul>
 			</div>
 			<div id="tabscontent">

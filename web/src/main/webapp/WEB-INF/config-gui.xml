@@ -180,9 +180,12 @@
   <!-- Display or not keyword selection panel in advanced search panel 
    <keyword-selection-panel/> 
   -->
-	<!--
-	<use-separate-window-for-editor-viewer/>
-	<use-modal-box-for-banner-functions/>
+	<!-- Optional user interface mechanism - not ready yet
+		<use-separate-window-for-editor-viewer/>
+		<use-modal-box-for-banner-functions/>
+	-->
+	<!-- Show Remote/Distributed search tab 
+		<show-remote-search/> 
 	-->
  </search>
 	
