@@ -639,7 +639,7 @@ public class SchemaManager
 		mds.loadSchematronRules();
 
 		// -- add cached xml files (schema codelists and label files) 
-		// -- as Jeeves XmlFile objects
+		// -- as Jeeves XmlFile objects (they need not exist)
 		
 		String base = fromAppPath + FS + name + FS + "loc";
 		Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
@@ -655,7 +655,7 @@ public class SchemaManager
 				XmlFile xf = new XmlFile(config, defaultLang, true);
 				xfMap.put(fname, xf);
 			} else {
-				Log.error(Geonet.SCHEMA_MANAGER, "Unable to load this file");
+				Log.info(Geonet.SCHEMA_MANAGER, "Unable to load this file");
 			}
 		}
 
