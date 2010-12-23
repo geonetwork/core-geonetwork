@@ -117,7 +117,7 @@ public class Search implements Service
 
 		searcher.search(context, elData, _config);
 		if (remote && (searcher.getSize() == 0)) { // do it again for Z3950
-			searcher.search(context, params, _config);
+			searcher.search(context, elData, _config);
 		}
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 

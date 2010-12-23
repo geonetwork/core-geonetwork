@@ -9,15 +9,15 @@ xmlns:exslt= "http://exslt.org/common" exclude-result-prefixes="exslt">
 <xsl:variable name="category"     select="'_cat'"/>
 
 <!--
-computes bounding box values
+computes bounding box values - don't add 360 to them!
 -->
 <xsl:variable name="boundingBox" select="/request/query//term[@use='2060']/text()"/>
-<xsl:variable name="northBL"     select="substring-before($boundingBox,' ') + 360"/>
+<xsl:variable name="northBL"     select="substring-before($boundingBox,' ')"/>
 <xsl:variable name="rest1"       select="substring-after($boundingBox,' ')"/>
-<xsl:variable name="westBL"      select="substring-before($rest1,' ')       + 360"/>
+<xsl:variable name="westBL"      select="substring-before($rest1,' ')"/>
 <xsl:variable name="rest2"       select="substring-after($rest1,' ')"/>
-<xsl:variable name="southBL"     select="substring-before($rest2,' ')       + 360"/>
-<xsl:variable name="eastBL"      select="substring-after($rest2,' ')        + 360"/>
+<xsl:variable name="southBL"     select="substring-before($rest2,' ')"/>
+<xsl:variable name="eastBL"      select="substring-after($rest2,' ')"/>
 
 <!--
 compiles a request
