@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.geonet20;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -353,13 +352,10 @@ public class Aligner
 
             // validate it here if requested
             if (params.validate) {
-                try {
-                    Xml.validate(md);
-                }
-                // invalid: skip this one
-                catch (Exception x) {
-                    System.out.println("Cannot validate XML, ignoring. Error was: "+ x.getMessage());
+                if(!dataMan.validate(md))  {
+                    log.info("Ignoring invalid metadata");
                     result.doesNotValidate++;
+                    return null;
                 }
             }
 			return md;

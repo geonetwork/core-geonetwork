@@ -2026,6 +2026,25 @@ public class DataManager
 		return true;
 	}
 
+    /**
+     * Validates an xml document, using autodetectschema to determine how.
+     *
+     * @param xml
+     * @return
+     */
+    public boolean validate(Element xml) {
+        String schema = autodetectSchema(xml);
+        try {
+            validate(schema, xml);
+        }
+        // XSD validation error(s)
+        catch (Exception x) {
+            Log.debug(Geonet.DATA_MANAGER, "invalid metadata: " + x.getMessage());
+            return false;
+        }
+        return true;
+    }
+
 	/**
 	 * Used by the validate embedded service. The validation report
 	 * is stored in the session.
