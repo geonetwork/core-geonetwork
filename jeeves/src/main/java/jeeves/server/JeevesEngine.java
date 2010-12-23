@@ -200,7 +200,7 @@ public class JeevesEngine
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String line;
                 while ((line = br.readLine()) != null)   {
-                    if(line != null || line.length() == 0) {
+                    if(line == null || line.length() == 0) {
                         warning("Malformed definition of XSLT transformer (in: META-INF/services/javax.xml.transform.TransformerFactory).");
                     }
                     TransformerFactoryFactory.init(line);
@@ -221,7 +221,6 @@ public class JeevesEngine
                 in.close();
             }
         }
-        info("XSLT factory: "+ TransformerFactoryFactory.getTransformerFactory().getClass().getName());
     }
 
 
