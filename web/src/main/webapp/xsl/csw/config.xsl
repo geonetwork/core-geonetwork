@@ -126,7 +126,7 @@
             	</tr>
             	<tr>
             		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerAbstract"/></td>
-            		<td class="padded"><input id="csw.abstract" class="content" type="text" value="" size="40"/></td>
+            		<td class="padded"><textarea id="csw.abstract" class="content" type="text" value="" size="40"/></td>
             	</tr>
             	<tr>
             		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerFees"/></td>
