@@ -500,6 +500,7 @@
 				<div id="tabContent1" class="tabContent">
 					<div id="simple_search_panel">
 						<xsl:call-template name="simple_search_panel"/>
+						<xsl:call-template name="categories_latestupdates"/>
 					</div>
 				</div>
 				<div id="tabContent2" class="tabContent" style="display:none;">
@@ -519,7 +520,14 @@
 			</div>
 		</div>
 	</xsl:template>
-	
+
+	<xsl:template name="categories_latestupdates">
+    <xsl:call-template name="categories"/>
+        <div id="latest_updates">
+            <xsl:call-template name="latestUpdates"/>
+        </div>
+  </xsl:template>	
+
 	<!--
 	page content - search results etc
 	-->
@@ -546,9 +554,7 @@
 				<xsl:if test="/root/gui/featured/*">
 					<div style="padding: 10px;">
 							<xsl:comment>Featured Map</xsl:comment>
-							<!--
 							<xsl:call-template name="featured"/>
-							-->
 					</div>
 				</xsl:if>
 			</div>

@@ -81,9 +81,11 @@ a.no-help:hover {
 	background-repeat:no-repeat;
 
 	padding:0 0 3px 7px;
+	/*
 	text-align: left;
 	text-transform: uppercase;
 	font-weight: bold;
+	*/
 
 }
 
