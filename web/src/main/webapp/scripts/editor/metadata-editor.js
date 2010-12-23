@@ -698,7 +698,7 @@ function setRegion(westField, eastField, southField, northField, region, eltRef,
 	for (var idx = 0; idx < viewers.length; ++idx) {
 	     var viewer = viewers[idx];
 	     if (eltRef == viewer.getAttribute("elt_ref")) {
-	    	 extentMap.updateBbox(extentMap.maps[eltRef], westField + "," + southField + "," + eastField + "," + northField, eltRef, true); // Region are in WGS84
+	    	 extentMap.updateBboxForRegion(extentMap.maps[eltRef], westField + "," + southField + "," + eastField + "," + northField, eltRef, true); // Region are in WGS84
 	     }
 	}
 }
