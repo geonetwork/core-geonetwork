@@ -482,6 +482,7 @@
 	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
 	<notfound>Nicht gefunden</notfound>
 	<nothing>Keine Aktion bei Import</nothing>
+	<notifications>Notifications</notifications>
 	<online>Interaktive Karte</online>
 	<onlink>Online Linkage</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -557,6 +558,7 @@
 	<registrationDetails>Eingegebene Details: </registrationDetails>
 	<remote>enfernte Suche</remote>
 	<remoteType>entfernt</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>entfernen</remove>
 	<res>Ergebnisse</res>
 	<reset>Zurücksetzen</reset>

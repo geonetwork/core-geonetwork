@@ -482,6 +482,7 @@
 	<noTemplatesAvailable>No hay plantillas disponibles, importelas primero.</noTemplatesAvailable>
 	<notfound>No encontrado</notfound>
 	<nothing>No realizar ninguna acción en la importación</nothing>
+	<notifications>Notifications</notifications>
 	<online>Mapa Interactivo</online>
 	<onlink>Recurso en línea</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -557,6 +558,7 @@
 	<registrationDetails>Key registration details entered: </registrationDetails>
 	<remote>Búsqueda remota</remote>
 	<remoteType>Remote</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>Eliminar</remove>
 	<res>resultados</res>
 	<reset>Vaciar</reset>

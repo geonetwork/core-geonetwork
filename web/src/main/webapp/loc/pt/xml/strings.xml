@@ -483,6 +483,7 @@
 	<noTemplatesAvailable>Nenhum modelo disponível, importe metadados primeiro.</noTemplatesAvailable>
 	<notfound>Não encontrado</notfound>
 	<nothing>Nenhuma acção durante importação</nothing>
+	<notifications>Notifications</notifications>
 	<online>Mapa interactivo</online>
 	<onlink>Ligação</onlink>
 	<opensearch>GeoNetwork opensearch serviço permite a pesquisa no catálogo de metadados.</opensearch>
@@ -559,6 +560,7 @@
 	<registrationDetails>Pormenores do registo introduzidos:</registrationDetails>
 	<remote>Pesquisa remota</remote>
 	<remoteType>Remoto</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>Eliminar</remove>
 	<res>Resultados</res>
 	<reset>Re-iniciar</reset>

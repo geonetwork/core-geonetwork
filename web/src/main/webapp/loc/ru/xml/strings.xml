@@ -481,6 +481,7 @@
 	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
 	<notfound>Not found</notfound>
 	<nothing>Нет действий</nothing>
+	<notifications>Notifications</notifications>
 	<online>Интерактивная карта</online>
 	<onlink>Интернет-ссылки</onlink>
 	<opensearch>Сервис GeoNetwork opensearch позволяет проводить поиск в каталоге метаданных.</opensearch>
@@ -556,6 +557,7 @@
 	<registrationDetails>Key registration details entered:</registrationDetails>
 	<remote>Удаленный поиск</remote>
 	<remoteType>Remote</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>Очистить</remove>
 	<res>результатов</res>
 	<reset>Сбросить</reset>

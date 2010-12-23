@@ -493,6 +493,7 @@
 	<noTemplatesAvailable>Geen templates beschikbaar, importeer eerst metadata.</noTemplatesAvailable>
 	<notfound>Niet gevonden</notfound>
 	<nothing>Geen aktie bij import</nothing>
+	<notifications>Notificaties</notifications>
 	<online>Interactieve kaart</online>
 	<onlink>Webkoppelingen</onlink>
 	<opensearch>GeoNetwork opensearch service maakt het mogelijk te zoeken in de metadata catalogus.</opensearch>
@@ -575,6 +576,7 @@
 	<registrationDetails>Voornaamste registratie gegevens ingevoerd: </registrationDetails>
 	<remote>Gedistribueerd zoeken</remote>
 	<remoteType>Gedistribueerd</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>verwijderen</remove>
 	<res>resultaten</res>
 	<reset>Reset</reset>

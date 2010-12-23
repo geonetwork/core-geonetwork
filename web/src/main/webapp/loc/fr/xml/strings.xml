@@ -485,6 +485,7 @@
 	<noTemplatesAvailable>Aucun modèle disponible, importer des métadonnées tout d'abord.</noTemplatesAvailable>
 	<notfound>Non trouvé</notfound>
 	<nothing>Aucune action à l'import</nothing>
+	<notifications>Notifications</notifications>
 	<online>Carte interactive</online>
 	<onlink>Liens</onlink>
 	<opensearch>Service de recherche OpenSearch de GeoNetwork permettant la recherche de métadonnées dans le catalogue.</opensearch>
@@ -560,6 +561,7 @@
 	<registrationDetails>Information sur l'inscription :</registrationDetails>
 	<remote>Recherche distante</remote>
 	<remoteType>Distant</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>Supprimer</remove>
 	<res>résultats</res>
 	<reset>Réinitialiser</reset>

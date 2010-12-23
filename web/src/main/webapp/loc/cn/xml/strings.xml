@@ -482,6 +482,7 @@
 	<noTemplatesAvailable>No templates available, import metadata first.</noTemplatesAvailable>
 	<notfound>Not found</notfound>
 	<nothing>No action on import</nothing>
+	<notifications>Notifications</notifications>
 	<online>在线交互地图</online>
 	<onlink>在线链接</onlink>
 	<opensearch>GeoNetwork opensearch service allow search to be made into the metadata catalog.</opensearch>
@@ -557,6 +558,7 @@
 	<registrationDetails>Key registration details entered:</registrationDetails>
 	<remote>远程搜索</remote>
 	<remoteType>Remote</remoteType>
+	<remoteUpdates>Remote updates</remoteUpdates>
 	<remove>删除</remove>
 	<res>results</res>
 	<reset>重设</reset>

@@ -296,8 +296,8 @@
 						
 						<xsl:if test="/root/gui/services/service/@name='notifications.list'">
 							<tr>
-								<td class="padded"><a href="{/root/gui/locService}/notifications.list">notifications</a></td>
-								<td class="padded">remote updates</td>
+								<td class="padded"><a href="{/root/gui/locService}/notifications.list"><xsl:value-of select="/root/gui/strings/notifications"/></a></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/remoteUpdates"/></td>
 							</tr>
 						</xsl:if>
 
