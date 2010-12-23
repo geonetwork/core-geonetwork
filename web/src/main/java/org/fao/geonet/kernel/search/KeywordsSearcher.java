@@ -101,7 +101,7 @@ public class KeywordsSearcher {
 
 				KeywordBean kb = new KeywordBean(idKeyword, sValue,
 						"", sUri, "", "", "", "",
-						sThesaurusName, false, _lang);
+						sThesaurusName, false, _lang, thesaurus.getTitle());
 				idKeyword++;
 
 				return kb;
@@ -272,7 +272,7 @@ public class KeywordsSearcher {
 
                     KeywordBean kb = new KeywordBean(idKeyword, sValue,
                             sDefinition, sUri, sEast, sWest, sSouth, sNorth,
-                            sThesaurusName, false, _lang);
+                            sThesaurusName, false, _lang, thesaurus.getTitle());
                     _results.add(kb);
                     idKeyword++;
                 }
@@ -332,7 +332,7 @@ public class KeywordsSearcher {
 
 			KeywordBean kb = new KeywordBean(idKeyword, sValue,
 					"", sUri, "", "", "", "",
-					sThesaurusName, false, _lang);
+					sThesaurusName, false, _lang, thesaurus.getTitle());
 			_results.add(kb);
 			idKeyword++;
 		}

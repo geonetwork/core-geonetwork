@@ -41,6 +41,7 @@ public class KeywordBean {
 	private String coordNorth;	
 	private String thesaurus;	
 	private boolean selected;
+    private String thesaurusTitle;
 	
 	private static final Namespace NS_GMD = Namespace.getNamespace("gmd",
 			"http://www.isotc211.org/2005/gmd");
@@ -62,7 +63,7 @@ public class KeywordBean {
 	public KeywordBean(int id, String value, String definition, String code, 
 				String coordEast, String coordWest, 
 				String coordSouth, String coordNorth, 
-				String thesaurus, boolean selected, String lang) {
+				String thesaurus, boolean selected, String lang, String thesaurusTitle) {
 		super();
 		this.id = id;
 		this.value = value;
@@ -75,6 +76,7 @@ public class KeywordBean {
 		this.coordNorth = coordNorth;
 		this.thesaurus = thesaurus;
 		this.selected = selected;
+        this.thesaurusTitle = thesaurusTitle;
 	}
 
 	/**
@@ -352,7 +354,7 @@ public class KeywordBean {
 		Element cs = new Element("CharacterString", NS_GCO);
 		Element date = new Element("date", NS_GMD);
 		date.setAttribute("nilReason", "unknown",NS_GCO);
-		cs.setText(kb.thesaurus);
+		cs.setText(kb.thesaurusTitle);
 		title.addContent((Content) cs.clone());
 		citation.addContent(0,title);
 		citation.addContent(1, date);
