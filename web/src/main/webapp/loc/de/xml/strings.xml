@@ -562,8 +562,8 @@
 	<messageNoPrivileges>Sie haben keine Berechtigung diese Aktion durchzuführen.</messageNoPrivileges>
 	<messageNotPerformed>Die angefragte Aufgabe konnte nicht ausgeführt werden.</messageNotPerformed>
 	<metadata.admin.index.desc>Neuaufbau des Lucene Index</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.failed js="true">Index operation failed.</metadata.admin.index.failed>
+	<metadata.admin.index.success js="true">Index operation was successful.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>

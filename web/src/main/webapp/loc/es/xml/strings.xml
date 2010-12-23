@@ -564,8 +564,8 @@
 	<messageNoPrivileges>Usted no dispone de los permisos necesarios para hacer esta operación</messageNoPrivileges>
 	<messageNotPerformed>La operación solicitada no pudo realizarse.</messageNotPerformed>
 	<metadata.admin.index.desc>Volver a generar el índice de Lucene</metadata.admin.index.desc>
-	<metadata.admin.index.failed>No se ha podido regenerar el índice de Lucene.</metadata.admin.index.failed>
-	<metadata.admin.index.success>La operación de generar índice de Lucene se completó con éxito.</metadata.admin.index.success>
+	<metadata.admin.index.failed js="true">No se ha podido regenerar el índice de Lucene.</metadata.admin.index.failed>
+	<metadata.admin.index.success js="true">La operación de generar índice de Lucene se completó con éxito.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimizar el índice de Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>

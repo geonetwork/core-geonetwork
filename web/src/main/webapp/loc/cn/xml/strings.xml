@@ -564,8 +564,8 @@
 	<messageNoPrivileges>您没有权限执行该操作</messageNoPrivileges>
 	<messageNotPerformed>请求操作未能执行。</messageNotPerformed>
 	<metadata.admin.index.desc>Rebuild Lucene index</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Index operation failed.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.failed js="true">Index operation failed.</metadata.admin.index.failed>
+	<metadata.admin.index.success js="true">Index operation was successful.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>

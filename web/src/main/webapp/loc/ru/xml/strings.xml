@@ -569,8 +569,8 @@ ISO 19115 не позволяет иметь более одного.
 	<messageNoPrivileges>Недостаточно привилегий для выполнения данной операции.</messageNoPrivileges>
 	<messageNotPerformed>Операция не может быть выполнена.</messageNotPerformed>
 	<metadata.admin.index.desc>Перестроить индекс Lucene</metadata.admin.index.desc>
-	<metadata.admin.index.failed>Индекс не может быть перестроен.</metadata.admin.index.failed>
-	<metadata.admin.index.success>Индекс успешно перестроен.</metadata.admin.index.success>
+	<metadata.admin.index.failed js="true">Индекс не может быть перестроен.</metadata.admin.index.failed>
+	<metadata.admin.index.success js="true">Индекс успешно перестроен.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Управление индексом Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Перезагрузить Lucene конфигурацию</lucene.config.reload>

@@ -101,7 +101,7 @@ function get_cookie ( cookie_name )
 		var viewEdit = findWindow(id);
 		if (viewEdit && viewEdit.editing()) {
 			viewEdit.focus();
-			alert(i18n('editorInUse'));
+			alert(translate('editorInUse'));
 			return;
 		} 
 
@@ -119,7 +119,7 @@ function get_cookie ( cookie_name )
 			var item = viewEditWindows[i];
 			if (item.editing()) {
 				item.focus()
-				alert(i18n('editorInUse'));
+				alert(translate('editorInUse'));
 				return false;
 			}
 			item.close();
@@ -128,7 +128,7 @@ function get_cookie ( cookie_name )
 	}
 
 	function checkReset() {
-		if (confirm(i18n('resetWarning'))) {
+		if (confirm(translate('resetWarning'))) {
 			if (checkEditorAndClose()) return true;
 		} 
 		return false;
@@ -695,7 +695,7 @@ function addSampleData(msgSelectSomething, msgFailedAddSampleMetadata, msgSucces
 
 function idxOperation(service, wait, btn, warning)
 {
-	if (warning && !confirm(i18n('doYouReallyWantToDoThis'))) return;
+	if (warning && !confirm(translate('doYouReallyWantToDoThis'))) return;
 
 	var url = Env.locService + '/' + service;
 	$(wait).style.display = 'block';
@@ -715,14 +715,14 @@ function idxOperation(service, wait, btn, warning)
 					        $(wait).style.display = 'none';
 					        $(btn).style.display = 'block';
 					        if (resp == "true")
-  					          alert (i18n('metadata.admin.index.success'));
+  					          alert (translate('metadata.admin.index.success'));
 					        else
  					          alert(msgFailed);
 					      },
 					      onFailure: function(originalRequest){
 					        $(wait).style.display = 'none';
 					        $(btn).style.display = 'block';
-					        alert(i18n('metadata.admin.index.failed'));
+					        alert(translate('metadata.admin.index.failed'));
 					      }
 					    }
 	);
