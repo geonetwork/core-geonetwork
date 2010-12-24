@@ -276,6 +276,18 @@ CREATE TABLE CswServerCapabilitiesInfo
 
 REM ======================================================================
 
+CREATE TABLE IndexLanguages
+  (
+    id            int,
+    languageName  varchar(32)   not null,
+    selected      char(1)       default 'n' not null,
+
+    primary key(id, languageName)
+
+  );
+
+REM ======================================================================
+
 REM CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 

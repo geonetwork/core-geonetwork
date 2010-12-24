@@ -9,7 +9,7 @@
 -- === Delete tables content
 -- ======================================================================
 
-TRUNCATE MetadataCateg, MetadataRating, OperationAllowed, Metadata, CategoriesDes, Categories, IsoLanguagesDes, IsoLanguages, RegionsDes, Regions, UserGroups, GroupsDes, Groups, Users, OperationsDes, Operations, CswServerCapabilitiesInfo, Languages, Settings, Relations;
+TRUNCATE MetadataCateg, MetadataRating, OperationAllowed, Metadata, CategoriesDes, Categories, IndexLanguages, IsoLanguagesDes, IsoLanguages, RegionsDes, Regions, UserGroups, GroupsDes, Groups, Users, OperationsDes, Operations, CswServerCapabilitiesInfo, Languages, Settings, Relations;
 
 
 -- ======================================================================
@@ -7335,6 +7335,10 @@ INSERT INTO Settings VALUES (702,700,'tokentimeout',3600);
 INSERT INTO Settings VALUES (703,700,'cachesize',60);
 INSERT INTO Settings VALUES (720,1,'inspire',NULL);
 INSERT INTO Settings VALUES (721,720,'enable','false');
+
+-- ======================================================================
+-- === Table: IndexLanguages
+-- ======================================================================
 
 INSERT INTO IndexLanguages VALUES (1, 'danish', 'n');
 INSERT INTO IndexLanguages VALUES (2, 'dutch', 'n');

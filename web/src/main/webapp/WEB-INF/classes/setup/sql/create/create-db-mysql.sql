@@ -335,3 +335,13 @@ CREATE TABLE CswServerCapabilitiesInfo
   );
 
 -- ======================================================================
+CREATE TABLE IndexLanguages
+  (
+    id            int,
+    languageName  varchar(32)   not null,
+    selected      char(1)       default 'n' not null,
+
+    primary key(id, languageName)
+
+  );
+  -- ======================================================================
