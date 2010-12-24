@@ -14,6 +14,7 @@
     <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>    
     <rebuildIndexMessage>如果你改变这些值，建议您重建Lucene索引。</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
+	<notificationsDes>Remote Updates</notificationsDes>
 	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
 	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
 	<templatesSamples>Manage Templates and Sample Data</templatesSamples>

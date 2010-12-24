@@ -221,7 +221,7 @@
 						<xsl:call-template name="addrow">
 	<xsl:with-param name="service" select="'user.list'"/>
 	<xsl:with-param name="title" select="/root/gui/strings/userManagement"/>
-	<xsl:with-param name="desc" select="/root/gui/strings/userManagementDes"/>
+	<xsl:with-param name="desc" select="/root/gui/strings/userManDes"/>
 						</xsl:call-template>
 
 						<xsl:call-template name="addrow">

@@ -13,6 +13,7 @@
     <useStopwords>مؤشر يستخدم stopwords وسين لهذه اللغات :</useStopwords>    
     <rebuildIndexMessage>إذا قمت بتغيير هذه القيم ، من المستحسن إعادة إنشاء الفهرس وسين.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
+	<notificationsDes>Remote Updates</notificationsDes>
 	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
 	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
 	<templatesSamples>Manage Templates and Sample Data</templatesSamples>

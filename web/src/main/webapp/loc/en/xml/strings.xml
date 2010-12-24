@@ -13,6 +13,7 @@
     <useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
     <rebuildIndexMessage>If you change these values, it is recommended you rebuild the Lucene index.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
+	<notificationsDes>Remote Updates</notificationsDes>
 	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
 	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
 	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
