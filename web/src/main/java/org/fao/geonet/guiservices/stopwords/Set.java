@@ -28,11 +28,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 import org.jdom.Element;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -51,38 +50,36 @@ public class Set implements Service {
 
         // retrieve existing indexLanguages
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingInfo settingInfo = new SettingInfo(gc.getSettingManager());
-        java.util.Set<IndexLanguage> languages = settingInfo.getIndexLanguages();
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        DataManager dataManager = gc.getDataManager();
+        java.util.Set<IndexLanguage> languages = dataManager.retrieveIndexLanguages(dbms);
 
         // set selected to false for all
-        for(Iterator<IndexLanguage> i = languages.iterator(); i.hasNext();) {
-            IndexLanguage indexLanguage = i.next();
+        for (IndexLanguage indexLanguage : languages) {
             indexLanguage.setSelected(false);
         }
 
-
         // loop parameters to set selected to true where applicable 
+        @SuppressWarnings("unchecked")
         List<Element> parameters = params.getChildren();
         for(Element parameter : parameters) {
-            String languageName = parameter.getName().substring(parameter.getName().indexOf('-') + 1);
-            String paramName = parameter.getName().substring(0, parameter.getName().indexOf('-'));
+            String paramLanguageName = parameter.getName().substring(parameter.getName().indexOf('-') + 1);
             String paramValue = parameter.getText();
             if(paramValue.equals("on")) {
-                for(Iterator<IndexLanguage> i = languages.iterator(); i.hasNext();) {
-                    IndexLanguage indexLanguage = i.next();
-                    if(indexLanguage.getName().equals(languageName)) {
+                for (IndexLanguage indexLanguage : languages) {
+                    if (indexLanguage.getName().equals(paramLanguageName)) {
                         indexLanguage.setSelected(true);
                     }
                 }
             }
         }
 
-        // loop languages to save them and to create a response
-        Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        // save languages
+        dataManager.saveIndexLanguages(languages, dbms);
+
+        // loop languages to create a response
 		Element response   = new Element("indexlanguages");
         for(IndexLanguage indexLanguage : languages) {
-            String isSelected = new Boolean(indexLanguage.isSelected()).toString();
-            dbms.execute("UPDATE Settings SET value=? WHERE id=?", isSelected, Integer.parseInt(indexLanguage.getSelectedId()));
             Element language = new Element("indexlanguage");
             Element name = new Element("name");
             name.setText(indexLanguage.getName());
@@ -92,13 +89,11 @@ public class Set implements Service {
             language.addContent(selected);
             response.addContent(language);
         }
-        dbms.commit();
-        gc.getSettingManager().refresh();
 
         //
         // re-initialize Lucene analyzer with changed stopwords
         //
-        gc.getSearchmanager().initAnalyzer(settingInfo);
+        gc.getSearchmanager().initAnalyzer(dataManager, dbms);
 
         response.addContent(new Element("displayRebuildIndex"));
 		return response;

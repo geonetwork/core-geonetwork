@@ -23,12 +23,14 @@
 package org.fao.geonet.guiservices.stopwords;
 
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 import org.jdom.Element;
 
@@ -48,8 +50,9 @@ public class Get implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingInfo settingInfo = new SettingInfo(gc.getSettingManager());
-        Set<IndexLanguage> languages = settingInfo.getIndexLanguages();
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        DataManager dataManager = gc.getDataManager();
+        Set<IndexLanguage> languages = dataManager.retrieveIndexLanguages(dbms);
 		Element response   = new Element("indexlanguages");
         if(languages != null) {
             for(IndexLanguage indexLanguage : languages) {
@@ -63,7 +66,7 @@ public class Get implements Service {
                 response.addContent(language);
             }
         }
-        System.out.println("\n\n\n**** Get stopwordslanguages:\n"+Xml.getString(response) + "\n\n\n\n");
+        Log.debug("stopwords.Get", "Get stopwordslanguages:\n" + Xml.getString(response));
 		return response;
 	}
 

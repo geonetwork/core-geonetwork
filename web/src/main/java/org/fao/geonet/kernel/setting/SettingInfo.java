@@ -26,14 +26,8 @@ package org.fao.geonet.kernel.setting;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.domain.IndexLanguage;
-import org.jdom.Attribute;
-import org.jdom.Element;
 
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
@@ -70,8 +64,11 @@ public class SettingInfo
 	}
 
 	//---------------------------------------------------------------------------
-	/** Return a string like 'http://HOST[:PORT]' */
-
+	/**
+     * Returns a string like 'http://HOST[:PORT]'.
+     *
+     * @return a string
+     */
 	public String getSiteUrl()
 	{
 		String host = sm.getValue("system/server/host");
@@ -153,86 +150,6 @@ public class SettingInfo
     {
         return sm.getValueAsBool("system/inspire/enable");
     }
-
-    private final static String indexlanguagesKey = "system/indexlanguages";
-
-    public Set<IndexLanguage> getSelectedIndexLanguages() {
-        Set<IndexLanguage> indexLanguages = getIndexLanguages();
-        Set<IndexLanguage> selectedIndexLanguages = new HashSet<IndexLanguage>();
-        for(IndexLanguage indexLanguage : indexLanguages) {
-             if(indexLanguage.isSelected()) {
-                  selectedIndexLanguages.add(indexLanguage);
-             }
-        }
-        return selectedIndexLanguages;
-    }
-
-    public Set<IndexLanguage> getIndexLanguages() {
-        Set<IndexLanguage> indexLanguages = null;
-        Element indexLanguagesRoot = sm.get(indexlanguagesKey, -1);
-        if(indexLanguagesRoot != null) {
-            List indexLanguagesRootChildrenList = indexLanguagesRoot.getChildren("children");
-            if(indexLanguagesRootChildrenList != null) {
-                Element indexLanguagesRootChildren = (Element)indexLanguagesRootChildrenList.get(0);
-                if(indexLanguagesRootChildren != null) {
-                    for(Object o : indexLanguagesRootChildren.getChildren("indexlanguage")) {
-                        Element indexLanguageEl = (Element) o;
-                        List indexLanguageChildrenList = indexLanguageEl.getChildren("children");
-                        if(indexLanguageChildrenList != null) {
-                            Element indexLanguageChildren =  (Element) indexLanguageChildrenList.get(0);
-                            if(indexLanguageChildren != null) {
-                                Element name = indexLanguageChildren.getChild("name");
-                                if(name != null) {
-                                    String nameValue = name.getChildText("value");
-                                    Attribute nameIdAttr = name.getAttribute("id");
-                                    String nameId = nameIdAttr.getValue();
-                                    Element selected = indexLanguageChildren.getChild("selected");
-                                    if(selected != null) {
-                                        boolean selectedValue = Boolean.valueOf(selected.getChildText("value"));
-                                        Attribute selectedIdAttr = selected.getAttribute("id");
-                                        String selectedId = selectedIdAttr.getValue();                                        
-                                        IndexLanguage indexLanguage = new IndexLanguage();
-                                        indexLanguage.setName(nameValue);
-                                        indexLanguage.setNameId(nameId);
-                                        indexLanguage.setSelected(selectedValue);
-                                        indexLanguage.setSelectedId(selectedId);
-                                        if(indexLanguages == null) {
-                                            indexLanguages = new HashSet<IndexLanguage>();
-                                        }
-                                        indexLanguages.add(indexLanguage);
-                                    }
-                                    else {
-                                        System.out.println("index language selected is  null");
-                                    }
-                                }
-                                else {
-                                    System.out.println("index language name is  null");
-                                }
-                            }
-                            else {
-                                System.out.println("index language children is  null");
-                            }
-                        }
-                        else {
-                            System.out.println("index language children list is  null");
-                        }
-                    }
-                }
-                else {
-                    System.out.println("index languages root children is  null");
-                }
-            }
-            else {
-                System.out.println("index languages root children list is  null");
-            }
-        }
-        else {
-            System.out.println("index languages root is  null");
-        }
-        return indexLanguages;
-    }
-
-
 
 	//---------------------------------------------------------------------------
 	//---

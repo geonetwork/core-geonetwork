@@ -136,13 +136,20 @@ public class SearchManager
     /**
      * Initializes the PerFieldAnalyzerWrapper, which is used when adding documents to the Lucene index, and also
      * to analyze query terms at search time.
-     * 
-     * @param settingInfo Utility to read Settings
+     *
+     * @param dataMan datamanager
+     * @param dbms dbms
      */
-	public void initAnalyzer(SettingInfo settingInfo) {
+	public void initAnalyzer(DataManager dataMan, Dbms dbms) {
     // Define the default Analyzer
 
-        Set<String> stopwords = findStopwords(settingInfo);
+        Set<String> stopwords = null;
+        try {
+           stopwords = findStopwords(dataMan, dbms);
+        }
+        catch(Exception x) {
+           Log.warning("SearchManager", "Exception getting stopwords: " + x.getMessage() + ", now creating GeoNetworkAnalyzer without stopwords");
+        }
 		_analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer(stopwords));
 		// Here you could define specific analyzer for each fields stored in the index.
 		//
@@ -169,15 +176,16 @@ public class SearchManager
     /**
      * Retrieves stopwords for selected languages.
      * 
-     * @param settingInfo Utility to read Settings
      * @return stopwords
+     * @throws Exception hmm
      */
-    private static Set<String> findStopwords(SettingInfo settingInfo) {
+    private static Set<String> findStopwords(DataManager dataMan, Dbms dbms) throws Exception {
         Set<String> allStopwords = null;
         // retrieve index languages defined by administrator
-        Set<IndexLanguage> languages = settingInfo.getSelectedIndexLanguages();
+        Set<IndexLanguage> languages = dataMan.retrieveSelectedIndexLanguages(dbms);
         if(languages != null) {
             for(IndexLanguage language : languages) {
+                Log.debug(Geonet.SEARCH_ENGINE,"Loading stopwords for " + language.getName());
                 // look up stopwords for that language
                 Set<String> stopwords = StopwordFileParser.parse(_stopwordsDir + File.separator + language.getName());
                 if(stopwords != null) {
@@ -232,8 +240,6 @@ public class SearchManager
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
         _stopwordsDir = appPath + STOPWORDS_DIR_PATH;
-
-        initAnalyzer(si);
 
         _inspireEnabled = si.getInspireEnabled();
 

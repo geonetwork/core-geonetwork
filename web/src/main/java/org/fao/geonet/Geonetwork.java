@@ -304,6 +304,8 @@ public class Geonetwork implements ApplicationHandler
         MetadataNotifierControl metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
         metadataNotifierControl.runOnce();
 
+        searchMan.initAnalyzer(dataMan, dbms);
+
 		return gnContext;
 	}
 
