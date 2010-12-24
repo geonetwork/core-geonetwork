@@ -171,6 +171,7 @@ public class SearchManager
 		_analyzer.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
 		_analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
 		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
+        _analyzer.addAnalyzer("inspiretheme", new KeywordAnalyzer());
 	}
 
     /**

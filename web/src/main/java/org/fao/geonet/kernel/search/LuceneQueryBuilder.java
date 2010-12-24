@@ -699,13 +699,8 @@ public class LuceneQueryBuilder {
                     // but  think that may be slow.
                     PhraseQuery phraseQuery = new PhraseQuery();
                     BooleanClause.Occur phraseOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-                    // tokenize phrase
-                    StringTokenizer st = new StringTokenizer(inspireTheme);
-                    while (st.hasMoreTokens()) {
-                        String phraseElement = st.nextToken();
-                        phraseElement = phraseElement.trim().toLowerCase();
-                        phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, LuceneSearcher.analyzeQueryText(LuceneIndexField.INSPIRE_THEME, phraseElement, _analyzer, _tokenizedFieldSet)));
-                    }
+
+                    phraseQuery.add(new Term(LuceneIndexField.INSPIRE_THEME, LuceneSearcher.analyzeQueryText(LuceneIndexField.INSPIRE_THEME, inspireTheme, _analyzer, _tokenizedFieldSet)));
                     inspireThemesQuery.add(phraseQuery, phraseOccur);
                 }
             }

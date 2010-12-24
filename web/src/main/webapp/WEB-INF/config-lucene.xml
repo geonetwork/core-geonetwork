@@ -14,7 +14,7 @@
 		<Field name="abstract"/>
 		<Field name="title"/>
 		<Field name="altTitle"/>
- 		<Field name="inspiretheme"/>
+ 		<!--Field name="inspiretheme"/-->
 		<Field name="keywordType"/>
 		<Field name="orgName"/>
 		<Field name="specificationTitle"/>

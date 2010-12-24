@@ -162,7 +162,7 @@
 									<xsl:with-param name="inspireThemes" select="$inspire-theme"/>
 								</xsl:call-template>
                             </xsl:variable>
-                                <Field name="inspiretheme" string="{string(.)}" store="true" index="true" token="true"/>
+                                <Field name="inspiretheme" string="{string(.)}" store="true" index="true" token="false"/>
 							<Field name="inspireannex" string="{$inspireannex}" store="true" index="true" token="false"/>
                                 <Field name="inspirecat" string="true" store="true" index="true" token="false"/>
                             </xsl:if>

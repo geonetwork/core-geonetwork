@@ -441,7 +441,7 @@
                            </span>
                        </div>
                         <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l8}>" name="Production and industrial facilities" id="inspire_ProductionAndIndustrialFacilities"/>
+                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l8}" name="Production and industrial facilities" id="inspire_ProductionAndIndustrialFacilities"/>
 
                            <span>
                                <label for="inspire_ProductionAndIndustrialFacilities"><!--Production and industrial facilities--><xsl:value-of select="/root/gui/strings/inspire/annex3/l8"/></label>
