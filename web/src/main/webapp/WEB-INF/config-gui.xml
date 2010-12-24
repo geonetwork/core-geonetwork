@@ -180,11 +180,23 @@
   <!-- Display or not keyword selection panel in advanced search panel 
    <keyword-selection-panel/> 
   -->
-	<!-- Optional user interface mechanism - not ready yet
+	<!-- Optional user interface mechanism for editor - not ready yet
 		<use-separate-window-for-editor-viewer/>
+	-->
+	<!-- Optional user interface mechanism - displays banner functions using
+	     drop down modal box which overlays the current web page instead of 
+			 replacing it.
+			 Banner functions are 'Administration', 'Feedback', 'Links' etc
+			 The idea here is that displaying these light-weight functions in a 
+			 modal box means that the main page is not disturbed
 		<use-modal-box-for-banner-functions/>
 	-->
-	<!-- Show Remote/Distributed search tab 
+	<!-- Show Remote/Distributed search tab - enables distributed/remote search
+	     using Z3950 - note that if you query the Australian Z3950 sites, you 
+			 will need to add the anzmeta plugin schema to GeoNetwork using the 
+			 add schema/profile function on the administration page. If you want to
+			 do this, you should add the schema from a URL as follows:
+			 http://geonetwork.globaldial.com/testdownloads/anzmeta.zip
 		<show-remote-search/> 
 	-->
  </search>

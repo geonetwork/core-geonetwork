@@ -4,17 +4,6 @@
 	<xsl:include href="main.xsl"/>
 
 	<!-- ============================================================================= -->
-
-	<xsl:template mode="script" match="/">
-		<script type="text/javascript" language="JavaScript">
-			function checkAndSubmit()
-			{
-				document.createform.submit();
-			}
-		</script>
-	</xsl:template>
-
-	<!-- ============================================================================= -->
 	<!-- page content -->
 	<!-- ============================================================================= -->
 
@@ -28,7 +17,7 @@
 				<button class="content" onclick="goBack()"><xsl:value-of select="/root/gui/strings/back"/></button>
 				<xsl:if test="/root/gui/templates/record">
 					&#160;
-					<button class="content" onclick="checkAndSubmit()"><xsl:value-of select="/root/gui/create/button"/></button>
+					<button class="content" onclick="doCreateCheck('metadata.create','createform','{$modal}')"><xsl:value-of select="/root/gui/create/button"/></button>
 				</xsl:if>
 			</xsl:with-param>
 		</xsl:call-template>
@@ -57,7 +46,7 @@
 	<!-- ============================================================================= -->
 	
 	<xsl:template name="template-form">
-		<form name="createform" accept-charset="UTF-8" action="metadata.create" method="post">
+		<form id="createform" name="createform" accept-charset="UTF-8" action="metadata.create" method="post">
 			<table class="text-aligned-left">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/template"/></th>

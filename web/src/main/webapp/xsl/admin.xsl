@@ -61,11 +61,13 @@
 				
 					<!-- metadata services -->
 					<xsl:variable name="mdServices">
-						<xsl:call-template name="addrow">
-<xsl:with-param name="service" select="'metadata.create.form'"/>
-<xsl:with-param name="title" select="/root/gui/strings/newMetadata"/>
-<xsl:with-param name="desc" select="/root/gui/strings/newMdDes"/>
-						</xsl:call-template>
+						<xsl:if test="$modal=0">
+							<xsl:call-template name="addrow">
+	<xsl:with-param name="service" select="'metadata.create.form'"/>
+	<xsl:with-param name="title" select="/root/gui/strings/newMetadata"/>
+	<xsl:with-param name="desc" select="/root/gui/strings/newMdDes"/>
+							</xsl:call-template>
+						</xsl:if>
 
 						<xsl:call-template name="addrow">
 <xsl:with-param name="service" select="'metadata.xmlinsert.form'"/>

@@ -127,50 +127,15 @@ function get_cookie ( cookie_name )
 		return true;
 	}
 
-	function checkReset() {
-		if (confirm(translate('resetWarning'))) {
-			if (checkEditorAndClose()) return true;
-		} 
-		return false;
-	}
-	
-	function doCreateCheck(service, form, closeCurrent) {
-		descs = $('groups').getValue();
-		if (descs.length == 0) {
-			alert("Please select at least one group!");
-			return;
-		}
-		doCreate(service, form, closeCurrent);
-	}
+	function doCreateCheck(service, form, modal) {
 
-	function doCreate(action, form, closeCurrent) {
-		// serialize form, submit to action 
-		var myAjax = new Ajax.Request(
-			getGNServiceURL(action),
-			{
-				method: 'post',
-				parameters: $(form).serialize(true),
-				onSuccess: function(req) {
-					// get uuid of created metadata
-					var node = req.responseXML;
-					if (node == null) {
-						alert("Create metadata failed: "+node);
-						return;
-					}
-					var id = xml.evalXPath(node, 'response/id');
-					if (id == null) {
-						alert("Create metadata failed: "+node);
-						return;
-					}
-					// popEditorViewer with the metadata id in it
-					popEditorViewer(getGNServiceURL('metadata.edit?id='+id), id);
-					if (closeCurrent) self.close();
-				},
-				onFailure: function(req) {
-					alert("ERROR: could not create new metadata from server ("+action+")");
-				}
-			}
-		);
+		// Nothing to check at present
+
+		var params = $(form).serialize();
+		if (modal == '1') {
+					Modalbox.hide();
+		}
+		location.replace(getGNServiceURL(service) + '?' + params);
 	}
 
 	function popCreateWindow(a)
