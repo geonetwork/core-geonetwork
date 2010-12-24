@@ -11,6 +11,9 @@
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
+	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
+	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
 	<simpleSearch>Simple Search</simpleSearch>
 	<advancedSearch>Advanced Search</advancedSearch>
 	<remoteSearch>Remote Search</remoteSearch>
@@ -580,9 +583,7 @@
     <metadata-samples-add-success>Añadidos los metadatos de ejemplo</metadata-samples-add-success>
 	<metadata-template-order>Ordenar plantillas</metadata-template-order>
 	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
-	<metadata-template-add-default>Añadir plantillas</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Añadir plantillas por defecto</metadata-template-add-default-desc>
-    <metadata-template-select>Seleccione las plantillas a añadir</metadata-template-select>
+	<metadata-template-add-default>Añadir plantillas</metadata-template-add-default>
 	<metadata>Metadatos</metadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>

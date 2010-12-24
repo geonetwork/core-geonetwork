@@ -583,7 +583,7 @@ function toggleFieldset(btn, elem) {
 function addTemplate(msgSelectSomething) {
                           
 	var url = "metadata.templates.add.default?schema=";
-	var selectedSchemas = $('metadata.templates.select');
+	var selectedSchemas = $('metadata.schemas.select');
 	var params = "";
 	for (i = 0;i < selectedSchemas.length;i++) {
 		if (selectedSchemas.options[i].selected) {
@@ -599,8 +599,8 @@ function addTemplate(msgSelectSomething) {
 		url = url + params;
 	}
 				
-	var wait = 'waitTpl';
-	var btn = 'tplBtn';
+	var wait = 'waitLoadingTemplatesSamples';
+	var btn = 'addTemplatesSamplesButtons';
 	$(wait).style.display = 'block';
 	$(btn).style.display = 'none';
 				
@@ -623,7 +623,7 @@ function addTemplate(msgSelectSomething) {
 							else
 								alert(translate('error'));
 
-							var selectedSchemas = $('metadata.templates.select');
+							var selectedSchemas = $('metadata.schemas.select');
 							for (i = 0;i < selectedSchemas.length;i++) {
 								selectedSchemas.options[i].selected = false 
 							}
@@ -638,7 +638,7 @@ function addTemplate(msgSelectSomething) {
             
 function addSampleData(msgSelectSomething, msgFailedAddSampleMetadata, msgSuccessAddSampleMetadata) {
 	var url = "metadata.samples.add?file_type=mef&uuidAction=overwrite&schema=";
-	var selectedSchemas = $('metadata.sampledata.select');
+	var selectedSchemas = $('metadata.schemas.select');
 	var params = "";
 
 	for (i = 0;i < selectedSchemas.length;i++) {
@@ -655,8 +655,8 @@ function addSampleData(msgSelectSomething, msgFailedAddSampleMetadata, msgSucces
 		url = url + params;
 	}
 				
-	var wait = 'waitSamples';
-	var btn = 'tplSamples';
+	var wait = 'waitLoadingTemplatesSamples';
+	var btn = 'addTemplatesSamplesButtons';
 	$(wait).style.display = 'block';
 	$(btn).style.display = 'none';
 				
@@ -680,7 +680,7 @@ function addSampleData(msgSelectSomething, msgFailedAddSampleMetadata, msgSucces
 							else
 								alert(translate('error')+": "+error);
 
-							var selectedSchemas = $('metadata.sampledata.select');
+							var selectedSchemas = $('metadata.schemas.select');
 							for (i = 0;i < selectedSchemas.length;i++) {
 								selectedSchemas.options[i].selected = false 
 							}

@@ -11,6 +11,9 @@
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	
 	<!-- new strings - 2.7 -->
+	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
+	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
+	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
 	<simpleSearch>Simple Search</simpleSearch>
 	<advancedSearch>Advanced Search</advancedSearch>
 	<remoteSearch>Remote Search</remoteSearch>
@@ -590,9 +593,7 @@
     <metadata-samples-add-success>Laden voorbeeld metadata is gelukt</metadata-samples-add-success>
 	<metadata-template-order>Templates sorteren</metadata-template-order>	
 	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>
-	<metadata-template-add-default>Add templates</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Add default templates</metadata-template-add-default-desc>
-    <metadata-template-select>Select the templates to add</metadata-template-select>
+	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>Metadata</metadata>
 	<metadataAdded>Metadata met ID: is opgenomen in de database</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>

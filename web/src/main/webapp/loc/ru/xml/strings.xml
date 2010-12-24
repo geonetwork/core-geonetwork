@@ -11,6 +11,9 @@
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
+	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
+	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
 	<simpleSearch>Simple Search</simpleSearch>
 	<advancedSearch>Advanced Search</advancedSearch>
 	<remoteSearch>Remote Search</remoteSearch>
@@ -585,9 +588,7 @@ ISO 19115 не позволяет иметь более одного.
     <metadata-samples-add-success>Образец метаданных добавлен</metadata-samples-add-success>
 	<metadata-template-order>Сортировать шаблоны</metadata-template-order>	
 	<metadata-template-order-desc>Сортировать Ваши шаблоны</metadata-template-order-desc>
-	<metadata-template-add-default>Добавить шаблоны</metadata-template-add-default>	
-	<metadata-template-add-default-desc>Добавить шаблоны по умолчанию</metadata-template-add-default-desc>
-    <metadata-template-select>Выбрать шаблоны для добавления</metadata-template-select>
+	<metadata-template-add-default>Добавить шаблоны</metadata-template-add-default>
 	<metadata>Метаданные</metadata>
 	<metadataAdded>Идентификатор добавленных метаданных:</metadataAdded>
 	<metadataDeleted>Идентификатор удаленных метаданных:</metadataDeleted>

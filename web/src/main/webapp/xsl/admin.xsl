@@ -78,7 +78,6 @@
 <xsl:with-param name="title" select="/root/gui/strings/mymetadata"/>
 <xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
 						</xsl:call-template>
-
 						
 						<xsl:call-template name="addrow">
 <xsl:with-param name="service" select="'metadata.batchimport.form'"/>
@@ -134,8 +133,8 @@
 					</xsl:if>
 					
 					
-					<!-- Template administration -->
-					<xsl:variable name="mdTemplate">
+					<!-- Template and sample metadata administration -->
+					<xsl:variable name="mdTemplateSamples">
 
 						<xsl:call-template name="addrow">
 <xsl:with-param name="service" select="'metadata.templates.list'"/>
@@ -145,30 +144,36 @@
 								select="/root/gui/strings/metadata-template-order-desc"/>
 						</xsl:call-template>
 
-						<xsl:if test="/root/gui/services/service/@name='metadata.templates.add.default'">
+						<xsl:if test="/root/gui/services/service/@name='metadata.templates.add.default' and /root/gui/services/service/@name='metadata.samples.add'">
 							<tr>
-								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-template-add-default"/></td>
+								<td class="padded"><xsl:value-of select="/root/gui/strings/metadata-templates-samples-add"/></td>
 								<td class="padded">
 									<table>
 										<tr>
-											<td align="center" width="20%">
-									<xsl:value-of select="/root/gui/strings/metadata-template-add-default-desc"/> :
+											<td align="left" width="10%">
+												<xsl:value-of select="/root/gui/strings/select"/>
 											</td>
-											<td align="center" width="60%">
-									<select class="content" id="metadata.templates.select" size="8" multiple="true">
-										<xsl:for-each select="/root/gui/schemalist/name">
-											<xsl:sort select="."/>
-											<option value="{string(.)}">
-												<xsl:value-of select="string(.)"/>
-											</option>
-										</xsl:for-each>
-									</select>
+											<td align="left" width="30%">
+												<select class="content" id="metadata.schemas.select" size="8" multiple="true">
+													<xsl:for-each select="/root/gui/schemalist/name">
+														<xsl:sort select="."/>
+														<option value="{string(.)}">
+															<xsl:value-of select="string(.)"/>
+														</option>
+													</xsl:for-each>
+												</select>
 											</td>
-											<td align="center" width="20%">
-									<button class="content" onclick="addTemplate('{/root/gui/strings/metadata-template-select}');" id="tplBtn">
-										<xsl:value-of select="/root/gui/strings/metadata-template-add-default"/>
-									</button>
-									<img src="{/root/gui/url}/images/loading.gif" id="waitTpl" style="display:none;"/>									
+											<td align="left" width="60%">
+												<div id="addTemplatesSamplesButtons">
+													<button class="content" onclick="addTemplate('{/root/gui/strings/metadata-schema-select}');" id="tplBtn">
+														<xsl:value-of select="/root/gui/strings/metadata-template-add-default"/>
+													</button> 
+													&#160;
+                  				<button class="content" onclick="addSampleData('{/root/gui/strings/metadata-schema-select}', '{/root/gui/strings/metadata-samples-add-failed}', '{/root/gui/strings/metadata-samples-add-success}');" id="tplSamples">                                   
+                   					<xsl:value-of select="/root/gui/strings/metadata-samples-add"/>
+                  				</button>
+												</div>
+												<img src="{/root/gui/url}/images/loading.gif" id="waitLoadingTemplatesSamples" style="display:none;"/>									
 											</td>
 										</tr>
 									</table>
@@ -177,11 +182,11 @@
 						</xsl:if>
 					</xsl:variable>
 
-					<xsl:if test="normalize-space($mdTemplate)">
+					<xsl:if test="normalize-space($mdTemplateSamples)">
 						<tr>
-							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/template"/></b></td>
+							<td colspan="2"><b><xsl:value-of select="/root/gui/strings/templatesSamples"/></b></td>
 						</tr>
-						<xsl:copy-of select="$mdTemplate"/>
+						<xsl:copy-of select="$mdTemplateSamples"/>
 						<tr><td class="spacer"/></tr>
 					</xsl:if>
 					
@@ -315,35 +320,6 @@
 						<td class="padded"><xsl:value-of select="/root/gui/strings/cswTestDesc"/></td>
 					</tr>
 	
-          <!-- Sample metadata -->
-          <xsl:if test="/root/gui/services/service/@name='metadata.samples.add'">
-            <tr><td colspan="2" class="spacer"/></tr>
-            <tr>
-              <td class="padded"><xsl:value-of select="/root/gui/strings/metadata-samples"/></td>
-              <td class="padded">
-								<table>
-									<tr>
-										<td width="60%" align="center">
-											<select class="content" id="metadata.sampledata.select" size="8" multiple="true">
-												<xsl:for-each select="/root/gui/schemalist/name">
-													<xsl:sort select="."/>
-													<option value="{string(.)}">
-														<xsl:value-of select="string(.)"/>
-													</option>
-												</xsl:for-each>
-											</select>
-										</td>
-										<td width="40%" align="center">
-                      <button class="content" onclick="addSampleData('{/root/gui/strings/metadata-sampledata-select}', '{/root/gui/strings/metadata-samples-add-failed}', '{/root/gui/strings/metadata-samples-add-success}');" id="tplSamples">                                   
-                        <xsl:value-of select="/root/gui/strings/metadata-samples-add"/>
-                      </button>
-                      <img src="{/root/gui/url}/images/loading.gif" id="waitSamples" style="display:none;"/>									
-										</td>
-									</tr>
-								</table>
-              </td>
-            </tr>
-          </xsl:if>
 				</table>
 				<p/>
 			</xsl:with-param>
