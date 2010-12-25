@@ -511,47 +511,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- CreativeCommons and DataCommons services                      -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.creativecommons.form">
-			<class name=".services.creativecommons.Get"/>
-
-			<output sheet="metadata-creativecommons.xsl">
-				<xml name="static" file="xml/creativecommons/jurisdictions.xml"/>
-				<xml name="staticjurisdictions" file="xml/creativecommons/jurisdictions.html"/>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.creativecommons.set">
-			<class name=".services.creativecommons.Set"/>
-
-			<output forward="metadata.edit"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.datacommons.form">
-			<class name=".services.datacommons.Get"/>
-
-			<output sheet="metadata-datacommons.xsl">
-				<xml name="static" file="xml/datacommons/jurisdictions.xml"/>
-				<xml name="staticjurisdictions" file="xml/datacommons/jurisdictions.html"/>
-				<xml name="datacommons" file="xml/datacommons/metadata-datacommons.xml"/>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.datacommons.set">
-			<class name=".services.datacommons.Set"/>
-
-			<output forward="metadata.edit"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Thumbnail services                                            -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -577,14 +536,6 @@
 			<class name=".services.thumbnail.Unset"/>
 
 			<output forward="metadata.thumbnail.form"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Taxonomic search                                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="prepare.taxon.search">
-			<output sheet="metadata-taxon-search.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
