@@ -1372,3 +1372,7 @@ fieldset .attributes {
 	width: 200px !important;
 	border-width: 0px !important;
 }
+
+div#privileges {
+	max-height: 650px;
+}
