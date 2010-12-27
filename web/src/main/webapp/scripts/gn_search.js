@@ -142,7 +142,7 @@ function resetMinimaps() {
 
 function showAdvancedSearch(search)
 {
-	openSearch('advanced_search_panel');
+	openSearch('advanced_search_pnl');
 	document.cookie = "search=advanced";
 	initAdvancedSearch();
 	if (search == 'true') {
@@ -152,7 +152,7 @@ function showAdvancedSearch(search)
 
 function showSimpleSearch(search)
 {
-	openSearch('simple_search_panel');
+	openSearch('simple_search_pnl');
 	document.cookie = "search=default";
 	initSimpleSearch();
 	if (search == 'true') {
@@ -162,7 +162,7 @@ function showSimpleSearch(search)
 
 function showRemoteSearch(search)
 {
-	openSearch('remote_search_panel');
+	openSearch('remote_search_pnl');
 	document.cookie = "search=remote";
 	initRemoteSearch();
 	if (search == 'true') {

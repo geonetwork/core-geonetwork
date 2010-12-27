@@ -498,20 +498,20 @@
 			</div>
 			<div id="tabscontent">
 				<div id="tabContent1" class="tabContent">
-					<div id="simple_search_panel">
+					<div id="simple_search_pnl">
 						<xsl:call-template name="simple_search_panel"/>
 						<xsl:call-template name="categories_latestupdates"/>
 					</div>
 				</div>
 				<div id="tabContent2" class="tabContent" style="display:none;">
-					<div id="advanced_search_panel">
+					<div id="advanced_search_pnl">
 						<xsl:call-template name="advanced_search_panel">
 							<xsl:with-param name="remote" select="false()"/>
 						</xsl:call-template>
 					</div>
 				</div>
 				<div id="tabContent3" class="tabContent" style="display:none;">
-					<div id="remote_search_panel">
+					<div id="remote_search_pnl">
 						<xsl:call-template name="advanced_search_panel">
 							<xsl:with-param name="remote" select="true()"/>
 						</xsl:call-template>
