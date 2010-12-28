@@ -169,4 +169,22 @@
 		<suggest name="xlink:href"/>
 	</field>
 
+
+  <field name="gmd:MD_Constraints">
+    <suggest name="gmd:useLimitation"/>
+  </field>
+  
+  <field name="gmd:MD_LegalConstraints">
+    <suggest name="gmd:useLimitation"/>
+    <suggest name="gmd:accessConstraints"/>
+    <suggest name="gmd:useConstraints"/>
+    <suggest name="gmd:otherContraints"/>
+  </field>
+  
+  <field name="gmd:MD_SecurityContraints">
+    <suggest name="gmd:classification"/>
+    <suggest name="gmd:useLimitation"/>
+  </field>
+  
+
 </fields>

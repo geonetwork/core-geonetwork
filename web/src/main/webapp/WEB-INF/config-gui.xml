@@ -127,8 +127,14 @@
   to edit all elements defined in a schema. -->
   <iso/>
   <!-- This view display all INSPIRE recommended elements
-    <inspire flat="true"/>
-    in a view -->
+  in a view : 
+  * In flat mode, define which non existing children of the exception must be displayed (using ancestorException)
+  * or which non existing element must be displayed (using exception)
+ 
+   <inspire flat="true">
+   	 <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution"/>
+     <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
+     </inspire> -->
   <xml/>
  </metadata-tab>
  

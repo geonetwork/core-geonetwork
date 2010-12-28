@@ -109,7 +109,6 @@
 							../../gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/geonet:child[string(@name)='onLine']">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
 						</xsl:apply-templates>
 					</xsl:if>
 
@@ -122,28 +121,52 @@
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
 					</xsl:apply-templates>
-
-					<xsl:apply-templates mode="elementEP"
-						select="
-						gmd:citation/gmd:CI_Citation/geonet:child[string(@name)='identifier']
-						">
-						<xsl:with-param name="schema" select="$schema" />
-						<xsl:with-param name="edit" select="$edit" />
-					</xsl:apply-templates>
-
+					<xsl:if test="not(gmd:citation/gmd:CI_Citation/gmd:identifier)">
+						<xsl:apply-templates mode="elementEP"
+							select="
+							gmd:citation/gmd:CI_Citation/geonet:child[string(@name)='identifier']
+							">
+							<xsl:with-param name="schema" select="$schema" />
+							<xsl:with-param name="edit" select="$edit" />
+						</xsl:apply-templates>
+					</xsl:if>
 
 					<!-- Language -->
 					<xsl:apply-templates mode="elementEP"
 						select="
-						gmd:language|
-						geonet:child[string(@name)='language']|
-						gmd:characterSet|
-						geonet:child[string(@name)='characterSet']
+						gmd:language
 						">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
 					</xsl:apply-templates>
-
+	
+					<xsl:if test="not(gmd:language)">
+					<xsl:apply-templates mode="elementEP"
+						select="
+						geonet:child[string(@name)='language']
+						">
+						<xsl:with-param name="schema" select="$schema" />
+						<xsl:with-param name="edit" select="$edit" />
+					</xsl:apply-templates>
+					</xsl:if>
+					
+					<xsl:apply-templates mode="elementEP"
+						select="
+						gmd:characterSet
+						">
+						<xsl:with-param name="schema" select="$schema" />
+						<xsl:with-param name="edit" select="$edit" />
+					</xsl:apply-templates>
+					
+					<xsl:if test="not(gmd:characterSet)">
+						<xsl:apply-templates mode="elementEP"
+							select="
+							geonet:child[string(@name)='characterSet']
+							">
+							<xsl:with-param name="schema" select="$schema" />
+							<xsl:with-param name="edit" select="$edit" />
+						</xsl:apply-templates>
+					</xsl:if>
 				</xsl:with-param>
 			</xsl:call-template>
 
@@ -156,14 +179,20 @@
 					select="generate-id(/root/gui/strings/inspireSection/classification/title)" />
 				<xsl:with-param name="content">
 
+					<xsl:apply-templates mode="complexElement"
+						select="
+						gmd:topicCategory
+						">
+						<xsl:with-param name="schema" select="$schema" />
+						<xsl:with-param name="edit" select="$edit" />
+					</xsl:apply-templates>
+					
 					<xsl:apply-templates mode="elementEP"
 						select="
-						gmd:topicCategory|
 						geonet:child[string(@name)='topicCategory']
 						">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
-						<xsl:with-param name="force" select="true()" />
 					</xsl:apply-templates>
 
 					<!-- Service info-->
@@ -194,7 +223,6 @@
 						">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
-						<xsl:with-param name="force" select="true()" />
 					</xsl:apply-templates>
 					<xsl:if test="not(gmd:descriptiveKeywords)">
 						<xsl:apply-templates mode="elementEP"
@@ -203,7 +231,6 @@
 							">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
 						</xsl:apply-templates>
 					</xsl:if>
 
@@ -219,26 +246,30 @@
 				<xsl:with-param name="content">
 
 					<xsl:for-each select="gmd:extent/gmd:EX_Extent">
-						<xsl:apply-templates mode="elementEP"
+						<xsl:apply-templates mode="complexElement"
 							select="
 							gmd:description|gmd:geographicElement|gmd:verticalElement
 							">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
+						</xsl:apply-templates>
+						
+						<xsl:apply-templates mode="elementEP"
+							select="
+							geonet:child[string(@name)='geographicElement']">
+							<xsl:with-param name="schema" select="$schema" />
+							<xsl:with-param name="edit" select="$edit" />
 						</xsl:apply-templates>
 					</xsl:for-each>
 
-					<xsl:if test="not(gmd:extent)">
-						<xsl:apply-templates mode="elementEP"
-							select="
-							geonet:child[string(@name)='extent']">
-							<xsl:with-param name="schema" select="$schema" />
-							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
-						</xsl:apply-templates>
-					</xsl:if>
-
+				  <xsl:if test="not(gmd:extent)">
+				    <xsl:apply-templates mode="elementEP"
+				      select="
+				      geonet:child[string(@name)='extent']">
+				      <xsl:with-param name="schema" select="$schema" />
+				      <xsl:with-param name="edit" select="$edit" />
+				    </xsl:apply-templates>
+				  </xsl:if>
 				</xsl:with-param>
 			</xsl:call-template>
 
@@ -249,7 +280,7 @@
 					select="generate-id(/root/gui/strings/inspireSection/temporal/title)" />
 				<xsl:with-param name="content">
 
-					<xsl:apply-templates mode="elementEP"
+					<xsl:apply-templates mode="complexElement"
 						select="
 						gmd:citation/gmd:CI_Citation/gmd:date|
 						gmd:citation/geonet:child[string(@name)='date']
@@ -260,13 +291,20 @@
 					<!-- temporal extent -->
 					
 					<xsl:for-each select="gmd:extent/gmd:EX_Extent">
-						<xsl:apply-templates mode="elementEP"
+						<xsl:apply-templates mode="complexElement"
 							select="
 							gmd:temporalElement
 							">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
+						</xsl:apply-templates>
+						
+						
+						<xsl:apply-templates mode="elementEP"
+							select="
+							geonet:child[string(@name)='temporalElement']">
+							<xsl:with-param name="schema" select="$schema" />
+							<xsl:with-param name="edit" select="$edit" />
 						</xsl:apply-templates>
 					</xsl:for-each>
 					
@@ -296,7 +334,6 @@
 								select="../../gmd:dataQualityInfo/gmd:DQ_DataQuality/geonet:child[string(@name)='lineage']">
 								<xsl:with-param name="schema" select="$schema" />
 								<xsl:with-param name="edit" select="$edit" />
-								<xsl:with-param name="force" select="true()" />
 							</xsl:apply-templates>
 						</xsl:if>
 					</xsl:if>
@@ -308,7 +345,6 @@
 						gmd:spatialResolution">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
-						<xsl:with-param name="force" select="true()" />
 					</xsl:apply-templates>
 					<xsl:if test="not(gmd:spatialResolution)">
 						<xsl:apply-templates mode="elementEP"
@@ -316,7 +352,6 @@
 							geonet:child[string(@name)='spatialResolution']">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
 						</xsl:apply-templates>
 					</xsl:if>
 				</xsl:with-param>
@@ -335,18 +370,18 @@
 						test="not (../../gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult[contains(gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE')])">
 						<xsl:choose>
 							<xsl:when test="$edit = true()">
-								<a
+							  <xsl:value-of select="/root/gui/strings/inspireAddConformity" />&#160;
+							  <a
 									href="metadata.processing?uuid={../../geonet:info/uuid}&amp;process=inspire-add-conformity"
 									alt="{/root/gui/strings/inspireAddConformity}" title="{/root/gui/strings/inspireAddConformity}">
-									<img src="../../images/inspire.png" align="absmiddle" />
-									<xsl:value-of select="/root/gui/strings/inspireAddConformity" />
+									<img src="../../images/plus.gif" align="absmiddle" />
 								</a>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
 
 					<xsl:apply-templates mode="iso19139"
-						select="../../gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
+						select="../../gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report[gmd:DQ_DomainConsistency]">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
 					</xsl:apply-templates>
@@ -359,7 +394,6 @@
 							">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
 						</xsl:apply-templates>
 					</xsl:if>
 				</xsl:with-param>
@@ -382,7 +416,6 @@
 								gmd:resourceConstraints">
 								<xsl:with-param name="schema" select="$schema" />
 								<xsl:with-param name="edit" select="$edit" />
-								<xsl:with-param name="force" select="true()" />
 							</xsl:apply-templates>
 
 							<xsl:apply-templates mode="elementEP"
@@ -391,7 +424,6 @@
 								">
 								<xsl:with-param name="schema" select="$schema" />
 								<xsl:with-param name="edit" select="$edit" />
-								<xsl:with-param name="force" select="true()" />
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
@@ -412,7 +444,6 @@
 						">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
-						<xsl:with-param name="force" select="true()" />
 					</xsl:apply-templates>
 					<xsl:if test="not(gmd:pointOfContact)">
 						<xsl:apply-templates mode="elementEP"
@@ -421,7 +452,6 @@
 							">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
-							<xsl:with-param name="force" select="true()" />
 						</xsl:apply-templates>
 					</xsl:if>
 				</xsl:with-param>

@@ -50,38 +50,6 @@
 									<gmd:specification>
 										<gmd:CI_Citation>
 											<gmd:title>
-												<gco:CharacterString>INSPIRE</gco:CharacterString>
-											</gmd:title>
-											<gmd:date>
-												<gmd:CI_Date>
-													<gmd:date>
-														<gco:Date><xsl:value-of select="substring-before(gmd:dateStamp/gco:DateTime, 'T')"/></gco:Date>
-													</gmd:date>
-													<gmd:dateType>
-														<gmd:CI_DateTypeCode
-															codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-															codeListValue="publication"/>
-													</gmd:dateType>
-												</gmd:CI_Date>
-											</gmd:date>
-										</gmd:CI_Citation>
-									</gmd:specification>
-									<gmd:explanation>
-										<gco:CharacterString>INSPIRE related dataset</gco:CharacterString>
-									</gmd:explanation>
-									<gmd:pass>
-										<gco:Boolean>1</gco:Boolean>
-									</gmd:pass>
-								</gmd:DQ_ConformanceResult>
-							</gmd:result>
-						</gmd:DQ_DomainConsistency>
-					</gmd:report><gmd:report>
-						<gmd:DQ_DomainConsistency>
-							<gmd:result>
-								<gmd:DQ_ConformanceResult>
-									<gmd:specification>
-										<gmd:CI_Citation>
-											<gmd:title>
 												<gco:CharacterString>INSPIRE Implementing rules</gco:CharacterString>
 											</gmd:title>
 											<gmd:date>
@@ -99,7 +67,7 @@
 										</gmd:CI_Citation>
 									</gmd:specification>
 									<gmd:explanation>
-										<gco:CharacterString>-- more information on the test --</gco:CharacterString>
+										<gco:CharacterString>-- More information on the test --</gco:CharacterString>
 									</gmd:explanation>
 									<gmd:pass>
 										<gco:Boolean>1</gco:Boolean>

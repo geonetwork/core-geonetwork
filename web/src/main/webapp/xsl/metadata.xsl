@@ -16,6 +16,11 @@
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
 	
+  <xsl:variable name="flat" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat"/>
+  <xsl:variable name="ancestorException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException/@for"/>
+  <xsl:variable name="elementException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/exception/@for"/>
+  
+	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- main schema mode selector -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -58,6 +63,7 @@
 
 	<!--
 	new children
+	View mode variables (ie. $flat, $ancestorException and $elementException) are defined in XSL header.
 	-->
 	<xsl:template mode="elementEP" match="geonet:child">
 		<xsl:param name="schema"/>
@@ -85,21 +91,23 @@
 		<xsl:variable name="parentName" select="../geonet:element/@ref|@parent"/>
 		<xsl:variable name="max" select="../geonet:element/@max|@max"/>
 		<xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
-		
+	   
 		<!--
-			Exception for gmd:graphicOverview because GeoNetwork manage thumbnail
-			using specific interface for thumbnail and large_thumbnail but user should be able to add
-			thumbnail using a simple URL.
+			Exception for:
+			 * gmd:graphicOverview because GeoNetwork manage thumbnail using specific interface 
+			 for thumbnail and large_thumbnail but user should be able to add	thumbnail using a simple URL.
+			 * from config-gui.xml (ancestor or element)
 		-->		
-		<xsl:variable name="exception" select="../gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"/>
+		<xsl:variable name="exception" select="
+		  @name='graphicOverview'
+			or count(ancestor::*[contains($ancestorException, local-name())]) > 0
+			or contains($elementException, @name)
+			"/>
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
 		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
 		
-		
-		<xsl:if test="$currTab!='simple'"> 
-			<xsl:if test="(geonet:choose 
-							or name($prevBrother)!=$name
-							or $exception)
+		<xsl:if test="not($flat) or $exception">
+		  <xsl:if test="(geonet:choose or name($prevBrother)!=$name or $name='gmd:graphicOverview')
 							or $subtemplates">
 				<xsl:variable name="text">
 					<xsl:if test="geonet:choose">
@@ -1829,12 +1837,12 @@
 		<!-- Look for the helper -->
 		<xsl:variable name="helper">
 			<xsl:choose>
-				<xsl:when test="starts-with($schema,'iso19139') and not(/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper)">
+			  <xsl:when test="starts-with($schema,'iso19139') and not(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper)">
 					<!-- Fallback to iso19139 helper for ISO profil if not exist ... -->
-					<xsl:copy-of select="/root/gui/iso19139/element[@name = $parentName]/helper/*"/>
+					<xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName]/helper/*"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="/root/gui/*[name(.)=$schema]/element[@name = $parentName]/helper/*"/>
+					<xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper/*"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
