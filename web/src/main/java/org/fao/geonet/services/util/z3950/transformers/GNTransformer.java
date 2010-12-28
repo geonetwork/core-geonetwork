@@ -17,9 +17,12 @@
 //==============================================================================
 package org.fao.geonet.services.util.z3950.transformers;
 
+import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.fao.geonet.ContextContainer;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.guiservices.schemas.GetSchemaInfo;
 import org.jdom.input.DOMBuilder;
 import org.jzkit.search.util.RecordConversion.FragmentTransformationException;
 import org.jzkit.search.util.RecordConversion.FragmentTransformer;
@@ -38,6 +41,7 @@ public class GNTransformer extends FragmentTransformer {
 
 	public GNTransformer(String from, String to, Map properties, Map context, ApplicationContext ctx) {
 		super(from,to,properties,context,ctx);
+		this.ctx = ctx;
 
 		stylesheet = (String)properties.get("Sheet");
 		if (stylesheet == null) {
@@ -72,11 +76,25 @@ public class GNTransformer extends FragmentTransformer {
 		DOMBuilder builder = new DOMBuilder();
 		org.jdom.Document jdomDoc = builder.build(input);
 
+    ContextContainer cnt = (ContextContainer)ctx.getBean("ContextGateway");
+
 		// now transform using stylesheet passed in 
 
 		org.jdom.Element elem = null;
 		try {
-			elem = Xml.transform(jdomDoc.detachRootElement(), stylesheet);
+			// Call GetSchemaInfo to place schema titles and codelists into 
+			// xpath /root/gui/schemas/{} for xsl transformation to use
+			org.jdom.Element root = new org.jdom.Element(Jeeves.Elem.ROOT);
+			org.jdom.Element gui = new org.jdom.Element(Jeeves.Elem.GUI);
+			GetSchemaInfo gsi = new GetSchemaInfo();
+			gui.addContent(gsi.exec(new org.jdom.Element(Jeeves.Elem.REQUEST), cnt.getSrvctx()));
+			root.addContent(gui);
+
+			org.jdom.Element metadata = new org.jdom.Element(Geonet.Elem.METADATA);
+			metadata.addContent(jdomDoc.detachRootElement());
+			root.addContent(metadata);
+			elem = Xml.transform(root, stylesheet);
+			
 		} catch (Exception e) {
 			throw new FragmentTransformationException(e.getMessage());
 		}
@@ -95,5 +113,4 @@ public class GNTransformer extends FragmentTransformer {
 
 		return output;
 	}
-
 }

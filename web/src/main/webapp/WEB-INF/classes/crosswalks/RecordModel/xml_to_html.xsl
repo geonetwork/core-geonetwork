@@ -2,40 +2,42 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork" 
 	xmlns:exslt = "http://exslt.org/common"
-	xmlns:dc = "http://purl.org/dc/elements/1.1/" 
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" 
-	xmlns:gco="http://www.isotc211.org/2005/gco"
 	exclude-result-prefixes="#all">
-	<xsl:output method="html"/>
 
-	<!--
-	show metadata form
-	-->
-	
-	<xsl:include href="../../../../xsl/main.xsl"/>
+	<xsl:output
+		omit-xml-declaration="yes" 
+		method="html" 
+		doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/html4/loose.dtd"
+		indent="yes"
+		encoding="UTF-8" />
+
+	<xsl:include href="../../../../xsl/utils.xsl"/>
 	<xsl:include href="../../../../xsl/metadata.xsl"/>
 	
 	<xsl:variable name="baseurl" select="//geonet:info/baseUrl"/>
 	<xsl:variable name="locserv" select="//geonet:info/locService"/>
 
 	<xsl:template match="/">
-		<xsl:apply-templates mode="doit" select="*"/>
+		<xsl:apply-templates mode="doit" select="/root/metadata/*[1]"/>
 	</xsl:template>
 
 	<xsl:template mode="doit" match="*">
 		<html>
 			<head>
-				<xsl:call-template name="myheader"/>
+				<xsl:call-template name="header"/>
 			</head>
 			<body>
 				<table width="100%">
 						<!-- banner -->
 						<tr><td>
-							<xsl:call-template name="mybanner"/>
+							<xsl:call-template name="banner"/>
 						</td></tr>
+						<!--
 						<tr><td align="center">
 							<a class="content" href="{$baseurl}" target="_blank"  alt="Opens new window">Go to the catalog that holds this metadata record</a>
 						</td></tr>
+						-->
 
 						<!-- content -->
 						<tr><td>
@@ -46,23 +48,70 @@
 		</html>
 	</xsl:template>
 		
-	<xsl:template name="myheader">
+	<xsl:template name="header">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+		<!-- use metadata title for title of page -->
+		<xsl:variable name="md">
+			<xsl:apply-templates mode="brief" select="."/>
+    </xsl:variable>
+    <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+		<title><xsl:value-of select="$metadata/title"/></title>
+		<META HTTP-EQUIV="Pragma" CONTENT="no-cache"/>
+    <META HTTP-EQUIV="Expires" CONTENT="-1"/>
+
+		<!-- include enough js stuff to do tooltips -->
+		<script type="text/javascript">
+			var Env = new Object();
+
+			Env.host = "<xsl:value-of select="substring-before($baseurl,'/geonetwork')"/>";
+			Env.url = "<xsl:value-of select="$baseurl"/>"
+			Env.locService= "<xsl:value-of select="concat($baseurl,$locserv)"/>";
+		</script>
+
+		<!-- Actually no translations supplied here because /root/gui/strings not
+		     available but initialize the variable anyway -->
+
+		<script language="JavaScript" type="text/javascript">
+            var translations = {
+        <xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
+      };
+    </script>
+
 		<link href="{$baseurl}/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 		<link href="{$baseurl}/favicon.ico" rel="icon" type="image/x-icon" />
 
 		<!-- stylesheet -->
 		<link rel="stylesheet" type="text/css" href="{$baseurl}/geonetwork.css"/>
 		<link rel="stylesheet" type="text/css" href="{$baseurl}/modalbox.css"/>
+
+		<!-- scripts -->
+		<script type="text/javascript" src="{$baseurl}/scripts/prototype.js">
+			// This is a comment - otherwise nothing works
+		</script>
+		<script type="text/javascript" src="{$baseurl}/scripts/core/kernel/kernel.js">
+			// This is a comment - otherwise nothing works
+		</script>
+		<script type="text/javascript" src="{$baseurl}/scripts/geonetwork.js">
+			// This is a comment - otherwise nothing works
+		</script>
+		<script type="text/javascript" src="{$baseurl}/scripts/editor/simpletooltip.js">
+			// This is a comment - otherwise nothing works
+		</script>
 	</xsl:template>
 
-	<xsl:template name="mybanner">
+	<xsl:template name="banner">
 		<table width="100%">
 			<tr class="banner">
 				<td class="banner">
-					<img src="{$baseurl}/images/header-left.jpg" alt="World picture" align="top" />
+					<a href="{$baseurl}" target="_blank">
+						<img src="{$baseurl}/images/header-left.jpg" alt="Catalog Home" align="top" />
+					</a>
 				</td>
 				<td align="right" class="banner">
-					<img src="{$baseurl}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" />
+					<a href="{$baseurl}" target="_blank">
+						<img src="{$baseurl}/images/header-right.gif" alt="Catalog Home" align="top" />
+					</a>
 				</td>
 			</tr>
 		</table>
@@ -72,19 +121,9 @@
 	page content
 	-->
 	<xsl:template name="content">
-		<xsl:param name="schema">
-			<xsl:apply-templates mode="schema" select="."/>
-		</xsl:param>
-		
-		<table  width="100%">
-				<tr>
-					<td class="content" valign="top">
-						
-					<xsl:variable name="md">
-						<xsl:apply-templates mode="brief" select="."/>
-					</xsl:variable>
-					<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-					
+		<table width="100%">
+			<tr>
+				<td class="content" valign="top">
 					<table width="100%">
 						<tr>
 							<td class="padded-content">
@@ -95,11 +134,6 @@
 							</table>
 						</td></tr>
 					</table>
-				</td>
-			</tr>
-			<tr>
-				<td align="center">
-					<a class="content" href="{$baseurl}" target="_blank"  alt="Opens new window">Go to the catalog that holds this metadata record</a>
 				</td>
 			</tr>
 			<tr>
