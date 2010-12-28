@@ -144,8 +144,18 @@ a.banner:hover
 	text-decoration: underline;
 }
 
+tr.banner-active, td.banner-active {
+    background-color: #fff !important;
+    border-left: 2px #0263B2 solid;
+}
+
 font.banner-active {
-	color: #ffffff;
+  color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+}
+font.banner-tab-active {
+  color: #064377;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -153,6 +163,7 @@ font.banner-active {
 font.banner-passive {
 	color: #a0a0a0;
 	text-decoration: none;
+	font-weight: bold;
 }
 
 input.banner {
@@ -1372,6 +1383,7 @@ fieldset .attributes {
 	width: 200px !important;
 	border-width: 0px !important;
 }
+
 
 div#privileges {
 	max-height: 650px;

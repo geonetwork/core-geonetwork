@@ -81,6 +81,10 @@
 		<xsl:param name="tabLink"/>
 		
 		<table width="100%">
+		  <tr>
+		    <td class="banner-login banner-passive"></td>
+		  </tr>
+		  
 			<!-- Tab visibility is managed in config-gui.xml -->
 			<!-- simple tab -->
 			<xsl:if test="/root/gui/config/metadata-tab/simple">
@@ -150,20 +154,34 @@
 		
 		<xsl:variable name="currTab" select="/root/gui/currTab"/>
 	
-		<tr><td class="banner-login">
-			<xsl:value-of select="$indent"/>
-			
-			<xsl:choose>
-				<!-- not active -->
-				<xsl:when test="$tabLink=''"><font class="banner-passive"><xsl:value-of select="$text"/></font></xsl:when>
-				
-				<!-- selected -->
-				<xsl:when test="$currTab=$tab"><font class="banner-active"><xsl:value-of select="$text"/></font></xsl:when>
-				
-				<!-- not selected -->
-				<xsl:otherwise><a class="palette" href="javascript:doTabAction('{$tabLink}','{$tab}')"><xsl:value-of select="$text"/></a></xsl:otherwise>
-			</xsl:choose>
-		</td></tr>
+	  <tr>
+	    <xsl:attribute name="class">
+	      <xsl:choose>
+	        <xsl:when test="$currTab=$tab">banner-active</xsl:when>
+	        <xsl:otherwise>banner-passive</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:attribute>
+	    <td>
+	      <xsl:attribute name="class">
+	        <xsl:choose>
+	          <xsl:when test="$currTab=$tab">banner-login banner-active</xsl:when>
+	          <xsl:otherwise>banner-login banner-passive</xsl:otherwise>
+	        </xsl:choose>
+	      </xsl:attribute>
+  			<xsl:value-of select="$indent"/>
+  			
+  			<xsl:choose>
+  				<!-- not active -->
+  				<xsl:when test="$tabLink=''"><font class="banner-passive"><xsl:value-of select="$text"/></font></xsl:when>
+  				
+  				<!-- selected -->
+  				<xsl:when test="$currTab=$tab"><font class="banner-tab-active"><xsl:value-of select="$text"/></font></xsl:when>
+  				
+  				<!-- not selected -->
+  				<xsl:otherwise><a class="palette" href="javascript:doTabAction('{$tabLink}','{$tab}')"><xsl:value-of select="$text"/></a></xsl:otherwise>
+  			</xsl:choose>
+	    </td>
+	  </tr>
 	</xsl:template>
 	
 </xsl:stylesheet>
