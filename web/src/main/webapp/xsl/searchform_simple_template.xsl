@@ -109,8 +109,8 @@
 				<!-- sort by - - - - - - - - - - - - - - - - - - - - -->			
 				<div class="row">  <!-- div row-->
 					<span class="labelField"><xsl:value-of select="/root/gui/strings/sortBy"/></span>
-					<select id="sortBy_simple" size="1" class="content" 
-						 onChange="$('sortBy').value = this.options[this.selectedIndex].value; if (this.options[this.selectedIndex].value=='title') $('sortOrder').value = 'reverse'; else $('sortOrder').value = ''">
+					<select id="sortBy_simple" name="sortBy" size="1" class="content" 
+					  onChange="if (this.options[this.selectedIndex].value=='title') $('sortOrder_simple').value = 'reverse'; else $('sortOrder_simple').value = ''">
 						<xsl:for-each select="/root/gui/strings/sortByType">
 							<option value="{@id}">
 								<xsl:if test="@id = /root/gui/searchDefaults/sortBy">
@@ -120,7 +120,7 @@
 							</option>
 						</xsl:for-each>
 					</select>
-					<!--input type="hidden" name="sortOrder" id="sortOrder"/--> <!-- Share the hidden field in advanced form -->
+					<input type="hidden" name="sortOrder" id="sortOrder_simple"/>
 				</div>
 			
 				<!-- hits per page - - - - - - - - - - - - - - - - - - -->

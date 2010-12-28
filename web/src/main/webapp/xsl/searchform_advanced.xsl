@@ -111,8 +111,8 @@
 				<!-- sort by - - - - - - - - - - - - - - - - - - - - -->		
 				<div class="row">
 					<span class="labelField"><xsl:value-of select="/root/gui/strings/sortBy"/></span>
-					<select id="sortBy" size="1" class="content" 
-						 onChange="$('sortBy_simple').value = this.options[this.selectedIndex].value; if (this.options[this.selectedIndex].value=='title') $('sortOrder').value = 'reverse'; else $('sortOrder').value = ''">
+				  <select id="sortBy" name="sortBy" size="1" class="content" 
+						 onChange="if (this.options[this.selectedIndex].value=='title') $('sortOrder').value = 'reverse'; else $('sortOrder').value = ''">
 						<xsl:for-each select="/root/gui/strings/sortByType">
 							<option value="{@id}">
 								<xsl:if test="@id = /root/gui/searchDefaults/sortBy">

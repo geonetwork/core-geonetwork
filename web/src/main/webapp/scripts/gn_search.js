@@ -380,6 +380,11 @@ function setSort()
 	   $('sortOrder').value = 'reverse';
 	else
 	   $('sortOrder').value = '';
+	
+	if ($('sortBy_simple').value=='title')
+	   $('sortOrder_simple').value = 'reverse';
+	else
+	   $('sortOrder_simple').value = '';
 }
 
 //-------------------------------------------------------------------
@@ -387,9 +392,12 @@ function setSort()
 function setSortAndSearch()
 {
 	$('sortBy').value = $F('sortBy.live');
+	$('sortBy_simple').value = $F('sortBy.live');
 	setSort();
-  if (document.cookie.indexOf("search=advanced")!=-1) runAdvancedSearch();
-	else runSimpleSearch();
+	if (document.cookie.indexOf("search=advanced")!=-1) 
+		runAdvancedSearch();
+	else 
+		runSimpleSearch();
 }
 
 //-------------------------------------------------------------------
@@ -757,11 +765,11 @@ function gn_search_error(req) {
 
 function gn_filteredSearch() {
     var params = "";
-	if ($("advanced_search_pnl").visible()) {
+    if ($("advanced_search_pnl").visible()) {
 		params = fetchParam('template');
 	}
-
-	var myAjax = new Ajax.Request(
+	
+    var myAjax = new Ajax.Request(
 		getGNServiceURL('selection.search'),
 		{
 			method: 'get',
