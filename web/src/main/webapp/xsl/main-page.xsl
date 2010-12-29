@@ -452,13 +452,13 @@
 
 		function doAdvancedSearchTab(myPos,numTabs,search) {
 			toggleTab(myPos,numTabs);
+			showAdvancedSearch(search);
 			document.cookie = "search=advanced";
-			showAdvancedSearch('local');
 		}
 
 		function doRemoteSearchTab(myPos,numTabs,search) {
 			toggleTab(myPos,numTabs);
-			showAdvancedSearch('remote');
+			showRemoteSearch(search);
 			document.cookie = "search=remote";
 		}
 
