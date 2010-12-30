@@ -631,7 +631,7 @@ public class LuceneSearcher extends MetaSearcher
                 }
                 Integer max = null;
                 if(upperTxt != null) {
-                    max = Integer.parseInt(lowerTxt);
+                    max = Integer.parseInt(upperTxt);
                 }
                 returnValue = NumericRangeQuery.newIntRange(fld, min, max, inclusive, inclusive);
             }
@@ -642,7 +642,7 @@ public class LuceneSearcher extends MetaSearcher
                 }
                 Long max = null;
                 if(upperTxt != null) {
-                    max = Long.parseLong(lowerTxt);
+                    max = Long.parseLong(upperTxt);
                 }
                 returnValue = NumericRangeQuery.newLongRange(fld, min, max, inclusive, inclusive);
             }
@@ -653,7 +653,7 @@ public class LuceneSearcher extends MetaSearcher
                 }
                 Float max = null;
                 if(upperTxt != null) {
-                    max = Float.parseFloat(lowerTxt);
+                    max = Float.parseFloat(upperTxt);
                 }
                 returnValue = NumericRangeQuery.newFloatRange(fld, min, max, inclusive, inclusive);
             }
@@ -664,7 +664,7 @@ public class LuceneSearcher extends MetaSearcher
                 }
                 Double max = null;
                 if(upperTxt != null) {
-                    max = Double.parseDouble(lowerTxt);
+                    max = Double.parseDouble(upperTxt);
                 }
                 returnValue = NumericRangeQuery.newDoubleRange(fld, min, max, inclusive, inclusive);
             }
