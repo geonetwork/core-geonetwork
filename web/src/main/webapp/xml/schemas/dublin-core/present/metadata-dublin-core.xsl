@@ -8,7 +8,7 @@
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
 	<!-- main template - the way into processing dublin-core -->
-	<xsl:template match="dublin-core" name="dublin-core">
+  <xsl:template match="metadata-dublin-core" name="metadata-dublin-core">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
