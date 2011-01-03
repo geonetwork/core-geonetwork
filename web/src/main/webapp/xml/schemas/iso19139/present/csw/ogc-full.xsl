@@ -14,7 +14,7 @@
 	<xsl:param name="displayInfo"/>
 	<xsl:param name="lang"/>
 	
-	<xsl:include href="../../../../xsl/metadata-iso19139-utils.xsl"/>
+	<xsl:include href="../metadata-iso19139-utils.xsl"/>
 	
 	<!-- ============================================================================= -->
 
