@@ -154,7 +154,7 @@
 
                     <xsl:if test="$inspire='true'">
                         <xsl:if test="string-length(.) &gt; 0">
-							<xsl:variable name="inspire-thesaurus" select="document('../../codelist/external/thesauri/gemet/inspire-theme.rdf')"/>
+							<xsl:variable name="inspire-thesaurus" select="document('../../codelist/external/thesauri/theme/inspire-theme.rdf')"/>
 							<xsl:variable name="inspire-theme" select="$inspire-thesaurus//skos:Concept"/>
                             <xsl:variable name="inspireannex">
 								<xsl:call-template name="determineInspireAnnex">
