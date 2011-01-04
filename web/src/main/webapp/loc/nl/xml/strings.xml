@@ -601,7 +601,9 @@
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
 	<metadataJSForm>Metadata van JS Form</metadataJSForm>
 	<metadataRecordsAdded>Totaal aantal metadata toegevoegd:</metadataRecordsAdded>
-	<min>Minimaal</min>
+  <failOnError>Fail on error</failOnError>
+  <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
+  <min>Minimaal</min>
 	<missing>ONTBREEKT of LEEG</missing>
 	<missingSeeTab>ONTBREEKT - Zie de volgende groep tab in de zijkolom: </missingSeeTab>
 	<more>meer</more>

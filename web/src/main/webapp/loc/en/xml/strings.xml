@@ -586,7 +586,9 @@
 	<metadataDeleted>Metadata deleted with ID:</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
 	<metadataJSForm>Metadata from JS Form</metadataJSForm>
-	<metadataRecordsAdded>Total number of metadata records added :</metadataRecordsAdded>
+  <failOnError>Fail on error</failOnError>
+	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
+  <metadataRecordsAdded>Total number of metadata records added:</metadataRecordsAdded>
 	<min>Minimum</min>
 	<missing>MISSING or EMPTY</missing>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>

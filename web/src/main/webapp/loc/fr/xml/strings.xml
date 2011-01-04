@@ -591,6 +591,8 @@
 	<metadataInsertResults>Rapport sur l'import de métadonnées</metadataInsertResults>
 	<metadataJSForm>Metadata depuis le formulaire javascript</metadataJSForm>
 	<metadataRecordsAdded>Nombres de métadonnées insérées :</metadataRecordsAdded>
+  <failOnError>Arrêt en cas d'erreur</failOnError>
+  <metadataRecordsProcessed>Nombre de métadonnées traitées :</metadataRecordsProcessed>
 	<min>Minimum</min>
 	<missing>Vide ou manquant</missing>
 	<missingSeeTab>Manquant - Voir l'onglet correspondant au groupe </missingSeeTab>

@@ -51,6 +51,18 @@
 				</tr>
 				
 				<xsl:call-template name="metadata-insert-common-form"/>
+			  <input type="hidden" name="failOnError" id="failOnError" value="off"/>
+			 <!-- Uncomment that to enable fail on error checkbox option 
+			   <tr>
+			    <th class="padded">
+			      <label for="failOnError">
+			        <xsl:value-of select="/root/gui/strings/failOnError"/>
+			      </label>
+			    </th>
+			    <td>
+			      <input class="content" type="checkbox" name="failOnError" id="failOnError"/>
+			    </td>
+			  </tr>-->
 			</table>
 		</form>
 	</xsl:template>

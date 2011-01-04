@@ -591,6 +591,8 @@
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
 	<metadataJSForm>来自javascript表单的元数据</metadataJSForm>
 	<metadataRecordsAdded>Total number of metadata records added :</metadataRecordsAdded>
+  <failOnError>Fail on error</failOnError>
+  <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
 	<min>最小值</min>
 	<missing>MISSING or EMPTY</missing>	
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>

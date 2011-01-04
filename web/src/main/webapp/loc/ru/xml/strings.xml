@@ -596,7 +596,9 @@ ISO 19115 не позволяет иметь более одного.
 	<metadataInsertResults>Результаты импорта метаданных</metadataInsertResults>
 	<metadataJSForm>Метаданные из JavaScript-формы</metadataJSForm>
 	<metadataRecordsAdded>Общее количество добавленных записей метаданных :</metadataRecordsAdded>
-	<min>Минимум</min>
+  <failOnError>Fail on error</failOnError>
+  <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
+  <min>Минимум</min>
 	<missing>MISSING or EMPTY</missing>
 	<missingSeeTab>MISSING - See the following group tab in sidebar:</missingSeeTab>
 	<more>больше</more>

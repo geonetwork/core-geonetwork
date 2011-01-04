@@ -109,6 +109,7 @@ public class Params
 	public static final String THUMBNAIL    = "thumbnail";
 	public static final String RESOURCES    = "resources";
 	public static final String METADATA     = "metadata";
+	public static final String FAIL_ON_ERROR = "failOnError";
 
 	public class Access
 	{

@@ -589,6 +589,8 @@
 	<metadataInsertResults>Ergebniss des Metadaten Imports</metadataInsertResults>
 	<metadataJSForm>Metadaten von einem JS Formular</metadataJSForm>
 	<metadataRecordsAdded>Anzahl, der hinzugefügten Metadatensätze:</metadataRecordsAdded>
+  <failOnError>Fail on error</failOnError>
+  <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
 	<min>Minimum</min>
 	<missing>MISSING or EMPTY</missing>	
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>

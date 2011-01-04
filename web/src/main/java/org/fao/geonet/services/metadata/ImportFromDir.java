@@ -23,6 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.UUID;
+
 import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -30,6 +37,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -38,13 +46,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.UUID;
 
 // FIXME: this class could be moved to DataManager
 
@@ -91,7 +92,8 @@ public class ImportFromDir implements Service
 	//--------------------------------------------------------------------------
 
 	private String stylePath;
-
+    private ArrayList<String> exceptions = new ArrayList<String>();
+    private boolean failOnError;
 	private static final String CONFIG_FILE = "import-config.xml";
 
 	//--------------------------------------------------------------------------
@@ -118,11 +120,17 @@ public class ImportFromDir implements Service
 	 * <li>Search for all xml file in given directory and load them</li>
 	 * <li>Search for a file named import-config.xml in given directory
 	 * and the import as described in that file.</li>
-	 * </ul> 
+	 * </ul>
+	 * 
+	 * Fail on error parameter is available for directory batch mode. If true, 
+	 * import stop on first error.
+	 * 
+	 * Return the number of record inserted and the list of exceptions.
 	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String dir  = Util.getParam(params, Params.DIR);
+		failOnError = Util.getParam(params, Params.FAIL_ON_ERROR, "off").equals("on");
 		File   file = new File(dir +"/"+ CONFIG_FILE);
 
 		//-----------------------------------------------------------------------
@@ -139,9 +147,18 @@ public class ImportFromDir implements Service
 
 		context.info("Import time is :" + duration + " secs");
 
-		Element response = new Element("response");
-		Element records = new Element("records").setText(""+result);
-		response.addContent(records);
+		Element response = new Element("response")
+			.addContent(new Element("records").setText(""+result))
+			.addContent(new Element("time").setText(""+duration));
+		
+		if (exceptions.size() > 0) {
+			Element ex = new Element("exceptions").setAttribute("count", ""+exceptions.size());
+			for (String e : exceptions)
+				ex.addContent(new Element("exception").setText(e));
+			
+			response.addContent(ex);
+		}
+		
 		return response;
 	}
 
@@ -156,8 +173,9 @@ public class ImportFromDir implements Service
 		File files[];
 		String stylePath;
 		ServiceContext context;
+		ArrayList<String> exceptions = new ArrayList<String>();
 
-		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath) {
+		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath, boolean failOnError) {
 			super (dm);
 			this.params = params;
 			this.context = context;
@@ -166,9 +184,19 @@ public class ImportFromDir implements Service
 		}
 
 		public void process() throws Exception {
-			for(int i=0; i<files.length; i++)
-				MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
-			
+			for(int i=0; i<files.length; i++) {
+				try {
+					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
+				} catch (Exception e) {
+					if (failOnError)
+						throw e;
+					
+					exceptions.add(e.getMessage());
+				}
+			}
+		}
+		public ArrayList<String> getExceptions() {
+			return exceptions;
 		}
 	}
 
@@ -190,9 +218,10 @@ public class ImportFromDir implements Service
 		if (files == null)
 			throw new Exception("Directory not found: " + dir);
 
-		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath);
+		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath, failOnError);
 		r.processWithFastIndexing();
-
+		exceptions = r.getExceptions();
+		
 		return files.length;
 	}
 
