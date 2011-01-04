@@ -137,53 +137,8 @@
 		
 		<script type="text/javascript">
 
-			function init()
-			{
-				var requestTab="<xsl:value-of select="$tab"/>";
-				var search="<xsl:value-of select="$search"/>";
-				var currentSearch = get_cookie('search');
-				<!-- show tab requested otherwise show last tab selected -->
-        if (requestTab == 'simple') {
-          doSimpleSearchTab(1,3,search);
-        } else if (requestTab == 'advanced') {
-          doAdvancedSearchTab(2,3,search);
-        } else if (requestTab == 'remote') {
-          doRemoteSearchTab(3,3,search);
-        } else if (currentSearch == 'advanced') {
-          doAdvancedSearchTab(2,3,search);
-        } else if (currentSearch == 'remote') {
-          doRemoteSearchTab(3,3,search);
-        } else {
-          doSimpleSearchTab(1,3,search);
-        }
-				<!-- If a UUID is passed, it will be opened within the AJAX page -->
-				var uuid="<xsl:value-of select="$uuid"/>";
-				if (uuid!='') {
-					gn_showSingleMetadataUUID(uuid);
-				}
+			function init() {};
 
-				var id="<xsl:value-of select="$id"/>";
-				if (id!='') {
-						gn_showSingleMetadata(id);
-				}
-
-				<!-- If a WMS server & layername(s) are passed, it will be opened 
-						 in the map viewer the large map viewer will also be opened -->
-				var urlWMS="<xsl:value-of select="$urlWMS"/>";
-				var typeWMS="<xsl:value-of select="$typeWMS"/>";
-				servicesWMS = new Array();
-				<xsl:for-each select="/root/request/service">
-					<xsl:text>servicesWMS.push("</xsl:text><xsl:value-of select="."/><xsl:text>");</xsl:text>
-				</xsl:for-each>
-				if (urlWMS!='') {
-				if (servicesWMS.length!=null || servicesWMS.length>0) {
-						if (typeWMS!='') {
-							imc_addServices(urlWMS, servicesWMS, typeWMS, im_servicesAdded);
-							openIntermap();
-						}
-					}
-				}
-			}
 						
 			var getIMServiceURL = function(service)
 			{
@@ -198,11 +153,16 @@
 			}
 
 			Ext.onReady(function(){
-                $("loading").hide();
+        $("loading").hide();
 
-                Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-                
-                GeoNetwork.MapStateManager.loadMapState();
+				var GNCookie = new Ext.state.CookieProvider({
+				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365)), 
+											//1 year from now
+								});
+
+        Ext.state.Manager.setProvider(GNCookie);
+
+        GeoNetwork.MapStateManager.loadMapState();
                 
 				initMapViewer();
 				var mapViewport =  GeoNetwork.mapViewer.getViewport();
@@ -228,7 +188,38 @@
 					collapsible:true,
 					border:false	
 				});
-				
+		
+					var searchTabs = new Ext.TabPanel({
+					renderTo: 'search_tabs',
+					activeTab : 0,
+					deferredRender: false,
+					border: false,
+					bodyBorder: false,
+					items: [ {
+										itemId: 'default',
+										title: '<xsl:value-of select="/root/gui/strings/simpleSearch"/>',
+										contentEl: 'simple_search_pnl'
+									 }
+									,{
+										itemId: 'advanced',
+										title: '<xsl:value-of select="/root/gui/strings/advancedSearch"/>',
+										contentEl: 'advanced_search_pnl'
+									}
+									<xsl:if test="/root/gui/config/search/show-remote-search">
+										,{
+											itemId: 'remote',
+											title: '<xsl:value-of select="/root/gui/strings/remoteSearch"/>',
+											contentEl: 'remote_search_pnl'
+										}
+									</xsl:if>
+										
+								]
+				});
+
+				 searchTabs.on('tabchange', function() {
+					GNCookie.set('search',{searchTab: this.getActiveTab().itemId}); 
+				});
+
 			   var viewport = new Ext.Panel({
 					region: 'center',
 					layout:'border',
@@ -268,7 +259,7 @@
 									useSplitTips:true,
 									collapsibleSplitTip: 'Drag to rezise the search panel. Double click to show/hide it',
 									bodyStyle: 'padding:15px',
-									contentEl: 'search_pnl'
+									items: [searchTabs] 
 									},
 									{region:'center', 
 										id: 'main-viewport',
@@ -312,10 +303,62 @@
 							items:[viewport]
 						});
 
-                        // Initialize small maps for search
-                        initMapsSearch();
-                        
-						showSimpleSearch();
+            // Initialize small maps for search
+            initMapsSearch();
+
+				var requestTab="<xsl:value-of select="$tab"/>";
+				var search="<xsl:value-of select="$search"/>";
+
+				var currentSearch = '';
+				var cookie = GNCookie.get('search');
+				if (cookie) currentSearch = cookie.searchTab;
+				<!-- show tab requested otherwise show last tab selected -->
+        if (requestTab == 'simple') {
+					searchTabs.setActiveTab(requestTab);
+					showSimpleSearch(search);
+        } else if (requestTab == 'advanced') {
+					searchTabs.setActiveTab(requestTab);
+          showAdvancedSearch(search);
+        } else if (requestTab == 'remote') {
+					searchTabs.setActiveTab(requestTab);
+          showRemoteSearch(search);
+        } else if (currentSearch == 'advanced') {
+					searchTabs.setActiveTab(currentSearch);
+          showAdvancedSearch(search);
+        } else if (currentSearch == 'remote') {
+					searchTabs.setActiveTab(currentSearch);
+          showRemoteSearch(search);
+        } else {
+					searchTabs.setActiveTab('default');
+          showSimpleSearch(search);
+        }
+				<!-- If a UUID is passed, it will be opened within the AJAX page -->
+				var uuid="<xsl:value-of select="$uuid"/>";
+				if (uuid!='') {
+					gn_showSingleMetadataUUID(uuid);
+				}
+
+				var id="<xsl:value-of select="$id"/>";
+				if (id!='') {
+						gn_showSingleMetadata(id);
+				}
+
+				<!-- If a WMS server & layername(s) are passed, it will be opened 
+						 in the map viewer the large map viewer will also be opened -->
+				var urlWMS="<xsl:value-of select="$urlWMS"/>";
+				var typeWMS="<xsl:value-of select="$typeWMS"/>";
+				servicesWMS = new Array();
+				<xsl:for-each select="/root/request/service">
+					<xsl:text>servicesWMS.push("</xsl:text><xsl:value-of select="."/><xsl:text>");</xsl:text>
+				</xsl:for-each>
+				if (urlWMS!='') {
+				if (servicesWMS.length!=null || servicesWMS.length>0) {
+						if (typeWMS!='') {
+							imc_addServices(urlWMS, servicesWMS, typeWMS, im_servicesAdded);
+							openIntermap();
+						}
+					}
+				}
 			});
 			
             
@@ -394,74 +437,7 @@
 			}
 
 			
-			/* -- toggleDisp and toggleTab are taken from:
-						http://wiki.script.aculo.us/scriptaculous/show/Tabs
-						Brian Love
-						http://wiki.script.aculo.us/scriptaculous/author/profile/13488
-			   --*/
-
-			function toggleDisp() {
-    			for (var i=0;i&lt;arguments.length;i++){
-        			var d = $(arguments[i]);
-        			if (d.style.display == 'none')
-            			d.style.display = 'block';
-        			else
-            			d.style.display = 'none';
-    			}
-			}
-
-			function toggleTab(num,numelems,opennum,animate) {
-    		if ($('tabContent'+num).style.display == 'none'){
-        		for (var i=1;i&lt;=numelems;i++){
-            		if ((opennum == null) || (opennum != i)){
-                		var temph = 'tabHeader'+i;
-                		var h = $(temph);
-                		if (!h){
-                    		var h = $('tabHeaderActive');
-                    		h.id = temph;
-                		}
-                		var tempc = 'tabContent'+i;
-                		var c = $(tempc);
-                		if(c.style.display != 'none'){
-                    		if (animate || typeof animate == 'undefined')
-                        		Effect.toggle(tempc,'blind',{duration:0.5, queue:{scope:'menus', limit: 3}});
-                    		else
-                        		toggleDisp(tempc);
-                		}
-            		}
-        		}
-        		var h = $('tabHeader'+num);
-        		if (h)
-            		h.id = 'tabHeaderActive';
-        		h.blur();
-        		var c = $('tabContent'+num);
-        		c.style.marginTop = '2px';
-        		if (animate || typeof animate == 'undefined'){
-            		Effect.toggle('tabContent'+num,'blind',{duration:0.5, queue:{scope:'menus', position:'end', limit: 3}});
-        		}else{
-            		toggleDisp('tabContent'+num);
-        		}
-    		}
-		}
-
-		function doSimpleSearchTab(myPos,numTabs,search) {
-			toggleTab(myPos,numTabs);
-			showSimpleSearch(search);
-			document.cookie = "search=default";
-		}
-
-		function doAdvancedSearchTab(myPos,numTabs,search) {
-			toggleTab(myPos,numTabs);
-			showAdvancedSearch(search);
-			document.cookie = "search=advanced";
-		}
-
-		function doRemoteSearchTab(myPos,numTabs,search) {
-			toggleTab(myPos,numTabs);
-			showRemoteSearch(search);
-			document.cookie = "search=remote";
-		}
-
+			
 		</script>
 	</xsl:template>
 
@@ -481,42 +457,20 @@
 		</div>
 		
 		<!-- Search forms -->
-		<div id="search_pnl">
-			<div id="tabs">
-				<ul>
-					<li style="margin-left: 1px" id="tabHeader1" class="currenttab"><a href="javascript:void(0)" onClick="doSimpleSearchTab(1,3)"><span><xsl:value-of select="/root/gui/strings/simpleSearch"/></span></a></li>
-					<li id="tabHeader2"><a href="javascript:void(0)" onClick="doAdvancedSearchTab(2,3)"><span><xsl:value-of select="/root/gui/strings/advancedSearch"/></span></a></li>
-					<li id="tabHeader3">
-						<a href="javascript:void(0)" onClick="doRemoteSearchTab(3,3)">
-							<xsl:if test="not(/root/gui/config/search/show-remote-search)">
-								<xsl:attribute name="style">display:none;</xsl:attribute>
-							</xsl:if>
-							<span><xsl:value-of select="/root/gui/strings/remoteSearch"/></span>
-						</a>
-					</li>
-				</ul>
+		<div id="search_tabs">
+			<div id="simple_search_pnl" class="x-hide-display" title="{/root/gui/strings/simpleSearch}">
+				<xsl:call-template name="simple_search_panel"/>
+				<xsl:call-template name="categories_latestupdates"/>
 			</div>
-			<div id="tabscontent">
-				<div id="tabContent1" class="tabContent">
-					<div id="simple_search_pnl">
-						<xsl:call-template name="simple_search_panel"/>
-						<xsl:call-template name="categories_latestupdates"/>
-					</div>
-				</div>
-				<div id="tabContent2" class="tabContent" style="display:none;">
-					<div id="advanced_search_pnl">
-						<xsl:call-template name="advanced_search_panel">
-							<xsl:with-param name="remote" select="false()"/>
-						</xsl:call-template>
-					</div>
-				</div>
-				<div id="tabContent3" class="tabContent" style="display:none;">
-					<div id="remote_search_pnl">
-						<xsl:call-template name="advanced_search_panel">
-							<xsl:with-param name="remote" select="true()"/>
-						</xsl:call-template>
-					</div>
-				</div>
+			<div id="advanced_search_pnl" class="x-hide-display" title="{/root/gui/strings/advancedSearch}">
+				<xsl:call-template name="advanced_search_panel">
+					<xsl:with-param name="remote" select="false()"/>
+				</xsl:call-template>
+			</div>
+			<div id="remote_search_pnl" class="x-hide-display" title="{/root/gui/strings/remoteSearch}">
+				<xsl:call-template name="advanced_search_panel">
+					<xsl:with-param name="remote" select="true()"/>
+				</xsl:call-template>
 			</div>
 		</div>
 	</xsl:template>

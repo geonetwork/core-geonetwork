@@ -142,7 +142,7 @@
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="/root/gui/session/surname"/>
 								<xsl:text> </xsl:text>
-								<button class="banner" onclick="goSubmit('logout')"><xsl:value-of select="/root/gui/strings/logout"/></button>
+								<button class="banner" onclick="doLogout()"><xsl:value-of select="/root/gui/strings/logout"/></button>
 							</form>
 						</td>
 					</xsl:when>

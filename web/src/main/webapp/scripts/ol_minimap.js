@@ -19,7 +19,7 @@
 Ext.namespace('GeoNetwork');
 
 // create application
-GeoNetwork.miniapp = function(extentBox) {
+GeoNetwork.miniapp = function() {
     // private vars:
     var toolbar, viewport;
 

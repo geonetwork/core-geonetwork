@@ -194,6 +194,17 @@ function get_cookie ( cookie_name )
 	}
 
 /**********************************************************
+ * Logout - need to clear cookie from ext
+ **********************************************************/
+	
+	function doLogout() 
+	{
+		var GNCookie = Ext.state.Manager.getProvider();
+		var cookie = GNCookie.clear('params');
+		goSubmit('logout');
+	}
+
+/**********************************************************
  * Download support 
  **********************************************************/
 

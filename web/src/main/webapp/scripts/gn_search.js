@@ -58,7 +58,9 @@ function runPdfSearch(onSelection) {
 		location.replace (serviceUrl);
 	//	metadataselect(0, 'remove-all');
 	} else {
-	    if (document.cookie.indexOf("search=advanced")!=-1)
+			var GNCookie = Ext.state.Manager.getProvider();
+			var cookie = GNCookie.get('search');
+	    if (cookie && cookie.searchTab=='advanced')
 	        runAdvancedSearch("pdf");
 	    else
 	        runSimpleSearch("pdf");
@@ -99,8 +101,9 @@ function resetSimpleSearch()
 /* make sure all values are completely reset (instead of just using the default
    form.reset that would only return to the values stored in the session */
 		var form = $('simple_search_form');
-    form.reset();
+    clearFormValues(form);
 
+		// Now set the special form fields to their defaults
 		resetWherePars();
 	
     setParam(form['sortBy'],      'relevance');
@@ -143,31 +146,94 @@ function resetMinimaps() {
 function showAdvancedSearch(search)
 {
 	openSearch('advanced_search_pnl');
-	document.cookie = "search=advanced";
+	var GNCookie = Ext.state.Manager.getProvider();
+	GNCookie.set('search', {searchTab: 'advanced'});
 	initAdvancedSearch();
 	if (search == 'true') {
-		runAdvancedSearch();
+		runAdvancedSearch(); 
+	} else {
+		setFormWithQueryParams('advanced_search_form');
 	}
 }
 
 function showSimpleSearch(search)
 {
 	openSearch('simple_search_pnl');
-	document.cookie = "search=default";
+	var GNCookie = Ext.state.Manager.getProvider();
+	GNCookie.set('search', {searchTab: 'default'});
 	initSimpleSearch();
 	if (search == 'true') {
 		runSimpleSearch();
+	} else {
+		setFormWithQueryParams('simple_search_form');
 	}
 }
 
 function showRemoteSearch(search)
 {
 	openSearch('remote_search_pnl');
-	document.cookie = "search=remote";
+	var GNCookie = Ext.state.Manager.getProvider();
+	GNCookie.set('search', {searchTab: 'remote'});
 	initRemoteSearch();
 	if (search == 'true') {
 		runRemoteSearch();
+	} else {
+		setFormWithQueryParams('remote_search_form');
 	}
+}
+
+function setFormWithQueryParams(formName) {
+	// TODO: Add special handling for date search fields?
+	var GNCookie = Ext.state.Manager.getProvider();
+	var cookie = GNCookie.get('params');
+	if (cookie) {
+		var params = cookie.searchParams;
+		var theControls = $(formName).getElements();
+		for (var param in params) {
+			theControls.each(function(theControl){
+				if (theControl.name == param) {
+					if (theControl.tagName != 'SELECT') {
+						if (theControl.type == 'checkbox' || theControl.type == 'radio') {
+							if (params[param] == 'on') {
+								theControl.checked = true; 
+								if (theControl.onchange) theControl.onchange();
+							}
+						} else {
+							theControl.value = params[param];
+							if (theControl.onchange) theControl.onchange();
+						}
+					} else {
+						for(index = 0; index < theControl.length; index++) {
+							if (theControl[index].value == params[param]) {
+								theControl.selectedIndex = index;
+								if (theControl.onchange) theControl.onchange();
+							}
+						}
+					}
+				} 
+			});
+		}
+	}
+}
+
+function clearFormValues(form) {
+	var GNCookie = Ext.state.Manager.getProvider();
+	var cookie = GNCookie.clear('params');
+
+	var theControls = form.getElements();
+	theControls.each(function(theControl){
+		if (theControl.tagName != 'SELECT') {
+			if (theControl.type == 'checkbox' || theControl.type == 'radio') {
+				theControl.checked = false; 
+			} else {
+				theControl.value = '';
+			}
+		} else {
+			theControl.selectedIndex = -1;
+		}
+	});
+
+	// TODO: Add ajax call to clear params on server
 }
 
 function openSearch(s)
@@ -207,20 +273,6 @@ function initAdvancedSearch()
 
 	new Ajax.Autocompleter('themekey', 'keywordList', 'portal.search.keywords?',{paramName: 'keyword', updateElement : addQuote});
 	initCalendar();
-	}
-
-function getWherePars(region, relation, northBL, southBL, eastBL, westBL) {
-	var pars;
-	var region = $(region).value;
-	if(region!="")
-  {
-		pars += "&attrset=geo";
-		pars += "&"+im_mm_getURLselectedbbox(northBL, southBL, eastBL, westBL);
-		pars += fetchParam(relation);
-		if(region!="userdefined") {
-			pars += fetchParam(region);
-		}
-	}
 }
 
 function runAdvancedSearch(type)
@@ -230,7 +282,7 @@ function runAdvancedSearch(type)
 
 	setSort();
 
-	var pars = $('advanced_search_form').serialize();
+	var pars = $('advanced_search_form').serialize(true);
 
     if (type == "pdf")
        gn_searchpdf(pars);
@@ -242,7 +294,11 @@ function runAdvancedSearch(type)
 function resetAdvancedSearch()
 {
 	var form = $('advanced_search_form');
-	form.reset();
+
+	// Clear all form values
+	clearFormValues(form);
+
+	// Now set the special form fields to their defaults
 	radioSimil = form['similarity'];
 	radioSimil[1].checked=true;
 
@@ -275,14 +331,16 @@ function initRemoteSearch() {}
 function resetRemoteSearch() {
 
 	var form = $('remote_search_form');
-	form.reset();
 
+	// Clear all form values
+	clearFormValues(form);
+
+	// Now set the special form fields to their defaults
 	resetWherePars();
 
  	setParam(form['hitsPerPage'], '10');
 	setBoolParam(form['serverhtml'], false);
  	setParam(form['timeout'],'20');
- 	setParam(form['profile'],'');
 	deselectAllServers(form);
 }
 
@@ -290,10 +348,12 @@ function profileSelected()
 {
 	var form = $('remote_search_form');
 	var serverList = form['profile'];
-	var serverArray = serverList.split(' ');
-	deselectAllServers(form);
-	for (var i=0; i < serverArray.length; i++)
-		selectServer(serverArray[i]);
+	if (serverList.selectedIndex > 0) {
+		var serverArray = serverList.options[selectedIndex].value.split(' ');
+		deselectAllServers(form);
+		for (var i=0; i < serverArray.length; i++)
+			selectServer(serverArray[i]);
+	}
 }
 	
 function deselectAllServers(form)
@@ -334,12 +394,13 @@ function runRemoteSearch(type)
 	if (checkRemoteFields()) {
 		if (type != "pdf") preparePresent('remote');
 
-		var pars = $('remote_search_form').serialize();
-		pars += '&remote=on&attrset=geo';
+		var pars = $('remote_search_form').serialize(true);
+		pars['remote']  = 'on';
+		pars['attrset'] = 'geo';
 
 		if (type == "pdf") {
-			pars = pars.replace(/hitsPerPage=\d{2,3}/, 'hitsPerPage=1000');
-			location.replace(getGNServiceURL('pdf.search') + "?" + pars);
+			pars['hitsPerPage']='1000';
+			location.replace(getGNServiceURL('pdf.search') + "?" + convertToParamString(pars));
 		} else {
 			// Load results via AJAX
 			gn_search(pars);    
@@ -347,6 +408,13 @@ function runRemoteSearch(type)
 	}
 }
 
+function convertToParamString(pars) {
+	var parStr = '';
+	for (var param in pars) {
+			parStr += "&" + param + '=' + pars[param];
+	}
+	return parStr;
+}
 
 /**********************************************************
 ***
@@ -394,7 +462,9 @@ function setSortAndSearch()
 	$('sortBy').value = $F('sortBy.live');
 	$('sortBy_simple').value = $F('sortBy.live');
 	setSort();
-	if (document.cookie.indexOf("search=advanced")!=-1) 
+	var GNCookie = Ext.state.Manager.getProvider();
+	var cookie = GNCookie.get('search');
+	if (cookie && cookie.searchTab=='advanced') 
 		runAdvancedSearch();
 	else 
 		runSimpleSearch();
@@ -603,6 +673,15 @@ function preparePresent()
 
 function gn_search(pars)
 {
+	/*var parStr = '';
+	for (var par in pars) {
+		parStr += ' ' + par + '=' + '"' + pars[par] + '"';
+	}
+	console.log('Setting params to '+parStr);*/
+	var GNCookie = Ext.state.Manager.getProvider();
+	GNCookie.clear('params');
+	GNCookie.set('params', {searchParams: pars});
+
 	var myAjax = new Ajax.Request(
 		getGNServiceURL('main.search.embedded'),
 		{
@@ -616,11 +695,11 @@ function gn_search(pars)
 
 function gn_searchpdf(pars)
 {
-    pars = pars.replace(/hitsPerPage=\d{2,3}/, 'hitsPerPage=9999');
+    pars['hitsPerPage']=9999;
     // Update this value if more document required in PDF output
     // FIXME : Should be defined in service config.
     location.replace (
-        getGNServiceURL('pdf.search') + "?" + pars
+        getGNServiceURL('pdf.search') + "?" + convertToParamString(pars)
     );
 }
 

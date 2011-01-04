@@ -30,33 +30,6 @@ GeoNetwork.MapStateManager = function() {
     var mapLayers = "";
     var mapExtent = "";
     
-    var getCookieValue = function(cookiename) {
-        var cookietext = "";
-        var cookieStart = document.cookie.indexOf(cookiename+"=");
-        if (cookieStart!=-1) {
-            cookieStart += cookiename.length+1; 
-            var cookieEnd=document.cookie.indexOf(";",cookieStart);
-            if (cookieEnd==-1) {
-                cookieEnd=document.cookie.length;
-            }
-            cookietext = document.cookie.substring(cookieStart,cookieEnd);      
-        }   
-
-        return cookietext;
-    };
-    
-    var storeCookieValue = function(cookiename, value) {
-        var cookietext = cookiename+"="+value;
-
-        var exdate=new Date();
-        exdate.setDate(exdate.getDate()+1);
-        cookietext += ";expires="+exdate.toGMTString();
-
-        // == write the cookie ==
-        document.cookie=cookietext;   
-    };
-    
-    
     var processValue = function(value, defaultValue) {
         if (typeof(value)!="undefined") {
             return value;
@@ -96,15 +69,16 @@ GeoNetwork.MapStateManager = function() {
                     cookietext = cookietext+li;
                 }
             }     
-
-            storeCookieValue(COOKIE_MAPLAYERS, cookietext);
+					var GNCookie = Ext.state.Manager.getProvider();
+					GNCookie.set(COOKIE_MAPLAYERS, {mapLayers: cookietext});
         },
 
         stoteMapExtextState: function(map) {
              // Map properties
             var mapExtent = map.getExtent();
             var cookietext = mapExtent.left+DATA_FIELD_SEP+mapExtent.bottom+DATA_FIELD_SEP+mapExtent.right+DATA_FIELD_SEP+mapExtent.top;
-            storeCookieValue(COOKIE_MAPEXTENT, cookietext);
+					var GNCookie = Ext.state.Manager.getProvider();
+					GNCookie.set(COOKIE_MAPEXTENT, {mapExtent: cookietext});
         },
         
         /**
@@ -117,15 +91,17 @@ GeoNetwork.MapStateManager = function() {
          */
         loadMapState: function() {           
              // Get layers from cookie
-            var cookietext = getCookieValue(COOKIE_MAPLAYERS);
-            if (cookietext != '') {
-              mapLayers = cookietext;            
+						var GNCookie = Ext.state.Manager.getProvider();
+            var cookie =GNCookie.get(COOKIE_MAPLAYERS);
+            if (cookie && cookie.mapLayers != '') {
+              mapLayers = cookie.mapLayers;            
             }
                      
             // Map properties
-            cookietext = getCookieValue(COOKIE_MAPEXTENT);
-            if (cookietext != '') {
-              mapExtent = cookietext;
+						var GNCookie = Ext.state.Manager.getProvider();
+            cookie =GNCookie.get(COOKIE_MAPEXTENT);
+            if (cookie && cookie.mapExtent != '') {
+              mapExtent = cookie.mapExtent;
             }
         },
 
