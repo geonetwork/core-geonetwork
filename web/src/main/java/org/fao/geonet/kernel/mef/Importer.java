@@ -247,6 +247,9 @@ public class Importer {
 							.equals("on");
 
 				} else {
+					Log.debug(Geonet.MEF, "Collecting info file:\n"
+							+ Xml.getString(info));
+					
 					categs = info.getChild("categories");
 					privileges = info.getChild("privileges");
 
@@ -255,7 +258,9 @@ public class Importer {
 					uuid = general.getChildText("uuid");
 					createDate = general.getChildText("createDate");
 					changeDate = general.getChildText("changeDate");
-					source = general.getChildText("siteId");
+					// --- If siteId is not set, set to current node
+					source = Util.getParam(general, Params.SITE_ID, gc
+							.getSiteId());
 					sourceName = general.getChildText("siteName");
 					localId = general.getChildText("localId");
 					isTemplate = general.getChildText("isTemplate").equals(
