@@ -154,10 +154,13 @@ public class LuceneSearcher extends MetaSearcher
 	{
 		SearcherLogger searchLogger = new SearcherLogger(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude());
 
+		String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
+		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
+		
 		_reader = _sm.getIndexReader();
 		computeQuery(srvContext, request, config);
 		initSearchRange(srvContext);
-		performQuery(getFrom()-1, getTo());
+		performQuery(getFrom()-1, getTo(), buildSummary);
 		searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
 	}
 
@@ -183,19 +186,24 @@ public class LuceneSearcher extends MetaSearcher
 		if (srvContext != null)
 			gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String sFast = request.getChildText("fast");
+		String sFast = request.getChildText(Geonet.SearchResult.FAST);
 		boolean fast = sFast != null && sFast.equals("true");
-
+		
 		// build response
 		Element response =  new Element("response");
 		response.setAttribute("from",  getFrom()+"");
 		response.setAttribute("to",    getTo()+"");
 		Log.debug(Geonet.SEARCH_ENGINE, Xml.getString(response));
 
-		response.addContent((Element)_elSummary.clone());
+		// Add summary if required and exists
+		String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
+		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
+		
+		if (buildSummary && _elSummary != null)
+			response.addContent((Element)_elSummary.clone());
 
 		if (getTo() > 0) {
-			TopDocs tdocs = performQuery(getFrom()-1, getTo()); // get enough hits to show a page	
+			TopDocs tdocs = performQuery(getFrom()-1, getTo(), false); // get enough hits to show a page	
 
 			int nrHits = getTo() - (getFrom()-1);
 			if (tdocs.scoreDocs.length >= nrHits) {
@@ -466,27 +474,35 @@ public class LuceneSearcher extends MetaSearcher
 	 * Default sort order option is not reverse order. Reverse order is active 
 	 * if sort order option is set and not null
      * @param startHit start
-     * @param endHit end
+	 * @param endHit end
+	 * @param buildSummary Compute summary. If true, checks if not already generated (by previous search)
      * @return topdocs
      * @throws Exception hmm
      */
-	private TopDocs performQuery(int startHit, int endHit) throws Exception
+	private TopDocs performQuery(int startHit, int endHit, boolean buildSummary) throws Exception
 	{
 		CachingWrapperFilter cFilter = null;
 		if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
 
 		int numHits;
-		boolean buildSummary = _elSummary == null;
+		
+		boolean computeSummary = false;
 		if (buildSummary) {
-			// get as many results as instructed or enough for search summary
-			numHits = Math.max(_maxHitsInSummary,endHit);
+			computeSummary = _elSummary == null;
+			if (computeSummary) {
+				// get as many results as instructed or enough for search summary
+				numHits = Math.max(_maxHitsInSummary,endHit);
+			} else {
+				numHits = endHit;
+			}	
 		} else {
 			numHits = endHit;
 		}
+		
 
 		Pair<TopDocs,Element> results = doSearchAndMakeSummary( numHits, startHit, endHit, 
 				_maxSummaryKeys, _language, _resultType, _summaryConfig, 
-				_reader, _query, cFilter, _sort, buildSummary,
+				_reader, _query, cFilter, _sort, computeSummary,
 				_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
 		);
 		TopDocs hits = results.one();
@@ -950,7 +966,7 @@ public class LuceneSearcher extends MetaSearcher
 				};
 
         List<String> response = new ArrayList<String>();
-				TopDocs tdocs = performQuery(0, maxHits);
+		TopDocs tdocs = performQuery(0, maxHits, false);
 
         for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
           Document doc = _reader.document(sdoc.doc, uuidselector);

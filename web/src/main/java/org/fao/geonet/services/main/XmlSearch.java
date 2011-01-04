@@ -91,14 +91,20 @@ public class XmlSearch implements Service
 		if (remote)	 searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
 			else      searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
+		// Check is user asked for summary only without building summary
+		String summaryOnly = Util.getParam(params, Geonet.SearchResult.SUMMARY_ONLY, "0");
+		String sBuildSummary = params.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
+		if (sBuildSummary != null && sBuildSummary.equals("false") && !"0".equals(summaryOnly))
+			elData.getChild(Geonet.SearchResult.BUILD_SUMMARY).setText("true");
+		
 		searcher.search(context, elData, _config);
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-		if (!"0".equals(Util.getParam(params, "summaryOnly", "0"))) {
+		if (!"0".equals(summaryOnly)) {
 			return searcher.getSummary();
 		} else {
 			
-			elData.addContent(new Element("fast").setText("true"));
+			elData.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
 			elData.addContent(new Element("from").setText("1"));
 			// FIXME ? from and to parameter could be used but if not
 			// set, the service return the whole range of results

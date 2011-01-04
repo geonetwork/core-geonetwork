@@ -373,6 +373,10 @@ public class Geonet
 
 		public static final String RESULT_TYPE = "resultType";
 
+		public static final String FAST = "fast";
+		public static final String BUILD_SUMMARY = "buildSummary";
+		public static final String SUMMARY_ONLY = "summaryOnly";
+
 		//-----------------------------------------------------------------------
 
         public class ResultType 
@@ -384,7 +388,7 @@ public class Geonet
              * Contains CSW results response with a GeoNetwork summary
              * of the current search. 
              */
-            public static final String RESULTS_WITH_SUMMARY     = "results-with-summary";
+            public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
         }
 
 		//-----------------------------------------------------------------------

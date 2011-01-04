@@ -100,6 +100,7 @@ public class GetRandom implements Service
 
 			// FIXME: featured should be at metadata level, not at group level
 			Element searchRequest = new Element("request");
+			searchRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
 			searchRequest.addContent(new Element("featured").setText("true"));
 			searchRequest.addContent(new Element("relation").setText(_relation));
 			searchRequest.addContent(new Element("northBL").setText(_northBL));
