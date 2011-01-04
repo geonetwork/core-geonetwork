@@ -50,6 +50,7 @@ import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -194,8 +195,14 @@ public class JeevesEngine
      */
     private void setupXSLTTransformerFactory() throws IOException, TransformerConfigurationException {
         InputStream in = null;
+        File f = new File(appPath + "WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory");
+        
         try {
-            in = this.getClass().getClassLoader().getResourceAsStream("META-INF/services/javax.xml.transform.TransformerFactory");
+            // In debug mode, Jeeves may load a different file
+        	// Load javax.xml.transform.TransformerFactory from application path instead
+        	// in = this.getClass().getClassLoader().getResourceAsStream("META-INF/services/javax.xml.transform.TransformerFactory");
+            in = new FileInputStream(f);
+            
             if(in != null) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String line;
@@ -208,11 +215,9 @@ public class JeevesEngine
                 }
                 in.close();
             }
-            else {
-                warning("Definition of XSLT transformer not found (tried: META-INF/services/javax.xml.transform.TransformerFactory)");
-            }
         }
         catch(IOException x) {
+        	warning("Definition of XSLT transformer not found (tried: " + f.getCanonicalPath() + ")");
             error(x.getMessage());
             x.printStackTrace();
         }

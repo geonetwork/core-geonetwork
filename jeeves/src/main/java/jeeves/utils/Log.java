@@ -41,17 +41,19 @@ public final class Log
 
 	public static final String JEEVES  = "jeeves";
 
-	public static final String ENGINE    = JEEVES+ ".engine";
-	public static final String APPHAND   = JEEVES+ ".apphand";
-	public static final String WEBAPP    = JEEVES+ ".webapp";
-	public static final String REQUEST   = JEEVES+ ".request";
-	public static final String SERVICE   = JEEVES+ ".service";
-	public static final String SCHEDULER = JEEVES+ ".scheduler";
-	public static final String RESOURCES = JEEVES+ ".resources";
-	public static final String DBMS      = JEEVES+ ".dbms";
-	public static final String DBMSPOOL	 = JEEVES+ ".dbmspool";
-	public static final String XLINK_PROCESSOR = JEEVES+ ".xlinkprocessor";
-	public static final String XML_RESOLVER = JEEVES+ ".xmlresolver";
+	public static final String ENGINE = JEEVES + ".engine";
+	public static final String APPHAND = JEEVES + ".apphand";
+	public static final String WEBAPP = JEEVES + ".webapp";
+	public static final String REQUEST = JEEVES + ".request";
+	public static final String SERVICE = JEEVES + ".service";
+	public static final String SCHEDULER = JEEVES + ".scheduler";
+	public static final String RESOURCES = JEEVES + ".resources";
+	public static final String DBMS = JEEVES + ".dbms";
+	public static final String DBMSPOOL = JEEVES + ".dbmspool";
+	public static final String XLINK_PROCESSOR = JEEVES + ".xlinkprocessor";
+	public static final String XML_RESOLVER = JEEVES + ".xmlresolver";
+	public static final String TRANSFORMER_FACTORY = JEEVES
+			+ ".transformerFactory";
 
 	public final class Dbms
 	{

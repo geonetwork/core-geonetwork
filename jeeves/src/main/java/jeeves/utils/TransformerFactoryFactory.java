@@ -21,6 +21,7 @@ public class TransformerFactoryFactory {
     private final static String SYSTEM_PROPERTY_NAME = "javax.xml.transform.TransformerFactory";
 
     public static void init(String implementationName) {
+    	debug("Implementation name: " + implementationName);
         if(implementationName != null && implementationName.length() > 0) {
             /*
              * code for JDK 1.5 -- might break other applications using the same System property at the same moment
@@ -32,6 +33,7 @@ public class TransformerFactoryFactory {
             String currentSystemProperty = null;
             if(props.containsKey(SYSTEM_PROPERTY_NAME)) {
                 currentSystemProperty = props.getProperty(SYSTEM_PROPERTY_NAME);
+                debug("Current system property: " + currentSystemProperty);
             }
             // set system property to what GeoNetwork needs
             props.setProperty(SYSTEM_PROPERTY_NAME, implementationName);
@@ -58,10 +60,12 @@ public class TransformerFactoryFactory {
     }
 
     public static TransformerFactory getTransformerFactory() throws TransformerConfigurationException {
-        debug("TransformerFactoryFactory: " + factory.getClass().getName());
-        debug("TransformerFactoryFactory: produces transformer implementation " +factory.newTransformer().getClass().getName());
+        debug("TransformerFactoryFactory: "
+        		    + factory.getClass().getName() 
+        			+ " produces transformer implementation " 
+        			+ factory.newTransformer().getClass().getName());
         return factory;
     }
 
-	private static void debug  (String message) { Log.debug  (Log.ENGINE, message); }
+	private static void debug  (String message) { Log.debug  (Log.TRANSFORMER_FACTORY, message); }
 }
