@@ -32,8 +32,16 @@
 					<xsl:value-of select="/root/gui/strings/errorsOnly"/>
 				</label>
 			</div>
-
-			<xsl:choose>
+		  
+		  <!-- Check if an error element exists. It could happen if XSD validation failed
+		  when schema not found for example. -->
+		  <xsl:if test="$report/error">
+		    <fieldset class="validation-report">
+		      <xsl:value-of select="$report/error/message"/><br/>
+		    </fieldset>
+		  </xsl:if>
+			
+		  <xsl:choose>
 				<xsl:when test="$report/geonet:xsderrors">
 					<xsl:apply-templates mode="validation-report" select="$report/geonet:xsderrors"
 					/>

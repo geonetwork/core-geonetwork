@@ -620,13 +620,12 @@ public class DataManager
 
 		// NOTE: this method assumes that enumerateTree has NOT been run on the
 		// metadata
-		String schemaDir = getSchemaDir(schema);
 		ErrorHandler errorHandler = new ErrorHandler();
 		errorHandler.setNs(Edit.NAMESPACE);
 		Element xsdErrors;
 		
 		try {
-		    xsdErrors = validateInfo(schemaDir + Geonet.File.SCHEMA,
+		    xsdErrors = validateInfo(schema,
 				md, errorHandler);
 		}catch (Exception e) {
 		    xsdErrors = JeevesException.toElement(e);
@@ -2063,7 +2062,7 @@ public class DataManager
 	 */
 	public Element doValidate(UserSession session, String schema, String id, Element md, String lang) throws Exception
 	{
-		Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + ".");
+		Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
 		
 		Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT);
 		if (sessionReport != null) {
