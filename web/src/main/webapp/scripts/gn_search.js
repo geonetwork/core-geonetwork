@@ -1296,20 +1296,6 @@ function taggleVisibility(elementId) {
 	}
 }
 
-function addINSPIREThemes() {
-	var allThemes = '';
-	var prefix = '&inspiretheme=';
-    // Select all checkboxes in inspirethemesdiv
-    var inspireThemeChk = $$('#inspirethemesdiv input[type="checkbox"]');
-    // console.log(inspireThemeChk.length);
-    for (i=0;i<inspireThemeChk.length;i++) {
-        if (inspireThemeChk[i].checked) {
-            allThemes += prefix + inspireThemeChk[i].value+"*";
-        }
-    }
-	return allThemes ;
-}
-
 function resetInspireOptions() {
     if (!$('inspire')) return;
 
