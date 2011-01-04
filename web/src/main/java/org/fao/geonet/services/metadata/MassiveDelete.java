@@ -77,40 +77,46 @@ public class MassiveDelete implements Service
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-		context.info("Get selected metadata");
+		context.debug("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
+			context.debug("Deleting metadata with uuid:"+ uuid);
+
 			String id   = dataMan.getMetadataId(dbms, uuid);
-
-			context.info("Deleting metadata with id:"+ id);
-
-			//-----------------------------------------------------------------------
-			//--- check access
-
-			MdInfo info = dataMan.getMetadataInfo(dbms, id);
-
-			if (info == null) {
-				notFound.add(new Integer(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
-			} else {
-
-				//--- backup metadata in 'removed' folder
-				if (info.template != MdInfo.Template.SUBTEMPLATE) {
-					backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
+			//--- Metadata may have been deleted since selection
+			if (id != null) {
+				//-----------------------------------------------------------------------
+				//--- check access
+	
+				MdInfo info = dataMan.getMetadataInfo(dbms, id);
+	
+				if (info == null) {
+					notFound.add(new Integer(id));
+				} else if (!accessMan.isOwner(context, id)) {
+					notOwner.add(new Integer(id));
+				} else {
+	
+					//--- backup metadata in 'removed' folder
+					if (info.template != MdInfo.Template.SUBTEMPLATE) {
+						backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
+					}
+			
+					//--- remove the metadata directory
+					File pb = new File(Lib.resource.getMetadataDir(context, id));
+					FileCopyMgr.removeDirectoryOrFile(pb);
+	
+					//--- delete metadata and return status
+					dataMan.deleteMetadata(dbms, id);
+					context.debug("  Metadata with id " + id + " deleted.");
+					metadata.add(new Integer(id));
 				}
-		
-				//--- remove the metadata directory
-				File pb = new File(Lib.resource.getMetadataDir(context, id));
-				FileCopyMgr.removeDirectoryOrFile(pb);
+			} else
+				context.debug("  Metadata not found in db:"+ uuid);
+				// TODO : add to notFound set
 
-				//--- delete metadata and return status
-				dataMan.deleteMetadata(dbms, id);
-				metadata.add(new Integer(id));
-			}
 		}
 		}
 
