@@ -678,7 +678,7 @@ Python and Latex are required to build the documentation. -->
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>8089</stopPort>
+          <stopPort>8090</stopPort>
         </configuration>
       	<executions>
       		<execution>
