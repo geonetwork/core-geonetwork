@@ -25,6 +25,7 @@ public class QueryInfo {
 	public static final String WILDCARD_QUERY = "WILDCARD_QUERY";
 	public static final String PHRASE_QUERY = "PHRASE_QUERY";
 	public static final String RANGE_QUERY = "RANGE_QUERY";
+	public static final String NUMERIC_RANGE_QUERY = "NUMERIC_RANGE_QUERY";
 	
 	/** the field to search for a value in a query */
 	private String field;

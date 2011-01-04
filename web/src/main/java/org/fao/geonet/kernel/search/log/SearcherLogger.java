@@ -8,6 +8,7 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -188,6 +189,11 @@ public class SearcherLogger {
 			qInfo.setUpperText(((TermRangeQuery)query).getUpperTerm());
 			// we consider that all terms are comming from the same field for this query
 			qInfo.setField(((TermRangeQuery)query).getField());
+		} else if (query instanceof NumericRangeQuery) {
+			qInfo = new QueryInfo(QueryInfo.NUMERIC_RANGE_QUERY);
+			qInfo.setLowerText(((NumericRangeQuery<?>)query).getMin().toString());
+			qInfo.setUpperText(((NumericRangeQuery<?>)query).getMax().toString());
+			qInfo.setField(((NumericRangeQuery<?>)query).getField());
 		} else {
 			Log.warning(Geonet.SEARCH_LOGGER, "unknown queryInfo type: " + query.getClass().getName());
 		}
