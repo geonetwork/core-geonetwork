@@ -39,7 +39,7 @@
       <artifactId>saxon-dom</artifactId>
     </dependency>
     <dependency>
-      <groupId>jfreechart</groupId>
+      <groupId>jfree</groupId>
       <artifactId>jfreechart</artifactId>
     </dependency>
     <dependency>
@@ -336,6 +336,7 @@
             <phase>initialize</phase>
             <goals>
               <goal>compress</goal>
+              <!--<goal>jslint</goal>-->
             </goals>
           </execution>
         </executions> 
@@ -676,10 +677,72 @@ Python and Latex are required to build the documentation. -->
           <webAppConfig>
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>
+          <stopKey>JETTY_TOP</stopKey>
+          <stopPort>8089</stopPort>
         </configuration>
+      	<executions>
+      		<execution>
+      			<id>start-jetty</id>
+      			<phase>pre-integration-test</phase>
+      			<goals>
+      				<goal>run</goal>
+      			</goals>
+      			<configuration>
+      				<scanIntervalSeconds>0</scanIntervalSeconds>
+      				<daemon>true</daemon>
+      			</configuration>
+      		</execution>
+      		<execution>
+      			<id>stop-jetty</id>
+      			<phase>post-integration-test</phase>
+      			<goals>
+      				<goal>stop</goal>
+      			</goals>
+      		</execution>
+      	</executions>
       </plugin>
-      
-      
+	  <plugin>
+	    <artifactId>maven-surefire-plugin</artifactId>
+	    <configuration>
+	  	  <excludes>
+	    	<exclude>**/itest/**</exclude>
+	      </excludes>
+	    </configuration>
+	    <executions>
+	      <execution>
+	    	<id>surefire-itest</id>
+	    	<phase>integration-test</phase>
+	    	<goals>
+	    	  <goal>test</goal>
+	    	</goals>
+	    	<configuration>
+	    	  <excludes>
+	    		<exclude>none</exclude>
+	    	  </excludes>
+	    	  <includes>
+	    		  <include>**/itest/**</include>
+	    	  </includes>
+	    	</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+      <plugin>
+    	<artifactId>maven-failsafe-plugin</artifactId>
+    	<version>2.6</version>
+    	<executions>
+    	  <execution>
+    		<goals>
+    		  <goal>integration-test</goal>
+    		  <goal>verify</goal>
+    	    </goals>
+    	  </execution>
+    	</executions>
+      </plugin>
+      <plugin>
+    	<groupId>org.apache.maven.plugins</groupId>
+    	  <artifactId>maven-surefire-report-plugin</artifactId>
+    	  <version>2.6</version>
+    	</plugin>
     </plugins>
   </build>
 
