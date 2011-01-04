@@ -9,7 +9,7 @@
 	xmlns:date="http://exslt.org/dates-and-times"
 	xmlns:saxon="http://saxon.sf.net/"
 	extension-element-prefixes="saxon"
-	exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon">
+	exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date">
 
 	<xsl:import href="text-utilities.xsl"/>
 	<xsl:include href="metadata-tab-utils.xsl"/>
