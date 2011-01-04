@@ -189,7 +189,7 @@
 					border:false	
 				});
 		
-					var searchTabs = new Ext.TabPanel({
+			    var searchTabs = new Ext.TabPanel({
 					renderTo: 'search_tabs',
 					activeTab : 0,
 					deferredRender: false,
@@ -197,17 +197,23 @@
 					bodyBorder: false,
 					items: [ {
 										itemId: 'default',
+                                        bodyStyle: 'padding:15px',
+										autoScroll: true,
 										title: '<xsl:value-of select="/root/gui/strings/simpleSearch"/>',
 										contentEl: 'simple_search_pnl'
 									 }
 									,{
 										itemId: 'advanced',
+                                        bodyStyle: 'padding:15px',
+										autoScroll: true,
 										title: '<xsl:value-of select="/root/gui/strings/advancedSearch"/>',
 										contentEl: 'advanced_search_pnl'
 									}
 									<xsl:if test="/root/gui/config/search/show-remote-search">
 										,{
 											itemId: 'remote',
+                                            bodyStyle: 'padding:15px',
+										    autoScroll: true,
 											title: '<xsl:value-of select="/root/gui/strings/remoteSearch"/>',
 											contentEl: 'remote_search_pnl'
 										}
@@ -248,6 +254,7 @@
 								items: 
 									[{region:'west',
 									xtype: 'panel',
+                                    layout: 'fit',
 									border:false,
 									width: 400,
 									minSize: 300,
@@ -258,7 +265,6 @@
 									split: 'true',
 									useSplitTips:true,
 									collapsibleSplitTip: 'Drag to rezise the search panel. Double click to show/hide it',
-									bodyStyle: 'padding:15px',
 									items: [searchTabs] 
 									},
 									{region:'center', 
