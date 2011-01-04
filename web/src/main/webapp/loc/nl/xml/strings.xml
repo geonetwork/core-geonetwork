@@ -653,7 +653,12 @@
 	<passwordOldRequired>Uw oude wachtwoord is verplicht</passwordOldRequired>
 	<passwordSpace>Helaas zijn spaties niet toegestaan in een wachtwoord.</passwordSpace>
 	<persInfo>Persoonlijke informatie</persInfo>
-	<placeKeyword>Geef sleutelwoorden</placeKeyword>
+  <usersAndGroups>Users and groups</usersAndGroups>
+  <classification>Thesauri and classification systems</classification>
+  <catalogueConfiguration>Catalogue settings</catalogueConfiguration>
+  <indexConfiguration>Index settings</indexConfiguration>
+  <io>Import, export &amp; harvesting</io>
+  <placeKeyword>Geef sleutelwoorden</placeKeyword>
 	<porCatInfoTab>Catalogus</porCatInfoTab>
 	<poweredBy>Gemaakt met </poweredBy>
 	<previous>Vorige</previous>

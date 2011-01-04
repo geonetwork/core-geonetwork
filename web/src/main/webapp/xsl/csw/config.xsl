@@ -59,8 +59,26 @@
 
 			<xsl:with-param name="buttons">
 				<xsl:call-template name="buttons"/>
+				<div align="left" style="{$style}">
+				<table>
+					<tr>
+						<td class="padded" width="{$width}">
+							<a href="test.csw">
+								<xsl:value-of select="/root/gui/strings/cswTest"/>
+							</a>
+						</td>
+						<td>
+							<xsl:value-of select="/root/gui/strings/cswTestDesc"/>
+						</td>
+					</tr>
+				</table>
+				</div>
 			</xsl:with-param>
+			
 		</xsl:call-template>
+		
+		
+		
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -146,7 +164,6 @@
 						</xsl:for-each>
             		</td>
             	</tr>
-
             </table>
         </div>
         </form>

@@ -11,10 +11,11 @@
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
-	<notificationsDes>Remote Updates</notificationsDes>
-	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
+  <selectTemplate>Select schemas</selectTemplate>
+	<notificationsDes>Remote updates</notificationsDes>
+	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
 	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
-	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
+	<templatesSamples>Manage templates and sample data</templatesSamples>
 	<simpleSearch>Simple Search</simpleSearch>
 	<advancedSearch>Advanced Search</advancedSearch>
 	<remoteSearch>Remote Search</remoteSearch>
@@ -647,7 +648,12 @@ ISO 19115 не позволяет иметь более одного.
 	<passwordOldRequired>Ваш старый пароль является обязательным</passwordOldRequired>
 	<passwordSpace>К сожалению, пробелы не допускаются в пароле.</passwordSpace>
 	<persInfo>Персональная информация</persInfo>
-	<placeKeyword>Ключевые слова местоположения</placeKeyword>
+  <usersAndGroups>Users and groups</usersAndGroups>
+  <classification>Thesauri and classification systems</classification>
+  <catalogueConfiguration>Catalogue settings</catalogueConfiguration>
+  <indexConfiguration>Index settings</indexConfiguration>
+  <io>Import, export &amp; harvesting</io>
+  <placeKeyword>Ключевые слова местоположения</placeKeyword>
 	<porCatInfoTab>Каталог</porCatInfoTab>
 	<poweredBy>Основано на </poweredBy>
 	<previous>Предыдущие</previous>

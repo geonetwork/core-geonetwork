@@ -1334,6 +1334,24 @@ fieldset .attributes {
 	border-width: 0px !important;
 }
 
+img.configTitle {
+	width:20px;
+	vertical-align: middle;
+}
+
+td.configOption {
+	width: 50px;
+	text-align: right;
+}
+img.configOption {
+	width: 15px;
+	vertical-align: middle;
+}
+
+td.configTitle {
+	font-size: 120%;
+	padding: 2px;
+}
 
 div#privileges {
 	max-height: 650px;

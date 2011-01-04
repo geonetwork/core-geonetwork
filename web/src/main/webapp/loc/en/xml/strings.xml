@@ -8,15 +8,16 @@
 	<fr>Français</fr> <!-- Do not translate! -->
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-          <pt>Рortuguês</pt> <!-- Do not translate! -->
+  <pt>Рortuguês</pt> <!-- Do not translate! -->
     
-    <useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
-    <rebuildIndexMessage>If you change these values, it is recommended you rebuild the Lucene index.</rebuildIndexMessage>
+  <selectTemplate>Select schemas</selectTemplate>
+	<useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
+  <rebuildIndexMessage>If you change these values, it is recommended you rebuild the Lucene index.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
-	<notificationsDes>Remote Updates</notificationsDes>
-	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
+	<notificationsDes>Remote updates</notificationsDes>
+	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
 	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
-	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
+	<templatesSamples>Manage templates and sample data</templatesSamples>
 	<simpleSearch>Simple Search</simpleSearch>
 	<advancedSearch>Advanced Search</advancedSearch>
 	<remoteSearch>Remote Search</remoteSearch>
@@ -40,7 +41,7 @@
 	<enterSchema>Enter a name for the schema to be added</enterSchema>
 	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
-		<searchStatistics>Search Statistics</searchStatistics>
+		<searchStatistics>Search statistics</searchStatistics>
 		<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
 		<stat.byDay>by Day</stat.byDay>
        <stat.byMonth>by Month</stat.byMonth>
@@ -578,7 +579,7 @@
     <metadata-samples-add>Add sample metadata</metadata-samples-add>
     <metadata-samples-add-failed>Add sample metadata failed</metadata-samples-add-failed>
     <metadata-samples-add-success>Added sample metadata</metadata-samples-add-success>
-	<metadata-template-order>Sort Templates</metadata-template-order>	
+	<metadata-template-order>Sort templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
     <metadata>Metadata</metadata>
@@ -638,6 +639,11 @@
 	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
 	<passwordSpace>Sorry, spaces are not allowed in password.</passwordSpace>
 	<persInfo>Personal info</persInfo>
+	<usersAndGroups>Users and groups</usersAndGroups>
+	<classification>Thesauri and classification systems</classification>
+	<catalogueConfiguration>Catalogue settings</catalogueConfiguration>
+	<indexConfiguration>Index settings</indexConfiguration>
+	<io>Import, export &amp; harvesting</io>
 	<placeKeyword>Place Keywords</placeKeyword>
 	<porCatInfoTab>Catalog</porCatInfoTab>
 	<poweredBy>Powered by </poweredBy>
@@ -723,7 +729,7 @@
 	<searchTemplates>Search for templates</searchTemplates>
 	<searchText>What?</searchText>
 	<searchUnused>Search for unused or empty metadata</searchUnused>
-	<searchUnusedTitle>Search for Unused</searchUnusedTitle>
+	<searchUnusedTitle>Search for unused</searchUnusedTitle>
 	<select>Select : </select>
 	<selectAll>Select all metadata</selectAll>
 	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>
@@ -1159,8 +1165,8 @@
     <notifications>Notification to remote targets</notifications>
     <url>URL</url>
     
-    <cswServer>CSW server</cswServer>
-    <cswServerDes>CSW Server configuration</cswServerDes>
+    <cswServer>CSW server configuration</cswServer>
+    <cswServerDes>Define CSW settings (title, access contraints, ...)</cswServerDes>
     <cswServerConfig>CSW Server configuration</cswServerConfig>
     <cswServerEnable>Enable</cswServerEnable>
     <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>

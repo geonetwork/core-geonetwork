@@ -11,10 +11,16 @@
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
-	<notificationsDes>Remote Updates</notificationsDes>
-	<metadata-templates-samples-add>Add Templates and Samples</metadata-templates-samples-add>
-	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
-	<templatesSamples>Manage Templates and Sample Data</templatesSamples>
+  <io>Import, export &amp; moissonnage</io>
+  <usersAndGroups>Utilisateurs et groupes</usersAndGroups>
+  <classification>Thesaurus et système de classification</classification>
+  <catalogueConfiguration>Paramètres du catalogue</catalogueConfiguration>
+  <indexConfiguration>Paramètres de l'Index</indexConfiguration>  
+  <selectTemplate>Sélectionner les standards </selectTemplate>
+	<notificationsDes>Configurer la mise à jour distante de dépôt</notificationsDes>
+	<metadata-templates-samples-add>Ajouter les modèles ou les exemples</metadata-templates-samples-add>
+	<metadata-schema-select>Sélectionner un standard pour lequel ajouter les modèles ou les exemples</metadata-schema-select>
+	<templatesSamples>Gérer les modèles et les exemples</templatesSamples>
 	<simpleSearch>Recherche simple</simpleSearch>
 	<advancedSearch>avancée</advancedSearch>
 	<remoteSearch>distribuée</remoteSearch>
@@ -1176,7 +1182,7 @@
 	<notifications>Notification de n&#339;uds distants</notifications>
     <url>URL</url>    
 
-    <cswServer>Serveur CSW</cswServer>
+    <cswServer>Configuration CSW</cswServer>
 	<cswServerDes>Configuration du serveur CSW</cswServerDes>
     <cswServerConfig>Configuration du serveur CSW</cswServerConfig>
     <cswServerEnable>Activer</cswServerEnable>
