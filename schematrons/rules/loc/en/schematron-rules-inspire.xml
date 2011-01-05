@@ -204,6 +204,7 @@
         19115. Its value can be defaulted to pointOfContact.<br/>
         See metadata section.
     </div></alert.M48>
+    <alert.M48.role><div>Contact role is empty.</div></alert.M48.role>
     <report.M48><div>Metadata point of contact found.</div></report.M48>
     <alert.M48.info><div>Organisation name and email not found metadata point of contact.</div></alert.M48.info>
     <report.M48.info><div>Organisation name and email found for :</div></report.M48.info>

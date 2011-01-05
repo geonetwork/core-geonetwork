@@ -490,7 +490,7 @@ USA.
 			//*[@gco:isoType='gmd:MD_DataIdentification']|
 			//srv:SV_ServiceIdentification|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']">
-			<sch:assert test="count(gmd:resourceConstraints/gmd:*) > 0">
+			<sch:assert test="count(gmd:resourceConstraints/*) > 0">
 				<sch:value-of select="$loc/strings/alert.M45.rc/div"/>
 			</sch:assert>
 			
@@ -534,10 +534,10 @@ USA.
 		
 		
 		
-		<sch:rule context="//gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:*|
-			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:resourceConstraints/gmd:*|
-			//srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:*|
-			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints/gmd:*">
+		<sch:rule context="//gmd:MD_DataIdentification/gmd:resourceConstraints/*|
+			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:resourceConstraints/*|
+			//srv:SV_ServiceIdentification/gmd:resourceConstraints/*|
+			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints/*">
 			<sch:let name="accessConstraints" value="string-join(gmd:accessConstraints/*/@codeListValue, ', ')"/>
 			<sch:let name="classification" value="string-join(gmd:classification/*/@codeListValue, ', ')"/>
 			<sch:let name="otherConstraints" value="gmd:otherConstraints/gco:CharacterString/text()"/>
@@ -592,12 +592,16 @@ USA.
 				or (*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
 			<sch:let name="organisationName" value="*/gmd:organisationName/*/text()"/>
 			<sch:let name="role" value="normalize-space(*/gmd:role/*/@codeListValue)"/>
-			<sch:let name="emailAddress" value="*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
+		    <sch:let name="emptyRole" value="$role=''"/>
+		    <sch:let name="emailAddress" value="*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
 			
 			<sch:assert
 				test="not($missing)"
 				><sch:value-of select="$loc/strings/alert.M47.info/div"/></sch:assert>
-			<sch:report
+		    <sch:assert
+		        test="not($emptyRole)"
+		        ><sch:value-of select="$loc/strings/alert.M48.role/div"/></sch:assert>
+		    <sch:report
 				test="not($missing)"
 				><sch:value-of select="$loc/strings/report.M47.info/div"/>
 				<sch:value-of select="$organisationName"/> 
@@ -656,10 +660,21 @@ USA.
 				or not(gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
 				or (gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
 			<sch:let name="organisationName" value="gmd:CI_ResponsibleParty/gmd:organisationName/*/text()"/>
-			<sch:let name="role" value="normalize-space(gmd:CI_ResponsibleParty/gmd:role/*/@codeListValue)"/>
-			<sch:let name="emailAddress" value="gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
+			<!-- 
+				2.11.1 "The role of the responsible party serving as a metadata
+				point of contact is out of scope of the INSPIRE
+				Implementing Rules, but this property is mandated by ISO
+				19115. The default value is pointOfContact."
+				JRC schematron 1.0 validate only if role=pointOfContact
+			-->
+		    <sch:let name="role" value="normalize-space(gmd:CI_ResponsibleParty/gmd:role/*/@codeListValue)"/>
+		    <sch:let name="emptyRole" value="$role=''"/>
+		    <sch:let name="emailAddress" value="gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"/>			
 			
-			<sch:assert
+		    <sch:assert
+		        test="not($emptyRole)"
+		        ><sch:value-of select="$loc/strings/alert.M48.role/div"/></sch:assert>
+		    <sch:assert
 				test="not($missing)"
 				><sch:value-of select="$loc/strings/alert.M48.info/div"/></sch:assert>
 			<sch:report

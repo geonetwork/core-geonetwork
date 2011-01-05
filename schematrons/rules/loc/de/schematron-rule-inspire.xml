@@ -42,6 +42,7 @@
     <alert.M46><div><h2>INSPIRE - Angabe zur Einschränkung des öffentlichen Zugangs ist obligatorisch</h2></div></alert.M46>
     <alert.M47><div><h2>INSPIRE - Angabe der verantwortlichen Organistation ist obligatorisch</h2></div></alert.M47>
     <alert.M48><div><h2>INSPIRE - Metadatenkontakt ist obligatorisch</h2></div></alert.M48>
+    <alert.M48.role><div>Contact role is empty.</div></alert.M48.role>
     <alert.M49><div><h2>INSPIRE - Metadatensprache ist obligatorisch</h2></div></alert.M49>
     <alert.M50><div><h2>INSPIRE - Datum der Metadaten ist obligatorisc</h2></div></alert.M50>
     <alert.M51><div><h2>INSPIRE Dienste) - Coupled resource ist obligatorisch wenn die Verbindung zu Datensätzen die der Dienst nutzt vorhanden ist</h2></div></alert.M51>
