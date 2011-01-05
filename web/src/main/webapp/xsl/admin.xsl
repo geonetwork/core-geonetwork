@@ -6,6 +6,7 @@
 	<xsl:template name="addrow">
 		<xsl:param name="service"/>
 		<xsl:param name="args" select="''"/>
+	  <xsl:param name="displayLink" select="true()"/>
 		<xsl:param name="title"/>
 		<xsl:param name="desc"/>
 		<xsl:param name="icon"/>
@@ -42,6 +43,9 @@
 				</td>
 				<td class="padded">
 					<xsl:choose>
+					  <xsl:when test="not($displayLink)">
+					      <xsl:value-of select="$title"/>
+					  </xsl:when>
 						<xsl:when test="/root/request/modal">
 							<a onclick="popAdminWindow('{$url}');" href="javascript:void(0);">
 								<xsl:value-of select="$title"/>
@@ -177,7 +181,8 @@
 								<td class="spacer"/>
 							</tr>
 							<xsl:call-template name="addrow">
-								<xsl:with-param name="service" select="'metadata.templates.list'"/>
+							  <xsl:with-param name="service" select="'metadata.templates.add.default'"/>
+							  <xsl:with-param name="displayLink" select="false()"/>
 							  <xsl:with-param name="title" select="/root/gui/strings/metadata-templates-samples-add"/>
 								<xsl:with-param name="icon">add.png</xsl:with-param>
 								<xsl:with-param name="content">
