@@ -559,26 +559,8 @@ function rateMetadata_OK(xmlRes)
 function doRegionSearch(regionlist)
 {
     var region = $(regionlist).value;
-    if(region=="")
-    {
-        region=null;
-        $('northBL').value='90';
-        $('southBL').value='-90';
-        $('eastBL').value='180';
-        $('westBL').value='-180';
-        $('northBL_remote').value='90';
-        $('southBL_remote').value='-90';
-        $('eastBL_remote').value='180';
-        $('westBL_remote').value='-180';
-        $('northBL_simple').value='90';
-        $('southBL_simple').value='-90';
-        $('eastBL_simple').value='180';
-        $('westBL_simple').value='-180';
-
-				GeoNetwork.minimapSimpleSearch.updateExtentBox();
-				GeoNetwork.minimapAdvancedSearch.updateExtentBox();
-				GeoNetwork.minimapRemoteSearch.updateExtentBox();
-
+    if(region=="") {
+			resetMinimaps();
     }  else if (region=="userdefined") {
 		// Do nothing. AoI is set by the user
     } else {
