@@ -93,7 +93,7 @@
     <report.M50><div>La date de dernère mise à jour est :</div></report.M50>
     
     <alert.M51><div>La ressource couplée au service est manquante</div></alert.M51>
-    <report.M51><div>La ressource couplée est : </div></report.M51>
+    <report.M51><div>Les ressources couplées sont : </div></report.M51>
     <alert.M52><div>La localisation de la ressource est manquante</div></alert.M52>
     <report.M52><div>La localisation de la ressource est:</div></report.M52>
     <alert.M53><div>Une seule contrainte d'accès et d'utilisation est autorisée</div></alert.M53>

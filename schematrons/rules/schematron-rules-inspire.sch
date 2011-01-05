@@ -214,14 +214,18 @@ USA.
 		<!-- No operatesOn for services -->
 		<sch:rule context="//srv:SV_ServiceIdentification|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']">
-			<sch:let name="coupledResourceHref" value="normalize-space(srv:operatesOn/@xlink:href)"/>
-			<sch:let name="coupledResourceUUID" value="normalize-space(srv:operatesOn/@uuidref)"/>
+		  <sch:let name="coupledResourceHref" value="string-join(srv:operatesOn/@xlink:href, ', ')"/>
+		  <sch:let name="coupledResourceUUID" value="string-join(srv:operatesOn/@uuidref, ', ')"/>
 			<sch:let name="coupledResource" value="../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'
 				and //srv:operatesOn"/>
 			
+			<!--
+			  "Conditional to services: Mandatory if linkage to
+			  datasets on which the service operates are available."
+			  TODO : maybe check if service couplingType=tight or serviceType=view ?
 			<sch:assert test="$coupledResource">
 				<sch:value-of select="$loc/strings/alert.M51/div"/>
-			</sch:assert>
+			</sch:assert>-->
 			<sch:report test="$coupledResource and $coupledResourceHref!=''">
 				<sch:value-of select="$loc/strings/report.M51/div"/><sch:value-of select="$coupledResourceHref"/>
 			</sch:report>
