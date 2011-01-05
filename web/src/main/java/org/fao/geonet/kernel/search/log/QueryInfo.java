@@ -62,9 +62,7 @@ public class QueryInfo {
 	 */
 	public QueryInfo(String field, String text, String queryType, Float similarity) {
 		this(field, text, queryType);
-
 		this.similarity = similarity;
-		this.inclusive = false;
 	}
 	
 	/**
@@ -74,14 +72,10 @@ public class QueryInfo {
 	 * @param queryType the type of query 
 	 */
 	public QueryInfo(String field, String text, String queryType) {
-		super();
+		this();
 		this.field = field;
 		this.luceneQueryType = queryType;
 		this.text = text;
-		
-		this.inclusive = false;
-		this.similarity = Float.MIN_VALUE;
-		
 	}
 	
 	/** 
@@ -90,9 +84,13 @@ public class QueryInfo {
 	 */
 	public QueryInfo() {
 		super();
+		this.text = "";
+		this.inclusive = false;
+		this.similarity = Float.MIN_VALUE;
 	}
 	
 	public QueryInfo(String queryType) {
+		this();
 		this.luceneQueryType = queryType;
 	}
 	
@@ -232,6 +230,6 @@ public class QueryInfo {
 				return QueryRequest.QUERY_TYPE_MDS;
 			}
 		}
-		return null;
+		return "";
 	}
 }
