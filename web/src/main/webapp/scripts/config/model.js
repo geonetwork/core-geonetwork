@@ -54,6 +54,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 
 			XLINKRESOLVER_ENABLE      : xml.evalXPath(node, 'xlinkResolver/enable'),
 
+			SEARCHSTATS_ENABLE        : xml.evalXPath(node, 'searchStats/enable'),
+
 			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
 			DOWNLOADSERVICE_SIMPLE         : xml.evalXPath(node, 'downloadservice/simple'),
 			DOWNLOADSERVICE_WITHDISCLAIMER : xml.evalXPath(node, 'downloadservice/withdisclaimer'),
@@ -168,6 +170,9 @@ ConfigModel.updateTemp =
 '	<xlinkResolver>'+
 '		<enable>{XLINKRESOLVER_ENABLE}</enable>'+
 '	</xlinkResolver>'+
+'	<searchStats>'+
+'		<enable>{SEARCHSTATS_ENABLE}</enable>'+
+'	</searchStats>'+
 '	<downloadservice>'+
 '		<leave>{DOWNLOADSERVICE_LEAVE}</leave>'+
 '		<simple>{DOWNLOADSERVICE_SIMPLE}</simple>'+

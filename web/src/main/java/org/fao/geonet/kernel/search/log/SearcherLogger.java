@@ -28,18 +28,18 @@ import java.util.Vector;
 
 /**
  * A class to log Lucene search queries (context, search parameters and search
- * results)
- * this class is built with the GeonetContext object. 
- * if the settings containg true for the value: log/enable, log operations will be performed, otherwise,
- * nothing will be done and a notice-level log will be made
+ * results); this class is built with the GeonetContext object. 
+ * If the settings has true for the value: searchStats/enable, log operations 
+ * will be performed, otherwise nothing will be done and a notice-level log 
+ * will be made
  * 
  * @author nicolas Ribot
  * 
  */
 public class SearcherLogger {
 	private ServiceContext srvContext;
-	/** sets from the GeonetContext.SettingManager value for log/enable key.
-	 * if false, no log will be done
+	/** To access the GeonetContext.SettingManager value for searchStats/enable 
+	 * key. If false, no log will be done
 	 */
 	private boolean isEnabled;
     private boolean logSpatial;
@@ -57,18 +57,14 @@ public class SearcherLogger {
 			Log.warning(Geonet.SEARCH_LOGGER, "null serviceContext object. will not be able to log queries...");
 		} else {
 			GeonetContext gc = (GeonetContext) this.srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-			Element logEnableElm = gc.getSettingManager().get("system/log/enable", 0);
+			Element logEnableElm = gc.getSettingManager().get("system/searchStats/enable", 0);
 			String val = logEnableElm != null ? logEnableElm.getValue() : "false";
-			//this.isEnabled = (val != null && "true".equalsIgnoreCase(val));
-			// always enable
-			this.isEnabled = true;
+			this.isEnabled = (val != null && "true".equalsIgnoreCase(val));
 		}
 		if (! this.isEnabled) {
 			Log.warning(Geonet.SEARCH_LOGGER, "Search Log is disabled. See administration page to enable it.");
 		}
-    	Log.debug(Geonet.SEARCH_LOGGER, "SearcherLogger created. Spatial object logging ? " + 
-                this.logSpatial + ". lucene terms to exclude from log: " +
-                luceneTermsList);
+    Log.debug(Geonet.SEARCH_LOGGER, "SearcherLogger created. Spatial object logging ? " + this.logSpatial + ". lucene terms to exclude from log: " + luceneTermsList);
 	}
 
 	public void logSearch(Query query, int numHits, Sort sort, String geomFilterWKT, String guiService) {

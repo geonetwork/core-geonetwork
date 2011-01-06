@@ -7338,6 +7338,8 @@ INSERT INTO Settings VALUES (230,1,'xlinkResolver',NULL);
 INSERT INTO Settings VALUES (231,230,'enable','false');
 INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
 INSERT INTO Settings VALUES (241,240,'enable','true');
+INSERT INTO Settings VALUES (250,1,'searchStats',NULL);
+INSERT INTO Settings VALUES (251,250,'enable','false');
 INSERT INTO Settings VALUES (600,1,'indexoptimizer',NULL);
 INSERT INTO Settings VALUES (601,600,'enable','true');
 INSERT INTO Settings VALUES (602,600,'at',NULL);

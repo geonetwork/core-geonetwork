@@ -50,6 +50,7 @@
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="oai"/>
 		<xsl:call-template name="xlinkResolver"/>
+		<xsl:call-template name="searchStats"/>
 		<xsl:call-template name="downloadservice"/>
 		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="localrating"/>
@@ -63,6 +64,20 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
+
+	<xsl:template name="searchStats">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/searchStats"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><label for="searchStats.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
+					<td class="padded"><input id="searchStats.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+
+    <!-- ============================================================================================= -->
 
 	<xsl:template name="xlinkResolver">
 		<h1 align="left"><xsl:value-of select="/root/gui/config/xlinkResolver"/></h1>

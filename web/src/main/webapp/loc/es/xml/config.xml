@@ -13,6 +13,8 @@
 	<network>Red</network>
 	<netmask>Mascara de red</netmask>
 
+	<searchStats>Search Statistics</searchStats>
+
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activar</enable>
 
@@ -361,6 +363,12 @@
 
 		<tip id="xlinkResolver.enable">
 			If set, XLinks to metadata fragments in records will be resolved.
+		</tip>
+
+		<!-- searchStats -->
+
+		<tip id="searchStats.enable">
+			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 	</tips>
 	

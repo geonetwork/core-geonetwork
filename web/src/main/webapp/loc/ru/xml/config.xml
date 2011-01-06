@@ -8,6 +8,8 @@
 	<host>Хост</host>
 	<port>Порт</port>
 
+	<searchStats>Search Statistics</searchStats>
+
 	<intranet>Локальная сеть</intranet>
 	<network>Адрес</network>
 	<netmask>Маска</netmask>
@@ -318,6 +320,12 @@
 
 		<tip id="xlinkResolver.enable">
 			If set, XLinks to metadata fragments in records will be resolved.
+		</tip>
+
+		<!-- searchStats -->
+
+		<tip id="searchStats.enable">
+			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 	</tips>
 	

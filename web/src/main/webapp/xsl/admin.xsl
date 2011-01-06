@@ -301,13 +301,15 @@
 							<xsl:with-param name="icon">color_swatch.png</xsl:with-param>
 						</xsl:call-template>
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'stat.main'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/searchStatistics"/>
-							<xsl:with-param name="desc"
-								select="/root/gui/strings/searchStatisticsDes"/>
-							<xsl:with-param name="icon">chart_bar.png</xsl:with-param>
-						</xsl:call-template>
+						<xsl:if test="string(/root/gui/env/searchStats/enable)='true'">
+							<xsl:call-template name="addrow">
+								<xsl:with-param name="service" select="'stat.main'"/>
+								<xsl:with-param name="title" select="/root/gui/strings/searchStatistics"/>
+								<xsl:with-param name="desc"
+									select="/root/gui/strings/searchStatisticsDes"/>
+								<xsl:with-param name="icon">chart_bar.png</xsl:with-param>
+							</xsl:call-template>
+						</xsl:if>
 
 					</xsl:variable>
 

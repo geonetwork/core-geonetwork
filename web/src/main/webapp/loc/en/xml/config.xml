@@ -13,6 +13,8 @@
 	<network>Network</network>
 	<netmask>Netmask</netmask>
 	
+	<searchStats>Search Statistics</searchStats>
+
 	<z3950>Z39.50 Server</z3950>
 	<enable>Enable</enable>
 
@@ -323,6 +325,12 @@
 
 		<tip id="xlinkResolver.enable">
 			If set, XLinks to metadata fragments in records will be resolved.
+		</tip>
+
+		<!-- searchStats -->
+
+		<tip id="searchStats.enable">
+			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 	</tips>
 	<data.dir>Data directory:</data.dir>

@@ -187,6 +187,8 @@ public class Set implements Service
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "xlinkResolver/enable",         "system/xlinkResolver/enable"),
 
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "searchStats/enable",         "system/searchStats/enable"),
+
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "shib/use",                     "system/shib/use"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/path",                    "system/shib/path"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/username",         "system/shib/attrib/username"),

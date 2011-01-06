@@ -110,6 +110,8 @@ ConfigView.prototype.setData = function(data)
 	
 	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
 
+	$('searchStats.enable').checked = data['SEARCHSTATS_ENABLE'] == 'true';
+
 	$('downloadservice.simple')        .checked = data['DOWNLOADSERVICE_SIMPLE'] == 'true';
 	$('downloadservice.withdisclaimer').checked = data['DOWNLOADSERVICE_WITHDISCLAIMER'] == 'true';
 	$('downloadservice.leave')         .checked = data['DOWNLOADSERVICE_LEAVE'] == 'true';
@@ -201,6 +203,8 @@ ConfigView.prototype.getData = function()
 		OAI_CACHESIZE			: $('oai.cachesize')  .value,
 
 		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
+	
+		SEARCHSTATS_ENABLE : $('searchStats.enable').checked,
 	
 		DOWNLOADSERVICE_SIMPLE : $('downloadservice.simple').checked,
 		DOWNLOADSERVICE_WITHDISCLAIMER : $('downloadservice.withdisclaimer').checked,
