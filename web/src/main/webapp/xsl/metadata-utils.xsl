@@ -154,7 +154,7 @@
 				<!-- Create child option only for iso19139 schema based metadata -->
 				<xsl:variable name="duplicateChild" select="concat(/root/gui/strings/createChild,': ',$ltitle)"/>
 				<xsl:if test="contains(geonet:info/schema, 'iso19139')">
-					<button onclick="doOtherButton('{/root/gui/locService}/metadata.duplicate.form?uuid={$metadata/geonet:info/uuid}&amp;child=y','{$duplicateChild}',600)"><xsl:value-of select="/root/gui/strings/createChild"/></button>
+				  <button onclick="load('{/root/gui/locService}/metadata.duplicate.form?uuid={$metadata/geonet:info/uuid}&amp;child=y')"><xsl:value-of select="/root/gui/strings/createChild"/></button>
 				</xsl:if>	
 			</div>
 		</xsl:if>
