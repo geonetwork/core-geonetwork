@@ -108,7 +108,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             
             <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
-                <Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true" token="false"/>
+                <Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true" token="true"/>
             </xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

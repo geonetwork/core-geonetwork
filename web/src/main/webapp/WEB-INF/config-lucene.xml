@@ -19,6 +19,7 @@
 		<Field name="orgName"/>
 		<Field name="specificationTitle"/>
 		<Field name="levelName"/>
+        <Field name="responsiblePartyRole"/>
 		<!-- from SearchManager/static -->
 		<Field name="_uuid"/>
 		<Field name="parentUuid"/>
