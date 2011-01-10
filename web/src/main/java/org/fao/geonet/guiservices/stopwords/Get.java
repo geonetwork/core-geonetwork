@@ -28,9 +28,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.IndexLanguagesDAO;
 import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 import org.jdom.Element;
 
@@ -49,10 +48,9 @@ public class Get implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        DataManager dataManager = gc.getDataManager();
-        Set<IndexLanguage> languages = dataManager.retrieveIndexLanguages(dbms);
+        IndexLanguagesDAO idxLanguagesDAO = new IndexLanguagesDAO();
+        Set<IndexLanguage> languages = idxLanguagesDAO.retrieveIndexLanguages(dbms);
 		Element response   = new Element("indexlanguages");
         if(languages != null) {
             for(IndexLanguage indexLanguage : languages) {
