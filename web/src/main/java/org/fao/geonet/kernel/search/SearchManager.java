@@ -137,15 +137,14 @@ public class SearchManager
      * Initializes the PerFieldAnalyzerWrapper, which is used when adding documents to the Lucene index, and also
      * to analyze query terms at search time.
      *
-     * @param dataMan datamanager
      * @param dbms dbms
      */
-	public void initAnalyzer(DataManager dataMan, Dbms dbms) {
+	public void initAnalyzer(Dbms dbms) {
     // Define the default Analyzer
 
         Set<String> stopwords = null;
         try {
-           stopwords = findStopwords(dataMan, dbms);
+           stopwords = findStopwords(dbms);
         }
         catch(Exception x) {
            Log.warning("SearchManager", "Exception getting stopwords: " + x.getMessage() + ", now creating GeoNetworkAnalyzer without stopwords");
@@ -172,6 +171,7 @@ public class SearchManager
 		_analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
 		_analyzer.addAnalyzer("subject", new KeywordAnalyzer());
         _analyzer.addAnalyzer("inspiretheme", new KeywordAnalyzer());
+
 	}
 
     /**
@@ -180,10 +180,11 @@ public class SearchManager
      * @return stopwords
      * @throws Exception hmm
      */
-    private static Set<String> findStopwords(DataManager dataMan, Dbms dbms) throws Exception {
+    private static Set<String> findStopwords(Dbms dbms) throws Exception {
         Set<String> allStopwords = null;
         // retrieve index languages defined by administrator
-        Set<IndexLanguage> languages = dataMan.retrieveSelectedIndexLanguages(dbms);
+        IndexLanguagesDAO idxLanguagesDAO = new IndexLanguagesDAO();
+        Set<IndexLanguage> languages = idxLanguagesDAO.retrieveSelectedIndexLanguages(dbms);
         if(languages != null) {
             for(IndexLanguage language : languages) {
                 Log.debug(Geonet.SEARCH_ENGINE,"Loading stopwords for " + language.getName());
@@ -241,6 +242,9 @@ public class SearchManager
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
 		_schemasDir     = new File(appPath, SCHEMA_STYLESHEETS_DIR_PATH);
         _stopwordsDir = appPath + STOPWORDS_DIR_PATH;
+
+        initAnalyzer(dbms);
+
 
         _inspireEnabled = si.getInspireEnabled();
 
@@ -561,19 +565,15 @@ public class SearchManager
 		if (isTemplate.equals("s")) {
 			// create empty document with only title and "any" fields
 			xmlDoc = new Element("Document");
-
 			StringBuffer sb = new StringBuffer();
 			allText(metadata, sb);
 			addField(xmlDoc, "title", title, true, true, true);
 			addField(xmlDoc, "any", sb.toString(), true, true, true);
-		} else {
-			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
-					+ Xml.getString(metadata));
-
+		}
+        else {
+			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
             xmlDoc = getIndexFields(type, metadata);
-
-			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
-					+ Xml.getString(xmlDoc));
+			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
 		}
 		// add _id field
 		addField(xmlDoc, "_id", id, true, true, false);
@@ -583,9 +583,7 @@ public class SearchManager
             xmlDoc.addContent(moreField);
         }
 
-		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"
-				+ Xml.getString(xmlDoc));
-
+		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
         return newDocument(xmlDoc);
 	}
 

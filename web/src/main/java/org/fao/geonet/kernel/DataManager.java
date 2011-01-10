@@ -103,6 +103,7 @@ public class DataManager
 
 		XmlSerializer.setSettingManager(ss);
 
+        sm.initAnalyzer(dbms);
 		init(context, dbms, false);
 	}
 
@@ -2526,7 +2527,6 @@ public class DataManager
        }
     }
 
-    //--------------------------------------------------------------------------
 
     public List<Element> retrieveNotifierServices(Dbms dbms) throws Exception {
         String query = "SELECT id, url, username, password FROM MetadataNotifiers WHERE enabled = 'y'";
@@ -2534,60 +2534,6 @@ public class DataManager
 
         return results;
     }
-
-
-    public Set<IndexLanguage> retrieveIndexLanguages(Dbms dbms) throws Exception {
-        String query = "SELECT languageName, selected FROM IndexLanguages";
-        List<Element> results = dbms.select(query).getChildren();
-        for(Element r : results) {
-            System.out.println("\n\n** retrieved language: " + Xml.getString(r));
-        }
-        Set<IndexLanguage> languages = new HashSet<IndexLanguage>();
-        for(Element result : results) {
-            IndexLanguage language = new IndexLanguage();
-            language.setName(result.getChildText("languagename"));
-            language.setSelected(result.getChildText("selected").equals("y"));
-            languages.add(language);
-        }
-        return languages;
-    }
-
-    public Set<IndexLanguage> retrieveSelectedIndexLanguages(Dbms dbms) throws Exception {
-        String query = "SELECT languageName, selected FROM IndexLanguages where selected = 'y'";
-        List<Element> results = dbms.select(query).getChildren();
-        Set<IndexLanguage> languages = new HashSet<IndexLanguage>();
-        for(Element result : results) {
-            IndexLanguage language = new IndexLanguage();
-            language.setName(result.getChildText("languagename"));
-            language.setSelected(true);
-            languages.add(language);
-        }
-        return languages;
-    }
-
-    public void saveIndexLanguages(Set<IndexLanguage> languages, Dbms dbms) throws Exception {
-       for(IndexLanguage language : languages) {
-           // check if exists in db
-           String query = "SELECT * FROM IndexLanguages WHERE languageName = '" + language.getName() + "'";
-           System.out.println("query is :" + query);
-           List<Element> results = dbms.select(query).getChildren();
-           // does not yet exist: insert
-           if(CollectionUtils.isEmpty(results)) {
-               query = "INSERT INTO IndexLanguages (languageName, selected) VALUES (?, ?)";
-               dbms.execute(query, language.getName(), language.isSelected() ? "y" : "n" );
-           }
-           // already exists:  update
-           else {
-               query = "UPDATE IndexLanguages SET selected=? WHERE languageName=?";
-               dbms.execute(query, language.isSelected() ? "y" : "n", language.getName());
-           }
-           dbms.commit();
-       }
-    }
-
-
-	//--------------------------------------------------------------------------
-
 
     /**
      * Applies automatic fixes to the metadata (if that is enabled) and adds some environmental information about
