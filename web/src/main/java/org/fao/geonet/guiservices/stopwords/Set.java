@@ -28,7 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.IndexLanguagesDAO;
 import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 import org.jdom.Element;
 
@@ -51,8 +51,8 @@ public class Set implements Service {
         // retrieve existing indexLanguages
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        DataManager dataManager = gc.getDataManager();
-        java.util.Set<IndexLanguage> languages = dataManager.retrieveIndexLanguages(dbms);
+        IndexLanguagesDAO idxLanguagesDAO = new IndexLanguagesDAO();
+        java.util.Set<IndexLanguage> languages = idxLanguagesDAO.retrieveIndexLanguages(dbms);
 
         // set selected to false for all
         for (IndexLanguage indexLanguage : languages) {
@@ -75,7 +75,7 @@ public class Set implements Service {
         }
 
         // save languages
-        dataManager.saveIndexLanguages(languages, dbms);
+        idxLanguagesDAO.saveIndexLanguages(languages, dbms);
 
         // loop languages to create a response
 		Element response   = new Element("indexlanguages");
@@ -93,7 +93,7 @@ public class Set implements Service {
         //
         // re-initialize Lucene analyzer with changed stopwords
         //
-        gc.getSearchmanager().initAnalyzer(dataManager, dbms);
+        gc.getSearchmanager().initAnalyzer(dbms);
 
         response.addContent(new Element("displayRebuildIndex"));
 		return response;
