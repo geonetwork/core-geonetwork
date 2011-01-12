@@ -315,7 +315,19 @@ public final class Processor {
 				Log.debug(Log.XLINK_PROCESSOR, "process local xlink '"+idSearch+"'");
 				Element localFragment = null;
 				try {
-					localFragment = Xml.selectElement(md, "*//*[@id='"+idSearch+"']");
+					localFragment = Xml.selectElement(md, "*//*[@id='" + idSearch + "']");
+					
+					// -- avoid recursivity if an xlink:href #ID is a descendant of the localFragment
+					
+					// Should work in XPath v2. Failed with JDOM : 
+					// localFragment = Xml.selectElement(md, "*//*[@id='" + idSearch + "' " 
+					//  		+ "and count(descendant::*[@xlink:href='#" + idSearch + "'])=0]");
+					List<Attribute> subXlinks = getXLinksWithXPath(localFragment, "*//@xlink:href[.='#" + idSearch + "']");
+					if (subXlinks.size()!=0) {
+						Log.warning(Log.XLINK_PROCESSOR, "found a fragment " + Xml.getString(localFragment) + " containing " 
+								+ subXlinks.size() + " reference(s) to itself. Id: " + idSearch);
+						continue;
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					Log.error(Log.XLINK_PROCESSOR, "Failed to look up localxlink "+idSearch+": "+e.getMessage());
