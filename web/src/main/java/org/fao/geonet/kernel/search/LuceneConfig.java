@@ -48,7 +48,6 @@ import java.util.List;
  */
 public class LuceneConfig {
 
-	private static final int DEFAULT_ANALYZER_CLASS = 0;
 	private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 
@@ -105,8 +104,6 @@ public class LuceneConfig {
 	private HashMap<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
 
 	private String defaultAnalyzerClass;
-	private HashMap<String, Object[]> defaultAnalyzerParameters = new HashMap<String, Object[]>();
-	private HashMap<String, Class[]> defaultAnalyzerParametersClass = new HashMap<String, Class[]>();
 
 	private HashMap<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private HashMap<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
@@ -234,7 +231,7 @@ public class LuceneConfig {
 			elem = luceneConfig.getChild("defaultAnalyzer");
 			if (elem != null) {
 				defaultAnalyzerClass = elem.getAttribute("name").getValue();
-				loadClassParameters(DEFAULT_ANALYZER_CLASS, "",
+				loadClassParameters(ANALYZER_CLASS, "",
 						defaultAnalyzerClass, elem.getChildren("Param"));
 			}
 
@@ -371,10 +368,6 @@ public class LuceneConfig {
 			analyzerParametersClass.put(id, paramsClass);
 			analyzerParameters.put(id, params);
 			break;
-		case DEFAULT_ANALYZER_CLASS:
-			defaultAnalyzerParametersClass.put(id, paramsClass);
-			defaultAnalyzerParameters.put(id, params);
-			break;
 		case BOOST_CLASS:
 			boostQueryParametersClass.put(id, paramsClass);
 			boostQueryParameters.put(id, params);
@@ -475,22 +468,6 @@ public class LuceneConfig {
 	 */
 	public String getBoostQueryClass() {
 		return boostQueryClass;
-	}
-
-	/**
-	 * 
-	 * @return The list of values for default analyzer parameters.
-	 */
-	public Object[] getDefaultAnalyzerParameter() {
-		return this.defaultAnalyzerParameters.get(defaultAnalyzerClass);
-	}
-
-	/**
-	 * 
-	 * @return The list of classes for default analyzer parameters.
-	 */
-	public Class[] getDefaultAnalyzerParameterClass() {
-		return this.defaultAnalyzerParametersClass.get(defaultAnalyzerClass);
 	}
 
 	/**

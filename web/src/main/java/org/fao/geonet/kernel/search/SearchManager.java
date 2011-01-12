@@ -242,12 +242,12 @@ public class SearchManager
             else {
                 try {
                     Class analyzerClass = Class.forName(analyzerClassName);
-                    Class[] clTypesArray = _luceneConfig.getAnalyzerParameterClass(field + analyzerClassName);
-                    Object[] inParamsArray = _luceneConfig.getAnalyzerParameter(field + analyzerClassName);
+                    Class[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
+                    Object[] inParamsArray = _luceneConfig.getAnalyzerParameter((field==null?"":field) + analyzerClassName);
                     try {
                         Log.debug(Geonet.SEARCH_ENGINE, " Creating analyzer with parameter");
                         Constructor c = analyzerClass.getConstructor(clTypesArray);
-                        analyzer = (Analyzer) c.newInstance(inParamsArray);
+                        analyzer = (Analyzer) c.newInstance(inParamsArray);                        
                     }
                     catch (Exception x) {
                         Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer with parameter: " + x.getMessage());
