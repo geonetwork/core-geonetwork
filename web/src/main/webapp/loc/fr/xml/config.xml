@@ -111,9 +111,9 @@
 		</datesearchopt>
 	
 		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
+		<cachesize>Taille du cache</cachesize>
 
-	<xlinkResolver>XLink Resolver</xlinkResolver>
+	<xlinkResolver>Résolution des XLink</xlinkResolver>
 
     <inspire>INSPIRE</inspire>
 	
