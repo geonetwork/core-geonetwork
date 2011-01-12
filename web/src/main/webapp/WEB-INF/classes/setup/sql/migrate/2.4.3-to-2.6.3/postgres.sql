@@ -10,7 +10,7 @@ CREATE TABLE MetadataNotifiers
     primary key(id)
   );
 
-REM ======================================================================
+-- ======================================================================
 
 CREATE TABLE MetadataNotifications
   (
@@ -19,18 +19,47 @@ CREATE TABLE MetadataNotifications
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
-    errormsg           long,
+    errormsg           text,
 
-    primary key(metadataId,notifierId)
+    primary key(metadataId,notifierId),
+
+    foreign key(notifierId) references MetadataNotifiers(id)
   );
 
-ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
+ALTER TABLE Settings ALTER COLUMN value TYPE text;    
+ALTER TABLE Metadata ADD displayorder int;
 
 INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
+INSERT INTO Settings VALUES (90,1,'selectionmanager',NULL);
+INSERT INTO Settings VALUES (91,90,'maxrecords','1000');
+INSERT INTO Settings VALUES (210,1,'localrating',NULL);
+INSERT INTO Settings VALUES (211,210,'enable','false');
+INSERT INTO Settings VALUES (220,1,'downloadservice',NULL);
+INSERT INTO Settings VALUES (221,220,'leave','false');
+INSERT INTO Settings VALUES (222,220,'simple','true');
+INSERT INTO Settings VALUES (223,220,'withdisclaimer','false');
+INSERT INTO Settings VALUES (230,1,'xlinkResolver',NULL);
+INSERT INTO Settings VALUES (231,230,'enable','false');
 INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
 INSERT INTO Settings VALUES (241,240,'enable','true');
+INSERT INTO Settings VALUES (600,1,'indexoptimizer',NULL);
+INSERT INTO Settings VALUES (601,600,'enable','true');
+INSERT INTO Settings VALUES (602,600,'at',NULL);
+INSERT INTO Settings VALUES (603,602,'hour','0');
+INSERT INTO Settings VALUES (604,602,'min','0');
+INSERT INTO Settings VALUES (605,602,'sec','0');
+INSERT INTO Settings VALUES (606,600,'interval',NULL);
+INSERT INTO Settings VALUES (607,606,'day','0');
+INSERT INTO Settings VALUES (608,606,'hour','24');
+INSERT INTO Settings VALUES (609,606,'min','0');
+INSERT INTO Settings VALUES (700,1,'oai',NULL);
+INSERT INTO Settings VALUES (701,700,'mdmode',1);
+INSERT INTO Settings VALUES (702,700,'tokentimeout',3600);
+INSERT INTO Settings VALUES (703,700,'cachesize',60);
+INSERT INTO Settings VALUES (720,1,'inspire',NULL);
+INSERT INTO Settings VALUES (721,720,'enable','false');
 
-REM == 2.6.2 changes
+-- 2.6.2 changes
 
 CREATE TABLE CswServerCapabilitiesInfo
   (
@@ -39,10 +68,10 @@ CREATE TABLE CswServerCapabilitiesInfo
     field     varchar(32)   not null,
     label     varchar(96),
 
-    primary key(idField)
-  );
+    primary key(idField),
 
-ALTER TABLE CswServerCapabilitiesInfo ADD FOREIGN KEY (langId) REFERENCES Languages (id);
+    foreign key(langId) references Languages(id)
+  );
 
 CREATE TABLE IndexLanguages
   (
@@ -53,7 +82,7 @@ CREATE TABLE IndexLanguages
     primary key(id, languageName)
 
   );
-  
+
 ALTER TABLE Languages ADD isocode varchar(3);
 
 UPDATE Languages SET isocode = 'eng' where id ='en';
@@ -112,5 +141,5 @@ INSERT INTO IndexLanguages VALUES (11, 'russian', 'n');
 INSERT INTO IndexLanguages VALUES (12, 'spanish', 'n');
 INSERT INTO IndexLanguages VALUES (13, 'swedish', 'n');
 
-UPDATE Settings SET value='2.6.2' WHERE name='version';
+UPDATE Settings SET value='2.6.3' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

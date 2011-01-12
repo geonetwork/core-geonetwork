@@ -140,5 +140,5 @@ INSERT INTO IndexLanguages VALUES (11, 'russian', 'n');
 INSERT INTO IndexLanguages VALUES (12, 'spanish', 'n');
 INSERT INTO IndexLanguages VALUES (13, 'swedish', 'n');
 
-UPDATE Settings SET value='2.6.2' WHERE name='version';
+UPDATE Settings SET value='2.6.3' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

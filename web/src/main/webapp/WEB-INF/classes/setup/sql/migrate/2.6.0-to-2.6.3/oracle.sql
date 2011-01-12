@@ -10,7 +10,7 @@ CREATE TABLE MetadataNotifiers
     primary key(id)
   );
 
--- ======================================================================
+REM ======================================================================
 
 CREATE TABLE MetadataNotifications
   (
@@ -19,12 +19,18 @@ CREATE TABLE MetadataNotifications
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
-    errormsg           text,
+    errormsg           long,
 
-    primary key(metadataId,notifierId),
-
-    foreign key(notifierId) references MetadataNotifiers(id)
+    primary key(metadataId,notifierId)
   );
+
+ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
+
+INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
+INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
+INSERT INTO Settings VALUES (241,240,'enable','true');
+
+REM == 2.6.2 changes
 
 CREATE TABLE CswServerCapabilitiesInfo
   (
@@ -33,10 +39,10 @@ CREATE TABLE CswServerCapabilitiesInfo
     field     varchar(32)   not null,
     label     varchar(96),
 
-    primary key(idField),
-
-    foreign key(langId) references Languages(id)
+    primary key(idField)
   );
+
+ALTER TABLE CswServerCapabilitiesInfo ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 
 CREATE TABLE IndexLanguages
   (
@@ -46,8 +52,8 @@ CREATE TABLE IndexLanguages
 
     primary key(id, languageName)
 
-  );  
-
+  );
+  
 ALTER TABLE Languages ADD isocode varchar(3);
 
 UPDATE Languages SET isocode = 'eng' where id ='en';
@@ -106,5 +112,5 @@ INSERT INTO IndexLanguages VALUES (11, 'russian', 'n');
 INSERT INTO IndexLanguages VALUES (12, 'spanish', 'n');
 INSERT INTO IndexLanguages VALUES (13, 'swedish', 'n');
 
-UPDATE Settings SET value='2.6.2' WHERE name='version';
+UPDATE Settings SET value='2.6.3' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
