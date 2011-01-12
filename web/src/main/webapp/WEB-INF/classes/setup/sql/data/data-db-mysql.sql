@@ -4626,7 +4626,7 @@ INSERT INTO OperationsDes VALUES (2,'cn','Editing');
 INSERT INTO OperationsDes VALUES (3,'cn','Notify');
 INSERT INTO OperationsDes VALUES (5,'cn','Interactive Map');
 INSERT INTO OperationsDes VALUES (6,'cn','Featured');
-INSERT INTO OperationsDes VALUES (0,'fr','Publirt');
+INSERT INTO OperationsDes VALUES (0,'fr','Publier');
 INSERT INTO OperationsDes VALUES (1,'fr','Télécharger');
 INSERT INTO OperationsDes VALUES (2,'fr','Editer');
 INSERT INTO OperationsDes VALUES (3,'fr','Notifier');
