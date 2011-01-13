@@ -3148,10 +3148,9 @@
 			</xsl:for-each>
 
 			<xsl:if test="not($info/server)">
-
 				<xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
-					<xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
-					<xsl:if test="$fileName != ''">
+				  <xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
+				  <xsl:if test="$fileName != ''">
 						<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
 						<xsl:choose>
 
@@ -3166,11 +3165,21 @@
 							<xsl:when test="string($fileDescr)='thumbnail'">
 								<xsl:choose>
 									<xsl:when test="$info/isHarvested = 'y'">
-										<xsl:if test="$info/harvestInfo/smallThumbnail">
-											<image type="thumbnail">
-												<xsl:value-of select="concat($info/harvestInfo/smallThumbnail, $fileName)"/>
-											</image>
-										</xsl:if>
+									  <xsl:choose>
+									    <xsl:when test="$info/harvestInfo/smallThumbnail">
+									      <image type="thumbnail">
+									        <xsl:value-of select="concat($info/harvestInfo/smallThumbnail, $fileName)"/>
+									      </image>
+									    </xsl:when>
+									    <xsl:otherwise>
+									      <!-- When harvested, thumbnail is stored in local node (eg. ogcwxs). 
+									      Only GeoNetHarvester set smallThumbnail elements.
+									      -->
+									      <image type="thumbnail">
+									        <xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+									      </image>
+									    </xsl:otherwise>
+									  </xsl:choose>
 									</xsl:when>
 									
 									<xsl:otherwise>
