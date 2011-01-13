@@ -57,6 +57,7 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="listPanel">
+	  <div style="max-height:600px;overflow:auto;">
 		<table id="table">
 			<tr>
 				<th class="padded" style="width:40px;"><b><xsl:value-of select="/root/gui/harvesting/select"/></b></th>
@@ -69,6 +70,7 @@
 				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/operation"/></b></th>
 			</tr>
 		</table>
+	  </div>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
