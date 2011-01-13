@@ -420,6 +420,7 @@
 						</xsl:choose>
 					</div>
 					
+				  <xsl:if test="/root/gui/searchDefaults/output = 'full'">
 					<!-- abstract -->
 					<xsl:if test="$metadata/abstract">
 						<div class="hittext_middle">
@@ -437,11 +438,12 @@
 							</div>
 						</div>
 					</xsl:if>
-					
+				  </xsl:if>
+				  
 					<!-- keywords -->
 					<xsl:if test="$metadata/keyword">
 						<xsl:variable name="keywords">
-							<xsl:for-each select="$metadata/keyword">
+						  <xsl:for-each select="$metadata/keyword">
 								<xsl:if test="position() &gt; 1">,  </xsl:if>
 								<xsl:value-of select="."/>
 							</xsl:for-each>
@@ -463,6 +465,7 @@
 						</div>
 					</xsl:if>
 
+				  <xsl:if test="/root/gui/searchDefaults/output = 'full'">
 					<!-- schema -->
 					<xsl:if test="$metadata/geonet:info/schema">
 						<div class="hittext_middle">
@@ -472,7 +475,7 @@
 							</div>
 						</div>
 					</xsl:if>
-
+				  
 					<xsl:if test="normalize-space($metadata/geoBox) or $metadata/temporalExtent">
 						<div class="hittext_middle">
 							<div class="caption"><xsl:value-of select="/root/gui/strings/extent"/></div>
@@ -493,6 +496,8 @@
 							</div>
 						</div>
 					</xsl:if>
+				  </xsl:if>
+				  
 				</div>
 			</div>
 			

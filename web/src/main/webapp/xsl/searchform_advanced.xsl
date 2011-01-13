@@ -130,7 +130,8 @@
 					<span class="labelField"><xsl:value-of select="/root/gui/strings/hitsPerPage"/></span>
 					<select class="content" id="hitsPerPage" name="hitsPerPage" onchange="$('hitsPerPage_simple').value = this.options[this.selectedIndex].value">
 						<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
-							<option>
+						  <xsl:sort select="@value" data-type="number"/>
+						  <option>
 								<xsl:if
 									test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
 									<xsl:attribute name="selected">selected</xsl:attribute>
@@ -148,7 +149,7 @@
 				<div class="row">
 					<span class="labelField"><xsl:value-of select="/root/gui/strings/output"/></span>
 
-					<select id="output" size="1" class="content" onchange="$('output_simple').value = this.options[this.selectedIndex].value">
+					<select id="output" name="output" size="1" class="content" onchange="$('output_simple').value = this.options[this.selectedIndex].value">
 						<xsl:for-each select="/root/gui/strings/outputType">
 							<option value="{@id}">
 								<xsl:if test="@id = /root/gui/searchDefaults/output">
@@ -1087,8 +1088,9 @@
 		<span class="labelField"><xsl:value-of select="/root/gui/strings/hitsPerPage"/></span>
 		<select class="content" id="hitsPerPage" name="hitsPerPage">
 			<xsl:for-each select="/root/gui/strings/hitsPerPageChoice">
+			  <xsl:sort select="@value" data-type="number"/>
 				<option>
-					<xsl:if test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
+				  <xsl:if test="string(@value)=string(/root/gui/searchDefaults/hitsPerPage)">
 						<xsl:attribute name="selected"/>
 					</xsl:if>
 					<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>

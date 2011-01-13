@@ -108,8 +108,8 @@ function resetSimpleSearch()
 	
     setParam(form['sortBy'],      'relevance');
     setParam(form['sortOrder'],   '');
-    setParam(form['hitsPerPage'], '10');
-    setParam(form['output'],      'full');
+    setParam(form['hitsPerPage_simple'], '10');
+    setParam(form['output_simple'],      'full');
 }
 
 
