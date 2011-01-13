@@ -2131,13 +2131,6 @@
     <condition/>
     
   </element>
-  <element name="gmd:phone" id="407.0">
-    <label>Téléphone</label>
-    <description>Type de données pour le numéro de téléphone de la personne ou du service responsable</description>
-    <help>Type de données pour les numéros de téléphone.</help>
-    <condition/>
-    
-  </element>
   <element name="gmd:plannedAvailableDateTime" id="300.0">
     <label>Disponibilité planifiée des données</label>
     <description>Date et heure à laquelle les donnée seront à disposition</description>

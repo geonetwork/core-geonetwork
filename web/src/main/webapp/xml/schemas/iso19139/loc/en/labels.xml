@@ -1530,16 +1530,6 @@
         <label>Peak response</label>
         <description>Wavelength at which the response is the highest</description>
     </element>
-    <element name="gmd:phone" id="388.0">
-        <label>Phone</label>
-        <description>Telephone numbers at which the organization or individual may be
-            contacted</description>
-    </element>
-    <element name="gmd:phone" id="407.0">
-        <label>Phone</label>
-        <description>Telephone numbers at which the organization or individual may be
-            contacted</description>
-    </element>
     <element name="gmd:phone" id="526.0">
         <label>Phone</label>
         <description>Telephone numbers at which the organization or individual may be
