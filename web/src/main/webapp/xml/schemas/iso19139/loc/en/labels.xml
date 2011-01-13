@@ -205,8 +205,6 @@
     <element name="gmd:EX_Extent" id="334.0">
         <label>Extent</label>
         <description>Information about spatial, vertical, and temporal extent</description>
-        <label>Extent</label>
-        <description>Information about horizonal, vertical, and temporal extent</description>
     </element>
     <element name="gmd:EX_GeographicBoundingBox" id="343.0">
         <label>Geographic bounding box</label>
