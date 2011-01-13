@@ -5,6 +5,28 @@
 
 # Note: In MacOs change seed -i to seed -i .bak to work properly
 
+function showUsage 
+{
+  echo -e "\nThis script is used to update branch from a release version to next SNAPSHOT version. Should be used in branch after creating a new release (tag)." 
+  echo -e "\nUsage:"
+  echo -e "\t`basename $0 $1` {actual_version} {next_version}"
+  echo -e "\nExample to update file versions from 2.6.2 to 2.6.3-SNAPSHOT:"
+  echo -e "\t`basename $0 $1` 2.6.2 2.6.3"
+  echo -e "\n"
+}
+
+if [ "$1" = "-h" ] 
+then
+	showUsage
+	exit
+fi
+
+if [ $# -ne 2 ]
+then
+  showUsage
+  exit
+fi
+
 version="$1"
 new_version="$2"
 
