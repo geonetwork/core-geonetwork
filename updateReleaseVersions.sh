@@ -3,16 +3,15 @@
 # Usage to create 2.6.2 release version from 2.6.2-SNAPSHOT
 # In root folder of branch code: ./updateReleaseVersion.sh 2.6.2
 
-# Note: In MacOs change seed -i to seed -i .bak to work properly
-
 function showUsage
 {
   echo -e "\nThis script is used to update branch from a SNAPSHOT version to a release version. Should be used in branch before creating a new release (tag)." 
-  echo -e "\nUsage:"
-  echo -e "\t`basename $0 $1` {version}"
-  echo -e "\nExample to update file versions from 2.6.2-SNAPSHOT to 2.6.2:"
-  echo -e "\t`basename $0 $1` 2.6.2"
-  echo -e "\n"
+  echo
+  echo -e "Usage: `basename $0 $1` version"
+  echo
+  echo -e "Example to update file versions from 2.7.0-SNAPSHOT to 2.7.0:"
+  echo -e "\t`basename $0 $1` 2.7.0"
+  echo
 }
 
 if [ "$1" = "-h" ] 
@@ -27,14 +26,36 @@ then
   exit
 fi
 
+if [[ $1 != [0-9].[0-9].[0-9] ]]; then 
+	echo
+	echo 'Update failed due to incorrect versionnumber format: ' $1
+	echo 'The format should be three numbers separated by dots. e.g.: 2.7.0'
+	echo
+	echo "Usage: ./`basename $0 $1` 2.7.0"
+	echo
+	exit
+fi
+
+# Note: In MacOS (darwin10.0) sed requires -i .bak as option to work properly
+if [[ $OSTYPE == 'darwin10.0' ]]; then
+	sedopt='-i .bak'
+else
+	sedopt='-i'
+fi
+
+echo
+echo 'Your Operating System is' $OSTYPE 
+echo 'sed will use the following option: ' $sedopt
+echo
+
 version="$1"
 
 # Update version in sphinx doc files
-sed -i "s/${version}-SNAPSHOT/${version}/g" docs/eng/users/source/conf.py 
-sed -i "s/${version}-SNAPSHOT/${version}/g" docs/eng/developer/source/conf.py
+sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/eng/users/source/conf.py 
+sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/eng/developer/source/conf.py
 
 # Update installer
-sed -i "s/\<property name=\"subVersion\" value=\"SNAPSHOT\" \/\>/\<property name=\"subVersion\" value=\"0\" \/\>/g" installer/build.xml
+sed $sedopt "s/\<property name=\"subVersion\" value=\"SNAPSHOT\" \/\>/\<property name=\"subVersion\" value=\"0\" \/\>/g" installer/build.xml
 
 # Update version pom files
-find . -name pom.xml -exec sed -i "s/${version}-SNAPSHOT/${version}/g" {} \;
+find . -name pom.xml -exec sed $sedopt "s/${version}-SNAPSHOT/${version}/g" {} \;
