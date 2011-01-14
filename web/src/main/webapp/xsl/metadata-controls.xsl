@@ -3,7 +3,7 @@
 	xmlns:exslt= "http://exslt.org/common" 
 	xmlns:str="http://exslt.org/strings" 
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	exclude-result-prefixes="exslt">
+	exclude-result-prefixes="exslt geonet str">
 
 	<xsl:template name="getButtons">
 		<xsl:param name="addLink"/>
