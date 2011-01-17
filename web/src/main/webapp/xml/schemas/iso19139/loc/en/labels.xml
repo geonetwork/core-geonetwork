@@ -1708,11 +1708,6 @@
         <description>Information about the series, or aggregate dataset, of which the dataset is a
             part</description>
     </element>
-    <element name="gmd:series" id="369.0">
-        <label>Series</label>
-        <description>Information about the series, or aggregate dataset, of which the dataset is a
-            part</description>
-    </element>
     <element name="gmd:shortName" id="308.0">
         <label>Short name</label>
         <description>Short form suitable for use in an implementation method such as XML or SGML.
