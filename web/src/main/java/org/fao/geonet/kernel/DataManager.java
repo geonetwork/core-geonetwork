@@ -1373,17 +1373,18 @@ public class DataManager
 		} else {
 			child = editLib.addElement(schema, el, name);
 		}
-		
-		//--- now add the geonet:element back again to keep ref number
-		el.addContent(refEl);
-
-		//--- now enumerate the new child
-		int iRef = editLib.findMaximumRef(md);
-		editLib.expandElements(schema, child);
-		editLib.enumerateTreeStartingAt(child, iRef+1, Integer.parseInt(ref));
-		
-		//--- add editing info to everything from the parent down
-		editLib.expandTree(mds,el);
+		//--- now enumerate the new child (if not a simple attribute)
+		if (childName == null || !childName.equals("geonet:attribute")) {
+			//--- now add the geonet:element back again to keep ref number
+			el.addContent(refEl);
+			
+			int iRef = editLib.findMaximumRef(md);
+			editLib.expandElements(schema, child);
+			editLib.enumerateTreeStartingAt(child, iRef+1, Integer.parseInt(ref));
+			
+			//--- add editing info to everything from the parent down
+			editLib.expandTree(mds,el);
+		}
 		
 		//--- attach the info element to the child (and the metadata root)
 		child.addContent(info);
@@ -1996,7 +1997,7 @@ public class DataManager
 	 */
 	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, String version, String lang) throws Exception
 	{
-		session.removeProperty(Geonet.Session.VALIDATION_REPORT);
+		session.removeProperty(Geonet.Session.VALIDATION_REPORT + id);
 
 		//--- check if the metadata has been modified from last time
 		if (version != null && !editLib.getVersion(id).equals(version)) {

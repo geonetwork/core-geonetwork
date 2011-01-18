@@ -73,6 +73,7 @@ public class GetRelated implements Service {
 			throws Exception {
 		// Check for one of service|children|related|null (ie. all)
 		String type = Util.getParam(params, "type", "");
+		String fast = Util.getParam(params, "fast", "true");
 		String from = Util.getParam(params, "from", "1");
 		String to = Util.getParam(params, "to", "1000");
 
@@ -104,10 +105,10 @@ public class GetRelated implements Service {
 
 		if (type.equals("") || type.equals("children"))
 			relatedRecords.addContent(search(uuid, "children", context, from,
-					to));
+					to, fast));
 		if (type.equals("") || type.equals("service"))
 			relatedRecords.addContent(search(uuid, "services", context, from,
-					to));
+					to, fast));
 		if (type.equals("") || type.equals("related")) {
 			Element relation = Get.getRelation(id, "full", context);
 			relatedRecords.addContent(new Element("related")
@@ -119,7 +120,7 @@ public class GetRelated implements Service {
 	}
 
 	private Element search(String uuid, String type, ServiceContext context,
-			String from, String to) throws Exception {
+			String from, String to, String fast) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager searchMan = gc.getSearchmanager();
@@ -136,7 +137,7 @@ public class GetRelated implements Service {
 			parameters.addContent(new Element("parentUuid").setText(uuid));
 		else if ("services".equals(type))
 			parameters.addContent(new Element("operatesOn").setText(uuid));
-		parameters.addContent(new Element("fast").addContent("true"));
+		parameters.addContent(new Element("fast").addContent(fast));
 		parameters.addContent(new Element("from").addContent(from));
 		parameters.addContent(new Element("to").addContent(to));
 
