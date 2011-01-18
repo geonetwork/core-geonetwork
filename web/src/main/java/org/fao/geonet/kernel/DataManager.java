@@ -1294,6 +1294,7 @@ public class DataManager
 	{
 		Log.debug(Geonet.DATA_MANAGER, "Removing metadata from session "+session.getUserId());
 		session.removeProperty(Geonet.Session.METADATA_EDITING + id);
+		session.removeProperty(Geonet.Session.VALIDATION_REPORT + id);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1332,7 +1333,6 @@ public class DataManager
 		
 		Element child = null;
 		MetadataSchema mds = getSchema(schema);
-		
 		if (childName != null) {
 			if (childName.equals("geonet:attribute")) {
 				 String defaultValue = "";
@@ -1348,7 +1348,7 @@ public class DataManager
 				 }
 				 //--- Add new attribute with default value  
 				 el.setAttribute(new Attribute(name, defaultValue));
-	
+				 // TODO : add attribute should be false and del true after adding an attribute  
 				child = el;
 			} else {
 				//--- normal element
@@ -1381,10 +1381,10 @@ public class DataManager
 		int iRef = editLib.findMaximumRef(md);
 		editLib.expandElements(schema, child);
 		editLib.enumerateTreeStartingAt(child, iRef+1, Integer.parseInt(ref));
-
+		
 		//--- add editing info to everything from the parent down
 		editLib.expandTree(mds,el);
-
+		
 		//--- attach the info element to the child (and the metadata root)
 		child.addContent(info);
 		md.addContent((Element)info.clone());
@@ -2064,7 +2064,7 @@ public class DataManager
 	{
 		Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
 		
-		Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT);
+		Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);
 		if (sessionReport != null) {
 			Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");
 			sessionReport.detach();
@@ -2090,7 +2090,7 @@ public class DataManager
 			//throw new SchematronValidationErrorEx("Schematron errors detected - see schemaTron report for "+id+" in htmlCache for more details",schematron);
 		}
 		
-		session.setProperty(Geonet.Session.VALIDATION_REPORT, errorReport);
+		session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
 		
 		return errorReport;
 	}
