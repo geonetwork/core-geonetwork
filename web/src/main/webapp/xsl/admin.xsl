@@ -262,6 +262,7 @@
 							<xsl:with-param name="title" select="/root/gui/strings/notifications"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/notificationsDes"
 							/>
+						  <xsl:with-param name="icon">bell.png</xsl:with-param>
 						</xsl:call-template>
 					</xsl:variable>
 
