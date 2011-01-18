@@ -311,7 +311,7 @@ USA.
 				>$loc/strings/alert.M6</sch:assert>
 			<sch:report
 				test="$topic = false"
-				><sch:value-of select="$loc/strings/report.M6"/> "<sch:value-of select="gmd:topicCategory"/>"</sch:report>
+			  ><sch:value-of select="$loc/strings/report.M6"/> "<sch:value-of select="gmd:topicCategory/gmd:MD_TopicCategoryCode/text()"/>"</sch:report>
 		</sch:rule>
 	</sch:pattern>
 	<!-- TEST  3 -->
