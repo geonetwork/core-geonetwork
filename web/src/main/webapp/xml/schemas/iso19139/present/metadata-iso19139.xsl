@@ -2525,6 +2525,13 @@
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
 					</xsl:when>
+				  <xsl:when test="string(gmd:protocol/gco:CharacterString)='DB:POSTGIS' 
+				    and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
+				    <xsl:apply-templates mode="iso19139GeoPublisher" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
+				      <xsl:with-param name="access" select="'private'"/>
+				      <xsl:with-param name="id" select="$id"/>
+				    </xsl:apply-templates>
+				  </xsl:when>				  
 					<xsl:otherwise>
 						<!-- use elementEP for geonet:child only -->
 						<xsl:apply-templates mode="elementEP" select="geonet:child[string(@name)='name']">
@@ -2858,12 +2865,70 @@
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
 					<td width="70%"><xsl:value-of select="string(.)"/></td>
-					<td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
+					<td align="right">
+					  <button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button>
+					  <xsl:call-template name="iso19139GeoPublisherButton">
+					    <xsl:with-param name="access" select="$access"></xsl:with-param>
+					  </xsl:call-template>
+					</td>
 				</tr></table>
 			</xsl:with-param>
 			<xsl:with-param name="schema"/>
 		</xsl:call-template>
 	</xsl:template>
+
+
+
+  <!-- Add button for publication in GeoServer -->
+  <xsl:template mode="iso19139GeoPublisher" match="*">
+    <xsl:param name="access" select="'public'"/>
+    <xsl:param name="id"/>
+    <xsl:if test="/root/gui/config/editor-geopublisher">
+      <xsl:call-template name="simpleElementGui">
+        <xsl:with-param name="title" select="/root/gui/strings/file"/>
+        <xsl:with-param name="text">
+          <table width="100%"><tr>
+            <xsl:variable name="ref" select="geonet:element/@ref"/>
+            <xsl:variable name="value" select="string(.)"/>
+            
+            <td width="70%">
+              <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{.}" size="40" />
+            </td>
+            <td align="right">                                              
+              <xsl:call-template name="iso19139GeoPublisherButton">
+                <xsl:with-param name="access" select="$access"></xsl:with-param>
+              </xsl:call-template>
+            </td>                                   
+          </tr></table>
+        </xsl:with-param>
+        <xsl:with-param name="schema"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+  
+  <xsl:template name="iso19139GeoPublisherButton">
+    <xsl:param name="access" select="'public'"/>
+    
+    <xsl:variable name="bbox">
+      <xsl:call-template name="iso19139-global-bbox"/>
+    </xsl:variable>
+    <xsl:variable name="layer">
+      <xsl:choose>
+        <xsl:when test="../../gmd:protocol/gco:CharacterString='DB:POSTGIS'">
+          <xsl:value-of select="concat(../../gmd:linkage/gmd:URL, '#', .)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <button type="button" class="content repository" 
+      onclick="javascript:showGeoPublisherPanel('{/root/*/geonet:info/id}', '{$layer}', 
+      '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);" 
+      alt="{/root/gui/strings/publishHelp}" 
+      title="{/root/gui/strings/geopublisherHelp}"><xsl:value-of select="/root/gui/strings/geopublisher"/></button>
+  </xsl:template>
 
 	<!-- ===================================================================== -->
 	<!-- === iso19139 brief formatting === -->
