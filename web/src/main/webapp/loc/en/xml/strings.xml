@@ -415,11 +415,11 @@
 	<durationHours>hour(s)</durationHours>
 	<durationMinutes>minute(s)</durationMinutes>
 	<durationMonths>month(s)</durationMonths>
-	<durationNbDays>Number of days:</durationNbDays>
+	<durationNbDays>days:</durationNbDays>
 	<durationNbHours>Number of hours:</durationNbHours>
-	<durationNbMinutes>Number of minutes:</durationNbMinutes>
-	<durationNbMonths>Number of months:</durationNbMonths>
-	<durationNbSeconds>Number of seconds:</durationNbSeconds>
+	<durationNbMinutes>minutes:</durationNbMinutes>
+	<durationNbMonths>months:</durationNbMonths>
+	<durationNbSeconds>seconds:</durationNbSeconds>
 	<durationNbYears>Number of years:</durationNbYears>
 	<durationSeconds>second(s)</durationSeconds>
 	<durationSign>Negative duration</durationSign>
