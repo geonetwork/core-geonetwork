@@ -1182,7 +1182,6 @@
         <label>Hours of service</label>
         <description>Time period (including time zone) when individuals can contact the organization
             or individual</description>
-        <label>Hours of Service</label>
     </element>
     <element name="gmd:identificationInfo" id="15.0">
         <label>Identification info</label>
