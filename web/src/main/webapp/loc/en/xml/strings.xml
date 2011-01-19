@@ -315,7 +315,7 @@
 	<backToDescription>Back to the data description</backToDescription>
 	<backToEditor>Back to editing metadata</backToEditor>
 	<backToPreviousPage>Back to previous page</backToPreviousPage>
-	<batchImport>Import all XML formatted metadata from a local directory</batchImport>
+	<batchImport>Import all XML formatted metadata from the application server directory</batchImport>
 	<batchImportTitle>Batch Import</batchImportTitle>
 	<begdate>Beginning Date</begdate>
 	<begtime>Beginning Date</begtime>
