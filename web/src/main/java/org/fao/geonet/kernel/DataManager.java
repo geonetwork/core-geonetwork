@@ -1384,10 +1384,12 @@ public class DataManager
 			
 			//--- add editing info to everything from the parent down
 			editLib.expandTree(mds,el);
+			
+			//--- attach the info element to the child
+			child.addContent(info);
 		}
 		
-		//--- attach the info element to the child (and the metadata root)
-		child.addContent(info);
+		//--- attach the info element to the metadata root)
 		md.addContent((Element)info.clone());
 
 		//--- store the metadata in the session again 

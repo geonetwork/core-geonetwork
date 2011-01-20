@@ -142,7 +142,7 @@
 						value="{gco:Distance}" size="30"/>
 					
 					&#160;
-					<xsl:value-of select="/root/gui/iso19139/element[@name = 'uom']/label"/>
+					<xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
 					&#160;
 					<input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
 						value="{gco:Distance/@uom}" size="10"/>
@@ -503,7 +503,7 @@
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"   select="$schema"/>
 					<xsl:with-param name="edit"     select="$edit"/>
-					<xsl:with-param name="title"    select="/root/gui/iso19139/element[@name='gml:timeInterval']/label"/>
+				  <xsl:with-param name="title"    select="/root/gui/schemas/iso19139/labels/element[@name='gml:timeInterval']/label"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
@@ -518,7 +518,7 @@
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"   select="$schema"/>
 					<xsl:with-param name="edit"     select="$edit"/>
-					<xsl:with-param name="title"    select="/root/gui/iso19139/element[@name='gml:timeInterval']/label"/>
+				  <xsl:with-param name="title"    select="/root/gui/schemas/iso19139/labels/element[@name='gml:timeInterval']/label"/>
 					<xsl:with-param name="text"     select="$text"/>
 				</xsl:apply-templates>
 			</xsl:otherwise>
@@ -698,30 +698,12 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
-		<xsl:variable name="value" select="@codeListValue" />
-		<xsl:variable name="lang" select="/root/gui/language" />
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<select class="md" name="_{geonet:element/@ref}_codeListValue"
-					size="1">
-					<option name="" />
-					
-					<xsl:for-each select="/root/gui/isoLang/record">
-						<xsl:sort select="label/child::*[name() = $lang]"/>
-						<option value="{code}">
-							<xsl:if test="code = $value">
-								<xsl:attribute name="selected" />
-							</xsl:if>
-							<xsl:value-of select="label/child::*[name() = $lang]" />
-						</option>
-					</xsl:for-each>
-				</select>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of
-					select="/root/gui/isoLang/record[code=$value]/label/child::*[name() = $lang]" />
-			</xsl:otherwise>
-		</xsl:choose>
+	  <xsl:call-template name="iso19139GetIsoLanguage">
+	    <xsl:with-param name="value" select="string(@codeListValue)"/>
+	    <xsl:with-param name="ref" select="concat('_', geonet:element/@ref, '_codeListValue')"/>
+	    <xsl:with-param name="schema" select="$schema"/>
+	    <xsl:with-param name="edit"   select="$edit"/>
+	  </xsl:call-template>
 	</xsl:template>
 
 	<!--  Do not allow editing of id to end user. Id is based on language selection
@@ -2142,7 +2124,7 @@
 	
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="//gmd:language" priority="20">
+  <xsl:template mode="iso19139" match="//gmd:language[gco:CharacterString]" priority="20">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 
@@ -2150,29 +2132,32 @@
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="text">
-				<xsl:apply-templates mode="iso19139GetIsoLanguage" select="gco:CharacterString">
+				<xsl:call-template name="iso19139GetIsoLanguage">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
+				  <xsl:with-param name="value" select="gco:CharacterString"/>
+				  <xsl:with-param name="ref" select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
+				</xsl:call-template>
 			</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
 	
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139GetIsoLanguage" match="*">
+  <xsl:template name="iso19139GetIsoLanguage" mode="iso19139GetIsoLanguage" match="*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+		<xsl:param name="value"/>
+    <xsl:param name="ref"/>
 		<xsl:variable name="lang"  select="/root/gui/language"/>
-		<xsl:variable name="value" select="string(.)"/>
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
-				<select class="md" name="_{geonet:element/@ref}" size="1">
+				<select class="md" name="{$ref}" size="1">
 					<option name=""/>
 
 					<xsl:for-each select="/root/gui/isoLang/record">
+					  <xsl:sort select="label/child::*[name() = $lang]"/>
 						<option value="{code}">
 							<xsl:if test="code = $value">
 								<xsl:attribute name="selected"/>
@@ -2185,6 +2170,18 @@
 
 			<xsl:otherwise>
 				<xsl:value-of select="/root/gui/isoLang/record[code=$value]/label/child::*[name() = $lang]"/>
+			  
+			  <!-- In view mode display other languages from gmd:locale of gmd:MD_Metadata element -->
+			  <xsl:if test="../gmd:locale or ../../gmd:locale">
+			    <xsl:text> (</xsl:text><xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gmd:locale' and not(@context)]/label)"/>
+			    <xsl:text>:</xsl:text>
+			    <xsl:for-each select="../gmd:locale|../../gmd:locale">
+			      <xsl:variable name="c" select="gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+			      <xsl:value-of select="/root/gui/isoLang/record[code=$c]/label/child::*[name() = $lang]"/>
+			      <xsl:if test="position()!=last()">, </xsl:if>
+			    </xsl:for-each><xsl:text>)</xsl:text>
+			  </xsl:if>
+			 
 			</xsl:otherwise>
 		</xsl:choose>		
 	</xsl:template>
@@ -2771,7 +2768,7 @@
 					<xsl:with-param name="text">
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
-						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
+						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
 						<input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
 						<select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');" class="md">
 							<xsl:if test="$value=''">
@@ -3730,20 +3727,24 @@
 	<xsl:template mode="iso19139" match="gmd:locale|geonet:child[string(@name)='locale']" priority="1">
 		<xsl:param name="schema" />
 		<xsl:param name="edit" />
-		<xsl:if test="$edit = true()">
-			<xsl:variable name="content">
-				<xsl:apply-templates mode="elementEP" select="*/gmd:languageCode|*/geonet:child[string(@name)='languageCode']">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
-			</xsl:variable>					
-			
-			<xsl:apply-templates mode="complexElement" select=".">
-				<xsl:with-param name="schema"  select="$schema"/>
-				<xsl:with-param name="edit"    select="$edit"/>
-				<xsl:with-param name="content" select="$content"/>
-			</xsl:apply-templates>
-		</xsl:if>
+	  <xsl:choose>
+	    <xsl:when test="$edit = true()">
+	      <xsl:variable name="content">
+	        <xsl:apply-templates mode="elementEP" select="*/gmd:languageCode|*/geonet:child[string(@name)='languageCode']">
+	          <xsl:with-param name="schema" select="$schema"/>
+	          <xsl:with-param name="edit"   select="$edit"/>
+	        </xsl:apply-templates>
+	      </xsl:variable>					
+	      
+	      <xsl:apply-templates mode="complexElement" select=".">
+	        <xsl:with-param name="schema"  select="$schema"/>
+	        <xsl:with-param name="edit"    select="$edit"/>
+	        <xsl:with-param name="content" select="$content"/>
+	      </xsl:apply-templates>
+	    </xsl:when>
+	    <!-- In view mode, gmd:locale is displayed next to gmd:language -->
+	  </xsl:choose>
+		
 	</xsl:template>
 
 
@@ -3908,7 +3909,7 @@
 				<xsl:variable name="ptFreeTextTree" select="exslt:node-set($tmpFreeText)" />
 				
 				<xsl:variable name="mainLang"
-					select="string(/root/*/gmd:language/gco:CharacterString)" />
+				  select="string(/root/*/gmd:language/gco:CharacterString|/root/*/gmd:language/gmd:LanguageCode/@codeListValue)" />
 				<xsl:variable name="mainLangId">
 					<xsl:call-template name="getLangIdFromMetadata">
 						<xsl:with-param name="lang" select="$mainLang" />
@@ -4066,7 +4067,7 @@
 	-->	
 	<xsl:template name="PT_FreeText_Tree">
 		<xsl:variable name="mainLang"
-			select="string(/root/*/gmd:language/gco:CharacterString)" />
+		  select="string(/root/*/gmd:language/gco:CharacterString|/root/*/gmd:language/gmd:LanguageCode/@codeListValue)" />
 		<xsl:variable name="languages"
 			select="/root/*/gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue" />
 		
