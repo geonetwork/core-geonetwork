@@ -2119,8 +2119,12 @@
         <label>Projected CRS</label>
         <description/>
     </element>
-    
-    
+
+    <element name="gml:id">
+        <label>Identifier</label>
+        <description>Unique identifier</description>
+    </element>
+
     <element name="gml:id" id="191.0" context="gmd:MD_CRS">
         <label>Ellipsoid</label>
         <description>Identity of the ellipsoid used</description>
