@@ -30,7 +30,6 @@ CREATE TABLE Settings
     id        int,
     parentId  int,
     name      varchar(32)    not null,
-    isocode varchar(3)  not null,
         
     value     text,
 
@@ -45,6 +44,7 @@ CREATE TABLE Languages
   (
     id    varchar(5),
     name  varchar(32)   not null,
+    isocode varchar(3)  not null,
 
     primary key(id)
   );
