@@ -245,7 +245,7 @@
 					select="generate-id(/root/gui/strings/inspireSection/geoloc/title)" />
 				<xsl:with-param name="content">
 
-					<xsl:for-each select="gmd:extent/gmd:EX_Extent">
+					<xsl:for-each select="*:extent/gmd:EX_Extent">
 						<xsl:apply-templates mode="complexElement"
 							select="
 							gmd:description|gmd:geographicElement|gmd:verticalElement
@@ -262,7 +262,7 @@
 						</xsl:apply-templates>
 					</xsl:for-each>
 
-				  <xsl:if test="not(gmd:extent)">
+				  <xsl:if test="not(*:extent)">
 				    <xsl:apply-templates mode="elementEP"
 				      select="
 				      geonet:child[string(@name)='extent']">
