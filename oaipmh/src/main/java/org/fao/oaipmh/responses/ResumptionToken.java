@@ -23,21 +23,14 @@
 
 package org.fao.oaipmh.responses;
 
-import java.util.Random;
-
-import org.fao.oaipmh.OaiPmh;
-import org.fao.oaipmh.exceptions.BadResumptionTokenException;
-import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.util.ISODate;
-import org.fao.oaipmh.util.SearchResult;
+import org.fao.oaipmh.OaiPmh;
 import org.jdom.Element;
 
 //=============================================================================
 
-
 public class ResumptionToken
 {
-	public static final String SEPARATOR = "/";
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -48,59 +41,17 @@ public class ResumptionToken
 
 	//---------------------------------------------------------------------------
 
-	/*
-	public ResumptionToken(String token)
+	public ResumptionToken(Element rt)
 	{
-		this.token = token;
-	}
-	 */
+		token = rt.getText();
 
-	//---------------------------------------------------------------------------
+		String expDt = rt.getAttributeValue("expirationDate");
+		String listSz= rt.getAttributeValue("completeListSize");
+		String curs  = rt.getAttributeValue("cursor");
 
-	public ResumptionToken(Element rt) 
-	{
-		try {
-			build(rt);
-		} catch ( BadResumptionTokenException e ) {}
-	}
-
-	public ResumptionToken(TokenListRequest req) throws BadResumptionTokenException {
-
-		String strToken = req.getResumptionToken();
-
-		if (strToken==null) {
-
-			if (req.getFrom()!= null)
-				from   = req.getFrom().toString();
-			if (req.getUntil()!= null)
-				until  = req.getUntil().toString();
-			if (req.getSet()!= null)
-				set    = req.getSet();
-			prefix = req.getMetadataPrefix();
-
-
-			randomid = generateRandomString();
-
-		}
-		else {
-
-			parseToken(strToken);
-		}
-	}
-
-	public ResumptionToken(TokenListRequest req, SearchResult res) throws BadResumptionTokenException {
-		this(req);
-		this.res=res;
-	}
-
-	public static String buildKey(TokenListRequest req)  throws BadResumptionTokenException {
-		ResumptionToken temp = new ResumptionToken(req);
-		return temp.getKey();
-	}
-
-	public static int getPos(TokenListRequest req) throws BadResumptionTokenException {
-		ResumptionToken temp = new ResumptionToken(req);
-		return temp.getPos();
+		expirDate = (expDt  == null) ? null : new ISODate(expDt);
+		listSize  = (listSz == null) ? null : new Integer(listSz);
+		cursor    = (curs   == null) ? null : new Integer(curs);
 	}
 
 	//---------------------------------------------------------------------------
@@ -109,62 +60,27 @@ public class ResumptionToken
 	//---
 	//---------------------------------------------------------------------------
 
-
-
-	public int getPos() 				 { return pos;         }
+	public String  getToken()            { return token;     }
 	public ISODate getExpirDate()        { return expirDate; }
 	public Integer getCompleteListSize() { return listSize;  }
 	public Integer getCursor()           { return cursor;    }
 
-	public void setExpirDate(ISODate date) {
-		this.expirDate=date;
+	public boolean isTokenEmpty() { return token.length() == 0; }
+
+	//---------------------------------------------------------------------------
+
+	public void setToken(String token)
+	{
+		this.token = token;
 	}
 
-	//public boolean isTokenEmpty() { return token.length() == 0; }
-	public boolean isTokenEmpty() { return isReset;  }
-
-	public String  getToken()            { 
-		if (isReset) return ""; // we are at the last chunk
-		return getKey()+SEPARATOR+pos;
-	}
-
-	public String getKey() {
-		return set+SEPARATOR+prefix+SEPARATOR+from+SEPARATOR+until+SEPARATOR+randomid;
-	}
-
-	public SearchResult getRes() {
-		return res;
-	}
-
-	public void setRes(SearchResult res) {
-		this.res = res;
-	}
-
-	public void setPos(int pos) {
-		this.pos = pos;
-	}
-
-
-	public void reset() {
-		isReset=true;
-	}
-	
-	public void setupToken(int newpos) {
-
-		if (newpos < res.ids.size()) // update token so that it refers to the next chunk
-			setPos(newpos);
-		else 
-		{
-			reset(); 	// reset token to indicate last chunk
-		}
-	}
-
+	//---------------------------------------------------------------------------
 
 	public Element toXml()
 	{
 		Element root = new Element("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
 
-		root.setText(getToken());
+		root.setText(token);
 
 		if (expirDate != null)
 			root.setAttribute("expirationDate", expirDate.toString());
@@ -180,67 +96,14 @@ public class ResumptionToken
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private void parseToken(String strToken) throws BadResumptionTokenException {
-
-		String[] temp = strToken.split(SEPARATOR);
-
-		if (temp.length != 6)
-			throw new BadResumptionTokenException("unknown resumptionToken format: "+strToken);
-
-		set = temp[0];
-		prefix = temp[1];
-		from =  temp[2] ;
-		until = temp[3] ;
-		randomid = temp[4];
-
-		pos = Integer.parseInt( temp[5] );
-	}
-
-	private void build(Element rt) throws BadResumptionTokenException
-	{
-		parseToken(rt.getText());
-
-		String expDt = rt.getAttributeValue("expirationDate");
-		String listSz= rt.getAttributeValue("completeListSize");
-		String curs  = rt.getAttributeValue("cursor");
-
-		expirDate = (expDt  == null) ? null : new ISODate(expDt);
-		listSize  = (listSz == null) ? null : new Integer(listSz);
-		cursor    = (curs   == null) ? null : new Integer(curs);
-	}
-
-	private static String generateRandomString() {
-		Random r = new Random();
-		return Long.toString(Math.abs(r.nextLong()), 36);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
 
-	//private String  token;
+	private String  token;
 	private ISODate expirDate;
 	private Integer listSize;
 	private Integer cursor;
-	private Integer pos;
-	private String set ="";
-	private String from="";
-	private String until="";
-	private String prefix="";
-	private Boolean isReset = false;
-	private String randomid;
-	private SearchResult res;
-
-
-
-
-
 }
 
 //=============================================================================
