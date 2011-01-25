@@ -432,14 +432,29 @@ public class Geonetwork implements ApplicationHandler
 			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
 			String dbType = Lib.db.getDBType(dbms);
 			logger.info("      Migrating from " + dbVersion + " to " + version + " (dbtype:" + dbType + ")...");
+			String sqlScriptPath = "";
 			String sqlMigrationScriptPath = path + "/WEB-INF/classes/setup/sql/migrate/" + 
 				 dbVersion + "-to-" + version + "/" + dbType + ".sql";
+			String defaultSqlMigrationScriptPath = path + "/WEB-INF/classes/setup/sql/migrate/" + 
+			 dbVersion + "-to-" + version + "/default.sql";
+		
 			File sqlMigrationScript = new File(sqlMigrationScriptPath);
+			File defaultSqlMigrationScript = new File(defaultSqlMigrationScriptPath);
+			File script = null;
+			
+			// Use specific db script or default one
 			if (sqlMigrationScript.exists()) {
+				script = sqlMigrationScript;
+			} else if (defaultSqlMigrationScript.exists()) {
+				script = defaultSqlMigrationScript;
+			} 
+			
+			if (script != null) {
 				try {
+					sqlScriptPath = script.getCanonicalPath();
 					// Run the SQL migration
 					logger.info("      Running SQL migration step ...");
-					Lib.db.runSQL(dbms, sqlMigrationScript);
+					Lib.db.runSQL(dbms, script);
 					
 					// Refresh setting manager in case the migration task added some new settings.
 					settingMan.refresh();
@@ -450,7 +465,7 @@ public class Geonetwork implements ApplicationHandler
 					
 					// TODO : Maybe a force rebuild index is required in such situation.
 				} catch (Exception e) {
-					logger.info("      Errors occurs during SQL migration task: " + sqlMigrationScriptPath 
+					logger.info("      Errors occurs during SQL migration task: " + sqlScriptPath 
 							+ " or when refreshing settings manager.");
 					e.printStackTrace();
 				}

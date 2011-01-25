@@ -46,6 +46,9 @@ public class DbLib {
 	// ---
 	// -----------------------------------------------------------------------------
 
+	private static final String SQL_EXTENSION = ".sql";
+	private static final String SETUP_SQL_PATH = "/WEB-INF/classes/setup/sql/";
+
 	public Element select(Dbms dbms, String table, String name)
 			throws SQLException {
 		return select(dbms, table, name, null);
@@ -191,12 +194,15 @@ public class DbLib {
 	 * @throws Exception
 	 */
 	public void runSQL(Dbms dbms, File sqlFile) throws Exception {
-		List<String> data = Lib.text.load(sqlFile.getCanonicalPath(), "UTF-8");
-
-		runSQL(dbms, data);
+		runSQL(dbms, sqlFile, true);
 	}
 
-	private void runSQL(Dbms dbms, List<String> data) throws Exception {
+	public void runSQL(Dbms dbms, File sqlFile, boolean failOnError) throws Exception {
+		List<String> data = Lib.text.load(sqlFile.getCanonicalPath(), "UTF-8");
+		runSQL(dbms, data, failOnError);
+	}
+	
+	private void runSQL(Dbms dbms, List<String> data, boolean failOnError) throws Exception {
 		StringBuffer sb = new StringBuffer();
 
 		for (String row : data) {
@@ -211,16 +217,27 @@ public class DbLib {
 					sql = sql.substring(0, sql.length() - 1);
 
 					Log.debug(Geonet.DB, "Executing " + sql);
-					if (sql.trim().startsWith("SELECT")) {
-						dbms.select(sql);
-					} else {
-						dbms.execute(sql);
+					
+					try {
+						if (sql.trim().startsWith("SELECT")) {
+							dbms.select(sql);
+						} else {
+							dbms.execute(sql);
+						}
+					} catch (SQLException e) {
+						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
+
+						if (failOnError)
+							throw e;						
 					}
 					sb = new StringBuffer();
 				}
 			}
 		}
-		dbms.commit();
+		dbms.commit();		
+	}
+	private void runSQL(Dbms dbms, List<String> data) throws Exception {
+		runSQL(dbms, data, true);
 	}
 
 	/**
@@ -239,6 +256,7 @@ public class DbLib {
 
 			return true;
 		} catch (SQLException e) {
+			Log.debug(Geonet.DB, "Safe execute error: " + query + ", error is:" + e.getMessage());
 			dbms.abort();
 			return false;
 		}
@@ -260,22 +278,45 @@ public class DbLib {
 																	// appPath
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms schema to load
-		String file = "create-db-" + getDBType(dbms) + ".sql";
-
+		String file = checkFilePath(appPath, "create/create-db-", getDBType(dbms));
+		
 		Log.debug(Geonet.DB, "Database creation script is:" + file);
 
 		// --- load the dbms schema
-		// FIXME : get resources path
-		return Lib.text.load(appPath + "/WEB-INF/classes/setup/sql/create/" + file);
+		return Lib.text.load(file);
 	}
 
+	/**
+	 * Check if db specific SQL script exist, if not return default SQL script path.
+	 * 
+	 * @param appPath
+	 * @param prefix
+	 * @param type
+	 * @return
+	 */
+	private String checkFilePath (String appPath, String prefix, String type) {
+		String dbFilePath = appPath + SETUP_SQL_PATH + prefix + type + SQL_EXTENSION;
+		File dbFile = new File(dbFilePath);
+		if (dbFile.exists())
+			return dbFilePath;
+		
+		String defaultFilePath = appPath + SETUP_SQL_PATH + prefix + "default" + SQL_EXTENSION;
+		File defaultFile = new File(defaultFilePath);
+		if (defaultFile.exists())
+			return defaultFilePath;
+		else
+			Log.debug(Geonet.DB, "No default SQL script found: " + defaultFilePath);
+
+		return "";
+	}
+	
 	private List<String> loadSqlDataFile(Dbms dbms, String appPath)
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms data file to load
-		String file = "data-db-" + getDBType(dbms) + ".sql";
-
+		String file = checkFilePath(appPath, "data/data-db-", getDBType(dbms));
+		
 		// --- load the sql data
-		return Lib.text.load(appPath + "/WEB-INF/classes/setup/sql/data/" + file, "UTF-8");
+		return Lib.text.load(file, "UTF-8");
 	}
 
 	private String getObjectName(String createStatem) {
