@@ -426,6 +426,7 @@ public class Geonet
 			/** Parameter name: {@value #_TITLE} - Title not tokenized mainly
 			 * used for sorting purpose */
 			public static final String TITLE     = "title";
+			public static final String SCALE_DENOMINATOR = "denominator";
 		}
 	}
 

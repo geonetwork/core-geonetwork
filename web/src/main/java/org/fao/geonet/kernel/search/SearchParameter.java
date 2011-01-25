@@ -89,6 +89,8 @@ public class SearchParameter {
     public static final String TAXON = "taxon";
     public static final String CREDIT = "credit";
     public static final String DATAPARAM = "dataparam";
+    public static final String ORGNAME = "orgName";
+	public static final String SPATIALREPRESENTATIONTYPE = "spatialRepresentationType";
     
 
 }

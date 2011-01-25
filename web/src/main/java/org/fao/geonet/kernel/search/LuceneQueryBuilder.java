@@ -569,6 +569,23 @@ public class LuceneQueryBuilder {
 		}
 		query.add(templateQuery, templateOccur);
 
+		String orgName = luceneQueryInput.getOrgName();
+		BooleanClause.Occur orgNameOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+		TermQuery orgNameQuery;
+		if(orgName != null) {
+			orgNameQuery = new TermQuery(new Term(LuceneIndexField.ORG_NAME, orgName));
+			query.add(orgNameQuery, orgNameOccur);
+		}
+		
+		String spatialRepType = luceneQueryInput.getSpatialRepresentationType();
+		BooleanClause.Occur spatialRepTypeOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+		TermQuery spatialRepTypeQuery;
+		if(spatialRepType != null) {
+			spatialRepTypeQuery = new TermQuery(new Term(LuceneIndexField.SPATIALREPRESENTATIONTYPE, spatialRepType));
+			query.add(spatialRepTypeQuery, spatialRepTypeOccur);
+		}
+		
+		
 		// metadata date range
 		addRangeQuery(query, 
 				luceneQueryInput.getDateTo(), 

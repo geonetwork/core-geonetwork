@@ -23,8 +23,23 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimerTask;
+import java.util.TreeSet;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -33,6 +48,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
@@ -78,21 +94,8 @@ import org.fao.geonet.util.JODAISODate;
 import org.fao.geonet.util.spring.CollectionUtils;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 //==============================================================================
 // search metadata locally using lucene
@@ -161,6 +164,8 @@ public class LuceneSearcher extends MetaSearcher
 		computeQuery(srvContext, request, config);
 		initSearchRange(srvContext);
 		performQuery(getFrom()-1, getTo(), buildSummary);
+		
+
 		searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
 	}
 
@@ -571,11 +576,13 @@ public class LuceneSearcher extends MetaSearcher
         		|| sortBy.equals(Geonet.SearchResult.SortBy.RATING)) {
             sortType = SortField.INT;
             sortBy = "_" + sortBy;
+        } else if (sortBy.equals(Geonet.SearchResult.SortBy.SCALE_DENOMINATOR)) {
+            sortType = SortField.INT;
         } else if (sortBy.equals(Geonet.SearchResult.SortBy.DATE) 
         		|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE)) {
             sortBy = "_" + sortBy;
         }
-
+        Log.debug(Geonet.SEARCH_ENGINE, "Sort by: " + sortBy + " order: " + sortOrder + " type: " + sortType);
         return new SortField(sortBy, sortType, sortOrder);
     }
     
@@ -1121,7 +1128,6 @@ public class LuceneSearcher extends MetaSearcher
 		 Log.debug(Geonet.SEARCH_ENGINE, "Escaped: "+result.toString());
      return result.toString();
   }
-
 }
 
 //==============================================================================

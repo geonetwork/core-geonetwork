@@ -86,6 +86,8 @@ public class UserQueryInput {
     private String denominator;
     private String denominatorFrom;
     private String denominatorTo;
+    private String orgName;
+    private String spatialRepresentationType;
     private List<String> taxons;
     private List<String> credits;
     private List<String> dataparams;
@@ -177,6 +179,8 @@ public class UserQueryInput {
         setDenominator(jdom.getChildText(SearchParameter.DENOMINATOR));
         setDenominatorFrom(jdom.getChildText(SearchParameter.DENOMINATORFROM));
         setDenominatorTo(jdom.getChildText(SearchParameter.DENOMINATORTO));
+        setOrgName(jdom.getChildText(SearchParameter.ORGNAME));
+        setSpatialRepresentationType(jdom.getChildText(SearchParameter.SPATIALREPRESENTATIONTYPE));
         @SuppressWarnings("unchecked")
         List<Element> taxonsE = (List<Element>)jdom.getChildren(SearchParameter.TAXON);
         List<String> taxons = new ArrayList<String>();
@@ -270,6 +274,8 @@ public class UserQueryInput {
                 .append("denominator: ").append(denominator)
                 .append("denominatorTo: ").append(denominatorTo)
                 .append("denominatorFrom: ").append(denominatorFrom)
+                .append("orgName: ").append(orgName)
+                .append("spatialRepresentationType: ").append(spatialRepresentationType)
                 .toString();
     }    
 
@@ -692,4 +698,20 @@ public class UserQueryInput {
     public void setDataparams(List<String> dataparams) {
         this.dataparams = dataparams;
     }
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setSpatialRepresentationType(String spatialRepresentationType) {
+		this.spatialRepresentationType = spatialRepresentationType;
+	}
+
+	public String getSpatialRepresentationType() {
+		return spatialRepresentationType;
+	}
 }

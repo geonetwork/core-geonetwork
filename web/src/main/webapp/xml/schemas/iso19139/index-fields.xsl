@@ -216,6 +216,10 @@
 				</xsl:for-each>
 			</xsl:for-each>
 			
+		  <xsl:for-each select="gmd:spatialRepresentationType">
+		    <Field name="spatialRepresentationType" string="{gmd:MD_SpatialRepresentationTypeCode/@codeListValue}" store="true" index="true"/>
+		  </xsl:for-each>
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<xsl:for-each select="gmd:resourceConstraints">

@@ -76,4 +76,6 @@ public class LuceneIndexField {
 	public static final String TAXON = "taxon:name";
 	public static final String CREDIT = "credit";
 	public static final String DATAPARAM = "dataparam";
+	public static final String ORG_NAME = "orgName";
+	public static final String SPATIALREPRESENTATIONTYPE = "spatialRepresentationType";
 }

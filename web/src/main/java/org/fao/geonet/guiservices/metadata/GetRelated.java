@@ -109,6 +109,7 @@ public class GetRelated implements Service {
 		if (type.equals("") || type.equals("service"))
 			relatedRecords.addContent(search(uuid, "services", context, from,
 					to, fast));
+		// TODO : Add datasets related to service search
 		if (type.equals("") || type.equals("related")) {
 			Element relation = Get.getRelation(id, "full", context);
 			relatedRecords.addContent(new Element("related")
