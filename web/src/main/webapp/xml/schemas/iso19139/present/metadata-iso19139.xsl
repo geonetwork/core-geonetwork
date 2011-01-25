@@ -2739,7 +2739,12 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<a href="{$linkage}" title="{$title}" onclick="runFileDownload(this.href, this.title); return false;"><xsl:value-of select="$title"/></a>
+						<a href="{$linkage}" title="{$title}">
+							<xsl:if test="/root/gui/env/downloadservice/leave='false'">
+								<xsl:attribute name="onclick">runFileDownload(this.href, this.title); return false;</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="$title"/>
+						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>

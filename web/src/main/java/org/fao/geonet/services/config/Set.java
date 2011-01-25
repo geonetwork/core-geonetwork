@@ -128,9 +128,9 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/tokentimeout",          "system/oai/tokentimeout"),
 		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/cachesize",             "system/oai/cachesize"),
 		
-		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "downloadservice/enable",             "system/downloadservice/enable"),
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/simple",             "system/downloadservice/simple"),
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/withdisclaimer",     "system/downloadservice/withdisclaimer"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   false,  "downloadservice/leave",             "system/downloadservice/leave"),
 		
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "csw/enable",               "system/csw/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "csw/contactId",                               "system/csw/contactId"),
