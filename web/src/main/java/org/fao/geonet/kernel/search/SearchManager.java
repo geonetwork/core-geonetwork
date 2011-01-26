@@ -1385,7 +1385,7 @@ public class SearchManager
                 SpatialIndexWriter writer = writerNoLocking();
                 SpatialIndex index = writer.getIndex();
                 FeatureSource featureSource = writer.getFeatureSource();
-                return _types.get(relation).newInstance(query, request, geom,
+                return _types.get(relation).newInstance(query, geom,
                         featureSource, index);
             } finally {
                 _lock.unlock();
