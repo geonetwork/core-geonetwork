@@ -4,7 +4,7 @@
 	xmlns:geonet="http://www.fao.org/geonetwork">
 	
 	<!-- main template - the way into processing iso19115 -->
-	<xsl:template match="metadata-iso19115">
+  <xsl:template match="metadata-iso19115" name="metadata-iso19115">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
@@ -1605,43 +1605,14 @@
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
-					<xsl:with-param name="text">
+				  <xsl:with-param name="edit"  select="$edit"/>
+				  <xsl:with-param name="text">
 						<xsl:variable name="ref" select="geonet:element/@ref"/>
-						
-						<table width="100%"><tr>
-							<td>
-								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{text()}" size="30" readonly="1"/>
-							</td>
-							<td align="center" width="30" valign="middle">
-								<img src="{/root/gui/url}/scripts/calendar/img.gif"
-									 id="_{$ref}_trigger"
-									 style="cursor: pointer; border: 1px solid;"
-									 title="Date selector"
-									 onmouseover="this.style.background='red';"
-									 onmouseout="this.style.background=''" />
-								<script type="text/javascript">
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
-											showsTime   : true, // Show the time
-											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
-										}
-									);
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%dT%H:%M:00",                                // the date format
-											showsTime   : true, // Show the time
-											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
-										}
-									);
-								</script>
-							</td>
-							<td align="left" width="100%">
-								<xsl:text>  </xsl:text><a href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
-							</td>
-						</tr></table>
+					  <xsl:call-template name="calendar">
+					    <xsl:with-param name="ref" select="$ref"/>
+					    <xsl:with-param name="date" select="text()"/>
+					    <xsl:with-param name="format" select="'%Y-%m-%dT%H:%M:00'"/>
+					  </xsl:call-template>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -1669,44 +1640,15 @@
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema"  select="$schema"/>
+				  <xsl:with-param name="schema"  select="$schema"/>
+				  <xsl:with-param name="edit"  select="$edit"/>
 					<xsl:with-param name="text">
 						<xsl:variable name="ref" select="geonet:element/@ref"/>
-						
-						<table width="100%"><tr>
-							<td>
-								<input class="md" type="text" name="_{$ref}" id="_{$ref}_cal" value="{text()}" size="30" readonly="1"/>
-							</td>
-							<td align="center" width="30" valign="middle">
-								<img src="{/root/gui/url}/scripts/calendar/img.gif"
-									 id="_{$ref}_trigger"
-									 style="cursor: pointer; border: 1px solid;"
-									 title="Date selector"
-									 onmouseover="this.style.background='red';"
-									 onmouseout="this.style.background=''" />
-								<script type="text/javascript">
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%d",                                // the date format
-											showsTime : false, // Do not show the time
-											button      : &quot;_<xsl:value-of select="$ref"/>_trigger&quot;  // ID of the button
-										}
-									);
-									Calendar.setup(
-										{
-											inputField  : &quot;_<xsl:value-of select="$ref"/>_cal&quot;,         // ID of the input field
-											ifFormat    : "%Y-%m-%d",                                // the date format
-											showsTime : false, // Do not show the time
-											button      : &quot;_<xsl:value-of select="$ref"/>_cal&quot;  // ID of the button
-										}
-									);
-								</script>
-							</td>
-							<td align="left" width="100%">
-								<xsl:text>  </xsl:text><a href="javascript:clearRef('{$ref}');"> <xsl:value-of select="/root/gui/strings/clear"/></a>
-							</td>
-						</tr></table>
+					  <xsl:call-template name="calendar">
+					    <xsl:with-param name="ref" select="$ref"/>
+					    <xsl:with-param name="date" select="text()"/>
+					    <xsl:with-param name="format" select="'%Y-%m-%d'"/>
+					  </xsl:call-template>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
