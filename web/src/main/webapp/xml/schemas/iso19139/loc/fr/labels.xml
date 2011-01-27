@@ -3460,4 +3460,37 @@
     <label>URL</label>
     <description>URL du document.</description>
   </element>
+  
+  <element name="gml:TimePeriodTypeGROUP_ELEMENT0">
+    <label>Information sur la période</label>
+    <description></description>
+  </element>
+  <element name="gml:TimePeriodTypeGROUP_ELEMENT4">
+    <label>Information sur la période</label>
+    <description></description>
+  </element>
+  <element name="gml:metaDataProperty">
+    <label>Métadonnée sur la propriété</label>
+    <description></description>
+  </element>
+  <element name="gml:descriptionReference">
+    <label>Référence sur la description</label>
+    <description></description>
+  </element>
+  <element name="gml:GenericMetaData">
+    <label>Métadonnée</label>
+    <description></description>
+  </element>
+  <element name="gml:description">
+    <label>Description</label>
+    <description></description>
+  </element>
+  <element name="gml:identifier">
+    <label>Identifiant</label>
+    <description></description>
+  </element>
+  <element name="gml:name">
+    <label>Nom</label>
+    <description></description>
+  </element>
 </labels>
