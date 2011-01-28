@@ -859,7 +859,7 @@
     <help>Description des points de contrôle utilisés pour tester la précision du géoréférencement de la trame.</help>
     <condition>Condition</condition>
   </element>
-  <element name="gmd:citation" id="24.0" context="gmd:MD_Identification">
+  <element name="gmd:citation" id="24.0" context="gmd:MD_DataIdentification">
     <label>Informations de référence</label>
     <description>Informations de référence sur les ressources</description>
     <help>Indication des sources du jeu de données décrit. Le nom ou le titre du fichier du jeu de données de même qu''une date du type adéquat (création, publication, traitement) sont gérés ici. Cet attribut est du type CI_Citation et est géré dans la classe du même nom.</help>
@@ -1551,7 +1551,7 @@
     
   </element>
   <element name="gmd:fileName" id="49.0">
-    <label>Nom de l'illustration</label>
+    <label>Nom ou URL de l'illustration</label>
     <description>Nom du fichier qui contient le graphique contenant une illustration du jeu de données</description>
     <help>Nom du fichier contenant une représentation figurative du jeu de données.</help>
     <condition/>
@@ -1627,7 +1627,7 @@
     
   </element>
   <element name="gmd:graphicOverview" id="31.0">
-    <label>Vue générale graphique</label>
+    <label>Aperçus</label>
     <description>Vue générale graphique illustrant les ressources (y inclus une légende)</description>
     <help>Vue d'ensemble graphique de la ressource (légende incluse). Ces informations sont gérées dans la classe MD_BrowseGraphic.</help>
     <condition/>

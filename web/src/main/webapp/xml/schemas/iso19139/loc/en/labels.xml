@@ -778,11 +778,11 @@
         <description>Date that the metadata was created (YYYY-MM-DDThh:mm:ss)</description>
         <condition>mandatory</condition>
     </element>
-    <!--<element name="gmd:dateTime" id="89.0">
+    <element name="gmd:dateTime" id="89.0">
         <label>Date / Time</label>
         <description>Date and time or range of date and time on or over which the process step
             occurred (YYYY-MM-DDThh:mm:ss)</description>
-    </element>-->
+    </element>
     <element name="gmd:dateTime" id="89.0" context="LI_ProcessStep">
         <description>Date and time or range of date and time on or over which the process step
             occurred (YYYY-MM-DDThh:mm:ss)</description>
