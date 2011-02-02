@@ -93,28 +93,36 @@ public class SettingInfo
 
 	public String getSelectionMaxRecords()
 	{
-		return sm.getValue("system/selectionmanager/maxrecords");
+		String value = sm.getValue("system/selectionmanager/maxrecords");
+		if (value == null) value = "10000";
+		return value;
 	}
 
 	//---------------------------------------------------------------------------
 
 	public boolean getLuceneIndexOptimizerSchedulerEnabled()
 	{
-		return sm.getValue("system/indexoptimizer/enable").equals("true");
+		String value = sm.getValue("system/indexoptimizer/enable");
+		if (value == null) return false;
+		else return value.equals("true");
 	}
 
 	//---------------------------------------------------------------------------
 
 	public boolean isXLinkResolverEnabled()
 	{
-		return sm.getValue("system/xlinkResolver/enable").equals("true");
+		String value = sm.getValue("system/xlinkResolver/enable");
+		if (value == null) return false;
+		else return value.equals("true");
 	}
 
 	//---------------------------------------------------------------------------
 
 	public boolean isSearchStatsEnabled()
 	{
-		return sm.getValue("system/searchStats/enable").equals("true");
+		String value = sm.getValue("system/searchStats/enable");
+		if (value == null) return false;
+		else return value.equals("true");
 	}
 
 	//---------------------------------------------------------------------------
