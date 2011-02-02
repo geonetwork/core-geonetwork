@@ -364,7 +364,7 @@ public class DownloadArchive implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		//--- increase metadata popularity
-		if (access.equals(Params.Access.PRIVATE)) dm.increasePopularity(dbms, id);
+		if (access.equals(Params.Access.PRIVATE)) dm.increasePopularity(context, id);
 
 		//--- send email notification
 		if (doNotify) {

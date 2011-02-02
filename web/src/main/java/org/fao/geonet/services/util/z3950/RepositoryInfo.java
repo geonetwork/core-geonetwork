@@ -93,23 +93,25 @@ public class RepositoryInfo {
 
    	GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 		ApplicationContext app_context = gc.getApplicationContext();
-
-		Configuration conf = (Configuration)app_context.getBean("JZKitConfig");
 		Vector<RepositoryInfo> ret = new Vector<RepositoryInfo>();
-		Iterator<SearchServiceDescriptionDBO> it = conf.enumerateRepositories();
+		
+		if (app_context != null) {
+			Configuration conf = (Configuration)app_context.getBean("JZKitConfig");
+			Iterator<SearchServiceDescriptionDBO> it = conf.enumerateRepositories();
                
-		while (it.hasNext()) {
-   		SearchServiceDescriptionDBO ssd = it.next();
-     	Collection<CollectionDescriptionDBO> col = ssd.getCollections();
-			if (col.size()>0) {
-				Iterator<CollectionDescriptionDBO> colit = col.iterator();
-				Log.debug(Geonet.Z3950, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
-				while (colit.hasNext()) {
-					CollectionDescriptionDBO oneCol = colit.next();
-					Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+oneCol.getLocalId()+":"+ssd.getCode());
-					ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), oneCol.getLocalId(), ssd.getCode(), ssd.getClassName()) ) ;                               
+			while (it.hasNext()) {
+	   		SearchServiceDescriptionDBO ssd = it.next();
+	     	Collection<CollectionDescriptionDBO> col = ssd.getCollections();
+				if (col.size()>0) {
+					Iterator<CollectionDescriptionDBO> colit = col.iterator();
+					Log.debug(Geonet.Z3950, "Service "+ssd.getServiceName()+" has "+col.size()+" collections "+colit.hasNext());
+					while (colit.hasNext()) {
+						CollectionDescriptionDBO oneCol = colit.next();
+						Log.debug(Geonet.Z3950, "Adding collection "+oneCol.getCode()+":"+oneCol.getCollectionName()+":"+oneCol.getLocalId()+":"+ssd.getCode());
+						ret.add( new RepositoryInfo(  oneCol.getCode() , oneCol.getCollectionName(), oneCol.getLocalId(), ssd.getCode(), ssd.getClassName()) ) ;                               
+					}
 				}
-     	}
+			}
 		}
                
 		return ret;

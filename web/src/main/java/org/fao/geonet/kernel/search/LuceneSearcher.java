@@ -90,6 +90,7 @@ import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.util.JODAISODate;
 import org.fao.geonet.util.spring.CollectionUtils;
 import org.jdom.Element;
@@ -155,7 +156,6 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
 		throws Exception
 	{
-		SearcherLogger searchLogger = new SearcherLogger(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude());
 
 		String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
@@ -164,9 +164,23 @@ public class LuceneSearcher extends MetaSearcher
 		computeQuery(srvContext, request, config);
 		initSearchRange(srvContext);
 		performQuery(getFrom()-1, getTo(), buildSummary);
-		
 
-		searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
+		SettingInfo si = new SettingInfo(srvContext);
+		if (si.isSearchStatsEnabled()) {
+			if (_sm.getLogAsynch()) {
+				// Run asynch
+				Log.debug("jeeves.service","Log search in asynch mode - start.");
+				GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+				gc.getThreadPool().runTask(new SearchLoggerTask(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude(), _query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n")));
+				Log.debug("jeeves.service","Log search in asynch mode - end.");
+			} else {
+				// Run synch - alter search performance
+				Log.debug("jeeves.service","Log search in synch mode - start.");
+				SearcherLogger searchLogger = new SearcherLogger(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude());
+				searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
+				Log.debug("jeeves.service","Log search in synch mode - end.");
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------------
@@ -305,7 +319,8 @@ public class LuceneSearcher extends MetaSearcher
                     ! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
                 if(!CollectionUtils.isEmpty(requestedGroups)) {
                     for(Element group : requestedGroups) {
-                        if(! userGroups.contains(group.getText())) {
+                        if(! "".equals(group.getText()) 
+                        		&& ! userGroups.contains(group.getText())) {
                             throw new UnAuthorizedException("You are not authorized to do this.", null);
                         }
                     }
@@ -1128,6 +1143,53 @@ public class LuceneSearcher extends MetaSearcher
 		 Log.debug(Geonet.SEARCH_ENGINE, "Escaped: "+result.toString());
      return result.toString();
   }
+    /**
+     * Task to launch a new thread for search logging.
+     * 
+     * Other idea: Another approach could be to use JMS, to send an 
+		 * asynchronous message with search info in order to log them.
+     * 
+     * @author francois
+     */
+    class SearchLoggerTask implements Runnable {
+        private ServiceContext srvContext;
+        boolean logSpatialObject;
+        String luceneTermsToExclude;
+		Query query; 
+		int numHits; 
+		Sort sort;
+		String geomWKT;
+		String value;
+
+
+        public SearchLoggerTask(ServiceContext srvContext,
+				boolean logSpatialObject, String luceneTermsToExclude,
+				Query query, int numHits, Sort sort, String geomWKT,
+				String value) {
+        			this.srvContext = srvContext;
+        			this.logSpatialObject = logSpatialObject;
+        			this.luceneTermsToExclude = luceneTermsToExclude;
+        			this.query = query;
+        			this.numHits = numHits;
+        			this.sort = sort;
+        			this.geomWKT = geomWKT;
+        			this.value = value;
+    	}
+
+		public void run() {
+            try {
+            	// Log.debug("geonetwork.search-logger", "sleep for 10sec");
+            	// Thread.sleep(10000);
+            	// Log.debug("geonetwork.search-logger", "wake up.");
+            	SearcherLogger searchLogger = new SearcherLogger(srvContext, logSpatialObject, luceneTermsToExclude);
+        		searchLogger.logSearch(query, numHits, sort, geomWKT, value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    
 }
 
 //==============================================================================

@@ -192,7 +192,7 @@ public class QueryInfo {
 					this.getLowerText(),
 					this.getUpperText(),
 					this.getInclusive() ? "y": "n");
-			Log.debug(Geonet.SEARCH_LOGGER, res + " queryInfo inserted for requestId: " + requestId);
+			Log.debug(Geonet.SEARCH_LOGGER, "Returned " + res + " for queryInfo: " + toString());
 		} catch (SQLException sqle) {
 			dbms.abort();
 			Log.warning(Geonet.SEARCH_LOGGER, "an error occuring during QueryInfo database storage. Aborting :" + 

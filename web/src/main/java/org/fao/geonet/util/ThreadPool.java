@@ -35,39 +35,53 @@ import java.util.concurrent.TimeUnit;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
- 
-public class ThreadPool {
-    int poolSize = 5;
- 
-    int maxPoolSize = 10;
- 
-    long keepAliveTime = 2;
- 
-    ThreadPoolExecutor threadPool = null;
- 
-    final ArrayBlockingQueue<Runnable> queue = 
-												new ArrayBlockingQueue<Runnable>(20);
- 
-		//--- threadpool will create all possible threads and queue tasks up to the
-		//--- size of the queue - any tasks submitted after that will be run by
-		//--- the caller thread (ie. the main thread) - this is why we create with
-		//--- CallerRunsPolicy for rejected tasks
-    public ThreadPool() {
-        threadPool = new ThreadPoolExecutor(poolSize, maxPoolSize, 
-									keepAliveTime, TimeUnit.SECONDS, queue, 
-									new ThreadPoolExecutor.CallerRunsPolicy()); 
-    }
- 
-    public void runTask(Runnable task) {
-        Log.debug(Geonet.THREADPOOL, "Task count in pool.."+threadPool.getTaskCount() );
-        Log.debug(Geonet.THREADPOOL, "Queue Size before assigning the task.."+queue.size() );
-        threadPool.execute(task);
-        Log.debug(Geonet.THREADPOOL, "Queue Size after assigning the task.."+queue.size() );
-        Log.debug(Geonet.THREADPOOL, "Pool Size after assigning the task.."+threadPool.getActiveCount() );
-        Log.debug(Geonet.THREADPOOL, "Task count in pool.."+threadPool.getTaskCount() );
-		}
 
-		public void shutDown() {
-				threadPool.shutdown();
-    }
+public class ThreadPool {
+	int poolSize = 5;
+
+	int maxPoolSize = 10;
+
+	long keepAliveTime = 2;
+
+	ThreadPoolExecutor threadPool = null;
+	
+	Runnable task;
+	
+	final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(
+			20);
+
+	// --- threadpool will create all possible threads and queue tasks up to the
+	// --- size of the queue - any tasks submitted after that will be run by
+	// --- the caller thread (ie. the main thread) - this is why we create with
+	// --- CallerRunsPolicy for rejected tasks
+	public ThreadPool() {
+		threadPool = new ThreadPoolExecutor(poolSize, maxPoolSize,
+				keepAliveTime, TimeUnit.SECONDS, queue,
+				new ThreadPoolExecutor.CallerRunsPolicy());
+	}
+
+	public void runTask(Runnable task) {
+		this.task = task;
+		threadPool.execute(task);
+		Log.debug(Geonet.THREADPOOL, toString());
+	}
+
+	
+	public void shutDown() {
+		threadPool.shutdown();
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer("ThreadPool tasks | ");
+		sb.append(task.getClass().getName());
+		sb.append(" \t| total: ").append(threadPool.getTaskCount());
+		sb.append(" \t| completed: ")
+				.append(threadPool.getCompletedTaskCount());
+		sb.append(" \t| active: ").append(threadPool.getActiveCount());
+		sb.append(" \t| in queue: ").append(queue.size());
+		sb.append(" \t| remaining in queue: ")
+				.append(queue.remainingCapacity());
+
+		return sb.toString();
+	}
 }

@@ -148,10 +148,8 @@ public class Show implements Service
 		}
 
 		//--- increase metadata popularity
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		if (!skipPopularity)
-			dm.increasePopularity(dbms, id);
+			dm.increasePopularity(context, id);
 
 		return elMd;
 	}

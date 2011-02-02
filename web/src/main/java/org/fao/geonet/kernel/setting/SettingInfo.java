@@ -112,6 +112,13 @@ public class SettingInfo
 
 	//---------------------------------------------------------------------------
 
+	public boolean isSearchStatsEnabled()
+	{
+		return sm.getValue("system/searchStats/enable").equals("true");
+	}
+
+	//---------------------------------------------------------------------------
+
 	public Calendar getLuceneIndexOptimizerSchedulerAt() throws IllegalArgumentException {
 		Calendar calendar = Calendar.getInstance();
 		try {

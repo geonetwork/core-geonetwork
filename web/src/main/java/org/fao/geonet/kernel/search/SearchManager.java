@@ -139,6 +139,7 @@ public class SearchManager
 	private Calendar _optimizerBeginAt;
 	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private boolean _inspireEnabled = false;
+	private boolean _logAsynch;
 
     public void setInspireEnabled(boolean inspireEnabled) {
         this._inspireEnabled = inspireEnabled;
@@ -324,7 +325,10 @@ public class SearchManager
 	 * @param si
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, String summaryConfigXmlFile, LuceneConfig lc, boolean logSpatialObject, String luceneTermsToExclude, DataStore dataStore, SettingInfo si, SchemaManager scm) throws Exception
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, 
+			String summaryConfigXmlFile, LuceneConfig lc, 
+			boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude, 
+			DataStore dataStore, SettingInfo si, SchemaManager scm) throws Exception
 	{
 		_scm = scm;
 
@@ -356,6 +360,7 @@ public class SearchManager
 
      _spatial = new Spatial(dataStore);
 
+     	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;
 		 _luceneTermsToExclude = luceneTermsToExclude;
 
@@ -559,6 +564,10 @@ public class SearchManager
 	}
 
 	//-----------------------------------------------------------------------------
+
+	public boolean getLogAsynch() {
+		return _logAsynch;
+	}
 
 	public boolean getLogSpatialObject() {
 		return _logSpatialObject;
@@ -1483,5 +1492,4 @@ public class SearchManager
                 Geometry.class, FeatureSource.class,
                 SpatialIndex.class);
     }
-
 }

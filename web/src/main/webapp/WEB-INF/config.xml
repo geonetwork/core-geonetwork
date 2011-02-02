@@ -91,7 +91,8 @@
 
 		<resource enabled="true">
 			<name>main-db</name>
-			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>BayACrsQ</user>
 				<password>Qf7Po9T0</password>
@@ -109,7 +110,8 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>admin</user>
 				<password>admin</password>
@@ -126,7 +128,8 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>admin</user>
 				<password>admin</password>
@@ -142,7 +145,8 @@
 		
 		<resource enabled="false">
 			<name>main-db</name>
-			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>www-data</user>
 				<password>www-data</password>
@@ -167,7 +171,8 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>www-data</user>
 				<password>www-data</password>
@@ -213,6 +218,7 @@
 		CAUTION ! this can lead to HUGE database and CSV export if detailed geo objects are used:
 		several Gb for instance...-->
 		<param name="statLogSpatialObjects" value="false" />
+		<param name="statLogAsynch" value="true" />
 		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
 		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
 	</appHandler>

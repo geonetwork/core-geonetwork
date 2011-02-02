@@ -38,7 +38,7 @@ public class Geonet
 	public static final Namespace XSD_NAMESPACE = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	public static final Namespace XSI_NAMESPACE = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 	public static final Namespace OASIS_CATALOG_NAMESPACE = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
-	
+
 	//--------------------------------------------------------------------------
 	//--- container for file names
 
@@ -463,6 +463,7 @@ public class Geonet
 		public static final String PREFERRED_SCHEMA = "preferredSchema";
 		public static final String STAT_LOG_SPATIAL_OBJECTS  = "statLogSpatialObjects";
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
+		public static final String STAT_LOG_ASYNCH = "statLogAsynch";
         
 	}
 

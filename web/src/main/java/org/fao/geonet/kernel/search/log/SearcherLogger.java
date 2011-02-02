@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
+import java.sql.SQLException;
 
 /**
  * A class to log Lucene search queries (context, search parameters and search
@@ -38,41 +39,38 @@ import java.util.Vector;
  */
 public class SearcherLogger {
 	private ServiceContext srvContext;
-	/** To access the GeonetContext.SettingManager value for searchStats/enable 
-	 * key. If false, no log will be done
-	 */
 	private boolean isEnabled;
-    private boolean logSpatial;
-    private List<String> luceneTermsToExclude;
+  private boolean logSpatial;
+  private List<String> luceneTermsToExclude;
 
+	/**
+	 * Constructor
+	 */
 	public SearcherLogger(ServiceContext srvContext, boolean logSpatial, String luceneTermsList) {
-		// TODO Auto-generated constructor stub
 		this.srvContext = srvContext;
-		this.isEnabled = false;
-        this.logSpatial = logSpatial;
+    this.logSpatial = logSpatial;
 
-        this.luceneTermsToExclude = Arrays.asList(luceneTermsList.split(","));
+    this.luceneTermsToExclude = Arrays.asList(luceneTermsList.split(","));
 		
 		if (srvContext == null) { // todo: handle exception/errors
 			Log.warning(Geonet.SEARCH_LOGGER, "null serviceContext object. will not be able to log queries...");
+			this.isEnabled = false;
 		} else {
-			GeonetContext gc = (GeonetContext) this.srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-			Element logEnableElm = gc.getSettingManager().get("system/searchStats/enable", 0);
-			String val = logEnableElm != null ? logEnableElm.getValue() : "false";
-			this.isEnabled = (val != null && "true".equalsIgnoreCase(val));
+			this.isEnabled = true;
 		}
-		if (! this.isEnabled) {
-			Log.warning(Geonet.SEARCH_LOGGER, "Search Log is disabled. See administration page to enable it.");
-		}
-    Log.debug(Geonet.SEARCH_LOGGER, "SearcherLogger created. Spatial object logging ? " + this.logSpatial + ". lucene terms to exclude from log: " + luceneTermsList);
+
+		Log.debug(Geonet.SEARCH_LOGGER, "SearcherLogger created. Spatial object logging ? " 
+				+ this.logSpatial + ". lucene terms to exclude from log: " + luceneTermsList);
 	}
 
 	public void logSearch(Query query, int numHits, Sort sort, String geomFilterWKT, String guiService) {
 		if (!isEnabled) {
 			return;
 		}
+		Dbms dbms = null;
 		try{
-    		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+				Log.debug(Geonet.SEARCH_LOGGER,"Opening dbms...");
+    		dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
     		if (dbms == null) {
     			Log.debug(Geonet.SEARCH_LOGGER,
     					"Null Dbms object. cannot log search operation");
@@ -84,7 +82,7 @@ public class SearcherLogger {
     					"Null Query object. cannot log search operation");
     			return;
     		}
-    		
+    	
     		QueryRequest queryRequest = new QueryRequest(srvContext.getIpAddress(), (new java.util.Date()).getTime());
     		Vector<QueryInfo> queryInfos = extractQueryTerms(query);
     		// type is also set when doing this.
@@ -121,7 +119,14 @@ public class SearcherLogger {
             // I dont want the log to cause an exception and hide the real problem.
 		    Log.error(Geonet.SEARCH_LOGGER, "Error logging search: "+e.getMessage());
             e.printStackTrace(); //fixme should be removed after control.
-        }
+		}finally {
+			try {
+				if (dbms != null) srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+			} catch (Exception e) {
+		    Log.error(Geonet.SEARCH_LOGGER, "There may have been an error logging the search: "+e.getMessage());
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/** Returns a dictionary containing field/text for the given query

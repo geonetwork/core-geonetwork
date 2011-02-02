@@ -27,37 +27,6 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Xml;
-import jeeves.utils.Xml.ErrorHandler;
-import jeeves.xlink.Processor;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
-import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.Text;
-import org.jdom.filter.ElementFilter;
-import org.jdom.filter.Filter;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,6 +41,38 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.Vector;
+import java.sql.SQLException;
+
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.OperationNotAllowedEx;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import jeeves.utils.Xml;
+import jeeves.utils.Xml.ErrorHandler;
+import jeeves.xlink.Processor;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.ISODate;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
+import org.jdom.filter.ElementFilter;
+import org.jdom.filter.Filter;
 
 //=============================================================================
 
@@ -226,7 +227,6 @@ public class DataManager
 		public void run() {
 
 			try {
-				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 				// poll context to see whether servlet is up yet
 				while (!context.isServletInitialized()) {
@@ -234,7 +234,9 @@ public class DataManager
 					Thread.sleep(10000); // sleep 10 seconds
 				}
 
-				// its up so safe to index all metadata that needs indexing
+				// servlet up so safe to index all metadata that needs indexing
+
+				Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 				startIndexGroup();
 				try {
 					for ( Integer id : toIndex ) {
@@ -244,8 +246,9 @@ public class DataManager
 					endIndexGroup();
 				}
 
-				//-- explicitly close Dbms resource to avoid exhausting Dbms pool
-				context.getResourceManager().close();
+				//-- commit Dbms resource (which makes it available to pool again) 
+				//-- to avoid exhausting Dbms pool
+				context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -931,13 +934,10 @@ public class DataManager
 
 	//--------------------------------------------------------------------------
 
-	public void increasePopularity(Dbms dbms, String id) throws Exception
+	public void increasePopularity(ServiceContext srvContext, String id) throws Exception
 	{
-		String query = "UPDATE Metadata SET popularity = popularity +1 WHERE "+
-							"id = ?";
-
-		dbms.execute(query, new Integer(id));
-		indexMetadata(dbms, id);
+		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		gc.getThreadPool().runTask(new IncreasePopularityTask(srvContext, id));
 	}
 
 	//--------------------------------------------------------------------------
@@ -3133,6 +3133,40 @@ public class DataManager
 
 	private String stylePath;
 	private static String FS = File.separator;
+	
+	class IncreasePopularityTask implements Runnable {
+        private ServiceContext srvContext;
+        String id;
+        Dbms dbms = null;
+        
+        public IncreasePopularityTask(ServiceContext srvContext,
+				String id) {
+        			this.srvContext = srvContext;
+        			this.id = id;
+    	}
+
+		public void run() {
+      try {
+       	dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+            	
+       	String query = "UPDATE Metadata SET popularity = popularity +1 WHERE "+
+				"id = ?";
+
+				dbms.execute(query, new Integer(id));
+				indexMetadata(dbms, id);
+      } catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (dbms != null) srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+				} catch (Exception e) {
+					Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata "+id+". Error: " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+
+    }
+	}
 }
 
 //=============================================================================

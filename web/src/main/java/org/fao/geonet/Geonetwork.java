@@ -283,6 +283,10 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("  - Search...");
 
 		boolean logSpatialObject = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_SPATIAL_OBJECTS));
+		boolean logAsynch = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_ASYNCH));
+		logger.info("  - Log spatial object: " + logSpatialObject);
+		logger.info("  - Log in asynch mode: " + logAsynch);
+        
 		String luceneTermsToExclude = "";
 		luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 		LuceneConfig lc = new LuceneConfig(path + luceneConfigXmlFile);
@@ -291,7 +295,9 @@ public class Geonetwork implements ApplicationHandler
         
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, lc, logSpatialObject, luceneTermsToExclude, dataStore, new SettingInfo(settingMan), schemaMan);
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, lc, 
+				logAsynch, logSpatialObject, luceneTermsToExclude, 
+				dataStore, new SettingInfo(settingMan), schemaMan);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager

@@ -96,13 +96,11 @@ public class Download implements Service
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
 		DataManager    dm = gc.getDataManager();
-
-		//--- increase metadata popularity
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
+		//--- increase metadata popularity
 		if (access.equals(Params.Access.PRIVATE))
-			dm.increasePopularity(dbms, id);
+			dm.increasePopularity(context, id);
 
 		//--- send email notification
 

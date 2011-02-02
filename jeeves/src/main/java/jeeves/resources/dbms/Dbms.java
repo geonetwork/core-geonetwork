@@ -39,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.sql.DataSource;
+
 import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 
@@ -55,7 +57,11 @@ public class Dbms
 	public static final String DEFAULT_TIME_FORMAT      = "HH:mm:ss";
 	public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
+	private String apacheUrl = "jdbc:apache:commons:dbcp:";
+
 	private String     url;
+	private String     driverUrl; // if different from actual url eg. for
+	                              // apache db commons pool
 	private Connection conn;
 	private long       lastConnTime;
 
@@ -73,8 +79,21 @@ public class Dbms
 		Class.forName(driver);
 
 		this.url = url;
+		this.driverUrl = url;
 	}
+	
+	/** Constructs a DBMS object that contains a jdbc connection and uses
+	    the apacheurl */
 
+	public Dbms(String driver, String url, String driverUrl) throws ClassNotFoundException
+	{
+		// loads the driver
+		Class.forName(driver);
+
+		this.url = url;
+		this.driverUrl = driverUrl;
+	}
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- Connection methods
@@ -87,17 +106,25 @@ public class Dbms
 	{
 		String actualUrl = url;
 		if (actualUrl.contains("postgis")) actualUrl = actualUrl.replaceFirst("postgis","postgresql");
-		conn = DriverManager.getConnection(actualUrl, username, password);
+
+		if (username != null && password != null) {
+			conn = DriverManager.getConnection(actualUrl, username, password);
+		} else {
+			conn = DriverManager.getConnection(actualUrl);
+		}
 
 		conn.setAutoCommit(false);
-		if (actualUrl.toUpperCase().contains("ORACLE")) {
-			Log.debug(Log.RESOURCES,"ORACLE is using TRANSACTION_READ_COMMITTED");
-			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-		} else {
-			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		if (!actualUrl.contains(apacheUrl)) { 
+			if (actualUrl.toUpperCase().contains("MCKOI")) {
+				conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			} else {
+				conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			}
 		}
 
 		lastConnTime = System.currentTimeMillis();
+		
+		Log.debug(Log.RESOURCES, "Open connection: "+ conn.hashCode());
 	}
 
 	//--------------------------------------------------------------------------
@@ -105,11 +132,13 @@ public class Dbms
 
 	public void disconnect()
 	{
-		try
-		{
-			conn.close();
-		}
-		catch(SQLException e) { e.printStackTrace(); }
+
+		Log.debug(Log.RESOURCES, 
+				"Close connection: "+ conn.hashCode());
+		try {
+			if (!conn.isClosed())
+				conn.close();
+		} catch(SQLException e) { e.printStackTrace(); }
 	}
 
 	//--------------------------------------------------------------------------
@@ -124,7 +153,7 @@ public class Dbms
 
 	//--------------------------------------------------------------------------
 
-	public String getURL() { return url; }
+	public String getURL() { return driverUrl; }
 
 	//--------------------------------------------------------------------------
 
@@ -199,7 +228,8 @@ public class Dbms
 
 	public Element selectFull(String query, Hashtable<String, String> formats, Object... args) throws SQLException
 	{
-		Log.debug(Log.Dbms.SELECT, "Query : "+ query);
+		Log.debug(Log.Dbms.SELECT, "Query: "+ query);
+		Log.debug(Log.Dbms.SELECT, "Connection: "+ conn.hashCode());
 
 		if (args != null)
 			Log.debug(Log.Dbms.SELECT, "Args  : "+ getArgs(args));
@@ -463,6 +493,16 @@ public class Dbms
 
 		return sb.toString();
 	}
+	
+	/**
+	 * In case DBMS connection was not closed
+	 * due to some error, close connection on 
+	 * finalize.
+	 */
+	protected void finalize() {
+		disconnect();
+	}
+	
 }
 
 //=============================================================================
