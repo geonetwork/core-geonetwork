@@ -31,31 +31,31 @@
 						<li class="arrow">
 							<input type="checkbox" name="gmd-contact" id="contact" />
 							<label for="contact">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:contact']/label"/>
+								<xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:contact']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd:identificationInfo" id="identificationInfo" disabled="disabled"/>
 							<label for="identificationInfo"> <!-- class="identificationInfo" -->
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:identificationInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:identificationInfo']/label"/>
 							</label>
 							<ul>
 								<li class="arrow">
 									<input type="checkbox" name="gmd-pointOfContact" id="pointOfContact" />
 									<label for="pointOfContact">
-										<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:pointOfContact']/label"/>
+									  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:pointOfContact']/label"/>
 									</label>
 								</li>
 								<li class="arrow">
 									<input type="checkbox" name="gmd-descriptiveKeywords" id="descriptiveKeywords" />
 									<label for="descriptiveKeywords">
-										<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:descriptiveKeywords']/label"/>
+									  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:descriptiveKeywords']/label"/>
 									</label>
 								</li>
 								<li class="arrow">
 									<input type="checkbox" name="gmd-extent" id="extent" />
 									<label for="extent">
-										<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:extent']/label"/>
+									  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:extent']/label"/>
 									</label>
 								</li>
 							</ul>
@@ -63,61 +63,61 @@
 						<li class="arrow">
 							<input type="checkbox" name="gmd-metadataMaintenance" id="metadataMaintenance" />
 							<label for="metadataMaintenance">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:metadataMaintenance']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:metadataMaintenance']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-metadataConstraints" id="metadataConstraints" />
 							<label for="metadataConstraints">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:metadataConstraints']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:metadataConstraints']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-spatialRepresentationInfo" id="spatialRepresentationInfo" />
 							<label for="spatialRepresentationInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:spatialRepresentationInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:spatialRepresentationInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-referenceSystemInfo" id="referenceSystemInfo" />
 							<label for="referenceSystemInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:referenceSystemInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:referenceSystemInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-distributionInfo" id="distributionInfo" />
 							<label for="distributionInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:distributionInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:distributionInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-dataQualityInfo" id="dataQualityInfo" />
 							<label for="dataQualityInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:dataQualityInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:dataQualityInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-applicationSchemaInfo" id="applicationSchemaInfo" />
 							<label for="applicationSchemaInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:applicationSchemaInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:applicationSchemaInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-portrayalCatalogueInfo" id="portrayalCatalogueInfo" />
 							<label for="portrayalCatalogueInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:portrayalCatalogueInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:portrayalCatalogueInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-contentInfo" id="contentInfo" />
 							<label for="contentInfo">
-								<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:contentInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:contentInfo']/label"/>
 							</label>
 						</li>
 						<li class="arrow">
 							<input type="checkbox" name="gmd-metadataExtensionInfo" id="metadataExtensionInfo" />
 							<label for="metadataExtensionInfo">
-                            	<xsl:value-of select="/root/gui/iso19139/element[@name='gmd:metadataExtensionInfo']/label"/>
+							  <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:metadataExtensionInfo']/label"/>
                             </label>
                         </li>
 					</ul>
