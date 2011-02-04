@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:svrl="http://purl.oclc.org/dsdl/svrl" 
-	exclude-result-prefixes="geonet srv gco gmd xlink gml sch">
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	exclude-result-prefixes="geonet srv gco gmd xlink gml sch xs">
+
+  <xsl:include href="validate-fn.xsl"/>
 
 	<!--
 	page content
@@ -96,7 +99,7 @@
 							<img src="../../images/schematron.gif" alt="error" title="error"/>
 							<xsl:text> </xsl:text>
 							<font class="error">
-								<xsl:value-of select="geonet:message"/>
+							  <xsl:value-of select="geonet:parse-xsd-error(geonet:message, //response/schema, /root/gui)"/>
 							</font>
 						</li>
 					</xsl:for-each>

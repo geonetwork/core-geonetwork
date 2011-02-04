@@ -144,7 +144,8 @@
 	<publishing js="true">Publishing ...</publishing>
 	
 	<logo>Logo configuration</logo>
-	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+    <logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+    <logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Registered logos</logoRegistered>
 	<logoAdd js="true">Add new logo</logoAdd>
 	<logoDel js="true">Remove selected logo</logoDel>

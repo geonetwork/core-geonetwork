@@ -141,6 +141,9 @@
     <publishing js="true">Publishing ...</publishing>
     
 	<logo>Logo configuration</logo>
+    <logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+    <chooseLogo>Choose logo</chooseLogo>
+    <orgLogo>Organisation logo</orgLogo>
 	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Registered logos</logoRegistered>
 	<logoAdd js="true">Add new logo</logoAdd>
@@ -462,6 +465,8 @@
 	<generateUUID>Generate UUID for inserted metadata</generateUUID>
 	<georss>Open a GeoRSS feed</georss>
 	<group>Group</group>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>
 	<groupManagement>Group management</groupManagement>
 	<groupManDes>Add/modify/delete and show groups</groupManDes>
 	<groups>Groups</groups>

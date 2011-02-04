@@ -143,7 +143,8 @@
 	<selectANode js="true">Выбор узла ...</selectANode>
 	<publishing js="true">Публикация ...</publishing>
 	<logo>Конфигурирование логотипов</logo>
-	<logoDes>Управление логотипами каталогов (node and harvesting logo)</logoDes>
+	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+    <logoDes>Управление логотипами каталогов (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Зарегистрированные логотипы</logoRegistered>
 	<logoAdd js="true">Добавить новый логотип</logoAdd>
 	<logoDel js="true">Удалить выбранный логотип</logoDel>

@@ -33,7 +33,7 @@
 	<anyWithAllWords>Tous - tous les mots suivants</anyWithAllWords>
 	<anyWithoutWords>Tous - aucun des mots suivants</anyWithoutWords>
 	<dataDownload>Données à télécharger</dataDownload>
-	<addSchema>Ajouter un schéma/profile de métadonnées</addSchema>
+	<addSchema>Ajouter un schéma/profil de métadonnées</addSchema>
 	<updateSchema>Mettre à jour un schéma/profile de métadonnées</updateSchema>
 	<deleteSchema>Supprimer un schéma/profile de métadonnées</deleteSchema>
 	<selectSchema>Sélectionner un schéma/profile de métadonnées</selectSchema>
@@ -147,7 +147,8 @@
 	<selectANode js="true">Choisir un n&#339;ud ...</selectANode>
 	<publishing js="true">Publication en cours ...</publishing>
 	<logo>Configuration des logos</logo>
-	<logoDes>Gestion des logos (catalogues local et moissonnés)</logoDes>
+	<logoSelectionWindow js="true">Sélectionner un logo</logoSelectionWindow>
+    <logoDes>Gestion des logos (catalogues local et moissonnés)</logoDes>
 	<logoRegistered js="true">Logos enregistrés</logoRegistered>
 	<logoAdd js="true">Ajouter un logo</logoAdd>
 	<logoDel js="true">Supprimer le logo sélectionné</logoDel>
@@ -471,6 +472,8 @@
 	<generateUUID>Générer un nouvel identifiant pour les métadonnées insérées</generateUUID>
 	<georss>Ouvrez flux GeoRSS</georss>
 	<group>Groupe</group>
+  <choice>Choix</choice>
+  <sequence>Séquence</sequence>
 	<groupManagement>Gestion des groupes</groupManagement>
 	<groupManDes>Ajouter/Modifier/Supprimer et visualiser les groupes</groupManDes>
 	<groups>Groupes</groups>

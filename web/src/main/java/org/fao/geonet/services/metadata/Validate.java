@@ -78,6 +78,7 @@ public class Validate implements Service
 		//--- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+		elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(dbms, id)));
 		elResp.addContent(errorReport);
 
 		return elResp;
