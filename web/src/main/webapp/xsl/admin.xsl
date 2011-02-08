@@ -206,14 +206,14 @@
 											<td style="align:center;width:20%;vertical-align:bottom;">
 											  <div id="addTemplatesSamplesButtons">
   												<button class="content"
-  													onclick="addTemplate('{/root/gui/strings/metadata-template-select}');"
+  													onclick="addTemplate('{/root/gui/strings/metadata-schema-select}');"
   													id="tplBtn">
   													<xsl:value-of
   														select="/root/gui/strings/metadata-template-add-default"
   													/>
   												</button>
   												<button class="content"
-  													onclick="addSampleData('{/root/gui/strings/metadata-sampledata-select}', '{/root/gui/strings/metadata-samples-add-failed}', '{/root/gui/strings/metadata-samples-add-success}');"
+  													onclick="addSampleData('{/root/gui/strings/metadata-schema-select}', '{/root/gui/strings/metadata-samples-add-failed}', '{/root/gui/strings/metadata-samples-add-success}');"
   													id="tplSamples">
   													<xsl:value-of
   														select="/root/gui/strings/metadata-samples-add"/>
