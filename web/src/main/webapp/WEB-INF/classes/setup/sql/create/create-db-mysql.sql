@@ -164,7 +164,7 @@ CREATE TABLE OperationsDes
 CREATE TABLE Requests
   (
     id             int,
-    requestDate    varchar(24),
+    requestDate    varchar(30),
     ip             varchar(128),
     query          text,
     hits           int,
@@ -274,8 +274,8 @@ CREATE TABLE Metadata
     schemaId     varchar(32)    not null,
     isTemplate   char(1)        default 'n' not null,
     isHarvested  char(1)        default 'n' not null,
-    createDate   varchar(24)    not null,
-    changeDate   varchar(24)    not null,
+    createDate   varchar(30)    not null,
+    changeDate   varchar(30)    not null,
     data         longtext       not null,
     source       varchar(250)   not null,
     title        varchar(255),
