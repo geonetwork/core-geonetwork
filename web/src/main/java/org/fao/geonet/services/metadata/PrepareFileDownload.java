@@ -36,6 +36,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
@@ -84,9 +85,9 @@ public class PrepareFileDownload implements Service
 
 		boolean addEdit = false;
 		
-		//--- the request should contain a UUID
-		String uuid = Util.getParam(params, Params.UUID);
-		String id = dm.getMetadataId(context, uuid);	
+		//--- the request should contain an ID or UUID
+		String id = Utils.getIdentifierFromParameters(params, context);
+
 		if (id == null) {
 			throw new MetadataNotFoundEx("No record has this UUID");
 		}
@@ -100,7 +101,6 @@ public class PrepareFileDownload implements Service
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");
 
 		response.addContent(new Element("id").setText(id));
-		response.addContent(new Element("uuid").setText(uuid));
 
 		//--- transform record into brief version
 		String briefXslt = appPath + "xsl/metadata-brief.xsl";
