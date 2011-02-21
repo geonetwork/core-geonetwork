@@ -9,6 +9,7 @@
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->	
 	
     <useStopwords>Индекс Lucene использует стоп-слова на этих языках:</useStopwords>
     <rebuildIndexMessage>Если вы измените эти значения, мы рекомендуем это восстановление индекса Lucene.</rebuildIndexMessage>

@@ -9,6 +9,7 @@
 	<nl>Holandes</nl> <!-- Do not translate -->
 	<ru>Russo</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->	
 
     <useStopwords>O índice Lucene usa stopwords para essas linguagens:</useStopwords>    
     <rebuildIndexMessage>Se você alterar esses valores, é recomendável que reconstruir o índice Lucene.</rebuildIndexMessage>

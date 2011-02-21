@@ -9,6 +9,7 @@
     <nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->	
 
     <useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>    
     <rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandé de reconstruire l'index Lucene.</rebuildIndexMessage>
