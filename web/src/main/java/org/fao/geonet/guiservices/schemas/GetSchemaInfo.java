@@ -58,8 +58,6 @@ public class GetSchemaInfo implements Service
 
 		Element schemas = new Element("schemas");
 
-		// --- get the current language from the session
-
 		for(String schema : schemaMan.getSchemas()) {
 			try {
 				Map<String, XmlFile> schemaInfo = schemaMan.getSchemaInfo(schema);

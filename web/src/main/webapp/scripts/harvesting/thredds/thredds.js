@@ -48,8 +48,8 @@ this.init = function()
 	model.retrieveGroups    (ker.wrap(this, init_groups_OK));
 	model.retrieveCategories(ker.wrap(this, init_categ_OK));
 	model.retrieveIcons     (ker.wrap(this, init_icons_OK));
-	model.retrieveStylesheets (ker.wrap(this, init_stylesheets_OK));
-	model.retrieveTemplates   (ker.wrap(this, init_templates_OK));
+	model.retrieveSchemasDIF   (ker.wrap(this, init_schemasDIF_OK));
+	model.retrieveSchemasFragments   (ker.wrap(this, init_schemasFragments_OK));
 }
 
 //-------------------------------------------------------------------------------------
@@ -87,32 +87,31 @@ function init_icons_OK(data)
 
 //-------------------------------------------------------------------------------------
 
-function init_stylesheets_OK(data)
+function init_schemasDIF_OK(data)
 {
-	gui.addToSelect('thredds.collectionFragmentStylesheet', "", "");
-	gui.addToSelect('thredds.atomicFragmentStylesheet', "", "");
+	gui.addToSelect('thredds.outputSchemaOnCollectionsDIF', "", "");
+	gui.addToSelect('thredds.outputSchemaOnAtomicsDIF', "", "");
 	
 	for (var i=0; i<data.length; i++) {
-		gui.addToSelect('thredds.collectionFragmentStylesheet', data[i].id, data[i].name);
-		gui.addToSelect('thredds.atomicFragmentStylesheet', data[i].id, data[i].name);
+		gui.addToSelect('thredds.outputSchemaOnCollectionsDIF', data[i].id, data[i].name);
+		gui.addToSelect('thredds.outputSchemaOnAtomicsDIF', data[i].id, data[i].name);
 	}				
 }
 
 //-------------------------------------------------------------------------------------
-//
-function init_templates_OK(data)
+
+function init_schemasFragments_OK(data)
 {
-	gui.addToSelect('thredds.collectionMetadataTemplate', 0, "");
-	gui.addToSelect('thredds.atomicMetadataTemplate', 0, "");
+	gui.addToSelect('thredds.outputSchemaOnCollectionsFragments', "", "");
+	gui.addToSelect('thredds.outputSchemaOnAtomicsFragments', "", "");
 
 	for (var i=0; i<data.length; i++) {
-		gui.addToSelect('thredds.collectionMetadataTemplate', data[i].id, data[i].title);
-		gui.addToSelect('thredds.atomicMetadataTemplate', data[i].id, data[i].title);
+		gui.addToSelect('thredds.outputSchemaOnCollectionsFragments', data[i].id, data[i].name);
+		gui.addToSelect('thredds.outputSchemaOnAtomicsFragments', data[i].id, data[i].name);
 	}				
 }
 
-
-//=====================================================================================
+//-------------------------------------------------------------------------------------
 
 function addGroupRow()
 {

@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.metadatafragments;
+package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.exceptions.BadInputEx;
 import jeeves.utils.Util;
@@ -31,7 +31,7 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class MetadataFragmentsParams extends AbstractParams
+public class WfsFeaturesParams extends AbstractParams
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -39,7 +39,7 @@ public class MetadataFragmentsParams extends AbstractParams
 	//---
 	//--------------------------------------------------------------------------
 
-	public MetadataFragmentsParams(DataManager dm)
+	public WfsFeaturesParams(DataManager dm)
 	{
 		super(dm);
 	}
@@ -61,7 +61,10 @@ public class MetadataFragmentsParams extends AbstractParams
 		url       			= Util.getParam(site, "url",  "");
 		lang  	  			= Util.getParam(opt, "lang",  "");
 		query						= Util.getParam(opt, "query",  "");
+		outputSchema		= Util.getParam(opt, "outputSchema",  "");
 		stylesheet			= Util.getParam(opt, "stylesheet",  "");
+		streamFeatures		= Util.getParam(opt, "streamFeatures",  true);
+		createSubtemplates	= Util.getParam(opt, "createSubtemplates", true);
 		templateId			= Util.getParam(opt, "templateId",  "");
 		recordsCategory	= Util.getParam(opt, "recordsCategory",  "");
 	}
@@ -82,7 +85,10 @@ public class MetadataFragmentsParams extends AbstractParams
 		url       			= Util.getParam(site, "url",  url);
 		lang  	  			= Util.getParam(opt,  "lang",  lang);
 		query						= Util.getParam(opt,  "query",  "");
+		outputSchema		= Util.getParam(opt,  "outputSchema",  "");
 		stylesheet			= Util.getParam(opt,  "stylesheet",  "");
+		streamFeatures		= Util.getParam(opt, "streamFeatures", streamFeatures);
+		createSubtemplates	= Util.getParam(opt, "createSubtemplates", createSubtemplates);
 		templateId			= Util.getParam(opt,  "templateId",  "");
 		recordsCategory = Util.getParam(opt,  "recordsCategory",  recordsCategory);
 	}
@@ -93,15 +99,17 @@ public class MetadataFragmentsParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public MetadataFragmentsParams copy()
+	public WfsFeaturesParams copy()
 	{
-		MetadataFragmentsParams copy = new MetadataFragmentsParams(dm);
+		WfsFeaturesParams copy = new WfsFeaturesParams(dm);
 		copyTo(copy);
 
 		copy.url  				= url;
 		copy.lang 				= lang;
 		copy.query		 		= query;
+		copy.outputSchema	= outputSchema;
 		copy.stylesheet		= stylesheet;
+		copy.createSubtemplates	= createSubtemplates;
 		copy.templateId		= templateId;
 		copy.recordsCategory    = recordsCategory;
 		return copy;
@@ -116,7 +124,10 @@ public class MetadataFragmentsParams extends AbstractParams
 	public String url;
 	public String lang;
 	public String query;
+	public String outputSchema;
 	public String stylesheet;
+	public boolean streamFeatures;
+	public boolean createSubtemplates;
 	public String templateId;
 	public String recordsCategory;
 }

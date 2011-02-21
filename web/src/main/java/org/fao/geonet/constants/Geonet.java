@@ -39,6 +39,8 @@ public class Geonet
 	public static final Namespace XSI_NAMESPACE = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 	public static final Namespace OASIS_CATALOG_NAMESPACE = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
 
+	public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
+	
 	//--------------------------------------------------------------------------
 	//--- container for file names
 
@@ -109,6 +111,7 @@ public class Geonet
 		public static final String SUMMARY    = "summary";
 		public static final String SITE_URL   = "siteURL";
 		public static final String APP_PATH   = "path";
+		public static final String SCHEMA     = "schema";
         public static final String JUSTCREATED = "JUSTCREATED";
 	}
 
@@ -130,8 +133,10 @@ public class Geonet
 		public static final String STYLESHEETS        = "/xsl";
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
-		public static final String WFS_STYLESHEETS    = CONV_STYLESHEETS + "/WFSToFragments";
-		public static final String TDS_STYLESHEETS    = CONV_STYLESHEETS + "/ThreddsToFragments";
+		public static final String WFS_STYLESHEETS    = "/convert/WFSToFragments";
+		public static final String TDS_STYLESHEETS    = "/convert/ThreddsToFragments";
+		public static final String CONVERT_STYLESHEETS       = "/convert/";
+		public static final String DIF_STYLESHEET     = "/convert/DIFToISO.xsl";
 		public static final String LOGOS              = "/images/logos/";
 		public static final String XML                = Jeeves.Path.XML;
 	}

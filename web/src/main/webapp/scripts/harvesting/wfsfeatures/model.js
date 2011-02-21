@@ -1,37 +1,36 @@
 //=====================================================================================
 //===
-//=== Model (type:metadatafragments)
+//=== Model (type:wfsfeatures)
 //===
 //=====================================================================================
 
-metadatafragments.Model = function(xmlLoader)
+wfsfeatures.Model = function(xmlLoader)
 {
 	HarvesterModel.call(this);	
 
 	var loader    = xmlLoader;
 	var callBackF = null;
 	
-	this.retrieveStylesheets = retrieveStylesheets;
 	this.retrieveGroups    = retrieveGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.getUpdateRequest  = getUpdateRequest;
 	this.retrieveIcons  	 = retrieveIcons;
-	this.retrieveTemplates = retrieveTemplates;
+	this.retrieveSchemas   = retrieveSchemas;
 
 //=====================================================================================
 
-function retrieveStylesheets(callBack)
+function retrieveSchemas(callBack)
 {
-	callBackF = callBack;	
+	callBackSchemasFragments = callBack;	
 
-	var request = ker.createRequest('type', 'wfsFragmentStylesheets');
+	var request = ker.createRequest('type', 'wfsFragmentSchemas');
 	
-	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveStylesheets_OK));
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveSchemas_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
-function retrieveStylesheets_OK(xmlRes)
+function retrieveSchemas_OK(xmlRes)
 {
 	if (xmlRes.nodeName == 'error')
 		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
@@ -44,7 +43,7 @@ function retrieveStylesheets_OK(xmlRes)
 			data.push(xml.toObject(list[i]));
 		}
 		
-		callBackF(data);
+		callBackSchemasFragments(data);
 	}
 }
 
@@ -60,13 +59,6 @@ function retrieveGroups(callBack)
 function retrieveCategories(callBack)
 {
 	new InfoService(loader, 'categories', callBack);
-}
-
-//=====================================================================================
-
-function retrieveTemplates(callBack)
-{
-	new InfoService(loader, 'templates', callBack);
 }
 
 //=====================================================================================
@@ -104,7 +96,10 @@ var updateTemp =
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '      <lang>{LANG}</lang>'+
 '      <query>{QUERY}</query>'+
+'      <outputSchema>{OUTPUTSCHEMA}</outputSchema>'+
 '      <stylesheet>{STYLESHEET}</stylesheet>'+
+'      <streamFeatures>{STREAMFEATURES}</streamFeatures>'+
+'      <createSubtemplates>{CREATESUBTEMPLATES}</createSubtemplates>' +
 '      <templateId>{TEMPLATEID}</templateId>'+
 '      <recordsCategory>{RECORDSCATEGORY}</recordsCategory>'+
 '    </options>'+

@@ -26,16 +26,19 @@
 		<createAtomicDatasetMd><xsl:value-of  select="createAtomicDatasetMd/value" /></createAtomicDatasetMd>
 		<ignoreHarvestOnAtomics><xsl:value-of  select="ignoreHarvestOnAtomics/value" /></ignoreHarvestOnAtomics>
 		<atomicGeneration><xsl:value-of  select="atomicGeneration/value" /></atomicGeneration>
+		<modifiedOnly><xsl:value-of  select="modifiedOnly/value" /></modifiedOnly>
 		<atomicFragmentStylesheet><xsl:value-of select="atomicFragmentStylesheet" /></atomicFragmentStylesheet>
 		<atomicMetadataTemplate><xsl:value-of select="atomicMetadataTemplate" /></atomicMetadataTemplate>
 		<createAtomicSubtemplates><xsl:value-of select="createAtomicSubtemplates" /></createAtomicSubtemplates>
-		<outputSchemaOnAtomics><xsl:value-of  select="outputSchemaOnAtomics/value" /></outputSchemaOnAtomics>
+		<outputSchemaOnAtomicsDIF><xsl:value-of  select="outputSchemaOnAtomicsDIF/value" /></outputSchemaOnAtomicsDIF>
+		<outputSchemaOnAtomicsFragments><xsl:value-of  select="outputSchemaOnAtomicsFragments/value" /></outputSchemaOnAtomicsFragments>
 		<ignoreHarvestOnCollections><xsl:value-of  select="ignoreHarvestOnCollections/value" /></ignoreHarvestOnCollections>
 		<collectionGeneration><xsl:value-of  select="collectionGeneration/value" /></collectionGeneration>
 		<collectionFragmentStylesheet><xsl:value-of select="collectionFragmentStylesheet" /></collectionFragmentStylesheet>
 		<collectionMetadataTemplate><xsl:value-of select="collectionMetadataTemplate" /></collectionMetadataTemplate>
 		<createCollectionSubtemplates><xsl:value-of select="createCollectionSubtemplates" /></createCollectionSubtemplates>
-		<outputSchemaOnCollections><xsl:value-of  select="outputSchemaOnCollections/value" /></outputSchemaOnCollections>
+		<outputSchemaOnCollectionsDIF><xsl:value-of  select="outputSchemaOnCollectionsDIF/value" /></outputSchemaOnCollectionsDIF>
+		<outputSchemaOnCollectionsFragments><xsl:value-of  select="outputSchemaOnCollectionsFragments/value" /></outputSchemaOnCollectionsFragments>
 		<datasetCategory><xsl:value-of  select="datasetCategory/value" /></datasetCategory>
 	</xsl:template>
 

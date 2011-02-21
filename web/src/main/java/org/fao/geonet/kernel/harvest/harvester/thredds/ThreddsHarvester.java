@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -33,10 +36,6 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
 
 //=============================================================================
 
@@ -159,13 +158,16 @@ public class ThreddsHarvester extends AbstractHarvester
 		settingMan.add(dbms, "id:"+optionsId, "collectionFragmentStylesheet",  params.collectionFragmentStylesheet);
 		settingMan.add(dbms, "id:"+optionsId, "collectionMetadataTemplate",  params.collectionMetadataTemplate);
 		settingMan.add(dbms, "id:"+optionsId, "createCollectionSubtemplates",  params.createCollectionSubtemplates);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollections",  params.outputSchemaOnCollections);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollectionsDIF",  params.outputSchemaOnCollectionsDIF);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollectionsFragments",  params.outputSchemaOnCollectionsFragments);
 		settingMan.add(dbms, "id:"+optionsId, "ignoreHarvestOnAtomics",  params.ignoreHarvestOnAtomics);
 		settingMan.add(dbms, "id:"+optionsId, "atomicGeneration",  params.atomicMetadataGeneration);
+		settingMan.add(dbms, "id:"+optionsId, "modifiedOnly",  params.modifiedOnly);
 		settingMan.add(dbms, "id:"+optionsId, "atomicFragmentStylesheet",  params.atomicFragmentStylesheet);
 		settingMan.add(dbms, "id:"+optionsId, "atomicMetadataTemplate",  params.atomicMetadataTemplate);
 		settingMan.add(dbms, "id:"+optionsId, "createAtomicSubtemplates",  params.createAtomicSubtemplates);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomics",  params.outputSchemaOnAtomics);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomicsDIF",  params.outputSchemaOnAtomicsDIF);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomicsFragments",  params.outputSchemaOnAtomicsFragments);
 		settingMan.add(dbms, "id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd);
 		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory);
 	}

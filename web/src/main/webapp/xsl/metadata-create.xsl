@@ -55,7 +55,7 @@
 							<xsl:for-each select="/root/gui/templates/record">
 								<xsl:sort select="displayorder" data-type="number"/>
 								<option value="{id}">
-									<xsl:value-of select="name"/>
+									<xsl:value-of select="concat('(',schema,') ',name)"/>
 								</option>
 							</xsl:for-each>
 						</select>

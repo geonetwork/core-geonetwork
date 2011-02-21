@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import org.fao.geonet.util.ISODate;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -59,6 +60,16 @@ public class RecordInfo
 	}
 
 	//---------------------------------------------------------------------------
+
+	public RecordInfo(Element record)
+	{
+		id         = record.getChildText("id");
+		uuid       = record.getChildText("uuid");
+		isTemplate = record.getChildText("istemplate");
+		changeDate = record.getChildText("changedate");
+	}
+
+	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
@@ -81,6 +92,19 @@ public class RecordInfo
         return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
 	}
 
+	//-----------------------------------------------------------------------------
+	
+	public boolean isOlderThan(String remoteChangeDate) {
+		if (dateWasNull)
+			return true;
+
+		ISODate remoteDate = new ISODate(remoteChangeDate);
+		ISODate localDate  = new ISODate(changeDate);
+
+        //--- modified:  we accept metadata modified from 24 hours before
+        //--- to harvest several changes during a day (if short date format used) or date local differences
+        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+    }
 	//---------------------------------------------------------------------------
 
 	public boolean equals(Object o)
@@ -101,12 +125,15 @@ public class RecordInfo
 	//---
 	//---------------------------------------------------------------------------
 
+	public String id;
 	public String uuid;
 	public String changeDate;
 	public String schema;
 	public String source;
+	public String isTemplate;
 
 	private boolean dateWasNull;
+
 }
 
 //=============================================================================

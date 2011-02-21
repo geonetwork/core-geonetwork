@@ -45,7 +45,7 @@ public class ThreddsParams extends AbstractParams
 	}
 
 	//---------------------------------------------------------------------------
-	//---
+	//---atomicMetadataGeneration
 	//--- Create : called when a new entry must be added. Reads values from the
 	//---          provided entry, providing default values
 	//---
@@ -67,11 +67,14 @@ public class ThreddsParams extends AbstractParams
 		createCollectionDatasetMd	= Util.getParam(opt, "createCollectionDatasetMd",  false);
 		createAtomicDatasetMd 		= Util.getParam(opt, "createAtomicDatasetMd",  false);
 		ignoreHarvestOnCollections	= Util.getParam(opt, "ignoreHarvestOnCollections",  false);
-		outputSchemaOnCollections 	= Util.getParam(opt, "outputSchemaOnCollections",  "");
+		outputSchemaOnCollectionsDIF 	= Util.getParam(opt, "outputSchemaOnCollectionsDIF",  "");
+		outputSchemaOnCollectionsFragments 	= Util.getParam(opt, "outputSchemaOnCollectionsFragments",  "");
 		ignoreHarvestOnAtomics		= Util.getParam(opt, "ignoreHarvestOnAtomics",  false);
-		outputSchemaOnAtomics 		= Util.getParam(opt, "outputSchemaOnAtomics",  "");
+		outputSchemaOnAtomicsDIF 		= Util.getParam(opt, "outputSchemaOnAtomicsDIF",  "");
+		outputSchemaOnAtomicsFragments 		= Util.getParam(opt, "outputSchemaOnAtomicsFragments",  "");
 		datasetCategory				= Util.getParam(opt, "datasetCategory",  "");
 		atomicMetadataGeneration			= Util.getParam(opt, "atomicGeneration", "default");
+		modifiedOnly				= Util.getParam(opt, "modifiedOnly",  false);
 		collectionMetadataGeneration		= Util.getParam(opt, "collectionGeneration", "default");
 		createAtomicSubtemplates	= Util.getParam(opt, "createAtomicSubtemplates", false);
 		createCollectionSubtemplates	= Util.getParam(opt, "createCollectionSubtemplates", false);
@@ -104,9 +107,12 @@ public class ThreddsParams extends AbstractParams
 		createCollectionDatasetMd		= Util.getParam(opt, "createCollectionDatasetMd",  createCollectionDatasetMd);
 		createAtomicDatasetMd			= Util.getParam(opt, "createAtomicDatasetMd",  createAtomicDatasetMd);
 		ignoreHarvestOnCollections 		= Util.getParam(opt, "ignoreHarvestOnCollections",  ignoreHarvestOnCollections);
-		outputSchemaOnCollections		= Util.getParam(opt, "outputSchemaOnCollections",  outputSchemaOnCollections);
+		outputSchemaOnCollectionsDIF		= Util.getParam(opt, "outputSchemaOnCollectionsDIF",  outputSchemaOnCollectionsDIF);
+		outputSchemaOnCollectionsFragments		= Util.getParam(opt, "outputSchemaOnCollectionsFragments",  outputSchemaOnCollectionsFragments);
 		ignoreHarvestOnAtomics 			= Util.getParam(opt, "ignoreHarvestOnAtomics", ignoreHarvestOnAtomics);
-		outputSchemaOnAtomics			= Util.getParam(opt, "outputSchemaOnAtomics", outputSchemaOnAtomics);
+		modifiedOnly		 			= Util.getParam(opt, "modifiedOnly", modifiedOnly);
+		outputSchemaOnAtomicsDIF			= Util.getParam(opt, "outputSchemaOnAtomicsDIF", outputSchemaOnAtomicsDIF);
+		outputSchemaOnAtomicsFragments			= Util.getParam(opt, "outputSchemaOnAtomicsFragments", outputSchemaOnAtomicsFragments);
 		datasetCategory 				= Util.getParam(opt, "datasetCategory",  datasetCategory);
 		atomicMetadataGeneration				= Util.getParam(opt, "atomicGeneration", atomicMetadataGeneration);
 		collectionMetadataGeneration			= Util.getParam(opt, "collectionGeneration", collectionMetadataGeneration);
@@ -140,15 +146,18 @@ public class ThreddsParams extends AbstractParams
 		copy.ignoreHarvestOnCollections 	= ignoreHarvestOnCollections;
 		copy.atomicMetadataGeneration				= atomicMetadataGeneration;
 		copy.collectionMetadataGeneration			= collectionMetadataGeneration;
+		copy.modifiedOnly					= modifiedOnly;
 		copy.createAtomicSubtemplates		= createAtomicSubtemplates;
 		copy.createCollectionSubtemplates	= createCollectionSubtemplates;
 		copy.atomicFragmentStylesheet		= atomicFragmentStylesheet;
 		copy.collectionFragmentStylesheet	= collectionFragmentStylesheet;
 		copy.atomicMetadataTemplate			= atomicMetadataTemplate;
 		copy.collectionMetadataTemplate		= collectionMetadataTemplate;
-		copy.outputSchemaOnCollections 		= outputSchemaOnCollections;
+		copy.outputSchemaOnCollectionsDIF		= outputSchemaOnCollectionsDIF;
+		copy.outputSchemaOnCollectionsFragments		= outputSchemaOnCollectionsFragments;
 		copy.ignoreHarvestOnAtomics			= ignoreHarvestOnAtomics;
-		copy.outputSchemaOnAtomics 			= outputSchemaOnAtomics;
+		copy.outputSchemaOnAtomicsDIF 			= outputSchemaOnAtomicsDIF;
+		copy.outputSchemaOnAtomicsFragments 			= outputSchemaOnAtomicsFragments;
 		copy.datasetCategory    			= datasetCategory;
 		return copy;
 	}
@@ -168,6 +177,7 @@ public class ThreddsParams extends AbstractParams
 	public boolean createServiceMd;
 	public boolean createCollectionDatasetMd;
 	public boolean createAtomicDatasetMd;
+	public boolean modifiedOnly;
 	public boolean ignoreHarvestOnCollections;
 	public boolean ignoreHarvestOnAtomics;
 	public String collectionMetadataGeneration;
@@ -178,8 +188,10 @@ public class ThreddsParams extends AbstractParams
 	public String atomicMetadataTemplate;
 	public boolean createCollectionSubtemplates;
 	public boolean createAtomicSubtemplates;
-	public String	outputSchemaOnAtomics;
-	public String	outputSchemaOnCollections;
+	public String	outputSchemaOnAtomicsDIF;
+	public String	outputSchemaOnCollectionsDIF;
+	public String	outputSchemaOnAtomicsFragments;
+	public String	outputSchemaOnCollectionsFragments;
 	public String datasetCategory;
 	
 	//---------------------------------------------------------------------------

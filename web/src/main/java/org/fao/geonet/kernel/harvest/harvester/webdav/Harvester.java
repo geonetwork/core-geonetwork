@@ -26,12 +26,14 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -97,8 +99,8 @@ class Harvester {
 		//--- remove old metadata
 		for (String uri : localUris.getUris()) {
 			if (!exists(files, uri)) {
-				String id = localUris.getID(uri);
-
+				// only one metadata record created per uri by this harvester 
+				String id = localUris.getRecords(uri).get(0).id;
 				log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadata(dbms, id);
 				dbms.commit();
@@ -110,12 +112,13 @@ class Harvester {
 
 		for(RemoteFile rf : files) {
 			result.total++;
-			String id = localUris.getID(rf.getPath());
-			if (id == null)	{
+			List<RecordInfo> records = localUris.getRecords(rf.getPath());
+			if (records == null)	{
 				addMetadata(rf);
 			}
 			else {
-				updateMetadata(rf, id);
+				// only one metadata record created per uri by this harvester 
+				updateMetadata(rf, records.get(0));
 			}
 		}
 		log.info("End of alignment for : "+ params.name);
@@ -265,9 +268,8 @@ class Harvester {
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(RemoteFile rf, String id) throws Exception {
-		String date = localUris.getChangeDate(rf.getPath());
-		if (!rf.isMoreRecentThan(date)) {
+	private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
+		if (!rf.isMoreRecentThan(record.changeDate)) {
 			log.debug("  - Metadata XML not changed for path : "+ rf.getPath());
 			result.unchanged++;
 		}
@@ -277,15 +279,15 @@ class Harvester {
 			if (md == null) {
 				return;
 			}
-			dataMan.updateMetadataExt(dbms, id, md, rf.getChangeDate());
+			dataMan.updateMetadataExt(dbms, record.id, md, rf.getChangeDate());
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
-			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-			addPrivileges(id);
-			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-			addCategories(id);
+			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(record.id));
+			addPrivileges(record.id);
+			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
+			addCategories(record.id);
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, id);
+			dataMan.indexMetadataGroup(dbms, record.id);
 			result.updated++;
 		}
 	}
@@ -320,7 +322,7 @@ interface RemoteRetriever {
 interface RemoteFile {
 	public String  getPath();
 	public String  getChangeDate();
-	public Element getMetadata() throws Exception;
+	public Element getMetadata() throws JDOMException, IOException, Exception;
 	public boolean isMoreRecentThan(String localDate);
 }
 

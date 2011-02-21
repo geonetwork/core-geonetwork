@@ -57,9 +57,9 @@
 		<long>Thredds Catalog</long>
 	</info>
 	
-	<info type="metadatafragments">
-		<short>WFS Fragments</short>
-		<long>Metadata Fragments from OGC WFS</long>
+	<info type="wfsfeatures">
+		<short>WFS Features</short>
+		<long>OGC WFS GetFeature Response</long>
 	</info>
 
 	<info type="filesystem">
@@ -174,28 +174,28 @@
 	<mins>minutes</mins>
 	
 	<threddslang>Metadata language</threddslang>
-	<threddsImp>Type of import</threddsImp>
-	<threddsServiceMdOnly19119>Create metadata for all services in the catalog using ISO19119.</threddsServiceMdOnly19119>
-	<threddsCollectionDataset19115>Create metadata for Collection Datasets.</threddsCollectionDataset19115>
-	<threddsAtomicDataset19115>Create metadata for Atomic Datasets.</threddsAtomicDataset19115>
-	<threddsCreateDefaultMd>Create default metadata</threddsCreateDefaultMd>
-	<threddsCreateFragments>Customise metadata generation using fragments</threddsCreateFragments>
-  <threddsFragmentStylesheetForCollections>Stylesheet to use to create metadata fragments from collection datasets</threddsFragmentStylesheetForCollections>
-  <collectionFragmentStylesheet>Collection Stylesheet</collectionFragmentStylesheet>
-  <threddsFragmentStylesheetForAtomics>Stylesheet to use to create metadata fragments from atomic datasets</threddsFragmentStylesheetForAtomics>
-  <atomicFragmentStylesheet>Atomic Stylesheet</atomicFragmentStylesheet>
-	<threddsCreateSubtemplates>Create subtemplates for fragments (xlinks will be used in generated metadata)</threddsCreateSubtemplates>
-	<threddsIgnoreHarvestOnCollections>Ignore harvesting attribute on collection datasets in catalog</threddsIgnoreHarvestOnCollections>
-	<threddsOSCollections>Select schema for collection metadata records</threddsOSCollections>
-	<threddsIgnoreHarvestOnAtomics>Ignore harvesting attribute on atomic datasets</threddsIgnoreHarvestOnAtomics>
-	<threddsOSAtomics>Select schema for atomic metadata records</threddsOSAtomics>
+	<threddsCreateDIFMd>Extract DIF metadata elements and create ISO metadata</threddsCreateDIFMd>
+	<threddsCreateFragments>Extract Unidata dataset discovery metadata using fragments</threddsCreateFragments>
+  <threddsFragmentStylesheet>Stylesheet to create metadata fragments</threddsFragmentStylesheet>
+	<threddsCreateSubtemplates>Create subtemplates for fragments and XLink them into template</threddsCreateSubtemplates>
+	<threddsIgnoreHarvest>Ignore harvesting attribute</threddsIgnoreHarvest>
+	<threddsOutputSchema>Select schema for output metadata records</threddsOutputSchema>
 	<threddsCreateThumbnails>Create thumbnails for any datasets delivered by WMS</threddsCreateThumbnails>
+	<threddsModifiedOnly>Harvest new or modified datasets only</threddsModifiedOnly>
+	<threddsServiceMd>Create ISO19119 metadata for all services in the catalog</threddsServiceMd>
+	<threddsCollectionDataset>Create metadata for Collection Datasets</threddsCollectionDataset>
+	<threddsAtomicDataset>Create metadata for Atomic Datasets</threddsAtomicDataset>
+	<threddsTemplate>Select template to combine with fragments</threddsTemplate>
 	
-	<metadatafragmentsQuery>GetFeature Query</metadatafragmentsQuery>
-	<metadataFragmentsStylesheet>Stylesheet to use to create fragments</metadataFragmentsStylesheet>
-	<template>Template to use to build metadata using fragments</template>
-	<fragmentCategory>Category for fragments</fragmentCategory>
-	<recordCategory>Category for records built with linked fragments</recordCategory>
+	<wfsFeaturesLang>Metadata language</wfsFeaturesLang>
+	<wfsFeaturesQuery>OGC WFS GetFeature Query</wfsFeaturesQuery>
+	<wfsFeaturesStylesheet>Stylesheet to create fragments</wfsFeaturesStylesheet>
+	<wfsFeaturesLargeResponse>Save large response to disk</wfsFeaturesLargeResponse>
+	<wfsFeaturesCreateSubtemplates>Create subtemplates</wfsFeaturesCreateSubtemplates>
+	<wfsFeaturesTemplate>Select template to combine with fragments</wfsFeaturesTemplate>
+	<wfsFeaturesSubtemplateCategory>Category for subtemplates</wfsFeaturesSubtemplateCategory>
+	<wfsFeaturesRecordCategory>Category for output metadata records</wfsFeaturesRecordCategory>
+	<wfsFeaturesOutputSchema>Schema for output metadata records</wfsFeaturesOutputSchema>
 
 	<z3950repositories>Z3950 Server(s)</z3950repositories>
 	<z3950query>Z3950 Query</z3950query>
@@ -291,9 +291,9 @@
 		<collectionDatasetRecords>Collections Added</collectionDatasetRecords>
 		<atomicDatasetRecords>Atomics Added</atomicDatasetRecords>
         <fragmentsAdded>Fragments Added</fragmentsAdded>
-        <subtemplatesAdded>Sub-templates Added</subtemplatesAdded>
+        <subtemplatesAdded>Subtemplates Added</subtemplatesAdded>
         <fragmentsRemoved>Fragments Removed</fragmentsRemoved>
-        <subtemplatesRemoved>Sub-templates Removed</subtemplatesRemoved>
+        <subtemplatesRemoved>Subtemplates Removed</subtemplatesRemoved>
 		<fragmentsUnknownSchema>Fragments w/Unknown Schema</fragmentsUnknownSchema>
 		<fragmentsReturned>Fragments Returned</fragmentsReturned>
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>

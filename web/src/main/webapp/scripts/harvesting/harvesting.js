@@ -13,7 +13,7 @@ ker.include('harvesting/webdav/webdav.js');
 ker.include('harvesting/csw/csw.js');
 ker.include('harvesting/ogcwxs/ogcwxs.js');
 ker.include('harvesting/thredds/thredds.js');
-ker.include('harvesting/metadatafragments/metadatafragments.js');
+ker.include('harvesting/wfsfeatures/wfsfeatures.js');
 ker.include('harvesting/z3950/z3950.js');
 ker.include('harvesting/oaipmh/oaipmh.js');
 ker.include('harvesting/arcsde/arcsde.js');
@@ -53,7 +53,7 @@ function Harvesting()
 	var ogcwxs   = new OgcWxs(loader);
 	var arcsde   = new Arcsde(loader);
 	var thredds  = new Thredds(loader);
-	var metadatafragments = new MetadataFragments(loader);
+	var wfsfeatures = new WfsFeatures(loader);
 	var filesystem   = new Filesystem(loader);
 	
 	//--- public objects
@@ -66,7 +66,7 @@ function Harvesting()
 	this.oaipmh   = oaipmh;
 	this.ogcwxs   = ogcwxs;
 	this.thredds  = thredds;
-	this.metadatafragments  = metadatafragments;
+	this.wfsfeatures  = wfsfeatures;
 	this.arcsde	  = arcsde;
 	this.filesystem  = filesystem;
 	
@@ -99,7 +99,7 @@ function init()
 	view.register(thredds);
 	view.register(z3950);
 	view.register(oaipmh);
-	view.register(metadatafragments);
+	view.register(wfsfeatures);
 	view.register(arcsde);
 	view.register(filesystem);
 	view.show(SHOW.LIST);

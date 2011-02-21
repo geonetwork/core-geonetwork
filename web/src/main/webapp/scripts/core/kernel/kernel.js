@@ -66,6 +66,26 @@ ker.createRequest = function(elemName, params)
 	return request;
 }
 
+/*  Creates an XML request like <request>....</request>
+
+    Params should be a javascript object eg:
+
+		{ type : 'threddsFragmentStyleSheets',  schema : 'iso19139' }
+ */
+
+ker.createRequestFromObject = function(params)
+{
+	var request = '<request>\n';
+
+	for (var param in params) {
+		request += '<'+ param +'>'+ xml.escape(params[param]) +'</'+ param +'>\n';
+	}
+
+	request += '</request>';
+
+	return request;
+}
+
 //=====================================================================================
 /*	Sends an XML request to the server. Params:
 	- service : the geonetwork service to call

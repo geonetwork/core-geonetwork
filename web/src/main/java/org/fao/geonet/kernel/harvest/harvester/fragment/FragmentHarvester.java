@@ -28,6 +28,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -35,13 +36,16 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -85,6 +89,59 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
+    * Create subtemplates/metadata from fragments read from WFS
+    * 
+	* Typical response expected:
+
+	<?xml version="1.0" encoding="utf-8"?>
+	<records>
+		<record>
+			<fragment title="John P BlockHead - CSIRO" id="contactinfo" uuid="contactinfo-18">
+				<gmd:CI_ResponsibleParty>
+					<gmd:individualName>
+						<gco:CharacterString>John P BlockHead</gco:CharacterString>
+					</gmd:individualName>
+					<gmd:organisationName>
+						<gco:CharacterString>CSIRO Division of Marine and Atmospheric Research (CMAR)</gco:CharacterString>
+					</gmd:organisationName>
+					<gmd:role>
+						<gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="custodian"/>
+					</gmd:role>
+				</gmd:CI_ResponsibleParty>
+			</fragment>
+			<fragment ...>
+			 ...
+			 </fragment>
+		</record>
+	</records>
+	
+    * @param fragments      Fragments to use to create metadata/subtemplates
+    * @param harvestUri     URI being harvested if any
+    * 
+    */
+	public HarvestSummary harvest(Element fragments, String harvestUri) throws Exception {
+		this.harvestUri = harvestUri;
+		harvestSummary = new HarvestSummary();
+ 
+		if (fragments == null || !fragments.getName().equals("records")) { 
+			throw new BadXmlResponseEx("<records> not found in response: \n"+Xml.getString(fragments));
+		}
+
+		//--- Loading categories and groups
+		localCateg 	= new CategoryMapper (dbms);
+		localGroups = new GroupMapper (dbms);
+
+		List<Element> recs = fragments.getChildren();
+		
+		for (Element rec : recs) {
+			addRecord(rec);
+		}
+		
+		return harvestSummary;
+	}
+
+	//---------------------------------------------------------------------------
+	/** 
     * Load metadata template to be used to generate metadata
     * 
     */
@@ -107,195 +164,267 @@ public class FragmentHarvester {
 	
 	//---------------------------------------------------------------------------
 	/** 
-    * Create subtemplates/metadata from fragments
-    * 
-    * @param fragments      Fragments to use to create metadata/subtemplates
-    * 
-    */
-	public HarvestSummary harvest(Element fragments) throws Exception {
-		harvestSummary = new HarvestSummary();
- 
-		if (fragments == null || !fragments.getName().equals("records")) { 
-			throw new BadXmlResponseEx("<records> not found in response: \n"+Xml.getString(fragments));
-		}
-
-		//--- Loading categories and groups
-		localCateg 	= new CategoryMapper (dbms);
-		localGroups = new GroupMapper (dbms);
-
-		List<Element> recs = fragments.getChildren();
-		
-		for (Element rec : recs) {
-			addFragments(rec.getChildren());
-		}
-		
-		return harvestSummary;
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
      * Add subtemplates and/or metadata using fragments and metadata template 
      *   
-     * @param fragments		List of fragments to add to GeoNetwork database
+     * @param rec		record containing fragments to add to GeoNetwork database
      * 
      */
-	private void addFragments(List<Element> fragments) throws Exception {
-
-		Element templateCopy = null;
+	private void addRecord(Element rec) throws Exception {
+		List<Element> fragments = rec.getChildren();
+		
+		Element recordMetadata = null;
 		
 		if (metadataTemplate != null) {
-			templateCopy = (Element)metadataTemplate.clone();
+			recordMetadata = (Element)metadataTemplate.clone();
+			
+			//Jaxen requires element to be associated with a
+			//document to correctly interpret XPath expressions 
+			new Document(recordMetadata);
 		}
 		
-		boolean matchFragment = true;
-
 		for (Element fragment : fragments) {
-
-			// get the id and title from the fragment to match/use in any template
-			String title = fragment.getAttributeValue("title");
-			String matchId = fragment.getAttributeValue("id");
+			addMetadata(fragment);
 			
-			if (matchId == null || matchId.equals("")) {
-				log.error("Fragment won't be matched because no id attribute "+Xml.getString(fragment));
-				matchFragment = false;
+			if (params.createSubtemplates) {
+				createSubtemplates(fragment);
 			}
 				
-			// get the metadata fragment from the fragment container
-			Element md = (Element) fragment.getChildren().get(0);
-		
-			String schema = dataMan.autodetectSchema (md); // e.g. iso19139; 
-			
-			if (schema == null) {
-				log.warning("Skipping metadata with unknown schema.");
- 				harvestSummary.fragmentsUnknownSchema ++;
-			} else {
-				if (params.createSubtemplates) {
-					String uuid = fragment.getAttributeValue("uuid");
-					if (uuid == null || uuid.equals("")) {
-						uuid = UUID.randomUUID().toString(); 
-						log.warning("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(md));
-					}
-					log.info("  - Adding metadata fragment with " + uuid + " schema is set to " + schema + " XML is "+ Xml.getString(md));
-					DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-					Date date = new Date();
-			
-					String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(), params.uuid, df.format(date), df.format(date), uuid, 1, null);
-			
-					int iId = Integer.parseInt(id);
-	
-					addPrivileges(id);
-					addCategories(id);
-				
-					dataMan.setTemplateExt(dbms, iId, "s", null);
-					dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
-
-					dataMan.indexMetadataGroup(dbms, id);
-			
-					dbms.commit();
-					harvestSummary.fragmentsAdded ++;
-	
-					if (metadataTemplate != null && matchFragment) {
-						insertLinkToFragmentIntoTemplate(templateCopy, matchId, uuid, title);
-					}
-				} else {
-					insertFragmentIntoMetadata(templateCopy, matchId, md);
-				}
+			if (recordMetadata != null) {
+				updateMetadataReferences(recordMetadata, fragment);
 			}
 		}
 		
 		harvestSummary.fragmentsReturned += fragments.size();
 
-		if (metadataTemplate != null && matchFragment) {
-			// now add any record built from template with linked in fragments
-			log.info("	- Attempting to insert metadata record with link");
-			DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-			Date date = new Date();
-			String recUuid = UUID.randomUUID().toString();
-			String templateSchema = dataMan.autodetectSchema(templateCopy);
-			templateCopy = dataMan.setUUID(templateSchema, recUuid, templateCopy); 
-		
-			String id = dataMan.insertMetadataExt(dbms, templateSchema, templateCopy, context.getSerialFactory(), params.uuid, df.format(date), df.format(date), recUuid, 1, null);
-		
-			int iId = Integer.parseInt(id);
-
-			log.info("	- Set privileges, category, template and harvested");
-			addPrivileges(id);
-			dataMan.setCategory (dbms, id, params.isoCategory);
+		if (recordMetadata != null) {
+			String recUuid = rec.getAttributeValue("uuid");
 			
-			dataMan.setTemplateExt(dbms, iId, "n", null);
-			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
-
-			dataMan.indexMetadataGroup(dbms, id);
-
-			log.info("	- Commit "+id);
-			dbms.commit();
-			harvestSummary.recordsBuilt++;
+			// Use random uuid if none provided
+			if (recUuid==null || recUuid.trim().equals("")) {
+				recUuid = UUID.randomUUID().toString();
+			}
+			
+			createMetadata(recUuid, recordMetadata);
 		}
 	}
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Insert Link to Fragment - replace all instances of matchId to the uuid
-     * of the fragment
+     * Add fragment metadata to the fragment   
      *   
-     * @param templateCopy		Copy of the template for fragment links
-     * @param matchId		Id used in template to place fragment
-     * @param uuid 			uuid of the fragment inserted into GeoNetwork db
+     * @param fragment		fragment to which metdata should be added
      * 
      */
-	@SuppressWarnings("unchecked")
-	private void insertLinkToFragmentIntoTemplate(Element templateCopy, String matchId, String uuid, String title) throws Exception {
+	private void addMetadata(Element fragment) {
+ 	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
+ 	    	List<Element> children = fragment.getChildren();
+ 			for (Element child: children) {
+ 				addFragmentMetadata(child);
+ 			}
+	    } else {
+	    	addFragmentMetadata(fragment);
+	    }
+    }
+
+	//---------------------------------------------------------------------------
+	/** 
+     * Add a random uuid to the xml fragment if one hasn't been provided and the 
+     * detected schema of the xml frgament  
+     *   
+     * @param fragment		fragment to which metadata should be added 
+     * 
+     */
+	private void addFragmentMetadata(Element fragment) {
+		// Add uuid if not supplied
+		String uuid = fragment.getAttributeValue("uuid");
+		
+		if (uuid == null || uuid.equals("")) {
+			uuid = UUID.randomUUID().toString(); 
+			fragment.setAttribute("uuid", uuid);
+			log.warning("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(fragment));
+		}
+
+		// Add schema
+		Element md = (Element) fragment.getChildren().get(0);
+	
+		String schema = dataMan.autodetectSchema (md); // e.g. iso19139; 
+		
+		if (schema == null) {
+			log.warning("Skipping metadata with unknown schema.");
+			harvestSummary.fragmentsUnknownSchema ++;
+		} else {
+			fragment.setAttribute("schema", schema);
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	/** 
+     * Create a sub-templates for the provided fragment 
+     *   
+     * @param fragment		fragment for which sub-templates should be created
+     * 
+     */
+	private void createSubtemplates(Element fragment) throws Exception {
+ 	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
+ 	    	List<Element> children = fragment.getChildren();
+ 			for (Element child: children) {
+ 				createSubtemplate(child);
+ 			}
+	    } else {
+	    	createSubtemplate(fragment);
+	    }
+	}
+	    
+	//---------------------------------------------------------------------------
+	/** 
+     * Create a sub-template for an xml fragment 
+     *   
+     * @param fragment		fragment for which a sub-template should be created
+     * 
+     */
+	private void createSubtemplate(Element fragment) throws Exception {
+		String uuid = fragment.getAttributeValue("uuid");
+		
+		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = new Date();
+		
+		String schema = fragment.getAttributeValue("schema");
+		
+		if (schema==null) return;  //skip fragments with unknown schema
+		
+		Element md = (Element) fragment.getChildren().get(0);
+
+//		log.debug("  - Adding metadata fragment with " + uuid + " schema is set to " + schema + " XML is "+ Xml.getString(md));
+		
+		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(), params.uuid, df.format(date), df.format(date), uuid, 1, null);
+
+		int iId = Integer.parseInt(id);
+
+		addPrivileges(id);
+		addCategories(id);
+	
+		dataMan.setTemplateExt(dbms, iId, "s", null);
+		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
+		dataMan.indexMetadataGroup(dbms, id);
+
+		dbms.commit();
+		harvestSummary.fragmentsAdded ++;
+    }
+
+	//---------------------------------------------------------------------------
+	/** 
+     * Update references in the template to the fragment with the fragment or an xlink to the 
+     * sub-template created for it 
+     *   
+     * @param template		template to update
+     * @param fragment		fragment referenced
+     * 
+     */
+	private void updateMetadataReferences(Element template, Element fragment) throws Exception {
+		String matchId = fragment.getAttributeValue("id");
+
+		if (matchId == null || matchId.equals("")) {
+			log.error(fragment.getName()+" can't be matched because it has no id attribute "+Xml.getString(fragment));
+			return;
+		}
 
 		// find all elements that have an attribute id with the matchId
-		log.info("Attempting to search metadata for "+matchId);
-		List<Element> elems = (List<Element>) Xml.selectNodes(templateCopy,"*//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+		log.debug("Attempting to search metadata for "+matchId);
+		List elems = Xml.selectNodes(template,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 		// for each of these elements...
-		for (Element elem : elems) {
-			log.info("Element found "+Xml.getString(elem));
-			
-			// add uuidref attribute to link to fragment
-			elem.setAttribute("uuidref", uuid);
-			elem.setAttribute("href", metadataGetService+"?uuid="+uuid, xlink);
-			elem.setAttribute("show", "replace", xlink);
-			if (title != null) elem.setAttribute("title", title, xlink);
+		for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+			Object ob = iter.next();
+			if (ob instanceof Element) {
+				Element elem = (Element)ob;
+
+	 	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
+ 				Element parent = elem.getParentElement();
+ 				int insertionIndex = parent.indexOf(elem);
+	 	    List<Element> children = fragment.getChildren();
+	 	    	
+	 			for (Element child: children) {
+	 				//insert a copy of the referencing element 
+	 				Element copy = (Element)elem.clone();
+	 				parent.addContent(insertionIndex++, copy);
+	 				//link the copy to or replace the copy with this xml fragment as requested 
+	 				updateTemplateReference(copy, child); 
+	 			}
+	 			
+	 			//remove the original reference
+	 			parent.removeContent(elem);
+		    } else {
+		    	updateTemplateReference(elem, fragment);
+		    }
+			}
 		}
 		
 		if (elems.size() > 0) harvestSummary.fragmentsMatched++;
-
-		log.info("Template with metadata links is\n"+Xml.getString(templateCopy));
 	}
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Insert Fragment - replace all instances of matchId with the fragment
+     * Create a metadata record from the filled in template
      *   
-     * @param metadata		Copy of the template into which to insert fragments
-     * @param matchId		Id used in template to place fragment
-     * @param fragment		Fragment to insert
+     * @param template		filled in template
      * 
      */
-	@SuppressWarnings("unchecked")
-	private void insertFragmentIntoMetadata(Element metadata, String matchId, Element fragment) throws Exception {
-		// find all elements that have an attribute id with the matchId
+	private void updateTemplateReference(Element reference, Element fragment) throws Exception {
+		String title = fragment.getAttributeValue("title");
+		String uuid = fragment.getAttributeValue("uuid");
+		String schema = fragment.getAttributeValue("schema");
 		
-		log.info("Attempting to search metadata for "+matchId);
-		List<Element> elems = (List<Element>) Xml.selectNodes(metadata,"*//*[@id='"+matchId+"']", metadataTemplateNamespaces);
-
-		// for each of these elements...
+		if (schema==null) return;  //skip fragments with unknown schema
 		
-		for (Element elem : elems) {
-			log.info("Element found "+Xml.getString(elem));
-			//replace current element with fragment
-			Element parent = elem.getParentElement(); 
-			parent.setContent(parent.indexOf(elem),(Element)fragment.clone());
+		// get the metadata fragment from the fragment container
+		Element md = (Element) fragment.getChildren().get(0);
+		
+		if (params.createSubtemplates) {
+			// log.debug("Element found "+Xml.getString(elem));
+			
+			// Add an xlink to the subtemplate created for this fragment to the referencing element
+			reference.setAttribute("uuidref", uuid);
+			reference.setAttribute("href", metadataGetService+"?uuid="+uuid, xlink);
+			reference.setAttribute("show", "replace", xlink);
+			if (title != null) reference.setAttribute("title", title, xlink);
+		} else {
+			// log.debug("Element found "+Xml.getString(elem));
+			// Replace the referencing element with the fragment
+			Element parent = reference.getParentElement(); 
+			parent.setContent(parent.indexOf(reference),(Element)md.clone());
 		}
+	}
+	    
+	//---------------------------------------------------------------------------
+	/** 
+     * Create a metadata record from the filled in template
+     *   
+     * @param template		filled in template
+     * 
+     */
+	private void createMetadata(String recUuid, Element template) throws Exception, SQLException {
+		// now add any record built from template with linked in fragments
+		log.debug("	- Attempting to insert metadata record with link");
+		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = new Date();
+		String templateSchema = dataMan.autodetectSchema(template);
+		template = dataMan.setUUID(templateSchema, recUuid, template); 
 		
-		if (elems.size() > 0) {
-			harvestSummary.fragmentsMatched++;
-		}
+		String id = dataMan.insertMetadataExt(dbms, templateSchema, template, context.getSerialFactory(), params.uuid, df.format(date), df.format(date), recUuid, 1, null);
 		
-		log.info("Generated metadata is\n"+Xml.getString(metadata));
+		int iId = Integer.parseInt(id);
+		
+		log.debug("	- Set privileges, category, template and harvested");
+		addPrivileges(id);
+		dataMan.setCategory (dbms, id, params.isoCategory);
+		
+		dataMan.setTemplateExt(dbms, iId, "n", null); 
+		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
+		dataMan.indexMetadataGroup(dbms, id);
+		
+		log.debug("	- Commit "+id);
+		dbms.commit();
+		harvestSummary.recordsBuilt++;
 	}
 
 	//---------------------------------------------------------------------------
@@ -351,8 +480,9 @@ public class FragmentHarvester {
 	private DataManager dataMan;
 	private FragmentParams params;
 	private String metadataGetService;
-	private List metadataTemplateNamespaces = new ArrayList();
+	private List metadataTemplateNamespaces = new ArrayList();;
 	private Element metadataTemplate;
+	private String harvestUri;
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
 	private HarvestSummary harvestSummary;
@@ -376,6 +506,8 @@ public class FragmentHarvester {
 	}
 
 	static private final Namespace xlink   = Namespace.getNamespace ("xlink", "http://www.w3.org/1999/xlink");
+	
+	private static final String REPLACEMENT_GROUP = "replacementGroup";
 
 
 }

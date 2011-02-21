@@ -121,6 +121,9 @@
 					<title>
 						<xsl:value-of select="name"/>
 					</title>
+					<schema>
+						<xsl:value-of select="id/@code"/>
+					</schema>
 				</template>
 			</xsl:for-each>
 		</xsl:copy>

@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.metadatafragments;
+package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
@@ -39,7 +39,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class MetadataFragmentsHarvester extends AbstractHarvester
+public class WfsFeaturesHarvester extends AbstractHarvester
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -55,7 +55,7 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public String getType() { return "metadatafragments"; }
+	public String getType() { return "wfsfeatures"; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -65,7 +65,7 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 
 	protected void doInit(Element node) throws BadInputEx
 	{
-		params = new MetadataFragmentsParams(dataMan);
+		params = new WfsFeaturesParams(dataMan);
 		params.create(node);
 	}
 
@@ -88,7 +88,7 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		params = new MetadataFragmentsParams(dataMan);
+		params = new WfsFeaturesParams(dataMan);
 
 		//--- retrieve/initialize information
 		params.create(node);
@@ -113,7 +113,7 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 	protected void doUpdate(Dbms dbms, String id, Element node)
 									throws BadInputEx, SQLException
 	{
-		MetadataFragmentsParams copy = params.copy();
+		WfsFeaturesParams copy = params.copy();
 
 		//--- update variables
 		copy.update(node);
@@ -138,12 +138,15 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
 											String siteId, String optionsId) throws SQLException
 	{
-		MetadataFragmentsParams params = (MetadataFragmentsParams) p;
+		WfsFeaturesParams params = (WfsFeaturesParams) p;
 
 		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
 		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
 		settingMan.add(dbms, "id:"+optionsId, "query",  params.query);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
 		settingMan.add(dbms, "id:"+optionsId, "stylesheet",  params.stylesheet);
+		settingMan.add(dbms, "id:"+optionsId, "streamFeatures",  params.streamFeatures);
+		settingMan.add(dbms, "id:"+optionsId, "createSubtemplates",  params.createSubtemplates);
 		settingMan.add(dbms, "id:"+optionsId, "templateId",  params.templateId);
 		settingMan.add(dbms, "id:"+optionsId, "recordsCategory",  params.recordsCategory);
 	}
@@ -175,8 +178,8 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 		Element res  = new Element("result");
 
 		add(res, "total",          					result.total);
-		add(res, "fragmentsAdded", 					result.fragmentsAdded);
-		add(res, "fragmentsRemoved",  			result.fragmentsRemoved);
+		add(res, "subtemplatesAdded",       result.subtemplatesAdded);
+		add(res, "subtemplatesRemoved",  		result.subtemplatesRemoved);
 		add(res, "fragmentsUnknownSchema", 	result.fragmentsUnknownSchema);
 		add(res, "fragmentsReturned",				result.fragmentsReturned);
 		add(res, "fragmentsMatched",				result.fragmentsMatched);
@@ -206,22 +209,23 @@ public class MetadataFragmentsHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	private MetadataFragmentsParams params;
-	private MetadataFragmentsResult result;
+	private WfsFeaturesParams params;
+	private WfsFeaturesResult result;
 }
 
 //=============================================================================
 
-class MetadataFragmentsResult
+class WfsFeaturesResult
 {
-	public int total;										// = recordsBuilt + fragmentsAdded 
-	public int fragmentsAdded;					// = fragments added 
-	public int fragmentsRemoved;				// = fragments removed
+	public int total;										// = recordsBuilt + subtemplatesAdded 
+	public int subtemplatesAdded;				// = fragments added to database
+	public int subtemplatesRemoved;			// = fragments removed to database
 	public int fragmentsReturned;				// = fragments returned
 	public int fragmentsMatched;				// = fragments matched to template
 	public int fragmentsUnknownSchema;	// = fragments with unknown schema
 	public int recordsBuilt;				// = records built from template
 	public int doesNotValidate;			// = completed records that didn't validate
+	public int recordsRemoved;		// = records removed
 }
 
 //=============================================================================

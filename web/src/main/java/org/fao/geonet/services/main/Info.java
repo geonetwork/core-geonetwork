@@ -245,9 +245,10 @@ public class Info implements Service
 
 			String id       = info.getChildText(Edit.Info.Elem.ID);
 			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
+			String schema   = info.getChildText(Edit.Info.Elem.SCHEMA);
 
 			if (template.equals("y"))
-				response.addContent(buildRecord(id, elem.getChildText("title")));
+				response.addContent(buildTemplateRecord(id, elem.getChildText("title"), schema));
 		}
 
 		return response;
@@ -304,6 +305,14 @@ public class Info implements Service
 	{
 		return buildRecord(id, name, null, null);
 	}
+
+	//--------------------------------------------------------------------------
+
+	private Element buildTemplateRecord(String id, String title, String schema)
+	{
+		return buildRecord(id, title, schema, null);
+	}
+
 
 	//--------------------------------------------------------------------------
 

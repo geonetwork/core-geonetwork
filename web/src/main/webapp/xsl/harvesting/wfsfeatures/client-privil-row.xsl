@@ -12,7 +12,7 @@
 
 	<xsl:template match="/root/group">
 
-		<tr id="metadatafragments.group.{@id}">
+		<tr id="wfsfeatures.group.{@id}">
 			<td class="padded" align="center"><xsl:value-of select="@name"/></td>
 			
 			<!-- view - - - - - - - - - - - - - - - - - - - - - - -->
@@ -48,7 +48,7 @@
 			<!-- actions - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<td class="padded" align="center">
-				<a href="javascript:harvesting.metadatafragments.removeGroupRow('csw.group.{@id}')">
+				<a href="javascript:harvesting.wfsfeatures.removeGroupRow('wfsfeatures.group.{@id}')">
 					<xsl:value-of select="/root/strings/remove"/>
 				</a>		
 			</td>

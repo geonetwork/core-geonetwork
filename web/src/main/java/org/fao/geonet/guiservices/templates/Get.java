@@ -106,7 +106,7 @@ public class Get implements Service
 
             if (template.equals("y")) {
                 // heikki, GeoNovum: added displayOrder
-                responseRecords.add(buildRecord(id, elem.getChildText("title"), displayOrder));
+                responseRecords.add(buildRecord(id, elem.getChildText("title"), info.getChildText("schema"), displayOrder));
             }
         }
         // heikki, Geonovum: then process them to ensure displayOrder is not empty and is unique
@@ -186,12 +186,13 @@ public class Get implements Service
 
 	//--------------------------------------------------------------------------
     // heikki, GeoNovum: added displayOrder
-	private Element buildRecord(String id, String name, String displayOrder)
+	private Element buildRecord(String id, String name, String schema, String displayOrder)
 	{
 		Element el = new Element("record");
 
 		el.addContent(new Element("id")  .setText(id));
 		el.addContent(new Element("name").setText(name));
+		el.addContent(new Element("schema").setText(schema));
         el.addContent(new Element("displayorder").setText(displayOrder));
 
 		return el;

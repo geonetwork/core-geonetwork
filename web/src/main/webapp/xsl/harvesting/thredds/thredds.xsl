@@ -101,7 +101,7 @@
 			<tr>
 				<td class="padded" colspan="2">
 					<input type="checkbox" id="thredds.createServiceMd" name="thredds.createServiceMd" value=""/>
-					<label for="thredds.createServiceMd"><xsl:value-of select="/root/gui/harvesting/threddsServiceMdOnly19119"/></label>
+					<label for="thredds.createServiceMd"><xsl:value-of select="/root/gui/harvesting/threddsServiceMd"/></label>
 					<br/>
 				</td>
 			</tr>
@@ -109,14 +109,14 @@
 			<tr>
 				<td class="padded" colspan="2" style="width:550px">
 					<input type="checkbox" id="thredds.collectionDatasetMd" name="thredds.collectionDatasetMd" value=""/>
-					<label for="thredds.collectionDatasetMd"><xsl:value-of select="/root/gui/harvesting/threddsCollectionDataset19115"/></label><br/>
+					<label for="thredds.collectionDatasetMd"><xsl:value-of select="/root/gui/harvesting/threddsCollectionDataset"/></label><br/>
 					
 					<div id="collectionDatasetsHarvested" style="margin-left:40px;display:none;border-color:#f00;border-style:solid;border-width:1px">
 						<xsl:call-template name="thredds-collection-options"/>
 					</div>
 					
 					<input type="checkbox" id="thredds.atomicDatasetMd" name="thredds.atomicDatasetMd" value=""/><label for="thredds.atomicDatasetMd">
-					<xsl:value-of select="/root/gui/harvesting/threddsAtomicDataset19115"/></label><br/>
+					<xsl:value-of select="/root/gui/harvesting/threddsAtomicDataset"/></label><br/>
 					
 					<div id="atomicDatasetsHarvested" style="margin-left:40px;display:none;border-color:#f00;border-style:solid;border-width:1px">
 						<xsl:call-template name="thredds-atomic-dataset-options"/>
@@ -143,30 +143,36 @@
 	
 	<xsl:template name="thredds-collection-options">
 		<input type="checkbox" id="thredds.ignoreHarvestOnCollections" name="thredds.ignoreHarvestOnCollections" value=""/>
-		<label for="thredds.ignoreHarvestOnCollections"><xsl:value-of select="/root/gui/harvesting/threddsIgnoreHarvestOnCollections"/></label><br/>
-		<input type="radio" name="thredds.collectionGenerationOption" id="thredds.createDefaultCollectionMd" value="default" checked="true"/>
-		<label for="thredds.createDefaultCollectionMd"><xsl:value-of select="/root/gui/harvesting/threddsCreateDefaultMd" /></label><br/>
+		<label for="thredds.ignoreHarvestOnCollections"><xsl:value-of select="/root/gui/harvesting/threddsIgnoreHarvest"/></label><br/>
+		<input type="radio" name="thredds.collectionGenerationOption" id="thredds.createDIFCollectionMd" value="default" checked="true"/>
+		<label for="thredds.createDIFCollectionMd"><xsl:value-of select="/root/gui/harvesting/threddsCreateDIFMd" /></label><br/>
 		
-		<div id="collectionDefaultMetadataOptions" style="margin-left:30px;">
-			<xsl:value-of select="/root/gui/harvesting/threddsOSCollections"/>
+		<div id="collectionDIFMetadataOptions" style="margin-left:30px;">
+			<xsl:value-of select="/root/gui/harvesting/threddsOutputSchema"/>
 			&#160;
-			<select id="thredds.outputSchemaOnCollections">
-				<option value="iso19139">iso19115/19139</option>
-			</select><br/>
+			<select id="thredds.outputSchemaOnCollectionsDIF"/>
+			<br/>
 		</div>
 		
 		<input type="radio" name="thredds.collectionGenerationOption" id="thredds.createFragmentsForCollections" value="fragments"/>
 		<label for="thredds.createFragmentsForCollections"><xsl:value-of select="/root/gui/harvesting/threddsCreateFragments" /></label><br/>
 		
 		<div id="collectionFragmentOptions" style="margin-left:30px;display:none;">
-			<xsl:value-of select="/root/gui/harvesting/threddsFragmentStylesheetForCollections"/>
+			<xsl:value-of select="/root/gui/harvesting/threddsOutputSchema"/>
 			&#160;
-			<select id="thredds.collectionFragmentStylesheet" size="1"/><br/>
-			<input type="checkbox" name="thredds.createCollectionSubtemplates" id="thredds.createCollectionSubtemplates" value=""/>
-			<label for="thredds.createCollectionSubtemplates"><xsl:value-of select="/root/gui/harvesting/threddsCreateSubtemplates"/></label><br/>
-			<xsl:value-of select="/root/gui/harvesting/template"/>
-			&#160;
-			<select id="thredds.collectionMetadataTemplate" size="1"/>
+			<select id="thredds.outputSchemaOnCollectionsFragments"/>
+			<br/>
+
+			<div id="collectionFragmentSchemaOptions" style="margin-left:30px;display:none;">
+				<xsl:value-of select="/root/gui/harvesting/threddsFragmentStylesheet"/>
+				&#160;
+				<select id="thredds.collectionFragmentStylesheet" size="1"/><br/>
+				<input type="checkbox" name="thredds.createCollectionSubtemplates" id="thredds.createCollectionSubtemplates" value=""/>
+				<label for="thredds.createCollectionSubtemplates"><xsl:value-of select="/root/gui/harvesting/threddsCreateSubtemplates"/></label><br/>
+				<xsl:value-of select="/root/gui/harvesting/threddsTemplate"/>
+				&#160;
+				<select id="thredds.collectionMetadataTemplate" size="1"/>
+			</div>
 		</div>
 	</xsl:template>
 						
@@ -174,31 +180,39 @@
 	
 	<xsl:template name="thredds-atomic-dataset-options">
 		<input type="checkbox" id="thredds.ignoreHarvestOnAtomics" name="thredds.ignoreHarvestOnAtomics" value=""/>
-		<label for="thredds.ignoreHarvestOnAtomics"><xsl:value-of select="/root/gui/harvesting/threddsIgnoreHarvestOnAtomics"/></label><br/>
-		<input type="radio" name="thredds.atomicGenerationOption" id="thredds.createDefaultAtomicMd" value="default" checked="true"/>
-		<label for="thredds.createDefaultAtomicMd"><xsl:value-of select="/root/gui/harvesting/threddsCreateDefaultMd" /></label><br/>
+		<label for="thredds.ignoreHarvestOnAtomics"><xsl:value-of select="/root/gui/harvesting/threddsIgnoreHarvest"/></label><br/>
+		<input type="radio" name="thredds.atomicGenerationOption" id="thredds.createDIFAtomicMd" value="default" checked="true"/>
+		<label for="thredds.createDIFAtomicMd"><xsl:value-of select="/root/gui/harvesting/threddsCreateDIFMd" /></label><br/>
 		
-		<div id="atomicDefaultMetadataOptions" style="margin-left:30px;">
-			<xsl:value-of select="/root/gui/harvesting/threddsOSAtomics"/>
+		<div id="atomicDIFMetadataOptions" style="margin-left:30px;">
+			<xsl:value-of select="/root/gui/harvesting/threddsOutputSchema"/>
 			&#160;
-			<select id="thredds.outputSchemaOnAtomics">
-				<option value="iso19139">iso19115/19139</option>
-			</select><br/>
+			<select id="thredds.outputSchemaOnAtomicsDIF"/>
 		</div>
 		
 		<input type="radio" name="thredds.atomicGenerationOption" id="thredds.createFragmentsForAtomics" value="fragments"/>
 		<label for="thredds.createFragmentsForAtomics"><xsl:value-of select="/root/gui/harvesting/threddsCreateFragments" /></label><br/>
 		
 		<div id="atomicFragmentOptions" style="margin-left:30px;display:none;">
-			<xsl:value-of select="/root/gui/harvesting/threddsFragmentStylesheetForAtomics"/>
+			<xsl:value-of select="/root/gui/harvesting/threddsOutputSchema"/>
 			&#160;
-			<select id="thredds.atomicFragmentStylesheet" size="1"/><br/>
-			<input type="checkbox" name="thredds.createAtomicSubtemplates" id="thredds.createAtomicSubtemplates" value=""/>
-			<label for="thredds.createAtomicSubtemplates"><xsl:value-of select="/root/gui/harvesting/threddsCreateSubtemplates"/></label><br/>
-			<xsl:value-of select="/root/gui/harvesting/template"/>
-			&#160;
-			<select id="thredds.atomicMetadataTemplate" size="1"/>
+			<select id="thredds.outputSchemaOnAtomicsFragments"/>
+			<br/>
+
+			<div id="atomicFragmentSchemaOptions" style="margin-left:30px;display:none;">
+				<xsl:value-of select="/root/gui/harvesting/threddsFragmentStylesheet"/>
+				&#160;
+				<select id="thredds.atomicFragmentStylesheet" size="1"/><br/>
+				<input type="checkbox" name="thredds.createAtomicSubtemplates" id="thredds.createAtomicSubtemplates" value=""/>
+				<label for="thredds.createAtomicSubtemplates"><xsl:value-of select="/root/gui/harvesting/threddsCreateSubtemplates"/></label><br/>
+				<xsl:value-of select="/root/gui/harvesting/threddsTemplate"/>
+				&#160;
+				<select id="thredds.atomicMetadataTemplate" size="1"/>
+			</div>
 		</div>
+
+		<input type="checkbox" id="thredds.modifiedOnly" name="thredds.modifiedOnly" value=""/>
+		<label for="thredds.modifiedOnly"><xsl:value-of select="/root/gui/harvesting/threddsModifiedOnly"/></label><br/>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->

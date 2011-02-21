@@ -399,7 +399,7 @@ public class XmlRequest
 		{
 			httpMethod = new GetMethod();
 
-			if (!("".equals(query)))
+			if (query != null && !query.equals(""))
 				httpMethod.setQueryString(query);
 
 			else if (alSimpleParams.size() != 0)

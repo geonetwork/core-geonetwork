@@ -1,25 +1,25 @@
 //=====================================================================================
 //===
-//=== metadatafragments controller
+//=== wfsfeatures controller
 //===
 //=====================================================================================
 
-ker.include('harvesting/metadatafragments/model.js');
-ker.include('harvesting/metadatafragments/view.js');
+ker.include('harvesting/wfsfeatures/model.js');
+ker.include('harvesting/wfsfeatures/view.js');
 
-var metadatafragments = new Object();
+var wfsfeatures = new Object();
 
 //=====================================================================================
 
-function MetadataFragments(xmlLoader)
+function WfsFeatures(xmlLoader)
 {
 	//--- call super constructor
 	Harvester.call(this);
 	
 	var loader= xmlLoader;
     
-	var model = new metadatafragments.Model(loader);
-	var view  = new metadatafragments.View(loader);
+	var model = new wfsfeatures.Model(loader);
+	var view  = new wfsfeatures.View(loader);
     
 	//--- public methods
 	this.addGroupRow    = addGroupRow;
@@ -35,9 +35,9 @@ function MetadataFragments(xmlLoader)
 //===
 //=====================================================================================
 
-this.getType      = function() { return "metadatafragments"; }
-this.getLabel     = function() { return loader.eval("info[@type='metadatafragments']/long"); }
-this.getEditPanel = function() { return "metadatafragments.editPanel"; }
+this.getType      = function() { return "wfsfeatures"; }
+this.getLabel     = function() { return loader.eval("info[@type='wfsfeatures']/long"); }
+this.getEditPanel = function() { return "wfsfeatures.editPanel"; }
 
 //=====================================================================================
 
@@ -45,21 +45,10 @@ this.init = function()
 {
 	this.view.init();
 	
-	model.retrieveStylesheets (ker.wrap(this, init_stylesheets_OK));
+	model.retrieveSchemas     (ker.wrap(this, init_schemas_OK));
 	model.retrieveGroups      (ker.wrap(this, init_groups_OK));
 	model.retrieveCategories  (ker.wrap(this, init_categ_OK));
-	model.retrieveTemplates   (ker.wrap(this, init_templates_OK));
 	model.retrieveIcons       (ker.wrap(this, init_icons_OK)); // not used 
-}
-
-//-------------------------------------------------------------------------------------
-
-function init_stylesheets_OK(data)
-{
-	gui.addToSelect('metadatafragments.stylesheet', 0, "");
-	for (var i=0; i<data.length; i++) {
-		gui.addToSelect('metadatafragments.stylesheet', data[i].id, data[i].name);
-	}				
 }
 
 //-------------------------------------------------------------------------------------
@@ -81,17 +70,7 @@ function init_categ_OK(data)
 	for (var i=0; i<data.length; i++) {
 		view.addCategory(data[i].id, data[i].label[Env.lang]);
 		
-		gui.addToSelect('metadatafragments.recordsCategory', data[i].id, data[i].label[Env.lang]);
-	}				
-}
-
-//-------------------------------------------------------------------------------------
-//
-function init_templates_OK(data)
-{
-	gui.addToSelect('metadatafragments.templateId', 0, "");
-	for (var i=0; i<data.length; i++) {
-		gui.addToSelect('metadatafragments.templateId', data[i].id, data[i].title);
+		gui.addToSelect('wfsfeatures.recordsCategory', data[i].id, data[i].label[Env.lang]);
 	}				
 }
 
@@ -103,6 +82,17 @@ function init_icons_OK(data)
 		
 	for (var i=0; i<data.length; i++)
 		view.addIcon(data[i]);				
+}
+
+//-------------------------------------------------------------------------------------
+
+function init_schemas_OK(data)
+{
+	gui.addToSelect('wfsfeatures.outputSchema', "", "");
+
+	for (var i=0; i<data.length; i++) {
+		gui.addToSelect('wfsfeatures.outputSchema', data[i].id, data[i].name);
+	}				
 }
 
 //=====================================================================================

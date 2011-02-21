@@ -31,12 +31,12 @@
 				<td class="tipCell"><xsl:value-of select="total"/></td>
 			</tr>
 			<tr class="tipRow">
-				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/fragmentsAdded"/></td>
-				<td class="tipCell"><xsl:value-of select="fragmentsAdded"/></td>
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/subtemplatesAdded"/></td>
+				<td class="tipCell"><xsl:value-of select="subtemplatesAdded"/></td>
 			</tr>
 			<tr class="tipRow">
-				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/fragmentsRemoved"/></td>
-				<td class="tipCell"><xsl:value-of select="fragmentsRemoved"/></td>
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/subtemplatesRemoved"/></td>
+				<td class="tipCell"><xsl:value-of select="subtemplatesRemoved"/></td>
 			</tr>
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/fragmentsUnknownSchema"/></td>

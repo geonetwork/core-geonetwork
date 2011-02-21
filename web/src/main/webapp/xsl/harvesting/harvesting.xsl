@@ -15,7 +15,7 @@
 	<xsl:include href="oaipmh/oaipmh.xsl"/>
 	<xsl:include href="arcsde/arcsde.xsl"/>
 	<xsl:include href="thredds/thredds.xsl"/>
-	<xsl:include href="metadatafragments/metadatafragments.xsl"/>
+	<xsl:include href="wfsfeatures/wfsfeatures.xsl"/>
 	<xsl:include href="filesystem/filesystem.xsl"/>
 
 	<!-- ============================================================================================= -->
@@ -102,7 +102,7 @@
 		<xsl:call-template name="editPanel-CSW"/>
 		<xsl:call-template name="editPanel-OGCWXS"/>
 		<xsl:call-template name="editPanel-thredds"/>
-		<xsl:call-template name="editPanel-metadatafragments"/>
+		<xsl:call-template name="editPanel-wfsfeatures"/>
         <xsl:call-template name="editPanel-Z3950"/>
 		<xsl:call-template name="editPanel-OAI"/>
 		<xsl:call-template name="editPanel-Arcsde"/>

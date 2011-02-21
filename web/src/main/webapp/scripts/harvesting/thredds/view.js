@@ -17,11 +17,14 @@ thredds.View = function(xmlLoader)
 	
 	
 	var currSearchId = 0;
+	var selectedSheet = '';
+	var selectedTemplateId = '';
 	
 	this.setPrefix('thredds');
 
 	this.setPrivilTransf(privilTransf);
 	this.setResultTransf(resultTransf);
+
 
 	//--- public methods
 	
@@ -35,11 +38,13 @@ thredds.View = function(xmlLoader)
 	
 	Event.observe('thredds.icon', 'change', ker.wrap(this, updateIcon));
 	Event.observe('thredds.collectionDatasetMd', 'click', ker.wrap(this, toggleCollectionDatasetOptions));
-	Event.observe('thredds.createDefaultCollectionMd', 'click', ker.wrap(this, toggleCollectionMetadataOptions));
+	Event.observe('thredds.createDIFCollectionMd', 'click', ker.wrap(this, toggleCollectionMetadataOptions));
 	Event.observe('thredds.createFragmentsForCollections', 'click', ker.wrap(this, toggleCollectionMetadataOptions));
 	Event.observe('thredds.atomicDatasetMd', 'click', ker.wrap(this, toggleAtomicDatasetOptions));
-	Event.observe('thredds.createDefaultAtomicMd', 'click', ker.wrap(this, toggleAtomicMetadataOptions));
+	Event.observe('thredds.createDIFAtomicMd', 'click', ker.wrap(this, toggleAtomicMetadataOptions));
 	Event.observe('thredds.createFragmentsForAtomics', 'click', ker.wrap(this, toggleAtomicMetadataOptions));
+	Event.observe('thredds.outputSchemaOnCollectionsFragments', 'change', ker.wrap(this, changeCollectionFragmentSchemaOptions));
+	Event.observe('thredds.outputSchemaOnAtomicsFragments', 'change', ker.wrap(this, changeAtomicFragmentSchemaOptions));
 
 //=====================================================================================
 //===
@@ -84,17 +89,20 @@ function setEmpty()
 	$('thredds.atomicDatasetMd').checked = false;
 	$('thredds.createThumbnails').checked = false;
 	$('thredds.ignoreHarvestOnCollections').checked = false;
-	$('thredds.createDefaultCollectionMd').checked = true;
+	$('thredds.createDIFCollectionMd').checked = true;
 	$('thredds.collectionFragmentStylesheet').value = '';
 	$('thredds.createCollectionSubtemplates').checked = false;
 	$('thredds.collectionMetadataTemplate').value = '';
-	$('thredds.outputSchemaOnCollections').value = '';	
+	$('thredds.outputSchemaOnCollectionsDIF').value = '';	
+	$('thredds.outputSchemaOnCollectionsFragments').value = '';	
+	$('thredds.outputSchemaOnAtomicsDIF').value = '';	
+	$('thredds.outputSchemaOnAtomicsFragments').value = '';	
 	$('thredds.ignoreHarvestOnAtomics').checked = false;
-	$('thredds.createDefaultAtomicMd').checked = true;
+	$('thredds.modifiedOnly').checked = false;
+	$('thredds.createDIFAtomicMd').checked = true;
 	$('thredds.atomicFragmentStylesheet').value = ''; 
 	$('thredds.createAtomicSubtemplates').checked = false;
 	$('thredds.atomicMetadataTemplate').value = '';
-	$('thredds.outputSchemaOnAtomics').value = '';	
 	$('thredds.lang').value = 'eng';
 	$('thredds.topic').value = '';	
 	$('thredds.cataUrl').value = '';
@@ -128,20 +136,34 @@ function setData(node)
 	hvutil.setOption(options, 'topic',	 		  'thredds.topic');
 	hvutil.setOption(options, 'createThumbnails', 'thredds.createThumbnails');
 	hvutil.setOption(options, 'createServiceMd',  'thredds.createServiceMd');
+
+	// Collections
 	hvutil.setOption(options, 'createCollectionDatasetMd', 		'thredds.collectionDatasetMd');
+	hvutil.setOption(options, 'ignoreHarvestOnCollections', 	'thredds.ignoreHarvestOnCollections');
+	hvutil.setRadioOption(options, 'collectionGeneration',		'thredds.collectionGenerationOption');
+	hvutil.setOption(options, 'outputSchemaOnCollectionsDIF', 		'thredds.outputSchemaOnCollectionsDIF');
+	hvutil.setOption(options, 'outputSchemaOnCollectionsFragments', 		'thredds.outputSchemaOnCollectionsFragments');
+	if ($('thredds.outputSchemaOnCollectionsFragments').selectedIndex > 0) {
+		selectedSheet = hvutil.find(options, 'collectionFragmentStylesheet');
+		selectedTemplateId = hvutil.find(options, 'collectionMetadataTemplate');
+		changeCollectionFragmentSchemaOptions();
+		hvutil.setOption(options, 'createCollectionSubtemplates', 	'thredds.createCollectionSubtemplates');
+	}
+
+	// Atomics
 	hvutil.setOption(options, 'createAtomicDatasetMd', 			'thredds.atomicDatasetMd');
 	hvutil.setOption(options, 'ignoreHarvestOnAtomics', 		'thredds.ignoreHarvestOnAtomics');
 	hvutil.setRadioOption(options, 'atomicGeneration', 			'thredds.atomicGenerationOption');
-	hvutil.setOption(options, 'atomicFragmentStylesheet', 		'thredds.atomicFragmentStylesheet');
-	hvutil.setOption(options, 'createAtomicSubtemplates',	 	'thredds.createAtomicSubtemplates');
-	hvutil.setOption(options, 'atomicMetadataTemplate', 		'thredds.atomicMetadataTemplate');
-	hvutil.setOption(options, 'outputSchemaOnAtomics', 			'thredds.outputSchemaOnAtomics');
-	hvutil.setOption(options, 'ignoreHarvestOnCollections', 	'thredds.ignoreHarvestOnCollections');
-	hvutil.setRadioOption(options, 'collectionGeneration',		'thredds.collectionGenerationOption');
-	hvutil.setOption(options, 'collectionFragmentStylesheet', 	'thredds.collectionFragmentStylesheet');
-	hvutil.setOption(options, 'createCollectionSubtemplates', 	'thredds.createCollectionSubtemplates');
-	hvutil.setOption(options, 'collectionMetadataTemplate', 	'thredds.collectionMetadataTemplate');
-	hvutil.setOption(options, 'outputSchemaOnCollections', 		'thredds.outputSchemaOnCollections');
+	hvutil.setOption(options, 'outputSchemaOnAtomicsDIF', 			'thredds.outputSchemaOnAtomicsDIF');
+	hvutil.setOption(options, 'outputSchemaOnAtomicsFragments', 			'thredds.outputSchemaOnAtomicsFragments');
+	if ($('thredds.outputSchemaOnAtomicsFragments').selectedIndex > 0) {
+		selectedSheet = hvutil.find(options, 'atomicFragmentStylesheet');
+		selectedTemplateId = hvutil.find(options, 'atomicMetadataTemplate');
+		changeAtomicFragmentSchemaOptions();
+		hvutil.setOption(options, 'createAtomicSubtemplates',	 	'thredds.createAtomicSubtemplates');
+		hvutil.setOption(options, 'modifiedOnly', 					'thredds.modifiedOnly');
+	}
+
 	hvutil.setOption(options, 'lang', 			  				'thredds.lang');
 	hvutil.setOption(options, 'datasetCategory',  				'thredds.datasetCategory');
 	
@@ -175,14 +197,17 @@ function getData()
 	data.LANG             = $F('thredds.lang');
 	data.TOPIC            = $F('thredds.topic');
 	data.CREATESERVICEMD			= $('thredds.createServiceMd').checked;
-	data.OUTPUTSCHEMAONCOLLECTIONS    = $F('thredds.outputSchemaOnCollections');
+	data.OUTPUTSCHEMAONCOLLECTIONSDIF = $F('thredds.outputSchemaOnCollectionsDIF');
+	data.OUTPUTSCHEMAONCOLLECTIONSFRAGMENTS    = $F('thredds.outputSchemaOnCollectionsFragments');
 	data.IGNOREHARVESTONCOLLECTIONS   = $('thredds.ignoreHarvestOnCollections').checked;
 	data.COLLECTIONGENERATION         = getCheckedValue('thredds.collectionGenerationOption');
 	data.COLLECTIONFRAGMENTSTYLESHEET = $F('thredds.collectionFragmentStylesheet');
 	data.CREATECOLLECTIONSUBTEMPLATES = $('thredds.createCollectionSubtemplates').checked;
 	data.COLLECTIONMETADATATEMPLATE   = $F('thredds.collectionMetadataTemplate');
-	data.OUTPUTSCHEMAONATOMICS        = $F('thredds.outputSchemaOnAtomics');
+	data.OUTPUTSCHEMAONATOMICSDIF     = $F('thredds.outputSchemaOnAtomicsDIF');
+	data.OUTPUTSCHEMAONATOMICSFRAGMENTS       = $F('thredds.outputSchemaOnAtomicsFragments');
 	data.IGNOREHARVESTONATOMICS       = $('thredds.ignoreHarvestOnAtomics').checked;
+	data.MODIFIEDONLY                 = $('thredds.modifiedOnly').checked;
 	data.ATOMICGENERATION             = getCheckedValue('thredds.atomicGenerationOption');
 	data.ATOMICFRAGMENTSTYLESHEET     = $F('thredds.atomicFragmentStylesheet');
 	data.CREATEATOMICSUBTEMPLATES     = $('thredds.createAtomicSubtemplates').checked;
@@ -249,12 +274,15 @@ function toggleCollectionDatasetOptions()
 
 function toggleCollectionMetadataOptions()
 {
-	if ($('thredds.createDefaultCollectionMd').checked) {
-		$('collectionDefaultMetadataOptions').show();	
+	if ($('thredds.createDIFCollectionMd').checked) {
+		$('collectionDIFMetadataOptions').show();	
 		$('collectionFragmentOptions').hide();	
 	} else {
 		$('collectionFragmentOptions').show();	
-		$('collectionDefaultMetadataOptions').hide();	
+		if ($('thredds.outputSchemaOnCollectionsFragments').selectedIndex > 0) {
+			$('collectionFragmentSchemaOptions').show();
+		}
+		$('collectionDIFMetadataOptions').hide();	
 	}
 }
 
@@ -273,13 +301,177 @@ function toggleAtomicDatasetOptions()
 
 function toggleAtomicMetadataOptions()
 {
-	if ($('thredds.createDefaultAtomicMd').checked) {
-		$('atomicDefaultMetadataOptions').show();	
+	if ($('thredds.createDIFAtomicMd').checked) {
+		$('atomicDIFMetadataOptions').show();	
 		$('atomicFragmentOptions').hide();	
 	} else {
 		$('atomicFragmentOptions').show();	
-		$('atomicDefaultMetadataOptions').hide();	
+		if ($('thredds.outputSchemaOnAtomicsFragments').selectedIndex > 0) {
+			$('atomicFragmentSchemaOptions').show();
+		}
+		$('atomicDIFMetadataOptions').hide();	
 	}
+}
+
+//=====================================================================================
+
+
+function changeAtomicFragmentSchemaOptions()
+{
+	var select = $('thredds.outputSchemaOnAtomicsFragments');
+	if (select.selectedIndex > 0) {
+
+		this.selectedSchema = select[select.selectedIndex].value;
+
+		// load the stylesheets for the chosen schema
+
+		request = ker.createRequestFromObject({
+			type: 'threddsFragmentStylesheets',
+			schema: this.selectedSchema
+		});
+		ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveAtomicStylesheets_OK));
+
+		// load the templates for the chosen schema
+
+		new InfoService(loader, 'templates', ker.wrap(this, updateAtomicTemplates_OK));
+
+	}
+	$('atomicFragmentSchemaOptions').show();
+}
+
+//=====================================================================================
+
+function retrieveAtomicStylesheets_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++) {
+			data.push(xml.toObject(list[i]));
+		}
+	}
+
+	updateSelectAtomicFragmentStylesheets(data);
+}
+
+//=====================================================================================
+
+function updateSelectAtomicFragmentStylesheets(data)
+{
+	$('thredds.atomicFragmentStylesheet').options.length = 0;
+	gui.addToSelect('thredds.atomicFragmentStylesheet', 0, "");
+
+	for (var i=0; i<data.length; i++) {
+		var optionValue = '(' + data[i].schema + ') ' + data[i].name;
+			if (data[i].id == selectedSheet) {
+				gui.addToSelect('thredds.atomicFragmentStylesheet', data[i].id, optionValue, true);
+			} else {
+				gui.addToSelect('thredds.atomicFragmentStylesheet', data[i].id, optionValue);
+			}
+	}				
+}
+
+//=====================================================================================
+
+function updateAtomicTemplates_OK(data)
+{
+	$('thredds.atomicMetadataTemplate').options.length = 0;
+	gui.addToSelect('thredds.atomicMetadataTemplate', 0, "");
+
+	for (var i=0; i<data.length; i++) {
+		if (data[i].schema == this.selectedSchema) {
+			var optionValue = '(' + data[i].schema + ') ' + data[i].title;
+			if (data[i].id == selectedTemplateId) {
+				gui.addToSelect('thredds.atomicMetadataTemplate', data[i].id, optionValue, true);
+			} else {
+				gui.addToSelect('thredds.atomicMetadataTemplate', data[i].id, optionValue);
+			}
+		}
+	}				
+}
+
+//=====================================================================================
+
+function changeCollectionFragmentSchemaOptions()
+{
+	var select = $('thredds.outputSchemaOnCollectionsFragments');
+	if (select.selectedIndex > 0) {
+
+		this.selectedSchema = select[select.selectedIndex].value;
+
+		// load the stylesheets for the chosen schema
+
+		request = ker.createRequestFromObject({
+			type: 'threddsFragmentStylesheets',
+			schema: this.selectedSchema
+		});
+		ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveCollectionStylesheets_OK));
+
+		// load the templates for the chosen schema
+
+		new InfoService(loader, 'templates', ker.wrap(this, updateCollectionTemplates_OK));
+	}
+
+	$('collectionFragmentSchemaOptions').show();
+}
+
+//=====================================================================================
+
+function retrieveCollectionStylesheets_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++) {
+			data.push(xml.toObject(list[i]));
+		}
+	}
+
+	updateSelectCollectionFragmentStylesheets(data);
+}
+
+//=====================================================================================
+
+function updateSelectCollectionFragmentStylesheets(data)
+{
+	$('thredds.collectionFragmentStylesheet').options.length = 0;
+	gui.addToSelect('thredds.collectionFragmentStylesheet', 0, "");
+
+	for (var i=0; i<data.length; i++) {
+		var optionValue = '(' + data[i].schema + ') ' + data[i].name;
+		if (data[i].id == selectedSheet) {
+			gui.addToSelect('thredds.collectionFragmentStylesheet', data[i].id, optionValue, true);
+		} else {
+			gui.addToSelect('thredds.collectionFragmentStylesheet', data[i].id, optionValue);
+		}
+	}				
+}
+
+//=====================================================================================
+
+function updateCollectionTemplates_OK(data)
+{
+	$('thredds.collectionMetadataTemplate').options.length = 0;
+	gui.addToSelect('thredds.collectionMetadataTemplate', 0, "");
+
+	for (var i=0; i<data.length; i++) {
+		if (data[i].schema == this.selectedSchema) {
+			var optionValue = '(' + data[i].schema + ') ' + data[i].title;
+			if (data[i].id == selectedTemplateId) {
+				gui.addToSelect('thredds.collectionMetadataTemplate', data[i].id, optionValue, true);
+			} else {
+				gui.addToSelect('thredds.collectionMetadataTemplate', data[i].id, optionValue);
+			}
+		}
+	}				
 }
 
 //=====================================================================================

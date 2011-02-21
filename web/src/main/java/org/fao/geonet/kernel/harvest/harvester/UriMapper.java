@@ -23,11 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.resources.dbms.Dbms;
-import org.jdom.Element;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import jeeves.resources.dbms.Dbms;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -37,8 +37,7 @@ import java.util.List;
 
 public class UriMapper
 {
-	private HashMap<String, String> hmUriDate = new HashMap<String, String>();
-	private HashMap<String, String> hmUriId   = new HashMap<String, String>();
+	private HashMap<String, List<RecordInfo>> hmUriRecords = new HashMap<String, List<RecordInfo>>();
 
 	//--------------------------------------------------------------------------
 	//---
@@ -48,20 +47,25 @@ public class UriMapper
 
 	public UriMapper(Dbms dbms, String harvestUuid) throws Exception
 	{
-		String query = "SELECT id, harvestUri, changeDate FROM Metadata WHERE harvestUuid=?";
+		String query = "SELECT id, uuid, harvestUri, changeDate, isTemplate FROM Metadata WHERE harvestUuid=?";
 
 		List idsList = dbms.select(query, harvestUuid).getChildren();
 
-        for (Object anIdsList : idsList) {
-            Element record = (Element) anIdsList;
+		for (int i=0; i<idsList.size(); i++)
+		{
+			Element record = (Element) idsList.get(i);
 
-            String id = record.getChildText("id");
-            String uri = record.getChildText("harvesturi");
-            String date = record.getChildText("changedate");
+			String uri  = record.getChildText("harvesturi");
 
-            hmUriDate.put(uri, date);
-            hmUriId.put(uri, id);
-        }
+			List<RecordInfo> records = hmUriRecords.get(uri);
+			
+			if (records == null) {
+				records = new ArrayList<RecordInfo>();
+				hmUriRecords.put(uri, records);
+			}
+			
+			records.add(new RecordInfo(record));
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -70,15 +74,12 @@ public class UriMapper
 	//---
 	//--------------------------------------------------------------------------
 
-	public String getChangeDate(String uri) { return hmUriDate.get(uri); }
+	public List<RecordInfo> getRecords(String uri) { return hmUriRecords.get(uri); }
 
 	//--------------------------------------------------------------------------
 
-	public String getID(String uri) { return hmUriId.get(uri); }
-
-	//--------------------------------------------------------------------------
-
-	public Iterable<String> getUris() { return hmUriDate.keySet(); }
+	public Iterable<String> getUris() { return hmUriRecords.keySet(); }
+	
 }
 
 //=============================================================================

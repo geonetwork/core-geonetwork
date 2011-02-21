@@ -11,28 +11,41 @@ thredds.Model = function(xmlLoader)
 	var loader    = xmlLoader;
 	var callBackIcons = null;
 	var callBackStylesheets = null;
+	var callBackSchemasDIF = null;
+	var callBackSchemasFragments = null;
 	
 	this.retrieveGroups    = retrieveGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.retrieveIcons     = retrieveIcons;
 	this.getUpdateRequest  = getUpdateRequest;
-	this.retrieveTemplates = retrieveTemplates;
-	this.retrieveStylesheets = retrieveStylesheets;
+	this.retrieveSchemasDIF = retrieveSchemasDIF;
+	this.retrieveSchemasFragments = retrieveSchemasFragments;
 
 //=====================================================================================
 
-function retrieveStylesheets(callBack)
+function retrieveSchemasDIF(callBack)
 {
-	callBackStylesheets = callBack;	
+	callBackSchemasDIF = callBack;	
 
-	var request = ker.createRequest('type', 'threddsFragmentStylesheets');
+	var request = ker.createRequest('type', 'threddsDIFSchemas');
 	
-	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveStylesheets_OK));
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveSchemasDIF_OK));
 }
 
 //-------------------------------------------------------------------------------------
 
-function retrieveStylesheets_OK(xmlRes)
+function retrieveSchemasFragments(callBack)
+{
+	callBackSchemasFragments = callBack;	
+
+	var request = ker.createRequest('type', 'threddsFragmentSchemas');
+	
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveSchemasFragments_OK));
+}
+
+//-------------------------------------------------------------------------------------
+
+function retrieveSchemasDIF_OK(xmlRes)
 {
 	if (xmlRes.nodeName == 'error')
 		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
@@ -45,7 +58,26 @@ function retrieveStylesheets_OK(xmlRes)
 			data.push(xml.toObject(list[i]));
 		}
 		
-		callBackStylesheets(data);
+		callBackSchemasDIF(data);
+	}
+}
+
+//-------------------------------------------------------------------------------------
+
+function retrieveSchemasFragments_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++) {
+			data.push(xml.toObject(list[i]));
+		}
+		
+		callBackSchemasFragments(data);
 	}
 }
 
@@ -103,13 +135,6 @@ function getUpdateRequest(data)
 
 //=====================================================================================
 
-function retrieveTemplates(callBack)
-{
-	new InfoService(loader, 'templates', callBack);
-}
-
-//=====================================================================================
-
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
 '    <site>'+
@@ -137,13 +162,16 @@ var updateTemp =
 '      <collectionFragmentStylesheet>{COLLECTIONFRAGMENTSTYLESHEET}</collectionFragmentStylesheet>' +
 '      <createCollectionSubtemplates>{CREATECOLLECTIONSUBTEMPLATES}</createCollectionSubtemplates>' +
 '      <collectionMetadataTemplate>{COLLECTIONMETADATATEMPLATE}</collectionMetadataTemplate>' +
-'      <outputSchemaOnCollections>{OUTPUTSCHEMAONCOLLECTIONS}</outputSchemaOnCollections>'+
+'      <outputSchemaOnCollectionsDIF>{OUTPUTSCHEMAONCOLLECTIONSDIF}</outputSchemaOnCollectionsDIF>'+
+'      <outputSchemaOnCollectionsFragments>{OUTPUTSCHEMAONCOLLECTIONSFRAGMENTS}</outputSchemaOnCollectionsFragments>'+
 '      <ignoreHarvestOnAtomics>{IGNOREHARVESTONATOMICS}</ignoreHarvestOnAtomics>'+
+'      <modifiedOnly>{MODIFIEDONLY}</modifiedOnly>'+
 '      <atomicGeneration>{ATOMICGENERATION}</atomicGeneration>' +
 '      <atomicFragmentStylesheet>{ATOMICFRAGMENTSTYLESHEET}</atomicFragmentStylesheet>' +
 '      <createAtomicSubtemplates>{CREATEATOMICSUBTEMPLATES}</createAtomicSubtemplates>' +
 '      <atomicMetadataTemplate>{ATOMICMETADATATEMPLATE}</atomicMetadataTemplate>' +
-'      <outputSchemaOnAtomics>{OUTPUTSCHEMAONATOMICS}</outputSchemaOnAtomics>'+
+'      <outputSchemaOnAtomicsDIF>{OUTPUTSCHEMAONATOMICSDIF}</outputSchemaOnAtomicsDIF>'+
+'      <outputSchemaOnAtomicsFragments>{OUTPUTSCHEMAONATOMICSFRAGMENTS}</outputSchemaOnAtomicsFragments>'+
 '      <datasetCategory>{DATASETCATEGORY}</datasetCategory>'+
 '    </options>'+
 
