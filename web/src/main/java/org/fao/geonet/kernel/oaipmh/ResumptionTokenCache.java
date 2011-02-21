@@ -2,7 +2,7 @@ package org.fao.geonet.kernel.oaipmh;
 
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
-import org.fao.oaipmh.responses.ResumptionToken;
+import org.fao.oaipmh.responses.GeonetworkResumptionToken;
 import org.fao.oaipmh.util.ISODate;
 
 import java.util.Collections;
@@ -16,7 +16,7 @@ public class ResumptionTokenCache extends Thread {
 	//public final static int CACHE_TIMEOUT = 200 ; // 200 sec 
 	public final static int CACHE_EXPUNGE_DELAY = 10*1000; // 10 seconds
 
-	private Map<String,ResumptionToken> map ; 
+	private Map<String,GeonetworkResumptionToken> map ;
 	private boolean running = true;
 	private long timeout;
 	private int cachemaxsize;
@@ -25,7 +25,7 @@ public class ResumptionTokenCache extends Thread {
 		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::init timout:"+timeout);
 		this.timeout=timeout*1000;
 		this.cachemaxsize=cachesize;
-		map = Collections.synchronizedMap( new HashMap<String,ResumptionToken>()  );
+		map = Collections.synchronizedMap( new HashMap<String,GeonetworkResumptionToken>()  );
 
 		this.setDaemon(true);
 		this.setName("Cached Search Session Expiry Thread");
@@ -81,10 +81,10 @@ public class ResumptionTokenCache extends Thread {
 	}
 
 
-	public synchronized ResumptionToken getResumptionToken(String str) {
+	public synchronized GeonetworkResumptionToken getResumptionToken(String str) {
 		return map.get(str);
 	}
-	public synchronized void storeResumptionToken(ResumptionToken resumptionToken) {
+	public synchronized void storeResumptionToken(GeonetworkResumptionToken resumptionToken) {
 		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::store "+resumptionToken.getKey() + " size: "+map.size() );
 		
 		if ( map.size() == cachemaxsize ) {

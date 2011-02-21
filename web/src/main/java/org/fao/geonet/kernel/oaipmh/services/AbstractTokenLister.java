@@ -14,7 +14,7 @@ import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.ListResponse;
-import org.fao.oaipmh.responses.ResumptionToken;
+import org.fao.oaipmh.responses.GeonetworkResumptionToken;
 import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
@@ -53,7 +53,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 
 		//String token = req.getResumptionToken();
 		String strToken = req.getResumptionToken();
-		ResumptionToken token = null;
+		GeonetworkResumptionToken token = null;
 		
 
 		
@@ -95,7 +95,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 
 			// we only need a new token if the result set is big enough
 			if (result.ids.size() > Lib.MAX_RECORDS ) {
-				token = new ResumptionToken(req,result);
+				token = new GeonetworkResumptionToken(req,result);
 				cache.storeResumptionToken(token);
 			}
 			
@@ -103,16 +103,16 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		else
 		{
 			//result = (SearchResult) session.getProperty(Lib.SESSION_OBJECT);
-			token = cache.getResumptionToken( ResumptionToken.buildKey(req)  );
-			Log.debug(Geonet.OAI_HARVESTER,"OAI ListRecords : using ResumptionToken :"+ResumptionToken.buildKey(req));
+			token = cache.getResumptionToken( GeonetworkResumptionToken.buildKey(req)  );
+			Log.debug(Geonet.OAI_HARVESTER,"OAI ListRecords : using ResumptionToken :"+GeonetworkResumptionToken.buildKey(req));
 			
 			if (token  == null)
-				throw new BadResumptionTokenException("No session for token : "+ ResumptionToken.buildKey(req));
+				throw new BadResumptionTokenException("No session for token : "+ GeonetworkResumptionToken.buildKey(req));
 
 			result = token.getRes();
 			
 			//pos = result.parseToken(token);
-			pos = ResumptionToken.getPos(req);
+			pos = GeonetworkResumptionToken.getPos(req);
 		}
 
 		ListResponse res = processRequest(req,pos,result,context);
