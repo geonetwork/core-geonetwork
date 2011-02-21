@@ -32,7 +32,9 @@ import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
@@ -51,6 +53,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 
@@ -64,8 +67,6 @@ public class Info implements Service
 
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
-		wfsXslPath = new File(appPath + Geonet.Path.WFS_STYLESHEETS);
-		tdsXslPath = new File(appPath + Geonet.Path.TDS_STYLESHEETS);
 		importXslPath = new File(appPath + Geonet.Path.IMPORT_STYLESHEETS);
 		iconPath   = new File(appPath +"/images/harvesting");
 		oaiSchema  = new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");
@@ -81,6 +82,8 @@ public class Info implements Service
 	{
 		Element result = new Element("root");
 
+		String schema = jeeves.utils.Util.getParam(params, "schema", "");
+
 		for (Iterator i=params.getChildren().iterator(); i.hasNext();)
 		{
 			Element el = (Element) i.next();
@@ -88,28 +91,40 @@ public class Info implements Service
 			String name = el.getName();
 			String type = el.getText();
 
-			if (!name.equals("type"))
-				throw new BadParameterEx(name, type);
+			if (name.equals("type")) {
 
-			if (type.equals("icons"))
-				result.addContent(getIcons());
+				if (type.equals("icons"))
+					result.addContent(getIcons());
 
-			else if (type.equals("oaiPmhServer"))
-				result.addContent(getOaiPmhServer(el, context));
+				else if (type.equals("oaiPmhServer"))
+					result.addContent(getOaiPmhServer(el, context));
 
-			else if (type.equals("wfsFragmentStylesheets"))
-				result.addContent(getStylesheets(el, context, wfsXslPath));
+				else if (type.equals("wfsFragmentStylesheets"))
+					result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.WFS_STYLESHEETS, schema));
 
-			else if (type.equals("threddsFragmentStylesheets"))
-				result.addContent(getStylesheets(el, context, tdsXslPath));
+				else if (type.equals("threddsFragmentStylesheets"))
+					result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.TDS_STYLESHEETS, schema));
 
-			else if (type.equals("importStylesheets"))
-				result.addContent(getStylesheets(el, context, importXslPath));
+				else if (type.equals("threddsFragmentSchemas"))
+					result.addContent(getSchemas(el, context, Geonet.Path.TDS_STYLESHEETS));
 
-			else
-				throw new BadParameterEx("type", type);
+				else if (type.equals("wfsFragmentSchemas"))
+					result.addContent(getSchemas(el, context, Geonet.Path.WFS_STYLESHEETS));
+
+				else if (type.equals("threddsDIFSchemas"))
+					result.addContent(getSchemas(el, context, Geonet.Path.DIF_STYLESHEET));
+
+				else if (type.equals("importStylesheets"))
+					result.addContent(getStylesheets(el, context, importXslPath));
+
+				else
+					throw new BadParameterEx("type", type);
+			} else if (name.equals("schema")) { // do nothing
+			} else {
+					throw new BadParameterEx(name, type);
+			}
 		}
-
+				
 		return result;
 	}
 
@@ -151,8 +166,60 @@ public class Info implements Service
 		}
 	};
 
+	
 	//--------------------------------------------------------------------------
-	//--- Metadata fragment/import stylesheets
+	//--- Get Metadata fragment stylesheets from each schema
+	//--------------------------------------------------------------------------
+
+	private Element getSchemaFragmentStylesheets(Element el, ServiceContext context, String xslFragmentDir, String schemaFilter) throws Exception {
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager schemaMan = gc.getSchemamanager();
+
+		Element elRoot = new Element("stylesheets");
+
+		for (String schema : schemaMan.getSchemas()) {
+			if (!schemaFilter.equals("") && !schema.equals(schemaFilter)) continue;
+			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslFragmentDir);	
+			if (!xslPath.exists()) continue;
+
+			List<Element> elSheets = getStylesheets(el, context, xslPath).getChildren();
+			for (Element elSheet : elSheets) {
+				elSheet = (Element)elSheet.clone();
+				elSheet.addContent(new Element(Geonet.Elem.SCHEMA).setText(schema));
+				elRoot.addContent(elSheet);
+			}
+		}
+
+		return elRoot;
+	}
+
+	//--------------------------------------------------------------------------
+	//--- Get List of Schemas that contain the xslPath               
+	//--------------------------------------------------------------------------
+
+	private Element getSchemas(Element el, ServiceContext context, String xslPathStr) throws Exception {
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager schemaMan = gc.getSchemamanager();
+
+		Element elRoot = new Element("schemas");
+
+		for (String schema : schemaMan.getSchemas()) {
+			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslPathStr);	
+			if (xslPath.exists()) {
+				Element res = new Element(Jeeves.Elem.RECORD);
+				
+				res.addContent(new Element(Geonet.Elem.ID)  .setText(schema));
+				res.addContent(new Element(Geonet.Elem.NAME).setText(schema));
+
+				elRoot.addContent(res);
+			}
+		}
+
+		return elRoot;
+	}
+
 	//--------------------------------------------------------------------------
 
 	private Element getStylesheets(Element el, ServiceContext context, File xslPath) throws Exception {
@@ -287,8 +354,6 @@ public class Info implements Service
 
 	private File iconPath;
 	private File oaiSchema;
-	private File wfsXslPath;
-	private File tdsXslPath;
 	private File importXslPath;
 
 	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
