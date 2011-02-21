@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Error inciant sessió</heading>
+	<message>El nom d'usuari o la contrasenya són incorrectes.<br/>Premeu el botó 'Tornar' i intenteu-ho una altra vegada.</message>
+	<button>Tornar</button>
+</strings>

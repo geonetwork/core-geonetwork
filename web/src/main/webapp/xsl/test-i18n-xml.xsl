@@ -16,6 +16,7 @@
 			<ru />
 			<nl />
 			<pt />
+			<ca />
 		</langs>
 	</xsl:variable>
 
@@ -197,4 +198,3 @@
 
 
 </xsl:stylesheet>
-

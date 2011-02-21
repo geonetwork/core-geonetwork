@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Error accedint el recurs</heading>
+	<message>Els recurs demanat o bé no es troba en el sistema o bé no està accessible. Potser ha estat esborrat o bé no teniu suficients permisos per accedir-hi.</message>
+	<button>Enrere</button>
+</strings>

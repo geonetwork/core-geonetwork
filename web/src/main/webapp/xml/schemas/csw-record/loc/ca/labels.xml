@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows"
+	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct = "http://purl.org/dc/terms/">
+	<!-- ==================================================== -->
+	<element name="csw:Record">
+		<label>Metadada</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Títol</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Creador</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Resum i paraules clau</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Descripció</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Editor</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Col·laborador</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Data</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Tipus de recurs</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Format</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Identificador del recurs</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Fonts</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Idioma</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Relació</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Cobertura</label>
+		<description>Per exemple: "Nord 90, Sud -90, Est 180, Oest -180. Global"</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Drets</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Data de modificació</label>
+		<description>Data de modificació de la metadada</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Resum</label>
+		<description>Resum sobre el contingut i les característiques del conjunt de dades.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Espacial</label>
+		<description>Característiques espacials del contingut del recurs.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Audiència</label>
+		<description>Descripció dels destinataris del recurs.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Accrual Method</label>
+		<description>Els mètodes amb què els ítems són afegits a una col·lecció.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Accrual Periodicity</label>
+		<description>La freqüència amb què els ítems són afegits a una col·lecció.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Accrual Policy</label>
+		<description>La política amb què els ítems són afegits a una col·lecció.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Instructional Method</label>
+		<description>Un procés usat per generar coneixement, actituds i habilitats que el recurs pot suportar, atès el seu disseny.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Procedència</label>
+		<description>Una explicació sobre els canvis en la propietat o custòdia del recurs des de la seva creació i que són significants amb vista a la seva autenticitat, integritat i interpretació.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Rights Holder</label>
+		<description>Una persona o organització que poseeix o gestiona els drets sobre el recurs.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ows:BoundingBox">
+		<label>Bounding box</label>
+	</element>
+	<element name="ows:UpperCorner">
+		<label>Upper corner</label>
+	</element>
+	<element name="ows:LowerCorner">
+		<label>Lower corner</label>
+	</element>
+	<element name="crs">
+		<label>CRS</label>
+	</element>
+</labels>

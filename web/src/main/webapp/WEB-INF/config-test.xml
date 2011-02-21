@@ -21,6 +21,10 @@
 					localized="false" />
 				<xml name="strings.nl" file="loc/nl/xml/strings.xml"
 					localized="false" />
+				<xml name="strings.pt" file="loc/pt/xml/strings.xml"
+					localized="false" />
+					<xml name="strings.ca" file="loc/ca/xml/strings.xml"
+					localized="false" />					
 				<!-- about.xml -->
 				<xml name="about.en" file="loc/en/xml/about.xml"
 					localized="false" />
@@ -38,6 +42,10 @@
 					localized="false" />
 				<xml name="about.nl" file="loc/nl/xml/about.xml"
 					localized="false" />
+				<xml name="about.pt" file="loc/pt/xml/about.xml"
+					localized="false" />
+				<xml name="about.ca" file="loc/ca/xml/about.xml"
+					localized="false" />					
 				<!-- config.xml -->
 				<xml name="config.en" file="loc/en/xml/config.xml"
 					localized="false" />
@@ -55,6 +63,10 @@
 					localized="false" />
 				<xml name="config.nl" file="loc/nl/xml/config.xml"
 					localized="false" />
+				<xml name="config.pt" file="loc/pt/xml/config.xml"
+					localized="false" />
+				<xml name="config.ca" file="loc/ca/xml/config.xml"
+					localized="false" />					
 				<!-- harvesting.xml -->
 				<xml name="harvesting.en"
 					file="loc/en/xml/harvesting.xml" localized="false" />
@@ -72,6 +84,10 @@
 					file="loc/ru/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.nl"
 					file="loc/nl/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.pt"
+					file="loc/pt/xml/harvesting.xml" localized="false" />	
+				<xml name="harvesting.ca"
+					file="loc/ca/xml/harvesting.xml" localized="false" />					
 				<!-- TODO : add other loc files -->
 			</output>
 		</service>
@@ -97,6 +113,10 @@
 					localized="false" />
 				<xml name="strings.nl" file="loc/nl/xml/strings.xml"
 					localized="false" />
+				<xml name="strings.pt" file="loc/pt/xml/strings.xml"
+					localized="false" />	
+				<xml name="strings.ca" file="loc/ca/xml/strings.xml"
+					localized="false" />					
 				<!-- about.xml -->
 				<xml name="about.en" file="loc/en/xml/about.xml"
 					localized="false" />
@@ -114,6 +134,10 @@
 					localized="false" />
 				<xml name="about.nl" file="loc/nl/xml/about.xml"
 					localized="false" />
+				<xml name="about.pt" file="loc/pt/xml/about.xml"
+					localized="false" />
+				<xml name="about.ca" file="loc/ca/xml/about.xml"
+					localized="false" />					
 				<!-- config.xml -->
 				<xml name="config.en" file="loc/en/xml/config.xml"
 					localized="false" />
@@ -131,6 +155,10 @@
 					localized="false" />
 				<xml name="config.nl" file="loc/nl/xml/config.xml"
 					localized="false" />
+				<xml name="config.pt" file="loc/pt/xml/config.xml"
+					localized="false" />
+				<xml name="config.ca" file="loc/ca/xml/config.xml"
+					localized="false" />					
 				<!-- harvesting.xml -->
 				<xml name="harvesting.en"
 					file="loc/en/xml/harvesting.xml" localized="false" />
@@ -148,6 +176,10 @@
 					file="loc/ru/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.nl"
 					file="loc/nl/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.pt"
+					file="loc/pt/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ca"
+					file="loc/ca/xml/harvesting.xml" localized="false" />					
 				<!-- TODO : add other loc files -->
 			</output>
 		</service>
