@@ -8,7 +8,12 @@
 	<fr>Français</fr> <!-- Do not translate! -->
 	<nl>Nederlands</nl> <!-- Do not translate -->
 	<ru>Русский</ru> <!-- Do not translate! -->
+<<<<<<< .mine
+    <pt>Рortuguês</pt> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->
+=======
   <pt>Рortuguês</pt> <!-- Do not translate! -->
+>>>>>>> .r7293
     
   <selectTemplate>Select schemas</selectTemplate>
 	<useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
