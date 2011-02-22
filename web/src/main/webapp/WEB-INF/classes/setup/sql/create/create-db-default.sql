@@ -328,7 +328,7 @@ CREATE TABLE CswServerCapabilitiesInfo
     idField   int,
     langId    varchar(5)    not null,
     field     varchar(32)   not null,
-    label     varchar(96),
+    label     text,
 
     primary key(idField),
 
