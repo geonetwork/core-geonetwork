@@ -144,7 +144,7 @@
             	</tr>
             	<tr>
             		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerAbstract"/></td>
-            		<td class="padded"><textarea id="csw.abstract" class="content" type="text" value="" size="40"/></td>
+            		<td class="padded"><textarea id="csw.abstract" class="content" value="" rows="5" cols="38"/></td>
             	</tr>
             	<tr>
             		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerFees"/></td>
@@ -169,7 +169,7 @@
         </form>
           <script>
             <xsl:for-each select="/root/response/record">
-                $('csw.<xsl:value-of select="field"/>_<xsl:value-of select="langid"/>').value = '<xsl:value-of select="label"/>';
+                $('csw.<xsl:value-of select="field"/>_<xsl:value-of select="langid"/>').value = '<xsl:value-of select="translate(label, '&#xD;&#xA;', '\n')"/>';
             </xsl:for-each>
 
             	$("csw.enable").checked = <xsl:value-of select="/root/response/cswEnable"/>;
