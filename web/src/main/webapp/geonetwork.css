@@ -1357,3 +1357,30 @@ td.configTitle {
 div#privileges {
 	max-height: 650px;
 }
+.logo-wrap div img {
+  max-height: 80px;
+  max-width: 80px;
+}
+.logo-wrap {
+  height: 90px;
+  width: 90px;
+  float: left;
+  margin: 4px;
+  margin-right: 0;
+  padding: 5px;
+  border: 1px solid #fff;
+}
+.logo-wrap span {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+}
+.logo-over {
+  border: 1px solid #dddddd;
+}
+.logo-selected {
+  border: 1px solid #99bbe8;
+  background-color: #dddddd;
+  padding: 4px;
+}
+

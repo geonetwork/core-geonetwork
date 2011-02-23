@@ -7,33 +7,6 @@
 	<xsl:template mode="css" match="/">
 		<xsl:call-template name="geoCssHeader"/>
 		<xsl:call-template name="ext-ux-css"/>
-		<style type="text/css">
-			.logo-wrap div img {
-				max-height: 80px;
-				max-width: 80px;
-			}
-			.logo-wrap {
-				height: 90px;
-				width: 90px;
-				float: left;
-				margin: 4px;
-				margin-right: 0;
-				padding: 5px;
-				border: 1px solid #fff;
-			}
-			.logo-wrap span {
-				display: block;
-				overflow: hidden;
-				text-align: center;
-			}
-			.logo-over {
-				border: 1px solid #dddddd;
-			}
-			.logo-selected {
-				border: 1px solid #99bbe8;
-				background-color: #dddddd;
-				padding: 4px;
-			}</style>
 	</xsl:template>
 
 	<xsl:template mode="script" match="/">
@@ -50,7 +23,7 @@
 	</xsl:template>
 
 	<xsl:template name="content">
-		<xsl:call-template name="formLayout">
+	  <xsl:call-template name="formLayout">
 			<xsl:with-param name="title" select="/root/gui/strings/logoDes"/>
 			<xsl:with-param name="content">
 				<div id="logoManager" style="width:100%;height:600px;"/>
