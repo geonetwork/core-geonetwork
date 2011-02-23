@@ -17,10 +17,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:str="http://exslt.org/strings" xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xalan="http://xml.apache.org/xalan"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    exclude-result-prefixes="gfc gmx gmd gco str xlink">
+    xmlns:geonet="http://www.fao.org/geonetwork"
+    exclude-result-prefixes="gfc gmx gmd gco geonet">
 
 	<!-- main template - the way into processing iso19110 -->
 	<xsl:template match="metadata-iso19110" name="metadata-iso19110">
