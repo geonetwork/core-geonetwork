@@ -2239,6 +2239,7 @@ public class DataManager
 		deleteAllMetadataCateg(dbms, id);
 
 		dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", new Integer(id));
+		dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
 
 		//--- remove metadata
 		XmlSerializer.delete(dbms, "Metadata", id);
@@ -2263,6 +2264,7 @@ public class DataManager
 		deleteAllMetadataCateg(dbms, id);
 
 		dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", new Integer(id));
+        dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
 
 		//--- remove metadata
 		XmlSerializer.delete(dbms, "Metadata", id);
@@ -2277,12 +2279,12 @@ public class DataManager
 
 	public void deleteMetadataOper(Dbms dbms, String id, boolean skipAllIntranet) throws Exception
 	{
-		String query = "DELETE FROM OperationAllowed WHERE metadataId="+id;
+		String query = "DELETE FROM OperationAllowed WHERE metadataId=?";
 
 		if (skipAllIntranet)
 			query += " AND groupId>1";
 
-		dbms.execute(query);
+		dbms.execute(query, new Integer(id));
 	}
 
 	//--------------------------------------------------------------------------
@@ -2291,9 +2293,9 @@ public class DataManager
 
 	public void deleteAllMetadataCateg(Dbms dbms, String id) throws Exception
 	{
-		String query = "DELETE FROM MetadataCateg WHERE metadataId="+id;
+		String query = "DELETE FROM MetadataCateg WHERE metadataId=?";
 
-		dbms.execute(query);
+		dbms.execute(query, new Integer(id));
 	}
 
 	//--------------------------------------------------------------------------
