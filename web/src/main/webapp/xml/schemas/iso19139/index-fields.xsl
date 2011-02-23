@@ -158,9 +158,9 @@
 				    <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
 			        </xsl:call-template>
                             </xsl:variable>
-                            <Field name="inspiretheme" string="{string(.)}" store="true" index="true" token="true"/>
-			    <Field name="inspireannex" string="{$inspireannex}" store="true" index="true" token="false"/>
-                            <Field name="inspirecat" string="true" store="true" index="true" token="false"/>
+                            <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
+						    <Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
+                            <Field name="inspirecat" string="true" store="true" index="true"/>
                         </xsl:if>
                     </xsl:if>
                 </xsl:for-each>
@@ -324,7 +324,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === General stuff === -->		
-
+		<!-- Metadata type  -->
 		<xsl:choose>
 			<xsl:when test="gmd:hierarchyLevel">
 				<xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
@@ -335,6 +335,15 @@
 				<Field name="type" string="dataset" store="true" index="true"/>
 			</xsl:otherwise>
 		</xsl:choose>
+
+	    <xsl:choose>
+	     <xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">
+	       <Field name="type" string="service" store="true" index="true"/>
+	     </xsl:when>
+	     <!-- <xsl:otherwise>
+	      ... gmd:*_DataIdentification / hierachicalLevel is used and return dataset, serie, ... 
+	      </xsl:otherwise>-->
+	    </xsl:choose>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
