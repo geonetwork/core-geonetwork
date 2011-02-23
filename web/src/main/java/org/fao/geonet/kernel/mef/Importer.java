@@ -394,7 +394,10 @@ public class Importer {
 				throw new Exception(
 						"Missing siteId parameter from info.xml file");
 
-			Lib.sources.update(dbms, source, sourceName, true);
+			// --- only update sources table if source is not current site 
+			if (!source.equals(gc.getSiteId())) { 
+				Lib.sources.update(dbms, source, sourceName, true); 
+			}
 		}
 
 		try {
