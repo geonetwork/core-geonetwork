@@ -91,6 +91,7 @@ public class SearchParameter {
     public static final String DATAPARAM = "dataparam";
     public static final String ORGNAME = "orgName";
 	public static final String SPATIALREPRESENTATIONTYPE = "spatialRepresentationType";
+    public static final String VALID = "valid";
     
 
 }

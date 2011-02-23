@@ -251,6 +251,19 @@ CREATE TABLE Metadata
     unique(uuid)
   );
 
+CREATE TABLE Validation 
+  (
+    metadataId   int,
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+    
+    primary key(metadataId, valType)
+);
+
+
 REM ======================================================================
 
 CREATE TABLE MetadataCateg
@@ -335,6 +348,7 @@ ALTER TABLE IsoLanguagesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE IsoLanguagesDes ADD FOREIGN KEY (idDes) REFERENCES IsoLanguages (id);
 ALTER TABLE Metadata ADD FOREIGN KEY (owner) REFERENCES Users (id);
 ALTER TABLE Metadata ADD FOREIGN KEY (groupOwner) REFERENCES Groups (id);
+ALTER TABLE Validation ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
 ALTER TABLE MetadataCateg ADD FOREIGN KEY (categoryId) REFERENCES Categories (id);
 ALTER TABLE MetadataCateg ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
 ALTER TABLE MetadataRating ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);

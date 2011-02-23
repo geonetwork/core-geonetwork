@@ -299,6 +299,19 @@ CREATE TABLE Metadata
 CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 
+CREATE TABLE Validation
+  (
+    metadataId   int,
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+    
+    primary key(metadataId, valType),
+    foreign key(metadataId) references Metadata(id)
+);
+
 -- ======================================================================
 
 CREATE TABLE MetadataCateg

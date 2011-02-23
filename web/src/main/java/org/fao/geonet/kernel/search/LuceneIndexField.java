@@ -57,6 +57,7 @@ public class LuceneIndexField {
 	public static final String TOPIC_CATEGORY = "topicCat";
 	public static final String TYPE = "type";
 	public static final String UUID = "_uuid";
+	public static final String VALID = "_valid";
 	public static final String WEST = "westBL";
 	public static final String DENOMINATOR_FROM = "denominatorFrom";
 	public static final String DENOMINATOR_TO = "denominatorTo";

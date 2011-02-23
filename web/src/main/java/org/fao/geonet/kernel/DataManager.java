@@ -34,6 +34,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +64,7 @@ import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
@@ -396,6 +398,26 @@ public class DataManager
             moreFields.add(makeField("_cat", categoryName, true, true, false));
         }
 
+        // getValidationInfo
+        // -1 : not evaluated
+        // 0 : invalid
+        // 1 : valid
+        List<Element> validationInfo = dbms.select("SELECT valType, status FROM Validation WHERE metadataId=?", new Integer(id)).getChildren();
+        if (validationInfo.size() == 0) {
+            moreFields.add(makeField("_valid", "-1", true, true, false));
+        } else {
+            String isValid = "1";
+            for (Object elem : validationInfo) {
+                Element vi = (Element) elem;
+                String type = vi.getChildText("valtype");
+                String status = vi.getChildText("status");
+                if ("0".equals(status)) {
+                    isValid = "0";
+                }
+                moreFields.add(makeField("_valid_" + type, status, true, true, false));
+            }
+            moreFields.add(makeField("_valid", isValid, true, true, false));
+        }
 		if (indexGroup) {
 			sm.indexGroup(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
 		} else {
@@ -520,7 +542,22 @@ public class DataManager
 			}
 		}
 	}
-
+	/** 
+	* Create XML schematron report. 
+	*/ 
+	public Element doSchemaTronForEditor(String schema,Element md,String lang) throws Exception { 
+    	// enumerate the metadata xml so that we can report any problems found  
+    	// by the schematron_xml script to the geonetwork editor 
+    	editLib.enumerateTree(md); 
+    	
+    	// get an xml version of the schematron errors and return for error display 
+    	Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang, null); 
+    	
+    	// remove editing info added by enumerateTree 
+    	editLib.removeEditingInfo(md); 
+    	
+    	return schemaTronXmlReport; 
+	} 
 	//--------------------------------------------------------------------------
 
 	public String getMetadataSchema(Dbms dbms, String id) throws Exception
@@ -544,32 +581,14 @@ public class DataManager
 		return md;
 	}
 
-	//--------------------------------------------------------------------------
-	/**
-	 * Create XML schematron report.
-	 */
-	public Element doSchemaTronForEditor(String schema,Element md,String lang) throws Exception
-	{
-
-		// enumerate the metadata xml so that we can report any problems found 
-		// by the schematron_xml script to the geonetwork editor
-		editLib.enumerateTree(md);
-
-		// get an xml version of the schematron errors and return for error display
-		Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang);
-
-		// remove editing info added by enumerateTree
-		editLib.removeEditingInfo(md);
-
-		return schemaTronXmlReport;
-	}
 
 	//--------------------------------------------------------------------------
 	/**
 	 * Create XML schematron report for each set of rules defined
 	 * in schema directory.
+	 * @param valTypeAndStatus 
 	 */
-	private Element getSchemaTronXmlReport(String schema, Element md, String lang) throws Exception {
+	private Element getSchemaTronXmlReport(String schema, Element md, String lang, HashMap<String, Integer[]> valTypeAndStatus) throws Exception {
 		// NOTE: this method assumes that you've run enumerateTree on the 
 		// metadata
 
@@ -585,8 +604,9 @@ public class DataManager
 			// -- create a report for current rules.
 			// Identified by a rule attribute set to shematron file name
 			Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+			String ruleId = rule.substring(0, rule.indexOf(".xsl"));
 			Element report = new Element("report", Edit.NAMESPACE);
-			report.setAttribute("rule", rule.substring(0, rule.indexOf(".xsl")),
+			report.setAttribute("rule", ruleId,
 					Edit.NAMESPACE);
 
 			String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
@@ -597,8 +617,26 @@ public class DataManager
 				params.put("rule", rule);
 				params.put("dataDir", this.dataDir);
 				Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
-				if (xmlReport != null)
+				if (xmlReport != null) {
 					report.addContent(xmlReport);
+				}
+				// add results to persitent validation information
+				int firedRules = 0;
+				Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+				while (i.hasNext()) {
+                    i.next();
+                    firedRules ++;
+                }
+				int invalidRules = 0;
+                i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                while (i.hasNext()) {
+                    i.next();
+                    invalidRules ++;
+                }
+				Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
+				if (valTypeAndStatus != null) {
+				    valTypeAndStatus.put(ruleId, results);
+				}
 			} catch (Exception e) {
 				Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
 				e.printStackTrace();
@@ -1189,24 +1227,13 @@ public class DataManager
 		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
 			if (doXLinks) Processor.processXLink(md); 
 			String schema = getMetadataSchema(dbms, id);
-
+			
 			if (withEditorValidationErrors) {
-				//-- get an XSD validation report and add results to the metadata 
-				//-- as geonet:xsderror attributes on the affected elements
-				getXSDXmlReport(schema,md);
-			}
-
-			//-- now expand the elements and add the geonet: elements
-			editLib.expandElements(schema,md);
-			version = editLib.getVersionForEditing(schema, id, md);
-
-			if (withEditorValidationErrors) {
-				//-- get a schematron error report if no xsd errors and add results
-				//-- to the metadata as a geonet:schematronerrors element with 
-				//-- links to the ref id of the affected element
-				Element condChecks = getSchemaTronXmlReport(schema,md,srvContext.getLanguage());
-				if (condChecks != null) md.addContent(condChecks);
-			}
+			    version = doValidate(srvContext.getUserSession(), dbms, schema, id, md, srvContext.getLanguage(), forEditing).two();
+			} else {
+                editLib.expandElements(schema, md);
+                version = editLib.getVersionForEditing(schema, id, md);
+            }
 		} else {
 			if (doXLinks) Processor.detachXLink(md);
 		}
@@ -1774,7 +1801,7 @@ public class DataManager
 		md = updateFixedInfo(schema, id, md, dbms);
 
 		//--- do the validation on the metadata
-		return doValidate(session, schema, id, md, lang);
+		return doValidate(session, dbms, schema, id, md, lang, false).one();
 
 	}
 	
@@ -2017,12 +2044,14 @@ public class DataManager
         // Notifies the metadata change to metatada notifier service
         notifyMetadataChange(dbms, md, id);
 
-		//--- update search criteria
-		indexMetadata(dbms, id);
-
-		//--- do the validation last - it throws exceptions
-		if (validate) {
-			doValidate(session,schema,id,md,lang);
+		try {
+    		//--- do the validation last - it throws exceptions
+    		if (validate) {
+    			doValidate(session, dbms, schema,id,md,lang, false);
+    		}
+		} finally {
+	        //--- update search criteria
+	        indexMetadata(dbms, id);
 		}
 	
 		return true;
@@ -2051,53 +2080,128 @@ public class DataManager
 	 * Used by the validate embedded service. The validation report
 	 * is stored in the session.
 	 * 
-	 * FIXME : if a record A is in edit mode, only validation report
-	 * could be retrieve for record A. If asked for record B, 
-	 * validateMetadataEmbedded will use A (stored in session) instead of B ?
 	 * 
 	 * @param session
 	 * @param schema
 	 * @param id
 	 * @param md
 	 * @param lang
+	 * @param forEditing TODO
 	 * @return
 	 * @throws Exception
 	 */
-	public Element doValidate(UserSession session, String schema, String id, Element md, String lang) throws Exception
+	public Pair <Element, String> doValidate(UserSession session, Dbms dbms, String schema, String id, Element md, String lang, boolean forEditing) throws Exception
 	{
+	    String version = null;
 		Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
 		
-		Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);
+		Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);		
 		if (sessionReport != null) {
 			Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");
 			sessionReport.detach();
-			return sessionReport;
+			return Pair.read(sessionReport, version);
 		}
+		
+	    HashMap <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
 		Element errorReport = new Element ("report", Edit.NAMESPACE);
 		errorReport.setAttribute("id", id, Edit.NAMESPACE);
 		
-		// XSD first... 
+		
+		//-- get an XSD validation report and add results to the metadata 
+		//-- as geonet:xsderror attributes on the affected elements 
 		Element xsdErrors = getXSDXmlReport(schema,md);
 		if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
 			errorReport.addContent(xsdErrors);
+			Integer[] results = {0, 0, 0};
+			valTypeAndStatus.put("xsd", results);
+		     Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
+		} else {
+		    Integer[] results = {1, 0, 0};
+		    valTypeAndStatus.put("xsd", results);
 		}
-
+		
+		
 		// ...then schematrons
-		Element schemaTronXml = doSchemaTronForEditor(schema, md, lang);
-		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-			Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
-			Element idElem = new Element("id", Edit.NAMESPACE);
-			idElem.setText(id);
-			schematron.addContent(idElem);
-			errorReport.addContent(schemaTronXml);
-			//throw new SchematronValidationErrorEx("Schematron errors detected - see schemaTron report for "+id+" in htmlCache for more details",schematron);
-		}
+		Element schematronError;
 		
-		session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
-		
-		return errorReport;
-	}
+		// If in edit mode
+        if (forEditing) {
+              Log.debug(Geonet.DATA_MANAGER, "  - Schematron in editing mode.");
+              //-- now expand the elements and add the geonet: elements
+              editLib.expandElements(schema, md);
+              version = editLib.getVersionForEditing(schema, id, md);
+                    
+              //-- get a schematron error report if no xsd errors and add results
+              //-- to the metadata as a geonet:schematronerrors element with 
+              //-- links to the ref id of the affected element
+              schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+              if (schematronError != null) {
+                  md.addContent((Element)schematronError.clone());
+                  Log.debug(Geonet.DATA_MANAGER, "  - Schematron error: " + Xml.getString(schematronError));
+              }
+		} else {
+	        // enumerate the metadata xml so that we can report any problems found 
+	        // by the schematron_xml script to the geonetwork editor
+	        editLib.enumerateTree(md);
 
+	        // get an xml version of the schematron errors and return for error display
+	        schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+
+	        // remove editing info added by enumerateTree
+	        editLib.removeEditingInfo(md);
+		}
+        
+        if (schematronError != null && schematronError.getContent().size() > 0) {
+            Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
+            Element idElem = new Element("id", Edit.NAMESPACE);
+            idElem.setText(id);
+            schematron.addContent(idElem);
+            errorReport.addContent(schematronError);
+            //throw new SchematronValidationErrorEx("Schematron errors detected - see schemaTron report for "+id+" in htmlCache for more details",schematron);
+        }
+        
+        // Save report in session (invalidate by next update) and db
+   		session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
+		saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
+   		
+		return Pair.read(errorReport, version);
+	}
+	
+	/**
+	 * Save validation status information into the database for the current record.
+	 * 
+	 * @param id   the metadata record internal identifier
+	 * @param valTypeAndStatus  the validation type could be xsd or schematron rules set identifier
+	 * @param date the validation date time
+	 */
+	private void saveValidationStatus (Dbms dbms, String id, HashMap<String, Integer[]> valTypeAndStatus, String date) throws Exception {
+	    clearValidationStatus(dbms, id);
+	    Set<String> i = valTypeAndStatus.keySet();
+	    for (String type : i) {
+	        String query = "INSERT INTO Validation (metadataId, valType, status, tested, failed, valDate) VALUES (?,?,?,?,?,?)";
+            Integer[] results = valTypeAndStatus.get(type);
+            dbms.execute(query, new Integer(id), type, results[0], results[1], results[2], date);
+        }
+	}
+	/**
+	 * Remove validation status information for a metadata record
+	 * @param dbms
+	 * @param id   the metadata record internal identifier
+	 */
+	private void clearValidationStatus (Dbms dbms, String id) throws Exception {
+	    dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
+	}
+	/**
+	 * Return the validation status information for the metadata record
+	 * @param dbms
+	 * @param id   the metadata record internal identifier
+	 * @return
+	 */
+	private List<Element> getValidationStatus (Dbms dbms, String id) throws Exception {
+	    return dbms.select("SELECT valType, status, tested, failed FROM Validation WHERE metadataId=?", new Integer(id)).getChildren();
+    }
+	
+	
 	//--------------------------------------------------------------------------
 	//--- Used by the harvesting procedure
 
@@ -2793,6 +2897,9 @@ public class DataManager
 	
 	//--------------------------------------------------------------------------
 
+	/**
+	 * TODO : buildInfoElem contains similar portion of code with indexMetadataI
+	 */
 	private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -2896,6 +3003,31 @@ public class DataManager
 		}
 		*/
 
+
+        // Add validity information
+        List<Element> validationInfo = getValidationStatus(dbms, id);
+        if (validationInfo == null || validationInfo.size() == 0) {
+            addElement(info, Edit.Info.Elem.VALID, "-1");
+        } else {
+            String isValid = "1";
+            for (Object elem : validationInfo) {
+                Element vi = (Element) elem;
+                String type = vi.getChildText("valtype");
+                String status = vi.getChildText("status");
+                if ("0".equals(status)) {
+                    isValid = "0";
+                }
+                String ratio = "xsd".equals(type) ? "" : vi.getChildText("failed") + "/" + vi.getChildText("tested");
+                
+                info.addContent(new Element(Edit.Info.Elem.VALID + "_details").
+                        addContent(new Element("type").setText(type)).
+                        addContent(new Element("status").setText(status)).
+                        addContent(new Element("ratio").setText(ratio))
+                        );
+            }
+            addElement(info, Edit.Info.Elem.VALID, isValid);
+        }
+        
 		// add baseUrl of this site (from settings)
 		String host    = settingMan.getValue("system/server/host");
 		String port    = settingMan.getValue("system/server/port");

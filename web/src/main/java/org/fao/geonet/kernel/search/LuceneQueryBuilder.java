@@ -676,6 +676,13 @@ public class LuceneQueryBuilder {
            query.add(schemaClause);
         }
 
+        // valid
+        //
+        BooleanClause validClause = requiredTextField(luceneQueryInput.getValid(), LuceneIndexField.VALID, "1");
+        if(validClause != null) {
+           query.add(validClause);
+        }
+        
         // parentUuid
 		//
 		BooleanClause parentUuidClause = requiredTextField(luceneQueryInput.getParentUuid(), LuceneIndexField.PARENTUUID, similarity);

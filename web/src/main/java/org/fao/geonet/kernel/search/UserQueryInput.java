@@ -40,6 +40,7 @@ public class UserQueryInput {
 
     private String similarity;
     private String uuid;
+    private String valid;
     private String any;
     private String all;
     private String or;
@@ -145,7 +146,8 @@ public class UserQueryInput {
         setServiceType(jdom.getChildText(SearchParameter.SERVICETYPE));
         setType(jdom.getChildText(SearchParameter.TYPE));
         setInspire(jdom.getChildText(SearchParameter.INSPIRE));
-
+        setValid(jdom.getChildText(SearchParameter.VALID));
+        
         @SuppressWarnings("unchecked")
         List<Element> inspireThemesE = (List<Element>)jdom.getChildren(SearchParameter.INSPIRETHEME);
         Set<String> inspireThemes = new HashSet<String>();
@@ -714,4 +716,12 @@ public class UserQueryInput {
 	public String getSpatialRepresentationType() {
 		return spatialRepresentationType;
 	}
+
+    public void setValid(String valid) {
+        this.valid = valid;
+    }
+
+    public String getValid() {
+        return valid;
+    }
 }
