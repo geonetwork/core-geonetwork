@@ -154,7 +154,7 @@ public class MassiveXslProcessing implements Service {
 				String id = dm.getMetadataId(dbms, uuid);
 				context.info("Processing metadata with id:" + id);
 	
-				XslProcessing.process(id, process, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true);
+				XslProcessing.process(id, process, true, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true);
 			}
     }
 	}

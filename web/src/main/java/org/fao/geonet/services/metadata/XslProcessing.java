@@ -52,19 +52,35 @@ import java.util.Set;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
- * schema. Parameters sent to the service are forwaded to XSL process.
+ * schema. All parameters sent to the service are forwarded to XSL process.
+ * <br/>
+ * Parameters are:
+ * <ul>
+ * <li>process: the process identifier (aka. file name without extension)</li>
+ * <li>save: (optional) 1 to save the results (default), 0 to only process and return the processed record</li>
+ * </ul>
+ * <br/>
  * 
  * In each xml/schemas/schemaId directory, a process could be added in a
  * directory called process. Then the process could be called using the
  * following URL :
  * http://localhost:8080/geonetwork/srv/en/metadata.processing?process
  * =keywords-comma-exploder&url=http://xyz
+ * <br/>
+ * <br/>
  * 
  * In that example the process has to be named keywords-comma-exploder.xsl.
  * 
- * To retrieve parameters in XSL process use the following: <code>
+ * To retrieve parameters in XSL process use the following: 
+ * <pre>
+ * {@code
  *     <xsl:param name="url">http://localhost:8080/</xsl:param>
- * </code>
+ * }
+ * </pre>
+ * 
+ * 
+ *  TODO : it could be nice to add an option to return a diff
+ *  so we could preview the change before applying them.
  * 
  * @author fxprunayre
  */
@@ -82,6 +98,7 @@ public class XslProcessing implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		String process = Util.getParam(params, Params.PROCESS);
+		boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
 
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
@@ -89,9 +106,9 @@ public class XslProcessing implements Service {
 		Set<Integer> notProcessFound = new HashSet<Integer>();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
-
+		Element processedMetadata;
 		try {
-			Element processedMetadata = process(id, process, _appPath, params,
+			processedMetadata = process(id, process, save, _appPath, params,
 				context, metadata, notFound, notOwner, notProcessFound, false);
 			if (processedMetadata == null) {
 				throw new BadParameterEx("Processing failed", 
@@ -104,8 +121,13 @@ public class XslProcessing implements Service {
 			throw e;
 		}
 		// -- return the processed metadata id
-		return new Element(Jeeves.Elem.RESPONSE).addContent(
-				new Element(Geonet.Elem.ID).setText(id));
+		Element response = new Element(Jeeves.Elem.RESPONSE)
+                                .addContent(new Element(Geonet.Elem.ID).setText(id));
+		// and the processed metadata if not saved.
+		if (!save) {
+		    response.addContent(new Element("record").addContent(processedMetadata));
+		}
+		return response;
 		
 	}
 
@@ -124,10 +146,10 @@ public class XslProcessing implements Service {
 	 * @param notProcessFound
 	 * @return
 	 * @throws Exception
-	 */
-	public static Element process(String id, String process, String appPath,
-			Element params, ServiceContext context, Set<Integer> metadata,
-			Set<Integer> notFound, Set<Integer> notOwner,
+	 */	
+	public static Element process(String id, String process, boolean save,
+	        String appPath, Element params, ServiceContext context, 
+	        Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
 			Set<Integer> notProcessFound, boolean useIndexGroup) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -163,20 +185,23 @@ public class XslProcessing implements Service {
 			// URL if needed.
 			List<Element> children = params.getChildren();
 			Map<String, String> xslParameter = new HashMap<String, String>();
-			for (Element param : children) {
+	        xslParameter.put("guiLang", context.getLanguage());
+	        xslParameter.put("baseUrl", context.getBaseUrl());
+	        for (Element param : children) {
 				xslParameter.put(param.getName(), param.getTextTrim());
 			}
 			Element processedMetadata = Xml.transform(md, filePath,
 					xslParameter);
 
 			// --- save metadata and return status
-			dataMan.updateMetadataExt(dbms, id, processedMetadata, new ISODate().toString());
-
-			if (useIndexGroup) {
-				dataMan.indexMetadataGroup(dbms, id);
-			} else {
-				dataMan.indexMetadata(dbms, id);
-			}
+            if (save) {
+                dataMan.updateMetadataExt(dbms, id, processedMetadata, new ISODate().toString());
+    			if (useIndexGroup) {
+    				dataMan.indexMetadataGroup(dbms, id);
+    			} else {
+    				dataMan.indexMetadata(dbms, id);
+    			}
+            }
 
 			metadata.add(new Integer(id));
 
