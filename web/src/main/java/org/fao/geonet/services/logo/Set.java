@@ -23,10 +23,13 @@
 
 package org.fao.geonet.services.logo;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -50,52 +53,83 @@ import org.jdom.Element;
  * 
  */
 public class Set implements Service {
-	private String harvestingLogoDirectory;
-	private String nodeLogoDirectory;
+    private String harvestingLogoDirectory;
+    private String nodeLogoDirectory;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		harvestingLogoDirectory = appPath + "images/harvesting/";
-		nodeLogoDirectory = appPath + "images/logos/";
-	}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        harvestingLogoDirectory = appPath + "images/harvesting/";
+        nodeLogoDirectory = appPath + "images/logos/";
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		String file = Util.getParam(params, Params.FNAME);
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        String file = Util.getParam(params, Params.FNAME);
+        String asFavicon = Util.getParam(params, Params.FAVICON, "0");
 
-		if (file.contains("..")) {
-			throw new BadParameterEx("Invalid character found in resource name.", file);
-		}
-		
-		if ("".equals(file)) {
-			throw new Exception("Logo name is not defined.");
-		}
+        if (file.contains("..")) {
+            throw new BadParameterEx(
+                    "Invalid character found in resource name.", file);
+        }
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager settingMan = gc.getSettingManager();
-		String nodeUuid = settingMan.getValue("system/site/siteId");
+        if ("".equals(file)) {
+            throw new Exception("Logo name is not defined.");
+        }
 
-		try {
-			String logo = nodeLogoDirectory + "/" + nodeUuid + ".gif";
-			if (file.endsWith(".png")) {
-				BufferedImage source = ImageIO.read(new File(
-						harvestingLogoDirectory + file));
-				ImageIO.write(source, "gif", new File(logo));
-			} else {
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settingMan = gc.getSettingManager();
+        String nodeUuid = settingMan.getValue("system/site/siteId");
 
-				FileInputStream is = new FileInputStream(
-						harvestingLogoDirectory + file);
-				FileOutputStream os = new FileOutputStream(logo);
-				BinaryFile.copy(is, os, true, true);
-			}
+        try {
 
-		} catch (Exception e) {
-			throw new Exception(
-					"Unable to move uploaded thumbnail to destination directory");
-		}
+            BufferedImage source = ImageIO.read(new File(
+                    harvestingLogoDirectory + file));
 
-		Element response = new Element("response");
-		response.addContent(new Element("status").setText("Logo set."));
-		return response;
-	}
+            if ("1".equals(asFavicon)) {
+                createFavicon(source, nodeLogoDirectory + "/favicon.gif");
+            } else {
+                String logo = nodeLogoDirectory + nodeUuid + ".gif";
+                String defaultLogo = nodeLogoDirectory + "logo.gif";
+    
+                if (file.endsWith(".png")) {
+                    ImageIO.write(source, "gif", new File(logo));
+                    ImageIO.write(source, "gif", new File(defaultLogo));
+                } else {
+                    copyLogo(harvestingLogoDirectory + file, logo);
+                    copyLogo(harvestingLogoDirectory + file, defaultLogo);
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception(
+                    "Unable to move uploaded thumbnail to destination directory");
+        }
+
+        Element response = new Element("response");
+        response.addContent(new Element("status").setText("Logo set."));
+        return response;
+    }
+
+    private void copyLogo(String file, String logo) throws IOException {
+        FileInputStream is = new FileInputStream(file);
+        FileOutputStream os = new FileOutputStream(logo);
+        BinaryFile.copy(is, os, true, true);
+    }
+
+    private void createFavicon(Image img, String outFile) throws IOException {
+        int width = 16;
+        int height = 16;
+        String type = "gif";
+
+        Image thumb = img.getScaledInstance(width, height,
+                BufferedImage.SCALE_SMOOTH);
+
+        BufferedImage bimg = new BufferedImage(width, height,
+                BufferedImage.TRANSLUCENT);
+
+        Graphics2D g = bimg.createGraphics();
+        g.drawImage(thumb, 0, 0, null);
+        g.dispose();
+
+        ImageIO.write(bimg, type, new File(outFile));
+    }
 }

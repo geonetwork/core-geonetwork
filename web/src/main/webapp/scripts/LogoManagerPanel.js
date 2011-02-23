@@ -73,7 +73,10 @@ GeoNetwork.LogoManagerPanel = Ext
 						var lp = this;
 						this.tb = new Ext.Toolbar({
 							disabled : true,
-							items : [ {
+							items : [{
+                                xtype: 'tbtext',
+                                text : translate('selectedLogo')
+                            }, {
 								xtype : 'button',
 								text : translate('logoDel'),
 								listeners : {
@@ -87,11 +90,20 @@ GeoNetwork.LogoManagerPanel = Ext
 								text : translate('logoForNode'),
 								listeners : {
 									click : function() {
-										this.setSelectedLogo();
+										this.setSelectedLogo(0);
 									},
 									scope : lp
 								}
-							} ]
+							}, {
+                                xtype : 'button',
+                                text : translate('logoForNodeFavicon'),
+                                listeners : {
+                                    click : function() {
+                                        this.setSelectedLogo(1);
+                                    },
+                                    scope : lp
+                                }
+                            } ]
 						});
 
 						this.view = new Ext.DataView({
@@ -163,13 +175,13 @@ GeoNetwork.LogoManagerPanel = Ext
 					 * 
 					 *  Call logo.set service to remove selected one.
 					 */
-					setSelectedLogo : function() {
+					setSelectedLogo : function(favicon) {
 						var lp = this;
 						var selection = this.view.getSelectedIndexes();
 						var record = this.view.getStore().getAt(selection[0]);
 						var name = record.get('name');
 						OpenLayers.Request.GET({
-							url : 'logo.set?fname=' + name,
+							url : 'logo.set?fname=' + name + "&favicon=" + favicon,
 							success : function(response) {
 							},
 							failure : function(response) {

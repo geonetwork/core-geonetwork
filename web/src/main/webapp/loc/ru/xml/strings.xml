@@ -148,6 +148,8 @@
     <logoDes>Управление логотипами каталогов (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Зарегистрированные логотипы</logoRegistered>
 	<logoAdd js="true">Добавить новый логотип</logoAdd>
+  <selectedLogo js="true">Selected logo:</selectedLogo>
+  <logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
 	<logoDel js="true">Удалить выбранный логотип</logoDel>
 	<logoForNode js="true">Установить выбранный логотип для каталога</logoForNode>
 	<logoSelect js="true">Выберите изображение для логотипа ...</logoSelect>

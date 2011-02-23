@@ -110,6 +110,7 @@ public class Params
 	public static final String RESOURCES    = "resources";
 	public static final String METADATA     = "metadata";
 	public static final String FAIL_ON_ERROR = "failOnError";
+    public static final String FAVICON = "favicon";
 
 	public class Access
 	{

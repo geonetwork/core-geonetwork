@@ -152,9 +152,11 @@
     <logoDes>Gestion des logos (catalogues local et moissonnés)</logoDes>
 	<logoRegistered js="true">Logos enregistrés</logoRegistered>
 	<logoAdd js="true">Ajouter un logo</logoAdd>
-	<logoDel js="true">Supprimer le logo sélectionné</logoDel>
-	<logoForNode js="true">Utiliser le logo sélectionné pour le catalogue</logoForNode>
-	<logoSelect js="true">Choisir une image ...</logoSelect>
+  <selectedLogo js="true">Logo sélectionné :</selectedLogo>
+  <logoDel js="true">Supprimer</logoDel>
+  <logoForNode js="true">Utiliser pour le catalogue</logoForNode>
+  <logoForNodeFavicon js="true">Utiliser comme icône du site</logoForNodeFavicon>
+  <logoSelect js="true">Choisir une image ...</logoSelect>
 	
 	<createChild>Créer un enfant</createChild>
 	<updateChildren>Mettre à jour les enfants</updateChildren>

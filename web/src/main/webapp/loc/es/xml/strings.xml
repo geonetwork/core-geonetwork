@@ -150,8 +150,10 @@
     <logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Registered logos</logoRegistered>
 	<logoAdd js="true">Add new logo</logoAdd>
-	<logoDel js="true">Remove selected logo</logoDel>
-	<logoForNode js="true">Set selected logo for the catalogue</logoForNode>
+  <selectedLogo js="true">Selected logo:</selectedLogo>
+  <logoDel js="true">Remove</logoDel>
+  <logoForNode js="true">Use for the catalogue</logoForNode>
+  <logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
 	<logoSelect js="true">Select image for logo ...</logoSelect>
 	
 	<createChild>Create child</createChild>
