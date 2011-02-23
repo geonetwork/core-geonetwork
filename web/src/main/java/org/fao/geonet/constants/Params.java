@@ -111,6 +111,7 @@ public class Params
 	public static final String METADATA     = "metadata";
 	public static final String FAIL_ON_ERROR = "failOnError";
     public static final String FAVICON = "favicon";
+    public static final String SAVE = "save";
 
 	public class Access
 	{
