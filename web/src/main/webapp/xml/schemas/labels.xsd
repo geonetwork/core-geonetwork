@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="labels">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="element"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="element">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="label" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="description" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="help" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="condition" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="_condition" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="example" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="helper" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="inspireInfo" minOccurs="0" maxOccurs="1"/>
+      </xs:all>
+      <xs:attribute name="context" type="xs:NMTOKEN"/>
+      <xs:attribute name="id" type="xs:decimal"/>
+      <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="condition" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="help" type="xs:string"/>
+  <xs:element name="label" type="xs:string"/>
+  <xs:element name="_condition" type="xs:string"/>
+  <xs:element name="example" type="xs:string"/>
+  <xs:element name="helper">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="option"/>
+      </xs:sequence>
+      <xs:attribute name="rel" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="option">
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" type="xs:NMTOKEN"/>
+      <xs:attribute name="title"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="inspireInfo" type="xs:string"/>
+</xs:schema>
