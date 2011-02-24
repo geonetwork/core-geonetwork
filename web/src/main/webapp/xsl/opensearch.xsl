@@ -27,7 +27,7 @@
 		   </Url>
 		   <Image height="16" width="16" type="image/x-icon">
 			<xsl:value-of select="concat('http://',//server/host,':',//server/port)"/>
-			<xsl:value-of select="/root/gui/url"/>/favicon.ico</Image>
+			<xsl:value-of select="/root/gui/url"/>/images/logos/favicon.gif</Image>
 		</OpenSearchDescription>
 	</xsl:template>
 </xsl:stylesheet>

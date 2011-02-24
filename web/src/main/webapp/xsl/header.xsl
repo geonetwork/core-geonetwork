@@ -10,8 +10,8 @@
 		
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
-		<link href="{/root/gui/url}/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-		<link href="{/root/gui/url}/favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="../../images/logos/favicon.gif" rel="shortcut icon" type="image/x-icon" />
+	  <link href="../../images/logos/favicon.gif" rel="icon" type="image/x-icon" />
 
 		<!-- Recent updates newsfeed -->
 		<link href="{/root/gui/locService}/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | {/root/gui/strings/recentAdditions}" />

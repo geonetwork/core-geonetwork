@@ -9,8 +9,10 @@
 				<title>
 					<xsl:value-of select="concat(/root/gui/strings/title, '-', $title)"/>
 				</title>
-				<link href="{/root/gui/url}/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-				<link href="{/root/gui/url}/favicon.ico" rel="icon" type="image/x-icon"/>
+			  
+			  <link href="../../images/logos/favicon.gif" rel="shortcut icon" type="image/x-icon" />
+			  <link href="../../images/logos/favicon.gif" rel="icon" type="image/x-icon" />
+			  
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
 				<script type="text/javascript" src="../../scripts/openlayers/OpenLayers.js"/>
 				<script type="text/javascript" src="../../scripts/test-csw.js"/>
