@@ -42,6 +42,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -115,7 +116,8 @@ public class GetSuggestion implements Service {
 
         // List or analyze all suggestions process registered for this schema
         if ("list".equals(action) || "analyze".equals(action)) {
-            String filePath = appPath + "xml/schemas/" + mdInfo.schemaId + "/"
+            MetadataSchema metadataSchema = dm.getSchema(mdInfo.schemaId);
+            String filePath = metadataSchema.getSchemaDir() + "/"
                     + XSL_SUGGEST;
             File xslProcessing = new File(filePath);
             if (xslProcessing.exists()) {

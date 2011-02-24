@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -169,7 +170,9 @@ public class XslProcessing implements Service {
 			// -----------------------------------------------------------------------
 			// --- check processing exist for current schema
 			String schema = info.schemaId;
-			String filePath = appPath + "xml/schemas/" + schema + "/process/"
+			MetadataSchema metadataSchema = dataMan.getSchema(schema);
+            
+			String filePath = metadataSchema.getSchemaDir() + "/process/"
 					+ process + ".xsl";
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
