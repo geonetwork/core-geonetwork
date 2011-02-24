@@ -47,6 +47,7 @@ public class DbmsPool implements ResourceProvider
 {
 	private Hashtable<Dbms, Boolean> htDbms = new Hashtable<Dbms,Boolean>(100, 0.75f);
 
+	private String size;
 	private String name;
 	private String user;
 	private String passwd;
@@ -73,8 +74,8 @@ public class DbmsPool implements ResourceProvider
 		user          = config.getChildText(Jeeves.Res.Pool.USER);
 		passwd        = config.getChildText(Jeeves.Res.Pool.PASSWORD);
 		url 				  = config.getChildText(Jeeves.Res.Pool.URL);
+		size          = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		String driver = config.getChildText(Jeeves.Res.Pool.DRIVER);
-		String size   = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		String maxt   = config.getChildText(Jeeves.Res.Pool.MAX_TRIES);
 		String maxw   = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
 		String rect   = config.getChildText(Jeeves.Res.Pool.RECONNECT_TIME);
@@ -104,6 +105,17 @@ public class DbmsPool implements ResourceProvider
 	}
 
 	//--------------------------------------------------------------------------
+
+	public Map<String, String> getStats() {
+		Map<String,String> result = new HashMap<String,String>();
+		result.put("numactive","undefined");
+		result.put("numidle","undefined");
+		result.put("maxactive",size);
+		return result;
+	}
+
+	//--------------------------------------------------------------------------
+
 	public void end()
 	{
 		for(Enumeration<Dbms> e=htDbms.keys(); e.hasMoreElements();)

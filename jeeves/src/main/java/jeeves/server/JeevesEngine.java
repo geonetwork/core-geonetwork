@@ -55,7 +55,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 //=============================================================================
@@ -66,6 +68,7 @@ import java.util.Vector;
 public class JeevesEngine
 {
 	private String  defaultSrv;
+	private String	startupErrorSrv;
 	private String  profilesFile;
 	private String  defaultLang;
 	private String  defaultContType;
@@ -270,7 +273,7 @@ public class JeevesEngine
 		List<Element> resList = configRoot.getChildren(ConfigFile.Child.RESOURCES);
 
 		for(int i=0; i<resList.size(); i++)
-			initResources(resList.get(i));
+			initResources(resList.get(i), file);
 
 		//--- init app-handlers
 
@@ -357,6 +360,10 @@ public class JeevesEngine
 		info("Initializing defaults...");
 
 		defaultSrv     = Util.getParam(defaults, ConfigFile.Default.Child.SERVICE);
+
+		// -- Don't break behaviour before gn 2.7 - if the startupErrorService 
+		// -- doesn't exist then ignore this parameter
+		startupErrorSrv = Util.getParam(defaults, ConfigFile.Default.Child.STARTUPERRORSERVICE, "");
 		defaultLang    = Util.getParam(defaults, ConfigFile.Default.Child.LANGUAGE);
 		defaultContType= Util.getParam(defaults, ConfigFile.Default.Child.CONTENT_TYPE);
 
@@ -394,8 +401,9 @@ public class JeevesEngine
 	  */
 
 	@SuppressWarnings("unchecked")
-	private void initResources(Element resources)
+	private void initResources(Element resources, String file)
 	{
+		boolean resourceFound = false;
 		info("Initializing resources...");
 
 		List<Element> resList = resources.getChildren(ConfigFile.Resources.Child.RESOURCE);
@@ -414,7 +422,7 @@ public class JeevesEngine
 			if ((enabled == null) || enabled.equals("true"))
 			{
 				info("   Adding resource : " + name);
-
+				resourceFound = true;
 				try
 				{
 					if (activator != null)
@@ -431,17 +439,37 @@ public class JeevesEngine
 					}
 
 					providerMan.register(provider, name, config);
+
+					// Try and open a resource from the provider
+					providerMan.getProvider(name).open();
+
 				}
 				catch(Exception e)
 				{
-					error("Raised exception while initializing resource. Skipped.");
+					Map<String,String> errors = new HashMap<String,String>();
+					String eS = "Raised exception while initializing resource "+name+" in "+file+". Skipped.";
+					error(eS); 
+					errors.put("Error", eS); 
 					error("   Resource  : " +name);
+					errors.put("Resource", name); 
 					error("   Provider  : " +provider);
+					errors.put("Provider", provider);
 					error("   Exception : " +e);
+					errors.put("Exception",e.toString());
 					error("   Message   : " +e.getMessage());
+					errors.put("Message", e.getMessage());
 					error("   Stack     : " +Util.getStackTrace(e));
+					errors.put("Stack", Util.getStackTrace(e));
+					error(errors.toString());
+					serviceMan.setStartupErrors(errors);
 				}
 			}
+		}
+
+		if (!resourceFound) {
+			Map<String,String> errors = new HashMap<String,String>();
+			errors.put("Error", "No database resources found to initialize - check "+file); 
+			serviceMan.setStartupErrors(errors);
 		}
 	}
 
@@ -491,12 +519,21 @@ public class JeevesEngine
 			}
 			catch (Exception e)
 			{
-				error("Raised exception while starting appl handler. Skipped.");
+				Map<String,String> errors = new HashMap<String,String>();
+				String eS = "Raised exception while starting appl handler. Skipped.";
+				error(eS);
+				errors.put("Error", eS);
 				error("   Handler   : " +className);
+				errors.put("Handler", className);
 				error("   Exception : " +e);
+				errors.put("Exception",e.toString());
 				error("   Message   : " +e.getMessage());
+				errors.put("Message",e.getMessage());
 				error("   Stack     : " +Util.getStackTrace(e));
-
+				errors.put("Stack",Util.getStackTrace(e));
+				error(errors.toString());
+				// only set the error if we don't already have one
+				if (!serviceMan.isStartupError()) serviceMan.setStartupErrors(errors);
 				srvContext.getResourceManager().abort();
 			}
 		}
@@ -643,9 +680,9 @@ public class JeevesEngine
 
 	//---------------------------------------------------------------------------
 
-    public int getMaxUploadSize() { return maxUploadSize; }
+  public int getMaxUploadSize() { return maxUploadSize; }
 
-    //---------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
 
 	public void dispatch(ServiceRequest srvReq, UserSession session)
 	{
@@ -656,6 +693,12 @@ public class JeevesEngine
 			srvReq.setLanguage(defaultLang);
 
 		srvReq.setDebug(srvReq.hasDebug() && debugFlag);
+
+		//--- if we have a startup error (ie. exception during startup) then
+		//--- override with the startupErrorSrv service (if defined)
+		if (serviceMan.isStartupError() && !startupErrorSrv.equals("") 
+				&& !srvReq.getService().contains(startupErrorSrv))
+			srvReq.setService(startupErrorSrv);
 
 		//--- normal dispatch pipeline
 

@@ -353,11 +353,17 @@
 	<index>Information sur l'index Lucene</index>
 	<main>Information sur le système</main>
 	<catalogue>Information sur le catalogue</catalogue>
+	<database>Database information</database>
 	<system>Configuration du catalogue</system>
 	<siteId>Identifiant du catalogue :</siteId>
 	<version>Version :</version>
 	<subVersion>Sous-version :</subVersion>
 	<index.lucene.config>Configuration Lucene :</index.lucene.config>
-	<db.url>Base de données :</db.url>
+	<db.url>Base de données URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>	
+	<db.numactive>Database connections in use:</db.numactive>	
+	<db.numidle>Database connections available:</db.numidle>	
+	<db.maxactive>Maximum number of database connections:</db.maxactive>	
+	<db.statserror>Database statistics:</db.statserror>	
 </strings>
 

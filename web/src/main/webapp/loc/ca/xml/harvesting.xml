@@ -175,28 +175,27 @@
 	<mins>minuts</mins>
 	
 	<threddslang>Idioma de les metadades</threddslang>
-	<threddsImp>Tipus d'importació</threddsImp>
-	<threddsServiceMdOnly19119>Crear metadades en el catàleg per tots els serveis usant ISO19119.</threddsServiceMdOnly19119>
-	<threddsCollectionDataset19115>Crear metadades per col·leccions de conjunts de dades.</threddsCollectionDataset19115>
-	<threddsAtomicDataset19115>Crear metadades per conjunts de dades atòmiques.</threddsAtomicDataset19115>
-	<threddsCreateDefaultMd>Create default metadata</threddsCreateDefaultMd>
-	<threddsCreateFragments>Customise metadata generation using fragments</threddsCreateFragments>
-  <threddsFragmentStylesheetForCollections>Stylesheet to use to create metadata fragments from collection datasets</threddsFragmentStylesheetForCollections>
-  <collectionFragmentStylesheet>Collection Stylesheet</collectionFragmentStylesheet>
-  <threddsFragmentStylesheetForAtomics>Stylesheet to use to create metadata fragments from atomic datasets</threddsFragmentStylesheetForAtomics>
-  <atomicFragmentStylesheet>Atomic Stylesheet</atomicFragmentStylesheet>
-	<threddsCreateSubtemplates>Create subtemplates for fragments (xlinks will be used in generated metadata)</threddsCreateSubtemplates>
-	<threddsIgnoreHarvestOnCollections>Ignore harvesting attribute on collection datasets in catalog</threddsIgnoreHarvestOnCollections>
-	<threddsOSCollections>Select schema for collection metadata records</threddsOSCollections>
-	<threddsIgnoreHarvestOnAtomics>Ignore harvesting attribute on atomic datasets</threddsIgnoreHarvestOnAtomics>
-	<threddsOSAtomics>Select schema for atomic metadata records</threddsOSAtomics>
+	<threddsCreateDIFMd>Extract DIF metadata elements and create ISO metadata</threddsCreateDIFMd>
+	<threddsCreateFragments>Extract Unidata dataset discovery metadata using fragments</threddsCreateFragments>
+	<threddsCreateSubtemplates>Create subtemplates for fragments and XLink them into template</threddsCreateSubtemplates>
+	<threddsIgnoreHarvest>Ignore harvesting attribute</threddsIgnoreHarvest>
+	<threddsOutputSchema>Select schema for output metadata records</threddsOutputSchema>
 	<threddsCreateThumbnails>Create thumbnails for any datasets delivered by WMS</threddsCreateThumbnails>
+	<threddsModifiedOnly>Harvest new or modified datasets only</threddsModifiedOnly>
+	<threddsServiceMd>Crear metadades en el catàleg per tots els serveis usant ISO19119.</threddsServiceMd>
+	<threddsCollectionDataset>Crear metadades per col·leccions de conjunts de dades.</threddsCollectionDataset>
+	<threddsAtomicDataset>Crear metadades per conjunts de dades atòmiques.</threddsAtomicDataset>
+	<threddsTemplate>Select template to combine with fragments</threddsTemplate>
 	
-	<metadatafragmentsQuery>GetFeature Query</metadatafragmentsQuery>
-	<metadataFragmentsStylesheet>Stylesheet to use to create fragments</metadataFragmentsStylesheet>
-	<template>Template to use to build metadata using fragments</template>
-	<fragmentCategory>Category for fragments</fragmentCategory>
-	<recordCategory>Category for records built with linked fragments</recordCategory>
+	<wfsFeaturesLang>Metadata language</wfsFeaturesLang>
+	<wfsFeaturesQuery>OGC WFS GetFeature Query</wfsFeaturesQuery>
+	<wfsFeaturesStylesheet>Stylesheet to create fragments</wfsFeaturesStylesheet>
+	<wfsFeaturesLargeResponse>Save large response to disk</wfsFeaturesLargeResponse>
+	<wfsFeaturesCreateSubtemplates>Create subtemplates</wfsFeaturesCreateSubtemplates>
+	<wfsFeaturesTemplate>Select template to combine with fragments</wfsFeaturesTemplate>
+	<wfsFeaturesSubtemplateCategory>Category for subtemplates</wfsFeaturesSubtemplateCategory>
+	<wfsFeaturesRecordCategory>Category for output metadata records</wfsFeaturesRecordCategory>
+	<wfsFeaturesOutputSchema>Schema for output metadata records</wfsFeaturesOutputSchema>
 
 	<z3950repositories>Z3950 Server(s)</z3950repositories>
 	<z3950query>Z3950 Query</z3950query>

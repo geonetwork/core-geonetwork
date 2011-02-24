@@ -55,6 +55,8 @@ public class ServiceContext extends BasicContext
 	private String uploadDir;
 	private int    maxUploadSize;
 	private JeevesServlet servlet;
+	private boolean startupError = false;
+	Map<String,String> startupErrors;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -87,6 +89,8 @@ public class ServiceContext extends BasicContext
 
 	public InputMethod  getInputMethod()  { return input;  }
 	public OutputMethod getOutputMethod() { return output; }
+	public Map<String,String> getStartupErrors() { return startupErrors; }
+	public boolean isStartupError() { return startupError; }
 	public boolean isServletInitialized() { 
 		if (servlet != null) return servlet.isInitialized(); 
 		else return true; // Jeeves not running in servlet container eg for testing
@@ -99,6 +103,7 @@ public class ServiceContext extends BasicContext
 	public void setIpAddress(String address) { ipAddress = address; }
 	public void setUploadDir(String dir)     { uploadDir = dir;     }
     public void setMaxUploadSize(int size)   { maxUploadSize = size;}
+    public void setStartupErrors(Map<String,String> errs)   { startupErrors = errs; startupError = true; }
 
 	public void setInputMethod (InputMethod m)  { input  = m; }
 	public void setOutputMethod(OutputMethod m) { output = m; }

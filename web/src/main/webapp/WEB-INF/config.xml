@@ -13,6 +13,11 @@
 
 	<default>
 		<service>main.home</service>
+		<!-- the following service is called if there is an exception raised
+		     during the initialization of resources or 
+				 the appHandler org.fao.geonet.Geonetwork
+				 -->
+		<startupErrorService>main.error</startupErrorService>
 		<language>en</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
@@ -261,6 +266,22 @@
 				</call>
 
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="main.error">
+			<output sheet="main-error.xsl">
+				<call name="startupError" class=".guiservices.util.GetStartupError" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.main.error">
+			<output sheet="main-error-xml.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="startupError" class=".guiservices.util.GetStartupError" />
 			</output>
 		</service>
 

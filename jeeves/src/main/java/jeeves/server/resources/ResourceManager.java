@@ -120,6 +120,16 @@ public class ResourceManager
 	}
 
 	//--------------------------------------------------------------------------
+	/** Gets statistics from the named resource provider
+	  */
+
+	public Map<String,String> getStats(String name) throws Exception
+	{
+		ResourceProvider provider = provManager.getProvider(name);
+		return provider.getStats();
+	}
+
+	//--------------------------------------------------------------------------
 	/** Closes a resource doing a commit
 	  */
 

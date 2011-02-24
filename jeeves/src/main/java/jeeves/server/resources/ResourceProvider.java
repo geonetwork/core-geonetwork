@@ -25,6 +25,7 @@ package jeeves.server.resources;
 
 import org.jdom.Element;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 //=============================================================================
@@ -44,6 +45,9 @@ public interface ResourceProvider
 
 	/** gets props from the provider */
 	public Map<String,String> getProps();
+
+	/** gets stats from the provider */
+	public Map<String,String> getStats() throws SQLException;
 
 	/** Stops the provider */
 	public void end();

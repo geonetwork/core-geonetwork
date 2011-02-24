@@ -16,7 +16,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<xsl:template mode="block" match="system|catalogue|main|index">
+	<xsl:template mode="block" match="system|catalogue|main|index|database">
 		<fieldset style="text-align:left;">
 			<xsl:variable name="tag" select="name(.)"/>
 			<legend><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></legend>
@@ -28,7 +28,7 @@
 	</xsl:template>
 	
 	
-	<xsl:template mode="info" match="main/*|index/*|catalogue/*|siteId|version|subVersion">
+	<xsl:template mode="info" match="main/*|index/*|catalogue/*|database/*|siteId|version|subVersion">
 		<xsl:variable name="tag" select="name(.)"/>
 		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></label> <span class="info"><xsl:value-of select=".|value"/></span><br/>
 	</xsl:template>

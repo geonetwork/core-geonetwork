@@ -86,7 +86,8 @@ public class ConfigFile
 			 */
 			private Child() {}
 			
-		   public static final String SERVICE      = "service";
+		  public static final String SERVICE      = "service";
+		  public static final String STARTUPERRORSERVICE = "startupErrorService";
 			public static final String LANGUAGE     = "language";
 			public static final String LOCALIZED    = "localized";
 			public static final String CONTENT_TYPE = "contentType";

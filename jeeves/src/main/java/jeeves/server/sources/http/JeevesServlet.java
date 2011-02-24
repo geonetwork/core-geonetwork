@@ -119,6 +119,8 @@ public class JeevesServlet extends HttpServlet
 	private void execute(HttpServletRequest req, HttpServletResponse res) throws IOException
 	{
 		String ip = req.getRemoteAddr();
+		// if we do have the optional x-forwarded-for request header then
+		// use whatever is in it to record ip address of client
 		String forwardedFor = req.getHeader("x-forwarded-for");
 		if (forwardedFor != null) ip = forwardedFor;
 

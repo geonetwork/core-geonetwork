@@ -277,6 +277,8 @@
 
 		<!-- Basic services to search and display the results -->
 		<allow service="main.home"/>
+		<allow service="main.error"/> <!-- for servlet startup errors -->
+		<allow service="xml.main.error"/> <!-- for servlet startup errors -->
 		<allow service="main.searchform.simple.embedded"/> <!--  ETj -->		
 		<allow service="main.searchform.advanced.embedded"/> <!--  ETj -->		
 		<allow service="main.searchform.remote.embedded"/>

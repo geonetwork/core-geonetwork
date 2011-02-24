@@ -344,10 +344,16 @@
 	<index>Lucene index information</index>
 	<main>System information</main>
 	<catalogue>Catalogue information</catalogue>
+	<database>Database information</database>
 	<system>Catalogue configuration</system>
 	<siteId>Catalogue identifier:</siteId>
 	<version>Version:</version>
 	<subVersion>Sub-version:</subVersion>
 	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database:</db.url>
+	<db.url>Database URL:</db.url>	
+	<db.openattempt>Database Status:</db.openattempt>	
+	<db.numactive>Database connections in use:</db.numactive>	
+	<db.numidle>Database connections available:</db.numidle>	
+	<db.maxactive>Maximum number of database connections:</db.maxactive>	
+	<db.statserror>Database statistics:</db.statserror>	
 </strings>

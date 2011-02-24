@@ -24,6 +24,7 @@ package org.fao.geonet.services.config;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.transform.TransformerFactory;
@@ -52,6 +53,7 @@ public class GetInfo implements Service {
 	private HashMap<String, String> catProperties = new HashMap<String, String>();
 	private HashMap<String, String> indexProperties = new HashMap<String, String>();
 	private HashMap<String, String> systemProperties = new HashMap<String, String>();
+	private HashMap<String, String> databaseProperties = new HashMap<String, String>();
 	private SearchManager sm;
 	private Dbms dbms; 
 	String appPath;
@@ -77,6 +79,7 @@ public class GetInfo implements Service {
 		loadSystemInfo();
 		loadCatalogueInfo(dataDir);
 		loadIndexInfo(luceneDir);
+		loadDatabaseInfo(context);
 
 		Element system = gc.getSettingManager().get("system", -1);
 
@@ -89,11 +92,15 @@ public class GetInfo implements Service {
 		Element cat = new Element("catalogue");
 		addToElement(cat, catProperties);
 
+		Element db = new Element("database");
+		addToElement(db, databaseProperties);
+
 		Element info = new Element("info");
 		info.addContent(system);
 		info.addContent(cat);
 		info.addContent(main);
 		info.addContent(index);
+		info.addContent(db);
 
 		return info;
 	}
@@ -105,8 +112,6 @@ public class GetInfo implements Service {
 	 */
 	private void loadCatalogueInfo(String dataDir) {
 		catProperties.put("data.dir", dataDir);
-		String dbURL = dbms.getURL();
-		catProperties.put("db.url", dbURL);
 	}
 
 
@@ -135,6 +140,7 @@ public class GetInfo implements Service {
 		long totMem = Runtime.getRuntime().totalMemory() / 1024;
 		systemProperties.put("mem.free", "" + freeMem);
 		systemProperties.put("mem.total", "" + totMem);
+
 	}
 
 	/**
@@ -156,6 +162,33 @@ public class GetInfo implements Service {
 			}
 		}
 		indexProperties.put("index.lucene.config", sm.getCurrentLuceneConfiguration().toString());
+	}
+	
+	/**
+	 * Compute information about database.
+	 * 
+	 * @param context
+	 */
+	private void loadDatabaseInfo(ServiceContext context) {
+		String dbURL = dbms.getURL();
+		databaseProperties.put("db.url", dbURL);
+
+		Dbms dbms = null;
+		try {
+			dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+			databaseProperties.put("db.openattempt", "Database Opened Successfully");
+		} catch (Exception e) {
+			databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error is: " + e.getMessage());
+		}
+
+		try {
+			Map<String,String> dbStats = context.getResourceManager().getStats(Geonet.Res.MAIN_DB);
+			databaseProperties.put("db.numactive", dbStats.get("numactive"));
+			databaseProperties.put("db.numidle", dbStats.get("numidle"));
+			databaseProperties.put("db.maxactive", dbStats.get("maxactive"));
+		} catch (Exception e) {
+			databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: "+e.getMessage());
+		}
 	}
 	
 	

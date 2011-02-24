@@ -58,6 +58,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 //=============================================================================
@@ -83,6 +84,8 @@ public class ServiceManager
 	private String  defaultContType;
 	private boolean defaultLocal;
 	private JeevesServlet servlet;
+	private boolean startupError = false;
+	private Map<String,String> startupErrors;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -100,6 +103,8 @@ public class ServiceManager
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setServlet(JeevesServlet serv) { servlet = serv; }
+    public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
+	public boolean isStartupError() { return startupError; }
 
 	//---------------------------------------------------------------------------
 
@@ -335,7 +340,6 @@ public class ServiceManager
 
 	public void dispatch(ServiceRequest req, UserSession session)
 	{
-		//--- create the corresponding service request
 
 		ServiceContext context = new ServiceContext(req.getService(), providMan, serialFact, profilMan, htContexts);
 
@@ -350,6 +354,7 @@ public class ServiceManager
 		context.setOutputMethod(req.getOutputMethod());
 		context.setHeaders(req.getHeaders());
 		context.setServlet(servlet);
+		if (startupError) context.setStartupErrors(startupErrors);
 
 		//--- invoke service and build result
 

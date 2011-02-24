@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.resources.ResourceListener;
@@ -36,6 +37,7 @@ import jeeves.utils.Log;
 
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedObjectPoolFactory;
+import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.dbcp.AbandonedConfig;
@@ -184,6 +186,18 @@ public class ApacheDBCPool implements ResourceProvider {
 		result.put("user", user);
 		result.put("password", passwd);
 		result.put("url", url);
+		return result;
+	}
+
+	// --------------------------------------------------------------------------
+
+	public Map<String, String> getStats() throws SQLException {
+		Map<String, String> result = new HashMap<String, String>();
+		PoolingDriver driver = (PoolingDriver) DriverManager.getDriver(apacheUrl);
+		ObjectPool connectionPool = driver.getConnectionPool(name);
+		result.put("numactive",connectionPool.getNumActive()+"");
+		result.put("numidle",connectionPool.getNumIdle()+"");
+		result.put("maxactive",size); // we limit the poolsize to this config
 		return result;
 	}
 
