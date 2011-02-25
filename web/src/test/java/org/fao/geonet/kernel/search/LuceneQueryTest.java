@@ -34,7 +34,7 @@ public class LuceneQueryTest extends TestCase {
     _analyzer.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
     _analyzer.addAnalyzer("subject", new KeywordAnalyzer());
 
-    	LuceneConfig lc = new LuceneConfig("src/main/webapp/WEB-INF/config-lucene.xml");
+    LuceneConfig lc = new LuceneConfig("src/main/webapp/", "WEB-INF/config-lucene.xml");
     	
 		_tokenizedFieldSet = lc.getTokenizedField();
 		_numericFieldSet = lc.getNumericFields();

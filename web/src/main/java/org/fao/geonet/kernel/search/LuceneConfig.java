@@ -52,6 +52,7 @@ public class LuceneConfig {
 	private static final int BOOST_CLASS = 2;
 
 	private File configurationFile;
+	private String appPath;
 
 	/**
 	 * Lucene numeric field configuration
@@ -128,14 +129,14 @@ public class LuceneConfig {
 	private Version LUCENE_VERSION = Version.LUCENE_29;
 
 	/**
-	 * Create a new Lucene configuration from an XML configuration file. If
-	 * configuration file is not found, a default configuration is loaded.
+	 * Create a new Lucene configuration from an XML configuration file. 
 	 * 
 	 * @param configurationFilePath
 	 */
-	public LuceneConfig(String configurationFilePath) {
+	public LuceneConfig(String appPath, String luceneConfigXmlFile) {
 		Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
-		this.configurationFile = new File(configurationFilePath);
+		this.appPath = appPath;
+		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load();
 	}
 
@@ -335,6 +336,9 @@ public class LuceneConfig {
 					} else if ("java.io.File".equals(paramType)
 							&& value != null) {
 						File f = new File(value);
+						if (!f.exists()) { // try relative to appPath
+							f = new File(appPath + value);
+						}
 						if (f != null) {
 							params[i] = f;
 						}
