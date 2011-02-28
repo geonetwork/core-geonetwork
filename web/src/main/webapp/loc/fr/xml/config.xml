@@ -37,7 +37,7 @@
 	<host>Hôte</host>
 	<port>Port</port>
 
-	<searchStats>Search Statistics</searchStats>
+	<searchStats>Statistique sur les recherches</searchStats>
 
 	<authentication>Authentification</authentication>
 	
@@ -359,11 +359,11 @@
 	<version>Version :</version>
 	<subVersion>Sous-version :</subVersion>
 	<index.lucene.config>Configuration Lucene :</index.lucene.config>
-	<db.url>Base de données URL:</db.url>
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
-	<db.statserror>Database statistics:</db.statserror>	
+	<db.url>Base de données / URL:</db.url>
+	<db.openattempt>Base de données / status :</db.openattempt>	
+  <db.numactive>Base de données / connexions utilisées :</db.numactive>	
+  <db.numidle>Base de données / connexions disponibles :</db.numidle>	
+  <db.maxactive>Base de données / nombre maximum de connexions :</db.maxactive>	
+  <db.statserror>Base de données / statistique :</db.statserror>	
 </strings>
 
