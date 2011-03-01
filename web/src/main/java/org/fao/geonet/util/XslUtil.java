@@ -4,6 +4,10 @@ import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -166,5 +170,31 @@ public final class XslUtil
 			Log.debug(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
     		return "";
 		}
+    }
+    
+    /**
+     * Return '' or error message if error occurs during URL connection.
+     * 
+     * @param url   The URL to ckeck
+     * @return
+     */
+    public static String getUrlStatus(String url){
+        URL u;
+        URLConnection conn;
+        try {
+            u = new URL(url);
+            conn = u.openConnection();
+            // TODO : set proxy
+            conn.setConnectTimeout(500);
+            conn.getInputStream().close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        
+        return "";
     }
 }
