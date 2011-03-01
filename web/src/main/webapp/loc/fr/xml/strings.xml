@@ -320,7 +320,7 @@
 	<all>Tout</all>
 	<any>- Tous -</any>
 	<anytime>N'importe quand</anytime>
-	<appSchInfoTab>Schéma d'application</appSchInfoTab>
+	<appSchInfoTab>Schéma d'app.</appSchInfoTab>
 	<assigned>Attribuer</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Disponibilité</availability>
@@ -349,8 +349,8 @@
 	<browsed>Browse Graphic File Description</browsed>
 	<browsen>Browse Graphic File Name</browsen>
 	<browset>Browse Graphic File Type</browset>
-	<byGroup>Par groupe</byGroup>
-	<byPackage>Par section</byPackage>
+	<byGroup>Vue ISO</byGroup>
+	<byPackage>Vue Avancée</byPackage>
 	<cancel>Annuler</cancel>
 	<categories>Catégories</categories>
 	<category>Catégorie</category>
@@ -378,7 +378,7 @@
 	<constraintsTab>Contraintes</constraintsTab>
 	<contactUs>Contact</contactUs>
 	<contains>Contient</contains>
-	<contentInfoTab>Content Info</contentInfoTab>
+	<contentInfoTab>Info. contenu</contentInfoTab>
 	<convert>Conversion</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Tout droit réservé.</p></copyright2>
@@ -389,7 +389,7 @@
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
 	<cswTest>Test CSW</cswTest>
 	<cswTestDesc>Interface de tests pour le point d'accès CSW</cswTestDesc>
-	<dataQualityTab>Qualité des données</dataQualityTab>
+	<dataQualityTab>Qualité</dataQualityTab>
 	<datasetIssued>Etendue temporelle</datasetIssued>
 	<datasetTab>Jeu de données</datasetTab>
 	<dateModified>Date de modification</dateModified>
@@ -450,7 +450,7 @@
 	<exactCoordinate>Coordonnées exacts</exactCoordinate>
 	<exactTerm>Terme exact</exactTerm>
 	<extended>Avancée</extended>
-	<extensionInfoTab>Ext. Info</extensionInfoTab>
+	<extensionInfoTab>Extension</extensionInfoTab>
 	<extent>Emprise</extent>
 	<featuredMap>La sélection</featuredMap>
 	<feedback>Retour d'information</feedback>
