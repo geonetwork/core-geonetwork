@@ -67,6 +67,7 @@ Ext.extend(GeoNetwork.LoadWmcWindow, GeoNetwork.BaseWindow, {
             fileUpload: true,
             width: 360,
             autoheight:true,
+            layout: 'fit',
             bodyStyle: 'padding: 10px 10px 0 10px;',
             labelWidth: 0,
             plain: true,
