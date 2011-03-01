@@ -23,27 +23,6 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.mef.MEFLib.Format;
-import org.fao.geonet.kernel.mef.MEFLib.Version;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.relations.Get;
-import org.jdom.Element;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.zip.ZipOutputStream;
-
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
@@ -52,6 +31,28 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA_19139;
 import static org.fao.geonet.kernel.mef.MEFConstants.FS;
 import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
 import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Set;
+import java.util.zip.ZipOutputStream;
+
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.MEFLib.Format;
+import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.relations.Get;
+import org.jdom.Element;
 
 class MEF2Exporter {
 	/**
@@ -131,7 +132,10 @@ class MEF2Exporter {
 		// Always save metadata in iso 19139
 		if (schema.contains("iso19139") && !schema.equals("iso19139")) {
 			// ie. this is an ISO profil.
-			String path = stylePath + schema + "/convert/to19139.xsl";
+		    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		    DataManager dm = gc.getDataManager();
+		    MetadataSchema metadataSchema = dm.getSchema(schema);
+			String path = metadataSchema.getSchemaDir() + "/convert/to19139.xsl";
 
 			// Element record needs to be cloned due to transform method in
 			// formatData,
