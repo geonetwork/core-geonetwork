@@ -321,7 +321,7 @@
     
   </element>
   <element name="gmd:EX_GeographicBoundingBox" id="343.0">
-    <label>Boite géographique</label>
+    <label>Emprise géographique</label>
     <description>Type de données pour la description de la position géographique du jeu de données. Il s'agit ici d'une référence approximative de telle sorte qu''il n''est pas nécessaire de spécifier le système de coordonnées</description>
     <help>Type de données destiné à la description de la position géographique du jeu de données. Il s'agit ici de la définition d'une enveloppe sommaire (délimitation en latitude et en longitude). Des informations supplémentaires peuvent être trouvées sous EX_Extent et EX_GeographicExtent.</help>
     <condition>Obligatoire</condition>
@@ -968,7 +968,6 @@
     <label>Condition</label>
     <description>Condition sous laquelle l'élément étendu est obligatoire</description>
     <help>Condition sous laquelle l'élément est obligatoire.</help>
-    <condition/>
     <condition>Condition</condition>
   </element>
   <element name="gmd:constraintLanguage" id="323.0">
@@ -1214,7 +1213,6 @@
     <label>Unité de densité</label>
     <description>Unité de mesure pour la densité d'enregistrement</description>
     <help>Unité de mesure de la densité d'écriture.</help>
-    <condition/>
     <condition>Condition</condition>
   </element>
   <element name="gmd:description" id="87.0" context="LI_ProcessStep">
@@ -1352,7 +1350,6 @@
     <label>Code</label>
     <description>Trois codes digitaux attribués à l'élément étendu</description>
     <help>Code à trois chiffres affecté à l'élément étendu.</help>
-    <condition/>
     <condition>Condition</condition>
   </element>
   <element name="gmd:domainOfValidity" id="197.0">
@@ -1366,7 +1363,6 @@
     <label>Valeur Domaine</label>
     <description>Valeurs valides qui peuvent être assignées à l'élément étendu</description>
     <help>Valeurs licites pouvant être affectées à l'élément étendu.</help>
-    <condition/>
     <condition>Condition</condition>
   </element>
   <element name="gmd:eastBoundLongitude" id="345.0">
@@ -1411,7 +1407,6 @@
       Cette échelle peut également indiquer la précision de la saisie dans le cas d'un jeu de données vectorielles. 
       Cette information est du type MD_RepresentativeFraction et est gérée dans la classe du même nom où de plus amples renseignements peuvent être obtenus.
     </help>
-    <condition/>
     <condition>Condition</condition>
   </element>
   <element name="gmd:errorStatistic" id="136.0">
@@ -1841,7 +1836,6 @@
     <description>Description des tests</description>
     <help>Description de la mesure (test).</help>
     <condition/>
-    
   </element>
   <element name="gmd:measureIdentification" id="101.0">
     <label>Identification du test</label>
@@ -1987,6 +1981,95 @@
     <label>Nom du test</label>
     <description>Nom des tests qui ont été appliqués aux données</description>
     <help>Nom du test appliqué aux données.</help>
+    <!-- TODO : translate -->
+    <!-- ISO19138 Data quality basic measures Annex C - under revision ISO 19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
+    <helper rel="gmd:measureDescription">
+      <option value="">-- Completeness --</option>
+      <option value="Excess item" title="Indication that an item is incorrectly present in the data" id="ISO19138:2006:measure:1">Excess item</option>
+      <option value="Number of excess items" title="Number of items within the dataset, that should not have been in the dataset" id="ISO19138:2006:measure:2">Number of excess items</option>
+      <option value="Rate of excess items" title="Number of excess items in the dataset in relation to the number of items that should have been present" id="ISO19138:2006:measure:3">Rate of excess items</option>
+      <option value="Number of duplicate feature instances" title="Total number of exact duplications of feature instances within the data. Count of all items in the data that are incorrectly extracted with duplicate geometrie" id="ISO19138:2006:measure:4">Number of duplicate feature instances</option>
+      <option value="Missing item" title="Indicator that shows that a specific item is missing in the data" id="ISO19138:2006:measure:5">Missing item</option>
+      <option value="Number of missing items" title="Count of all items that should have been in the dataset and are missing" id="ISO19138:2006:measure:6">Number of missing items</option>
+      <option value="Rate of missing items" title="Number of missing items in the dataset in relation to the number of items that should have been present" id="ISO19138:2006:measure:7">Rate of missing items</option>
+      <option value="">-- Logical consistency / Conceptual consistency --</option>
+      <option value="Conceptual schema noncompliance" title="Indication that an item is not compliant to the rules of the relevant conceptual schema" id="ISO19138:2006:measure:8">Conceptual schema noncompliance</option>
+      <option value="Conceptual schema compliance" title="Indication that an item complies with the rules of the relevant conceptual schema" id="ISO19138:2006:measure:9">Conceptual schema compliance</option>
+      <option value="Number of items noncompliant to the rules of the conceptual schema" title="Count of all items in the dataset that are noncompliant to the rules of the conceptual schema. If the conceptual schema explicitly or implicitly describes rules, these rules have to be followed. Violations against such rules can e.g. be invalid placement of features within a defined tolerance, duplication of features and invalid overlap of features." id="ISO19138:2006:measure:10">Number of items noncompliant to the rules of the conceptual schema</option>
+      <option value="Number of invalid overlaps of surfaces" title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well." id="ISO19138:2006:measure:11">Number of invalid overlaps of surfaces</option>
+      <option value="Non-compliance rate with respect to the rules of the conceptual schema" title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset" id="ISO19138:2006:measure:12">Non-compliance rate with respect to the rules of the conceptual schema</option>
+      <option value=" Compliance rate with the rules of the conceptual schema" title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items" id="ISO19138:2006:measure:13"> Compliance rate with the rules of the conceptual schema</option>
+      <option value="">-- Logical consistency / Domain consistency --</option>
+      <option value="Value domain non-conformance" title="Indication of if an item is not in conformance with its value domain" id="ISO19138:2006:measure:14">Value domain non-conformance</option>
+      <option value="Value domain conformance" title="Indication of if an item is conforming to its value domain" id="ISO19138:2006:measure:15">Value domain conformance</option>
+      <option value="Number of items not in conformance with their value domain" title="Count of all items in the dataset that are not in conformance with their value domain." id="ISO19138:2006:measure:16">Number of items not in conformance with their value domain</option>
+      <option value="Value domain conformance rate" title="Number of items in the dataset that are in conformance with their value domain in relation to the total number of items in the dataset" id="ISO19138:2006:measure:17">Value domain conformance rate</option>
+      <option value="Value domain non-conformance rate" title="the number of items in the dataset that are not in conformance with their value domain in relation to the total number of items" id="ISO19138:2006:measure:18">Value domain non-conformance rate</option>
+      <option value="Physical structure conflicts" title="Count of all items in the dataset that are stored in conflict with the physical structure of the dataset" id="ISO19138:2006:measure:19">Physical structure conflicts</option>
+      <option value="Physical structure conflict rate" title="Number of items in the dataset that are stored in conflict with the physical structure of the dataset divided by the total number of items" id="ISO19138:2006:measure:20">Physical structure conflict rate</option>
+      <option value="">-- Logical consistency / Topological consistency --</option>
+      <option value="Number of faulty point-curve connections" title="Number of faulty point-curve connections in the dataset. A point-curve connection exists where different curves touch. These curves have an intrinsic topological relationship that has to reflect the true constellation. If the point-curve connection contradicts the universe of discourse, the point-curve connection is faulty with respect to this data quality measure. The data quality measure counts the number of errors of this kind." id="ISO19138:2006:measure:21">Number of faulty point-curve connections</option>
+      <option value="Rate of faulty point-curve connections" title="Number of faulty link node connections in relation to the number of supposed link node connections" id="ISO19138:2006:measure:22">Rate of faulty point-curve connections</option>
+      <option value="Number of missing connection due to undershoots" title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to undershoots" id="ISO19138:2006:measure:23">Number of missing connection due to undershoots</option>
+      <option value="Number of missing connections due to overshoots" title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to overshoots" id="ISO19138:2006:measure:24">Number of missing connections due to overshoots</option>
+      <option value="Number of invalid slivers" title="Count of all items in the dataset that are invalid sliver surfaces. A sliver is an unintended area that occurs when adjacent surfaces are not digitized properly. The borders of the adjacent surfaces may unintentionally gap or overlap by small amounts to cause a topological error." id="ISO19138:2006:measure:25">Number of invalid slivers</option>
+      <option value="Number of invalid self intersect errors" title="Count of all items in the data that illegally intersect with themselves" id="ISO19138:2006:measure:26">Number of invalid self intersect errors</option>
+      <option value="Number of invalid self overlap errors" title="Count of all items in the data that illegally self overlap" id="ISO19138:2006:measure:27">Number of invalid self overlap errors</option>
+      <option value="">-- Positional accuracy / Absolute or external accuracy / General measures --</option>
+      <option value="Mean value of positional uncertainties" title="Mean value of the positional uncertainties for a set of positions where the positional uncertainties are defined as the distance between a measured position and what is considered as the corresponding true position" id="ISO19138:2006:measure:28">Mean value of positional uncertainties</option>
+      <option value="Mean value of positional uncertainties excluding outliers" title="For a set of points where the distance does not exceed a defined threshold the arithmetical average of distances between their measured positions and what is considered as the corresponding true positions" id="ISO19138:2006:measure:29">Mean value of positional uncertainties excluding outliers</option>
+      <option value="Number of positional uncertainties above a given threshold" title="Number of positional uncertainties above a given threshold for a set of positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position" id="ISO19138:2006:measure:30">Number of positional uncertainties above a given threshold</option>
+      <option value="Rate of positional errors above a given threshold" title="Number of positional uncertainties above a given threshold for a set of positions in relation to the total number of measured positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position." id="ISO19138:2006:measure:31">Rate of positional errors above a given threshold</option>
+      <option value="Covariance matrix" title="A symmetrical square matrix with variances of point coordinates on the main diagonal and covariances between these coordinates as off-diagonal elements." id="ISO19138:2006:measure:32">Covariance matrix</option>
+      <option value="">-- Positional accuracy / Absolute or external accuracy / Vertical --</option>
+      <option value="Linear error probable" title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 50%." id="ISO19138:2006:measure:33">Linear error probable</option>
+      <option value="Standard linear error" title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 68.3%." id="ISO19138:2006:measure:34">Standard linear error</option>
+      <option value="Linear map accuracy at 90% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90%." id="ISO19138:2006:measure:35">Linear map accuracy at 90% significance level</option>
+      <option value="Linear map accuracy at 95% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 95%." id="ISO19138:2006:measure:36">Linear map accuracy at 95% significance level</option>
+      <option value="Linear map accuracy at 99% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99%." id="ISO19138:2006:measure:37">Linear map accuracy at 99% significance level</option>
+      <option value="Near certainty linear error" title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99.8%." id="ISO19138:2006:measure:38">Near certainty linear error</option>
+      <option value="Root mean square error" title="Standard deviation, where the true value is not estimated from the observations but known a priori." id="ISO19138:2006:measure:39">Root mean square error</option>
+      <option value="Absolute linear error at 90% significance level of biased vertical data (Alternative 1)" title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present." id="ISO19138:2006:measure:40">Absolute linear error at 90% significance level of biased vertical data (Alternative 1)</option>
+      <option value="Absolute linear error at 90% significance level of biased vertical data" title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present." id="ISO19138:2006:measure:41">Absolute linear error at 90% significance level of biased vertical data</option>
+      <option value="">-- Positional accuracy / Absolute or external accuracy / Horizontal --</option>
+      <option value="Circular standard deviation" title="Radius describing a circle, in which the true point location lies with the probability of 39.4%." id="ISO19138:2006:measure:42">Circular standard deviation</option>
+      <option value="Circular error probable" title="Radius describing a circle, in which the true point location lies with the probability of 50%." id="ISO19138:2006:measure:43">Circular error probable</option>
+      <option value="Circular map accuracy standard" title="Radius describing a circle, in which the true point location lies with the probability of 90%." id="ISO19138:2006:measure:44"> Circular map accuracy standard</option>
+      <option value="Circular error at 95% significance level" title="Radius describing a circle, in which the true point location lies with the probability of 95%." id="ISO19138:2006:measure:45">Circular error at 95% significance level</option>
+      <option value="Circular near certainty error" title="Radius describing a circle, in which the true point location lies with the probability of 99.8%." id="ISO19138:2006:measure:46">Circular near certainty error</option>
+      <option value="Root mean square error of planimetry" title="Radius of a circle around the given point, in which the true value lies with probability P." id="ISO19138:2006:measure:47">Root mean square error of planimetry</option>
+      <option value="Absolute circular error at 90% significance level of biased data (Alternative 2)" title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present." id="ISO19138:2006:measure:48">Absolute circular error at 90% significance level of biased data (Alternative 2)</option>
+      <option value="Absolute circular error at 90% significance level of biased data" title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present." id="ISO19138:2006:measure:49">Absolute circular error at 90% significance level of biased data</option>
+      <option value="Uncertainty ellipse" title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point" id="ISO19138:2006:measure:50">Uncertainty ellipse</option>
+      <option value="Confidence ellipse" title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point" id="ISO19138:2006:measure:51">Confidence ellipse</option>
+      <option value="">-- Positional accuracy / Relative or internal accuracy --</option>
+      <option value="Relative vertical error" title="Evaluation of the random errors of one relief feature to another in the same dataset or on the same map/chart. It is a function of the random errors in the two elevations with respect to a common vertical datum." id="ISO19138:2006:measure:52">Relative vertical error</option>
+      <option value="Relative horizontal error" title="Evaluation of the random errors in the horizontal position of one feature to another in the same dataset or on the same map/chart." id="ISO19138:2006:measure:53">Relative horizontal error</option>
+      <option value="">-- Temporal accuracy / Accuracy of a time measurement --</option>
+      <option value="Time accuracy at 68.3% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 68.3%." id="ISO19138:2006:measure:54">Time accuracy at 68.3% significance level</option>
+      <option value="Time accuracy at 50% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 50%." id="ISO19138:2006:measure:55">Time accuracy at 50% significance level</option>
+      <option value="Time accuracy at 90% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 90%." id="ISO19138:2006:measure:56">Time accuracy at 90% significance level</option>
+      <option value="Time accuracy at 95% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 95%." id="ISO19138:2006:measure:57">Time accuracy at 95% significance level</option>
+      <option value="Time accuracy at 99% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99%." id="ISO19138:2006:measure:58">Time accuracy at 99% significance level</option>
+      <option value="Time accuracy at 99.8% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99.8%." id="ISO19138:2006:measure:59">Time accuracy at 99.8% significance level</option>
+      <option value="">-- Thematic accuracy / Classification correctness --</option>
+      <option value="Number of incorrectly classified features" title="Number of incorrectly classified features" id="ISO19138:2006:measure:60">Number of incorrectly classified features</option>
+      <option value="Misclassification rate" title="number of incorrectly classified features in relation to the number of features that are supposed to be there" id="ISO19138:2006:measure:61">Misclassification rate</option>
+      <option value="Misclassification matrix" title="matrix that indicates the number of items of class (i) classified as class (j)." id="ISO19138:2006:measure:62">Misclassification matrix</option>
+      <option value="Relative misclassification matrix" title="matrix that indicates the number of items of class (i) classified as class (i) divided by the number of items of class (i)" id="ISO19138:2006:measure:63">Relative misclassification matrix</option>
+      <option value="Kappa coefficient" title="Coefficient to quantify the proportion of agreement of assignments to classes by removing misclassifications" id="ISO19138:2006:measure:64">Kappa coefficient</option>
+      <option value="">-- Thematic accuracy / Non-quantitative attribute correctness --</option>
+      <option value="Number of incorrect attribute values" title="Total number of erroneous attribute values within the relevant part of the dataset" id="ISO19138:2006:measure:65">Number of incorrect attribute values</option>
+      <option value="Rate of correct attribute values" title="Number of correct attribute values in relation to the total number of attribute values" id="ISO19138:2006:measure:66">Rate of correct attribute values</option>
+      <option value="Rate of incorrect attribute values" title="Number of attribute values where incorrect values are assigned in relation to the total number of attribute values" id="ISO19138:2006:measure:67">Rate of incorrect attribute values</option>
+      <option value="">-- Thematic accuracy / Quantitative attribute accuracy --</option>
+      <option value="Attribute value uncertainty at 68.3% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 68.3%." id="ISO19138:2006:measure:68">Attribute value uncertainty at 68.3% significance level</option>
+      <option value="Attribute value uncertainty at 50% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 50%." id="ISO19138:2006:measure:69">Attribute value uncertainty at 50% significance level</option>
+      <option value="Attribute value uncertainty at 90% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 90%." id="ISO19138:2006:measure:70">Attribute value uncertainty at 90% significance level</option>
+      <option value="Attribute value uncertainty at 95% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 95%." id="ISO19138:2006:measure:71">Attribute value uncertainty at 95% significance level</option>
+      <option value="Attribute value uncertainty at 99% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99%." id="ISO19138:2006:measure:72">Attribute value uncertainty at 99% significance level</option>
+      <option value="Attribute value uncertainty at 99.8% significance level" title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99.8%." id="ISO19138:2006:measure:73">Attribute value uncertainty at 99.8% significance level</option>
+    </helper>
     <condition/>
     
   </element>
@@ -2008,7 +2091,6 @@
     <label>Obligation</label>
     <description>Obligation de l'élément étendu</description>
     <help>Niveau d'obligation associé à l'élément étendu (obligatoire, optionnel ou obligatoire sous certaines conditions).</help>
-    <condition/>
     <condition>Condition</condition>
   </element>
   <element name="gmd:offLine" id="278.0">
@@ -2739,6 +2821,14 @@
     <label>Type de valeur</label>
     <description>Valeur quantitative, ou domaine de valeur, pour l'appréciation de qualité</description>
     <help>Valeur (ou domaine de valeurs) quantitative pour l'appréciation de la qualité.</help>
+    <helper>
+      <option value="Booléen">Booléen</option>
+      <option value="Réel">Réel</option>
+      <option value="Integer">Integer</option>
+      <option value="Ratio">Ratio</option>
+      <option value="Pourcentage">Pourcentage</option>
+      <option value="Mesure(s) (valeur(s) + unité(s))">Mesure(s) (valeur(s) + unité(s))</option>
+    </helper>
     <condition/>
     
   </element>

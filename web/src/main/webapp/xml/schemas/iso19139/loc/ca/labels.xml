@@ -563,6 +563,7 @@
         <condition>mandatory</condition>
     </element>
     <element name="gmd:code" id="547.0" context="gmd:MD_CodeValue">
+        <label>Code</label>
         <description>Valor del codi</description>
         <help>Valor del codi (exemple: numèric)</help>
     </element>
@@ -714,7 +715,6 @@
     <element name="gmd:dateTime" id="89.0" context="LI_ProcessStep">
         <description>Data i hora o rangs de dates i hores en què es va produir el pas de procés (YYYY-MM-DDThh:mm:ss)</description>
         <label>Data i hora</label>
-        <description>Data i hora durant les quals s'ha desenvolupat el pas del procés</description>
     </element>
     <element name="gmd:dateTime" id="106.0" context="gmd:DQ_Element">
         <label>Data i hora</label>
@@ -1074,7 +1074,6 @@
     <element name="gmd:hoursOfService" id="391.0">
         <label>Horari d'atenció</label>
         <description>Període de temps (incloent la zona horària) en que es pot contactar amb l'organizació o l'individu</description>
-        <label>Hours of Service</label>
     </element>
     <element name="gmd:identificationInfo" id="15.0">
         <label>Informació d'identificació</label>
@@ -1547,7 +1546,6 @@
     <element name="gmd:schemaAscii" id="324.0">
         <description>L'esquema complet d'aplicació en un arxiu ASCII</description>
         <label>Esquema ASCII</label>
-        <description>L'esquema complet d'aplicació en un arxiu ASCII</description>
     </element>
     <element name="gmd:schemaLanguage" id="322.0">
         <label>Llenguatge de l'esquema</label>
@@ -1792,7 +1790,6 @@ no són adients</description>
     <element name="gmd:userNote" id="75.0">
         <label>Nota d'usuari</label>
         <description>Explicació de l'aplicació de les restriccions legals o d'altres restriccions i prerequisits legals per l'obtenció i l'ús del recurs o de la metadada</description>
-        <label>Nota d'usuari</label>
     </element>
     <element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
         <condition>mandatory</condition>
@@ -2191,7 +2188,7 @@ no són adients</description>
         <description/>
         <helper>
 			<option value="BOOLEAN">BOOLEAN</option>
-			<option vaue="BYTE">BYTE</option>
+			<option value="BYTE">BYTE</option>
 			<option value="CHARACTER">CHARACTER</option>
 			<option value="DATE">DATE</option>
 			<option value="DATETIME">DATETIME</option>

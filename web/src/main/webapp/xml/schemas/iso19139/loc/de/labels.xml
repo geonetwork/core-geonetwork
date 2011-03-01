@@ -2923,7 +2923,7 @@
       <description/>
       <helper>
         <option value="BOOLEAN">BOOLEAN</option>
-        <option vaue="BYTE">BYTE</option>
+        <option value="BYTE">BYTE</option>
         <option value="CHARACTER">CHARACTER</option>
         <option value="DATE">DATE</option>
         <option value="DATETIME">DATETIME</option>
