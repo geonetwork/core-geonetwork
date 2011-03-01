@@ -11,8 +11,8 @@
 	extension-element-prefixes="saxon"
 	exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date">
 
-	<xsl:import href="text-utilities.xsl"/>
-	<xsl:include href="metadata-tab-utils.xsl"/>
+  <xsl:import href="text-utilities.xsl"/>
+  <xsl:include href="metadata-tab-utils.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
 	
@@ -1660,7 +1660,11 @@
 				<xsl:value-of select="name(.)"/>
 				<xsl:text>=</xsl:text>
 					<xsl:text>"</xsl:text>
-					<xsl:value-of select="string()"/>
+			  <xsl:call-template name="replaceString">
+			    <xsl:with-param name="expr"        select="string()"/>
+			    <xsl:with-param name="pattern"     select="'&amp;'"/>
+			    <xsl:with-param name="replacement" select="'&amp;amp;'"/>
+			  </xsl:call-template>
 					<xsl:text>"</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
@@ -1839,10 +1843,10 @@
 			<xsl:choose>
 			  <xsl:when test="starts-with($schema,'iso19139') and not(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper)">
 					<!-- Fallback to iso19139 helper for ISO profil if not exist ... -->
-					<xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName]/helper/*"/>
+					<xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName]/helper"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper/*"/>
+					<xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -1850,23 +1854,25 @@
 		
 		<!-- Display the helper list -->
 		<xsl:if test="normalize-space($helper)!=''">
-			<xsl:variable name="refId">
-				<xsl:choose>
-					<xsl:when test="$attribute=true()">
-						<xsl:value-of select="concat(../geonet:element/@ref, '_', name(.))"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="geonet:element/@ref"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
+		  <xsl:variable name="list" select="exslt:node-set($helper)"/>
+		  <xsl:variable name="refId" select="if ($attribute=true()) then concat(../geonet:element/@ref, '_', name(.)) else geonet:element/@ref"/>
+		  <xsl:variable name="relatedElementName" select="$list/*/@rel"/>
+		  <xsl:variable name="relatedElementAction">
+		    <xsl:if test="$relatedElementName!=''">
+		      <xsl:variable name="relatedElement" select="../following-sibling::node()[name()=$relatedElementName]/gco:CharacterString"/>
+		      <xsl:variable name="relatedElementRef" select="../following-sibling::node()[name()=$relatedElementName]/gco:CharacterString/geonet:element/@ref"/>
+		      <xsl:variable name="relatedElementIsEmpty" select="normalize-space($relatedElement)=''"/>
+		      
+		      <xsl:value-of select="concat('if ($(&quot;_', $relatedElementRef, '&quot;)) $(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"/> 
+		    </xsl:if>
+		  </xsl:variable>
 			
 			<xsl:text> </xsl:text>				
 			(<xsl:value-of select="/root/gui/strings/helperList"/>
-			<select onchange="$('_{$refId}').value=this.options[this.selectedIndex].value; if ($('_{$refId}').onkeyup) $('_{$refId}').onkeyup();" class="md">
-				<option/>
-				<!-- This assume that helper list is already sort in alphabetical order in loc file. -->
-				<xsl:copy-of select="exslt:node-set($helper)"/>
+		  <select onchange="$('_{$refId}').value=this.options[this.selectedIndex].value; if ($('_{$refId}').onkeyup) $('_{$refId}').onkeyup(); {$relatedElementAction}" class="md">
+		    <option/>
+		    <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
+		    <xsl:copy-of select="$list/*"/>
 			</select>)
 		</xsl:if>
 	</xsl:template>
