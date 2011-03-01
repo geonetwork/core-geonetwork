@@ -202,6 +202,10 @@
 			<class name=".guiservices.metadata.GetRelated"/>
 		</service>
 		
+	  <service name="xml.relation">
+	    <class name=".guiservices.metadata.GetRelated"/>
+	    <output sheet="relation.xsl" contentType="text/xml; charset=UTF-8"/>
+	  </service>
 	  
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

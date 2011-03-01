@@ -23,6 +23,8 @@
 
 package org.fao.geonet.guiservices.metadata;
 
+import java.util.Iterator;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -30,17 +32,22 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.filter.ElementFilter;
 
 /**
  * Perform a search and return all children metadata record for current record.
@@ -53,7 +60,7 @@ import org.jdom.Element;
  * 
  * Parameters:
  * <ul>
- * <li>type: service|children|related|null (ie. all)</li>
+ * <li>type: service|children|related|parent|dataset|null (ie. all)</li>
  * <li>from: start record</li>
  * <li>to: end record</li>
  * <li>id or uuid: could be optional if call in Jeeves service forward call. In
@@ -63,92 +70,136 @@ import org.jdom.Element;
  */
 public class GetRelated implements Service {
 
-	private ServiceConfig _config;
+    private ServiceConfig _config;
 
-	public void init(String appPath, ServiceConfig config) throws Exception {
-		_config = config;
-	}
+    public void init(String appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		// Check for one of service|children|related|null (ie. all)
-		String type = Util.getParam(params, "type", "");
-		String fast = Util.getParam(params, "fast", "true");
-		String from = Util.getParam(params, "from", "1");
-		String to = Util.getParam(params, "to", "1000");
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        // Check for one of service|children|related|null (ie. all)
+        String type = Util.getParam(params, "type", "");
+        String fast = Util.getParam(params, "fast", "true");
+        String from = Util.getParam(params, "from", "1");
+        String to = Util.getParam(params, "to", "1000");
 
-		Log.info(Geonet.SEARCH_ENGINE, "GuiService param is "+_config.getValue("guiService"));
+        Log.info(Geonet.SEARCH_ENGINE,
+                "GuiService param is " + _config.getValue("guiService"));
 
-		Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-		int id;
-		String uuid;
-		if (info == null) {
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
-			DataManager dm = gc.getDataManager();
-			Dbms dbms = (Dbms) context.getResourceManager().open(
-					Geonet.Res.MAIN_DB);
+        Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        int id;
+        String uuid;
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getDataManager();
+        Dbms dbms = (Dbms) context.getResourceManager()
+                .open(Geonet.Res.MAIN_DB);
+        
+        if (info == null) {
+            String mdId = Utils.getIdentifierFromParameters(params, context);
 
-			String mdId = Utils.getIdentifierFromParameters(params, context);
-			
-			uuid = dm.getMetadataUuid(dbms, mdId);
-			if (uuid == null)
-				throw new MetadataNotFoundEx("Metadata not found.");
-			
-			id = Integer.parseInt(mdId);
-		} else {
-			uuid = info.getChildText(Params.UUID);
-			id = Integer.parseInt(info.getChildText(Params.ID));
-		}
+            uuid = dm.getMetadataUuid(dbms, mdId);
+            if (uuid == null)
+                throw new MetadataNotFoundEx("Metadata not found.");
 
-		Element relatedRecords = new Element("relations");
+            id = Integer.parseInt(mdId);
+        } else {
+            uuid = info.getChildText(Params.UUID);
+            id = Integer.parseInt(info.getChildText(Params.ID));
+        }
 
-		if (type.equals("") || type.equals("children"))
-			relatedRecords.addContent(search(uuid, "children", context, from,
-					to, fast));
-		if (type.equals("") || type.equals("service"))
-			relatedRecords.addContent(search(uuid, "services", context, from,
-					to, fast));
-		// TODO : Add datasets related to service search
-		if (type.equals("") || type.equals("related")) {
-			Element relation = Get.getRelation(id, "full", context);
-			relatedRecords.addContent(new Element("related")
-					.addContent(relation));
-		}
+        Element relatedRecords = new Element("relations");
 
-		return relatedRecords;
+        if (type.equals("") || type.equals("children"))
+            relatedRecords.addContent(search(uuid, "children", context, from,
+                    to, fast));
+        if (type.equals("") || type.equals("parent")) {
+            Element md = dm.getMetadata(context, String.valueOf(id), false);
+            if (md != null) {
+                Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+                Element parent = md.getChild("parentIdentifier", gmd);
+                if (parent != null) {
+                    String parentUuid = parent.getChildText("CharacterString", gco);
+                    String parentId = dm.getMetadataId(dbms, parentUuid);
 
-	}
+                    try {
+                        Lib.resource.checkPrivilege(context, parentId, AccessManager.OPER_VIEW);
+                        
+                        relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(dm.getMetadata(context, parentId, false))));
+                    } catch (Exception e) {
+                        Log.debug(Geonet.SEARCH_ENGINE,
+                                "Parent metadata " + parentId + " record is not visible for user.");
+                    }
+                }
+            }
+        }
+        if (type.equals("") || type.equals("service"))
+            relatedRecords.addContent(search(uuid, "services", context, from,
+                    to, fast));
+        // Get datasets related to service search
+        if (type.equals("") || type.equals("dataset")) {
+            Element md = dm.getMetadata(context, String.valueOf(id), false);
+            Iterator<Element> i = md.getDescendants(new ElementFilter ("operatesOn", Namespace.getNamespace("http://www.isotc211.org/2005/srv")));
+            StringBuffer uuids = new StringBuffer("");
+            boolean first = true;
+            while (i.hasNext()) {
+                Element e = i.next();
+                if (first) {
+                    uuids.append(e.getAttributeValue("uuidref"));
+                    first = false;
+                } else {
+                    uuids.append(" or " + e.getAttributeValue("uuidref"));
+                }
+            }
+            
+            if (uuids.length() > 0) {
+                relatedRecords.addContent(search(uuids.toString(), "datasets", context, from,
+                        to, fast));
+            }
+        }
+        if (type.equals("") || type.equals("related")) {
+            Element relation = Get.getRelation(id, "full", context);
+            relatedRecords.addContent(new Element("related")
+                    .addContent(relation));
+        }
 
-	private Element search(String uuid, String type, ServiceContext context,
-			String from, String to, String fast) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager searchMan = gc.getSearchmanager();
+        return relatedRecords;
 
-		// perform the search
-		Log.info(Geonet.SEARCH_ENGINE,
-				"Creating metadata for children searcher");
-		MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
-				Geonet.File.SEARCH_LUCENE);
+    }
 
-		// Creating parameters for search, fast only to retrieve uuid
-		Element parameters = new Element(Jeeves.Elem.REQUEST);
-		if ("children".equals(type))
-			parameters.addContent(new Element("parentUuid").setText(uuid));
-		else if ("services".equals(type))
-			parameters.addContent(new Element("operatesOn").setText(uuid));
-		parameters.addContent(new Element("fast").addContent(fast));
-		parameters.addContent(new Element("from").addContent(from));
-		parameters.addContent(new Element("to").addContent(to));
+    private Element search(String uuid, String type, ServiceContext context,
+            String from, String to, String fast) throws Exception {
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager searchMan = gc.getSearchmanager();
 
-		searcher.search(context, parameters, _config);
+        // perform the search
+        Log.info(Geonet.SEARCH_ENGINE,
+                "Creating metadata for children searcher");
+        MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
+                Geonet.File.SEARCH_LUCENE);
 
-		Log.info(Geonet.SEARCH_ENGINE, "Getting children search summary");
+        // Creating parameters for search, fast only to retrieve uuid
+        Element parameters = new Element(Jeeves.Elem.REQUEST);
+        if ("children".equals(type))
+            parameters.addContent(new Element("parentUuid").setText(uuid));
+        else if ("services".equals(type))
+            parameters.addContent(new Element("operatesOn").setText(uuid));
+        else if ("datasets".equals(type))
+            parameters.addContent(new Element("uuid").setText(uuid));
+        parameters.addContent(new Element("fast").addContent(fast));
+        parameters.addContent(new Element("from").addContent(from));
+        parameters.addContent(new Element("to").addContent(to));
 
-		Element response = new Element(type);
-		Element relatedElement = searcher.present(context, parameters, _config);
-		response.addContent(relatedElement);
-		return response;
-	}
+        searcher.search(context, parameters, _config);
+
+        Log.info(Geonet.SEARCH_ENGINE, "Getting children search summary");
+
+        Element response = new Element(type);
+        Element relatedElement = searcher.present(context, parameters, _config);
+        response.addContent(relatedElement);
+        return response;
+    }
 }
