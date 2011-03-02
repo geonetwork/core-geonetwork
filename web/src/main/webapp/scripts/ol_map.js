@@ -1197,6 +1197,19 @@ GeoNetwork.app = function() {
             GeoNetwork.CatalogueInterface.addLayers(layers);
         },
 
+        /**
+         * Shows the Add WMS layer dialog with the layers of the provided WMS server
+         *
+         * @param url       WMS server url
+         *
+         */
+        addWMSServerLayers: function(url) {
+
+            GeoNetwork.WindowManager.showWindow("addwms");
+            var w = GeoNetwork.WindowManager.getWindow("addwms");
+            w.setUrl(url);
+        },
+
         getViewport: function() {
             return viewport;
         },
