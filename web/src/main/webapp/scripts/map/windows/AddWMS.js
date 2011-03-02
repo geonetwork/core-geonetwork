@@ -74,12 +74,16 @@ Ext.extend(GeoNetwork.AddWmsLayerWindow, GeoNetwork.BaseWindow, {
                 /*{xtype: 'gn_wmsbrowserpanel', title: OpenLayers.i18n("WMSBrowserTab1"), wmsStore: ds, map: map},*/
                 /*{title: OpenLayers.i18n("WMSBrowserTab3"), xtype: 'gn_wmsbrowserpanel', mode: GeoNetwork.wms.BrowserPanel.ADDWMS, map: this.map}*/
             
-               {xtype: 'gn_wmsbrowserpanel', mode: GeoNetwork.wms.BrowserPanel.ADDWMS, wmsStore: ds, map: this.map}
+               {id: 'gn_wmsbrowserpanel', xtype: 'gn_wmsbrowserpanel', mode: GeoNetwork.wms.BrowserPanel.ADDWMS, wmsStore: ds, map: this.map}
 
 		] }) ;
 
         this.add(tabs);
 
         this.doLayout();
+    },
+
+    setUrl: function(url) {
+        Ext.getCmp("gn_wmsbrowserpanel").loadUrl(url);
     }
 });

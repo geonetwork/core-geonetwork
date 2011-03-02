@@ -1145,6 +1145,12 @@ function addWMSLayer(layers) {
     GeoNetwork.mapViewer.addWMSLayer(layers);
 }
 
+function addWMSServerLayers(url) {
+	Ext.getCmp("north-map-panel").expand();
+	mainViewport.doLayout();
+    GeoNetwork.mapViewer.addWMSServerLayers(url);
+}
+
 function addSelectedWMSLayers(metadataIdForm) {
 	var checkedBoxes = $$('#'+metadataIdForm+' input');
 	var wmsLayers = new Array();

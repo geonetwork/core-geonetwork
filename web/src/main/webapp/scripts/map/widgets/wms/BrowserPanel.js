@@ -87,9 +87,16 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
     wmsStore: null,
 
     /**
+     * APIProperty: url
+     * {<String>} default url to show
+     *
+     */
+    url: '',
+
+    /**
      * initComponent
      * Initialize this component
-    */
+     */
     initComponent: function() {
         GeoNetwork.wms.BrowserPanel.superclass.initComponent.call(this);
 
@@ -111,6 +118,7 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
 
             var url = new Ext.form.TextField({
                 fieldLabel: 'URL',
+                value: this.url,
                 name: 'wmsurl',
                 width: 250, autoHeight: true
             });
@@ -154,6 +162,8 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
             this.addLayerToMap, this);
 
         this.doLayout();
+
+        if (this.url != '') this.getWMSCaps();
     },
 
     /**
@@ -188,9 +198,22 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
         }*/
         if (node) {
             this.treePanel.getRootNode().appendChild(node);
+            node.expand(true);
         }
         this.treePanel.show();
         this.body.dom.style.cursor = 'default';
+    },
+
+    /**
+     * Method: loadUrl
+     * Load the WMS Capabilities from the url specified
+     *
+     * Parameters:
+     * url - {String} the capabilities url to load
+     */
+    loadUrl: function(url) {
+         this.form.getForm().findField('wmsurl').setValue(url);
+         this.getWMSCaps();
     },
 
     /**
