@@ -94,7 +94,7 @@ public class Lib
 
 	//--------------------------------------------------------------------------
 
-	public static Element transform(String schemaDir, Element md, String uuid, String changeDate, String targetFormat) throws Exception {
+	public static Element transform(String schemaDir, Element md, String uuid, String changeDate, String targetFormat, String baseUrl, String siteUrl, String siteName) throws Exception {
 
 		//--- setup environment
 
@@ -102,6 +102,9 @@ public class Lib
 
 		env.addContent(new Element("uuid")      .setText(uuid));
 		env.addContent(new Element("changeDate").setText(changeDate));
+		env.addContent(new Element("baseURL")   .setText(baseUrl));
+		env.addContent(new Element("siteURL")   .setText(siteUrl));
+		env.addContent(new Element("siteName")  .setText(siteName));
 
 		//--- setup root element
 

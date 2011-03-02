@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.OaiPmh;
@@ -104,6 +105,7 @@ public class ListRecords extends AbstractTokenLister
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager   sm = gc.getSchemamanager();
+		DataManager     dm = gc.getDataManager();
 
 		String query = "SELECT uuid, schemaId, changeDate, data FROM Metadata WHERE id=?";
 
@@ -132,7 +134,7 @@ public class ListRecords extends AbstractTokenLister
 			md.setAttribute("schemaLocation", schemaLoc, OaiPmh.Namespaces.XSI);
 		} else {
 			if (Lib.existsConverter(schemaDir, prefix)) {
-				md = Lib.transform(schemaDir, md, uuid, changeDate, prefix);
+				md = Lib.transform(schemaDir, md, uuid, changeDate, prefix, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
 			} else {
 				return null;
 			}
