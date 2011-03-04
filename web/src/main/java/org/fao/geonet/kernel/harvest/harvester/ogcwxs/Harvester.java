@@ -676,7 +676,7 @@ class Harvester
 				
 				// Call the services 
 				s.execOnHarvest(par, context, dbms, dataMan);
-				
+				dbms.commit();
 				result.thumbnails ++;
 			} else
 				result.thumbnailsFailed ++;
