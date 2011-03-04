@@ -1040,6 +1040,7 @@ div.toolTipOverlay {
 	border-style: solid;
 	margin: 2px;
 	padding: 2px;
+	white-space: normal;
 }
 
 div.toolTipOverlay * li {
