@@ -61,6 +61,7 @@
                 <xsl:when test="$langGui='fr'">fre</xsl:when><!-- TODO : sometimes fra is used in metadata record -->
                 <xsl:when test="$langGui='nl'">dut</xsl:when>
                 <xsl:when test="$langGui='ru'">rus</xsl:when>
+                <xsl:when test="$langGui='pt'">por</xsl:when>
                 <xsl:otherwise>eng</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
