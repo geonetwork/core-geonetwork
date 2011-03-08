@@ -58,11 +58,11 @@ public class Login implements Service
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String username = Util.getParam(params, Params.USERNAME);
 		String password = Util.getParam(params, Params.PASSWORD);
+	    String userinfo = Util.getParam(params, Params.INFO, "false");
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
@@ -104,8 +104,14 @@ public class Login implements Service
 
 		context.info("User '"+ username +"' logged in as '"+ sProfile +"'");
 		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile);
-
-		return new Element("ok");
+		
+		if ("false".equals(userinfo)) {
+		    return new Element("ok");
+		} else {
+    		user.removeChildren("password");
+    		return new Element("ok")
+    		    .addContent(user.detach());
+		}
 	}
 
 	//--------------------------------------------------------------------------
