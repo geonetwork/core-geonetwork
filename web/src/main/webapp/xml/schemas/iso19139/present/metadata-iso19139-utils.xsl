@@ -62,6 +62,7 @@
                 <xsl:when test="$langGui='nl'">dut</xsl:when>
                 <xsl:when test="$langGui='ru'">rus</xsl:when>
                 <xsl:when test="$langGui='pt'">por</xsl:when>
+                <xsl:when test="$langGui='no'">nor</xsl:when>
                 <xsl:otherwise>eng</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -396,7 +397,7 @@
 	</xsl:template>
 
 
-	<!-- Create a service URL for a service metadata record. -->
+  	<!-- Create a service URL for a service metadata record. -->
 	<xsl:template name="getServiceURL">
 		<xsl:param name="metadata"/>
 		
