@@ -378,7 +378,8 @@
 				<include>${geonetwork.build.dir}/scripts/map/lang/de.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/nl.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/fr.js</include>
-                
+                <include>${geonetwork.build.dir}/scripts/map/lang/no.js</include>
+
                 <include>${geonetwork.build.dir}/scripts/map/Ext.ux/form/DateTime.js</include>
                 
 				<include>${geonetwork.build.dir}/scripts/map/widgets/tree/WMSListGenerator.js</include>

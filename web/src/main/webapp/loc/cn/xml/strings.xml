@@ -10,9 +10,10 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	<ca>Català</ca> <!-- Do not translate! -->	
-	
+	<no>Norsk</no>  <!-- Do not translate! -->
 
-    <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>    
+
+    <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>
     <rebuildIndexMessage>如果你改变这些值，建议您重建Lucene索引。</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
   <selectTemplate>Select schemas</selectTemplate>

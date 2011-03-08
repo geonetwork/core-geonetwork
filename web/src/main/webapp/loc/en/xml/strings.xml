@@ -10,6 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
     <pt>Рortuguês</pt> <!-- Do not translate! -->
 	<ca>Català</ca> <!-- Do not translate! -->
+    <no>Norsk</no>  <!-- Do not translate! -->
+
   <selectTemplate>Select schemas</selectTemplate>
 	<useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
   <rebuildIndexMessage>If you change these values, it is recommended you rebuild the Lucene index.</rebuildIndexMessage>

@@ -73,7 +73,12 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Format/WMSCapabilities.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Format/WMSCapabilities_1_1_1.js"></script>
 
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/es.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/no.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"></script>
 

@@ -10,7 +10,8 @@
 	<ru>Русский</ru> <!-- Do not translate! -->
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	<ca>Català</ca> <!-- Do not translate! -->
-	
+	<no>Norsk</no>  <!-- Do not translate! -->
+
 	<useStopwords>L'índex Lucene utilitza paraules buides per aquests idiomes:</useStopwords>    
     <rebuildIndexMessage>Si canvieu aquests valors es recomana tornar a generar l'índex Lucene.   </rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
