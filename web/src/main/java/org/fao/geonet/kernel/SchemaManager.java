@@ -922,25 +922,28 @@ public class SchemaManager
 
 		for (int i=0; i<saSchemas.length; i++) {
 			if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
-				Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchemas[i]);
-				String schemaFile  = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA;
-				String suggestFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
-				String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
-				String idFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_ID;
-				String oasisCatFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_OASIS;
-
-				try {
-					if (hmSchemas.containsKey(saSchemas[i])) { // exists so ignore it
-						Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchemas[i]+" already exists - cannot add!");
-					} else {
-						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile);
-						numberOfSchemasAdded++;
-					}
-				} catch (Exception e) {
-					Log.error(Geonet.SCHEMA_MANAGER, "Failed. "+e.getMessage());
-					Log.debug(Geonet.SCHEMA_MANAGER, e);
-					continue; // skip this one
-				}
+			    File schemaDir = new File(schemasDir + saSchemas[i]);
+                if (schemaDir.isDirectory()) {
+    				Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchemas[i]);
+    				String schemaFile  = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA;
+    				String suggestFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
+    				String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
+    				String idFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_ID;
+    				String oasisCatFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_OASIS;
+    
+    				try {
+    					if (hmSchemas.containsKey(saSchemas[i])) { // exists so ignore it
+    						Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchemas[i]+" already exists - cannot add!");
+    					} else {
+    						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile);
+    						numberOfSchemasAdded++;
+    					}
+    				} catch (Exception e) {
+    					Log.error(Geonet.SCHEMA_MANAGER, "Failed. "+e.getMessage());
+    					Log.debug(Geonet.SCHEMA_MANAGER, e);
+    					continue; // skip this one
+    				}
+                }
 			}
 		}
 
