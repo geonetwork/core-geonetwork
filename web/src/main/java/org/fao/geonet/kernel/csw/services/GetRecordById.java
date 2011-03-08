@@ -23,9 +23,13 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -36,12 +40,11 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.util.Iterator;
-import java.util.Map;
 
 //=============================================================================
 
@@ -94,6 +97,10 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				if (id == null)
 					continue;
 					//throw new InvalidParameterValueEx("uuid", "Can't find metadata with uuid "+uuid);
+				
+				// Check if the current user has access 
+			    // to the requested MD 
+			    Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW); 
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, ResultType.RESULTS);
 	
