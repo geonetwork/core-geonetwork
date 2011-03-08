@@ -39,7 +39,7 @@
 				<Field name="identifier" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 	
-			<xsl:for-each select="/simpledc/dct:abstract">
+			<xsl:for-each select="/simpledc/dct:abstract|/simpledc/dc:description">
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
