@@ -397,7 +397,25 @@
 	</xsl:template>
 
 
-  	<!-- Create a service URL for a service metadata record. -->
+  <xsl:template mode="iso19139IsEmpty" match="*|@*|text()">
+    <xsl:choose>
+      <!-- normal element -->
+      <xsl:when test="*">
+        <xsl:apply-templates mode="iso19139IsEmpty"/>
+      </xsl:when>
+      <!-- text element -->
+      <xsl:when test="text()!=''">txt</xsl:when>
+      <!-- empty element -->
+      <xsl:otherwise>
+        <!-- attributes? -->
+        <xsl:for-each select="@*">
+          <xsl:if test="string-length(.)!=0">att</xsl:if>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+	<!-- Create a service URL for a service metadata record. -->
 	<xsl:template name="getServiceURL">
 		<xsl:param name="metadata"/>
 		

@@ -221,8 +221,8 @@
 
 	<!-- ================================================================= -->
 
-	<xsl:template match="gmx:FileName">
-		<xsl:copy>
+  <xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
+    <xsl:copy>
 			<xsl:attribute name="src">
 				<xsl:choose>
 					<xsl:when test="/root/env/config/downloadservice/simple='true'">

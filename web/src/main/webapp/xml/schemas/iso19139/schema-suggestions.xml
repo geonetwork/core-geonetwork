@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <fields>	
+  <field name="gmd:contactInstructions">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:FileName"/>
+  </field>
+  
 	<field name="gmd:otherCitationDetails">
 		<suggest name="gco:CharacterString"/>
 		<suggest name="gmx:FileName"/>

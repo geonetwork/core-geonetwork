@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl ="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl ="http://www.w3.org/1999/XSL/Transform"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:gts="http://www.isotc211.org/2005/gts"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -15,7 +15,7 @@
 	<xsl:include href="metadata-iso19139-utils.xsl"/>
 	<xsl:include href="metadata-iso19139-geo.xsl"/>
 	<xsl:include href="metadata-iso19139-inspire.xsl"/>
-	
+
 	<!-- main template - the way into processing iso19139 -->
 	<xsl:template match="metadata-iso19139" name="metadata-iso19139">
 		<xsl:param name="schema"/>
@@ -574,84 +574,165 @@
 	</xsl:template>
 
 
-	<!-- gmx:FileName could be used as substitution of any
-		gco:CharacterString. To turn this on add a schema 
-		suggestion.
-		-->
-	<xsl:template mode="iso19139" name="file-upload" match="*[gmx:FileName]">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:apply-templates mode="complexElement" select=".">
-			<xsl:with-param name="schema"   select="$schema"/>
-			<xsl:with-param name="edit"   	select="$edit"/>
-			<xsl:with-param name="content">
-				
-				<xsl:choose>
-					<xsl:when test="$edit">
-						<xsl:variable name="id" select="generate-id(.)"/>
-						<div id="{$id}"/>
-						
-						<xsl:variable name="ref" select="gmx:FileName/geonet:element/@ref"/>
-						<xsl:variable name="value" select="gmx:FileName"/>
-						<xsl:variable name="button" select="normalize-space(gmx:FileName)!=''"/>
-						
-						<xsl:call-template name="simpleElementGui">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit" select="$edit"/>
-							<xsl:with-param name="title" select="/root/gui/strings/file"/>
-							<xsl:with-param name="text">
-								<button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');" type="button">
-									<xsl:value-of select="/root/gui/strings/insertFileMode"/>
-								</button>
-							</xsl:with-param>
-							<xsl:with-param name="id" select="concat('db_',$ref)"/>
-							<xsl:with-param name="visible" select="not($button)"/>
-						</xsl:call-template>
-						
-						<xsl:if test="$button">
-							<xsl:apply-templates mode="iso19139FileRemove" select="gmx:FileName">
-								<xsl:with-param name="access" select="'private'"/>
-								<xsl:with-param name="id" select="$id"/>
-							</xsl:apply-templates>
-						</xsl:if>
-						
-						<xsl:call-template name="simpleElementGui">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit" select="$edit"/>
-							<xsl:with-param name="title">
-								<xsl:call-template name="getTitle">
-									<xsl:with-param name="name"   select="name(.)"/>
-									<xsl:with-param name="schema" select="$schema"/>
-								</xsl:call-template>
-							</xsl:with-param>
-							<xsl:with-param name="text">
-								<input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
-							</xsl:with-param>
-							<xsl:with-param name="id" select="concat('di_',$ref)"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:otherwise>
-						<!-- Add an hyperlink in view mode -->						
-						<xsl:call-template name="simpleElementGui">
-							<xsl:with-param name="schema" select="$schema"/>
-							<xsl:with-param name="edit" select="$edit"/>
-							<xsl:with-param name="title">
-								<xsl:call-template name="getTitle">
-									<xsl:with-param name="name"   select="name(.)"/>
-									<xsl:with-param name="schema" select="$schema"/>
-								</xsl:call-template>
-							</xsl:with-param>
-							<xsl:with-param name="text">
-								<a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>
-							</xsl:with-param>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:with-param>
-		</xsl:apply-templates>
-	</xsl:template>
-
+  <!-- gmx:FileName could be used as substitution of any
+    gco:CharacterString. To turn this on add a schema 
+    suggestion.
+  -->
+  <xsl:template mode="iso19139" name="file-upload" match="*[gmx:FileName]">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    
+    <xsl:variable name="src" select="gmx:FileName/@src"/>
+    
+    <xsl:call-template name="file-or-logo-upload">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
+      <xsl:with-param name="ref" select="gmx:FileName/geonet:element/@ref"/>
+      <xsl:with-param name="value" select="gmx:FileName"/>
+      <xsl:with-param name="src" select="$src"/>
+      <xsl:with-param name="delButton" select="normalize-space(gmx:FileName)!=''"/>
+      <xsl:with-param name="setButton" select="normalize-space(gmx:FileName)=''"/>
+      <xsl:with-param name="visible" select="false()"/>
+      <xsl:with-param name="action" select="concat('startFileUpload(', //geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
+    </xsl:call-template>
+  </xsl:template>
+  
+  
+  <!-- Add exception to update-fixed-info to avoid URL creation for downloadable resources -->
+  <xsl:template mode="iso19139" match="gmd:contactInstructions[gmx:FileName]" priority="2">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    
+    <xsl:call-template name="file-or-logo-upload">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="$edit"/>
+      <xsl:with-param name="ref" select="gmx:FileName/geonet:element/@ref"/>
+      <xsl:with-param name="value" select="gmx:FileName"/>
+      <xsl:with-param name="src" select="gmx:FileName/@src"/>
+      <xsl:with-param name="action" select="concat('showLogoSelectionPanel(', $apos, '_', 
+        gmx:FileName/geonet:element/@ref, '_src', $apos, ');')"/>
+      <xsl:with-param name="delButton" select="false()"/>
+      <xsl:with-param name="setButton" select="true()"/>
+      <xsl:with-param name="visible" select="true()"/>
+      <xsl:with-param name="setButtonLabel" select="/root/gui/strings/chooseLogo"/>
+      <xsl:with-param name="label" select="/root/gui/strings/orgLogo"/>
+    </xsl:call-template>
+  </xsl:template>
+  
+  <xsl:template name="file-or-logo-upload">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    <xsl:param name="ref"/>
+    <xsl:param name="value"/>
+    <xsl:param name="src"/>
+    <xsl:param name="action"/>
+    <xsl:param name="delButton" select="normalize-space($value)!=''"/>
+    <xsl:param name="setButton" select="normalize-space($value)!=''"/>
+    <xsl:param name="visible" select="not($setButton)"/>
+    <xsl:param name="setButtonLabel" select="/root/gui/strings/insertFileMode"/>
+    <!-- Create a new simple element with this label and @src value -->
+    <xsl:param name="label" select="/root/gui/strings/file"/>
+    
+    
+    <xsl:apply-templates mode="complexElement" select=".">
+      <xsl:with-param name="schema"   select="$schema"/>
+      <xsl:with-param name="edit"     select="$edit"/>
+      <xsl:with-param name="content">
+        
+        <xsl:choose>
+          <xsl:when test="$edit">
+            <xsl:variable name="id" select="generate-id(.)"/>
+            <div id="{$id}"/>
+            
+            <xsl:call-template name="simpleElementGui">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit" select="$edit"/>
+              <xsl:with-param name="title" select="$label"/>
+              <xsl:with-param name="text">
+                <xsl:if test="$visible">
+                  <input id="_{$ref}_src" class="md" type="text" name="_{$ref}_src" value="{$src}" size="40" />
+                </xsl:if>
+                <button class="content" onclick="{$action}" type="button">
+                  <xsl:value-of select="$setButtonLabel"/>
+                </button>
+              </xsl:with-param>
+              <xsl:with-param name="id" select="concat('db_',$ref)"/>
+              <xsl:with-param name="visible" select="$setButton"/>
+            </xsl:call-template>
+            
+            <xsl:if test="$delButton">
+              <xsl:apply-templates mode="iso19139FileRemove" select="gmx:FileName">
+                <xsl:with-param name="access" select="'public'"/>
+                <xsl:with-param name="id" select="$id"/>
+                <xsl:with-param name="geo" select="false()"/>
+              </xsl:apply-templates>
+            </xsl:if>
+            
+            <xsl:call-template name="simpleElementGui">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit" select="$edit"/>
+              <xsl:with-param name="title">
+                <xsl:call-template name="getTitle">
+                  <xsl:with-param name="name"   select="name(.)"/>
+                  <xsl:with-param name="schema" select="$schema"/>
+                </xsl:call-template>
+              </xsl:with-param>
+              <xsl:with-param name="text">
+                <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
+              </xsl:with-param>
+              <xsl:with-param name="id" select="concat('di_',$ref)"/>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- in view mode, if a label is provided display a simple element for this label 
+            with the link variable (could be an image or a hyperlink)-->
+            <xsl:variable name="link">
+              <xsl:choose>
+                <xsl:when test="geonet:is-image(gmx:FileName/@src)">
+                  <img class="logo-wrap" src="{gmx:FileName/@src}"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+            
+            <xsl:if test="$label">
+              <xsl:call-template name="simpleElementGui">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit" select="$edit"/>
+                <xsl:with-param name="title" select="$label"/>
+                <xsl:with-param name="text">
+                  <xsl:copy-of select="$link"/>
+                </xsl:with-param>
+              </xsl:call-template>
+            </xsl:if>
+            
+            <xsl:call-template name="simpleElementGui">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit" select="$edit"/>
+              <xsl:with-param name="title">
+                <xsl:call-template name="getTitle">
+                  <xsl:with-param name="name"   select="name(.)"/>
+                  <xsl:with-param name="schema" select="$schema"/>
+                </xsl:call-template>
+              </xsl:with-param>
+              <xsl:with-param name="text">
+                <xsl:choose>
+                  <xsl:when test="$label">
+                    <xsl:value-of select="gmx:FileName"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of select="$link"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:with-param>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template>
 
 
 	<!-- ================================================================= -->
@@ -1058,7 +1139,7 @@
 	-->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:date[gco:DateTime|gco:Date]|gmd:editionDate|gmd:dateOfNextUpdate" priority="2">
+  	<xsl:template mode="iso19139" match="gmd:date[gco:DateTime|gco:Date]|gmd:editionDate|gmd:dateOfNextUpdate" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -2574,7 +2655,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true' and string($name)!='' and string($linkage)!=''">
+			<xsl:when test="//geonet:info[dynamic='true'] and string($name)!='' and string($linkage)!=''">
 			<!-- Create a link for a WMS service that will open in InterMap opensource -->
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
@@ -2950,7 +3031,7 @@
 			<xsl:variable name="id" select="$info/id"/>
 			<xsl:variable name="uuid" select="$info/uuid"/>
 
-			<xsl:if test="normalize-space(gmd:parentIdentifier/*)!=''">
+			<xsl:if test="normalize-space(gmd:parentIdentifier/gco:CharacterString)!=''">
 				<parentId><xsl:value-of select="gmd:parentIdentifier/*"/></parentId>
 			</xsl:if>
 
@@ -3096,7 +3177,7 @@
 			<xsl:for-each select="gmd:contact/*">
 				<xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
 				<xsl:if test="normalize-space($role)!=''">
-					<responsibleParty role="{$role}" appliesTo="metadata">
+				  <responsibleParty role="{geonet:getCodeListValue(/root/gui/schemas, 'iso19139', 'gmd:CI_RoleCode', $role)}" appliesTo="metadata">
 						<xsl:apply-templates mode="responsiblepartysimple" select="."/>
 					</responsibleParty>
 				</xsl:if>
@@ -3281,15 +3362,17 @@
 				</xsl:for-each>
 			</xsl:if>
 
-			<xsl:for-each select="gmd:pointOfContact/*">
-				<xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
-				<xsl:if test="normalize-space($role)!=''">
-					<responsibleParty role="{$role}" appliesTo="resource">
-						<xsl:apply-templates mode="responsiblepartysimple" select="."/>
-					</responsibleParty>
-				</xsl:if>
-			</xsl:for-each>
-
+  	  <xsl:for-each-group select="gmd:pointOfContact/*" group-by="gmd:organisationName/gco:CharacterString">
+  	    <xsl:variable name="roles" select="string-join(current-group()/gmd:role/*/geonet:getCodeListValue(/root/gui/schemas, 'iso19139', 'gmd:CI_RoleCode', @codeListValue), ', ')"/>
+  	    <xsl:if test="normalize-space($roles)!=''">
+  	      <responsibleParty role="{$roles}" appliesTo="resource">
+  	        <xsl:if test="descendant::*/gmx:FileName">
+  	          <xsl:attribute name="logo"><xsl:value-of select="descendant::*/gmx:FileName/@src"/></xsl:attribute>
+  	        </xsl:if>
+  	        <xsl:apply-templates mode="responsiblepartysimple" select="."/>
+  	      </responsibleParty>
+  	    </xsl:if>
+  	  </xsl:for-each-group>
 	</xsl:template>
 
 	<!-- helper to create a very simplified view of a CI_ResponsibleParty block -->
@@ -3629,7 +3712,6 @@
 					<xsl:with-param name="schema" select="$schema" />
 					<xsl:with-param name="text">&#160;
 					    
-					    
 						<xsl:variable name="langId">
 							<xsl:call-template name="getLangId">
 								<xsl:with-param name="langGui" select="/root/gui/language" />
@@ -3660,13 +3742,10 @@
 						    then display an image. -->
 							<xsl:when test="contains(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString, '://')">
 							    <div class="thumbnail">
-							    	<a href="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}" target="thumbnail-view">
+							      <a href="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}" rel="lightbox-viewset">
 							    		<xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
 							    		<xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-	    								<img class="thumbnail" src="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}">
-	    									<xsl:attribute name="alt"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-	    								    <xsl:attribute name="title"><xsl:value-of select="$imageTitle"/></xsl:attribute>
-	    								</img>
+	    								<img class="thumbnail" src="{gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString}"/>
 							    	</a>	
 							    	<br/>
     							    <span class="thumbnail"><xsl:value-of select="$imageTitle"/></span>
@@ -3905,7 +3984,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="widget">
-			<xsl:if test="$edit='true'">
+			<xsl:if test="$edit=true()">
 				<xsl:variable name="tmpFreeText">
 					<xsl:call-template name="PT_FreeText_Tree" />
 				</xsl:variable>
@@ -4132,6 +4211,7 @@
 				geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
 		<xsl:text>showCRSSelectionPanel</xsl:text>
 	</xsl:template>
-	<xsl:template mode="addXMLFragment" match="*|@*"></xsl:template>
 	
+  <xsl:template mode="addXMLFragment" match="*|@*"></xsl:template>
+  
 </xsl:stylesheet>
