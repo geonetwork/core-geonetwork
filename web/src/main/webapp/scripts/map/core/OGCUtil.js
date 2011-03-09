@@ -19,6 +19,29 @@
 
 Ext.namespace('GeoNetwork', 'GeoNetwork.OGCUtil');
 
+GeoNetwork.OGCUtil.getProtocolVersion = function() {
+    return "1.3.0"
+};
+
+
+GeoNetwork.OGCUtil.getLanguage = function() {
+    var language;
+    switch(Env.lang) {
+        case 'nl': language = 'dut'; break;
+        case 'en': language = 'eng'; break;
+        case 'fr': language = 'fre'; break;
+        case 'de': language = 'ger'; break;
+        case 'es': language = 'spa'; break;
+        case 'ru': language = 'rus'; break;
+        case 'pt': language = 'por'; break;
+        case 'cn': language = 'chi'; break;
+
+        default: language = 'eng';
+    }
+    return language;
+};
+
+
 /**
  * APIFunction: GeoNetwork.OGCUtil.ensureProperUrlEnd
  * Function to make sure that the last char of the URL is either a ?
@@ -32,9 +55,9 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.OGCUtil');
 */
 GeoNetwork.OGCUtil.ensureProperUrlEnd = function (url) {
     if (url.indexOf("?") == -1) {
-        url += "?"; 
+        url += "?";
     }
-    else { 
+    else {
         // url can be like http://.../...?var=value, make sure that it will
         // end correctly
         var lastChar = url.substring(url.length-1);
@@ -150,4 +173,3 @@ GeoNetwork.OGCUtil.layerExistsInMap = function (layer, map) {
     }
     return layerExists;
 };
- 

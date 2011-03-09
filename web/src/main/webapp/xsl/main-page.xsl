@@ -68,10 +68,6 @@
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ExtentBox.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ZoomWheel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/WMSGetFeatureInfo.js"></script>
-
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Format/WMSCapabilities.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Format/WMSCapabilities_1_1_1.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"></script>
@@ -392,9 +388,11 @@
                 <xsl:for-each select="/root/gui/config/mapViewer/servers/server">
                 GeoNetwork.WMSList.push(["<xsl:value-of select='@name'/>","<xsl:value-of select='@url'/>"]);                
                 </xsl:for-each>
-                
-                // Initialize map viewer 
-               GeoNetwork.mapViewer.init(layers, mapOptions);
+
+ 				var scales = <xsl:value-of select='/root/gui/config/mapViewer/scales/@values'/>;
+
+                // Initialize map viewer
+                GeoNetwork.mapViewer.init(backgroundLayers, mapOptions, scales);
             }
             
             function initMapsSearch() {

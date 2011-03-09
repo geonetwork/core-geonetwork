@@ -88,15 +88,16 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
 
     /**
      * APIProperty: url
-     * {<String>} default url to show
-     *
+     * {<Ext.data.Store>} default url to show
+     *     url property. Only needed for mode = WMSLIST
      */
     url: '',
+
 
     /**
      * initComponent
      * Initialize this component
-     */
+    */
     initComponent: function() {
         GeoNetwork.wms.BrowserPanel.superclass.initComponent.call(this);
 
@@ -118,11 +119,34 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
 
             var url = new Ext.form.TextField({
                 fieldLabel: 'URL',
-                value: this.url,
                 name: 'wmsurl',
+                value: this.url,
                 width: 250, autoHeight: true
             });
+
+            /*var protocol = new Ext.form.ComboBox({
+                mode:           'local',
+                value:          '1.1.1',
+                triggerAction:  'all',
+                forceSelection: true,
+                editable:       false,
+                fieldLabel:     'Protocol',
+                name:           'wmsprotocol',
+                hiddenName:     'wmsprotocol',
+                displayField:   'name',
+                valueField:     'value',
+                store:          new Ext.data.JsonStore({
+                    fields : ['name', 'value'],
+                    data   : [
+                        {name : '1.1.1', value: '1.1.1'},
+                        {name : '1.3.0', value: '1.3.0'}
+                    ]
+                }),
+                width: 100
+            });*/
+
             this.form.add(url);
+            //this.form.add(protocol);
 
             this.form.add(new Ext.Button({id: 'parse', text:
                 OpenLayers.i18n("WMSBrowserConnectButton"),
@@ -149,7 +173,7 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
                 {click: this.nodeClick, scope: this,
                 node: this.treePanel.getRootNode(), wmsStore: this.wmsStore});
         } else if (this.mode == GeoNetwork.wms.BrowserPanel.ADDWMS) {
-	    
+
             new GeoNetwork.tree.WMSListGenerator(
                 {click: this.nodeClick, scope: this,
                 node: this.treePanel.getRootNode(), wmsStore: this.wmsStore});
@@ -182,7 +206,7 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
 
         var accessContraints = capability.service.accessContraints;
 
-        if ((accessContraints) && (accessContraints.toLowerCase() != "none") && 
+        if ((accessContraints) && (accessContraints.toLowerCase() != "none") &&
           (accessContraints != "-")) {
             var disclaimerWindow = new GeoNetwork.DisclaimerWindow({
                 disclaimer: accessContraints
@@ -204,13 +228,7 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
         this.body.dom.style.cursor = 'default';
     },
 
-    /**
-     * Method: loadUrl
-     * Load the WMS Capabilities from the url specified
-     *
-     * Parameters:
-     * url - {String} the capabilities url to load
-     */
+
     loadUrl: function(url) {
          this.form.getForm().findField('wmsurl').setValue(url);
          this.getWMSCaps();
@@ -225,6 +243,7 @@ Ext.extend(GeoNetwork.wms.BrowserPanel, Ext.Panel, {
      */
     getWMSCaps: function(btn) {
         var url = this.form.getForm().findField('wmsurl').getValue();
+        //var protocol = this.form.getForm().findField('wmsprotocol').getValue();
         // trim the string
         url = url.replace(/^\s+|\s+$/g, '');
         if (url != '') {

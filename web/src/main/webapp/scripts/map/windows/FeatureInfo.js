@@ -19,7 +19,7 @@
 
 /**
  * @requires GeoNetwork/windows/BaseWindow.js
- */ 
+ */
 
 Ext.namespace('GeoNetwork');
 
@@ -69,7 +69,12 @@ Ext.extend(GeoNetwork.FeatureInfoWindow, GeoNetwork.BaseWindow, {
         this.doLayout();
     },
 
-   	setFeatures: function(featureList) {
+    setFeatures: function(featureList) {
         this.items.items[0].showFeatures(featureList);
-   	}
+    },
+
+    setMap: function(map) {
+        this.items.items[0].setMap(map);
+    }
+
 });

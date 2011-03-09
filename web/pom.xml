@@ -369,10 +369,6 @@
                 
                 <include>${geonetwork.build.dir}/scripts/map/Control/ExtentBox.js</include>
                 <include>${geonetwork.build.dir}/scripts/map/Control/ZoomWheel.js</include>
-                <include>${geonetwork.build.dir}/scripts/map/Control/WMSGetFeatureInfo.js</include>
-                
-				<include>${geonetwork.build.dir}/scripts/map/Format/WMSCapabilities.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/Format/WMSCapabilities_1_1_1.js</include>    
                 
 				<include>${geonetwork.build.dir}/scripts/map/lang/en.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/de.js</include>

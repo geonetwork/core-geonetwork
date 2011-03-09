@@ -165,6 +165,8 @@ margin:5px;
 }
 
 .olControlScaleLine {
+display: inline;
+position: static;
 font-family:tahoma,arial,helvetica,sans-serif;
 font-size:xx-small;
 bottom:15px;
