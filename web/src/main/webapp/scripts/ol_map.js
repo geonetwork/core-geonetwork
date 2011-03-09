@@ -38,21 +38,28 @@ GeoNetwork.app = function() {
 
     var map;
     
+    var fixedScales;
+
+    var featureinfolayer;
+
+
     // private functions
 
     /**
      * Creates the OL Map 
      *
      */
-    var createMap = function(mapOptions) {
+    var createMap = function(mapOptions, scales) {
         var options = mapOptions || {
             projection: "EPSG:4326",
-            units: "m",
+            units: "degrees",
             maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
             restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90),
             controls: []
         };
         map = new OpenLayers.Map('ol_map', options);
+
+        fixedScales = scales;
     };
 
     /**
@@ -447,17 +454,46 @@ GeoNetwork.app = function() {
         
         toolbar.push("-");
 
-        featureinfo = new GeoNetwork.Control.WMSGetFeatureInfo();
+        featureinfo = new OpenLayers.Control.WMSGetFeatureInfo({drillDown: true, infoFormat: 'application/vnd.ogc.gml'});
 
-        featureinfo.events.on({'featureinfoend': function(evt) {
-            if (evt.featurelist == null) {
-                Ext.MessageBox.alert(OpenLayers.i18n("infoTitle"),
-                        OpenLayers.i18n("FeatureInfoNotQueryable"));
-            } else {
-                GeoNetwork.WindowManager.showWindow("featureinfo");
-                GeoNetwork.WindowManager.getWindow("featureinfo").setFeatures(evt.featurelist);
+        var moveLayerToTop = function(layertomove) {
+            var idx = -1;
+            for (var i=0, len = map.layers.length; i<len; i++) {
+                var layer = map.layers[i];
+                if (layer != layertomove) {
+                    idx = Math.max(map.getLayerIndex(
+                        map.layers[i]), idx);
+                }
             }
-        }});
+            if (map.getLayerIndex(layertomove) < idx) {
+                map.setLayerIndex(layertomove, idx+1);
+            }
+        };
+
+        featureinfolayer = new OpenLayers.Layer.Vector("Feature info", {displayInLayerSwitcher: false,
+            styleMap: new OpenLayers.StyleMap({
+                externalGraphic: OpenLayers.Util.getImagesLocation() + "marker.png",
+                pointRadius: 12
+            })
+        });
+
+
+        featureinfo.events.on({
+            'getfeatureinfo': function(evt) {
+                var lonlat = map.getLonLatFromViewPortPx(evt.xy);
+                var point = new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat);
+                featureinfolayer.destroyFeatures();
+                featureinfolayer.addFeatures(new OpenLayers.Feature.Vector(point));
+                moveLayerToTop(featureinfolayer);
+                GeoNetwork.WindowManager.showWindow("featureinfo");
+                GeoNetwork.WindowManager.getWindow("featureinfo").setMap(map);
+                GeoNetwork.WindowManager.getWindow("featureinfo").setFeatures(evt.features);
+            },
+            'deactivate': function() {
+                featureinfolayer.destroyFeatures();
+            }
+        });
+
 
         action = new GeoExt.Action({
             control: featureinfo,
@@ -641,9 +677,30 @@ GeoNetwork.app = function() {
             scaleLine.activate();
         }, this);
 
-        var zoomStore = new GeoExt.data.ScaleStore({
+        var zoomStore;
+
+        if (fixedScales.length > 0) {
+            var zooms = [];
+            var scales = fixedScales;
+            var units = map.baseLayer.units;
+
+            for (var i=scales.length-1; i >= 0; i--) {
+                var scale = scales[i];
+                zooms.push({
+                    level: i,
+                    resolution: OpenLayers.Util.getResolutionFromScale(scale, units),
+                    scale: scale
+                });
+            }
+
+            zoomStore = new GeoExt.data.ScaleStore({});
+            zoomStore.loadData(zooms);
+
+        } else {
+            zoomStore = new GeoExt.data.ScaleStore({
             map: map
         });
+        }
 
         var zoomSelector = new Ext.form.ComboBox({
             emptyText: 'Zoom level',
@@ -1106,10 +1163,10 @@ GeoNetwork.app = function() {
 
     // public space:
     return {
-        init: function(layers, mapOptions) {
+        init: function(layers, mapOptions, fixedScales) {
             Ext.QuickTips.init();
 
-            createMap(mapOptions);
+            createMap(mapOptions, fixedScales);
             
             //createDummyBaseLayer(mapOptions.maxExtent);
 
@@ -1185,6 +1242,7 @@ GeoNetwork.app = function() {
                 GeoNetwork.MapStateManager.storeMapLayersState(map);
             });
                
+            map.addLayer(featureinfolayer);
         },
 
         /**

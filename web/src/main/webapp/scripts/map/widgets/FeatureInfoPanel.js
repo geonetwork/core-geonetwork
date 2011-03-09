@@ -46,10 +46,7 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
 
     /**
      * APIProperty: features
-     * Array({Object}) an array of objects to show in the panel
-     *     The Objects should have the following structure:
-     *     title - {String} the title of the map layer
-     *     features - Array({<OpenLayers.Feature.Vector>} the features
+     * Array({<OpenLayers.Feature.Vector>}) the features
      *         returned from a GetFeatureInfo response.
      */
     features: null,
@@ -101,6 +98,14 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
         this.add(east);
 
         this.doLayout();
+    },
+
+    /**
+     * APIMethod: setMap
+     * Set a reference to the {<OpenLayers.Map>} object
+     */
+    setMap: function(map) {
+        this.map = map;
     },
 
     /**
@@ -162,14 +167,37 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
     },
 
     /**
+     * Function: getLayerTitle
+     * Search for the layer title to which a certain featureinfo result belongs
+     *
+     * Parameters:
+     * featureType - {String} The name of the layer / featuretype
+     *
+     * Returns:
+     * {String} The title of the layer if found, otherwise a blank space in HTML
+     */
+    getLayerTitle: function(featureType) {
+        if (featureType == null) return '&nbsp';
+        var layers = this.map.getLayersByClass('OpenLayers.Layer.WMS');
+        for (var i=0, len=layers.length; i<len; i++) {
+            if (layers[i].params.LAYERS instanceof Array) {
+                if (OpenLayers.Util.indexOf(layers[i].params.LAYERS, featureType) !== -1) {
+                    return layers[i].name;
+                }
+            } else {
+                if (layers[i].params.LAYERS.indexOf(featureType) !== -1) {
+                    return layers[i].name;
+                }
+            }
+        }
+    },
+
+    /**
      * APIMethod: showFeatures
      * Show the features in the feature info panel, clears any previous 
      *     features.
      *
      * Parameters:
-     * features - Array({Object}) an array of objects to show in the panel
-     *     The Objects should have the following structure:
-     *     title - {String} the title of the map layer
      *     features - Array({<OpenLayers.Feature.Vector>} the features
      *         returned from a GetFeatureInfo response.
      */
@@ -179,9 +207,24 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
         while(root.firstChild){
           root.removeChild(root.firstChild);
         }
-        for (var i=0, len = features.length; i<len; i++) {
-            var node = new Ext.tree.TreeNode({text: features[i].title, 
-                features: features[i].features});
+        // group based on feature.type
+        var i, len, featureList = [];
+        for (i=0, len=features.length; i<len; i++) {
+            var found = false;
+            for (var j=0; j<featureList.length; j++) {
+                if (featureList[j].title === features[i].type) {
+                    featureList[j].features.push(features[i]);
+                    found = true;
+                }
+            }
+            if (found === false) {
+                featureList.push({title: this.getLayerTitle(features[i].type), features: [features[i]]});
+            }
+        }
+        for (i=0, len = featureList.length; i<len; i++) {
+            // get title based on feature.type
+            var node = new Ext.tree.TreeNode({text: featureList[i].title,
+                features: featureList[i].features});
             node.addListener("click", this.click, this);
             root.appendChild(node);
             if (i === 0) {

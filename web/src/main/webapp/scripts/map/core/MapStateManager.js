@@ -85,12 +85,12 @@ GeoNetwork.MapStateManager = function() {
                        
             for(var i = 0; i < layers.length; i++) {
                 if ((!layers[i].isBaseLayer) && (layers[i].displayInLayerSwitcher)) {      
-                    var li = layers[i].name+DATA_FIELD_SEP+layers[i].url+DATA_FIELD_SEP+layers[i].params.LAYERS+
-                                DATA_FIELD_SEP+processValue(layers[i].opacity, 1)+DATA_FIELD_SEP+processValue(layers[i].queryable, false)+
-                                DATA_FIELD_SEP+processValue(layers[i].llbbox)+DATA_FIELD_SEP+processValue(layers[i].styles)+
-                                DATA_FIELD_SEP+processValue(layers[i].dimensions)+DATA_FIELD_SEP+processValue(layers[i].visibility, true)+
-                                DATA_FIELD_SEP+processValue(layers[i].projection.projCode, "EPSG:4326")+DATA_FIELD_SEP+processValue(layers[i].units)+
-                                DATA_FIELD_SEP+processValue(layers[i].metadata_id);
+                    var params = Object.toJSON(layers[i].params);
+                    var options = Object.toJSON(layers[i].options);
+                    var opacity = processValue(layers[i].opacity, 1)
+
+                    var li = layers[i].name+DATA_FIELD_SEP+layers[i].url+DATA_FIELD_SEP+params+
+                    			DATA_FIELD_SEP+options+DATA_FIELD_SEP+opacity;
                                 
                     if (cookietext.length > 0) cookietext = cookietext+LAYER_SEP;                    
                     cookietext = cookietext+li;
@@ -145,25 +145,15 @@ GeoNetwork.MapStateManager = function() {
                 for(var i = 0; i < layerCookieList.length; i++) {
                     var layerInfo = layerCookieList[i].split(DATA_FIELD_SEP);
                     
-                    if (layerInfo.length == 12) {
+                    if (layerInfo.length == 5) {
                         var name = layerInfo[0];
                         var url = layerInfo[1];
-                        var layer = layerInfo[2];
-                        var opacity = layerInfo[3];
-                        var queryable = (layerInfo[4] == 'true');
-                        var llbbox = layerInfo[5];
-                        var styles = layerInfo[6];
-                        var dimensions = layerInfo[7];
-                        var visibility = (layerInfo[8] == 'true');
-                        var projCode = layerInfo[9];
-                        var units = layerInfo[10];
-                        var metadata_id = layerInfo[11];
+                        var params = layerInfo[2].evalJSON(true);
+                        var options = layerInfo[3].evalJSON(true)
+                        var opacity = layerInfo[4];
                                
                         var ol_layer = new OpenLayers.Layer.WMS(name, url,
-                            {layers: layer, format: 'image/png', transparent: 'TRUE'},
-                            {queryable: queryable, singleTile: true, ratio: 1, buffer: 0, 
-                                projection: projCode, units: units, transitionEffect: 'resize', 
-                                metadata_id: metadata_id, llbbox: llbbox, styles: styles, dimensions: dimensions, visibility: visibility} );
+                            params, options);
                                                 
                         if (!GeoNetwork.OGCUtil.layerExistsInMap(ol_layer, map)) {
                             if (opacity) ol_layer.setOpacity(parseFloat(opacity));

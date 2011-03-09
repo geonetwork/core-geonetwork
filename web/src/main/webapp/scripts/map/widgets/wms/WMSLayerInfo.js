@@ -81,7 +81,7 @@ GeoNetwork.wms.WMSLayerInfo.prototype = {
     loadWMS: function(onlineResource, layer) {
         this.layer = layer;
         var params = {'service': 'WMS', 'request': 'GetCapabilities',
-            'version': '1.1.1'};
+            'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
         var paramString = OpenLayers.Util.getParameterString(params);
         var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
         onlineResource += separator + paramString;
@@ -106,12 +106,12 @@ GeoNetwork.wms.WMSLayerInfo.prototype = {
      */
     processSuccess: function(response) {
         if (!this.parser) {
-            this.parser = new GeoNetwork.Format.WMSCapabilities();
+            this.parser = new OpenLayers.Format.WMSCapabilities();
         }
         var caps = this.parser.read(response.responseXML || response.responseText);
         var node;
         if (caps.capability) {
-            node = this.processLayers(caps, caps.capability.layers);
+            node = this.processLayers(caps, caps.capability.nestedLayers);
         }
         // return the newly created Layer through a callback function
         Ext.callback(this.callback, this.scope, [node, this.layer]);
@@ -173,8 +173,8 @@ GeoNetwork.wms.WMSLayerInfo.prototype = {
             } catch(e) {
             }
 
-            if (typeof(lr.childLayers) != "undefined") {
-                findedLayer = this.processLayers(caps, lr.childLayers);
+            if (typeof(lr.nestedLayers) != "undefined") {
+                findedLayer = this.processLayers(caps, lr.nestedLayers);
                 if (findedLayer != null) break;
             }
 

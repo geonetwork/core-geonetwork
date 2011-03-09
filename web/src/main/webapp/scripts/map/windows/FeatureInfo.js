@@ -71,5 +71,10 @@ Ext.extend(GeoNetwork.FeatureInfoWindow, GeoNetwork.BaseWindow, {
 
    	setFeatures: function(featureList) {
         this.items.items[0].showFeatures(featureList);
+    },
+
+    setMap: function(map) {
+        this.items.items[0].setMap(map);
    	}
+
 });

@@ -66,8 +66,8 @@ GeoNetwork.CatalogueInterface = function() {
             } catch(e) {
             }
 
-            if (typeof(lr.childLayers) != "undefined") {
-                findedLayer = getLayer(caps, lr.childLayers, layer);
+            if (typeof(lr.nestedLayers) != "undefined") {
+                findedLayer = getLayer(caps, lr.nestedLayers, layer);
                 if (findedLayer !== null) {
                     break;
                 }
@@ -88,7 +88,7 @@ GeoNetwork.CatalogueInterface = function() {
     var processLayersSuccess = function(response) {
         layerLoadingMask.hide();
         
-        var parser = new GeoNetwork.Format.WMSCapabilities();
+        var parser = new OpenLayers.Format.WMSCapabilities();
         var caps = parser.read(response.responseXML || response.responseText);
         if (caps.capability) {
             // GetCapabilities disclaimer
@@ -111,7 +111,7 @@ GeoNetwork.CatalogueInterface = function() {
                     var metadata_id = layers[i][3];
 
                     var ol_layer = new OpenLayers.Layer.WMS(name, url,
-                        {layers: layer, format: 'image/png', transparent: 'TRUE'},
+                        {layers: layer, format: 'image/png', transparent: 'TRUE', version: caps.version, language: GeoNetwork.OGCUtil.getLanguage()},
                         {queryable: true, singleTile: true, ratio: 1, buffer: 0, transitionEffect: 'resize', metadata_id: metadata_id} );
 
                     if (!GeoNetwork.OGCUtil.layerExistsInMap(ol_layer, map)) {
@@ -190,7 +190,7 @@ GeoNetwork.CatalogueInterface = function() {
             layers = layerList;
 
             var params = {'service': 'WMS', 'request': 'GetCapabilities',
-                'version': '1.1.1'};
+                'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
             var paramString = OpenLayers.Util.getParameterString(params);
             var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
             onlineResource += separator + paramString;

@@ -153,7 +153,7 @@ GeoNetwork.Control.ExtentBox = OpenLayers.Class(OpenLayers.Control, {
      */ 
     updateMap: function() {
         if ((!this.minxelement) || (!this.maxxelement) ||
-            (!this.minxelement) || (!this.maxxelement)) {
+            (!this.minyelement) || (!this.maxyelement)) {
                 return;
         }
 

@@ -80,7 +80,8 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      */
     loadWMS: function(onlineResource) {
         var params = {'service': 'WMS', 'request': 'GetCapabilities',
-            'version': '1.1.1'};
+            'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
+
         var paramString = OpenLayers.Util.getParameterString(params);
         var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
         onlineResource += separator + paramString;
@@ -104,13 +105,15 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      */
     processSuccess: function(response) {
         if (!this.parser) {
-            this.parser = new GeoNetwork.Format.WMSCapabilities();
+            this.parser = new OpenLayers.Format.WMSCapabilities();
         }
         var caps = this.parser.read(response.responseXML || response.responseText);
+        this.layerParams.VERSION = caps.version;
         var node;
         if (caps.capability) {
-            for(var i=0, len = caps.capability.layers.length; i<len; ++i) {
-                var layer = caps.capability.layers[i];
+            for(var i=0, len = caps.capability.nestedLayers.length; i<len; ++i) {
+                var layer = caps.capability.nestedLayers[i];
+
                 node = this.addLayer(layer, caps.capability.request.getmap.href, null);
                 this.processLayer(layer, caps.capability.request.getmap.href, node);
             }
@@ -142,7 +145,7 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      */
     createWMSLayer: function(layer, url) {
         return new OpenLayers.Layer.WMS( layer.title, url,
-            OpenLayers.Util.extend({layers: layer.name}, this.layerParams),
+            OpenLayers.Util.extend({layers: layer.name, language: GeoNetwork.OGCUtil.getLanguage()}, this.layerParams),
             OpenLayers.Util.extend({minScale: layer.minScale,
                 queryable: layer.queryable, maxScale: layer.maxScale,
                 metadataURL: layer.metadataURL,
@@ -194,9 +197,9 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      * node - {<Ext.tree.TreeNode>}
      */
     processLayer: function(layer, url, node) {
-        Ext.each(layer.childLayers, function(el) {
+        Ext.each(layer.nestedLayers, function(el) {
             var node2 = this.addLayer(el, url, node);
-            if (el.childLayers) {
+            if (el.nestedLayers) {
                 this.processLayer(el, url, node2);
             }
         }, this);
