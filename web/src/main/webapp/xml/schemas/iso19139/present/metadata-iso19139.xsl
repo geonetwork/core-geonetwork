@@ -2992,25 +2992,27 @@
   <xsl:template name="iso19139GeoPublisherButton">
     <xsl:param name="access" select="'public'"/>
     
-    <xsl:variable name="bbox">
-      <xsl:call-template name="iso19139-global-bbox"/>
-    </xsl:variable>
-    <xsl:variable name="layer">
-      <xsl:choose>
-        <xsl:when test="../../gmd:protocol/gco:CharacterString='DB:POSTGIS'">
-          <xsl:value-of select="concat(../../gmd:linkage/gmd:URL, '#', .)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="."/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    
-    <button type="button" class="content repository" 
-      onclick="javascript:showGeoPublisherPanel('{/root/*/geonet:info/id}', '{$layer}', 
-      '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);" 
-      alt="{/root/gui/strings/publishHelp}" 
-      title="{/root/gui/strings/geopublisherHelp}"><xsl:value-of select="/root/gui/strings/geopublisher"/></button>
+    <xsl:if test="/root/gui/config/editor-geopublisher">
+      <xsl:variable name="bbox">
+        <xsl:call-template name="iso19139-global-bbox"/>
+      </xsl:variable>
+      <xsl:variable name="layer">
+        <xsl:choose>
+          <xsl:when test="../../gmd:protocol/gco:CharacterString='DB:POSTGIS'">
+            <xsl:value-of select="concat(../../gmd:linkage/gmd:URL, '#', .)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      
+      <button type="button" class="content repository" 
+        onclick="javascript:showGeoPublisherPanel('{/root/*/geonet:info/id}', '{$layer}', 
+        '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);" 
+        alt="{/root/gui/strings/publishHelp}" 
+        title="{/root/gui/strings/geopublisherHelp}"><xsl:value-of select="/root/gui/strings/geopublisher"/></button>
+    </xsl:if>
   </xsl:template>
 
 	<!-- ===================================================================== -->
@@ -4211,7 +4213,6 @@
 				geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
 		<xsl:text>showCRSSelectionPanel</xsl:text>
 	</xsl:template>
-	
   <xsl:template mode="addXMLFragment" match="*|@*"></xsl:template>
   
 </xsl:stylesheet>
