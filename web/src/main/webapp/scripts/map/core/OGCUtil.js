@@ -20,7 +20,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.OGCUtil');
 
 GeoNetwork.OGCUtil.getProtocolVersion = function() {
-    return "1.3.0"
+    return "1.3.0";
 };
 
 

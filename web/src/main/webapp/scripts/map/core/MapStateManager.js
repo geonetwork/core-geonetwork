@@ -87,7 +87,7 @@ GeoNetwork.MapStateManager = function() {
                 if ((!layers[i].isBaseLayer) && (layers[i].displayInLayerSwitcher)) {
                     var params = Object.toJSON(layers[i].params);
                     var options = Object.toJSON(layers[i].options);
-                    var opacity = processValue(layers[i].opacity, 1)
+                    var opacity = processValue(layers[i].opacity, 1);
 
                     var li = layers[i].name+DATA_FIELD_SEP+layers[i].url+DATA_FIELD_SEP+params+
                     			DATA_FIELD_SEP+options+DATA_FIELD_SEP+opacity;
@@ -149,7 +149,7 @@ GeoNetwork.MapStateManager = function() {
                     	var name = layerInfo[0];
                         var url = layerInfo[1];
                         var params = layerInfo[2].evalJSON(true);
-                        var options = layerInfo[3].evalJSON(true)
+                        var options = layerInfo[3].evalJSON(true);
                         var opacity = layerInfo[4];
 
                     	var ol_layer = new OpenLayers.Layer.WMS(name, url,

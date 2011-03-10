@@ -26,8 +26,7 @@ var activeIndex = 0;
 var printConfigUrl = mapfish.SERVER_BASE_URL + 'pdf/info.json';
 
 // create application
-GeoNetwork.app = function() {
-    // private vars:
+GeoNetwork.app = function() {    // private vars:
     var toolbar, toctoolbar, tocbbar, viewport;
 
     var tree, legendPanel, mapLateralPanel;
