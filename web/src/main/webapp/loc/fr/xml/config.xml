@@ -133,7 +133,7 @@
 	<clickablehyperlinks>Hyperliens cliquables</clickablehyperlinks>
 
 	<localrating>Evaluation Local</localrating>
-    <autofixing>Automatique fixe</autofixing>
+    <autofixing>Correction automatique</autofixing>
 	
 	<proxy>Proxy</proxy>
 	<use>Activé</use>

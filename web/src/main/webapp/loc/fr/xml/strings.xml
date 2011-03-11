@@ -35,10 +35,10 @@
 	<anyWithAllWords>Tous - tous les mots suivants</anyWithAllWords>
 	<anyWithoutWords>Tous - aucun des mots suivants</anyWithoutWords>
 	<dataDownload>Données à télécharger</dataDownload>
-	<addSchema>Ajouter un schéma/profil de métadonnées</addSchema>
-	<updateSchema>Mettre à jour un schéma/profile de métadonnées</updateSchema>
-	<deleteSchema>Supprimer un schéma/profile de métadonnées</deleteSchema>
-	<selectSchema>Sélectionner un schéma/profile de métadonnées</selectSchema>
+	<addSchema>Ajouter un standard de métadonnées</addSchema>
+  <updateSchema>Mettre à jour un standard de métadonnées</updateSchema>
+  <deleteSchema>Supprimer un standard de métadonnées</deleteSchema>
+  <selectSchema>Sélectionner un standard de métadonnées</selectSchema>
 	<schemaFileName>Chemin vers l'archive ZIP</schemaFileName>
 	<schemaUrl>URL de l'archive ZIP</schemaUrl>
 	<schemaUuid>Identifiant (UUID) d'une métadonnée locale avec l'URL du schéma (GeoNetwork Metadata Schema Archive-GMSA URL) dans la section ressource en ligne</schemaUuid>
@@ -387,6 +387,7 @@
 	<create>Dupliquer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
+  <crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
 	<cswTest>Test CSW</cswTest>
 	<cswTestDesc>Interface de tests pour le point d'accès CSW</cswTestDesc>
@@ -835,8 +836,8 @@
 	<winInfo1>Cette fenêtre montre les ressources de GeoNetwork.</winInfo1>
 	<winInfo2>L'icône Besoin d'aide (?) vous donne accès à l'aide.</winInfo2>
 	<wwwlink>Liens Internet</wwwlink>
-	<xmlInsert>Importer des fichiers ISO19115</xmlInsert>
-	<xmlInsertTitle>Import de fichiers XML</xmlInsertTitle>
+	<xmlInsert>Importer des fichiers de métadonnées (format XML ou MEF)</xmlInsert>
+	<xmlInsertTitle>Import de métadonnées</xmlInsertTitle>
 	<xmlTab>XML</xmlTab>
     <inspireTab>Vue INSPIRE</inspireTab>
     <inspireSection>
