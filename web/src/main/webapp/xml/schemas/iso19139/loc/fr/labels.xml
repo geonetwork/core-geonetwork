@@ -3242,13 +3242,6 @@
     <condition/>
     
   </element>
-  <element name="gmd:featureTypes">
-    <label>Liste des types d’entité</label>
-    <description>Provides information about the list of feature types with the same spatial representation</description>
-    <help/>
-    <condition/>
-    
-  </element>
   <element name="gmd:featureAttribute">
     <label>FeatureAttribute</label>
     <description>FeatureAttribute</description>

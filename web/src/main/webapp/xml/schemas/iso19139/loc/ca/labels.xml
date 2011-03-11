@@ -2104,10 +2104,6 @@ no són adients</description>
         <label>Tipus d'entitat</label>
         <description>Subconjunt de tipus d'entitat del catàleg d'entitats citat que apareixen a les dades</description>
     </element>
-    <element name="gmd:featureTypes">
-        <label>Llista de tipus d'entitat</label>
-        <description>Subconjunt de tipus d'entitats del catàleg d'entitats citat que ocorren a les dades </description>
-    </element>
     <element name="gmd:featureAttribute">
         <label>Feature attribute</label>
         <description/>

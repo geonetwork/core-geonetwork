@@ -2241,11 +2241,6 @@ NOTE! Det vil være overlapp mellom disse overordnede kategoriene. Et tema kan d
         <description>Subset of feature types from cited feature catalogue occurring in
             data</description>
     </element>
-    <element name="gmd:featureTypes">
-        <label>Feature types</label>
-        <description>Subset of feature types from cited feature catalogue occurring in
-            data</description>
-    </element>
     <element name="gmd:featureAttribute">
         <label>Feature attribute</label>
         <description></description>
