@@ -203,6 +203,8 @@ class Harvester {
 			// --- For each record....
 			for (Document doc : list) {
 				Element md = doc.getRootElement();
+				String eName = md.getQualifiedName();
+				if (eName.equals("summary")) continue;
 
 				// -- Remove existing geonet:info children as for example
 				// -- GeoNetwork Z39.50 server return when full mode
@@ -223,14 +225,10 @@ class Harvester {
 				Z3950Result result = serverResults.getServerResult(serverName);
 				result.totalMetadata++;
 
-				String eName = md.getQualifiedName();
-				if (eName.equals("summary")) {
-					continue;
-				} else if (eName.equals("error")) {
+				if (eName.equals("error")) {
 					result.unretrievable++;
 					continue;
 				} 
-
 
 				// validate it here if requested
 				if (params.validate) {
