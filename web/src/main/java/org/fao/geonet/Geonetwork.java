@@ -203,17 +203,6 @@ public class Geonetwork implements ApplicationHandler
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
-		//--- load proxy information from settings into Jeeves
-		ProxyInfo pi = JeevesProxyInfo.getInstance();
-		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
-		if (useProxy) {
-			String  proxyHost      = settingMan.getValue("system/proxy/host");
-			String  proxyPort      = settingMan.getValue("system/proxy/port");
-			String  username       = settingMan.getValue("system/proxy/username");
-			String  password       = settingMan.getValue("system/proxy/password");
-			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
-		}
-		
 		// --- Migrate database if an old one is found
 		migrateDatabase(dbms, settingMan, version, subVersion);
 		
@@ -379,6 +368,18 @@ public class Geonetwork implements ApplicationHandler
         MetadataNotifierControl metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
         metadataNotifierControl.runOnce();
 
+		//--- load proxy information from settings into Jeeves for observers such
+		//--- as jeeves.utils.XmlResolver to use
+		ProxyInfo pi = JeevesProxyInfo.getInstance();
+		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+		if (useProxy) {
+			String  proxyHost      = settingMan.getValue("system/proxy/host");
+			String  proxyPort      = settingMan.getValue("system/proxy/port");
+			String  username       = settingMan.getValue("system/proxy/username");
+			String  password       = settingMan.getValue("system/proxy/password");
+			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
+		}
+		
 		return gnContext;
 	}
 
