@@ -246,9 +246,17 @@
 				<xsl:with-param name="content">
 
 					<xsl:for-each select="*:extent/gmd:EX_Extent">
+					  <xsl:apply-templates mode="simpleElement"
+					    select="
+					    gmd:description
+					    ">
+					    <xsl:with-param name="schema" select="$schema" />
+					    <xsl:with-param name="edit" select="$edit" />
+					  </xsl:apply-templates>
+					  
 						<xsl:apply-templates mode="complexElement"
 							select="
-							gmd:description|gmd:geographicElement|gmd:verticalElement
+							gmd:geographicElement|gmd:verticalElement
 							">
 							<xsl:with-param name="schema" select="$schema" />
 							<xsl:with-param name="edit" select="$edit" />
