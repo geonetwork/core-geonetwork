@@ -1240,6 +1240,12 @@
     <condition/>
     
   </element>
+  <element name="gmd:description" id="401.0">
+    <label>Description</label>
+    <description></description>
+    <help></help>
+    <condition/>
+  </element>
   <element name="gmd:descriptiveKeywords" id="33.0">
     <label>Mots clés descriptifs</label>
     <description>Catégorie, type et source de référence des mots clés</description>
