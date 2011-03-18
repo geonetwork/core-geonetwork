@@ -152,6 +152,8 @@ public class Lib
 			result.add(Integer.parseInt(info.getChildText("id")));
 		}
 
+		searcher.close();
+
 		return result;
 	}
 

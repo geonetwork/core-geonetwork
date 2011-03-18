@@ -181,25 +181,30 @@ public class GetRelated implements Service {
         MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
                 Geonet.File.SEARCH_LUCENE);
 
-        // Creating parameters for search, fast only to retrieve uuid
-        Element parameters = new Element(Jeeves.Elem.REQUEST);
-        if ("children".equals(type))
-            parameters.addContent(new Element("parentUuid").setText(uuid));
-        else if ("services".equals(type))
-            parameters.addContent(new Element("operatesOn").setText(uuid));
-        else if ("datasets".equals(type))
-            parameters.addContent(new Element("uuid").setText(uuid));
-        parameters.addContent(new Element("fast").addContent(fast));
-        parameters.addContent(new Element("from").addContent(from));
-        parameters.addContent(new Element("to").addContent(to));
+				try {
+        	// Creating parameters for search, fast only to retrieve uuid
+        	Element parameters = new Element(Jeeves.Elem.REQUEST);
+        	if ("children".equals(type))
+            	parameters.addContent(new Element("parentUuid").setText(uuid));
+        	else if ("services".equals(type))
+            	parameters.addContent(new Element("operatesOn").setText(uuid));
+        	else if ("datasets".equals(type))
+            	parameters.addContent(new Element("uuid").setText(uuid));
+        	parameters.addContent(new Element("fast").addContent(fast));
+        	parameters.addContent(new Element("from").addContent(from));
+        	parameters.addContent(new Element("to").addContent(to));
+	
+        	searcher.search(context, parameters, _config);
 
-        searcher.search(context, parameters, _config);
+        	Log.info(Geonet.SEARCH_ENGINE, "Getting children search summary");
 
-        Log.info(Geonet.SEARCH_ENGINE, "Getting children search summary");
-
-        Element response = new Element(type);
-        Element relatedElement = searcher.present(context, parameters, _config);
-        response.addContent(relatedElement);
-        return response;
+        	Element response = new Element(type);
+        	Element relatedElement = searcher.present(context, parameters, _config);
+        	response.addContent(relatedElement);
+        	return response;
+				} finally {
+					Log.info(Geonet.SEARCH_ENGINE, "Closing searcher");
+					searcher.close();
+				}
     }
 }

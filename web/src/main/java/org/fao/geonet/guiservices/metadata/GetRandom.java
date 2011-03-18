@@ -98,43 +98,46 @@ public class GetRandom implements Service
 			SearchManager searchMan = gc.getSearchmanager();
 			MetaSearcher  searcher  = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-			// FIXME: featured should be at metadata level, not at group level
-			Element searchRequest = new Element("request");
-			searchRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-			searchRequest.addContent(new Element("featured").setText("true"));
-			searchRequest.addContent(new Element("relation").setText(_relation));
-			searchRequest.addContent(new Element("northBL").setText(_northBL));
-			searchRequest.addContent(new Element("southBL").setText(_southBL));
-			searchRequest.addContent(new Element("eastBL").setText(_eastBL));
-			searchRequest.addContent(new Element("westBL").setText(_westBL));
-
-			Log.debug(Geonet.SEARCH_ENGINE, "RANDOM SEARCH CRITERIA:\n"+ Xml.getString(searchRequest));
-			
-			searcher.search(context, searchRequest, _config);
-
-			Element presentRequest = new Element("request");
-			presentRequest.addContent(new Element("fast").setText("true"));
-			presentRequest.addContent(new Element("from").setText("1"));
-			presentRequest.addContent(new Element("to").setText(searcher.getSize()+""));
-            
-			List results = searcher.present(context, presentRequest, _config).getChildren();
-
-			_response = new Element("response");
-			for (int i = 0; i < _maxItems && results.size() > 1; i++)
-			{
-				Random rnd = new Random();
-				int r = rnd.nextInt(results.size() - 1) + 1;  // skip summary
-
-				Element mdInfo = (Element)results.remove(r);
-				mdInfo.detach();
-
-				Element info = mdInfo.getChild("info", Edit.NAMESPACE);
-				String id = info.getChildText("id");
-				Element md = dataMan.getMetadata(context, id, false);
-
-				_response.addContent(md);
+			try {
+				// FIXME: featured should be at metadata level, not at group level
+				Element searchRequest = new Element("request");
+				searchRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+				searchRequest.addContent(new Element("featured").setText("true"));
+				searchRequest.addContent(new Element("relation").setText(_relation));
+				searchRequest.addContent(new Element("northBL").setText(_northBL));
+				searchRequest.addContent(new Element("southBL").setText(_southBL));
+				searchRequest.addContent(new Element("eastBL").setText(_eastBL));
+				searchRequest.addContent(new Element("westBL").setText(_westBL));
+	
+				Log.debug(Geonet.SEARCH_ENGINE, "RANDOM SEARCH CRITERIA:\n"+ Xml.getString(searchRequest));
+				
+				searcher.search(context, searchRequest, _config);
+	
+				Element presentRequest = new Element("request");
+				presentRequest.addContent(new Element("fast").setText("true"));
+				presentRequest.addContent(new Element("from").setText("1"));
+				presentRequest.addContent(new Element("to").setText(searcher.getSize()+""));
+           	 
+				List results = searcher.present(context, presentRequest, _config).getChildren();
+	
+				_response = new Element("response");
+				for (int i = 0; i < _maxItems && results.size() > 1; i++) {
+					Random rnd = new Random();
+					int r = rnd.nextInt(results.size() - 1) + 1;  // skip summary
+	
+					Element mdInfo = (Element)results.remove(r);
+					mdInfo.detach();
+	
+					Element info = mdInfo.getChild("info", Edit.NAMESPACE);
+					String id = info.getChildText("id");
+					Element md = dataMan.getMetadata(context, id, false);
+	
+					_response.addContent(md);
+				}
+				_lastUpdateTime = System.currentTimeMillis();
+			} finally {
+				searcher.close();
 			}
-			_lastUpdateTime = System.currentTimeMillis();
 		}
 		return (Element)_response.clone();
 	}
