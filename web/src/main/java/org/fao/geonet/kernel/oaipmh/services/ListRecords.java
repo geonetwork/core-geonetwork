@@ -37,6 +37,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.OaiPmh;
+import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
+import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.requests.ListRecordsRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.Header;
@@ -102,70 +104,19 @@ public class ListRecords extends AbstractTokenLister
 	@SuppressWarnings("unchecked")
 	private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager   sm = gc.getSchemamanager();
-		DataManager     dm = gc.getDataManager();
 
-		String query = "SELECT uuid, schemaId, changeDate, data FROM Metadata WHERE id=?";
-
-		List<Element> list = dbms.select(query, id).getChildren();
-
-		//--- maybe the metadata has been removed
-
-		if (list.size() == 0)
+		// have to catch exceptions and return null because this function can
+		// be called several times for a list of MD records
+		// and we do not want to stop because of one error
+		try {
+			return GetRecord.buildRecordStat(context,"id" ,id , prefix);
+		} catch (IdDoesNotExistException e) {
 			return null;
-
-		Element rec = list.get(0);
-
-		String uuid       = rec.getChildText("uuid");
-		String schema     = rec.getChildText("schemaid");
-		String changeDate = rec.getChildText("changedate");
-		String data       = rec.getChildText("data");
-
-		Element md = Xml.loadString(data, false);
-
-		//--- try to disseminate format
-
-		String schemaDir = sm.getSchemaDir(schema);
-		if (prefix.equals(schema)) {
-			String schemaUrl = Lib.getSchemaUrl(context, schemaDir);
-			String schemaLoc = md.getNamespace().getURI() +" "+ schemaUrl;
-			md.setAttribute("schemaLocation", schemaLoc, OaiPmh.Namespaces.XSI);
-		} else {
-			if (Lib.existsConverter(schemaDir, prefix)) {
-				md = Lib.transform(schemaDir, md, uuid, changeDate, prefix, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
-			} else {
-				return null;
-			}
+		} catch (CannotDisseminateFormatException e2) {
+			return null;
+		} catch (Exception e3) {
+			throw e3;
 		}
-
-		//--- build header and set some infos
-
-		Header h = new Header();
-
-		h.setIdentifier(uuid);
-		h.setDateStamp(new ISODate(changeDate));
-
-		//--- find and add categories (here called sets)
-
-		query = "SELECT name FROM Categories, MetadataCateg WHERE id=categoryId AND metadataId=?";
-
-		list = dbms.select(query, id).getChildren();
-
-		for (Element record : list)
-		{
-			h.addSet(record.getChildText("name"));
-		}
-
-		//--- build and return record
-
-		Record r = new Record();
-
-		r.setHeader(h);
-		r.setMetadata(md);
-
-		return r;
 	}
 }
 

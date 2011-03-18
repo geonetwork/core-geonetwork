@@ -84,8 +84,11 @@ public class Identify implements OaiPmhService
 			return new ISODate();
 
 		Element rec = (Element) list.get(0);
+	
+		String date = rec.getChildText("mcd");
+		if (date == null || date.equals("")) return new ISODate();
 
-		return new ISODate(rec.getChildText("mcd"));
+		return new ISODate(date);
 	}
 }
 

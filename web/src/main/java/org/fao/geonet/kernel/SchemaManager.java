@@ -25,14 +25,18 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.context.ServiceContext;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -237,6 +241,51 @@ public class SchemaManager
 				throw new IllegalArgumentException("Schema not registered : " + name);
 
 			return schema.getDir();
+		} finally {
+			afterRead();
+		}
+	}
+
+	//--------------------------------------------------------------------------
+	/**	Return the schema location as a JDOM attribute - this can be 
+	  * either an xsi:schemaLocation or xsi:noNamespaceSchemaLocation
+		* depending on the schema
+		*
+		* @param schema the metadata schema we want the schemaLocation for
+	  */
+
+	public Attribute getSchemaLocation(String name, ServiceContext context) {
+
+		Attribute out = null;
+
+		beforeRead();
+		try {
+			Schema schema = hmSchemas.get(name);	
+
+			if (schema == null)
+				throw new IllegalArgumentException("Schema not registered : " + name);
+
+			String nsUri = schema.getMetadataSchema().getPrimeNS();
+			String schemaLoc  = schema.getSchemaLocation();
+			String schemaFile = schema.getDir() + "schema.xsd";
+      if (schemaLoc.equals("")) {
+				if (new File(schemaFile).exists()) { // build one 
+					String schemaUrl = getSchemaUrl(context, schemaFile);
+					if (nsUri == null || nsUri.equals("")) {
+						out = new Attribute("noNamespaceSchemaLocation", schemaUrl, Csw.NAMESPACE_XSI);
+					} else {
+						schemaLoc = nsUri +" "+ schemaUrl;
+						out = new Attribute("schemaLocation", schemaLoc, Csw.NAMESPACE_XSI);
+          }
+				} // else return null - no schema xsd exists - could be dtd
+      } else {
+				if (nsUri == null || nsUri.equals("")) {
+					out = new Attribute("noNamespaceSchemaLocation", schemaLoc, Csw.NAMESPACE_XSI);
+				} else {
+        	out = new Attribute("schemaLocation", schemaLoc, Csw.NAMESPACE_XSI);
+				}
+      }
+			return out;
 		} finally {
 			afterRead();
 		}
@@ -684,7 +733,8 @@ public class SchemaManager
 									new SchemaSuggestions(xmlSuggestFile),
 									extractADElements(xmlIdFile),
 									xfMap,
-									isPluginSchema);
+									isPluginSchema,
+									extractSchemaLocation(xmlIdFile));
 
 		Log.debug(Geonet.SCHEMA_MANAGER, "Property xml.catalog.files is "+System.getProperty("xml.catalog.files"));
 
@@ -855,8 +905,9 @@ public class SchemaManager
 		* @param adElems List of autodetect XML elements (as JDOM Elements)
 		* @param xfMap Map containing XML localized info files (as Jeeves XmlFiles)
 		* @param isPlugin true if schema is a plugin schema 
+		* @param schemaLocation namespaces and URLs of their xsds
 		*/
-	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir, SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap, boolean isPlugin) { 
+	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir, SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap, boolean isPlugin, String schemaLocation) { 
 		
 		Schema schema = new Schema();
 
@@ -868,6 +919,7 @@ public class SchemaManager
 		schema.setAutodetectElements(adElems);
 		schema.setInfo(xfMap);
 		schema.setPluginSchema(isPlugin);
+		schema.setSchemaLocation(schemaLocation);
 
 		hmSchemas.put(name, schema);
 	}
@@ -995,6 +1047,18 @@ public class SchemaManager
 			}
 		}
 		return elements;
+	}
+
+	//--------------------------------------------------------------------------
+	/** Extract schemaLocation info from identification file
+	  *
+		* @param xmlidFile name of schema XML identification file
+		*/
+	private String extractSchemaLocation(String xmlIdFile) throws Exception {
+		Element root = Xml.loadFile(xmlIdFile);
+		Element schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_NS);
+		if (schemaLocElem == null) schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_PREFIX_NS);
+		return schemaLocElem.getText();
 	}
 
 	//--------------------------------------------------------------------------
@@ -1144,6 +1208,25 @@ public class SchemaManager
 
 		return dir.delete();
 	}
+
+	//--------------------------------------------------------------------------
+	/**	Create a URL that can be used to point to a schema XSD delivered by 
+	  * GeoNetwork
+		*
+		* @param context the ServiceContext used to get setting manager and appPath
+		* @param schemaDir the schema directory
+	  */
+
+	public String getSchemaUrl(ServiceContext context, String schemaDir) {
+		SettingInfo si = new SettingInfo(context);
+
+		schemaDir = schemaDir.replace('\\','/');
+		String appPath = context.getAppPath().replace('\\','/');
+		String relativePath = StringUtils.substringAfter(schemaDir,context.getAppPath()); 
+		return si.getSiteUrl() + context.getBaseUrl() + "/" + relativePath;
+	}
+
+	//--------------------------------------------------------------------------
 
 
 }

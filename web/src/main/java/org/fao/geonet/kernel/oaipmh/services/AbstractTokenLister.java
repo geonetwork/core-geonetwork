@@ -149,9 +149,13 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		
 
 		//result.setupToken(res, pos);
-		if (token != null) // is null if no token needed
-			token.setupToken(pos);
-		res.setResumptionToken(token);
+		if (res.getSize() == Lib.MAX_RECORDS) { // put the token on only if we 
+		                                        // have enough results
+			if (token != null) token.setupToken(pos);
+			res.setResumptionToken(token);
+		} else {
+			res.setResumptionToken(null);
+		}
 		
 
 		return res;

@@ -55,6 +55,26 @@ public class Schema {
 		this.version = version; 
 	}
 
+	private String schemaLocation;
+
+	/**
+		* Get schemaLocation = official URLs which locate xsds for the various 
+		* namespaces used by this schema
+		*
+		*/
+	public String getSchemaLocation() { return schemaLocation; }
+
+	/**
+		* Set schemaLocation = official URLs which locate xsds for the various 
+		* namespaces used by this schema
+		*
+		* @param schemaLocation namespaces and URLs of XSDs arranged in pairs
+		*
+		*/
+	public void setSchemaLocation(String schemaLocation) { 
+		this.schemaLocation = schemaLocation; 
+	}
+
 	private List<Element> autodetectElements = new ArrayList<Element>();
 
 	/**

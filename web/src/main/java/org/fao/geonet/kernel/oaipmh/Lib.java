@@ -28,7 +28,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -74,18 +73,6 @@ public class Lib
 	}
 
 	//---------------------------------------------------------------------------
-
-	public static String getSchemaUrl(ServiceContext context, String schemaDir)
-	{
-		SettingInfo si = new SettingInfo(context);
-
-		schemaDir = schemaDir.replace('\\','/');
-		String appPath = context.getAppPath().replace('\\','/');
-		String relativePath = StringUtils.substringAfter(schemaDir,context.getAppPath()); 
-		return si.getSiteUrl() + context.getBaseUrl() + relativePath;
-	}
-
-	//--------------------------------------------------------------------------
 
 	public static boolean existsConverter(String schemaDir, String prefix) {
 		 File f = new File(schemaDir + "convert/" + prefix + ".xsl");

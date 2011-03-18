@@ -42,6 +42,7 @@ import org.fao.oaipmh.responses.GetRecordResponse;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.Record;
 import org.fao.oaipmh.util.ISODate;
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.List;
@@ -73,23 +74,29 @@ public class GetRecord implements OaiPmhService
 
 	//---------------------------------------------------------------------------
 
-	private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception
-	{
+	private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception {
+		return buildRecordStat(context,"uuid",uuid,prefix);
+	}
+
+	//---------------------------------------------------------------------------
+
+	// function builds a OAI records from a metadata record, according to the arguments select and selectVal
+	public static Record buildRecordStat(ServiceContext context, String select, Object selectVal, String prefix) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager   sm = gc.getSchemamanager();
 		DataManager     dm = gc.getDataManager();
 
-		String query = "SELECT id, schemaId, changeDate, data FROM Metadata WHERE uuid=?";
-
-		List list = dbms.select(query, uuid).getChildren();
+		String query = "SELECT uuid,id, schemaId, changeDate, data FROM Metadata WHERE "+select+"=?";
+		List list = dbms.select(query, selectVal).getChildren();
 
 		if (list.size() == 0)
-			throw new IdDoesNotExistException(uuid);
+			throw new IdDoesNotExistException(selectVal.toString());
 
 		Element rec = (Element) list.get(0);
 
 		String id         = rec.getChildText("id");
+		String uuid				= rec.getChildText("uuid");
 		String schema     = rec.getChildText("schemaid");
 		String changeDate = rec.getChildText("changedate");
 		String data       = rec.getChildText("data");
@@ -98,12 +105,15 @@ public class GetRecord implements OaiPmhService
 
 		//--- try to disseminate format
 
-		String schemaDir = sm.getSchemaDir(schema);
 		if (prefix.equals(schema)) {
-			String schemaUrl = Lib.getSchemaUrl(context, schemaDir);
-			String schemaLoc = md.getNamespace().getURI() +" "+ schemaUrl;
-			md.setAttribute("schemaLocation", schemaLoc, OaiPmh.Namespaces.XSI);
+			Attribute schemaLocAtt = sm.getSchemaLocation(schema, context);
+			if (schemaLocAtt != null) {
+				if (md.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
+					md.setAttribute(schemaLocAtt);
+				}
+			}
 		} else {
+			String schemaDir = sm.getSchemaDir(schema);
 			if (Lib.existsConverter(schemaDir, prefix)) {
 				md = Lib.transform(schemaDir, md, uuid, changeDate, prefix, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
 			} else {

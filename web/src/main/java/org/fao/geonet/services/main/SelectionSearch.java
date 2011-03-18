@@ -120,8 +120,6 @@ public class SelectionSearch implements Service
 		Element summary = searcher.getSummary();
 		summary.addContent(new Element(Geonet.SearchResult.RESTORELASTSEARCH).setText(restoreLastSearch));
 
-		searcher.close();
-
 		return summary;	
 		
 	}

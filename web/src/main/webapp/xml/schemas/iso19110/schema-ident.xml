@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.osgeo.org/geonetwork/schemas/geonet_schema" schemaLocation="http://www.osgeo.org/geonetwork/schemas/geonet_schema http://www.osgeo.org/geonetwork/schemas/geonet_schema/geonet_schema.xsd">
+<schema xmlns="http://www.osgeo.org/geonetwork/schemas/geonet_schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.osgeo.org/geonetwork/schemas/geonet_schema http://www.osgeo.org/geonetwork/schemas/geonet_schema/geonet_schema.xsd">
 	<name>iso19110</name>
 	<id>ae229ba0-dde3-11df-99ab-001c2346de4c</id>
 	<version>1.0</version>
+	<schemaLocation>http://www.isotc211.org/2005/gfc http://eden.ign.fr/xsd/isotc211/iso19110/20060608/gfc/gfc.xsd</schemaLocation>
 	<autodetect xmlns:gfc="http://www.isotc211.org/2005/gfc">
 		<elements type="root">
 			<gfc:FC_FeatureCatalogue/>

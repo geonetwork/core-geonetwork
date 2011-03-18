@@ -35,6 +35,7 @@ import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.fao.oaipmh.responses.MetadataFormat;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -91,29 +92,24 @@ public class ListMetadataFormats implements OaiPmhService
 
 	private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) throws IOException, JDOMException
 	{
-		String schemaFile = sm.getSchemaDir(name) + "schema.xsd";
-
-		//--- extract namespace if schema.xsd file exists (could be DTD schema)
-
-		String nsPref = null;
-		boolean schemaExists = new File(schemaFile).exists();
-		if (schemaExists) {
-			Element elem   = Xml.loadFile(schemaFile);
-			nsPref = elem.getAttributeValue("targetNamespace");
-		}
-
-		//--- create object
-
 		MetadataFormat mf = new MetadataFormat();
-
 		mf.prefix    = name;
-		if (schemaExists) {
-			mf.schema    = Lib.getSchemaUrl(context, schemaFile);
-		} else {
-			mf.schema		 = "";
-		}
-		mf.namespace = Namespace.getNamespace(nsPref != null ? nsPref : "");
+		mf.schema = "";
+		mf.namespace = Namespace.NO_NAMESPACE; 
 
+		Attribute schemaLoc = sm.getSchemaLocation(name, context);
+		if (schemaLoc == null) { 
+			// no schema location eg. when schema is a DTD
+		} else if (schemaLoc.getName().equals("noNamespaceSchemaLocation")) {
+			mf.schema = schemaLoc.getValue();
+		} else {
+			String sLoc = schemaLoc.getValue();
+			String[] toks = sLoc.split("\\s");
+			if (toks.length > 1) {
+				mf.namespace = Namespace.getNamespace(toks[0]);
+				mf.schema = toks[1];
+			}
+		}
 		return mf;
 	}
 
