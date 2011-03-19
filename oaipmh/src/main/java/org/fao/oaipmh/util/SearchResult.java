@@ -104,6 +104,14 @@ public class SearchResult
 	}
 
 	/**
+	 * @param ids the ids to add
+	 */
+	public void addIds(List<Integer> ids) {
+		if (this.ids == null) this.ids = ids;
+		else this.ids.addAll(ids);
+	}
+
+	/**
 	 * @return the token
 	 */
 	public String getToken() {
