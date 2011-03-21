@@ -27,13 +27,15 @@ import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.WhitespaceTokenizer;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.util.Version;
 
 import java.io.Reader;
 import java.util.Set;
 
 /**
- * Default Lucene analyzer for GeoNetwork, based on WhitespaceTokenizer but with added LowercaseFilter and
+ * Default Lucene analyzer for GeoNetwork, based on a modified version of WhitespaceTokenizer and with added LowercaseFilter and
  * ASCIIFoldingFilter, and optionally StopFilter.
  * <p/>
  * Reason is that with StandardAnalyzer, which GeoNetwork was using before, it tokenizes such that the character * is
@@ -80,13 +82,13 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
 
-        final Tokenizer source = new WhitespaceTokenizer(reader);
+        final Tokenizer source = new StandardTokenizer(Version.LUCENE_29, reader);
 
         if(stopwords != null) {
-            return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(new StopFilter(enablePositionIncrements, source, stopwords, ignoreCase))));
+            return new TokenStreamComponents(source, new StopFilter(enablePositionIncrements, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))), stopwords, ignoreCase));
         }
         else {
-            return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(source)));
+            return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))));
         }
     }
 

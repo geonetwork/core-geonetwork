@@ -80,8 +80,6 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -236,7 +234,7 @@ public class LuceneSearcher extends MetaSearcher
                     else if (srvContext != null) {
 						md = gc.getDataManager().getMetadata(srvContext, id, false);
 					}
-	
+
 					//--- a metadata could have been deleted just before showing 
 					//--- search results
 	

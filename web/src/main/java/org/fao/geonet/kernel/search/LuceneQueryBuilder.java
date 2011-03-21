@@ -81,7 +81,40 @@ public class LuceneQueryBuilder {
             throw new IllegalArgumentException("Cannot create Lucene query for null string");
         }
         Query query = null;
-        String analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
+
+        String analyzedString = "";
+        // wildcards - preserve them by analyzing the parts of the search string around them separately
+        // (this is because Lucene's StandardTokenizer would remove wildcards, but that's not what we want)
+        if(string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
+            String starsPreserved = "";
+            String[] starSeparatedList = string.split("\\*");
+            for(String starSeparatedPart : starSeparatedList) {
+                String qPreserved = "";
+                // ? present
+                if(starSeparatedPart.indexOf('?') >= 0) {
+                    String[] qSeparatedList = starSeparatedPart.split("\\?");
+                    for(String qSeparatedPart : qSeparatedList) {
+                        String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
+                        qPreserved += '?' + analyzedPart;
+                    }
+                    // remove leading ?
+                    qPreserved = qPreserved.substring(1);
+                    starsPreserved += '*' + qPreserved;
+                }
+                // no ? present
+                else {
+                    starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                }
+            }
+            // remove leading *
+            starsPreserved = starsPreserved.substring(1);
+            analyzedString = starsPreserved;
+        }
+        // no wildcards
+        else {
+            analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
+        }
+
         if(StringUtils.hasLength(analyzedString)) {
         // no wildcards
         if(string.indexOf('*') < 0 && string.indexOf('?') < 0) {
