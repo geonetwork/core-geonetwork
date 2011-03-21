@@ -126,12 +126,13 @@ public class LuceneConfig {
 	private boolean trackMaxScore = false;
 	private boolean docsScoredInOrder = false;
 
-	private Version LUCENE_VERSION = Version.LUCENE_29;
+	private Version LUCENE_VERSION = Version.LUCENE_30;
 
 	/**
-	 * Create a new Lucene configuration from an XML configuration file. 
+	 * Creates a new Lucene configuration from an XML configuration file.
 	 * 
-	 * @param configurationFilePath
+	 * @param appPath
+     * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, String luceneConfigXmlFile) {
 		Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");

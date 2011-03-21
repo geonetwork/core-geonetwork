@@ -61,7 +61,25 @@ public class LuceneQueryTest extends TestCase {
 	/**
 	 * 'any' parameter with a single token value that has a wildcard.
 	 */
-	public void testSingleTokenWildcardAny() {
+	public void testSingleTokenQMarkWildcardAny() {
+		// create request object
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("any");
+		any.addContent("hoeper?poep");
+		request.addContent(any);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+		// build lucene query
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
+		// verify query
+		assertEquals("+any:hoeper?poep +_isTemplate:n", query.toString());
+	}
+
+    	/**
+	 * 'any' parameter with a single token value that has a wildcard.
+	 */
+	public void testSingleTokenStarWildcardAny() {
 		// create request object
 		JDOMFactory factory = new DefaultJDOMFactory();
 		Element request = factory.element("request");
