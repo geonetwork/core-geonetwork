@@ -108,6 +108,14 @@ public class LuceneQueryBuilder {
             }
             // remove leading *
             starsPreserved = starsPreserved.substring(1);
+            
+            // restore ending wildcard
+            if (string.endsWith("*")) {
+                starsPreserved += "*";
+            } else if (string.endsWith("?")) {
+                starsPreserved += "?";
+            }
+            
             analyzedString = starsPreserved;
         }
         // no wildcards
