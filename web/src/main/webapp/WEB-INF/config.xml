@@ -89,11 +89,12 @@
 		
 					!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!
 	-->
+  
 	<resources>
+	  
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mckoi standalone -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<resource enabled="true">
 			<name>main-db</name>
 			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
@@ -121,7 +122,7 @@
 				<user>admin</user>
 				<password>admin</password>
 				<driver>com.mysql.jdbc.Driver</driver>
-				<url>jdbc:mysql://$WEBSERVER_HOST/geonetwork</url>
+			  <url>jdbc:mysql://localhost:3306/geonetwork</url>
 				<poolSize>10</poolSize>
 				<reconnectTime>3600</reconnectTime>
 			</config>
@@ -139,7 +140,7 @@
 				<user>admin</user>
 				<password>admin</password>
 				<driver>oracle.jdbc.driver.OracleDriver</driver>
-				<url>jdbc:oracle:thin:@IP:1521:fs</url>
+				<url>jdbc:oracle:thin:@localhost:1521:geonetwork</url>
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
@@ -165,7 +166,7 @@
 					
 					jdbc:postgis://host:port/database
 				-->
-                <url>jdbc:postgresql://localhost:5432/geonetwork</url>
+        <url>jdbc:postgresql://localhost:5432/geonetwork</url>
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
@@ -181,8 +182,8 @@
 			<config>
 				<user>www-data</user>
 				<password>www-data</password>
-				  <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
-                  <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
+				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+        <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
