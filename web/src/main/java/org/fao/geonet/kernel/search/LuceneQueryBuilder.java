@@ -23,7 +23,13 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import jeeves.utils.Log;
+
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -40,11 +46,6 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.util.spring.CollectionUtils;
 import org.fao.geonet.util.spring.StringUtils;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 /**
  *
@@ -111,6 +112,14 @@ public class LuceneQueryBuilder {
             }
             // remove leading *
             starsPreserved = starsPreserved.substring(1);
+            
+            // restore ending wildcard
+            if (string.endsWith("*")) {
+                starsPreserved += "*";
+            } else if (string.endsWith("?")) {
+                starsPreserved += "?";
+            }
+            
             analyzedString = starsPreserved;
         }
         // no wildcards
