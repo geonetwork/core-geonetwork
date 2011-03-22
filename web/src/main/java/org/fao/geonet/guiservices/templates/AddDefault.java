@@ -23,11 +23,6 @@
 
 package org.fao.geonet.guiservices.templates;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -36,13 +31,17 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * A simple service that add all metadata templates available from schemas being
@@ -124,9 +123,14 @@ public class AddDefault implements Service {
 						title = templateName.substring(4,
 								templateName.length() - 4);
 					}
-					dataMan.insertMetadata(dbms, schemaName, null, "1", xml,
-							context.getSerialFactory(), siteId, uuid,
-							isTemplate, title, owner);
+                    //
+                    // insert metadata
+                    //
+                    String groupOwner = "1";
+                    String docType = null, category = null, createDate = null, changeDate = null;
+                    boolean ufo = true, indexImmediate = true;
+					dataMan.insertMetadata(dbms, schemaName, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, owner, groupOwner, siteId,
+                                           isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 					dbms.commit();
 					status = "loaded";

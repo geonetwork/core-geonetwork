@@ -248,8 +248,14 @@ class Harvester
 
 		log.debug("  - Adding metadata with remote id : "+ ri.id);
 
-		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(), params.uuid,
-														  ri.changeDate.toString(), ri.changeDate.toString(), ri.id, 1, null);
+        //
+        // insert metadata
+        //
+        int userid = 1;
+        String group = null, isTemplate = null, docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, userid, group, params.uuid,
+                         isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 

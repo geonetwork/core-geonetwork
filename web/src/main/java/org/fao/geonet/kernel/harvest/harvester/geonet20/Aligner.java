@@ -166,8 +166,15 @@ public class Aligner
 			return null;
 		}
 
-		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-														  params.uuid, createDate, changeDate, remoteUuid, 1, null);
+        //
+        //  insert metadata
+        //
+        int userid = 1;
+        String group = null, isTemplate = null, docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, userid, group, remoteUuid,
+                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+
 
 		int iId = Integer.parseInt(id);
 

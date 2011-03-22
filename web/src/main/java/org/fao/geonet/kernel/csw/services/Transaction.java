@@ -199,10 +199,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		String 	schema = dataMan.autodetectSchema(xml);
 		
 //		String category   = Util.getParam(request, Params.CATEGORY);
-		String 	category  = "_none_";
-        String source = null;
-		String createDate = null;
-		String changeDate = null;
+		String 	category  = null, source = null, createDate = null, changeDate = null;
 		
 		String uuid;
 		uuid = dataMan.extractUUID(schema, xml);
@@ -227,22 +224,22 @@ public class Transaction extends AbstractOperation implements CatalogService
 		int userId = us.getUserIdAsInt();
 
         AccessManager am = gc.getAccessManager();
-        
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         // Set default group: user first group
         Set<String> userGroups = am.getVisibleGroups(dbms, userId);
         String group = (String) userGroups.toArray()[0];
 
-        String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(),
-				source, createDate, changeDate, uuid, userId, group);
+        //
+        // insert metadata
+        //
+        String docType = null, title = null, isTemplate = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
+                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 		if( id == null )
 			return false;
-		
-		// --- Insert category if requested
-		if (!"_none_".equals(category))
-			dataMan.setCategory(dbms, id, category);
 
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getSettingManager();

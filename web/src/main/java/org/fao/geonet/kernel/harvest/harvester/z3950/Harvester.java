@@ -37,12 +37,12 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.services.main.Info;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.main.Info;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
-import org.jdom.DocType;
 import org.jdom.Element;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -291,42 +291,48 @@ class Harvester {
 
 				//--- generate a new metadata id
 		
-				int iId = context.getSerialFactory().getSerial(dbms, "Metadata");
+				int id = context.getSerialFactory().getSerial(dbms, "Metadata");
+                // TODO end confusion about datatypes
+                String id$ = Integer.toString(id);
+
 				String docType = "";
 				if (doc.getDocType() != null) {
 					docType = Xml.getString(doc.getDocType());
 				}
 
-				// check for duplicate uuid because postgres
-				// aborts the transaction if a constraint is
-				// violated!
+				// check for duplicate uuid because postgres aborts the transaction if a constraint is violated!
 				if (dataMan.getMetadataId(dbms,uuid) != null) {
 					log.error("Uuid "+uuid+" already exists in the Metadata table");
 					result.couldNotInsert++;
 					continue;
 				}
 
-				String id = "";
+                //
+                // insert metadata
+                //
 				try {
-					id = dataMan.insertMetadataExt(dbms, schema, md, iId, 
-						params.uuid, new ISODate().toString(), new ISODate().toString(),
-						uuid, 1, null, docType, "n");
-				} catch (Exception e) {  
+                    String groupOwner = "1", isTemplate = "n", title = null;
+                    int owner = 1;
+                    String category = null, createDate = new ISODate().toString(), changeDate = createDate;
+                    boolean ufo = false, indexImmediate = false;
+					dataMan.insertMetadata(dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
+                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+
+				}
+                catch (Exception e) {
 					log.error("Unable to insert metadata "+e.getMessage());
 					e.printStackTrace();
 					result.couldNotInsert++;
 					continue;
 				}
 
-				iId = Integer.parseInt(id);
+				addPrivileges(id$);
+				addCategories(id$, codes.get(colCode));
 
-				addPrivileges(id);
-				addCategories(id, codes.get(colCode));
+				dataMan.setTemplateExt(dbms, id, "n", null);
+				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
 
-				dataMan.setTemplateExt(dbms, iId, "n", null);
-				dataMan.setHarvestedExt(dbms, iId, params.uuid, params.name);
-
-				dataMan.indexMetadata(dbms, id);
+				dataMan.indexMetadata(dbms, id$);
 
 				result.addedMetadata++;
 			}

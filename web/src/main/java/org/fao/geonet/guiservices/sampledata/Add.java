@@ -101,7 +101,9 @@ public class Add implements Service {
 							+ file);
 					MEFLib.doImport(params, context, file, "");
 					dbms.commit();
-				} catch (Exception e) {
+				}
+                catch (Exception e) {
+                    e.printStackTrace();
 					serviceStatus = "false";
 					serviceError = e.getMessage() + " whilst loading " + file;
 					Log.error(Geonet.DATA_MANAGER,

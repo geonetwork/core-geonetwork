@@ -26,7 +26,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.BadServerCertificateEx;
 import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
@@ -36,7 +35,6 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -58,7 +56,6 @@ import org.jdom.Namespace;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-
 import thredds.catalog.InvAccess;
 import thredds.catalog.InvCatalogFactory;
 import thredds.catalog.InvCatalogImpl;
@@ -76,6 +73,7 @@ import ucar.nc2.ncml.NcMLWriter;
 import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.DataInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -90,8 +88,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.SSLHandshakeException;
 
 //=============================================================================
 /** 
@@ -181,7 +177,7 @@ class Harvester
 	 * @param log		
 	 * @param context		Jeeves context
 	 * @param dbms 			Database
-	 * @param ThreddsParam	Information about harvesting configuration for the node
+	 * @param params	Information about harvesting configuration for the node
 	 * 
 	 * @return null
      **/
@@ -442,8 +438,15 @@ class Harvester
 		
 		deleteExistingMetadata(uri);
 
-		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(), params.uuid, df.format(date), df.format(date), uuid, 1, null);
-		
+		//
+        // insert metadata
+        //
+        int userid = 1;
+        String group = null, isTemplate = null, docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+
 		int iId = Integer.parseInt(id);
 		addPrivileges(id);
 		addCategories(id);
@@ -1039,7 +1042,7 @@ class Harvester
 	/** 
 	 * Get a String result from an HTTP URL
 	 *
-	 * @param 	url		the URL to get the info from 
+	 * @param 	href		the URL to get the info from
 	 **/
 	
 	private String getResultFromHttpUrl(String href) {
@@ -1072,8 +1075,7 @@ class Harvester
 	 * Process all services that serve datasets in the thredds catalog
 	 *
 	 * @param	cata				the XML of the catalog
-	 * @param	hostPart			host part of the catalog URL
-	 * @param	servicesStyleSheet	name of the stylesheet to produce 19119
+	 * @param	serviceStyleSheet	name of the stylesheet to produce 19119
 	 **/
 	
 	private void processServices(Element cata, String serviceStyleSheet) throws Exception {

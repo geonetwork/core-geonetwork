@@ -320,10 +320,15 @@ class Harvester
 		log.info("  - Adding metadata for services with " + uuid);
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
-		
-		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-													 params.uuid, df.format(date), df.format(date), 
-													 uuid, 1, null);
+
+        //
+        // insert metadata
+        //
+        int userid = 1;
+        String group = null, isTemplate = null, docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
@@ -584,9 +589,14 @@ class Harvester
 		// Insert in db
 		try {
 
-			reg.id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(),
-														 params.uuid, date, date, 
-														 reg.uuid, 1, null);
+            //
+            //  insert metadata
+            //
+            int userid = 1;
+            String group = null, isTemplate = null, docType = null, title = null, category = null;
+            boolean ufo = false, indexImmediate = false;
+            reg.id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
+                         isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
 			xml = dataMan.updateFixedInfoNew(schema, reg.id, xml, params.uuid, null);
 			

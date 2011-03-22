@@ -256,10 +256,18 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	private String addMetadata(Element xml, String uuid, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 		System.out.println("  - Adding metadata with remote uuid: "+ uuid);
 
-		String source = params.uuid;
-		String createDate = new ISODate().toString();
-		String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(), source, createDate, 
-												createDate, uuid, 1, null);
+        //
+        // insert metadata
+        //
+        String source = params.uuid;
+        String createDate = new ISODate().toString();
+        int userId = 1;
+        String docType = null, title = null, isTemplate = null, group = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
+                         isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
+
+
 
 		int iId = Integer.parseInt(id);
 		dataMan.setTemplateExt(dbms, iId, "n", null);

@@ -304,7 +304,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 
 		String source = params.uuid;
 		String createDate = new ISODate().toString();
-		String id = dataMan.insertMetadataExt(dbms, schema, xml, context.getSerialFactory(), source, createDate, createDate, uuid, 1, null);
+
+        //
+        // insert metadata
+        //
+        int userid = 1;
+        String group = null, isTemplate = null, docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, source,
+                         isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 		dataMan.setTemplateExt(dbms, iId, "n", null);

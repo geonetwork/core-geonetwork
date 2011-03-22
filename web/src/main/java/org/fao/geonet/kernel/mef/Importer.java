@@ -285,13 +285,16 @@ public class Importer {
 
 					fc.add(index, dm.setUUID("iso19110", uuid, fc.get(index)));
 
-					String fcId = dm.insertMetadataExt(dbms, "iso19110", fc
-							.get(index), context.getSerialFactory(), source,
-							createDate, changeDate, uuid, context
-									.getUserSession().getUserIdAsInt(), null);
+                    //
+                    // insert metadata
+                    //
+                    int userid = context.getUserSession().getUserIdAsInt();
+                    String group = null, docType = null, title = null, category = null;
+                    boolean ufo = false, indexImmediate = false;
+                    String fcId = dm.insertMetadata(dbms, "iso19110", fc.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
+                            userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
-					Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: "
-							+ uuid);
+					Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
 
 					// Create database relation between metadata and feature
 					// catalog
@@ -300,8 +303,7 @@ public class Importer {
 					dbms.execute(query, Integer.parseInt(mdId), Integer.parseInt(fcId));
 
 					id.add(fcId);
-					// TODO : privileges not handled for feature
-					// catalog ...
+					// TODO : privileges not handled for feature catalog ...
 				}
 
 				int iId = Integer.parseInt(id.get(index));
@@ -427,11 +429,17 @@ public class Importer {
 				// reimporting a metadata. 
 				if (!dm.existsMetadata(dbms, iLocalId)) {
 					Log.debug(Geonet.MEF, "Using given localId: " + localId);
-					
-					id.add(index, dm.insertMetadataExt(dbms, schema, md.get(index),
-							iLocalId, source, createDate, changeDate, uuid, context
-									.getUserSession().getUserIdAsInt(), groupId, "",
-							isTemplate));
+
+                    //
+                    // insert metadata
+                    //
+                    String docType = "", title = null, category = null;
+                    boolean ufo = false, indexImmediate = false;
+                    dm.insertMetadata(dbms, schema, md.get(index), iLocalId, uuid, context.getUserSession().getUserIdAsInt(), groupId, source,
+                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+
+					id.add(index, Integer.toString(iLocalId));
+
 					insertedWithLocalId = true;
 				}
 			} catch (NumberFormatException e) {
@@ -440,9 +448,15 @@ public class Importer {
 		} 
 		
 		if (!insertedWithLocalId) {
-			id.add(index, dm.insertMetadataExt(dbms, schema, md.get(index),
-					context.getSerialFactory(), source, createDate, changeDate,
-					uuid, context.getUserSession().getUserIdAsInt(), groupId));
+            //
+            // insert metadata
+            //
+            int userid = context.getUserSession().getUserIdAsInt();
+            String docType = null, title = null, category = null;
+            boolean ufo = false, indexImmediate = false;
+            id.add(index,
+                    dm.insertMetadata(dbms, schema, md.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
+                    userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
 		}
 
 	}

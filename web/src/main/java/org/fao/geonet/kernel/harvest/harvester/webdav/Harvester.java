@@ -156,8 +156,15 @@ class Harvester {
 
 		log.debug("  - Adding metadata with remote path : "+ rf.getPath());
 
-		String id = dataMan.insertMetadataExt(dbms, schema, md, context.getSerialFactory(),
-													 params.uuid, rf.getChangeDate(), rf.getChangeDate(), uuid, 1, null);
+		//
+        // insert metadata
+        //
+        int userid = 1;
+        String group = null, isTemplate = null, docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+                     isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
+
 
 		int iId = Integer.parseInt(id);
 

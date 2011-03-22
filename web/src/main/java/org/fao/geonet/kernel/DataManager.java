@@ -27,23 +27,6 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-import java.util.Vector;
-import java.sql.SQLException;
-
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.OperationNotAllowedEx;
@@ -55,7 +38,7 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
-
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -75,6 +58,22 @@ import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
+import java.util.Vector;
 
 //=============================================================================
 
@@ -1079,111 +1078,70 @@ public class DataManager
 		return id;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Adds a metadata in xml form (the xml should be validated). This method is
-	  * used to add a metadata got from a remote site via a mef and the data has 
-		* NOT been included. Note that neither permissions nor lucene indexes are 
-		* updated.
-	  */
+    /**
+     * Inserts a metadata into the database, optionally indexing it, and optionally applying automatic changes to it (update-fixed-info).
+     *
+     * @param dbms the database
+     * @param schema XSD this metadata conforms to
+     * @param metadata the metadata to store
+     * @param id database id for new metadata record
+     * @param uuid unique id for this metadata
+     * @param owner user who owns this metadata
+     * @param group group this metadata belongs to
+     * @param source id of the origin of this metadata (harvesting source, etc.)
+     * @param isTemplate whether this metadata is a template
+     * @param docType ?!
+     * @param title title of this metadata
+     * @param category category of this metadata
+     * @param createDate date of creation
+     * @param changeDate date of modification
+     * @param ufo whether to apply automatic changes
+     * @param index whether to index this metadata
+     * @return id, as a string
+     * @throws Exception hmm
+     */
+    public String insertMetadata(Dbms dbms, String schema, Element metadata, int id, String uuid, int owner, String group, String source,
+                                 String isTemplate, String docType, String title, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
-	public String insertMetadataExt(Dbms dbms, String schema, Element md, 
-												SerialFactory sf, String source, String createDate, 
-												String changeDate, String uuid, int owner, 
-												String groupOwner ) throws Exception
-	{
-		//--- generate a new metadata id
-		int id = sf.getSerial(dbms, "Metadata");
+        // TODO resolve confusion about datatypes
+        String id$ = Integer.toString(id);
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, 
-											changeDate, uuid, owner, groupOwner, "", "n");
-	}
+        //--- force namespace prefix for iso19139 metadata
+        setNamespacePrefixUsingSchemas(metadata);
 
-	//--------------------------------------------------------------------------
-	/** Adds a metadata in xml form (the xml should be validated). This method is
-	  * used to add a metadata got from a remote site via a mef and the data has 
-		* been included. Note that neither permissions nor lucene indexes are 
-		* updated.
-	  */
+        if (ufo && isTemplate.equals("n")) {
+            metadata = updateFixedInfoExisting(schema, Integer.toString(id), metadata, uuid);
+        }
 
-	public String insertMetadataExt(Dbms dbms, String schema, Element md, 
-							SerialFactory sf, String source, String createDate, 
-							String changeDate, String uuid, int owner, String groupOwner, 
-							String isTemplate ) throws Exception
-	{
-		//--- generate a new metadata id
-		int id = sf.getSerial(dbms, "Metadata");
+         if (source == null) {
+            source = getSiteID();
+         }
 
-		if (isTemplate.equals("n"))
-			md = updateFixedInfoExisting(schema, Integer.toString(id), md, uuid);
+        if(StringUtils.isBlank(isTemplate)) {
+            isTemplate = "n";
+        }
 
-		return insertMetadataExt(dbms, schema, md, id, source, createDate, 
-											changeDate, uuid, owner, groupOwner, "", isTemplate);
-	}
+        //--- store metadata
+        XmlSerializer.insert(dbms, schema, metadata, id, source, uuid, createDate, changeDate, isTemplate, title, owner, group, docType);
 
-	//--------------------------------------------------------------------------
-	/** @param source the source of the metadata. If null, the local siteId will be used
-	  */
+        copyDefaultPrivForGroup(dbms, id$, group);
 
-	public String insertMetadataExt(Dbms dbms, String schema, Element md, int id,
-											  String source, String createDate, String changeDate,
-											  String uuid, int owner, String groupOwner, 
-												String docType, String isTemplate) throws Exception
-	{
-		if (source == null)
-			source = getSiteID();
+        if (category != null) {
+            setCategory(dbms, id$, category);
+        }
 
-		//--- force namespace prefix for iso19139 metadata
-		setNamespacePrefixUsingSchemas(md);
-
-		//--- Note: we cannot index metadata here. Indexing is done in the harvesting part
-
-	    String record = XmlSerializer.insert(dbms, schema, md, id, source, uuid, createDate,
-										 changeDate, isTemplate, null, owner, groupOwner, docType);
+        if(index) {
+            indexMetadata(dbms, id$);
+        }
 
         // Notifies the metadata change to metatada notifier service
-        notifyMetadataChange(dbms, md, id + "");
+        notifyMetadataChange(dbms, metadata, id$);
 
-        return record;
-	}
+        return id$;
+    }
 
-	//--------------------------------------------------------------------------
-	/** Adds a metadata in xml form (the xml should be validated). The group id is
-	  * used to setup permissions. Internal metadata fields are updated. Default
-	  * operations are set.
-	  */
 
-	public String insertMetadata(Dbms dbms, String schema, String category, String groupId, Element xml, SerialFactory sf, String source, String uuid, int owner) throws Exception
-	{
-		return insertMetadata(dbms, schema, category, groupId, xml, sf, source, uuid, "n", null, owner);
-	}
 
-	//--------------------------------------------------------------------------
-
-	public String insertMetadata(Dbms dbms, String schema, String category, String groupOwner, Element xml, SerialFactory sf, String source, String uuid, String isTemplate, String title, int owner) throws Exception
-	{
-		//--- generate a new metadata id
-		int serial = sf.getSerial(dbms, "Metadata");
-
-		//--- force namespace prefix for iso19139 metadata
-		setNamespacePrefixUsingSchemas(xml);
-
-		if (isTemplate.equals("n"))
-			xml = updateFixedInfoExisting(schema, Integer.toString(serial), xml, uuid);
-
-		//--- store metadata
-
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, isTemplate, title, owner, groupOwner);
-
-		copyDefaultPrivForGroup(dbms, id, groupOwner);
-		if (category != null)
-			setCategory(dbms, id, category);
-		indexMetadata(dbms, id);
-
-        // Notifies the metadata change to metatada notifier service
-        notifyMetadataChange(dbms, xml, id);
-
-		return id;
-	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -2450,45 +2408,73 @@ public class DataManager
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Adds a permission to a group. Metadata is not reindexed
-	  */
-
-	public void setOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception
-	{
+    /**
+     *  Adds a permission to a group. Metadata is not reindexed.
+     *
+     * @param dbms
+     * @param mdId
+     * @param grpId
+     * @param opId
+     * @throws Exception
+     */
+	public void setOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception {
 		setOperation(dbms,new Integer(mdId),new Integer(grpId),new Integer(opId));
 	}
 
-	public void setOperation(Dbms dbms, int mdId, int grpId, int opId) throws Exception
-	{
-		String query = "SELECT metadataId FROM OperationAllowed " +
-							"WHERE metadataId=? AND groupId=? AND operationId=?";
-
+    /**
+     *
+     * @param dbms
+     * @param mdId
+     * @param grpId
+     * @param opId
+     * @throws Exception
+     */
+	public void setOperation(Dbms dbms, int mdId, int grpId, int opId) throws Exception {
+		String query = "SELECT metadataId FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
 		Element elRes = dbms.select(query, mdId, grpId, opId);
-
 		if (elRes.getChildren().size() == 0) {
 			dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) VALUES(?,?,?)", mdId, grpId, opId);
 		}
 	}
 
-	//--------------------------------------------------------------------------
-
-	public void unsetOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception
-	{
+    /**
+     *
+     * @param dbms
+     * @param mdId
+     * @param grpId
+     * @param opId
+     * @throws Exception
+     */
+	public void unsetOperation(Dbms dbms, String mdId, String grpId, String opId) throws Exception {
 		unsetOperation(dbms,new Integer(mdId),new Integer(grpId),new Integer(opId));
 	}
 
-	public void unsetOperation(Dbms dbms, int mdId, int groupId, int operId) throws Exception
-	{
-		String query = "DELETE FROM OperationAllowed "+
-							"WHERE metadataId=? AND groupId=? AND operationId=?";
-
+    /**
+     *
+     * @param dbms
+     * @param mdId
+     * @param groupId
+     * @param operId
+     * @throws Exception
+     */
+	public void unsetOperation(Dbms dbms, int mdId, int groupId, int operId) throws Exception {
+		String query = "DELETE FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
 		dbms.execute(query, mdId, groupId, operId);
 	}
 
-	//--------------------------------------------------------------------------
-
-	public void copyDefaultPrivForGroup(Dbms dbms, String id, String groupId) throws Exception
-	{
+    /**
+     * Sets VIEW and NOTIFY privileges for a metadata to a group.
+     *
+     * @param dbms the database
+     * @param id metadata id
+     * @param groupId group id
+     * @throws Exception hmmm
+     */
+	public void copyDefaultPrivForGroup(Dbms dbms, String id, String groupId) throws Exception {
+        if(StringUtils.isBlank(groupId)) {
+            Log.info(Geonet.DATA_MANAGER, "Attempt to set default privileges for metadata " + id + " to an empty groupid");
+            return;
+        }
 		//--- store access operations for group
 
 		setOperation(dbms, id, groupId, AccessManager.OPER_VIEW);
