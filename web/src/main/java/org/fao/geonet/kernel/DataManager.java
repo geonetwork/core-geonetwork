@@ -1173,7 +1173,7 @@ public class DataManager {
 
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-		Element xml = updateFixedInfoNew(schema, Integer.toString(serial), Xml.loadString(data, false), uuid, parentUuid);
+		Element xml = updateFixedInfo(schema, Integer.toString(serial), Xml.loadString(data, false), parentUuid, DataManager.UpdateDatestamp.yes, dbms);
 
 		//--- store metadata
 		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner);
@@ -1226,7 +1226,8 @@ public class DataManager {
         setNamespacePrefixUsingSchemas(metadata);
 
         if (ufo && isTemplate.equals("n")) {
-            metadata = updateFixedInfoExisting(schema, Integer.toString(id), metadata, uuid);
+            String parentUuid = null;
+            metadata = updateFixedInfo(schema, Integer.toString(id), metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         }
 
          if (source == null) {
@@ -1410,7 +1411,8 @@ public class DataManager {
         }
 		String schema = getMetadataSchema(dbms, id);
         if(ufo) {
-		    md = updateFixedInfo(schema, id, md, dbms);
+            String parentUuid = null;
+		    md = updateFixedInfo(schema, id, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         }
 		//--- write metadata to dbms
         XmlSerializer.update(dbms, id, md, changeDate);
@@ -2013,67 +2015,55 @@ public class DataManager {
      * @param schema
      * @param id
      * @param md
+     * @param parentUuid
+     * @param updateDatestamp
      * @param dbms
      * @return
      * @throws Exception
      */
-	public Element updateFixedInfo(String schema, String id, Element md, Dbms dbms) throws Exception {
-		String query = "SELECT uuid, source, isTemplate FROM Metadata WHERE id = " + id;
+	public Element updateFixedInfo(String schema, String id, Element md, String parentUuid, UpdateDatestamp updateDatestamp, Dbms dbms) throws Exception {
+        boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enable", true);
+        if(autoFixing) {
+        	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info");
+            String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = " + id;
+            Element rec = dbms.select(query).getChild("record");
+            Boolean isTemplate = !rec.getChildText("istemplate").equals("n");
+            // don't process templates
+            if(isTemplate) {
+                Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
+                return md;
+            }
+            else {
+                String uuid = rec.getChildText("uuid");
+                //--- setup environment
+                Element env = new Element("env");
+                env.addContent(new Element("id").setText(id));
+                env.addContent(new Element("uuid").setText(uuid));
+                if(parentUuid != null) {
+                    env.addContent(new Element("parentUuid").setText(parentUuid));
+                }
+                env.addContent(new Element("updateDateStamp").setText(updateDatestamp.name()));
+                env.addContent(new Element("datadir").setText(Lib.resource.getDir(dataDir, Params.Access.PRIVATE, id)));
 
-		Element rec = dbms.select(query).getChild("record");
-		String isTemplate = rec.getChildText("istemplate");
-
-		// don't process templates
-		if (isTemplate.equals("n"))
-		{
-			String uuid = rec.getChildText("uuid");
-			return updateFixedInfoExisting(schema, id, md, uuid);
-		}
-		else return md;
-	}
-
-    /**
-     *
-     * @param schema
-     * @param id
-     * @param md
-     * @param uuid
-     * @return
-     * @throws Exception
-     */
-	public Element updateFixedInfoExisting(String schema, String id, Element md, String uuid) throws Exception {
-		//--- setup environment - for new records
-
-		Element env = new Element("env");
-
-		env.addContent(new Element("id")        			.setText(id));
-		env.addContent(new Element("uuid")      			.setText(uuid));
-		env.addContent(new Element("updateDateStamp")	.setText("no"));
-		env.addContent(new Element("datadir")         .setText(Lib.resource.getDir(dataDir, Params.Access.PRIVATE, id)));
-		return updateFixedInfo(schema, md, env);
-	}
-
-    /**
-     *
-     * @param schema
-     * @param id
-     * @param md
-     * @param uuid
-     * @param parentUuid
-     * @return
-     * @throws Exception
-     */
-	public Element updateFixedInfoNew(String schema, String id, Element md, String uuid, String parentUuid) throws Exception {
-		//--- setup environment - for new records
-
-		Element env = new Element("env");
-
-		env.addContent(new Element("id")        			.setText(id));
-		env.addContent(new Element("uuid")      			.setText(uuid));
-		env.addContent(new Element("parentUuid")			.setText(parentUuid));
-		env.addContent(new Element("updateDateStamp")	.setText("yes"));
-		env.addContent(new Element("datadir")         .setText(Lib.resource.getDir(dataDir, Params.Access.PRIVATE, id)));
-		return updateFixedInfo(schema, md, env);
+                // add original metadata to result
+                Element result = new Element("root");
+                result.addContent(md);
+                // add 'environment' to result
+                env.addContent(new Element("changeDate").setText(new ISODate().toString()));
+                env.addContent(new Element("siteURL")   .setText(getSiteURL()));
+                Element system = settingMan.get("system", -1);
+                env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
+                result.addContent(env);
+                // apply update-fixed-info.xsl
+                String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+                result = Xml.transform(result, styleSheet);
+                return result;
+            }
+        }
+        else {
+            Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
+            return md;
+        }
 	}
 
     /**
@@ -2196,41 +2186,6 @@ public class DataManager {
         return dbms.select(query).getChildren();
     }
 
-    /**
-     * Applies automatic fixes to the metadata (if that is enabled) and adds some environmental information about
-     * this system.
-     *
-     * @param schema
-     * @param md
-     * @param env
-     * @return
-     * @throws Exception
-     */
-	private Element updateFixedInfo(String schema, Element md, Element env) throws Exception {
-        boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enable", true);
-        if(autoFixing) {
-        	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, applying update-fixed-info");
-
-        	Element result = new Element("root");
-        	result.addContent(md);
-
-        	//--- environment common to both existing and new records goes here
-			env.addContent(new Element("changeDate").setText(new ISODate().toString()));
-			env.addContent(new Element("siteURL")   .setText(getSiteURL()));
-			Element system = settingMan.get("system", -1);
-			env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
-	        result.addContent(env);
-
-	        //--- do an XSLT transformation using update-fixed-info.xsl
-	        String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
-             result = Xml.transform(result, styleSheet);
-            return result;
-        }
-        else {
-            Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
-            return md;
-        }
-	}
 	
 	/**
 	 * Updates all children of the selected parent. Some elements are protected
@@ -2751,4 +2706,8 @@ public class DataManager {
 
         }
 	}
+
+    public enum UpdateDatestamp {
+        yes, no
+    }
 }

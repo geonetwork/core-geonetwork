@@ -598,7 +598,7 @@ class Harvester
             reg.id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
-			xml = dataMan.updateFixedInfoNew(schema, reg.id, xml, params.uuid, null);
+			xml = dataMan.updateFixedInfo(schema, reg.id, xml, null, DataManager.UpdateDatestamp.no, dbms);
 			
 			int iId = Integer.parseInt(reg.id);
 			log.debug("    - Layer loaded in DB.");

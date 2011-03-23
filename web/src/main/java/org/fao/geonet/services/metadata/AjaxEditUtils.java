@@ -7,6 +7,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -516,7 +517,8 @@ public class AjaxEditUtils extends EditUtils {
         EditLib editLib = dataManager.getEditLib();
 		editLib.removeEditingInfo(md);
 		editLib.contractElements(md);
-		md = dataManager.updateFixedInfo(schema, id, md, dbms);
+        String parentUuid = null;
+        md = dataManager.updateFixedInfo(schema, id, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
 
 		//--- do the validation on the metadata
 		return dataManager.doValidate(session, dbms, schema, id, md, lang, false).one();
@@ -566,7 +568,8 @@ public class AjaxEditUtils extends EditUtils {
         }
 
         editLib.contractElements(md);
-		md = dataManager.updateFixedInfo(schema, id, md, dbms);
+        String parentUuid = null;
+		md = dataManager.updateFixedInfo(schema, id, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         String changeDate = null;
 		XmlSerializer.update(dbms, id, md, changeDate);
 
@@ -620,7 +623,9 @@ public class AjaxEditUtils extends EditUtils {
 		el.removeAttribute(name);
 
 		editLib.contractElements(md);
-		md = dataManager.updateFixedInfo(schema, id, md, dbms);
+        String parentUuid = null;
+        md = dataManager.updateFixedInfo(schema, id, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+
         String changeDate = null;
 		XmlSerializer.update(dbms, id, md, changeDate);
 
