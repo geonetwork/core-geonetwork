@@ -636,10 +636,10 @@
 		<span title="{/root/gui/strings/searchhelp/keywords}">
 			<xsl:choose>
 				<xsl:when test="not($remote)">
-					<input id="themekey" name="themekey" onClick="popSelector(this,'keywordSelectorFrame','keywordSelector','portal.search.keywords?mode=selector&amp;keyword','themekey');" class="content" size="31" value="{/root/gui/searchDefaults/themekey}"/>
+				  <input id="themekey" name="themekey" onClick="popSelector(this,'keywordSelectorFrame','keywordSelector','portal.search.keywords?mode=selector&amp;keyword','themekey');" class="content" size="31" value="{/root/gui/searchDefaults/themekey}"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<input id="themekey" name="themekey" class="content" size="31" value="{/root/gui/searchDefaults/themekey}" />
+				  <input id="themekey" name="themekey" class="content" size="31" value="{/root/gui/searchDefaults/themekey}" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</span>

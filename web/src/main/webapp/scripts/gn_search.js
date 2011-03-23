@@ -984,6 +984,28 @@ function setBoolParam(p, val)
 		}
   }
 
+
+  function keywordCheck(k, check){
+       // FIXME k = '"'+ k + '"';
+       if (check){     // add the keyword to the list
+               if ($("themekey").value !== '') { // add the "or" keyword
+                $("themekey").value += ' or ' + k;
+            } else {
+                $("themekey").value = k;
+            }
+       } else { // Remove that keyword
+               $("themekey").value = $("themekey").value.replace(' or '+ k, '');
+               $("themekey").value = $("themekey").value.replace(k, '');
+               pos = $("themekey").value.indexOf(" or ");
+               if (pos === 0){
+                       $("themekey").value = $("themekey").value.substring (4, $("themekey").value.length);
+               }
+       }
+  }
+
+  /**
+   * TODO : remove / Not sure this function is used anywhere
+   */
   function selectorCheck(k, check, input, prep){
 	k = '"'+ k + '"';
 	//alert (k+"-"+check);
