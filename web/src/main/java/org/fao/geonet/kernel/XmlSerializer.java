@@ -39,58 +39,47 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
-//=============================================================================
+/**
+ * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,
+ * lastChangeDate).
+ */
+public class XmlSerializer {
 
-/** This class is responsible of reading and writing xml on the database. It
-  * works on tables like (id, data, lastChangeDate)
-  */
-
-public class XmlSerializer
-{
 	private static SettingManager sm;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- PRIVATE METHODS
-	//---
-	//--------------------------------------------------------------------------
-
-
-	/** Retrieve the xml element which id matches the given one. The element is
-	  * read from 'table' and the string read is converted into xml
-	  */
-
-	private static Element internalSelect(Dbms dbms, String table, String id) throws Exception
-	{
+    /**
+     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
+     *
+     * @param dbms
+     * @param table
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	private static Element internalSelect(Dbms dbms, String table, String id) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
-
 		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
 
 		if (rec == null)
 			return null;
 
 		String xmlData = rec.getChildText("data");
-
-//		if (!xmlData.startsWith("<?xml"))
-//			xmlData  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + xmlData;
-
 		rec = Xml.loadString(xmlData, false);
-
 		return (Element) rec.detach();
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- PUBLIC API
-	//---
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @param sMan
+     */
 	public static void setSettingManager(SettingManager sMan) {
 		sm = sMan;
 	}
 
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @return
+     */
 	public static boolean resolveXLinks() {
 		if (sm == null) { // no initialization, no XLinks
 			Log.error(Geonet.DATA_MANAGER,"No settingManager in XmlSerializer, XLink Resolver disabled.");
@@ -109,57 +98,97 @@ public class XmlSerializer
 		}
 	}
 
-	//--------------------------------------------------------------------------
-
-	/** Retrieve the xml element which id matches the given one. The element is
-	  * read from 'table' and the string read is converted into xml, XLinks are
-		* resolved when config'd on
-	  */
-
-	public static Element select(Dbms dbms, String table, String id) throws Exception
-	{
+    /**
+     *  Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read
+     *  is converted into xml, XLinks are resolved when config'd on.
+     *
+     * @param dbms
+     * @param table
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public static Element select(Dbms dbms, String table, String id) throws Exception {
 		Element rec = internalSelect(dbms, table, id);
 		if (resolveXLinks()) Processor.detachXLink(rec);
 		return rec;
 	}
 
-	//--------------------------------------------------------------------------
-
-	/** Retrieve the xml element which id matches the given one. The element is
-	  * read from 'table' and the string read is converted into xml, XLinks are
-		* NOT resolved even if they are config'd on - this is used when you want
-		* to do XLink processing yourself
-	  */
-
-	public static Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception
-	{
+    /**
+     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is
+     * converted into xml, XLinks are NOT resolved even if they are config'd on - this is used when you want to do XLink
+     * processing yourself
+     * @param dbms
+     * @param table
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public static Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception {
 		return internalSelect(dbms, table, id);
 	}
 
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @param dbms
+     * @param schema
+     * @param xml
+     * @param serial
+     * @param source
+     * @param uuid
+     * @param owner
+     * @param groupOwner
+     * @return
+     * @throws SQLException
+     */
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, int owner, String groupOwner) throws SQLException
-	{
+										 String source, String uuid, int owner, String groupOwner) throws SQLException {
 		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner, groupOwner, "");
 	}
 
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @param dbms
+     * @param schema
+     * @param xml
+     * @param serial
+     * @param source
+     * @param uuid
+     * @param isTemplate
+     * @param title
+     * @param owner
+     * @param groupOwner
+     * @return
+     * @throws SQLException
+     */
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String isTemplate,
-										 String title, int owner, String groupOwner) throws SQLException
-	{
+										 String title, int owner, String groupOwner) throws SQLException {
 		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner, "");
 	}
 
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @param dbms
+     * @param schema
+     * @param xml
+     * @param serial
+     * @param source
+     * @param uuid
+     * @param createDate
+     * @param changeDate
+     * @param isTemplate
+     * @param title
+     * @param owner
+     * @param groupOwner
+     * @param docType
+     * @return
+     * @throws SQLException
+     */
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
 										 String source, String uuid, String createDate,
 										 String changeDate, String isTemplate, String title,
-										 int owner, String groupOwner, String docType) throws SQLException
-	{
+										 int owner, String groupOwner, String docType) throws SQLException {
 	
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
@@ -238,55 +267,36 @@ public class XmlSerializer
 		dbms.execute(query, args.toArray());
 	}
 
-	//--------------------------------------------------------------------------
-	/** Deletes an xml element given its id
-	  */
-
-	public static void delete(Dbms dbms, String table, String id) throws SQLException
-	{
+    /**
+     * Deletes an xml element given its id.
+     *
+     * @param dbms
+     * @param table
+     * @param id
+     * @throws SQLException
+     */
+	public static void delete(Dbms dbms, String table, String id) throws SQLException {
 		// TODO: Ultimately we want to remove any xlinks in this document
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
 		String query = "DELETE FROM " + table + " WHERE id="+id;
-
 		dbms.execute(query);
 	}
-	//--------------------------------------------------------------------------
 
-	private static void fixCR(Element xml)
-	{
+    /**
+     *
+     * @param xml
+     */
+	private static void fixCR(Element xml) {
 		List list = xml.getChildren();
-
-		if (list.size() == 0)
-		{
+		if (list.size() == 0) {
 			String text = xml.getText();
-
 			xml.setText(Util.replaceString(text, "\r\n", "\n"));
 		}
-
-		else for (Object o : list)
-			fixCR((Element) o);
+		else {
+            for (Object o : list) {
+                fixCR((Element) o);
+            }
+        }
 	}
-
-	//---------------------------------------------------------------------------
-
-//	public static void dump(String name, String text)
-//	{
-//		System.out.print("name: "+name+", value:");
-//
-//		char[] chars = text.toCharArray();
-//
-//		for(char c: chars)
-//		{
-//			int i = c;
-//
-//			if (i>=32)	System.out.print(c);
-//				else		System.out.print("["+ i +"]");
-//		}
-//
-//		System.out.println("");
-//	}
 }
-
-//=============================================================================
-
