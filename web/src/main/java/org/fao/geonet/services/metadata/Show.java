@@ -41,7 +41,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 //=============================================================================
 
@@ -113,8 +112,10 @@ public class Show implements Service
 		Element elMd;
 		boolean addEditing = false;
 		if (!skipInfo) {
-			elMd = dm.getMetadata(context, id, addEditing);
-		} else {
+            boolean withValidationErrors = false;
+            elMd = gc.getDataManager().getMetadata(context, id, addEditing, withValidationErrors);
+		}
+        else {
 			elMd = dm.getMetadataNoInfo(context, id);
 		}
 

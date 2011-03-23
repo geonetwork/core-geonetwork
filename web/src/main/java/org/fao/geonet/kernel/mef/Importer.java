@@ -337,8 +337,10 @@ public class Importer {
 
 				if (indexGroup) {
 					dm.indexMetadataGroup(dbms, id.get(index));
-				} else {
-					dm.indexMetadata(dbms, id.get(index));
+				}
+                else {
+                    boolean indexGroup = false;
+                    dm.indexMetadata(dbms, id.get(index), indexGroup);
 				}
 			}
 

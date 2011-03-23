@@ -23,19 +23,12 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -45,6 +38,12 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Get suggestion for all metadata
@@ -112,7 +111,8 @@ public class GetSuggestion implements Service {
         // Retrieve metadata record
         String id = Utils.getIdentifierFromParameters(params, context);
         MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-        Element md = dm.getMetadata(context, id, false);
+        boolean forEditing = false, withValidationErrors = false;
+        Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
 
         // List or analyze all suggestions process registered for this schema
         if ("list".equals(action) || "analyze".equals(action)) {

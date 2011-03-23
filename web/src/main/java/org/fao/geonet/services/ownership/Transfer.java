@@ -39,20 +39,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-//=============================================================================
-
-public class Transfer implements Service
-{
+/**
+ *
+ */
+public class Transfer implements Service {
+    /**
+     *
+     * @param appPath
+     * @param params
+     * @throws Exception
+     */
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		int sourceUsr = Util.getParamAsInt(params, "sourceUser");
 		int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
 		int targetUsr = Util.getParamAsInt(params, "targetUser");
@@ -98,41 +104,35 @@ public class Transfer implements Service
 		dbms.commit();
 
 		//--- reindex metadata
-
-		for (int mdId : metadata)
-			dm.indexMetadata(dbms, Integer.toString(mdId));
+		for (int mdId : metadata) {
+            boolean indexGroup = false;
+            dm.indexMetadata(dbms, Integer.toString(mdId), indexGroup);
+        }
 
 		//--- return summary
-
 		return new Element("response")
 			.addContent(new Element("privileges").setText(privCount      +""))
 			.addContent(new Element("metadata")  .setText(metadata.size()+""));
 	}
 
-	//--------------------------------------------------------------------------
-
-	private Set<String> retrievePrivileges(Dbms dbms, int userId, int groupId) throws SQLException
-	{
-		String query = "SELECT * "+
-							"FROM OperationAllowed, Metadata "+
-							"WHERE metadataId=id AND owner=? AND groupId=?";
-
+    /**
+     *
+     * @param dbms
+     * @param userId
+     * @param groupId
+     * @return
+     * @throws SQLException
+     */
+	private Set<String> retrievePrivileges(Dbms dbms, int userId, int groupId) throws SQLException {
+		String query = "SELECT * FROM OperationAllowed, Metadata WHERE metadataId=id AND owner=? AND groupId=?";
 		List list = dbms.select(query, userId, groupId).getChildren();
-
 		Set<String> result = new HashSet<String>();
-
-		for (Object o : list)
-		{
+		for (Object o : list) {
 			Element elem = (Element) o;
 			String  opId = elem.getChildText("operationid");
 			String  mdId = elem.getChildText("metadataid");
-
 			result.add(opId +"|"+ mdId);
 		}
-
 		return result;
 	}
 }
-
-//=============================================================================
-

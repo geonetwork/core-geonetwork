@@ -240,7 +240,8 @@ public class LuceneSearcher extends MetaSearcher
 						md = getMetadataFromIndex(doc, id);
 					}
                     else if (srvContext != null) {
-						md = gc.getDataManager().getMetadata(srvContext, id, false);
+                        boolean forEditing = false, withValidationErrors = false;
+                        md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors);
 					}
 	
 					//--- a metadata could have been deleted just before showing 
@@ -375,6 +376,7 @@ public class LuceneSearcher extends MetaSearcher
 		        // Construct Lucene query (Java)
                 LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
                 _query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), _sm.getAnalyzer()).build(luceneQueryInput);
+                Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
 
                 try {
                     // only for debugging -- might cause NPE is query was wrongly constructed

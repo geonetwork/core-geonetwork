@@ -149,10 +149,9 @@ public class Insert implements Service
 			Importer.addCategories(dm, dbms, id.get(0), categs);
 		} 
 
-		
 		// Index
-		dm.indexMetadata(dbms, id.get(0));
-		
+        boolean indexGroup = false;
+        dm.indexMetadata(dbms, id.get(0), indexGroup);
 		
 		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);

@@ -128,13 +128,11 @@ class UnusedSearcher extends MetaSearcher
 
 		response.addContent((Element) elSummary.clone());
 
-		if (getTo() > 0)
-		{
-			for(int i = getFrom() -1; i < getTo(); i++)
-			{
+		if (getTo() > 0) {
+			for(int i = getFrom() -1; i < getTo(); i++) {
 				String  id = alResult.get(i);
-				Element md = gc.getDataManager().getMetadata(srvContext, id, false);
-
+                boolean forEditing = false, withValidationErrors = false;
+                Element md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors);
 				response.addContent(md);
 			}
 		}

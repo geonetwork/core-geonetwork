@@ -332,7 +332,8 @@ class Harvester {
 				dataMan.setTemplateExt(dbms, id, "n", null);
 				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
 
-				dataMan.indexMetadata(dbms, id$);
+                boolean indexGroup = false;
+                dataMan.indexMetadata(dbms, id$, indexGroup);
 
 				result.addedMetadata++;
 			}

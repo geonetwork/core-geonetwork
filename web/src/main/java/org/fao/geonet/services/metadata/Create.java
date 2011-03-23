@@ -65,7 +65,7 @@ public class Create implements Service
 		try {
 			uuid = Util.getParam(params, Params.UUID);
 			// lookup ID by UUID
-			id = dm.getMetadataId(context, uuid);	
+			id = dm.getMetadataId(dbms, uuid);
 		}
 		catch(BadInputEx x) {
 			try {

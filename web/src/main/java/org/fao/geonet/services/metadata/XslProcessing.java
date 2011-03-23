@@ -173,20 +173,18 @@ public class XslProcessing implements Service {
 			String schema = info.schemaId;
 			MetadataSchema metadataSchema = dataMan.getSchema(schema);
             
-			String filePath = metadataSchema.getSchemaDir() + "/process/"
-					+ process + ".xsl";
+			String filePath = metadataSchema.getSchemaDir() + "/process/" + process + ".xsl";
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
-				context.info("  Processing instruction not found for " + schema
-						+ " schema.");
+				context.info("  Processing instruction not found for " + schema + " schema.");
 				notProcessFound.add(new Integer(id));
 				return null;
 			}
 			// --- Process metadata
-			Element md = dataMan.getMetadata(context, id, false);
-			
-			// -- here we send parameters set by user from
-			// URL if needed.
+            boolean forEditing = false, withValidationErrors = false;
+            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors);
+
+			// -- here we send parameters set by user from URL if needed.
 			List<Element> children = params.getChildren();
 			Map<String, String> xslParameter = new HashMap<String, String>();
 	        xslParameter.put("guiLang", context.getLanguage());
@@ -194,8 +192,7 @@ public class XslProcessing implements Service {
 	        for (Element param : children) {
 				xslParameter.put(param.getName(), param.getTextTrim());
 			}
-			Element processedMetadata = Xml.transform(md, filePath,
-					xslParameter);
+			Element processedMetadata = Xml.transform(md, filePath, xslParameter);
 
 			// --- save metadata and return status
             if (save) {
@@ -206,8 +203,10 @@ public class XslProcessing implements Service {
                 dataMan.updateMetadata(session, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString());
     			if (useIndexGroup) {
     				dataMan.indexMetadataGroup(dbms, id);
-    			} else {
-    				dataMan.indexMetadata(dbms, id);
+    			}
+                else {
+                    boolean indexGroup = false;
+                    dataMan.indexMetadata(dbms, id, indexGroup);
     			}
             }
 

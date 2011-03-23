@@ -118,18 +118,11 @@ public class UpdateAdminOper implements Service
 			}
 		}
 
-		//-----------------------------------------------------------------------
 		//--- index metadata
+        boolean indexGroup = false;
+        dm.indexMetadata(dbms, id, indexGroup);
 
-		dm.indexMetadata(dbms, id);
-
-		//-----------------------------------------------------------------------
 		//--- return id for showing
-
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Geonet.Elem.ID).setText(id));
+		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
 	}
 }
-
-//=============================================================================
-

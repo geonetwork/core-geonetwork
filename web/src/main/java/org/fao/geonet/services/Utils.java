@@ -1,6 +1,7 @@
 package org.fao.geonet.services;
 
 import jeeves.exceptions.MissingParameterEx;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
@@ -40,8 +41,10 @@ public class Utils {
 		try {
 			String uuid = Util.getParam(params, uuidParamName);
 			// lookup ID by UUID
-			id = dm.getMetadataId(context, uuid);
-		} catch (MissingParameterEx x) {
+            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+			id = dm.getMetadataId(dbms, uuid);
+		}
+        catch (MissingParameterEx x) {
 			// request does not contain UUID; use ID from request
 			try {
 				id = Util.getParam(params, idParamName);

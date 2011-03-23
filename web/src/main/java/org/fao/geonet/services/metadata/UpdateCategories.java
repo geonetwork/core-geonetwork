@@ -37,76 +37,57 @@ import org.jdom.Element;
 
 import java.util.List;
 
-//=============================================================================
+/**
+ * Stores all operations allowed for a metadata. Called by the metadata.admin service.
+ */
+public class UpdateCategories implements Service {
 
-/** Stores all operations allowed for a metadata. Called by the metadata.admin service
-  */
-
-public class UpdateCategories implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @param appPath
+     * @param params
+     * @throws Exception
+     */
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
-		
 		if (!dataMan.existsMetadata(dbms, iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		//-----------------------------------------------------------------------
 		//--- remove old operations
-
 		dataMan.deleteAllMetadataCateg(dbms, id);
 
-		//-----------------------------------------------------------------------
 		//--- set new ones
-
 		List list = params.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
+		for(int i=0; i<list.size(); i++) {
 			Element el = (Element) list.get(i);
-
 			String name = el.getName();
 
 			if (name.startsWith("_"))
 				dataMan.setCategory(dbms, id, name.substring(1));
 		}
 
-		//-----------------------------------------------------------------------
 		//--- index metadata
+        boolean indexGroup = false;
+        dataMan.indexMetadata(dbms, id, indexGroup);
 
-		dataMan.indexMetadata(dbms, id);
-
-		//-----------------------------------------------------------------------
 		//--- return id for showing
-
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Geonet.Elem.ID).setText(id));
+		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
 	}
 }
-
-//=============================================================================
-

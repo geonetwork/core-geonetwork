@@ -23,8 +23,6 @@
 
 package org.fao.geonet.guiservices.metadata;
 
-import java.util.Iterator;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -32,7 +30,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -48,6 +45,8 @@ import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+
+import java.util.Iterator;
 
 /**
  * Perform a search and return all children metadata record for current record.
@@ -111,11 +110,12 @@ public class GetRelated implements Service {
 
         Element relatedRecords = new Element("relations");
 
-        if (type.equals("") || type.equals("children"))
-            relatedRecords.addContent(search(uuid, "children", context, from,
-                    to, fast));
+        if (type.equals("") || type.equals("children")) {
+            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
+        }
         if (type.equals("") || type.equals("parent")) {
-            Element md = dm.getMetadata(context, String.valueOf(id), false);
+            boolean forEditing = false, withValidationErrors = false;
+            Element md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors);
             if (md != null) {
                 Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
                 Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
@@ -126,21 +126,23 @@ public class GetRelated implements Service {
 
                     try {
                         Lib.resource.checkPrivilege(context, parentId, AccessManager.OPER_VIEW);
-                        
-                        relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(dm.getMetadata(context, parentId, false))));
-                    } catch (Exception e) {
-                        Log.debug(Geonet.SEARCH_ENGINE,
-                                "Parent metadata " + parentId + " record is not visible for user.");
+                        Element content = dm.getMetadata(context, parentId, forEditing, withValidationErrors);
+                        relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(content)));
+                    }
+                    catch (Exception e) {
+                        Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata " + parentId + " record is not visible for user.");
                     }
                 }
             }
         }
-        if (type.equals("") || type.equals("service"))
-            relatedRecords.addContent(search(uuid, "services", context, from,
-                    to, fast));
+        if (type.equals("") || type.equals("service")) {
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
+        }
         // Get datasets related to service search
         if (type.equals("") || type.equals("dataset")) {
-            Element md = dm.getMetadata(context, String.valueOf(id), false);
+            boolean forEditing = false, withValidationErrors = false;
+            Element md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors);
+
             Iterator<Element> i = md.getDescendants(new ElementFilter ("operatesOn", Namespace.getNamespace("http://www.isotc211.org/2005/srv")));
             StringBuffer uuids = new StringBuffer("");
             boolean first = true;

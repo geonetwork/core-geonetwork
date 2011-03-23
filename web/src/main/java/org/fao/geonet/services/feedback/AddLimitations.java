@@ -23,12 +23,6 @@
 
 package org.fao.geonet.services.feedback;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -38,7 +32,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -47,6 +40,12 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 //=============================================================================
 
@@ -89,9 +88,10 @@ public class AddLimitations implements Service
 		try {
 			String uuid = Util.getParam(params, Params.UUID);
 			// lookup ID by UUID
-			id = dm.getMetadataId(context, uuid.toLowerCase());	
+			id = dm.getMetadataId(dbms, uuid.toLowerCase());
 			if (id == null) throw new MetadataNotFoundEx(uuid);
-		} catch(MissingParameterEx x) {
+		}
+        catch(MissingParameterEx x) {
 			// request does not contain UUID; use ID from request
 			try {
 				id = Util.getParam(params, Params.ID);
@@ -153,7 +153,9 @@ public class AddLimitations implements Service
 		addElement(response,Params.ACCESS,access);
 
     //--- get metadata
-    Element elMd = dm.getMetadata(context, id, false);
+    boolean forEditing = false, withValidationErrors = false;
+    Element elMd = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
+
     if (elMd == null)
        throw new IllegalArgumentException("Metadata not found --> " + id);	
 

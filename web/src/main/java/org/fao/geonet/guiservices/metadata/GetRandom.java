@@ -130,18 +130,16 @@ public class GetRandom implements Service
 	
 					Element info = mdInfo.getChild("info", Edit.NAMESPACE);
 					String id = info.getChildText("id");
-					Element md = dataMan.getMetadata(context, id, false);
-	
+                    boolean forEditing = false, withValidationErrors = false;
+                    Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
 					_response.addContent(md);
 				}
 				_lastUpdateTime = System.currentTimeMillis();
-			} finally {
+			}
+            finally {
 				searcher.close();
 			}
 		}
 		return (Element)_response.clone();
 	}
 }
-
-//=============================================================================
-

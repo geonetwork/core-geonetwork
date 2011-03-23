@@ -27,11 +27,9 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -96,7 +94,9 @@ public class PrepareFileDownload implements Service
 		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 
 		//--- get metadata
-		Element elMd = dm.getMetadata(context, id, addEdit);
+        boolean withValidationErrors = false;
+        Element elMd = gc.getDataManager().getMetadata(context, id, addEdit, withValidationErrors);
+
 		if (elMd == null)
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");
 

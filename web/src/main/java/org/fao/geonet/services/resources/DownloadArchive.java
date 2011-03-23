@@ -101,18 +101,21 @@ public class DownloadArchive implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
-
 		String id;
 		// does the request contain a UUID ?
 		try {
 			String uuid = Util.getParam(params, Params.UUID);
 			// lookup ID by UUID
-			id = dm.getMetadataId(context, uuid.toLowerCase());
-			if (id == null) throw new IllegalArgumentException("Metadata not found --> " + uuid);
-		} catch (MissingParameterEx x) {
+			id = dm.getMetadataId(dbms, uuid.toLowerCase());
+			if (id == null) {
+                throw new IllegalArgumentException("Metadata not found --> " + uuid);
+            }
+		}
+        catch (MissingParameterEx x) {
 			try {
 				id = Util.getParam(params, Params.ID);
-			} catch (MissingParameterEx xx) {
+			}
+            catch (MissingParameterEx xx) {
 				throw new Exception("Request must contain a UUID or an ID");
 			}
 		}
@@ -221,7 +224,9 @@ public class DownloadArchive implements Service
     }
 
 		//--- get metadata
-		Element elMd = dm.getMetadata(context, id, false);
+        boolean forEditing = false, withValidationErrors = false;
+        Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors);
+
 		if (elMd == null)
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");
 

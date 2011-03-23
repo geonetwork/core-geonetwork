@@ -98,12 +98,12 @@ public class GetLatestUpdated implements Service
 			_response = new Element("response");
 			int numItems = 0;
 
-			for (Iterator iter = result.getChildren().iterator(); iter.hasNext() && numItems++ < _maxItems; )
-			{
+			for (Iterator iter = result.getChildren().iterator(); iter.hasNext() && numItems++ < _maxItems; ) {
 				Element rec = (Element)iter.next();
 				String  id = rec.getChildText("id");
 
-				Element md = gc.getDataManager().getMetadata(context, id, false);
+                boolean forEditing = false, withValidationErrors = false;
+                Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
 				_response.addContent(md);
 			}
 			_lastUpdateTime = System.currentTimeMillis();
@@ -111,6 +111,3 @@ public class GetLatestUpdated implements Service
 		return (Element)_response.clone();
 	}
 }
-
-//=============================================================================
-
