@@ -672,15 +672,15 @@
 			<table id="maptype.table" style="display:none;border-color:#2a628f;border-style:solid;width:80%;margin:5px;margin-left:15px">
 				<tr>
 					<td>
-					<input name="digital" id="digital" type="checkbox" value="on">
-						<xsl:if test="/root/gui/searchDefaults/digital='on'">
+					<input name="digital" id="digital" type="checkbox" value="true">
+						<xsl:if test="/root/gui/searchDefaults/digital='true'">
 							<xsl:attribute name="checked">CHECKED</xsl:attribute>
 						</xsl:if>
 						<label for="digital"><xsl:value-of select="/root/gui/strings/digital"/></label>
 					</input>
 					<br/>
-					<input name="paper" id="paper" type="checkbox" value="on">
-						<xsl:if test="/root/gui/searchDefaults/paper='on'">
+					<input name="paper" id="paper" type="checkbox" value="true">
+						<xsl:if test="/root/gui/searchDefaults/paper='true'">
 							<xsl:attribute name="checked">CHECKED</xsl:attribute>
 						</xsl:if>
 						<label for="paper"><xsl:value-of select="/root/gui/strings/paper"/></label>
@@ -688,14 +688,14 @@
 				</td>
 				<td>
 					<input name="dynamic" id="dynamic" type="checkbox">
-						<xsl:if test="/root/gui/searchDefaults/dynamic='on'">
+					  <xsl:if test="/root/gui/searchDefaults/dynamic='true'">
 						<xsl:attribute name="checked">CHECKED</xsl:attribute>
 					</xsl:if>
 						<label for="dynamic"><xsl:value-of select="/root/gui/strings/dynamic"/></label>
 					</input>
 					<br/>
 					<input name="download" id="download" type="checkbox">
-						<xsl:if test="/root/gui/searchDefaults/download='on'">
+						<xsl:if test="/root/gui/searchDefaults/download='true'">
 							<xsl:attribute name="checked">CHECKED</xsl:attribute>
 						</xsl:if>
 						<label for="download"><xsl:value-of select="/root/gui/strings/downloadable"/></label>

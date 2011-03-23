@@ -43,7 +43,7 @@ public class LuceneQueryInput extends UserQueryInput {
     private boolean isReviewer;
     private boolean isUserAdmin;
     private boolean isAdmin;
-
+    
     /**
      * Creates this from a JDOM element.
      * 

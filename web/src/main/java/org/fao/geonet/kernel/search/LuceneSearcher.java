@@ -328,12 +328,10 @@ public class LuceneSearcher extends MetaSearcher
             }
 
             // remove elements from user input that compromise this request
-            request.removeChildren(SearchParameter.OWNER);
-            request.removeChildren(SearchParameter.GROUPOWNER);
-            request.removeChildren(SearchParameter.ISADMIN);
-            request.removeChildren(SearchParameter.ISREVIEWER);
-            request.removeChildren(SearchParameter.ISUSERADMIN);
-
+            for (String fieldName : UserQueryInput.SECURITY_FIELDS){
+                request.removeChildren(fieldName);
+            }
+            
 			// if 'restrict to' is set then don't add any other user/group info
 			if (request.getChild(SearchParameter.GROUP) == null) {
 				for (String group : userGroups) {
@@ -374,10 +372,9 @@ public class LuceneSearcher extends MetaSearcher
 				_query = makeQuery(xmlQuery, SearchManager.getAnalyzer(), _tokenizedFieldSet, _luceneConfig.getNumericFields());
 			} 
             else {
-		        // Construct Lucene query (Java)				
+		        // Construct Lucene query (Java)
                 LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
                 _query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), _sm.getAnalyzer()).build(luceneQueryInput);
-                Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
 
                 try {
                     // only for debugging -- might cause NPE is query was wrongly constructed

@@ -295,6 +295,14 @@
 				<xsl:if test="normalize-space($mimetype)!=''">
           <Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
 				</xsl:if>
+			  
+			  <xsl:if test="contains(., 'WWW:DOWNLOAD')">
+			    <Field name="download" string="true" store="false" index="true"/>
+			  </xsl:if>
+			  
+			  <xsl:if test="contains(., 'OGC:WMS')">
+			    <Field name="dynamic" string="true" store="false" index="true"/>
+			  </xsl:if>
 			</xsl:for-each>  
 		</xsl:for-each>
 

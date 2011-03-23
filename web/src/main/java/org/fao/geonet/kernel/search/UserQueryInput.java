@@ -23,705 +23,256 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.jdom.Element;
-
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
 
 /**
  * Search parameters that can be provided by a search client.
- *
- * @author heikki doeleman
  * 
+ * @author heikki doeleman
+ * @author francois prunayre
  */
 public class UserQueryInput {
 
-    private String similarity;
-    private String uuid;
-    private String valid;
-    private String any;
-    private String all;
-    private String or;
-    private String without;
-    private String phrase;
-    private Set<String> topicCategories;
-    private String download;
-    private String dynamic;
-    private String protocol;
-    private String featured;
-    private Set<String> categories;
-    private String template;
-    private String dateTo;
-    private String dateFrom;
-    private String revisionDateTo;
-    private String revisionDateFrom;
-    private String publicationDateTo;
-    private String publicationDateFrom;
-    private String creationDateTo;
-    private String creationDateFrom;
-    private String extTo;
-    private String extFrom;
-    private String metadataStandardName;
-    private String _schema;
-    private String parentUuid;
-    private String operatesOn;
-    private String serviceType;
-    private String type;
-    private String inspire;
-    private Set<String> inspireThemes;
-    private String inspireAnnex;
-    private String siteId;
-    private Set<String> themeKeys;
-    private String digital;
-    private String paper;
-    private String title;
-    private String abstrakt;
-    private String eastBL;
-    private String westBL;
-    private String northBL;
-    private String southBL;
-    private String relation;
-    private String editable;
-    private String denominator;
-    private String denominatorFrom;
-    private String denominatorTo;
-    private String orgName;
-    private String spatialRepresentationType;
-    private List<String> taxons;
-    private List<String> credits;
-    private List<String> dataparams;
-    
     /**
-     * Creates this from a JDOM element.
-     * 
-     * @param jdom input
+     * List of fields which MUST not be control by user. Those fields are always
+     * removed from the request.
      */
-    public UserQueryInput(Element jdom) {
-        setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
-        setUuid(jdom.getChildText(SearchParameter.UUID));
-        setAny(jdom.getChildText(SearchParameter.ANY));
-        setAll(jdom.getChildText(SearchParameter.ALL));
-        setOr(jdom.getChildText(SearchParameter.OR));
-        setWithout(jdom.getChildText(SearchParameter.WITHOUT));
-        setPhrase(jdom.getChildText(SearchParameter.PHRASE));
+    public static final List<String> SECURITY_FIELDS = Arrays.asList(
+            SearchParameter.OWNER, 
+            SearchParameter.ISADMIN, 
+            SearchParameter.ISREVIEWER, 
+            SearchParameter.ISUSERADMIN, 
+            LuceneIndexField.GROUP_OWNER);
 
-        @SuppressWarnings("unchecked")
-        List<Element> isoTopicCategoriesE = (List<Element>)jdom.getChildren(SearchParameter.TOPICCATEGORY);
-        Set<String> isoTopicCategories = new HashSet<String>();
-        for(Element isoTopicCategoryE : isoTopicCategoriesE) {
-            isoTopicCategories.add(isoTopicCategoryE.getText());
-        }
-        setTopicCategories(isoTopicCategories);
+    /**
+     * Don't take into account those field in search (those field are not 
+     * indexed but are search options).
+     * 
+     * TODO : move to lucene-config.xml because those fields depends on the
+     * client
+     */
+    public static final List<String> RESERVED_FIELDS = Arrays.asList(
+            SearchParameter.GROUP, 
+            Geonet.SearchResult.FAST, 
+            Geonet.SearchResult.SORT_BY, 
+            Geonet.SearchResult.REMOTE, 
+            Geonet.SearchResult.EXTENDED, 
+            Geonet.SearchResult.INTERMAP, 
+            Geonet.SearchResult.HITS_PER_PAGE, 
+            Geonet.SearchResult.TIMEOUT, 
+            Geonet.SearchResult.OUTPUT, 
+            Geonet.SearchResult.SUMMARY_ONLY, 
+            "region_simple", "attrset", "mode", 
+            "region", "from", "to", "hitsperpage" 
+            );
 
-        setDownload(jdom.getChildText(SearchParameter.DOWNLOAD));
-        setDynamic(jdom.getChildText(SearchParameter.DYNAMIC));
-        setProtocol(jdom.getChildText(SearchParameter.PROTOCOL));
-        setFeatured(jdom.getChildText(SearchParameter.FEATURED));
+    private String similarity;
+    private String editable;
+    private static Map<String, String> searchParamToLuceneField = new HashMap<String, String>();
+    static {
+        // Populate map for search parameter to Lucene mapping
+        searchParamToLuceneField.put(SearchParameter.SITEID,
+                LuceneIndexField.SOURCE);
+        searchParamToLuceneField.put(SearchParameter.INSPIRE,
+                LuceneIndexField.INSPIRE_CAT);
+        searchParamToLuceneField.put(SearchParameter.THEMEKEY,
+                LuceneIndexField.KEYWORD);
+        searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY,
+                LuceneIndexField.TOPIC_CATEGORY);
+        searchParamToLuceneField.put(SearchParameter.CATEGORY,
+                LuceneIndexField.CAT);
+    }
+    private Map<String, HashSet<String>> searchCriteria = new HashMap<String, HashSet<String>>();
+    private Map<String, HashSet<String>> searchPrivilegeCriteria = new HashMap<String, HashSet<String>>();
+    private Map<String, String> searchOption = new HashMap<String, String>();
 
-        @SuppressWarnings("unchecked")
-        List<Element> categoriesE = (List<Element>)jdom.getChildren(SearchParameter.CATEGORY);
-        Set<String> categories = new HashSet<String>();
-        for(Element categoryE : categoriesE) {
-            categories.add(categoryE.getText());
-        }
-        setCategories(categories);
+    public Map<String, HashSet<String>> getSearchCriteria() {
+        return searchCriteria;
+    }
 
-        setTemplate(jdom.getChildText(SearchParameter.TEMPLATE));
-        setDateTo(jdom.getChildText(SearchParameter.DATETO));
-        setDateFrom(jdom.getChildText(SearchParameter.DATEFROM));
-        setRevisionDateTo(jdom.getChildText(SearchParameter.REVISIONDATETO));
-        setRevisionDateFrom(jdom.getChildText(SearchParameter.REVISIONDATEFROM));
-        setPublicationDateTo(jdom.getChildText(SearchParameter.PUBLICATIONDATETO));
-        setPublicationDateFrom(jdom.getChildText(SearchParameter.PUBLICATIONDATEFROM));
-        setCreationDateTo(jdom.getChildText(SearchParameter.CREATIONDATETO));
-        setCreationDateFrom(jdom.getChildText(SearchParameter.CREATIONDATEFROM));
-        setExtTo(jdom.getChildText(SearchParameter.EXTTO));
-        setExtFrom(jdom.getChildText(SearchParameter.EXTFROM));
-        setMetadataStandardName(jdom.getChildText(SearchParameter.METADATASTANDARDNAME));
-        set_schema(jdom.getChildText(SearchParameter._SCHEMA));
-        setParentUuid(jdom.getChildText(SearchParameter.PARENTUUID));
-        setOperatesOn(jdom.getChildText(SearchParameter.OPERATESON));
-        setServiceType(jdom.getChildText(SearchParameter.SERVICETYPE));
-        setType(jdom.getChildText(SearchParameter.TYPE));
-        setInspire(jdom.getChildText(SearchParameter.INSPIRE));
-        setValid(jdom.getChildText(SearchParameter.VALID));
-        
-        @SuppressWarnings("unchecked")
-        List<Element> inspireThemesE = (List<Element>)jdom.getChildren(SearchParameter.INSPIRETHEME);
-        Set<String> inspireThemes = new HashSet<String>();
-        for(Element inspireThemeE : inspireThemesE) {
-            inspireThemes.add(inspireThemeE.getText());
-        }
-        setInspireThemes(inspireThemes);
+    public Map<String, HashSet<String>> getSearchPrivilegeCriteria() {
+        return searchPrivilegeCriteria;
+    }
 
-        setInspireAnnex(jdom.getChildText(SearchParameter.INSPIREANNEX));
-        setSiteId(jdom.getChildText(SearchParameter.SITEID));
-
-        @SuppressWarnings("unchecked")
-        List<Element> themeKeysE = (List<Element>)jdom.getChildren(SearchParameter.THEMEKEY);
-        Set<String> themeKeys = new HashSet<String>();
-        for(Element themeKeyE : themeKeysE) {
-            themeKeys.add(themeKeyE.getText());
-        }
-        setThemeKeys(themeKeys);
-
-        setDigital(jdom.getChildText(SearchParameter.DIGITAL));
-        setPaper(jdom.getChildText(SearchParameter.PAPER));
-        setTitle(jdom.getChildText(SearchParameter.TITLE));
-        setAbstrakt(jdom.getChildText(SearchParameter.ABSTRACT));
-        setEastBL(jdom.getChildText(SearchParameter.EASTBL));
-        setWestBL(jdom.getChildText(SearchParameter.WESTBL));
-        setNorthBL(jdom.getChildText(SearchParameter.NORTHBL));
-        setSouthBL(jdom.getChildText(SearchParameter.SOUTHBL));
-        setRelation(jdom.getChildText(SearchParameter.RELATION));
-        setEditable(jdom.getChildText(SearchParameter.EDITABLE));
-
-        setDenominator(jdom.getChildText(SearchParameter.DENOMINATOR));
-        setDenominatorFrom(jdom.getChildText(SearchParameter.DENOMINATORFROM));
-        setDenominatorTo(jdom.getChildText(SearchParameter.DENOMINATORTO));
-        setOrgName(jdom.getChildText(SearchParameter.ORGNAME));
-        setSpatialRepresentationType(jdom.getChildText(SearchParameter.SPATIALREPRESENTATIONTYPE));
-        @SuppressWarnings("unchecked")
-        List<Element> taxonsE = (List<Element>)jdom.getChildren(SearchParameter.TAXON);
-        List<String> taxons = new ArrayList<String>();
-        for(Element taxonE : taxonsE) {
-             taxons.add(taxonE.getText());
-        }
-        setTaxons(taxons);
-        @SuppressWarnings("unchecked")
-        List<Element> creditsE = (List<Element>)jdom.getChildren(SearchParameter.CREDIT);
-        List<String> credits = new ArrayList<String>();
-        for(Element creditE : creditsE) {
-             credits.add(creditE.getText());
-        }
-        setCredits(credits);
-        @SuppressWarnings("unchecked")
-        List<Element> dataparamsE = (List<Element>)jdom.getChildren(SearchParameter.DATAPARAM);
-        List<String> dataparams = new ArrayList<String>();
-        for(Element dataparamE : dataparamsE) {
-             dataparams.add(dataparamE.getText());
-        }
-        setDataparams(dataparams);
-
+    public Map<String, String> getSearchOption() {
+        return searchOption;
     }
 
     /**
-     *
+     * Creates this from a JDOM element.
+     * 
+     * @param jdom
+     *            input
+     */
+    public UserQueryInput(Element jdom) {
+
+        // Done in LuceneSearcher#computeQuery
+        // protectRequest(jdom);
+
+        for (Object e : jdom.getChildren()) {
+            if (e instanceof Element) {
+                Element node = (Element) e;
+                String nodeName = node.getName();
+                String nodeValue = node.getText().trim();
+                if (SearchParameter.SIMILARITY.equals(nodeName)) {
+                    setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
+                } else {
+                    if (nodeValue.length() > 0) {
+
+                        if (SECURITY_FIELDS.contains(nodeName)
+                                || nodeName.contains("_op")) {
+                            addValues(searchPrivilegeCriteria, nodeName,
+                                    nodeValue);
+                        } else if (RESERVED_FIELDS.contains(nodeName)) {
+                            searchOption.put(nodeName, nodeValue);
+                        } else {
+                            // addValues(searchCriteria, nodeName, nodeValue);
+                            // Rename search parameter to lucene index field
+                            // when needed
+                            addValues(
+                                    searchCriteria,
+                                    (searchParamToLuceneField
+                                            .containsKey(nodeName) ? searchParamToLuceneField
+                                            .get(nodeName) : nodeName),
+                                    nodeValue);
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void addValues(Map<String, HashSet<String>> hash,
+            String nodeName, String nodeValue) {
+        Set<String> currentValues = searchCriteria.get(nodeName);
+
+        if (currentValues == null) {
+            HashSet<String> values = new HashSet<String>();
+            values.add(nodeValue);
+            hash.put(nodeName, values);
+        } else {
+            currentValues.add(nodeValue);
+        }
+    }
+
+    // TODO Improve and move to config-lucene.xml in order to be able
+    // to add range field from configuration
+    public static final List<String> RANGE_QUERY_FIELDS = Arrays.asList(
+            SearchParameter.DATEFROM,
+            SearchParameter.DATETO,
+            SearchParameter.REVISIONDATEFROM, 
+            SearchParameter.REVISIONDATETO,
+            SearchParameter.PUBLICATIONDATEFROM,
+            SearchParameter.PUBLICATIONDATETO,
+            SearchParameter.DENOMINATORFROM,
+            SearchParameter.DENOMINATORTO,
+            SearchParameter.DENOMINATOR,
+            SearchParameter.CREATIONDATEFROM, 
+            SearchParameter.CREATIONDATETO);
+
+    /**
+     * TODO : use enum instead ? 
+     */
+    private static final List<String> RANGE_FIELDS = Arrays.asList(
+            LuceneIndexField.CHANGE_DATE, 
+            LuceneIndexField.REVISION_DATE,
+            LuceneIndexField.PUBLICATION_DATE, 
+            LuceneIndexField.CREATE_DATE,
+            LuceneIndexField.DENOMINATOR);
+    private static final List<String> RANGE_FIELDS_FROM = Arrays.asList(
+            SearchParameter.DATEFROM, 
+            SearchParameter.REVISIONDATEFROM,
+            SearchParameter.PUBLICATIONDATEFROM,
+            SearchParameter.CREATIONDATEFROM, 
+            SearchParameter.DENOMINATORFROM);
+    private static final List<String> RANGE_FIELDS_TO = Arrays.asList(
+            SearchParameter.DATETO, 
+            SearchParameter.REVISIONDATETO,
+            SearchParameter.PUBLICATIONDATETO, 
+            SearchParameter.CREATIONDATETO,
+            SearchParameter.DENOMINATORTO);
+
+    /**
+     * Return Lucene field name according to search parameter name.
+     * 
+     * @param searchFieldName
+     * @return
+     */
+    public static String getRangeField(String searchFieldName) {
+        // Do a range query for the search field itself (eg. denominator)
+        if (RANGE_FIELDS.contains(searchFieldName)) {
+            return searchFieldName;
+        }
+        if (RANGE_FIELDS_FROM.contains(searchFieldName)) {
+            return RANGE_FIELDS.get(RANGE_FIELDS_FROM.indexOf(searchFieldName));
+        }
+        if (RANGE_FIELDS_TO.contains(searchFieldName)) {
+            return RANGE_FIELDS.get(RANGE_FIELDS_TO.indexOf(searchFieldName));
+        }
+        return null;
+    }
+
+    public static String getTo(String fieldName) {
+        return RANGE_FIELDS_TO.get(RANGE_FIELDS.indexOf(fieldName));
+    }
+
+    public static String getFrom(String fieldName) {
+        return RANGE_FIELDS_FROM.get(RANGE_FIELDS.indexOf(fieldName));
+    }
+
+    /**
+     * All @See {@value #SECURITY_FIELDS} are removed from a user request.
+     * 
+     * @param jdom
+     */
+    private void protectRequest(Element jdom) {
+        for (String fieldName : SECURITY_FIELDS) {
+            jdom.removeChildren(fieldName);
+        }
+    }
+
+    /**
+     * 
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        StringBuffer topicCategoriesToString = new StringBuffer();
-        for(String topicCategory : topicCategories) {
-            topicCategoriesToString.append(" topicCategory: ").append(topicCategory);
+        StringBuffer text = new StringBuffer();
+        Map<String, HashSet<String>> searchCriteria = getSearchCriteria();
+        for (Iterator iter = searchCriteria.entrySet().iterator(); iter
+                .hasNext();) {
+            Entry entry = (Entry) iter.next();
+            String fieldName = (String) entry.getKey();
+            HashSet<String> fieldValue = (HashSet<String>) entry.getValue();
+            text.append(fieldName).append(":").append(fieldValue).append(" ");
         }
-        StringBuffer categoriesToString = new StringBuffer();
-        for(String category : categories) {
-            categoriesToString.append(" category: ").append(category);
-        }
-        StringBuffer inspireThemesToString = new StringBuffer();
-        for(String inspireTheme : inspireThemes) {
-            inspireThemesToString.append(" inspireTheme: ").append(inspireTheme);
-        }
-        StringBuffer themeKeysToString = new StringBuffer();
-        for(String themeKey : themeKeys) {
-            themeKeysToString.append(" themeKey: ").append(themeKey);
-        }
-        return new StringBuffer().append(" similarity: ").append(similarity)
-                .append(" uuid: ").append(uuid)
-                .append(" any: ").append(any)
-                .append(" all: ").append(all)
-                .append(" or: ").append(or)
-                .append(" without: ").append(without)
-                .append(" phrase: ").append(phrase)
-                .append(topicCategoriesToString)
-                .append(" download: ").append(download)
-                .append(" dynamic: ").append(dynamic)
-                .append(" protocol: ").append(protocol)
-                .append(" featured: ").append(featured)
-                .append(categoriesToString)
-                .append(" template: ").append(template)
-                .append(" dateTo: ").append(dateTo)
-                .append(" dateFrom: ").append(dateFrom)
-                .append(" revisionDateTo: ").append(revisionDateTo)
-                .append(" revisionDateFrom: ").append(revisionDateFrom)
-                .append(" publicationDateTo: ").append(publicationDateTo)
-                .append(" publicationDateFrom: ").append(publicationDateFrom)
-                .append(" creationDateTo: ").append(creationDateTo)
-                .append(" creationDateFrom: ").append(creationDateFrom)
-                .append(" extTo: ").append(extTo)
-                .append(" extFrom: ").append(extFrom)
-                .append(" metadataStandardName: ").append(metadataStandardName)
-                .append("_schema: ").append(_schema)
-                .append(" parentUuid: ").append(parentUuid)
-                .append(" operatesOn: ").append(operatesOn)
-                .append(" serviceType: ").append(serviceType)
-                .append(" type: ").append(type)
-                .append(" inspire: ").append(inspire)
-                .append(inspireThemesToString)
-                .append(" inspireAnnex: ").append(inspireAnnex)
-                .append(" siteId: ").append(siteId)
-                .append(themeKeysToString)
-                .append(" digital: ").append(digital)
-                .append(" paper: ").append(paper)
-                .append(" title: ").append(title)
-                .append(" abstract: ").append(abstrakt)
-                .append(" eastBL: ").append(eastBL)
-                .append(" westBL: ").append(westBL)
-                .append(" northBL: ").append(northBL)
-                .append(" southBL: ").append(southBL)
-                .append("relation: ").append(relation)
-                .append("denominator: ").append(denominator)
-                .append("denominatorTo: ").append(denominatorTo)
-                .append("denominatorFrom: ").append(denominatorFrom)
-                .append("orgName: ").append(orgName)
-                .append("spatialRepresentationType: ").append(spatialRepresentationType)
-                .toString();
-    }    
-
-    public String getAll() {
-        return all;
-    }
-
-    public void setAll(String all) {
-        this.all = all;
-    }
-
-    public String getSimilarity() {
-        return similarity;
+        return text.toString();
     }
 
     public void setSimilarity(String similarity) {
         this.similarity = similarity;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getAny() {
-        return any;
-    }
-
-    public void setAny(String any) {
-        this.any = any;
-    }
-
-    public String getOr() {
-        return or;
-    }
-
-    public void setOr(String or) {
-        this.or = or;
-    }
-
-    public String getWithout() {
-        return without;
-    }
-
-    public void setWithout(String without) {
-        this.without = without;
-    }
-
-    public String getPhrase() {
-        return phrase;
-    }
-
-    public void setPhrase(String phrase) {
-        this.phrase = phrase;
-    }
-
-    public Set<String> getTopicCategories() {
-        return topicCategories;
-    }
-
-    public void setTopicCategories(Set<String> topicCategories) {
-        if(this.topicCategories == null) {
-            this.topicCategories = new HashSet<String>();
-        }
-        this.topicCategories = topicCategories;
-    }
-
-    public String getDownload() {
-        return download;
-    }
-
-    public void setDownload(String download) {
-        this.download = download;
-    }
-
-    public String getDynamic() {
-        return dynamic;
-    }
-
-    public void setDynamic(String dynamic) {
-        this.dynamic = dynamic;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getFeatured() {
-        return featured;
-    }
-
-    public void setFeatured(String featured) {
-        this.featured = featured;
-    }
-
-    public Set<String> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<String> categories) {
-        if(this.categories == null) {
-            this.categories = new HashSet<String>();
-        }
-        this.categories = categories;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    public String getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(String dateTo) {
-        this.dateTo = dateTo;
-    }
-
-    public String getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(String dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public String getRevisionDateTo() {
-        return revisionDateTo;
-    }
-
-    public void setRevisionDateTo(String revisionDateTo) {
-        this.revisionDateTo = revisionDateTo;
-    }
-
-    public String getRevisionDateFrom() {
-        return revisionDateFrom;
-    }
-
-    public void setRevisionDateFrom(String revisionDateFrom) {
-        this.revisionDateFrom = revisionDateFrom;
-    }
-
-    public String getPublicationDateTo() {
-        return publicationDateTo;
-    }
-
-    public void setPublicationDateTo(String publicationDateTo) {
-        this.publicationDateTo = publicationDateTo;
-    }
-
-    public String getPublicationDateFrom() {
-        return publicationDateFrom;
-    }
-
-    public void setPublicationDateFrom(String publicationDateFrom) {
-        this.publicationDateFrom = publicationDateFrom;
-    }
-
-    public String getCreationDateTo() {
-        return creationDateTo;
-    }
-
-    public void setCreationDateTo(String creationDateTo) {
-        this.creationDateTo = creationDateTo;
-    }
-
-    public String getCreationDateFrom() {
-        return creationDateFrom;
-    }
-
-    public void setCreationDateFrom(String creationDateFrom) {
-        this.creationDateFrom = creationDateFrom;
-    }
-
-    public String getExtTo() {
-        return extTo;
-    }
-
-    public void setExtTo(String extTo) {
-        this.extTo = extTo;
-    }
-
-    public String getExtFrom() {
-        return extFrom;
-    }
-
-    public void setExtFrom(String extFrom) {
-        this.extFrom = extFrom;
-    }
-
-    public String getMetadataStandardName() {
-        return metadataStandardName;
-    }
-
-    public void setMetadataStandardName(String metadataStandardName) {
-        this.metadataStandardName = metadataStandardName;
-    }
-
-    public String get_schema() {
-        return _schema;
-    }
-
-    public void set_schema(String _schema) {
-        this._schema = _schema;
-    }
-
-    public String getParentUuid() {
-        return parentUuid;
-    }
-
-    public void setParentUuid(String parentUuid) {
-        this.parentUuid = parentUuid;
-    }
-
-    public String getOperatesOn() {
-        return operatesOn;
-    }
-
-    public void setOperatesOn(String operatesOn) {
-        this.operatesOn = operatesOn;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getInspire() {
-        return inspire;
-    }
-
-    public void setInspire(String inspire) {
-        this.inspire = inspire;
-    }
-
-    public Set<String> getInspireThemes() {
-        return inspireThemes;
-    }
-
-    public void setInspireThemes(Set<String> inspireThemes) {
-        if(this.inspireThemes == null) {
-            this.inspireThemes = new HashSet<String>();
-        }
-        this.inspireThemes = inspireThemes;
-    }
-
-    public String getInspireAnnex() {
-        return inspireAnnex;
-    }
-
-    public void setInspireAnnex(String inspireAnnex) {
-        this.inspireAnnex = inspireAnnex;
-    }
-
-    public String getSiteId() {
-        return siteId;
-    }
-
-    public void setSiteId(String siteId) {
-        this.siteId = siteId;
-    }
-
-    public Set<String> getThemeKeys() {
-        return themeKeys;
-    }
-
-    public void setThemeKeys(Set<String> themeKeys) {
-        if(this.themeKeys == null) {
-            this.themeKeys = new HashSet<String>();
-        }
-        this.themeKeys = themeKeys;
-    }
-
-    public String getDigital() {
-        return digital;
-    }
-
-    public void setDigital(String digital) {
-        this.digital = digital;
-    }
-
-    public String getPaper() {
-        return paper;
-    }
-
-    public void setPaper(String paper) {
-        this.paper = paper;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAbstrakt() {
-        return abstrakt;
-    }
-
-    public void setAbstrakt(String abstrakt) {
-        this.abstrakt = abstrakt;
-    }
-
-    public String getEastBL() {
-        return eastBL;
-    }
-
-    public void setEastBL(String eastBL) {
-        this.eastBL = eastBL;
-    }
-
-    public String getWestBL() {
-        return westBL;
-    }
-
-    public void setWestBL(String westBL) {
-        this.westBL = westBL;
-    }
-
-    public String getNorthBL() {
-        return northBL;
-    }
-
-    public void setNorthBL(String northBL) {
-        this.northBL = northBL;
-    }
-
-    public String getSouthBL() {
-        return southBL;
-    }
-
-    public void setSouthBL(String southBL) {
-        this.southBL = southBL;
-    }
-
-    public String getRelation() {
-        return relation;
-    }
-
-    public void setRelation(String relation) {
-        this.relation = relation;
-    }
-    
-    public String getEditable() {
-        return editable;
+    public String getSimilarity() {
+        return similarity;
     }
 
     public void setEditable(String editable) {
         this.editable = editable;
     }
 
-    public String getDenominator() {
-        return denominator;
-    }
-
-    public void setDenominator(String denominator) {
-        this.denominator = denominator;
-    }
-
-    public String getDenominatorFrom() {
-        return denominatorFrom;
-    }
-
-    public void setDenominatorFrom(String denominatorFrom) {
-        this.denominatorFrom = denominatorFrom;
-    }
-
-    public String getDenominatorTo() {
-        return denominatorTo;
-    }
-
-    public void setDenominatorTo(String denominatorTo) {
-        this.denominatorTo = denominatorTo;
-    }
-
-    public List<String> getTaxons() {
-        return taxons;
-    }
-
-    public void setTaxons(List<String> taxons) {
-        this.taxons = taxons;
-    }
-
-    public List<String> getCredits() {
-        return credits;
-    }
-
-    public void setCredits(List<String> credits) {
-        this.credits = credits;
-    }
-
-    public List<String> getDataparams() {
-        return dataparams;
-    }
-
-    public void setDataparams(List<String> dataparams) {
-        this.dataparams = dataparams;
-    }
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
-
-	public String getOrgName() {
-		return orgName;
-	}
-
-	public void setSpatialRepresentationType(String spatialRepresentationType) {
-		this.spatialRepresentationType = spatialRepresentationType;
-	}
-
-	public String getSpatialRepresentationType() {
-		return spatialRepresentationType;
-	}
-
-    public void setValid(String valid) {
-        this.valid = valid;
-    }
-
-    public String getValid() {
-        return valid;
+    public String getEditable() {
+        return editable;
     }
 }

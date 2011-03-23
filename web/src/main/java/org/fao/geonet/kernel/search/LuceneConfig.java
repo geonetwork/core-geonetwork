@@ -127,8 +127,10 @@ public class LuceneConfig {
 	private boolean docsScoredInOrder = false;
 
 	private Version LUCENE_VERSION = Version.LUCENE_30;
+	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_30;
 
-	/**
+	
+    /**
 	 * Creates a new Lucene configuration from an XML configuration file.
 	 * 
 	 * @param appPath
@@ -156,8 +158,8 @@ public class LuceneConfig {
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Failed to set Lucene version to: " + version
-									+ ". Set to default LUCENE_29.");
-					LUCENE_VERSION = Version.valueOf("LUCENE_29");
+									+ ". Set to default: " + DEFAULT_LUCENE_VERSION.toString());
+					LUCENE_VERSION = DEFAULT_LUCENE_VERSION;
 				}
 			}
 
@@ -507,13 +509,18 @@ public class LuceneConfig {
 		return RAMBufferSizeMB;
 	}
 
+	public String getLuceneVersion() {
+        return LUCENE_VERSION.toString();
+    }
+
 	/**
 	 * 
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Lucene configuration:\n");
-		sb.append(" * RAMBufferSize: " + getRAMBufferSize() + "\n");
+		sb.append(" * Version: " + getLuceneVersion() + "\n");
+        sb.append(" * RAMBufferSize: " + getRAMBufferSize() + "\n");
 		sb.append(" * MergeFactor: " + getMergeFactor() + "\n");
 		sb.append(" * Default analyzer: " + getDefaultAnalyzerClass() + "\n");
 		sb.append(" * Field analyzers: "
