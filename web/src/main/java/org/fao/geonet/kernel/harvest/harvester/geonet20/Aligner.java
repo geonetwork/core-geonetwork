@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
@@ -265,9 +266,17 @@ public class Aligner
 
 			if (md == null)
 				log.warning("  - Cannot get metadata (possibly bad XML) with remote id="+ remoteId);
-			else
-			{
-				dataMan.updateMetadataExt(dbms, id, md, changeDate);
+			else {
+                //
+                // update metadata
+                //
+                boolean validate = false;
+                boolean ufo = false;
+                boolean index = false;
+                String language = context.getLanguage();
+                UserSession session = null;
+                dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, changeDate);
+
 				result.updatedMetadata++;
 			}
 		}

@@ -69,7 +69,7 @@ public class DeleteElement implements Service
 		String ref     		= Util.getParam(params, Params.REF);
 		String parentRef	= Util.getParam(params, Params.PARENT);
 
-		Element child = dataMan.deleteElementEmbedded(dbms, session, id, ref, parentRef);
+		Element child = new AjaxEditUtils(context).deleteElementEmbedded(dbms, session, id, ref, parentRef);
 
 		return child;
 	}

@@ -79,7 +79,7 @@ public class MoveElement implements Service
 		//-----------------------------------------------------------------------
 		//--- swap elements and return status
 
-		dataMan.swapElementEmbedded(dbms, session, id, ref, down);
+		new AjaxEditUtils(context).swapElementEmbedded(dbms, session, id, ref, down);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

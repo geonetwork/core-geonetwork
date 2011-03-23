@@ -66,7 +66,8 @@ public class Update implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
+        AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
+        ajaxEditUtils.preprocessUpdate(params, context);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan = gc.getDataManager();
@@ -90,10 +91,15 @@ public class Update implements Service
 			if (data != null) {
 				Element md = Xml.loadString(data, false);
 
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, false, version, context.getLanguage()))
+                String changeDate = null;
+                boolean validate = true;
+                boolean ufo = true;
+                boolean index = true;
+				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate));
 					throw new ConcurrentUpdateEx(id);
-			} else {
-				EditUtils.updateContent(params, context, false, true);
+			}
+            else {
+				ajaxEditUtils.updateContent(params, false, true);
 			}
 
 		}
@@ -110,7 +116,7 @@ public class Update implements Service
         }
 		//--- if finished then remove the XML from the session
 		if (finished) {
-			dataMan.removeMetadataEmbedded(session, id);
+			ajaxEditUtils.removeMetadataEmbedded(session, id);
 		}
 
 		return elResp;

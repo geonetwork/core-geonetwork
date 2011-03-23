@@ -56,7 +56,7 @@ public class DeleteAttribute implements Service {
 		String id = Util.getParam(params, Params.ID);
 		String ref = Util.getParam(params, Params.REF);
 
-		Element child = dataMan.deleteAttributeEmbedded(dbms, session, id, ref);
+		Element child = new AjaxEditUtils(context).deleteAttributeEmbedded(dbms, session, id, ref);
 
 		return child;
 	}

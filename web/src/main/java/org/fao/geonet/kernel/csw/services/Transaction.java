@@ -305,7 +305,16 @@ public class Transaction extends AbstractOperation implements CatalogService
 			if (!dataMan.getAccessManager().canEdit(context, id))
 				throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
 
-			dataMan.updateMetadataExt(dbms, id, xml, changeDate);
+            //
+            // update metadata
+            //
+            boolean validate = false;
+            boolean ufo = false;
+            boolean index = false;
+            String language = context.getLanguage();
+            UserSession session = context.getUserSession();
+            dataMan.updateMetadata(session, dbms, id, xml, validate, ufo, index, language, changeDate);
+
 			dataMan.indexMetadataGroup(dbms, id);
 
 			bReturn = true;

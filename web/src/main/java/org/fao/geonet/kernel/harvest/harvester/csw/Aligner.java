@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -287,7 +288,15 @@ public class Aligner
 				if (md == null)
 					return;
 
-				dataMan.updateMetadataExt(dbms, id, md, ri.changeDate);
+                //
+                // update metadata
+                //
+                boolean validate = false;
+                boolean ufo = false;
+                boolean index = false;
+                String language = context.getLanguage();
+                UserSession session = null;
+				dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate);
 
 				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
 				addPrivileges(id);

@@ -210,19 +210,16 @@ public class XmlSerializer
 		return Integer.toString(serial);
 	}
 
-	//--------------------------------------------------------------------------
-	/** Updates an xml element into the database. The new data replaces the old one
-	  */
-
-	public static void update(Dbms dbms, String id, Element xml) throws SQLException
-	{
-		update(dbms, id, xml, null);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException
-	{
+    /**
+     *  Updates an xml element into the database. The new data replaces the old one.
+     *
+     * @param dbms
+     * @param id
+     * @param xml
+     * @param changeDate
+     * @throws SQLException
+     */
+	public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";

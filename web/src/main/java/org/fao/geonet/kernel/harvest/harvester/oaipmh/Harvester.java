@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -448,7 +449,15 @@ class Harvester
 			if (md == null)
 				return;
 
-			dataMan.updateMetadataExt(dbms, id, md, ri.changeDate.toString());
+            //
+            // update metadata
+            //
+            boolean validate = false;
+            boolean ufo = false;
+            boolean index = false;
+            String language = context.getLanguage();
+            UserSession session = null;
+            dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString());
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both

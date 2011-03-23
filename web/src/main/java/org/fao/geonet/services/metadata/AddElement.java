@@ -65,7 +65,7 @@ public class AddElement implements Service
 		String child = params.getChildText(Params.CHILD);
 
 		// -- build the element to be added and return it
-		Element elResp = dataMan.addElementEmbedded(dbms, session, id, ref, name, child);
+		Element elResp = new AjaxEditUtils(context).addElementEmbedded(dbms, session, id, ref, name, child);
 		return elResp;
 	}
 }

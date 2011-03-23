@@ -28,6 +28,7 @@ import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -152,8 +153,8 @@ public class XslProcessing implements Service {
 	        String appPath, Element params, ServiceContext context, 
 	        Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
 			Set<Integer> notProcessFound, boolean useIndexGroup) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		UserSession session = context.getUserSession();
 		DataManager dataMan = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
 		Dbms dbms = (Dbms) context.getResourceManager()
@@ -198,7 +199,11 @@ public class XslProcessing implements Service {
 
 			// --- save metadata and return status
             if (save) {
-                dataMan.updateMetadataExt(dbms, id, processedMetadata, new ISODate().toString());
+                boolean validate = true;
+                boolean ufo = true;
+                boolean index = true;
+                String language = context.getLanguage();
+                dataMan.updateMetadata(session, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString());
     			if (useIndexGroup) {
     				dataMan.indexMetadataGroup(dbms, id);
     			} else {

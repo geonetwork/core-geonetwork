@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
@@ -286,7 +287,16 @@ class Harvester {
 			if (md == null) {
 				return;
 			}
-			dataMan.updateMetadataExt(dbms, record.id, md, rf.getChangeDate());
+            //
+            // update metadata
+            //
+            boolean validate = false;
+            boolean ufo = false;
+            boolean index = false;
+            String language = context.getLanguage();
+            UserSession session = null;
+            dataMan.updateMetadata(session, dbms, record.id, md, validate, ufo, index, language, rf.getChangeDate());
+
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
 			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(record.id));

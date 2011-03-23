@@ -73,7 +73,7 @@ public class Validate implements Service
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- validate metadata from session
-		Element errorReport = dataMan.validateMetadataEmbedded(session, dbms, id, context.getLanguage());
+		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, dbms, id, context.getLanguage());
 
 		//--- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);

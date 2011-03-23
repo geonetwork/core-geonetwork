@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import jeeves.utils.Log;
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
@@ -63,6 +64,11 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
     public GeoNetworkAnalyzer(Set<String> stopwords) {
         super();
         this.stopwords = stopwords;
+        if(stopwords != null) {
+            for(String sw : stopwords) {
+                Log.debug("GeoNetworkAnalyzer", "stopword: " + sw);
+            }
+        }
     }
 
     /**

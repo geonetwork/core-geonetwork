@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.XmlRequest;
@@ -526,10 +527,19 @@ public class Aligner
 			log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
 			result.unchangedMetadata++;
 		}
-		else
-		{
+		else {
+            //
+            // update metadata
+            //
 			log.debug("  - Updating local metadata with id="+ id);
-			dataMan.updateMetadataExt(dbms, id, md, ri.changeDate);
+
+            boolean validate = false;
+            boolean ufo = false;
+            boolean index = false;
+            String language = context.getLanguage();
+            UserSession session = null;
+            dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate);
+
 			result.updatedMetadata++;
 		}
 

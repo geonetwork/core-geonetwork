@@ -53,7 +53,9 @@ public class AddAttribute implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		EditUtils.preprocessUpdate(params, context);
+		AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
+
+        ajaxEditUtils.preprocessUpdate(params, context);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
@@ -67,10 +69,10 @@ public class AddAttribute implements Service
 		//-----------------------------------------------------------------------
 		//--- add element and return status
 
-		EditUtils.updateContent(params, context);
+		ajaxEditUtils.updateContent(params);
 
 		// version already checked in updateContent
-		if (!dataMan.addAttribute(dbms, id, ref, name, null))
+		if (! ajaxEditUtils.addAttribute(dbms, id, ref, name, null))
 			throw new ConcurrentUpdateEx(id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
@@ -78,6 +80,3 @@ public class AddAttribute implements Service
 		return elResp;
 	}
 }
-
-//=============================================================================
-

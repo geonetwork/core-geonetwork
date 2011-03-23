@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.arcsde;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Xml;
@@ -231,8 +232,15 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
 	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 		System.out.println("  - Updating metadata with id: "+ id);
-
-		dataMan.updateMetadataExt(dbms, id, xml, new ISODate().toString());
+        //
+        // update metadata
+        //
+        boolean validate = false;
+        boolean ufo = false;
+        boolean index = false;
+        String language = context.getLanguage();
+        UserSession session = null;
+        dataMan.updateMetadata(session, dbms, id, xml, validate, ufo, index, language, new ISODate().toString());
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
 		addPrivileges(id, localGroups, dbms);
