@@ -58,6 +58,7 @@
             	<script src="../../scripts/ext/ext-all-debug.js"  type="text/javascript"/>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js" />
                 <script src="../../scripts/openlayers/lib/OpenLayers.js" type="text/javascript"/>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/ca.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"></script>
@@ -79,6 +80,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/ca.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"></script>
