@@ -32,6 +32,9 @@ import java.util.StringTokenizer;
 
 import jeeves.utils.Log;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -45,8 +48,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.util.spring.CollectionUtils;
-import org.fao.geonet.util.spring.StringUtils;
 
 /**
  * Class to create a Lucene query from a {@link LuceneQueryInput} representing a
@@ -488,7 +489,7 @@ public class LuceneQueryBuilder {
                     string, _analyzer, _tokenizedFieldSet);
         }
 
-        if (StringUtils.hasLength(analyzedString)) {
+        if (StringUtils.isNotBlank(analyzedString)) {
             // no wildcards
             if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
                 // similarity is not set or is 1
@@ -683,12 +684,11 @@ public class LuceneQueryBuilder {
     private void addSeparatedTextField(String text, String separator,
             String fieldName, BooleanQuery query) {
 
-        if (StringUtils.hasText(text)) {
+        if (StringUtils.isNotBlank(text)) {
             BooleanClause.Occur occur = LuceneUtils
                     .convertRequiredAndProhibitedToOccur(false, false);
 
-            String[] tokens = StringUtils.delimitedListToStringArray(text,
-                    separator);
+            String[] tokens = StringUtils.split(text, separator);
             for (String token : tokens) {
                 token = token.trim();
                 // TODO : here we should use similarity if set
@@ -757,20 +757,18 @@ public class LuceneQueryBuilder {
         // Set user groups privileges
         Set<String> groups = luceneQueryInput.getGroups();
         String editable$ = luceneQueryInput.getEditable();
-        boolean editable = StringUtils.hasText(editable$)
-                && editable$.equals("true");
+        boolean editable = BooleanUtils.toBoolean(editable$);
         BooleanQuery groupsQuery = new BooleanQuery();
         boolean groupsQueryEmpty = true;
         BooleanClause.Occur groupOccur = LuceneUtils
                 .convertRequiredAndProhibitedToOccur(false, false);
         if (!CollectionUtils.isEmpty(groups)) {
             for (String group : groups) {
-                group = group.trim();
-                if (group.length() > 0) {
+                if (StringUtils.isNotBlank(group)) {
                     if (!editable) {
                         // add to view
                         TermQuery viewQuery = new TermQuery(new Term(
-                                LuceneIndexField._OP0, group));
+                                LuceneIndexField._OP0, group.trim()));
                         BooleanClause viewClause = new BooleanClause(viewQuery,
                                 groupOccur);
                         groupsQueryEmpty = false;
@@ -778,7 +776,7 @@ public class LuceneQueryBuilder {
                     }
                     // add to edit
                     TermQuery editQuery = new TermQuery(new Term(
-                            LuceneIndexField._OP2, group));
+                            LuceneIndexField._OP2, group.trim()));
                     BooleanClause editClause = new BooleanClause(editQuery,
                             groupOccur);
                     groupsQueryEmpty = false;

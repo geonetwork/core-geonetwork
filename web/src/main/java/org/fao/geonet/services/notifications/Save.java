@@ -23,20 +23,21 @@
 
 package org.fao.geonet.services.notifications;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.notifications.domain.NotificationTarget;
-import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -141,8 +142,8 @@ public class Save implements Service {
             NotificationTarget notificationTarget = notificationTargets.get(key);
             String enabled = notificationTarget.isEnabled() ? "y" : "n" ;
             // insert
-            if(! notificationTarget.isPreExisting() && StringUtils.hasText(notificationTarget.getName())
-                    && StringUtils.hasText(notificationTarget.getUrl())) {
+            if(! notificationTarget.isPreExisting() && StringUtils.isNotBlank(notificationTarget.getName())
+                    && StringUtils.isNotBlank(notificationTarget.getUrl())) {
                 int id = context.getSerialFactory().getSerial(dbms, "MetadataNotifiers");
                 String query = "INSERT INTO MetadataNotifiers(id, name, username, password, url, enabled) VALUES(?, ?, ?, ?, ?, ?)";
                 dbms.execute(query, id, notificationTarget.getName(), notificationTarget.getUsername(), notificationTarget.getPassword(), notificationTarget.getUrl(), enabled);

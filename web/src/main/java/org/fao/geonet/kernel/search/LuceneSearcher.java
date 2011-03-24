@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimerTask;
 import java.util.TreeSet;
 
 import jeeves.constants.Jeeves;
@@ -49,6 +48,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
@@ -92,7 +92,6 @@ import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.util.JODAISODate;
-import org.fao.geonet.util.spring.CollectionUtils;
 import org.jdom.Element;
 
 import com.vividsolutions.jts.geom.Geometry;

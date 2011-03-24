@@ -1,5 +1,7 @@
 package org.fao.geonet.notifier;
 
+import java.io.IOException;
+
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -10,12 +12,11 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.spring.StringUtils;
-import ucar.nc2.util.net.EasySSLProtocolSocketFactory;
 
-import java.io.IOException;
+import ucar.nc2.util.net.EasySSLProtocolSocketFactory;
 
 /**
  * Metadata notifier client to manage the communication with notification servlet
@@ -57,7 +58,7 @@ public class MetadataNotifierClient {
             // Create an instance of HttpClient.
             client = new HttpClient();
 
-            if (StringUtils.hasLength(username) && StringUtils.hasLength(password)) {
+            if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
                 System.out.println("webUpdate: SET USER");
                 client.getState().setCredentials(
                                AuthScope.ANY,
@@ -119,7 +120,7 @@ public class MetadataNotifierClient {
             // Create an instance of HttpClient.
             client = new HttpClient();
 
-             if (StringUtils.hasLength(username) && StringUtils.hasLength(password)) {
+             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
                 client.getState().setCredentials(
                                AuthScope.ANY,
                                new UsernamePasswordCredentials(username, password)
