@@ -112,7 +112,7 @@ GeoNetwork.lang.ca = {
     'GazetteerWindowTitle': "Cercar per adre&ccedil;a",
     'searchResults': "Resultats",
     'errorTitle': "Error",
-    'SearchOptionLoadFailureMsg': "Cap resultat disponible . \n És possible que el servei no estigui disponible. \n",
+    'SearchOptionLoadFailureMsg': "Cap resultat disponible . \n es possible que el servei no estigui disponible. \n",
     'gazetteerTooltipTitle': "Cerca basada en l'adre&ccedil;a",
     'gazetteerTooltipText': "Cerca per localitzaci&oacute;, basada en el codi postal, carrer, municipi o lloc.",
     'SearchOptionNoResults': "No s'ha trobat cap resultat",
