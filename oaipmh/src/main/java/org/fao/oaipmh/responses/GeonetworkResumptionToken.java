@@ -48,7 +48,7 @@ public class GeonetworkResumptionToken extends ResumptionToken
 	private Boolean isReset = false;
 	private String randomid;
 	private SearchResult res;
-	public static final String SEPARATOR = "-";
+	public static final String SEPARATOR = "/-/";
 	
 
 	/**
