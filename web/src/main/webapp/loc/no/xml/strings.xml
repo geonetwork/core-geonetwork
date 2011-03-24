@@ -636,6 +636,9 @@
 	<ress>resultat</ress>
 	<restrictTo>Begrens til</restrictTo>
 	<result>Siste resultater</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Resultat av søk innenfor koordinater </resultsCoordinate>
 	<resultsFreeText>Resultat av fritekstsøk </resultsFreeText>
 	<resultsMatching>Resultat av søk :</resultsMatching>

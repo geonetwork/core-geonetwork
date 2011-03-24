@@ -718,6 +718,9 @@
 	<ress>result</ress>
 	<restrictTo>Restrict to</restrictTo>
 	<result>النتيجة</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>النتيجة حسب الاحداثيات المدخلة</resultsCoordinate>
 	<resultsFreeText>النتيجة حسب الكلمة المدخلة</resultsFreeText>
 	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>

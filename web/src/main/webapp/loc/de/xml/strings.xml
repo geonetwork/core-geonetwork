@@ -713,6 +713,9 @@
 	<ress>Ergebnis</ress>
 	<restrictTo>Beschränken auf</restrictTo>
 	<result>Letzte Ergebnisse</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Ergebnisse, die auf Koordinatensuche zu treffen </resultsCoordinate>
 	<resultsFreeText>Ergebnisse, die auf Freitextsuche zu treffen </resultsFreeText>
 	<resultsMatching>Suchergebnisse :</resultsMatching>

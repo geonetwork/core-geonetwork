@@ -715,6 +715,9 @@
 	<ress>resultado</ress>
 	<restrictTo>Limitar a</restrictTo>
 	<result>Página de resultados</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Resultados de la búsqueda por coordenadas </resultsCoordinate>
 	<resultsFreeText>Resultados de la búsqueda por palabras libres </resultsFreeText>
 	<resultsMatching>Los resultados de la búsqueda son:</resultsMatching>

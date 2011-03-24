@@ -731,6 +731,9 @@
 	<ress>resultaat</ress>
 	<restrictTo>Beperk tot</restrictTo>
 	<result>Vorige resultaten</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Resultaten die met de coordinaten overeenkomen</resultsCoordinate>
 	<resultsFreeText>Resultaten die met de zoek criteria overeenkomen</resultsFreeText>
 	<resultsMatching>Zoekresultaten :</resultsMatching>

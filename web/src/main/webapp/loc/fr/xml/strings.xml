@@ -718,6 +718,9 @@
 	<ress>résultat</ress>
 	<restrictTo>Limiter a</restrictTo>
 	<result>Derniers résultats</result>
+  <searchResult>Résultats de recherche</searchResult>
+  <resources>Ressources</resources>
+  <visualizationService>URL du service de visualisation (WMS)</visualizationService>
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats de la recherche</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>

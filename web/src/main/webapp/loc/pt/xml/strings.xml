@@ -715,6 +715,9 @@
 	<ress>Resultado</ress>
 	<restrictTo>Restringir a</restrictTo>
 	<result>Últimos resultados</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Resultados que respondam à pesquisa de coordenadas</resultsCoordinate>
 	<resultsFreeText>Resultados que respondam à pesquisa de palavras livres</resultsFreeText>
 	<resultsMatching>Resultados da pesquisa:</resultsMatching>

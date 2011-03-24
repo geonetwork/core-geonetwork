@@ -715,6 +715,9 @@
 	<ress>result</ress>
 	<restrictTo>Restrict to</restrictTo>
 	<result>最后结果</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>满足坐标搜索条件的结果</resultsCoordinate>
 	<resultsFreeText>满足全文检索条件的结果</resultsFreeText>
 	<resultsMatching>满足多个条件的结果：</resultsMatching>

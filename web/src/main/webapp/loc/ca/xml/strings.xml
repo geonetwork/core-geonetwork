@@ -560,6 +560,9 @@
 	<ress>resultat</ress>
 	<restrictTo>Limitar a</restrictTo>
 	<result>Últims resultats</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Resultats de la cerca per coordenades </resultsCoordinate>
 	<resultsFreeText>Resultats de la cerca per paraules clau</resultsFreeText>
 	<resultsMatching>Els resultats de la cerca són:</resultsMatching>

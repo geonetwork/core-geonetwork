@@ -720,6 +720,9 @@ ISO 19115 не позволяет иметь более одного.
 	<ress>результат</ress>
 	<restrictTo>В пределах</restrictTo>
 	<result>Последние результаты</result>
+  <searchResult>Search results</searchResult>
+  <resources>Resources</resources>
+  <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Результаты, удовлетворяющие координатному критерию</resultsCoordinate>
 	<resultsFreeText>Результаты, удовлетворяющие текстовому критерию</resultsFreeText>
 	<resultsMatching>Число метаданных, удовлетворяющих критерию поиска:</resultsMatching>
