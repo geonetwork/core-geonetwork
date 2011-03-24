@@ -13,7 +13,7 @@
 		<MergeFactor>10</MergeFactor>
 
 		<!-- Default Lucene version to use (mainly for Analyzer creation). -->
-		<luceneVersion>29</luceneVersion>
+		<luceneVersion>30</luceneVersion>
 	</index>
 
 
@@ -57,14 +57,13 @@
 		
 		Example:
 		org.apache.lucene.analysis.fr.FrenchAnalyzer
+	
+	<defaultAnalyzer name="org.apache.lucene.analysis.standard.StandardAnalyzer">
+	<Param name="version" type="org.apache.lucene.util.Version"/>
+	</defaultAnalyzer>
 	-->
   <defaultAnalyzer name="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
-	<!--
-  <defaultAnalyzer name="org.apache.lucene.analysis.standard.StandardAnalyzer">
-    <Param name="version" type="org.apache.lucene.util.Version"/>
-  </defaultAnalyzer>
-  -->
-	<!-- TODO: Add a language specific analyzer according to:
+  <!-- TODO: Add a language specific analyzer according to:
 		 * metadata language
 		 * metadata elements language (ie. PT_FreeText elements)
 	-->
@@ -122,6 +121,7 @@
 		<Field name="abstract"/>
 		<Field name="title"/>
 		<Field name="altTitle"/>
+	  <!-- FIXME : INSPIRE theme should probably not be tokenized like keywords-->
 		<Field name="inspiretheme"/>
 		<Field name="keywordType"/>
 		<Field name="orgName"/>
