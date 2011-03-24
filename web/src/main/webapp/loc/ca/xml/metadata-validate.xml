@@ -2,7 +2,17 @@
 <strings>
 	<heading>Validació de metadades</heading>
 	<message>Metadates validades amb èxit</message>
-	<schemaTronError>tanmatiex, hi ha errors de validació contra les regles de l'Schematron</schemaTronError>
-  <schemaTronValid>La validació contra les regles de l'Schematron ha estat correcte</schemaTronValid>
-  <schemaTronReport>L'informe de l'Schematron està disponible aquí</schemaTronReport>
+	<schemaTronError>tanmateix, hi ha errors de validació contra les regles de l'Schematron</schemaTronError>
+	<schemaTronValid>La validació contra les regles de l'Schematron ha estat correcte</schemaTronValid>
+	<schemaTronReport>L'informe de l'Schematron està disponible aquí</schemaTronReport>
+	<invalidElement>Element invàlid. Trobat contingut invàlid començant a l'element: </invalidElement>
+	<onElementOf>A un dels següents elements </onElementOf>
+	<isExpected> is expected.</isExpected>
+	<isNotComplete> is not complete.</isNotComplete>
+	<elementLocated>Parent element is </elementLocated>
+	<missingElement>Missing element. The content of element: </missingElement>
+	<invalidValue>Invalid or missing value.</invalidValue>
+	<notValidFor> is not a valid value for </notValidFor>
+	<xsdErrorIs>XSD error is: </xsdErrorIs>
+	<inElement> in element </inElement>
 </strings>

@@ -48,6 +48,7 @@
         <xsl:variable name="lang">
             <xsl:choose>
                 <xsl:when test="$langGui='ar'">ara</xsl:when>
+				<xsl:when test="$langGui='ca'">cat</xsl:when>				
                 <xsl:when test="$langGui='cn'">chi</xsl:when>
                 <xsl:when test="$langGui='de'">ger</xsl:when>
                 <xsl:when test="$langGui='es'">spa</xsl:when>

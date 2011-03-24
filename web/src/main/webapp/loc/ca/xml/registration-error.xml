@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <heading>Error de registre</heading>
-    <message>Ho sentim, ha succeït un error de registre. Si us plau, intenteu-ho més tard.</message>
+    <heading>Error de privilegis</heading>
+    <message>Potser no té privilegis suficients per realitzar aquesta operació.</message>
+	<button>Enrere</button>
 </strings>
 
