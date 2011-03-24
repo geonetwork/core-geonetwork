@@ -206,6 +206,7 @@ public class LuceneSearcher extends MetaSearcher
 
 		String sFast = request.getChildText(Geonet.SearchResult.FAST);
 		boolean fast = sFast != null && sFast.equals("true");
+		boolean inFastMode = fast || "index".equals(sFast);
 		
 		// build response
 		Element response =  new Element("response");
@@ -227,7 +228,7 @@ public class LuceneSearcher extends MetaSearcher
 			if (tdocs.scoreDocs.length >= nrHits) {
 				for (int i = 0; i < nrHits; i++) {
 					Document doc;
-					if (fast) {
+					if (inFastMode) {
 						doc = _reader.document(tdocs.scoreDocs[i].doc); // no selector
 					} else {
 						doc = _reader.document(tdocs.scoreDocs[i].doc, _selector);
@@ -236,9 +237,10 @@ public class LuceneSearcher extends MetaSearcher
 					Element md = null;
 	
 					if (fast) {
-						md = getMetadataFromIndex(doc, id);
-					}
-                    else if (srvContext != null) {
+						md = getMetadataFromIndex(doc, id, false);
+					} else if ("index".equals(sFast)) {
+					    md = getMetadataFromIndex(doc, id, true);
+                    } else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false;
                         md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors);
 					}
@@ -929,40 +931,47 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public static Element getMetadataFromIndex(Document doc, String id)
-	{
-		String root       = doc.get("_root");
-		String schema     = doc.get("_schema");
-
+	public static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField){
+        // Retrieve the info element
+        String root       = doc.get("_root");
+        String schema     = doc.get("_schema");
+        String source     = doc.get("_source");
+        String uuid       = doc.get("_uuid");
+        
         String createDate = doc.get("_createDate");
         if (createDate != null) createDate = createDate.toUpperCase();
-
         String changeDate = doc.get("_changeDate");
         if (changeDate != null) changeDate = changeDate.toUpperCase();
         
-		String source     = doc.get("_source");
-		String uuid       = doc.get("_uuid");
-
-		Element md = new Element(root);
-
-		Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
-
-		addElement(info, Edit.Info.Elem.ID,          id);
-		addElement(info, Edit.Info.Elem.UUID,        uuid);
-		addElement(info, Edit.Info.Elem.SCHEMA,      schema);
-		addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
-		addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
-		addElement(info, Edit.Info.Elem.SOURCE,      source);
-	
-		List<Fieldable> fields = doc.getFields();
-    for (Iterator<Fieldable> i = fields.iterator(); i.hasNext(); ) {
-      Fieldable field = i.next();
-      String name  = field.name();
-      String value = field.stringValue();
-      if (name.equals("_cat")) addElement(info, Edit.Info.Elem.CATEGORY, value);
-    }	
-		md.addContent(info);
-		return md;
+        // Root element is using root element name if not using only the index content (ie. dumpAllField)
+        // probably because the XSL need that info later ?
+        Element md = new Element(dumpAllField?"metadata":root);
+        
+        Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
+        
+        addElement(info, Edit.Info.Elem.ID,          id);
+        addElement(info, Edit.Info.Elem.UUID,        uuid);
+        addElement(info, Edit.Info.Elem.SCHEMA,      schema);
+        addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
+        addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
+        addElement(info, Edit.Info.Elem.SOURCE,      source);
+        
+        List<Fieldable> fields = doc.getFields();
+        for (Iterator<Fieldable> i = fields.iterator(); i.hasNext(); ) {
+          Fieldable field = i.next();
+          String name  = field.name();
+          String value = field.stringValue();
+          
+          // Dump the categories to the info element
+          if (name.equals("_cat")) {
+              addElement(info, Edit.Info.Elem.CATEGORY, value);
+          } else if (dumpAllField) {
+              // And all other field to the root element in dump all mode
+              md.addContent(new Element(name).setText(value));
+          }
+        }	
+        md.addContent(info);
+        return md;
 	}
 
     //--------------------------------------------------------------------------------

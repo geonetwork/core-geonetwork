@@ -337,7 +337,7 @@
 		<allow service="xml.user.login"/>
 		<allow service="xml.user.logout"/>
 		<allow service="xml.search"/>
-		<allow service="xml.search.keywords"/>
+	  <allow service="xml.search.keywords"/>
 		<allow service="xml.metadata.get"/>
 		<allow service="xml.metadocument.get"/>
 		<allow service="xml.metadocument.snippet"/>
@@ -347,7 +347,8 @@
 		<allow service="xml.keyword.get"/>
 		<allow service="xml.file.disclaimer"/>
 		<allow service="xml.file.download"/>
-
+	  <allow service="q"/>
+	  
 		<!-- Portal XML services -->
 		<allow service="portal.search"/>
 		<allow service="portal.opensearch"/>

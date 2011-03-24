@@ -978,6 +978,9 @@
 			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
+    <service name="q">
+      <class name=".services.main.XmlSearch" />
+    </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.get">
