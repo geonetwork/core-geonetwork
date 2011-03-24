@@ -165,26 +165,12 @@ function showSimpleSearch()
 
 function openSearch(s)
 {
-	if( ! Prototype.Browser.IE )
-	{
-		Effect.BlindDown(s);
-	}
-	else
-	{
-		$(s).show();
-	}
+    $(s).show();
 }
 
 function closeSearch(s)
 {
-	if( ! Prototype.Browser.IE )
-	{
-		Effect.BlindUp($(s));
-	}
-	else
-	{
-		$(s).hide();
-	}
+    $(s).hide();
 }
 
 /**********************************************************
