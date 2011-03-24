@@ -529,9 +529,9 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("hoeper*");
         request.addContent(any);
         // build lucene query input
-        LuceneQueryInput0 lQI = new LuceneQueryInput0(request);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
         // build lucene query
-        Query query = new LuceneQueryBuilder0(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
         // verify query
         assertEquals("+any:hoeper* +_isTemplate:n", query.toString());
     }
@@ -547,9 +547,9 @@ public class LuceneQueryTest extends TestCase {
         any.addContent("hoeper?");
         request.addContent(any);
         // build lucene query input
-        LuceneQueryInput0 lQI = new LuceneQueryInput0(request);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
         // build lucene query
-        Query query = new LuceneQueryBuilder0(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
         // verify query
         assertEquals("+any:hoeper? +_isTemplate:n", query.toString());
     }
