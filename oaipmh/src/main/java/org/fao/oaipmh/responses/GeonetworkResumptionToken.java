@@ -37,22 +37,36 @@ import org.jdom.Element;
 
 public class GeonetworkResumptionToken extends ResumptionToken
 {
+	
+	private Integer listSize;
+	private Integer cursor;
+	private Integer pos;
+	private String set ="";
+	private String from="";
+	private String until="";
+	private String prefix="";
+	private Boolean isReset = false;
+	private String randomid;
+	private SearchResult res;
 	public static final String SEPARATOR = "-";
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+	
 
-	//---------------------------------------------------------------------------
-
+	/**
+	 * Default constructor.
+	 * Builds a GeonetworkResumptionToken.
+	 * @param rt
+	 */
 	public GeonetworkResumptionToken(Element rt)
 	{
         build(rt);
 	}
 
-	//---------------------------------------------------------------------------
-
+	/**
+	 * Default constructor.
+	 * Builds a GeonetworkResumptionToken.
+	 * @param req
+	 * @throws BadResumptionTokenException
+	 */
 	public GeonetworkResumptionToken(TokenListRequest req) throws BadResumptionTokenException {
 
 		String strToken = req.getResumptionToken();
@@ -77,6 +91,13 @@ public class GeonetworkResumptionToken extends ResumptionToken
 		}
 	}
 
+	/**
+	 * Default constructor.
+	 * Builds a GeonetworkResumptionToken.
+	 * @param req
+	 * @param res
+	 * @throws BadResumptionTokenException
+	 */
 	public GeonetworkResumptionToken(TokenListRequest req, SearchResult res) throws BadResumptionTokenException {
 		this(req);
 		this.res=res;
@@ -98,21 +119,23 @@ public class GeonetworkResumptionToken extends ResumptionToken
 	//---
 	//---------------------------------------------------------------------------
 
-	public String  getToken()            { 
-		if (isReset) return ""; // we are at the last chunk
-		return getKey()+SEPARATOR+pos;
+	public String getToken() {
+		if (isReset)
+			return ""; // we are at the last chunk
+		return getKey() + SEPARATOR + pos;
 	}
 
-	public boolean isTokenEmpty() { return isReset;  }
+	public boolean isTokenEmpty() {
+		return isReset;
+	}
 
-	public int getPos() 				 { return pos;         }
-
-	public void setExpirDate(ISODate date) {
-		this.expirDate=date;
+	public int getPos() {
+		return pos;
 	}
 
 	public String getKey() {
-		return set+SEPARATOR+prefix+SEPARATOR+from+SEPARATOR+until+SEPARATOR+randomid;
+		return set + SEPARATOR + prefix + SEPARATOR + from + SEPARATOR + until
+				+ SEPARATOR + randomid;
 	}
 
 	public SearchResult getRes() {
@@ -148,8 +171,8 @@ public class GeonetworkResumptionToken extends ResumptionToken
 
 		root.setText(getToken());
 
-		if (expirDate != null)
-			root.setAttribute("expirationDate", expirDate.toString());
+		if (getExpirDate() != null)
+			root.setAttribute("expirationDate", getExpirDate().toString());
 
 		if (listSize != null)
 			root.setAttribute("completeListSize", listSize.toString());
@@ -190,7 +213,7 @@ public class GeonetworkResumptionToken extends ResumptionToken
 		String listSz= rt.getAttributeValue("completeListSize");
 		String curs  = rt.getAttributeValue("cursor");
 
-		expirDate = (expDt  == null) ? null : new ISODate(expDt);
+		setExpirDate((expDt  == null) ? null : new ISODate(expDt));
 		listSize  = (listSz == null) ? null : new Integer(listSz);
 		cursor    = (curs   == null) ? null : new Integer(curs);
 	}
@@ -215,30 +238,6 @@ public class GeonetworkResumptionToken extends ResumptionToken
 		Random r = new Random();
 		return Long.toString(Math.abs(r.nextLong()), 36);
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	//private String  token;
-	private ISODate expirDate;
-	private Integer listSize;
-	private Integer cursor;
-	private Integer pos;
-	private String set ="";
-	private String from="";
-	private String until="";
-	private String prefix="";
-	private Boolean isReset = false;
-	private String randomid;
-
-	private SearchResult res;
-
-
-
-
 
 }
 

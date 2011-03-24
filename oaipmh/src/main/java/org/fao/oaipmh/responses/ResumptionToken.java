@@ -23,24 +23,30 @@
 
 package org.fao.oaipmh.responses;
 
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.OaiPmh;
+import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================
 
 public class ResumptionToken
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-
+	private String  token;
+	private ISODate expirDate;
+	private Integer listSize;
+	private Integer cursor;
+	
+	/**
+	 * Default constructor.
+	 * Builds a ResumptionToken.
+	 */
 	public ResumptionToken() {}
 
-	//---------------------------------------------------------------------------
-
+	/**
+	 * Default constructor.
+	 * Builds a ResumptionToken.
+	 * @param rt
+	 */
 	public ResumptionToken(Element rt)
 	{
 		token = rt.getText();
@@ -66,6 +72,10 @@ public class ResumptionToken
 	public Integer getCursor()           { return cursor;    }
 
 	public boolean isTokenEmpty() { return token.length() == 0; }
+	
+	public void setExpirDate(ISODate date) {
+		this.expirDate = date;
+	}
 
 	//---------------------------------------------------------------------------
 
@@ -93,17 +103,7 @@ public class ResumptionToken
 
 		return root;
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private String  token;
-	private ISODate expirDate;
-	private Integer listSize;
-	private Integer cursor;
+	
 }
 
 //=============================================================================
