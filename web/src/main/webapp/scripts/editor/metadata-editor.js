@@ -556,7 +556,7 @@ function checkForFileUpload(fref, pref)
 	var protoIn = $('_'+pref);        // the protocol input field to be submitted
 
 	var fileUploaded = (fileName != null && fileName.value.length > 0);
-	var protocol = protoIn.value;
+    var protocol = protoSelect.value;
 	var protocolDownload = (protocol.startsWith('WWW:DOWNLOAD') && protocol.indexOf('http')>0);
 
 	// don't let anyone change the protocol if a file has already been uploaded 
@@ -587,7 +587,7 @@ function checkForFileUpload(fref, pref)
 	}
 
 	// protocol change is ok so set the protocol value to that selected
-	//protoIn.value = protoSelect.value;
+	protoIn.value = protoSelect.value;
 }
 
 // called by upload button in file field of metadata form
