@@ -1173,7 +1173,7 @@ public class DataManager {
 
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-		Element xml = updateFixedInfo(schema, Integer.toString(serial), Xml.loadString(data, false), parentUuid, DataManager.UpdateDatestamp.yes, dbms);
+		Element xml = updateFixedInfo(schema, Integer.toString(serial), uuid, Xml.loadString(data, false), parentUuid, DataManager.UpdateDatestamp.yes, dbms);
 
 		//--- store metadata
 		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner);
@@ -1227,7 +1227,7 @@ public class DataManager {
 
         if (ufo && isTemplate.equals("n")) {
             String parentUuid = null;
-            metadata = updateFixedInfo(schema, Integer.toString(id), metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+            metadata = updateFixedInfo(schema, Integer.toString(id), null, metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         }
 
          if (source == null) {
@@ -1412,7 +1412,7 @@ public class DataManager {
 		String schema = getMetadataSchema(dbms, id);
         if(ufo) {
             String parentUuid = null;
-		    md = updateFixedInfo(schema, id, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+		    md = updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         }
 		//--- write metadata to dbms
         XmlSerializer.update(dbms, id, md, changeDate);
@@ -2011,9 +2011,12 @@ public class DataManager {
 	}
 
     /**
-     *
+     * Update metadata record (not template) using update-fixed-info.xsl
+     * 
+     * 
      * @param schema
      * @param id
+     * @param uuid If the metadata is a new record (not yet saved), provide the uuid for that record
      * @param md
      * @param parentUuid
      * @param updateDatestamp
@@ -2021,20 +2024,23 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	public Element updateFixedInfo(String schema, String id, Element md, String parentUuid, UpdateDatestamp updateDatestamp, Dbms dbms) throws Exception {
+	public Element updateFixedInfo(String schema, String id, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, Dbms dbms) throws Exception {
         boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enable", true);
         if(autoFixing) {
         	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info");
-            String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = " + id;
+            
+        	String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = " + id;
             Element rec = dbms.select(query).getChild("record");
-            Boolean isTemplate = !rec.getChildText("istemplate").equals("n");
+            Boolean isTemplate = rec != null && !rec.getChildText("istemplate").equals("n");
+            
             // don't process templates
             if(isTemplate) {
                 Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
                 return md;
             }
             else {
-                String uuid = rec.getChildText("uuid");
+                uuid = uuid == null ? rec.getChildText("uuid") : uuid;
+                
                 //--- setup environment
                 Element env = new Element("env");
                 env.addContent(new Element("id").setText(id));
