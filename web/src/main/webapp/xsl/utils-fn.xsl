@@ -122,8 +122,8 @@
   <!-- Return mimetype according to protocol and linkage extension -->
   <xsl:function name="geonet:protocolMimeType" as="xs:string">
     <xsl:param name="linkage" as="xs:string"/>
-    <xsl:param name="protocol" as="xs:string"/>
-    <xsl:param name="mimeType" as="xs:string"/>
+    <xsl:param name="protocol" as="xs:string?"/>
+    <xsl:param name="mimeType" as="xs:string?"/>
     
     <xsl:choose>
       <xsl:when test="(starts-with($protocol,'WWW:LINK-') or starts-with($protocol,'WWW:DOWNLOAD-')) and $mimeType!=''">
