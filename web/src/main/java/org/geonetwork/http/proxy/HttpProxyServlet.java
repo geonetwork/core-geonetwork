@@ -21,7 +21,7 @@ import java.util.Enumeration;
 /**
  * Http proxy for ajax calls
  *
- * @author Jose Garc�a
+ * @author Jose Garcia
  */
 public class HttpProxyServlet extends HttpServlet {
     // Url to proxy
@@ -79,6 +79,11 @@ public class HttpProxyServlet extends HttpServlet {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
 
+            // Get the proxy parameters
+            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
+            String proxyHost = System.getProperty("http.proxyHost");
+            String proxyPort = System.getProperty("http.proxyPort");
+
             // Get rest of parameters to pass to proxied url
             HttpMethodParams urlParams = new HttpMethodParams();
 
@@ -99,6 +104,12 @@ public class HttpProxyServlet extends HttpServlet {
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 HttpClient client = new HttpClient();
+
+                // Added support for proxy
+                if (proxyHost != null && proxyPort != null) {
+                    client.getHostConfiguration().setProxy(proxyHost, new Integer(proxyPort));
+                }
+
                 httpGet = new GetMethod(url);
                 httpGet.setParams(urlParams);
                 client.executeMethod(httpGet);
@@ -109,7 +120,7 @@ public class HttpProxyServlet extends HttpServlet {
                     if (!isValidContentType(contentTypesReturned[0])) {
                         contentTypesReturned = contentType.getValue().split(" ");
                         if (!isValidContentType(contentTypesReturned[0])) {
-                            throw new ServletException("Status: 415 Unsupported media type");                            
+                            throw new ServletException("Status: 415 Unsupported media type");
                         }
                     }
 
@@ -121,8 +132,8 @@ public class HttpProxyServlet extends HttpServlet {
                     PrintWriter out = response.getWriter();
                     out.print(responseBody);
 
-                    out.flush();  
-                    out.close();                    
+                    out.flush();
+                    out.close();
 
                 } else {
                     returnExceptionMessage(response, "Unexpected failure: " + httpGet.getStatusLine().toString());
@@ -152,17 +163,22 @@ public class HttpProxyServlet extends HttpServlet {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
 
-            // Get rest of parameters to pass to proxied url
-           HttpMethodParams urlParams = new HttpMethodParams();
+            // Get the proxy parameters
+            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
+            String proxyHost = System.getProperty("http.proxyHost");
+            String proxyPort = System.getProperty("http.proxyPort");
 
-           Enumeration paramNames = request.getParameterNames();
-           while (paramNames.hasMoreElements()) {
-               String paramName = (String) paramNames.nextElement();
-               if (!paramName.equalsIgnoreCase(PARAM_URL)) {
-                   urlParams.setParameter(paramName, request.getParameter(paramName));
-               }
-           }
-                        
+            // Get rest of parameters to pass to proxied url
+            HttpMethodParams urlParams = new HttpMethodParams();
+
+            Enumeration paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String paramName = (String) paramNames.nextElement();
+                if (!paramName.equalsIgnoreCase(PARAM_URL)) {
+                    urlParams.setParameter(paramName, request.getParameter(paramName));
+                }
+            }
+
             // Checks if allowed host
             if (!isAllowedHost(host)) {
                 //throw new ServletException("This proxy does not allow you to access that location.");
@@ -180,6 +196,11 @@ public class HttpProxyServlet extends HttpServlet {
 
                 HttpClient client = new HttpClient();
 
+                // Added support for proxy
+                if (proxyHost != null && proxyPort != null){
+                    client.getHostConfiguration().setProxy(proxyHost, new Integer(proxyPort));
+                }
+
                 httpPost.setRequestBody(body);
 
                 client.executeMethod(httpPost);
@@ -193,7 +214,7 @@ public class HttpProxyServlet extends HttpServlet {
                             throw new ServletException("Status: 415 Unsupported media type");
                         }
                     }
-                    
+
                     // Sets response contentType
                     response.setContentType(getResponseContentType(contentTypesReturned));
 
@@ -202,7 +223,7 @@ public class HttpProxyServlet extends HttpServlet {
                     out.print(responseBody);
                     out.flush();
                     out.close();
-                    
+
                 } else {
                     returnExceptionMessage(response, "Unexpected failure: " + httpPost.getStatusLine().toString());
                 }
