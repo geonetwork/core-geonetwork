@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -48,6 +49,8 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
+
+import com.google.common.base.Splitter;
 
 /**
  * Class to create a Lucene query from a {@link LuceneQueryInput} representing a
@@ -688,9 +691,7 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur occur = LuceneUtils
                     .convertRequiredAndProhibitedToOccur(false, false);
 
-            String[] tokens = text.split(separator);
-            for (String token : tokens) {
-                token = token.trim();
+            for (String token : Splitter.on(separator).trimResults().split(text)) {
                 // TODO : here we should use similarity if set
                 TermQuery termQuery = new TermQuery(new Term(fieldName, token));
                 BooleanClause clause = new BooleanClause(termQuery, occur);
@@ -700,51 +701,49 @@ public class LuceneQueryBuilder {
     }
 
 
-    /**
-     * Add any field clause to a query.
-     * 
-     * @param any
-     * @param similarity
-     * @param query
-     */
-    private void addAnyTextQuery(String any, String similarity,
-            BooleanQuery query) {
-        BooleanClause anyClause = null;
-        BooleanClause.Occur occur = LuceneUtils
-                .convertRequiredAndProhibitedToOccur(true, false);
-        if (any != null && !onlyWildcard(any)) {
-            if (any.length() > 0) {
-                // tokenize searchParam
-                StringTokenizer st = new StringTokenizer(any);
-                if (st.countTokens() == 1) {
-                    String token = st.nextToken();
-                    Query subQuery = textFieldToken(token,
-                            LuceneIndexField.ANY, similarity);
-                    if (subQuery != null) {
-                        anyClause = new BooleanClause(subQuery, occur);
-                    }
-                } else {
-                    BooleanQuery booleanQuery = new BooleanQuery();
-                    while (st.hasMoreTokens()) {
-                        String token = st.nextToken();
-                        Query subQuery = textFieldToken(token,
-                                LuceneIndexField.ANY, similarity);
-                        if (subQuery != null) {
-                            BooleanClause subClause = new BooleanClause(
-                                    subQuery, occur);
-                            if (subClause != null) {
-                                booleanQuery.add(subClause);
-                            }
-                        }
-                    }
-                    anyClause = new BooleanClause(booleanQuery, occur);
-                }
-            }
-        }
-        if (anyClause != null) {
-            query.add(anyClause);
-        }
-    }
+	/**
+	 * Add any field clause to a query.
+	 * 
+	 * @param any
+	 * @param similarity
+	 * @param query
+	 */
+	private void addAnyTextQuery(String any, String similarity,
+			BooleanQuery query) {
+		BooleanClause anyClause = null;
+		BooleanClause.Occur occur = LuceneUtils
+				.convertRequiredAndProhibitedToOccur(true, false);
+		if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
+			// tokenize searchParam
+			StringTokenizer st = new StringTokenizer(any);
+			if (st.countTokens() == 1) {
+				String token = st.nextToken();
+				Query subQuery = textFieldToken(token, LuceneIndexField.ANY,
+						similarity);
+				if (subQuery != null) {
+					anyClause = new BooleanClause(subQuery, occur);
+				}
+			} else {
+				BooleanQuery booleanQuery = new BooleanQuery();
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					Query subQuery = textFieldToken(token,
+							LuceneIndexField.ANY, similarity);
+					if (subQuery != null) {
+						BooleanClause subClause = new BooleanClause(subQuery,
+								occur);
+						if (subClause != null) {
+							booleanQuery.add(subClause);
+						}
+					}
+				}
+				anyClause = new BooleanClause(booleanQuery, occur);
+			}
+		}
+		if (anyClause != null) {
+			query.add(anyClause);
+		}
+	}
 
     /**
      * Add search privilege criteria to a query.
@@ -1120,6 +1119,6 @@ public class LuceneQueryBuilder {
     }
 
     private boolean onlyWildcard(String s) {
-        return s != null && s.trim().equals("*");
+        return "*".equals(StringUtils.trim(s));
     }
 }

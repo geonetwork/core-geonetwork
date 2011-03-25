@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -123,11 +124,11 @@ public class UserQueryInput {
             if (e instanceof Element) {
                 Element node = (Element) e;
                 String nodeName = node.getName();
-                String nodeValue = node.getText().trim();
+                String nodeValue = StringUtils.trim(node.getText());
                 if (SearchParameter.SIMILARITY.equals(nodeName)) {
                     setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
                 } else {
-                    if (nodeValue.length() > 0) {
+                    if (StringUtils.isNotBlank(nodeValue)) {
 
                         if (SECURITY_FIELDS.contains(nodeName)
                                 || nodeName.contains("_op")) {
