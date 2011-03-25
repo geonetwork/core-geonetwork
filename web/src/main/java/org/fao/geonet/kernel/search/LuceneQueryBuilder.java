@@ -688,7 +688,7 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur occur = LuceneUtils
                     .convertRequiredAndProhibitedToOccur(false, false);
 
-            String[] tokens = StringUtils.split(text, separator);
+            String[] tokens = text.split(separator);
             for (String token : tokens) {
                 token = token.trim();
                 // TODO : here we should use similarity if set
