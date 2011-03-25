@@ -988,7 +988,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="northbc">
-		<label>Coordenada límit nord</label>
+		<label>Coordenada límit Nord</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1113,7 +1113,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="placekt">
-		<label>Tesaure de paraules clau de lloc</label>
+		<label>Tesaurus de paraules clau de lloc</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1498,7 +1498,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="stratkt">
-		<label>Tesaure de paraules clau de l'estrat</label>
+		<label>Tesaurus de paraules clau de l'estrat</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1528,7 +1528,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="tempkeyt">
-		<label>Tesaure de paraules clau de temps</label>
+		<label>Tesaurus de paraules clau de temps</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1548,7 +1548,7 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="themekt">
-		<label>Tesaure de paraules clau de tema</label>
+		<label>Tesaurus de paraules clau de tema</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
@@ -1673,12 +1673,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="vrtcount">
-		<label>Número d'elements en la vertical</label>
+		<label>Número d'elements a la vertical</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->
 	<element name="westbc">
-		<label>Coordenada límit Est</label>
+		<label>Coordenada límit Oest</label>
 		<description/>
 	</element>
 	<!-- ==================================================== -->

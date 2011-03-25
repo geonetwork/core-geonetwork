@@ -1,0 +1,309 @@
+ 
+
+de             |  from, of
+la             |  the, her
+qui            |  who
+el             |  the
+a              |  in
+i              |  and
+a              |  to
+els            |  them
+del            |  de + el
+dels           |  de + els
+pel            |  per + el
+pels           |  per + els
+es             |  reflexive pronoun
+se             |  reflexive pronoun
+les            |  the, them
+per            |  for, by, etc
+un             |  a
+una            |  a
+amb            |  with
+no             |  no
+al             |  a + el
+als            |  a + els
+com            |  how
+més            |  more
+però           |  but
+ja             |  already
+o              |  or
+perquè         |  because
+entre          |  between
+quan           |  when
+molt           |  very
+sense          |  without
+sobre          |  on
+també          |  also
+fins           |  until
+on             |  where
+qui            |  whom, that
+tot            |  all
+durant         |  during
+tots           |  all
+un             |  a
+ni             |  nor
+contra         |  against
+altra          |  other
+altre          |  other
+altres         |  other
+abans          |  before
+després        |  after
+això           |  this
+alguns         |  some
+què            |  what?
+uns            |  a
+tant           |  so much, many
+quin           |  who
+quina          |  who
+quins          |  who
+quines         |  who
+molt           |  many
+molta          |  many
+molts          |  many
+moltes         |  many
+poc            |  few
+poca           |  few
+pocs           |  few
+poques         |  few
+algunes        |  some
+alguns         |  some
+quelcom        |  something
+aquest         |  those
+aquesta        |  those
+aquests        |  those
+aquestes       |  those
+aquell         |  this
+aquella        |  this
+aquells        |  this
+aquelles       |  this
+jo             |  I
+tu             |  you
+ell            |  he
+ella           |  she, it
+nosaltres      |  we
+vosaltres      |  you
+elles		   |  they
+ells		   |  they
+
+
+      | some adjective  
+meu            |  mine
+meva           |  mine
+meus           |  mine
+meves          |  mine
+teu            |  your
+teva           |  your
+teus           |  your
+teves          |  your
+seu            |  his
+seva           |  hers
+seus           |  theirs
+seves          |  theirs
+llur		   |  theirs
+llurs		   |  theirs
+nostra         |  ours
+nostre         |  ours
+nostres        |  ours
+vostra         |  yours
+vostre         |  yours
+vostres        |  yours
+
+
+		| some pronouns (pronoms febles)
+em
+et
+es
+el
+la
+els
+les
+en
+ho
+li
+hi
+ens
+us
+
+
+               | forms of estar, to be (not including the infinitive):
+
+estic
+estàs
+està
+estem
+esteu
+estan
+estigui
+estiguis
+estiguem
+estigueu
+estiguin
+estaré
+estaràs
+estarà
+estarem
+estareu
+estaran
+estaria
+estaries
+estaríem
+estaríeu
+estarien
+estava
+estaves
+estàvem
+estàveu
+estaven
+estiguí
+estigueres
+estigué
+estiguérem
+estiguéreu
+estigueren
+estigués
+estiguessis
+estiguéssim
+estiguéssiu
+estiguessin
+estigues
+estigui
+estiguem
+estigueu
+estiguin
+estant
+
+
+               | forms of haver, to have (not including the infinitive):
+he
+haig
+has
+ha
+hem
+heu
+han
+hagi
+hagis
+hàgim
+hàgiu
+hagin
+hauré
+hauràs
+haurà
+haurem
+haureu
+hauran
+hauria
+hauries
+hauríem
+hauríeu
+haurien
+havia
+havies
+havíem
+havíeu
+havien
+haguí
+hagueres
+hagué
+haguérem
+haguéreu
+hagueren
+hagut
+haguda
+haguts
+hagudes
+havent
+
+               | forms of ser, to be (not including the infinitive):
+sóc
+ets
+és
+som
+    | sou excluded, it also means salary
+sigui
+siguis
+siguem
+sigueu
+siguin
+seré
+seràs
+serà
+serem
+sereu
+seran
+seria
+series
+seríem
+seríeu
+serien
+era
+eres
+era
+érem
+éreu
+eren
+fui
+fores
+fou
+fórem
+fóreu
+foren
+sigut
+siguda
+siguts
+sigudes
+	| fos excluded, also means melt
+fossis
+fóssim
+fóssiu
+fossin
+essent
+sent
+
+
+               | forms of tenir, to have (not including the infinitive):
+tinc
+tens
+té
+tenim
+teniu
+tenen
+tingui
+tinguis
+tinguem
+tingueu
+tinguin
+tindré
+tindràs
+tindrà
+tindrem
+tindreu
+tindran
+tindria
+tindries
+tindríem
+tindríeu
+tindrien
+tinguí
+tingueres
+tingué
+tinguérem
+tinguéreu
+tingueren
+tenia
+tenies
+teníem
+teníeu
+tenien
+tingués
+tinguessis
+tinguéssim
+tinguéssiu
+tinguessin
+tingut
+tinguda
+tinguts
+tingudes
+tenint
+
+
