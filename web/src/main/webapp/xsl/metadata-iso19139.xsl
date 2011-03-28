@@ -2427,7 +2427,7 @@
 	<!-- online resources: WMS get map -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and string(gmd:name/gco:CharacterString)]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="metadata_id" select="//geonet:info/id" />
@@ -2500,7 +2500,7 @@
 	<!-- online resources: WMS get capabilities -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
@@ -2857,7 +2857,7 @@
 							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
 						</link>
 					</xsl:when>
-					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
+                    <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!='') or ($protocol = 'OGC:WMS' and string($linkage)!='' and string($name)!='')">
 						<link type="wms">
 <!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=2&#34;)')"/>-->
 							
@@ -2869,7 +2869,7 @@
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
 						</link>
 					</xsl:when>
-					<xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!=''">
+                    <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!='') or ($protocol = 'OGC:WMS' and string($name)='' and string($linkage)!='')">
 						<link type="wms">
 							<!--xsl:value-of select="concat('javascript:runIM_selectService(&#34;'  ,  $linkage  ,  '&#34;, 2,',$id,')' )"/-->
 							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
