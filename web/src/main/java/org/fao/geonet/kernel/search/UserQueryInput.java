@@ -70,6 +70,7 @@ public class UserQueryInput {
             Geonet.SearchResult.EXTENDED, 
             Geonet.SearchResult.INTERMAP, 
             Geonet.SearchResult.HITS_PER_PAGE, 
+            Geonet.SearchResult.GEOMETRY,
             Geonet.SearchResult.TIMEOUT, 
             Geonet.SearchResult.OUTPUT, 
             Geonet.SearchResult.SUMMARY_ONLY, 
