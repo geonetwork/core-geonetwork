@@ -85,7 +85,7 @@ public class MEF2Visitor implements IVisitor {
 
                     if (xmlFiles == null || xmlFiles.length < 1) {
                         throw new BadFormatEx(
-                                "Missing XML document in metadata folder in MEF file "
+                                "Missing XML document in metadata folder " + file.getName() + "/metadata in MEF file "
                                         + mefFile.getName() + ".");
                     }
 
