@@ -92,11 +92,12 @@ public class Update implements Service
 				Element md = Xml.loadString(data, false);
 
                 String changeDate = null;
-                boolean validate = true;
+                boolean validate = showValidationErrors.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate));
+				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate)) {
 					throw new ConcurrentUpdateEx(id);
+				}
 			}
             else {
 				ajaxEditUtils.updateContent(params, false, true);
