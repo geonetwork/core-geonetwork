@@ -5,20 +5,20 @@
 	<codelist name="gmd:CI_DateTypeCode">
 		<entry>
 			<code>creation</code>
-			<label>>Creació</label>
-			<description>data en que el recurs va ser creat</description>
+			<label>Creació</label>
+			<description>data en què el recurs va ser creat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>publication</code>
 			<label>Publicació</label>
-			<description>data en que el recurs va ser publicat</description>
+			<description>data en què el recurs va ser publicat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>revision</code>
 			<label>Revisió</label>
-			<description>data en que el recurs va ser revisat o millorat</description>
+			<description>data en què el recurs va ser revisat o millorat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -197,7 +197,7 @@
 		<entry>
 			<code>processor</code>
 			<label>Processador</label>
-			<description>organització processadora de les dades, en el cas que el conjunt de dades hagi estat modificat</description>
+			<description>organització processadora de les dades, en cas que el conjunt de dades hagi estat modificat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
