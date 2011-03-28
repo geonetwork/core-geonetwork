@@ -1477,7 +1477,7 @@ public class DataManager {
 		Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
 		
 		Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);		
-		if (sessionReport != null) {
+		if (sessionReport != null && !forEditing) {
 			Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");
 			sessionReport.detach();
 			return Pair.read(sessionReport, version);
@@ -1563,6 +1563,7 @@ public class DataManager {
             Integer[] results = valTypeAndStatus.get(type);
             dbms.execute(query, new Integer(id), type, results[0], results[1], results[2], date);
         }
+        dbms.commit();
 	}
 
 	/**
@@ -1573,6 +1574,7 @@ public class DataManager {
 	 */
 	private void clearValidationStatus (Dbms dbms, String id) throws Exception {
 	    dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
+	    dbms.commit();
 	}
 
 	/**
