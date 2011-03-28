@@ -129,7 +129,7 @@ class Harvester
 		if (s.from.length() != 0)	req.setFrom(new ISODate(s.from));
 			else							req.setFrom(null);
 
-		if (s.until.length() != 0)	req.setUntil(new ISODate(s.from));
+		if (s.until.length() != 0)	req.setUntil(new ISODate(s.until));
 			else 							req.setUntil(null);
 
 		if (s.set.length() != 0) 	req.setSet(s.set);
