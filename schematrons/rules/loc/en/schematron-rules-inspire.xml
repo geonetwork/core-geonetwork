@@ -102,10 +102,10 @@
         </ul>      
         
     </div></alert.M41>
-    <alert.M41.N><div>WestBoundLongitude is missing or has wrong value</div></alert.M41.N>
+    <alert.M41.N><div>NorthBoundLongitude is missing or has wrong value</div></alert.M41.N>
     <alert.M41.S><div>SouthBoundLongitude is missing or has wrong value</div></alert.M41.S>
     <alert.M41.E><div>EastBoundLongitude is missing or has wrong value</div></alert.M41.E>
-    <alert.M41.W><div>NorthBoundLongitude is missing or has wrong value</div></alert.M41.W>
+    <alert.M41.W><div>WestBoundLongitude is missing or has wrong value</div></alert.M41.W>
     <report.M41.N><div>NorthBoundLongitude found:</div></report.M41.N>
     <report.M41.S><div>SouthBoundLongitude found:</div></report.M41.S>
     <report.M41.E><div>EastBoundLongitude found:</div></report.M41.E>
