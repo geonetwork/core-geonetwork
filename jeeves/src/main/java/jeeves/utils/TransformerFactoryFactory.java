@@ -20,7 +20,8 @@ public class TransformerFactoryFactory {
     private static TransformerFactory factory ;
     private final static String SYSTEM_PROPERTY_NAME = "javax.xml.transform.TransformerFactory";
 
-    public static void init(String implementationName) {
+    private static TransformerFactory createFactory(String implementationName) {
+        TransformerFactory factory;
         if(implementationName != null && implementationName.length() > 0) {
             /*
              * code for JDK 1.5 -- might break other applications using the same System property at the same moment
@@ -55,6 +56,10 @@ public class TransformerFactoryFactory {
         else {
             factory = TransformerFactory.newInstance();
         }
+        return factory;
+    }
+    public static void init(String implementationName) {
+            factory = createFactory(implementationName);
     }
 
     public static TransformerFactory getTransformerFactory() throws TransformerConfigurationException {
@@ -64,6 +69,20 @@ public class TransformerFactoryFactory {
         debug("TransformerFactoryFactory: " +factory.getClass().getName());
         debug("TransformerFactoryFactory: produces transformer implementation " +factory.newTransformer().getClass().getName());
         return factory;
+    }
+
+    /**
+     * Returns a non-caching transformerfactory, useful for where caching transformerfactory can't handle things, like
+     * XSLTs generated at runtime and not saved to file.
+     *
+     * @return non-caching transformerfactory
+     * @throws TransformerConfigurationException
+     */
+    public static TransformerFactory getNonCachingTransformerFactory() throws TransformerConfigurationException {
+        TransformerFactory nonCachingFactory = createFactory("net.sf.saxon.TransformerFactoryImpl");
+        debug("TransformerFactoryFactory: " + nonCachingFactory.getClass().getName());
+        debug("TransformerFactoryFactory: produces transformer implementation " + nonCachingFactory.newTransformer().getClass().getName());
+        return nonCachingFactory;
     }
 
 	private static void debug  (String message) { Log.debug  (Log.ENGINE, message); }

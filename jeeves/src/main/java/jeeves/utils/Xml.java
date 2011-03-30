@@ -190,7 +190,25 @@ public class Xml
 	public static Element transform(Element xml, Source xslt) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
-		transform(xml, xslt, resXml, null);
+		transform(xml, xslt, resXml, null, false);
+		return (Element)resXml.getDocument().getRootElement().detach();
+	}
+
+    /**
+     * Transforms an xml tree into another using a stylesheet on disk, with option to require non-caching
+     * transformerfactory. That is useful in cases where the XSLT transformation does not reside in a file, but is
+     * generated dynamically -- the caching transformerfactory throws a NullpointerException for those.
+     *
+     * @param xml document to transform
+     * @param xslt transformation
+     * @param nonCachingTransformerFactory whether to require noncaching transformerfactory
+     * @return result
+     * @throws Exception hmm
+     */
+	public static Element transform(Element xml, Source xslt, boolean nonCachingTransformerFactory) throws Exception
+	{
+		JDOMResult resXml = new JDOMResult();
+		transform(xml, xslt, resXml, null, nonCachingTransformerFactory);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 
@@ -226,7 +244,7 @@ public class Xml
 	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception {
 		File styleSheet = new File(styleSheetPath);
 		Source srcSheet = new StreamSource(styleSheet);
-        transform(xml, srcSheet, result, params);
+        transform(xml, srcSheet, result, params, false);
 	}
 
     /**
@@ -236,15 +254,23 @@ public class Xml
      * @param xslt transformation to use
      * @param result result
      * @param params parameters
+     * @param nonCachingTransformerFactory whether non-caching transformerfactory is required
      * @throws Exception hmm
      */
-	public static void transform(Element xml, Source xslt, Result result, Map<String,String> params) throws Exception {
+	public static void transform(Element xml, Source xslt, Result result, Map<String,String> params, boolean nonCachingTransformerFactory) throws Exception {
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
 
 		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
 		// stylesheet so switch it off but trap any exceptions because this
 		// code is run on transformers other than saxon
-        TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
+        TransformerFactory transFact;
+        if(nonCachingTransformerFactory == false) {
+            transFact = TransformerFactoryFactory.getTransformerFactory();
+        }
+        // non-caching transformerfactory required
+        else {
+            transFact = TransformerFactoryFactory.getNonCachingTransformerFactory();
+        }
 		try {
 			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
