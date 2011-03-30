@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.XPath;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -41,10 +40,13 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
-import org.jdom.Content;
 import org.jdom.Element;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -210,8 +212,7 @@ public class SearchController
 
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("lang", context.getLanguage());
-		params.put("displayInfo", 
-				resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 		
 		res = Xml.transform(res, styleSheet, params);
 
@@ -221,6 +222,7 @@ public class SearchController
 
 		if (elemNames != null) {
 		    if (outSchema != OutputSchema.OGC_CORE) {
+                /* original implementation. Seems incorrect -- see http://trac.osgeo.org/geonetwork/ticket/492.
 						Element frags = (Element)res.clone();
 						frags.removeContent();
 						for (String s : elemNames) {
@@ -233,18 +235,69 @@ public class SearchController
 							}
 						}
 						res = frags;
-				} else {
+				*/
+                String transformation = createElementNameTransformation(elemNames);
+                InputStream is = new ByteArrayInputStream(transformation.getBytes("UTF-8"));
+                Source ss = new StreamSource(is);
+                res = Xml.transform(res, ss);
+			}
+            else {
 		    		removeElements(res, elemNames);
-				}
+			}
 		}
 		return res;
-	} catch (Exception e) {
+	}
+    catch (Exception e) {
 		context.error("Error while getting metadata with id : "+ id);
 		context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
-
 		throw new NoApplicableCodeEx("Raised exception while getting metadata :"+ e);
-  }
+    }
 	}
+
+    /**
+     * Creates a transformation containing
+     *
+     * <xsl:apply-templates select="[xpath"/>
+     *
+     * for each requested Xpath.
+     *
+     * TODO better put this in a file and pass it parameters from Java ?
+     *
+     * @param elemNames
+     * @return
+     */
+    private static String createElementNameTransformation(Set<String> elemNames) {
+
+        String result =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:ows=\"http://www.opengis.net/ows\" xmlns:geonet=\"http://www.fao.org/geonetwork\">\n" +
+                "<xsl:output indent=\"yes\"/>\n" +
+                "<xsl:param name=\"displayInfo\"/>\n" +
+                "<xsl:template match=\"gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']\">\n" +
+                "<xsl:variable name=\"info\" select=\"geonet:info\"/>\n" +
+                "<xsl:copy>\n";
+
+        for (String xpath : elemNames) {
+            result += "<xsl:apply-templates select=\"" + xpath + "\"/>\n";
+        }
+
+        result +=
+                "<!-- GeoNetwork elements added when resultType is equal to results_with_summary -->\n" +
+                "<xsl:if test=\"$displayInfo = 'true'\">\n" +
+                "<xsl:copy-of select=\"$info\"/>\n" +
+                "</xsl:if>\n" +
+                "</xsl:copy>\n" +
+                "</xsl:template>\n" +
+                "<xsl:template match=\"@*|node()\">\n" +
+                "<xsl:copy>\n" +
+                "<xsl:apply-templates select=\"@*|node()\"/>\n" +
+                "</xsl:copy>\n" +
+                "</xsl:template>\n" +
+                "\n" +
+                "</xsl:stylesheet>";
+
+        return result;
+    }
 
     //---------------------------------------------------------------------------
 
