@@ -40,6 +40,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
 import javax.xml.transform.Source;
@@ -160,8 +161,7 @@ public class SearchController
      */
     public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
                                            OutputSchema outSchema, Set<String> elemNames, ResultType resultType) throws CatalogException {
-	try
-	    {
+	try {
 		//--- get metadata from DB
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		Element  res = gc.getDataManager().getMetadata(context, id, false); 
@@ -243,7 +243,7 @@ public class SearchController
                 res = Xml.transform(res, ss, requireNonCachingTransformerFactory);
 			}
             else {
-		    		removeElements(res, elemNames);
+                removeElements(res, elemNames);
 			}
 		}
 		return res;
@@ -279,7 +279,9 @@ public class SearchController
                 "<xsl:copy>\n";
 
         for (String xpath : elemNames) {
-            result += "<xsl:apply-templates select=\"" + xpath + "\"/>\n";
+            if(StringUtils.hasLength(xpath)) {
+                result += "<xsl:apply-templates select=\"" + xpath + "\"/>\n";
+            }
         }
 
         result +=

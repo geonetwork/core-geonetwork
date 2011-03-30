@@ -98,7 +98,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	int startPos   = getStartPosition(request);
 	int maxRecords = getMaxRecords(request);
 
-        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+    Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
 
 	ResultType      resultType  = ResultType  .parse(request.getAttributeValue("resultType"));
 	OutputSchema    outSchema   = OutputSchema.parse(request.getAttributeValue("outputSchema"));
@@ -120,8 +120,11 @@ public class GetRecords extends AbstractOperation implements CatalogService
                 customElements = gc.getDataManager().getCustomElementSets(dbms);
                 // custom elementset defined
                 if(!CollectionUtils.isEmpty(customElements)) {
+                    if(elemNames == null) {
+                        elemNames = new HashSet<String>();
+                    }
                     for(Element customElement : customElements) {
-                        elemNames.add(customElement.getText());
+                        elemNames.add(customElement.getChildText("xpath"));
                     }
                 }
             }
@@ -185,6 +188,7 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		status.setAttribute("timestamp",timeStamp);
 
 		response.addContent(status);
+
 		Pair<Element, Element> search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
                 setName, filterExpr, filterVersion, sort, elemNames, maxHitsInSummary);
 		
