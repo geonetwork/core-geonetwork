@@ -23,6 +23,13 @@ CREATE TABLE Categories
 
 REM ======================================================================
 
+CREATE TABLE CustomElementSet
+  (
+    xpath  varchar(1000) not null
+  );
+
+REM ======================================================================
+
 CREATE TABLE Settings
   (
     id        int,

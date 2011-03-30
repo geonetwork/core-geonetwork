@@ -1050,4 +1050,11 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+
+    <customize-elementset>自定义元素集</customize-elementset>
+    <csw-server-disabled>妇女地位委员会服务器被禁用。</csw-server-disabled>
+    <custom-elementset-intro>定义元素被包含在这里设置的自定义元素。每个元素都必须确定其从文档根完整的XPath。这些元素和他们的后裔将被纳入到妇女地位委员会GetRecord与ElementSetName=完全请求的响应。</custom-elementset-intro>
+    <custom-elementset-revert>要恢复到默认ElementSetName=充分的答复，请删除此列表的所有元素。</custom-elementset-revert>
+    <custom-elementset-add>添加元素</custom-elementset-add>
+
 </strings>

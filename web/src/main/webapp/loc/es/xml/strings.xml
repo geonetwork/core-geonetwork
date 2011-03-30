@@ -1051,4 +1051,11 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+
+    <customize-elementset>Personalizar conjunto de elementos</customize-elementset>
+    <csw-server-disabled>Servidor de la CSW se desactiva.</csw-server-disabled>
+    <custom-elementset-intro>Definir los elementos que deben incluirse en el elemento personalizado ajustado aquí. Cada elemento debe ser identificado por su XPATH total de la raíz del documento. Estos elementos y sus descendientes serán incluidos en las respuestas a las solicitudes CSW GetRecord con ElementSetName = FULL.</custom-elementset-intro>
+    <custom-elementset-revert>Para volver a la ElementSetName default = respuestas completas, eliminar todos los elementos de esta lista.</custom-elementset-revert>
+    <custom-elementset-add>Añadir elemento</custom-elementset-add>
+
 </strings>

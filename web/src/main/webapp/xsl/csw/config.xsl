@@ -66,10 +66,14 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="form">
+		
+		
 
 		<form name="cswCapabilitiesForm" accept-charset="UTF-8" action="{/root/gui/locService}/csw.config.set" method="post">
 		<div align="left" style="{$style}">
-            <table>
+				<a href="{/root/gui/locService}/csw.customelementset.get" style="margin:20px 0px 20px 0px;display:block;outline:none;"><xsl:value-of select="/root/gui/strings/customize-elementset"/></a>
+		
+		<table>
             	<tr>
 					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/strings/cswServerEnable"/></td>
 					<td class="padded"><input id="csw.enable" name="csw.enable" class="content" type="checkbox"/></td>

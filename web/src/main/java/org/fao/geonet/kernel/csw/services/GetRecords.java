@@ -23,10 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
@@ -45,6 +47,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.spring.CollectionUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -106,10 +109,29 @@ public class GetRecords extends AbstractOperation implements CatalogService
 	// element set name default.  In that case, we set setName to FULL instead of
 	// SUMMARY so that we can retrieve a CSW:Record and trim out the elements that
 	// aren't in the elemNames set.
-	if ((elemNames == null) || (elemNames.size() == 0))
+	if ((elemNames == null) || (elemNames.size() == 0)) {
 	    setName = getElementSetName(query , ElementSetName.SUMMARY);
+        // if no elementnames requested, and elementsetname is FULL, use customized elementset if it is defined :
+        if(setName.equals(ElementSetName.FULL)) {
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            List<Element> customElements = null;
+            try {
+                Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+                customElements = gc.getDataManager().getCustomElementSets(dbms);
+                // custom elementset defined
+                if(!CollectionUtils.isEmpty(customElements)) {
+                    for(Element customElement : customElements) {
+                        elemNames.add(customElement.getText());
+                    }
+                }
+            }
+            catch(Exception x) {
+                Log.warning(Geonet.CSW, "Failed to check for custom element sets; ignoring -- request will be handled with default FULL elementsetname. Message was: " + x.getMessage());
+            }
+        }
+    }
 
-        Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
+    Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
 	Element filterExpr = getFilterExpression(constr);
 	String filterVersion = getFilterVersion(constr);
 	
@@ -163,10 +185,8 @@ public class GetRecords extends AbstractOperation implements CatalogService
 		status.setAttribute("timestamp",timeStamp);
 
 		response.addContent(status);
-		Pair<Element, Element> search = _searchController.search(context,
-					startPos, maxRecords, resultType, outSchema,
-					setName, filterExpr, filterVersion, sort,
-					elemNames, maxHitsInSummary);
+		Pair<Element, Element> search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
+                setName, filterExpr, filterVersion, sort, elemNames, maxHitsInSummary);
 		
 		// Only add GeoNetwork summary on results_with_summary option 
 		if (resultType == ResultType.RESULTS_WITH_SUMMARY)

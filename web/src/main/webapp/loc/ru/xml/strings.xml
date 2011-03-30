@@ -1053,4 +1053,10 @@
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
     
+    <customize-elementset>Настройка элемента множества</customize-elementset>
+    <csw-server-disabled>КПЖ сервер отключен.</csw-server-disabled>
+    <custom-elementset-intro>Определить элементы должны быть включены в пользовательский набор элементов здесь. Каждый элемент должен быть идентифицирован по полной XPATH от корня документа. Эти элементы и их потомки будут включены в ответах на запросы КПЖ GetRecord с ElementSetName = FULL.</custom-elementset-intro>
+    <custom-elementset-revert>Чтобы вернуться к умолчанию ElementSetName = полные ответы, удалить все элементы из этого списка.</custom-elementset-revert>
+    <custom-elementset-add>Добавить элемент</custom-elementset-add>
+    
 </strings>

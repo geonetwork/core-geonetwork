@@ -363,7 +363,7 @@ public class Geonetwork implements ApplicationHandler
 					e.printStackTrace();
 				}
 				
-				logger.info("      Successfull migration.\n" +
+				logger.info("      Successful migration.\n" +
 							"      Catalogue administrator still need to update the catalogue\n" +
 							"      logo and data directory in order to complete the migration process.\n" +
 							"      Lucene index rebuild is also recommended after migration."

@@ -150,13 +150,18 @@ public abstract class AbstractOperation
 		}
 	}
 
-	//---------------------------------------------------------------------------
-
-	protected ElementSetName getElementSetName(Element parent, ElementSetName defValue) throws InvalidParameterValueEx
-	{
-		if (parent == null)
+    /**
+     * Retrieves ElementSetName from a JDOM element if that is not null, otherwise returns the provided default value.
+     *
+     * @param parent
+     * @param defValue
+     * @return
+     * @throws InvalidParameterValueEx
+     */
+	protected ElementSetName getElementSetName(Element parent, ElementSetName defValue) throws InvalidParameterValueEx {
+		if (parent == null) {
 			return defValue;
-
+        }
 		return ElementSetName.parse(parent.getChildText("ElementSetName", parent.getNamespace()));
 	}
 

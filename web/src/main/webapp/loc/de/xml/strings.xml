@@ -1045,4 +1045,11 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+
+    <customize-elementset>Passen Element gesetzt</customize-elementset>
+    <csw-server-disabled>CSW-Server deaktiviert ist.</csw-server-disabled>
+    <custom-elementset-intro>Definieren Sie Elemente in Ihr eigenes Element gesetzt, hier einbezogen werden. Jedes Element muss mit vollem XPATH von der Wurzel identifiziert werden. Diese Elemente und ihre Nachkommen werden in Antworten auf Anfragen mit CSW GetRecord ElementSetName = FULL einbezogen werden.</custom-elementset-intro>
+    <custom-elementset-revert>Um wieder auf den Standardwert ElementSetName = FULL Antworten, löschen Sie alle Elemente aus dieser Liste.</custom-elementset-revert>
+    <custom-elementset-add>Element hinzufügen</custom-elementset-add>
+
 </strings>

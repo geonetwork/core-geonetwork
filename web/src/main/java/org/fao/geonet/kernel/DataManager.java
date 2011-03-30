@@ -44,14 +44,14 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
-import org.fao.geonet.util.spring.CollectionUtils;
+import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -2985,6 +2985,35 @@ public class DataManager
         dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getAbstract(), langId, "abstract");
         dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getFees(), langId, "fees");
         dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?",  cswCapabilitiesInfo.getAccessConstraints(), langId, "accessConstraints");
+    }
+
+    /**
+     * Replaces the contents of table CustomElementSet.
+     *
+     * @param dbms database
+     * @param customElementSet customelementset definition to save
+     * @throws Exception hmm
+     */
+    public void saveCustomElementSets(Dbms dbms, CustomElementSet customElementSet) throws Exception {
+        dbms.execute("DELETE FROM CustomElementSet");
+        for(String xpath : customElementSet.getXpaths()) {
+             if(StringUtils.hasLength(xpath)) {
+                 dbms.execute("INSERT INTO CustomElementSet (xpath) VALUES ('" + xpath + "')");
+             }
+        }
+    }
+
+    /**
+     * Retrieves contents of CustomElementSet.
+     *
+     * @param dbms database
+     * @return List of elements (denoted by XPATH)
+     * @throws Exception hmm
+     */
+    public List<Element> getCustomElementSets(Dbms dbms) throws Exception {
+		Element customElementSetList = dbms.select("SELECT * FROM CustomElementSet");
+        List<Element> records = customElementSetList.getChildren();
+        return records;
     }
 
 	//--------------------------------------------------------------------------

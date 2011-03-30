@@ -68,13 +68,26 @@ public class SearchController
     //---------------------------------------------------------------------------
 
     /**
-	 * Perform the general search tasks
-	 */
+     * Performs the general search tasks.
+     *
+     * @param context
+     * @param startPos
+     * @param maxRecords
+     * @param resultType
+     * @param outSchema
+     * @param setName
+     * @param filterExpr
+     * @param filterVersion
+     * @param sort
+     * @param elemNames
+     * @param maxHitsFromSummary
+     * @return
+     * @throws CatalogException
+     */
     public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, OutputSchema outSchema, ElementSetName setName,
                                          Element filterExpr, String filterVersion, Sort sort,
-                                         Set<String> elemNames, int maxHitsFromSummary) throws CatalogException
-    {
+                                         Set<String> elemNames, int maxHitsFromSummary) throws CatalogException {
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
 	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, sort, resultType, startPos, maxRecords, maxHitsFromSummary);
@@ -125,19 +138,26 @@ public class SearchController
     }
 
     //---------------------------------------------------------------------------
+
     /**
-     * Retrieve metadata from the database.
-     * Conversion between metadata record and output schema are defined
-     * in xml/csw/schemas/ directory.
-     * 
-     * @return	The XML metadata record if the record could be converted to 
-     * the required output schema. Null if no conversion available for 
+     * Retrieves metadata from the database.
+     * Conversion between metadata record and output schema are defined in xml/csw/schemas/ directory.
+     *
+     * @return	The XML metadata record if the record could be converted to
+     * the required output schema. Null if no conversion available for
      * the schema (eg. fgdc record could not be converted to ISO).
+     *
+     * @param context
+     * @param id
+     * @param setName
+     * @param outSchema
+     * @param elemNames
+     * @param resultType
+     * @return
+     * @throws CatalogException
      */
     public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName,
-				     OutputSchema outSchema, Set<String> elemNames, ResultType resultType)
-	throws CatalogException
-    {
+                                           OutputSchema outSchema, Set<String> elemNames, ResultType resultType) throws CatalogException {
 	try
 	    {
 		//--- get metadata from DB
@@ -147,26 +167,26 @@ public class SearchController
 		if (res==null)
 		    return null;
 
-		String schema = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
-					.getChildText(Edit.Info.Elem.SCHEMA);
+		String schema = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
 
-		String FS         = File.separator;
+		String FS = File.separator;
 		
 		// --- transform iso19115 record to iso19139
 		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
 		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
 		if (schema.equals("iso19115")) {
-			res = Xml.transform(res, context.getAppPath() + "xsl" + FS
-					+ "conversion" + FS + "import" + FS + "ISO19115-to-ISO19139.xsl");
+			res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "import" + FS + "ISO19115-to-ISO19139.xsl");
 			schema = "iso19139";
 		}
 		
 		//--- skip metadata with wrong schemas
 
-		if (schema.equals("fgdc-std") || schema.equals("dublin-core") 
-				|| schema.equals("iso19110")) // To be improved. See #343
-		    if (outSchema != OutputSchema.OGC_CORE)
-			return null;
+        // To be improved. See #343
+		if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19110")) {
+		    if (outSchema != OutputSchema.OGC_CORE){
+		    	return null;
+            }
+        }
 
 		//--- apply stylesheet according to setName and schema
 
