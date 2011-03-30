@@ -179,6 +179,21 @@ public class Xml
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 
+    /**
+     * Transforms an xml tree into another using a stylesheet on disk.
+     *
+     * @param xml document to transform
+     * @param xslt transformation
+     * @return result
+     * @throws Exception hmm
+     */
+	public static Element transform(Element xml, Source xslt) throws Exception
+	{
+		JDOMResult resXml = new JDOMResult();
+		transform(xml, xslt, resXml, null);
+		return (Element)resXml.getDocument().getRootElement().detach();
+	}
+
 	//--------------------------------------------------------------------------
 	/** Transform an xml tree into another using a stylesheet on disk and pass
 	 * parameters */
@@ -208,15 +223,27 @@ public class Xml
 	//--------------------------------------------------------------------------
 	/** Transform an xml tree putting the result to a stream with optional parameters */
 
-	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
-	{
+	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception {
 		File styleSheet = new File(styleSheetPath);
-		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
 		Source srcSheet = new StreamSource(styleSheet);
+        transform(xml, srcSheet, result, params);
+	}
+
+    /**
+     * Transforms an xml tree putting the result to a stream with optional parameters.
+     *
+     * @param xml document to be transformed
+     * @param xslt transformation to use
+     * @param result result
+     * @param params parameters
+     * @throws Exception hmm
+     */
+	public static void transform(Element xml, Source xslt, Result result, Map<String,String> params) throws Exception {
+		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
 
 		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
 		// stylesheet so switch it off but trap any exceptions because this
-		// code is run on transformers other than saxon 
+		// code is run on transformers other than saxon
         TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
 		try {
 			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
@@ -229,7 +256,7 @@ public class Xml
 			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
 			//e.printStackTrace();
 		} finally {
-			Transformer t = transFact.newTransformer(srcSheet);
+			Transformer t = transFact.newTransformer(xslt);
 			if (params != null) {
 				for (String param : params.keySet()) {
 					t.setParameter(param,params.get(param));

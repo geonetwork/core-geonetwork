@@ -58,6 +58,9 @@ public class TransformerFactoryFactory {
     }
 
     public static TransformerFactory getTransformerFactory() throws TransformerConfigurationException {
+        if(factory == null) {
+            init(null);
+        }
         debug("TransformerFactoryFactory: " +factory.getClass().getName());
         debug("TransformerFactoryFactory: produces transformer implementation " +factory.newTransformer().getClass().getName());
         return factory;
