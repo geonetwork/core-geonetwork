@@ -54,8 +54,8 @@ public class ListRecords extends AbstractTokenLister
 {
 
 
-	public ListRecords(ResumptionTokenCache cache, SettingManager sm) {
-	    super(cache, sm);
+	public ListRecords(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
+	    super(cache, sm, scm);
 	}
 
 	public String getVerb() { return ListRecordsRequest.VERB; }

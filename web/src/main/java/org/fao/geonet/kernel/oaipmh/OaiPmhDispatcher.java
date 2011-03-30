@@ -32,6 +32,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.services.GetRecord;
 import org.fao.geonet.kernel.oaipmh.services.Identify;
 import org.fao.geonet.kernel.oaipmh.services.ListIdentifiers;
@@ -62,15 +63,15 @@ public class OaiPmhDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public OaiPmhDispatcher(SettingManager sm)
+	public OaiPmhDispatcher(SettingManager sm, SchemaManager scm)
 	{
 		ResumptionTokenCache cache = new ResumptionTokenCache(sm);
 		
 		register(new GetRecord());
 		register(new Identify());
-		register(new ListIdentifiers(cache, sm));
+		register(new ListIdentifiers(cache, sm, scm));
 		register(new ListMetadataFormats());
-		register(new ListRecords(cache, sm));
+		register(new ListRecords(cache, sm, scm));
 		register(new ListSets());
 	}
 

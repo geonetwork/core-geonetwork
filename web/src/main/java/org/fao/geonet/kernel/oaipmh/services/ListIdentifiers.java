@@ -47,8 +47,8 @@ import org.jdom.Element;
 
 public class ListIdentifiers extends AbstractTokenLister
 {
-	public ListIdentifiers(ResumptionTokenCache cache, SettingManager sm) {
-		super(cache, sm);
+	public ListIdentifiers(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
+		super(cache, sm, scm);
 	}
 
 	public String getVerb() { return ListIdentifiersRequest.VERB; }

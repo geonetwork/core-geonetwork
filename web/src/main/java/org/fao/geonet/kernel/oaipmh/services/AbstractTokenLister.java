@@ -4,6 +4,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
@@ -21,10 +22,14 @@ import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AbstractTokenLister implements OaiPmhService {
 
 	protected ResumptionTokenCache cache;
 	private SettingManager settingMan;
+	private SchemaManager schemaMan;
 	
 	/**
 	 * @return the mode
@@ -61,9 +66,10 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		return dateUntil;
 	}
 	
-	public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm) {
+	public AbstractTokenLister(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
 		this.cache=cache;
 		this.settingMan = sm;
+		this.schemaMan = scm;
 	}
 	
 	
@@ -113,8 +119,23 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 			if (set != null)
 				params.addContent(new Element("category").setText(set));
 
+			params.addContent(new Element("_schema").setText(prefix));
+
+			// now do the search
 			result     = new SearchResult(prefix);
-			result.setIds(Lib.search(context, params));
+			if (schemaMan.existsSchema(prefix)) {
+				result.setIds(Lib.search(context, params));
+			} else {
+				// collect up all the schemas that we can convert to create prefix,
+				// search ids and add to the result set 
+				List<String> schemas = getSchemasThatCanConvertTo(prefix);
+				for (String schema : schemas) {
+					params.removeChild("_schema");
+					params.addContent(new Element("_schema").setText(schema));
+					result.addIds(Lib.search(context, (Element)params.clone()));
+				}
+				if (schemas.size() == 0) result.setIds(new ArrayList<Integer>());
+			}
 
 			if (result.getIds().size() == 0)
 				throw new NoRecordsMatchException("No results");
@@ -147,20 +168,26 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		if (token == null && res.getSize() == 0)
 			throw new NoRecordsMatchException("No results");
 		
-
 		//result.setupToken(res, pos);
-		if (res.getSize() == Lib.MAX_RECORDS) { // put the token on only if we 
-		                                        // have enough results
-			if (token != null) token.setupToken(pos);
-			res.setResumptionToken(token);
-		} else {
-			res.setResumptionToken(null);
-		}
-		
+		if (token != null) token.setupToken(pos);
+		res.setResumptionToken(token);
 
 		return res;
 		
 		
+	}
+
+	//---------------------------------------------------------------------------
+	/** Get list of schemas that can convert to the prefix */
+
+	private List<String> getSchemasThatCanConvertTo(String prefix) {
+		List<String> result = new ArrayList<String>();
+		for (String schema : schemaMan.getSchemas()) {
+			if (Lib.existsConverter(schemaMan.getSchemaDir(schema), prefix)) {
+				result.add(schema);
+			}
+		}
+		return result;
 	}
 
 	public abstract String getVerb(); 

@@ -327,7 +327,7 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Open Archive Initiative (OAI-PMH) server...");
 
-		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan);
+		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
         //------------------------------------------------------------------------
