@@ -296,6 +296,7 @@ public class SearchController
                 "\n" +
                 "</xsl:stylesheet>";
 
+        System.out.println("generated transformation:\n" + result);
         return result;
     }
 
