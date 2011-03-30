@@ -239,7 +239,8 @@ public class SearchController
                 String transformation = createElementNameTransformation(elemNames);
                 InputStream is = new ByteArrayInputStream(transformation.getBytes("UTF-8"));
                 Source ss = new StreamSource(is);
-                res = Xml.transform(res, ss);
+                boolean requireNonCachingTransformerFactory = true;
+                res = Xml.transform(res, ss, requireNonCachingTransformerFactory);
 			}
             else {
 		    		removeElements(res, elemNames);
