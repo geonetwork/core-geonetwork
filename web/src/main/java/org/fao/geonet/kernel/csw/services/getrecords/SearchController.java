@@ -274,7 +274,8 @@ public class SearchController
                 "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:ows=\"http://www.opengis.net/ows\" xmlns:geonet=\"http://www.fao.org/geonetwork\">\n" +
                 "<xsl:output indent=\"yes\"/>\n" +
                 "<xsl:param name=\"displayInfo\"/>\n" +
-                "<xsl:template match=\"gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']\">\n" +
+                //"<xsl:template match=\"gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']\">\n" +
+                "<xsl:template match=\"/*\">\n" +
                 "<xsl:variable name=\"info\" select=\"geonet:info\"/>\n" +
                 "<xsl:copy>\n";
 
