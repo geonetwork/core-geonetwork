@@ -157,7 +157,7 @@
         $("loading").hide();
 
 				var GNCookie = new Ext.state.CookieProvider({
-				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365)), 
+				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365))
 											//1 year from now
 								});
 
