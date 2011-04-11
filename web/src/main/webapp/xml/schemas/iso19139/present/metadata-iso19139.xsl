@@ -3051,7 +3051,7 @@
 			</xsl:apply-templates>
 
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
-				<xsl:variable name="protocol" select="gmd:protocol/gco:CharacterString"/>
+				<xsl:variable name="protocol" select="gmd:protocol[1]/gco:CharacterString"/>
 				<xsl:variable name="linkage"  select="normalize-space(gmd:linkage/gmd:URL)"/>
 				<xsl:variable name="name">
 					<xsl:for-each select="gmd:name">

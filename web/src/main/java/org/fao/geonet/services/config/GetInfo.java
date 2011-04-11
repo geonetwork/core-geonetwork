@@ -33,6 +33,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.TransformerFactoryFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
@@ -130,8 +131,8 @@ public class GetInfo implements Service {
 		systemProperties.put("os.arch", properties.getProperty("os.arch"));
 
 		try {
-			systemProperties.put("xslt.factory", TransformerFactory
-					.newInstance().newTransformer().getClass().getName());
+            TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
+            systemProperties.put("xslt.factory", transFact.getClass().getName());
 		} catch (Exception e) {
 			systemProperties.put("xslt.factory", "Exception:" + e.getMessage());
 		}

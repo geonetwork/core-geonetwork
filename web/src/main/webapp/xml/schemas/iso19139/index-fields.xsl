@@ -23,12 +23,16 @@
 
 	<!-- ========================================================================================= -->
 
-        <xsl:param name="inspire">false</xsl:param>
-    
-        <!-- If identification creation, publication and revision date
-          should be indexed as a temporal extent information (eg. in INSPIRE 
-          metadata implementing rules, those elements are defined as part
-          of the description of the temporal extent). -->
+  <xsl:param name="dataDir"/>
+  <xsl:param name="inspire">false</xsl:param>
+  
+  <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat($dataDir, '/codelist/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
+  <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
+  
+  <!-- If identification creation, publication and revision date
+    should be indexed as a temporal extent information (eg. in INSPIRE 
+    metadata implementing rules, those elements are defined as part
+    of the description of the temporal extent). -->
 	<xsl:variable name="useDateAsTemporalExtent" select="false()"/>
 
         <!-- ========================================================================================= -->
@@ -144,23 +148,30 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 			<xsl:for-each select="//gmd:MD_Keywords">
+			  
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <xsl:variable name="keywordLower" select="lower-case(.)"/>
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
 					
                     <xsl:if test="$inspire='true'">
                         <xsl:if test="string-length(.) &gt; 0">
-			    <xsl:variable name="inspire-thesaurus" select="document('../../codelist/external/thesauri/gemet/inspire-theme.rdf')"/>
-			    <xsl:variable name="inspire-theme" select="$inspire-thesaurus//skos:Concept"/>
-                            <xsl:variable name="inspireannex">
-			        <xsl:call-template name="determineInspireAnnex">
-				    <xsl:with-param name="keyword" select="string(.)"/>
-				    <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
-			        </xsl:call-template>
-                            </xsl:variable>
+                         
+                          <xsl:variable name="inspireannex">
+                            <xsl:call-template name="determineInspireAnnex">
+                              <xsl:with-param name="keyword" select="string(.)"/>
+                              <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                            </xsl:call-template>
+                          </xsl:variable>
+                          
+                          <!-- Add the inspire field if it's one of the 34 themes -->
+                          <xsl:if test="normalize-space($inspireannex)!=''">
+                            <!-- Maybe we should add the english version to the index to not take the language into account 
+                            or create one field in the metadata language and one in english ? -->
                             <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
-						    <Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
+                            <Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
+                            <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
                             <Field name="inspirecat" string="true" store="true" index="true"/>
+                          </xsl:if>
                         </xsl:if>
                     </xsl:if>
                 </xsl:for-each>
@@ -493,33 +504,44 @@
 	<xsl:template name="determineInspireAnnex">
 		<xsl:param name="keyword"/>
 		<xsl:param name="inspireThemes"/>
-		
 		<xsl:variable name="englishKeywordMixedCase">
 			<xsl:call-template name="translateInspireThemeToEnglish">
 				<xsl:with-param name="keyword" select="$keyword"/>
 				<xsl:with-param name="inspireThemes" select="$inspireThemes"/>
 			</xsl:call-template>
 		</xsl:variable>
-		
-            <xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>
-            <xsl:variable name="upper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
-            <xsl:variable name="englishKeyword" select="translate(string($englishKeywordMixedCase),$upper,$lower)"/>			
-		
+	  <xsl:variable name="englishKeyword" select="lower-case($englishKeywordMixedCase)"/>			
+	  <!-- Another option could be to add the annex info in the SKOS thesaurus using something
+		like a related concept. -->
 		<xsl:choose>
 			<!-- annex i -->
-			<xsl:when test="$englishKeyword='coordinate reference systems' or $englishKeyword='geographical grid systems' or $englishKeyword='geographical names' or $englishKeyword='administrative units' or $englishKeyword='addresses' or $englishKeyword='cadastral parcels' or $englishKeyword='transport networks' or $englishKeyword='hydrography' or $englishKeyword='protected sites'">
+			<xsl:when test="$englishKeyword='coordinate reference systems' or $englishKeyword='geographical grid systems' 
+			            or $englishKeyword='geographical names' or $englishKeyword='administrative units' 
+			            or $englishKeyword='addresses' or $englishKeyword='cadastral parcels' 
+			            or $englishKeyword='transport networks' or $englishKeyword='hydrography' 
+			            or $englishKeyword='protected sites'">
 			    <xsl:text>i</xsl:text>
 			</xsl:when>
 			<!-- annex ii -->
-			<xsl:when test="$englishKeyword='elevation' or $englishKeyword='land cover' or $englishKeyword='orthoimagery' or $englishKeyword='geology'">
+			<xsl:when test="$englishKeyword='elevation' or $englishKeyword='land cover' 
+			            or $englishKeyword='orthoimagery' or $englishKeyword='geology'">
 				 <xsl:text>ii</xsl:text>
 			</xsl:when>
 			<!-- annex iii -->
-			<xsl:when test="$englishKeyword='statistical units' or $englishKeyword='buildings' or $englishKeyword='soil' or $englishKeyword='land use' or $englishKeyword='human health and safety' or $englishKeyword='utility and government services' or $englishKeyword='environmental monitoring facilities' or $englishKeyword='production and industrial facilities' or $englishKeyword='agricultural and aquaculture facilities' or $englishKeyword='population distribution - demography' or $englishKeyword='area management/restriction/regulation zones and reporting units' or $englishKeyword='natural risk zones' or $englishKeyword='atmospheric conditions' or $englishKeyword='meteorological geographical features' or $englishKeyword='oceanographic geographical features' or $englishKeyword='sea regions' or $englishKeyword='bio-geographical regions' or $englishKeyword='habitats and biotopes' or $englishKeyword='species distribution' or $englishKeyword='energy resources' or $englishKeyword='mineral resources'">
+			<xsl:when test="$englishKeyword='statistical units' or $englishKeyword='buildings' 
+			            or $englishKeyword='soil' or $englishKeyword='land use' 
+			            or $englishKeyword='human health and safety' or $englishKeyword='utility and government services' 
+			            or $englishKeyword='environmental monitoring facilities' or $englishKeyword='production and industrial facilities' 
+			            or $englishKeyword='agricultural and aquaculture facilities' or $englishKeyword='population distribution - demography' 
+			            or $englishKeyword='area management/restriction/regulation zones and reporting units' 
+			            or $englishKeyword='natural risk zones' or $englishKeyword='atmospheric conditions' 
+			            or $englishKeyword='meteorological geographical features' or $englishKeyword='oceanographic geographical features' 
+			            or $englishKeyword='sea regions' or $englishKeyword='bio-geographical regions' 
+			            or $englishKeyword='habitats and biotopes' or $englishKeyword='species distribution' 
+			            or $englishKeyword='energy resources' or $englishKeyword='mineral resources'">
 				 <xsl:text>iii</xsl:text>
 			</xsl:when>
 			<!-- inspire annex cannot be established: leave empty -->
-			<xsl:otherwise><xsl:value-of select="$englishKeyword"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 								

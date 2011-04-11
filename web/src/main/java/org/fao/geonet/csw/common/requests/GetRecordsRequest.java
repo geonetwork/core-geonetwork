@@ -206,6 +206,8 @@ public class GetRecordsRequest extends CatalogRequest
 	protected Element getPostParams()
 	{
 		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
+        // Add queryable namespaces to POST query
+        params.addNamespaceDeclaration(Csw.NAMESPACE_DC);
 
 		//--- 'service' and 'version' are common mandatory attributes
 		setAttrib(params, "service", Csw.SERVICE);

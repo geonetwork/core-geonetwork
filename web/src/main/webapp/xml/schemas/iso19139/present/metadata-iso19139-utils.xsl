@@ -433,7 +433,7 @@
 			<xsl:when test="$serviceUrl=''">
 				<!-- Search for URLs related to an OGC protocol in distribution section -->
 				<xsl:variable name="urlFilter">OGC:WMS</xsl:variable>
-				<xsl:variable name="distributionInfoUrl" select="$metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, $urlFilter)]/gmd:linkage/gmd:URL"/>
+				<xsl:variable name="distributionInfoUrl" select="$metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol[1]/gco:CharacterString, $urlFilter)]/gmd:linkage/gmd:URL"/>
 				<xsl:value-of select="$distributionInfoUrl"/>
 				<!-- FIXME ? Here we assume that only one URL is related to an OGC protocol which could not be the case in all situation.
 				This service URL is used to initialize the LinkedServiceMetadataPanel to search for layers. It should be the case in most

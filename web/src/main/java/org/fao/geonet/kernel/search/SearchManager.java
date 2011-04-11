@@ -139,6 +139,7 @@ public class SearchManager
 	private Calendar _optimizerBeginAt;
 	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private boolean _inspireEnabled = false;
+    private String _dataDir;
 	private boolean _logAsynch;
 
     public void setInspireEnabled(boolean inspireEnabled) {
@@ -331,7 +332,7 @@ public class SearchManager
 			DataStore dataStore, SettingInfo si, SchemaManager scm) throws Exception
 	{
 		_scm = scm;
-
+		_dataDir = dataDir;
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 
 		_luceneConfig = lc;
@@ -984,6 +985,7 @@ public class SearchManager
 			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
       Map<String,String> params = new HashMap<String, String>();
       params.put("inspire", Boolean.toString(_inspireEnabled));
+      params.put("dataDir", _dataDir);
 			return Xml.transform(xml, styleSheet, params);
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage());

@@ -356,7 +356,7 @@
 						</xsl:call-template>
 
 						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'group.list'"/>
+						  <xsl:with-param name="service" select="'group.update'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/groupManagement"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/groupManDes"/>
 							<xsl:with-param name="icon">group.png</xsl:with-param>

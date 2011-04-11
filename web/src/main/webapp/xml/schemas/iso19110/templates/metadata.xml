@@ -2,8 +2,7 @@
 <gfc:FC_FeatureCatalogue xmlns:gfc="http://www.isotc211.org/2005/gfc"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    uuid="56cf8277-e2be-48ef-9bb7-05a10dedf665"
-    xsi:schemaLocation="http://www.isotc211.org/2005/gfc ../../../../web/geonetwork/xml/schemas/iso19110/schema.xsd">
+    uuid="56cf8277-e2be-48ef-9bb7-05a10dedf665">
     <gfc:name>
         <gco:CharacterString>Feature catalogue template in ISO19110</gco:CharacterString>
     </gfc:name>
