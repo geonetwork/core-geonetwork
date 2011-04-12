@@ -253,7 +253,7 @@ USA.
 			<!-- Check that INSPIRE theme are available.
 				Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
 			-->
-			<sch:let name="inspire-thesaurus" value="document(concat($dataDir, '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
+			<sch:let name="inspire-thesaurus" value="document(concat('file:///', $dataDir, '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
 			<sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE Theme thesaurus is not available. -->
