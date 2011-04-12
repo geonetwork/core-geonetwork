@@ -65,9 +65,14 @@ public class GetEditableData implements Service
 		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
         String justCreated = Util.getParam(params, Geonet.Elem.JUSTCREATED, null);
 
-		//-----------------------------------------------------------------------
+        // Set current tab for new editing session if defined.
+        Element elCurrTab = params.getChild(Params.CURRTAB);
+        if (elCurrTab != null) {
+            context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+        }
+		
+        //-----------------------------------------------------------------------
 		//--- get metadata
-
 		Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
 		if (elMd == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
