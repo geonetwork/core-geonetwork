@@ -93,7 +93,7 @@ public class Set implements Service {
             response.addContent(language);
         }
         dbms.commit();
-        gc.getSettingManager().refresh();
+        gc.getSettingManager().refresh(dbms);
 
         //
         // re-initialize Lucene analyzer with changed stopwords

@@ -464,7 +464,7 @@ public class Geonetwork implements ApplicationHandler
 					Lib.db.runSQL(dbms, script);
 					
 					// Refresh setting manager in case the migration task added some new settings.
-					settingMan.refresh();
+					settingMan.refresh(dbms);
 					
 					// Update the logo 
 					String siteId = settingMan.getValue("system/site/siteId");

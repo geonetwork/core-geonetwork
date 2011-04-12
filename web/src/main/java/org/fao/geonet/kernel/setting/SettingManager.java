@@ -372,12 +372,12 @@ public class SettingManager
 	 * Refreshes current settings manager. This has to be used when updating the Settings table without using this
      * class. For example when using an SQL script.
 	 */
-	public boolean refresh() throws SQLException
+	public boolean refresh(Dbms dbms) throws SQLException
 	{
 		lock.readLock().lock();
 		try
 		{
-			this.init(this.dbms);
+			this.init(dbms);
 			return true;
 		}
 		finally
