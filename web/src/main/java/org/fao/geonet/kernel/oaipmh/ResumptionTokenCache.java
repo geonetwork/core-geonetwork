@@ -110,7 +110,7 @@ public class ResumptionTokenCache extends Thread {
 			removeLast();
 		}
 		
-		resumptionToken.setExpirDate(new ISODate( getUTCTime().getTime() + getTimeout()  ));
+		resumptionToken.setExpirDate(new ISODate( getUTCTime().getTime() + getTimeout()*1000  ));
 		map.put(resumptionToken.getKey(), resumptionToken);
 	}
 
