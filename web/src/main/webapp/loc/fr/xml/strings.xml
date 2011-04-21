@@ -497,7 +497,7 @@
 	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
 	<home>Accueil</home>
 	<i18n>Test i18n</i18n>
-	<i18nDesc>This service should help GeoNetwork opensource developers to have up to date localized files for the GUI.</i18nDesc>
+	<i18nDesc>Permet de lister les chaînes de traduction manquantes pour l'interface.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
 	<identifier>Identifiant</identifier>
 	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
