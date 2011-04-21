@@ -209,7 +209,7 @@ INSERT INTO Groups VALUES (2,'sample',NULL,NULL,NULL);
 -- ======================================================================
 
 INSERT INTO GroupsDes VALUES (-1,'en','Guest');
-INSERT INTO GroupsDes VALUES (-1,'fr','Guest');
+INSERT INTO GroupsDes VALUES (-1,'fr','Invité');
 INSERT INTO GroupsDes VALUES (-1,'es','Guest');
 INSERT INTO GroupsDes VALUES (-1,'cn','Guest');
 INSERT INTO GroupsDes VALUES (-1,'ru','Guest');
@@ -236,7 +236,7 @@ INSERT INTO GroupsDes VALUES (1,'no','Alle');
 INSERT INTO GroupsDes VALUES (1,'nl','Iedereen');
 INSERT INTO GroupsDes VALUES (1,'pt','Todos');
 INSERT INTO GroupsDes VALUES (2,'en','Sample group');
-INSERT INTO GroupsDes VALUES (2,'fr','Sample group');
+INSERT INTO GroupsDes VALUES (2,'fr','Groupe exemple');
 INSERT INTO GroupsDes VALUES (2,'es','Grupo de ejemplo');
 INSERT INTO GroupsDes VALUES (2,'cn','Sample group');
 INSERT INTO GroupsDes VALUES (2,'ru','Пример группы');
