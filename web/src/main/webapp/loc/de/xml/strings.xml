@@ -6,10 +6,11 @@
 	<en>English</en> <!-- Do not translate! -->
 	<es>Español</es> <!-- Do not translate! -->
 	<fr>Français</fr> <!-- Do not translate! -->
-	<nl>Nederlands</nl> <!-- Do not translate -->
+	<nl>Nederlands</nl> <!-- Do not translate! -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-	<pt>Рortuguês</pt> <!-- Do not translate! -->
-	<ca>Català</ca> <!-- Do not translate! -->	
+    <pt>Рortuguês</pt> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->  
+	<tr>Türkçe</tr> <!-- Do not translate! -->
 	
     <useStopwords>Der Lucene Index verwendet Stoppwörter für diesen Sprachen verfügbar:</useStopwords>    
     <rebuildIndexMessage>Wenn Sie diese Werte ändern, ist es ratsam, den Wiederaufbau der Lucene-Index.</rebuildIndexMessage>

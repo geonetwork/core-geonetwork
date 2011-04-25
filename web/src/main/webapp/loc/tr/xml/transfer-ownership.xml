@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<sourceUser>Kaynak Editörü</sourceUser>
+	<targetUser>Hedef Editör</targetUser>
+	<sourceGroup>Kaynak Grup</sourceGroup>
+	<targetGroup>Hedef Grup </targetGroup>
+	<operation>Operasyon - İşlem</operation>
+	
+	<cannotRetrieve>Sunucudan bilgi alınamadı</cannotRetrieve>
+	<cannotTransfer>Mülkiyet bilgisi transfer edilemedi***</cannotTransfer>
+	<noUser>Mülkiyet transfer ededek hedef editör bulunamadı***</noUser>
+	<transfer>Transfer</transfer>
+	<result>{MD} metaverisine ait {PRIV} yetkileri transfer edildi</result>
+	<noEditors>İlgili metaveri ile ilişkili editör bulunmuyor</noEditors>
+</strings>
+

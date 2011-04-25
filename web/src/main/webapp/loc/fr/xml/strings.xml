@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ar>عربي</ar> <!-- Do not translate! -->
+	<ar>عربي</ar> <!-- Do not translate! -->
 	<cn>中文</cn> <!-- Do not translate! -->
 	<de>Deutsch</de> <!-- Do not translate! -->
 	<en>English</en> <!-- Do not translate! -->
 	<es>Español</es> <!-- Do not translate! -->
 	<fr>Français</fr> <!-- Do not translate! -->
-    <nl>Nederlands</nl> <!-- Do not translate -->
+	<nl>Nederlands</nl> <!-- Do not translate! -->
 	<ru>Русский</ru> <!-- Do not translate! -->
-	<pt>Рortuguês</pt> <!-- Do not translate! -->
-	<ca>Català</ca> <!-- Do not translate! -->	
+    <pt>Рortuguês</pt> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->  
+	<tr>Türkçe</tr> <!-- Do not translate! -->
 
     <useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>    
     <rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandé de reconstruire l'index Lucene.</rebuildIndexMessage>
