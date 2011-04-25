@@ -36,7 +36,7 @@
 					&#160;
 					<xsl:value-of select="$from"/>-<xsl:value-of select="$to"/>/<xsl:value-of select="$count"/>
 					&#160;
-					(page <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>),
+					(<xsl:value-of select="/root/gui/strings/page"/> <xsl:value-of select="$currPage"/>/<xsl:value-of select="$pages"/>),
 					&#160;
 					<span id="nbselected">
 						<xsl:choose>
