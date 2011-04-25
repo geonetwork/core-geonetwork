@@ -501,6 +501,7 @@
 	<overwriteFile>Overwrite?</overwriteFile>
 	<owner>Owner</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
+	<page>Page</page>
 	<paper>ورقية</paper>
 	<partial>تغطية جزئية</partial>
 	<partialCooordinate>احداثيات جزئية</partialCooordinate>

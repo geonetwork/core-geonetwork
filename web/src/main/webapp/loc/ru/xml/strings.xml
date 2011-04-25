@@ -496,6 +496,7 @@
 	<overwriteFile>Overwrite?</overwriteFile>
 	<owner>Собственник</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
+	<page>Cтраницы</page>
 	<paper>Бумажная копия</paper>
 	<partial>Частичное перекрытие</partial>
 	<partialCooordinate>Частичные координаты</partialCooordinate>

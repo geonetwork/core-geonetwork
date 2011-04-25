@@ -500,6 +500,7 @@
 	<overwriteFile>Écraser ?</overwriteFile>
 	<owner>Auteur</owner>
 	<ownerRights>Suppression/Privilèges/Catégories débloqués: vous avez les droits</ownerRights>
+	<page>Page</page>
 	<paper>Copie papier</paper>
 	<partial>Recouvert partiellement</partial>
 	<partialCooordinate>Coordonnées partielles</partialCooordinate>

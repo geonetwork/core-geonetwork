@@ -497,6 +497,7 @@
 	<overwriteFile>Overwrite?</overwriteFile>
 	<owner>Owner</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
+	<page>页面</page>
 	<paper>硬拷贝</paper>
 	<partial>部分重叠</partial>
 	<partialCooordinate>局部坐标</partialCooordinate>

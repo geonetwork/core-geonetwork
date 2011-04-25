@@ -498,6 +498,7 @@
 	<owner>Propietario</owner>
 	<ownerRights>Delete/Privileges/Categories Unlocked: You have ownership rights</ownerRights>
 	<paper>Copia impresa</paper>
+	<page>Página</page>
 	<partial>Parcialmente contenido</partial>
 	<partialCooordinate>Coordenadas parciales </partialCooordinate>
 	<password>Contraseña</password>

@@ -630,6 +630,7 @@
 	<overwriteFile>Sobreescriure?</overwriteFile>
 	<owner>Propietari</owner>
 	<ownerRights>Esborrar/Privilegis/Categories no bloquejades: Disposeu de dret de propietari</ownerRights>
+	<page>Pàgina</page>
 	<paper>Còpia impresa</paper>
 	<partial>Parcialment contingut</partial>
 	<partialCooordinate>Coordenades parcials </partialCooordinate>

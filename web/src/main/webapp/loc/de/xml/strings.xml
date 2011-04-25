@@ -497,6 +497,7 @@
 	<overwriteFile>Überschreiben?</overwriteFile>
 	<owner>Besitzer</owner>
 	<ownerRights>Löschen/Privilegien/Kategorien gesperrt: Sie haben keine Besitzerrechte</ownerRights>
+	<page>Seite</page>
 	<paper>Analog</paper>
 	<partial>teilweise Überschneidung</partial>
 	<partialCooordinate>Partial coordinates </partialCooordinate>
