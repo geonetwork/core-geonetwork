@@ -971,6 +971,9 @@ div.toolTipOverlay ul li, div.shortcutHelp ul li {
     margin-left:15px;
     list-style-type: disc;
 }
+.tooltipDescription {
+	white-space:normal;
+}
 
 .addIcon { background-image: url('images/add.png') !important; }
 .searchIcon { background-image: url('images/find.png') !important; }
