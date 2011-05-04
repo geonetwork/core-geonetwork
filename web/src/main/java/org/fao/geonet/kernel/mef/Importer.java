@@ -33,6 +33,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
@@ -405,16 +406,23 @@ public class Importer {
 		}
 
 		try {
-			if (dm.existsMetadataUuid(dbms, uuid)
-					&& !uuidAction.equals(Params.NOTHING)) {
-				dm.deleteMetadata(dbms, dm.getMetadataId(dbms, uuid));
-				Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : "
-						+ uuid);
+			if (dm.existsMetadataUuid(dbms, uuid) && !uuidAction.equals(Params.NOTHING)) {
+                // user has privileges to replace the existing metadata
+                if(dm.getAccessManager().canEdit(context, dm.getMetadataId(dbms, uuid))) {
+                    dm.deleteMetadata(dbms, dm.getMetadataId(dbms, uuid));
+                    Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
+                }
+                // user does not hav privileges to replace the existing metadata
+                else {
+                    throw new UnAuthorizedException("User has no privilege to replace existing metadata", null);
+                }
 			}
-		} catch (Exception e) {
-			throw new Exception(
-					" Existing metadata with same UUID could not be deleted.");
 		}
+        catch (Exception e) {
+			throw new Exception(" Existing metadata with same UUID could not be deleted.");
+		}
+
+
 
 		Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
 		
