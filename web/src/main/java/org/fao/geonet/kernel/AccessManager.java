@@ -274,69 +274,72 @@ public class AccessManager
 		return hs;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Returns true if, and only if, at least one of these conditions is 
-	  * satisfied
-	  *  - The user is the metadata owner
-	  *  - The user is an Administrator
-		*	 - The user has edit rights over the metadata
-	  *  - The user is a Reviewer and/or UserAdmin and the metadata groupOwner 
-		*    is one of his groups
-	  */
-
-	public boolean canEdit(ServiceContext context, String id) throws Exception
-	{
+    /**
+     *  Returns true if and only if at least one of these conditions is satisfied :
+     *
+     *  The user is the metadata owner
+     *  The user is an Administrator
+     *  The user has edit rights over the metadata
+     *  The user is a Reviewer and/or UserAdmin and the metadata groupOwner is one of his groups.
+     *
+     * @param context
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public boolean canEdit(ServiceContext context, String id) throws Exception {
 		return isOwner(context, id) || hasEditPermission(context, id);
 	}
 
-	public boolean isOwner(ServiceContext context, String id) throws Exception
-	{
-
+    /**
+     *
+     * @param context
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public boolean isOwner(ServiceContext context, String id) throws Exception {
 		UserSession us = context.getUserSession();
-
 		if (!us.isAuthenticated()) {
 			return false;
 		}
 
 		//--- retrieve metadata info
-
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		MdInfo info = dm.getMetadataInfo(dbms, id);
 
 		//--- harvested metadata cannot be edited
-
-//		if (info == null || info.isHarvested)
-		if (info == null)
+        //		if (info == null || info.isHarvested)
+		if (info == null) {
 			return false;
+        }
 
 		//--- check if the user is an administrator
-
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 			return true;
+        }
 
 		//--- check if the user is the metadata owner
-		//
-		if (us.getUserId().equals(info.owner))
+		if (us.getUserId().equals(info.owner)) {
 			return true;
+        }
 
 		//--- check if the user is a reviewer or useradmin
-
-		if (!us.getProfile().equals(Geonet.Profile.REVIEWER) && !us.getProfile().equals(Geonet.Profile.USER_ADMIN))
+		if (!us.getProfile().equals(Geonet.Profile.REVIEWER) && !us.getProfile().equals(Geonet.Profile.USER_ADMIN)) {
 			return false;
+        }
 
-		//--- if there is no group owner then the reviewer cannot review and
-		//--- the useradmin cannot administer
-
-		if (info.groupOwner == null)
+		//--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
+		if (info.groupOwner == null) {
 			return false;
+        }
 
 		for (String userGroup : getUserGroups(dbms, us, null)) {
-			if (userGroup.equals(info.groupOwner))
+			if (userGroup.equals(info.groupOwner)) {
 				return true;
+            }
 		}
 
 		return false;
@@ -368,36 +371,43 @@ public class AccessManager
         }
     }
 
-	public boolean hasEditPermission(ServiceContext context, String id) throws Exception
-	{
-
+    /**
+     *
+     * @param context
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public boolean hasEditPermission(ServiceContext context, String id) throws Exception {
 		UserSession us = context.getUserSession();
-		
-		if (!us.isAuthenticated())
+		if (!us.isAuthenticated()) {
 			return false;
-
-		//--- check if the user is an editor and has edit rights over the metadata 
-		//--- record 
+        }
+		//--- check if the user is an editor and has edit rights over the metadata record
 		if (us.getProfile().equals(Geonet.Profile.EDITOR)) {
 			HashSet<String> hsOper = getOperations(context, id, context.getIpAddress());
 			if (hsOper.contains(OPER_EDITING)) return true;
 		}
-
 		return false;
 	}
 
-	//--------------------------------------------------------------------------
 
-	public int getPrivilegeId(String descr)
-	{
+    /**
+     *
+     * @param descr
+     * @return
+     */
+	public int getPrivilegeId(String descr) {
 		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : -1;
 
 	}
 
-	//--------------------------------------------------------------------------
-
-	public String getPrivilegeName(int id)
-	{
+    /**
+     *
+     * @param id
+     * @return
+     */
+	public String getPrivilegeName(int id) {
 		return hmIdToName.get(id);
 	}
 
@@ -406,9 +416,13 @@ public class AccessManager
 	//--- Private methods
 	//---
 	//--------------------------------------------------------------------------
-	
-	private boolean isIntranet(String ip)
-	{
+
+    /**
+     *
+     * @param ip
+     * @return
+     */
+	private boolean isIntranet(String ip) {
 		//--- consider IPv4 & IPv6 loopback
 		//--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
 
@@ -439,15 +453,14 @@ public class AccessManager
 			return false;
 		}
 	}
-	
 
-	//--------------------------------------------------------------------------
-
-	/** Converts an ip x.x.x.x into a long
-	  */
-
-	private long getAddress(String ip)
-	{
+    /**
+     *  Converts an ip x.x.x.x into a long.
+     *
+     * @param ip
+     * @return
+     */
+	private long getAddress(String ip){
 		StringTokenizer st = new StringTokenizer(ip, ".");
 
 		long a1 = Integer.parseInt(st.nextToken());
