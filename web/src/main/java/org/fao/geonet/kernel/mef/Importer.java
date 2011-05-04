@@ -422,11 +422,9 @@ public class Importer {
 
 		try {
 			if (dm.existsMetadataUuid(dbms, uuid) && !uuidAction.equals(Params.NOTHING)) {
-                System.out.println("UUID already exists and the request does not ask to do 'NOTHING' with UUID" );
                 // user has privileges to replace the existing metadata
                 if(dm.getAccessManager().canEdit(context, dm.getMetadataId(dbms, uuid))) {
                     dm.deleteMetadata(dbms, dm.getMetadataId(dbms, uuid));
-                    System.out.println("Deleting existing metadata with UUID : " + uuid );
                     Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                 }
                 // user does not hav privileges to replace the existing metadata
