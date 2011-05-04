@@ -92,7 +92,7 @@ var toolTipRequestTemp =
 var toolTipTemp =
 	'   <b>{LABEL}</b>'+
 	'   <br/>'+
-	'   <span>{DESCRIPTION}</span>'+
+	'   <span class="tooltipDescription">{DESCRIPTION}</span>'+
 	'   <br/>'+
 	'   <font color="#C00000">{CONDITION}</font>'+
 	'   <i>{HELP}</i>';
