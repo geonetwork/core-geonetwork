@@ -38,6 +38,9 @@
 			
 		<unzip src="geoserver-2.0.2-charts-plugin.zip"
 			dest="${geoserver_dir}/WEB-INF/lib" />	
+
+		<!-- Add GeoCat Bridge REST API -->
+		<copy file="restconfig-2.0.2.jar" todir="${geoserver_dir}/WEB-INF/lib" overwrite="yes" />
 			
 		<!-- Styler -->	
 		<unzip src="styler.zip"

@@ -72,6 +72,11 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ZoomWheel.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/ca.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/tr.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"></script>
 

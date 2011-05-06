@@ -1825,7 +1825,6 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="prcStep">
-		<element name="prcStep">
 		<label>İlerleme adımı</label>
 		<description>information about an event in the creation process for the data specified by the
 			scope</description>

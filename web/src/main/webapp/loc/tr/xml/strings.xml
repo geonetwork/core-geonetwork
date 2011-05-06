@@ -9,8 +9,8 @@
 	<nl>Nederlands</nl> <!-- Do not translate! -->
 	<ru>Русский</ru> <!-- Do not translate! -->
     <pt>Рortuguês</pt> <!-- Do not translate! -->
-	<ca>Català</ca> <!-- Do not translate! -->  
-	<tr>Türkçe</tr> <!-- Do not translate! -->
+	<ca>Català</ca> <!-- Do not translate! -->		  
+	<tr>Türkçe</tr> <!-- Do not translate! -->		  
     
     <useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
     <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
@@ -913,164 +913,166 @@
 	<mainhelp2> Yardımı Gizle... </mainhelp2>
 	<mainhelp3>
 		<p>
-			<font size="-2"> Sağlanan seçeneklerin biri veya birkaçının kombinasyonu ile arama yapabilirsinizYou can search using one of the provided options, or a combination of them.<br/> Only results matching all criteria will be displayed. </font>
+			<font size="-2"> Sağlanan seçeneklerin biri veya birkaçının kombinasyonu ile arama yapabilirsiniz.<br/> 
+			Sadece bütün kriterlerle eşleşen sonuçlar gösterilecektir.</font>
 		</p>
 		<p>
-			<font size="-2"> The <b>What?</b> search searches for matching text in all metadata fields in GeoNetwork's content. <br/>
-				<i> When entering more than one word in the <b>Free text</b> textbox, they will be interpreted by the system as separated by AND. </i>
+			<font size="-2"> <b>Ne?</b> araması GeoNetwork içeriğinde eşleşen metin arar. <br/>
+				<i> <b>Serbest Metin</b>  alanına birden fazla kelime girilir ise, bunlar sistem tarafından VE olarak ayrılmış şekilde yorumlanır. </i>
 			</font>
 		</p>
 		<p>
-			<font size="-2"> The <b>Topic</b> search will find maps matching a specific topic. </font>
+			<font size="-2"> <b>Konu</b> belirlenen konu ile eşleşen haritaları arayacaktır. </font>
 		</p>
 		<p>
-			<font size="-2"> The <b>Where?</b> search will find maps matching the bounding box of the selected area. </font>
+			<font size="-2"> <b>Nere?</b> araması seçilen alanın seçim alan ile eşleşen haritaları bulacaktır. </font>
 		</p>
 		<p>
-			<font size="-2"> Selecting the option "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Including</b> the selected <b>Area</b>" will find maps that cover more than just the selected area.<br/>
-				<i>For example: Regional or Global maps that, among other countries, also cover the selected country</i>
+			<font size="-2"> Selecting the option "<input name="demo" type="checkbox" checked="checked"/> <b>Seçili Alanın dahil edilmesi</b>" seçilen alandan daha fazla olacak şekilde kapsayan haritaları da bulacaktır.<br/>
+				<i>Örneğin: Sadece seçilen ülte değil diğer ülkeler de olan bölgesel veya global haritalar </i>
 			</font>
 		</p>
 		<p>
-			<font size="-2"> Selecting the option "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Partially overlapping</b> the selected <b>Area</b>" will also find maps that partially cover the selected area. </font>
+			<font size="-2">  "
+					<input name="demo" type="checkbox" checked="checked"/> <b> Kısmı üst üste binen Alan</b> seçeneği " aynı zamanda kısmi olarak seçilen alanı kapsayan haritaları da bulacaktır. </font>
 		</p>
 	</mainhelp3>
 	<savexml>
-		<dc>Save Dublin Core metadata as XML</dc>
-		<fgdc>Save FGDC metadata as XML</fgdc>
-		<iso19115Esri>Save ISO19115 metadata in XML for ESRI ArcCatalog</iso19115Esri>
-		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
-		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
+		<dc>Dublin Core Metaverisini XML olarak kaydet</dc>
+		<fgdc>FGDC Metaverisini XML olarak kaydet</fgdc>
+		<iso19115Esri>ISO19115 Metaverisini ESRI ArcCatalog için XML olarak kaydet </iso19115Esri>
+		<iso19139>ISO19115/19139 Metaverisini XML olarak kaydet</iso19139>
+		<iso19139fra>Save ISO19115/19139 Fra Metaverisini XML olarak kaydet</iso19139fra>
 	</savexml>
 	<thesaurus>
-		<addelement>Add element</addelement>
-		<admin>Manage thesaurus</admin>
-		<broader>Broader Term</broader>
-		<category>Thesaurus category</category>
-		<consultation>View thesaurus</consultation>
-		<delete>Delete thesaurus</delete>
-		<deleteelement>Delete element</deleteelement>
-		<download>Download thesaurus</download>
-		<edit>Edit thesaurus</edit>
-		<editelement>Edit element</editelement>
-		<edition>Edit thesaurus</edition>
-		<en>in</en>
-		<foundKeyWords>Number of terms found</foundKeyWords>
-		<foundKeyWordsLimit>Maximum number of terms found</foundKeyWordsLimit>
-		<keywordConfirm>Confirm keyword suppression</keywordConfirm>
-		<keywordDescription>Keyword definition:</keywordDescription>
-		<management>Manage thesauri</management>
-		<manDes>Add/modify/delete and show thesauri</manDes>
-		<narrower>Narrower Term</narrower>
-		<related>Related Term</related>
-		<thesaurus>Thesaurus</thesaurus>
-		<unknown>Unknown thesaurus</unknown>
-		<update>Update thesaurus</update>
-		<updateelement>Update element</updateelement>
-		<upload>Upload thesaurus</upload>
+		<addelement>Eleman Ekle</addelement>
+		<admin>Eşanlamlılar Sözlük İdaresi</admin>
+		<broader>Daha Geniş Terim</broader>
+		<category>Eşanlamlılar Sözlük Kategorisi</category>
+		<consultation>Eşanlamlılar Sözlük Görüntüle</consultation>
+		<delete>Eşanlamlılar Sözlük Sil</delete>
+		<deleteelement>Elemanı Sil</deleteelement>
+		<download>Eşanlamlılar Sözlük İndir</download>
+		<edit>Eşanlamlılar Sözlük Düzenle</edit>
+		<editelement>Eleman Düzenle</editelement>
+		<edition>Eşanlamlılar Sözlük Düzenle</edition>
+		<en>içinde</en>
+		<foundKeyWords>Bulunan terimler</foundKeyWords>
+		<foundKeyWordsLimit>Bulunan maksimum terim sayısı </foundKeyWordsLimit>
+		<keywordConfirm>Anahtar kelime gizleme onayı</keywordConfirm>
+		<keywordDescription>Anahtar Kelime tanımı:</keywordDescription>
+		<management>Eşanlamlılar Sözlüğü İdare</management>
+		<manDes>Eşanlamlılar sözlüğü ekle/düzenle/sil ve göster</manDes>
+		<narrower>Daha Dar Kelime</narrower>
+		<related>İlgili Kelime</related>
+		<thesaurus>Eşanlamlılar Sözlüğü</thesaurus>
+		<unknown>Bilinmeyen Eşanlamlılar Sözlüğü</unknown>
+		<update>Eşanlamlılar Sözlüğü Güncelle</update>
+		<updateelement>Eleman Güncelle</updateelement>
+		<upload>Eşanlamlılar Sözlüğü Yükle</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+		<searchAllText>Serbest Metni buraya giriniz</searchAllText>
+		<rtitle>Başlığı buraya giriniz</rtitle>
+		<abstract>Özeti buraya giriniz</abstract>
+		<keywords>Mevcut metaveri kayıtlarından anahtar kelimeler seçiniz</keywords>
+		<thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
 	</searchhelp>
 
     <inspire>
         <what>
-            <l1>INSPIRE search options</l1>
-            <l2>INSPIRE metadata</l2>
-            <l3>Only INSPIRE metadata</l3>
-            <l4>Hide INSPIRE options</l4>
-            <l5>Show INSPIRE options</l5>
-            <l6>Annex </l6>
-            <l7>Source type</l7>
-            <l8>Everything</l8>
-            <l9>Datasets and dataset series</l9>
-            <l10>Services</l10>
-            <l11>Organisation</l11>
-            <l12>Show INSPIRE Themes</l12>
-            <l13>Hide INSPIRE Themes</l13>
-            <l14>INSPIRE Theme</l14>
-            <l15>Service type</l15>
+            <l1>INSPIRE arama seçenekleri</l1>
+            <l2>INSPIRE metaveri</l2>
+            <l3>Sadece INSPIRE metaveri</l3>
+            <l4>INSPIRE seçeneklerini Gizle</l4>
+            <l5>INSPIRE seçeneklerini Göster</l5>
+            <l6>Ek</l6>
+            <l7>Kaynak Türü</l7>
+            <l8>Hepsi</l8>
+            <l9>Verisetleri ve veriset serileri</l9>
+            <l10>Servisler</l10>
+            <l11>Organizasyon</l11>
+            <l12>INSPIRE Temalarını Göster</l12>
+            <l13>INSPIRE Temalarını Gizle</l13>
+            <l14>INSPIRE Temalası</l14>
+            <l15>Servis Türü</l15>
         </what>
         <annex1>
-            <l1>Coordinate reference systems</l1>
-            <l2>Geographical grid systems</l2>
-            <l3>Geographical names</l3>
-            <l4>Administrative units</l4>
-            <l5>Addresses</l5>
-            <l6>Cadastral parcels</l6>
-            <l7>Transport networks</l7>
-            <l8>Hydrography</l8>
-            <l9>Protected sites</l9>
+            <l1>Koordinat Referans Sistemler</l1>
+            <l2>Coğrafik grid sistemleri</l2>
+            <l3>Coğrafik isimler</l3>
+            <l4>İdari Birimler</l4>
+            <l5>Addresler</l5>
+            <l6>Kadastral parseller</l6>
+            <l7>Ulaşım ağları</l7>
+            <l8>Hidrografi</l8>
+            <l9>Korumalı Araziler</l9>
         </annex1>
         <annex2>
-            <l1>Elevation</l1>
-            <l2>Land cover</l2>
-            <l3>Orthoimagery</l3>
-            <l4>Geology</l4>
+            <l1>Yükselti</l1>
+            <l2>Arazi örtüsü</l2>
+            <l3>Orto Resim</l3>
+            <l4>Jeoloji</l4>
         </annex2>
         <annex3>
-            <l1>Statistical units</l1>
-            <l2>Buildings</l2>
-            <l3>Soil</l3>
-            <l4>Land use</l4>
-            <l5>Human health and safety</l5>
-            <l6>Utility and governmental services</l6>
-            <l7>Environmental monitoring facilities</l7>
-            <l8>Production and industrial facilities</l8>
-            <l9>Agricultural and aquaculture facilities</l9>
-            <l10>Population distribution — demography</l10>
-            <l11>Area management/restriction/regulation zones and reporting units</l11>
-            <l12>Natural risk zones</l12>
-            <l13>Atmospheric conditions</l13>
-            <l14>Meteorological geographical features</l14>
-            <l15>Oceanographic geographical features</l15>
-            <l16>Sea regions</l16>
-            <l17>Bio-geographical regions</l17>
-            <l18>Habitats and biotopes</l18>
-            <l19>Species distribution</l19>
-            <l20>Energy resources</l20>
-            <l21>Mineral resources</l21>
+            <l1>İstatiksel Birimler</l1>
+            <l2>Binalar</l2>
+            <l3>Toprak</l3>
+            <l4>Arazi Kullanımı</l4>
+            <l5>İnsan sağlığı ve güvenliği</l5>
+            <l6>Kamu ve Devlet Servisleri</l6>
+            <l7>Çevresel Monitörleme Tesisleri</l7>
+            <l8>Üretim ve Endüstriyel Tesisleri</l8>
+            <l9>Tarımsal ve Sulu Tarım Tesisleri</l9>
+            <l10>Nüfus Dağılımı — demografi</l10>
+            <l11>Alan idaresi/kısıtlama/düzenleme alanları ve raporlama birimleri</l11>
+            <l12>Doğal Risk Bölgeleri</l12>
+            <l13>Atmosferik Durumlar</l13>
+            <l14>Meteorolojik Coğrafi Özellikler</l14>
+            <l15>Oşinografik  Coğrafi Özellikler</l15>
+            <l16>Deniz Bölgeleri</l16>
+            <l17>Biyo-Coğrafik Bölgeler</l17>
+            <l18>Habitat  ve biyotoplar</l18>
+            <l19>Türlerin Dağılımları</l19>
+            <l20>Enerji kaynakları</l20>
+            <l21>Mineral kaynakları</l21>
         </annex3>
     </inspire>
     
-    <selectMetadataFileAlert>You must select a metadata file to insert</selectMetadataFileAlert>        
-    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>
-    <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
-    <searchExactPhrase>Exact phrase</searchExactPhrase>
-    <searchAllWords>All of the words</searchAllWords>
-    <searchWithoutWords>Without the words</searchWithoutWords>
+    <selectMetadataFileAlert>Eklemek için bir metaveri seçmelisiniz</selectMetadataFileAlert>        
+    <showMoreSearchFields>Daha fazla arama alanı Göster/Gizle</showMoreSearchFields>
+    <searchEitherOfTheWords>Kelimelerden herhangi birisi</searchEitherOfTheWords>
+    <searchExactPhrase>Kesin İfade</searchExactPhrase>
+    <searchAllWords>Kelimelerin hepsi</searchAllWords>
+    <searchWithoutWords>Kelimeler olmadan</searchWithoutWords>
     
-    <showMap>Show map</showMap>
-    <mapViewer>Map viewer</mapViewer>
+    <showMap>Haritayı Göster</showMap>
+    <mapViewer>Harita Göstergeci</mapViewer>
 
-    <uuid>Unique identifier</uuid>
-    <mymetadata>my metadata</mymetadata>
-    <addremove>Add/Remove</addremove>
-    <enabled>Enabled</enabled>
-    <notifications>Notification to remote targets</notifications>
+    <uuid>Özgün Tanımlayıcı</uuid>
+    <mymetadata>Benim Metaverim</mymetadata>
+    <addremove>Ekle/Çıkart</addremove>
+    <enabled>Etkin yapılmış</enabled>
+    <notifications>Uzak hedeflere bildirim</notifications>
     <url>URL</url>
     
-    <cswServer>CSW server</cswServer>
-    <cswServerDes>CSW Server configuration</cswServerDes>
-    <cswServerConfig>CSW Server configuration</cswServerConfig>
-    <cswServerEnable>Enable</cswServerEnable>
-    <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
-    <cswServerTitle>Title</cswServerTitle>
-    <cswServerAbstract>Abstract</cswServerAbstract>
-    <cswServerFees>Fees</cswServerFees>
-    <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
-    <cswServerContact>Contact</cswServerContact>
+    <cswServer>CSW sunucusu</cswServer>
+    <cswServerDes>CSW sunucusu konfigürasyonu</cswServerDes>
+    <cswServerConfig>CSW sunucusu konfigürasyonu</cswServerConfig>
+    <cswServerEnable>Etkinleştir</cswServerEnable>
+    <cswServerMetadataPublic>Eklenen metaveri geneldri (İşlem)</cswServerMetadataPublic>
+    <cswServerTitle>Başlık</cswServerTitle>
+    <cswServerAbstract>Özet</cswServerAbstract>
+    <cswServerFees>Ücretler</cswServerFees>
+    <cswServerAccessConstraints>Kısıtlar Erişimi</cswServerAccessConstraints>
+    <cswServerContact>İletişim</cswServerContact>
 
-    <customize-elementset>Customize element set</customize-elementset>
-    <csw-server-disabled>CSW server is disabled.</csw-server-disabled>
-    <custom-elementset-intro>Define elements to be included in your custom element set here. Each element must be identified by its full XPATH from the document root. These elements and their descendants will be included in responses to CSW GetRecord requests with ElementSetName=FULL.</custom-elementset-intro>
-    <custom-elementset-revert>To revert to the default ElementSetName=FULL responses, delete all elements from this list.</custom-elementset-revert>
-    <custom-elementset-add>Add element</custom-elementset-add>
+    <customize-elementset>Eleman Setini özelleştir</customize-elementset>
+    <csw-server-disabled>CSW sunucusu hizmet dışı.</csw-server-disabled>
+    <custom-elementset-intro>Kendi özelleştirilmiş eleman verisinde bulunacak elemanları burada tanımlayın. Her eleman tam doküman kökünden tam XPATH ile teşhis edilebilmelidir.
+	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
+    <custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
+    <custom-elementset-add>Eleman Ekle</custom-elementset-add>
+
 
 </strings>

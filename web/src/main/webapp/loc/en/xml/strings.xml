@@ -593,7 +593,7 @@
 	<result>Last results</result>
 	<resultsCoordinate>Results matching the coordinate search </resultsCoordinate>
 	<resultsFreeText>Results matching the Free Text Word </resultsFreeText>
-	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
+	<resultsMatching>Aggregated results matching search criteria :</resultsMatching>
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>

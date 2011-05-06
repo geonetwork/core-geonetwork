@@ -287,7 +287,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>investigation</code>
-			<label>Araştırma&Sorgulama</label>
+			<label>Araştırma ve Sorgulama</label>
 			<description>sistematik sorgulama veya araştırma</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1326,7 +1326,7 @@
 		<entry>
 			<code>vector</code>
 			<label>Vektör</label>
-			<description>coğrafi veriyi temsil etmek için kullanılan vektör veri/description>
+			<description>coğrafi veriyi temsil etmek için kullanılan vektör veri</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1364,7 +1364,7 @@
 	<codelist name="TopicCatCd">
 		<entry>
 			<code>farming</code>
-			<label>Tarım&Hayvancılık</label>
+			<label>Tarım ve Hayvancılık</label>
 			<description>hayvan yetiştiriciliği ve/veya bitki ekimi</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1472,7 +1472,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Altyapı&İletişim</label>
+			<label>Altyapı ve İletişim</label>
 			<description>enerji, su ve atık sistemleri ve iletişim altyapısı ve servisleri</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
