@@ -254,7 +254,8 @@ public class ImportFromDir implements Service
 					String schema   = config.mapSchema(catDir);
 
 					if (validate)
-						dm.validate(schema, xml);
+                        // Validate xsd and schematron
+						dm.validateMetadata(schema, xml, context);
 
 					alImport.add(new ImportInfo(schema, category, xml));
 					counter++;
@@ -299,59 +300,6 @@ public class ImportFromDir implements Service
 		String id = dm.insertMetadata(dbms, schema, category, group, xml, context.getSerialFactory(), gc.getSiteId(), uuid, context.getUserSession().getUserIdAsInt());
 
 	}
-	
-	
-	//--------------------------------------------------------------------------
- 	//---
-	//--- validateIt (should be in DataManager?)
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void validateIt(String schema, Element xml, ServiceContext context) throws Exception
-	{
-		validateIt(schema,xml,context," ");	
-	}
-
-	public static void validateIt(String schema, Element xml, ServiceContext context, String fileName) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getDataManager();
-
-		dataMan.setNamespacePrefix(xml);
-		try {
-			dataMan.validate(schema, xml);
-		} catch (XSDValidationErrorEx e) {
-			if (!fileName.equals(" ")) {
-				throw new XSDValidationErrorEx(e.getMessage()+ "(in "+fileName+"): ",e.getObject());
-			} else {
-				throw new XSDValidationErrorEx(e.getMessage(),e.getObject());
-			}
-		}
-
-		//-----------------------------------------------------------------------
-		//--- if the uuid does not exist we generate it
-
-		String uuid = dataMan.extractUUID(schema, xml);
-
-		if (uuid.length() == 0)
-			uuid = UUID.randomUUID().toString();
-
-		//--- Now do the schematron validation on this file - if there are errors
-		//--- then we say what they are!
-		//--- Note we have to use uuid here instead of id because we don't have 
-		//--- an id...
-
-		Element schemaTronXml = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
-		xml.detach();
-		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-			Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
-			throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - " 
-					+ Xml.getString(schemaTronReport) + " for more details",schemaTronReport);
-		}
-
-	}
-
 }
 
 //=============================================================================

@@ -30,6 +30,7 @@ package org.fao.geonet.kernel;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.OperationNotAllowedEx;
+import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -43,6 +44,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -513,6 +515,80 @@ public class DataManager
 		editLib.removeEditingInfo(md);
 
 		return schemaTronXmlReport;
+	}
+
+    /**
+     * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx
+     * if xsd errors or SchematronValidationErrorEx if schematron rules fails
+     *
+     * @param schema
+     * @param xml
+     * @param context
+     * @throws Exception
+     */
+	public static void validateMetadata(String schema, Element xml, ServiceContext context) throws Exception
+	{
+		validateMetadata(schema,xml,context," ");
+	}
+
+    /**
+     * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx
+     * if xsd errors or SchematronValidationErrorEx if schematron rules fails
+     *
+     * @param schema
+     * @param xml
+     * @param context
+     * @param fileName
+     * @throws Exception
+     */
+	public static void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception
+	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		DataManager dataMan = gc.getDataManager();
+
+		dataMan.setNamespacePrefix(xml);
+		try {
+			dataMan.validate(schema, xml);
+		} catch (XSDValidationErrorEx e) {
+			if (!fileName.equals(" ")) {
+				throw new XSDValidationErrorEx(e.getMessage()+ "(in "+fileName+"): ",e.getObject());
+			} else {
+				throw new XSDValidationErrorEx(e.getMessage(),e.getObject());
+			}
+		}
+
+		//-----------------------------------------------------------------------
+		//--- if the uuid does not exist we generate it
+
+		String uuid = dataMan.extractUUID(schema, xml);
+
+		if (uuid.length() == 0)
+			uuid = UUID.randomUUID().toString();
+
+		//--- Now do the schematron validation on this file - if there are errors
+		//--- then we say what they are!
+		//--- Note we have to use uuid here instead of id because we don't have
+		//--- an id...
+
+		Element schemaTronXml = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
+		xml.detach();
+
+		if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
+			Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
+
+            List<Namespace> theNSs = new ArrayList<Namespace>();
+            theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
+            theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
+
+            Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report/svrl:schematron-output/svrl:failed-assert", theNSs);
+
+            if (failedAssert != null) {
+			    throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - "
+					    + Xml.getString(schemaTronReport) + " for more details",schemaTronReport);
+            }
+		}
+
 	}
 
 	//--------------------------------------------------------------------------

@@ -268,8 +268,10 @@ public class Importer {
 				}
 
 				if (validate) {
-					dm.validate(schema, metadata);
+					// Validate xsd and schematron
+					dm.validateMetadata(schema, metadata, context);
                 }
+
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
 
 				importRecord(uuid, localId, uuidAction, md, schema, index, source, sourceName, context, id,

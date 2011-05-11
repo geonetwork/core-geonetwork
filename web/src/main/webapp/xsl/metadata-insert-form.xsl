@@ -66,8 +66,8 @@
                     $('gn.fileType').style.display='';
                     document.xmlinsert.enctype="multipart/form-data";
 					document.xmlinsert.encoding="multipart/form-data";
-                    document.xmlinsert.action=Env.locService+"/mef.import";
-                    document.xmlinsert.target='upFrame';
+                    document.xmlinsert.action=Env.locService+"/mef.import.ui";
+                    document.xmlinsert.target='_self';
                 }
             }
             

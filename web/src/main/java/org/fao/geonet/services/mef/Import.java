@@ -23,11 +23,13 @@
 
 package org.fao.geonet.services.mef;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
@@ -64,22 +66,42 @@ public class Import implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		String mefFile = Util.getParam(params, "mefFile");
+        String fileType = Util.getParam(params, "file_type");
 		String uploadDir = context.getUploadDir();
 
 		File file = new File(uploadDir, mefFile);
 
 		List<String> id = MEFLib.doImport(params, context, file, stylePath);
-		Element result = new Element("id");
-		String ids = "";
+        String ids = "";
 
-		Iterator<String> iter = id.iterator();
-		while (iter.hasNext()) {
-			String item = (String) iter.next();
-			ids += item + ";";
+        Iterator<String> iter = id.iterator();
+        while (iter.hasNext()) {
+            String item = (String) iter.next();
+            ids += item + ";";
 
-		}
-		file.delete();
-		result.setText(ids);
+        }
+
+        file.delete();
+
+		Element result = null;
+
+        if (context.getService().equals("mef.import")) {
+
+            result = new Element("id");
+            result.setText(ids);
+
+        } else {
+
+            result = new Element(Jeeves.Elem.RESPONSE);
+            if ((fileType.equals("single") && (id.size() == 1))) {
+                result.addContent(new Element(Params.ID).setText(id.get(0) +""));
+            } else {
+                result.addContent(new Element("records").setText(id.size() +""));
+
+            }
+
+        }
+
 
 		// --- return success with all metadata id
 		return result;
