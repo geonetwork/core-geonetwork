@@ -101,7 +101,7 @@ public class Insert implements Service
         if (schema == null)
         	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
 
-		if (validate) ImportFromDir.validateIt(schema, xml, context);
+		if (validate) dataMan.validateMetadata(schema, xml, context);
 
 		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it

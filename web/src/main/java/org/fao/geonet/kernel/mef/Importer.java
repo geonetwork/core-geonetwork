@@ -270,8 +270,10 @@ public class Importer {
 					popularity = general.getChildText("popularity");
 				}
 
-				if (validate)
-					dm.validate(schema, metadata);
+				if (validate) {
+					// Validate xsd and schematron
+					dm.validateMetadata(schema, metadata, context);
+                }
 
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION,
 						Params.NOTHING);

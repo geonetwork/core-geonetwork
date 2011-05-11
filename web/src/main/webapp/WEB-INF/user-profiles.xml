@@ -246,6 +246,7 @@
 
 		<!-- MEF facilities -->
 		<allow service="mef.import"/>
+        <allow service="mef.import.ui"/>
 
 		<!-- Relation services -->
 		<allow service="xml.relation.insert"/>
