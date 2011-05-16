@@ -42,6 +42,29 @@ public class LocalLib
 	//--- API methods
 	//---
 	//-----------------------------------------------------------------------------
+    public Map<String, String> getLanguagesInspire(Dbms dbms) throws SQLException
+	{
+		Map<String, String> hm = new HashMap<String, String>();
+
+		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isInspire='y'").getChildren())
+		{
+			Element lang = (Element) obj;
+			hm.put(lang.getChildText("id"), lang.getChildText("isocode"));
+		}
+
+		return hm;
+	}
+
+    public String getDefaultLanguage(Dbms dbms) throws SQLException
+	{
+		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isDefault='y'").getChildren())
+		{
+			Element lang = (Element) obj;
+			return lang.getChildText("id");
+		}
+
+		return null;
+	}
 
     public Map<String, String> getLanguagesIso(Dbms dbms) throws SQLException
 	{

@@ -44,7 +44,8 @@ public class Csw {
 	public static final Namespace NAMESPACE_GEONET = Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
 	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc","http://purl.org/dc/elements/1.1/");
 	public static final Namespace NAMESPACE_XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        public static final Namespace NAMESPACE_INSPIRE = Namespace.getNamespace("inspire_ds", "http://inspire.europa.eu/networkservice/discovery");
+    public static final Namespace NAMESPACE_INSPIRE_DS = Namespace.getNamespace("inspire_ds", "http://inspire.ec.europa.eu/schemas/inspire_ds/1.0");
+    public static final Namespace NAMESPACE_INSPIRE_COM = Namespace.getNamespace("inspire_common", "http://inspire.ec.europa.eu/schemas/common/1.0");
 	public static final Namespace NAMESPACE_SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	
 	//---------------------------------------------------------------------------

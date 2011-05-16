@@ -1724,16 +1724,18 @@ CREATE TABLE CswServerCapabilitiesInfo
   );
 
 ALTER TABLE Languages ADD isocode varchar(3);
+ALTER TABLE Languages ADD isInspire char(1);
+ALTER TABLE Languages ADD isDefault char(1);
 
-UPDATE Languages SET isocode = 'eng' where id ='en';
-UPDATE Languages SET isocode = 'fre' where id ='fr';
-UPDATE Languages SET isocode = 'esp' where id ='es';
-UPDATE Languages SET isocode = 'rus' where id ='ru';
-UPDATE Languages SET isocode = 'chi' where id ='cn';
-UPDATE Languages SET isocode = 'ger' where id ='de';
-UPDATE Languages SET isocode = 'dut' where id ='nl';
-UPDATE Languages SET isocode = 'por' where id ='pt';
-UPDATE Languages SET isocode = 'nor' where id ='no';
+UPDATE Languages SET isocode = 'eng', isInspire = 'y', isDefault = 'y' where id ='en';
+UPDATE Languages SET isocode = 'fre', isInspire = 'y', isDefault = 'n' where id ='fr';
+UPDATE Languages SET isocode = 'spa', isInspire = 'y', isDefault = 'n' where id ='es';
+UPDATE Languages SET isocode = 'rus', isInspire = 'n', isDefault = 'n' where id ='ru';
+UPDATE Languages SET isocode = 'chi', isInspire = 'n', isDefault = 'n' where id ='cn';
+UPDATE Languages SET isocode = 'ger', isInspire = 'y', isDefault = 'n' where id ='de';
+UPDATE Languages SET isocode = 'dut', isInspire = 'y', isDefault = 'n' where id ='nl';
+UPDATE Languages SET isocode = 'por', isInspire = 'y', isDefault = 'n' where id ='pt';
+UPDATE Languages SET isocode = 'nor', isInspire = 'n', isDefault = 'n' where id ='no';
 
 INSERT INTO CswServerCapabilitiesInfo VALUES (1, 'en', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (2, 'en', 'abstract', '');
