@@ -11,4 +11,8 @@
 		<p>Registrering <font class="error">FEILET</font> fordi det ikke kunne sendes epost til adressen du oppga.</p>
 		<p>Sjekk de oppgitte detaljene og fors�k p� nytt.</p>
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

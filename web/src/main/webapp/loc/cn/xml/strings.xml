@@ -16,6 +16,10 @@
     <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>
     <rebuildIndexMessage>如果你改变这些值，建议您重建Lucene索引。</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
   <selectTemplate>Select schemas</selectTemplate>
   <notificationsDes>Remote updates</notificationsDes>
 	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>

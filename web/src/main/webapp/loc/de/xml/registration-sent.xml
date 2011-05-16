@@ -11,4 +11,8 @@
 		<p>Entschuldigung, die Registrierung ist <font class="error">FEHLGESCHLAGEN</font>. Es konnte keine E-Mail an Ihre Adresse geschickt werden.</p>
 		<p>Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.</p>
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

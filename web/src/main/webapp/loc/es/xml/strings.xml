@@ -13,6 +13,10 @@
     <no>Norsk</no>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
   <selectTemplate>Select schemas</selectTemplate>
   <notificationsDes>Remote updates</notificationsDes>
 	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>

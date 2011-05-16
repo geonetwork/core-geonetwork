@@ -12,6 +12,10 @@
 	<ca>Català</ca> <!-- Do not translate! -->
     <no>Norsk</no>  <!-- Do not translate! -->
 
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
   <selectTemplate>Select schemas</selectTemplate>
 	<useStopwords>The Lucene index uses stopwords for these languages:</useStopwords>    
   <rebuildIndexMessage>If you change these values, it is recommended you rebuild the Lucene index.</rebuildIndexMessage>

@@ -11,4 +11,8 @@
 		<p>Sorry, registration has <font class="error">FAILED</font> because we could not send an email to the address you gave us.</p>
 		<p>Please check your details and try registering again.</p>
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

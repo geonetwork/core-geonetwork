@@ -13,6 +13,10 @@
     <no>Norsk</no>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
   <io>Import, export &amp; moissonnage</io>
   <usersAndGroups>Utilisateurs et groupes</usersAndGroups>
   <classification>Thesaurus et système de classification</classification>

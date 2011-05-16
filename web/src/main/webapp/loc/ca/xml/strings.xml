@@ -12,6 +12,10 @@
 	<ca>Català</ca> <!-- Do not translate! -->
 	<no>Norsk</no>  <!-- Do not translate! -->
 
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
 	<useStopwords>L'índex Lucene utilitza paraules buides per aquests idiomes:</useStopwords>    
     <rebuildIndexMessage>Si canvieu aquests valors es recomana tornar a generar l'índex Lucene.   </rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->

@@ -432,11 +432,48 @@ function get_cookie ( cookie_name )
         			Modalbox.show(output,{title: title, width: 300});
 						},
 						onFailure: function(req) {
-            	alert(translate("registrationFailed") + " " + req.responseText + " status: " + req.status + " - " + translate("tryAgain"));
+            	var output = req.responseText;
+							var title = translate('registrationFailed');
+        			Modalbox.show(output,{title: title, width: 300});
+            	//alert(translate("registrationFailed") + " " + req.responseText + " status: " + req.status + " - " + translate("tryAgain"));
 						}
 				}
 		);
 	}
+
+	/**********************************************************
+	***
+	***	FORGOTTEN PASSWORD ACTIONS	
+	***
+	**********************************************************/
+	       			
+	function processForgottenPwdSubmit(url) {
+
+		var f = $('forgottenpwd');
+		if (isWhitespace(f.username.value)) {
+			alert(translate("usernameMandatory"));
+			return false;
+		}
+
+		var myAjax = new Ajax.Request(
+			getGNServiceURL(url), 
+				{
+					method: 'post',
+					parameters: f.serialize(true), 
+						onSuccess: function(req) {
+            	var output = req.responseText;
+							var title = translate('changePassword');
+        			Modalbox.show(output,{title: title, width: 300});
+						},
+						onFailure: function(req) {
+            	var output = req.responseText;
+							var title = translate('changePasswordFailed');
+        			Modalbox.show(output,{title: title, width: 300});
+						}
+				}
+		);
+ 	}
+	  
 	
 /**********************************************************
 ***

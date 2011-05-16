@@ -11,4 +11,8 @@
 		<p>Desculpe, o seu registo <font class="error">FALHOU</font> porque não foi possível enviar um email ao endereço que nos deu.</p>
 		<p>Por favor verifique os seus dados e tente novamente.</p>
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

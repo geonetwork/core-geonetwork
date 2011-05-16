@@ -63,7 +63,7 @@
 											string(/root/gui/env/userSelfRegistration/enable)='true'">
 
 						|
-						<a class="banner" onclick="doBannerButton('{/root/gui/locService}/password.forgotten.form','{/root/gui/strings/changePassword}','{$modal}',300)" href="javascript:void(0);">
+						<a class="banner" onclick="doBannerButton('{/root/gui/locService}/password.forgotten.form','{/root/gui/strings/changePassword}','1',300)" href="javascript:void(0);">
 							<xsl:value-of select="/root/gui/strings/forgottenPassword"/>
 						</a>
 					</xsl:if>
@@ -94,7 +94,7 @@
 					</xsl:choose>
 					|
 				</td>
-				<td align="right" class="banner-menu" width="610px">
+				<td align="right" class="banner-menu" width="590px">
 					<xsl:if test="count(/root/gui/config/languages/*) &gt; 1">
 						<!-- Redirect to current page when no error could happen 
 						(ie. when having no parameters in GET), if not redirect to the home page. -->

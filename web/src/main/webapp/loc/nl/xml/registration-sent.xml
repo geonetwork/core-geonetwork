@@ -11,4 +11,8 @@
 		<p>De registratie is <font class="error">MISLUKT</font> omdat we geen email naar het adres konden sturen dat u opgaf.</p>
 		<p>Controleer uw gegevens en probeer opnieuw te registreren.</p>
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

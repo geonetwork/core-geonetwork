@@ -11,4 +11,8 @@
 		<p>Ho sentim, la inscripció ha <font class="error">FALLAT</font> donat que no podem enviar-vos un correu a l'adreça que ens heu facilitat.</p>
 		<p>Si us plau, examineu els detalls i intenteu fer la inscripció una altra vegada.</p>
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

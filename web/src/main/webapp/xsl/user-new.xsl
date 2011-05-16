@@ -49,6 +49,24 @@
 					return;
 				}
 
+				// check surname specified
+				if (document.userupdateform.surname.value == '') {
+						alert("<xsl:value-of select="/root/gui/strings/surnameMandatory"/>");
+						return;
+				}
+
+				// check firstname specified
+				if (document.userupdateform.name.value == '') {
+						alert("<xsl:value-of select="/root/gui/strings/firstnameMandatory"/>");
+						return;
+				}
+
+				// check email specified
+				if (document.userupdateform.email.value == '') {
+						alert("<xsl:value-of select="/root/gui/strings/emailMandatory"/>");
+						return;
+				}
+
 				// check at least one group selected
 				if ($F('groups') == '')
 					if ($F('user.profile') != 'Administrator')

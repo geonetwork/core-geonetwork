@@ -431,6 +431,14 @@
 		<!-- Test CSW ISO server -->
 		<allow service="test.csw"/>
 
+		<!--  forgotten password services -->
+		<allow service="xml.password.emaillink"/>
+		<allow service="xml.password.change"/>
+		<allow service="password.forgotten.form"/>
+		<allow service="password.forgotten.submit"/>
+		<allow service="password.change.form"/>
+		<allow service="password.change.submit"/>
+
 		<!-- User self registration -->
 		<allow service="user.register.get"/>
 		<allow service="user.register.submit"/>

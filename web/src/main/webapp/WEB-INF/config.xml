@@ -519,6 +519,66 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Forgotten password services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="password.forgotten.form">
+			<output sheet="password-forgotten.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="password.forgotten.submit">
+			<class name=".services.password.SendLink" />
+			
+			<error id="user-not-found" sheet="error-modal.xsl">
+				<xml name="error" file="xml/user-not-found-error.xml" />
+			</error>
+
+			<error id="operation-not-allowed" sheet="error-modal.xsl">
+				<xml name="error" file="xml/registered-users-only.xml" />
+			</error>
+			
+			<error sheet="error-modal.xsl"/>
+
+			<output sheet="infomodal.xsl">
+				<xml name="info" file="xml/password-link-sent.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="password.change.form">
+			<output sheet="password-change.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="password.change.submit">
+			<class name=".services.password.Change" />
+
+			<output sheet="info.xsl">
+				<xml name="info" file="xml/password-changed.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.password.emaillink">
+			<class name=".services.password.SendLink" />
+			<error sheet="error-xml.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.password.change">
+			<class name=".services.password.Change" />
+			<error sheet="error-xml.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- User services                                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

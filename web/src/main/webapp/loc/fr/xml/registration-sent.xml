@@ -10,4 +10,8 @@
         <p>Désolé, <font class="error">échec</font> de l'inscription car l'envoi du mail à échoué.</p>
         <p>Si vous avez oublié votre mot de passe, contacter le support <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> ou xx xx xx xx xx</p>        
     </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
 </strings>

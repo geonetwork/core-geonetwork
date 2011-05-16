@@ -12,6 +12,10 @@
 	<ca>Català</ca> <!-- Do not translate! -->
     <no>Norsk</no>  <!-- Do not translate! -->
 
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
     <useStopwords>O índice Lucene usa stopwords para essas linguagens:</useStopwords>    
     <rebuildIndexMessage>Se você alterar esses valores, é recomendável que reconstruir o índice Lucene.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
