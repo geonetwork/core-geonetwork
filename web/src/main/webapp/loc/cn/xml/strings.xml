@@ -550,6 +550,7 @@
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC-WMS地图服务(ver 1.3.0)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">下载文件 (FTP)</protocolChoice>
@@ -1059,4 +1060,5 @@
     <custom-elementset-revert>要恢复到默认ElementSetName=充分的答复，请删除此列表的所有元素。</custom-elementset-revert>
     <custom-elementset-add>添加元素</custom-elementset-add>
 
+    <wmslayers>WMS layers</wmslayers>
 </strings>

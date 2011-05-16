@@ -550,6 +550,7 @@
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">Sevicio de Mapas OGC-WMS</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Servicio Capabilities OGC-WMS (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">Servicio Capabilities OGC-WMS (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Sevicio de Mapas OGC-WMS (ver 1.1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">Sevicio de Mapas OGC-WMS (ver 1.3.0)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichero para la descarga (FTP)</protocolChoice>
@@ -1060,4 +1061,5 @@
     <custom-elementset-revert>Para volver a la ElementSetName default = respuestas completas, eliminar todos los elementos de esta lista.</custom-elementset-revert>
     <custom-elementset-add>Añadir elemento</custom-elementset-add>
 
+    <wmslayers>Capas WMS</wmslayers>
 </strings>

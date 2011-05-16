@@ -550,6 +550,7 @@
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Datei via FTP zum download</protocolChoice>
@@ -1054,4 +1055,5 @@
     <custom-elementset-revert>Um wieder auf den Standardwert ElementSetName = FULL Antworten, löschen Sie alle Elemente aus dieser Liste.</custom-elementset-revert>
     <custom-elementset-add>Element hinzufügen</custom-elementset-add>
 
+    <wmslayers>WMS layers</wmslayers>
 </strings>
