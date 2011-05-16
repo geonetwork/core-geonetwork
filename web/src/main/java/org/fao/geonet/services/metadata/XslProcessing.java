@@ -81,6 +81,10 @@ public class XslProcessing implements Service {
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager   dataMan = gc.getDataManager();
+
 		String process = Util.getParam(params, Params.PROCESS);
 
 		Set<Integer> metadata = new HashSet<Integer>();
@@ -92,7 +96,7 @@ public class XslProcessing implements Service {
 
 		try {
 			Element processedMetadata = process(id, process, _appPath, params,
-				context, metadata, notFound, notOwner, notProcessFound, false);
+				context, metadata, notFound, notOwner, notProcessFound, false, dataMan.getSiteURL());
 			if (processedMetadata == null) {
 				throw new BadParameterEx("Processing failed", 
 						"Not found:" + notFound.size() +
@@ -128,7 +132,7 @@ public class XslProcessing implements Service {
 	public static Element process(String id, String process, String appPath,
 			Element params, ServiceContext context, Set<Integer> metadata,
 			Set<Integer> notFound, Set<Integer> notOwner,
-			Set<Integer> notProcessFound, boolean useIndexGroup) throws Exception {
+			Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -166,6 +170,9 @@ public class XslProcessing implements Service {
 			for (Element param : children) {
 				xslParameter.put(param.getName(), param.getTextTrim());
 			}
+
+            xslParameter.put("siteUrl", siteUrl);
+
 			Element processedMetadata = Xml.transform(md, filePath,
 					xslParameter);
 

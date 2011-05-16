@@ -334,7 +334,16 @@ public class Processor {
 
 	//--------------------------------------------------------------------------
 	private static void doXLink(String hrefUri, String idSearch, Attribute xlink, String action) { 
-		Element element = xlink.getParent(); 
+		Element element = xlink.getParent();
+
+        // Don't process XLink for operatesOn
+        List<String> excludedXlinkElements = new ArrayList<String>();
+        excludedXlinkElements.add("operatesOn");
+
+        if (excludedXlinkElements.contains(element.getName())) {
+           return;
+        }
+
 		if (!hrefUri.equals("")) {
 			String show = element.getAttributeValue(XLink.SHOW, XLink.NAMESPACE_XLINK);
 			if (show == null || show.equals("")) show = XLink.SHOW_EMBED;

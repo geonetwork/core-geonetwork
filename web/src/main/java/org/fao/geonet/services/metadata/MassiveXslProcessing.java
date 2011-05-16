@@ -131,32 +131,36 @@ public class MassiveXslProcessing implements Service {
 		String appPath;
 		Element params;
 		ServiceContext context;
-    Set<Integer> metadata, notFound, notOwner, notProcessFound;
+        Set<Integer> metadata, notFound, notOwner, notProcessFound;
 
-    public MassiveXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, String appPath, Element params, ServiceContext context, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> notProcessFound) {
-        super(dm);
-				this.dbms = dbms;
-				this.iter = iter;
-				this.process = process;
-				this.appPath = appPath;
-				this.params = params;
-				this.context = context;
-        this.metadata = metadata;
-				this.notFound = notFound;
-				this.notOwner = notOwner;
-				this.notProcessFound = notProcessFound;
-    }
+        public MassiveXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, String appPath, Element params, ServiceContext context, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> notProcessFound) {
+            super(dm);
+            this.dbms = dbms;
+            this.iter = iter;
+            this.process = process;
+            this.appPath = appPath;
+            this.params = params;
+            this.context = context;
+            this.metadata = metadata;
+            this.notFound = notFound;
+            this.notOwner = notOwner;
+            this.notProcessFound = notProcessFound;
+        }
 
-    @Override
-    public void process() throws Exception {
-			while (iter.hasNext()) {
-				String uuid = (String) iter.next();
-				String id = dm.getMetadataId(dbms, uuid);
-				context.info("Processing metadata with id:" + id);
-	
-				XslProcessing.process(id, process, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true);
-			}
-    }
+        @Override
+        public void process() throws Exception {
+            GeonetContext gc = (GeonetContext) context
+                    .getHandlerContext(Geonet.CONTEXT_NAME);
+            DataManager dataMan = gc.getDataManager();
+
+            while (iter.hasNext()) {
+                String uuid = (String) iter.next();
+                String id = dm.getMetadataId(dbms, uuid);
+                context.info("Processing metadata with id:" + id);
+
+                XslProcessing.process(id, process, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true,  dataMan.getSiteURL());
+            }
+        }
 	}
 }
 
