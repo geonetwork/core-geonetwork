@@ -370,7 +370,7 @@ class Harvester
 		Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 		Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 		Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
-
+        Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
         Element root 	= md.getChild("identificationInfo", gmd)
 							.getChild("SV_ServiceIdentification", srv);
@@ -439,6 +439,10 @@ class Harvester
 				// Add operatesOn element at the end of identification section.
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
+
+                String hRefLink =  dataMan.getSiteURL() + "/iso19139.xml?uuid=" + layer.uuid;
+                op.setAttribute("href", hRefLink, xlink);
+
 				
 				root.addContent(op);
 				
