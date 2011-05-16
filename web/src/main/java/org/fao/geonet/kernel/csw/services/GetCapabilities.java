@@ -106,11 +106,11 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
             String currentLanguage = context.getLanguage();
 
-            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())            
+          // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
             if (inspireEnabled){
                 String isoLangParamValue = request.getAttributeValue("language");
 
-                Map<String, String> langs = Lib.local.getLanguagesIso(dbms);
+                Map<String, String> langs = Lib.local.getLanguagesInspire(dbms);
 
                 if (isoLangParamValue != null) {
                     // Retrieve GN language id from Iso language id
@@ -123,7 +123,10 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     }
                 }
 
-                setInspireLanguages(capabilities, langs, currentLanguage);
+
+                String defaultLanguage = Lib.local.getDefaultLanguage(dbms);
+
+                setInspireLanguages(capabilities, langs, currentLanguage, defaultLanguage);
             }
 
             CswCapabilitiesInfo cswCapabilitiesInfo = gc.getDataManager().getCswCapabilitiesInfo(dbms, currentLanguage);
@@ -304,28 +307,49 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 	
 	//---------------------------------------------------------------------------
 	
-    private void setInspireLanguages (Element capabilities, Map<String, String> languages, String currLang) {
+    private void setInspireLanguages (Element capabilities, Map<String, String> languages, String currLang, String defaultLang) {
         Element inspireExtCapabilities = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS)
-                .getChild("ExtendedCapabilities", Csw.NAMESPACE_OWS)
-                .getChild("ExtendedCapabilities", Csw.NAMESPACE_INSPIRE);
+                .getChild("ExtendedCapabilities", Csw.NAMESPACE_INSPIRE_DS);
 
 
-        Element inspireLanguages = inspireExtCapabilities.getChild("Languages", Csw.NAMESPACE_INSPIRE);
+        Element inspireLanguages = inspireExtCapabilities.getChild("SupportedLanguages", Csw.NAMESPACE_INSPIRE_COM);
 
-        // TODO: retrieve from config file
-        String defaultLang = "en";
+        if (defaultLang == null) defaultLang = "en";
 
         try {
+            // Add DefaultLanguage
             for(String key : languages.keySet()) {
-                // List of supported languages
-                Element supportedLanguage = new Element("Language", Csw.NAMESPACE_INSPIRE);
-                supportedLanguage.setText(languages.get(key));
+                Element defaultLanguage;
+                Element language;
 
+                System.out.println("key: "+ key);
                 if (key.equalsIgnoreCase(defaultLang)) {
-                    supportedLanguage.setAttribute("default", "true");
+                    defaultLanguage = new Element("DefaultLanguage", Csw.NAMESPACE_INSPIRE_COM);
+                    language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
+
+                    language.setText(languages.get(key));
+                    defaultLanguage.getChildren().add(language);
+                    inspireLanguages.getChildren().add(defaultLanguage);
+
+                    break;
+                }
+            }
+
+            // Add list of supported languages
+            for(String key : languages.keySet()) {
+                Element supportedLanguage;
+                Element language;
+
+                if (!(key.equalsIgnoreCase(defaultLang))) {
+                    supportedLanguage = new Element("SupportedLanguage", Csw.NAMESPACE_INSPIRE_COM);
+                    language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
+
+                    language.setText(languages.get(key));
+                    supportedLanguage.getChildren().add(language);
+                    inspireLanguages.getChildren().add(supportedLanguage);
                 }
 
-                inspireLanguages.getChildren().add(supportedLanguage);
+
             }
 
             // Current language
@@ -333,7 +357,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             if (languages.containsKey(currLang)) {
                 vars.put("$INSPIRE_LOCALE", languages.get(currLang));
 
-            } else {      
+            } else {
                 vars.put("$INSPIRE_LOCALE", languages.get(defaultLang));
             }
 

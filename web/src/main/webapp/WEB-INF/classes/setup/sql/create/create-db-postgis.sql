@@ -52,6 +52,8 @@ CREATE TABLE Languages
     id    varchar(5),
     name  varchar(32)   not null,
     isocode varchar(3)  not null,
+    isInspire char(1)     default 'n',
+    isDefault char(1)     default 'n',
 
     primary key(id)
   );

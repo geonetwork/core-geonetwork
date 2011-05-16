@@ -88,7 +88,7 @@ ALTER TABLE Languages ADD isocode varchar(3);
 
 UPDATE Languages SET isocode = 'eng' where id ='en';
 UPDATE Languages SET isocode = 'fre' where id ='fr';
-UPDATE Languages SET isocode = 'esp' where id ='es';
+UPDATE Languages SET isocode = 'spa' where id ='es';
 UPDATE Languages SET isocode = 'rus' where id ='ru';
 UPDATE Languages SET isocode = 'chi' where id ='cn';
 UPDATE Languages SET isocode = 'ger' where id ='de';
@@ -153,6 +153,21 @@ INSERT INTO IndexLanguages VALUES (12, 'spanish', 'n');
 INSERT INTO IndexLanguages VALUES (13, 'swedish', 'n');
 INSERT INTO IndexLanguages VALUES (14, 'catalan', 'n');
 INSERT INTO IndexLanguages VALUES (15, 'turkish', 'n');
+
+-- 2.6.4 changes
+ALTER TABLE Languages ADD isInspire char(1);
+ALTER TABLE Languages ADD isDefault char(1);
+
+UPDATE Languages SET isInspire = 'y', isDefault = 'y' where id ='en';
+UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='fr';
+UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='es';
+UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ru';
+UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='cn';
+UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='de';
+UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='nl';
+UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='pt';
+UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ca';
+UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
 UPDATE Settings SET value='2.6.4' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

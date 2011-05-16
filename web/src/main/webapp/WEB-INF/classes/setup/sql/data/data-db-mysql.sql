@@ -36,17 +36,17 @@ TRUNCATE Relations;
 -- === Table: Languages
 -- ======================================================================
 
-INSERT INTO Languages VALUES ('en','English', 'eng');
-INSERT INTO Languages VALUES ('fr','French', 'fre');
-INSERT INTO Languages VALUES ('es','Espanol', 'esp');
-INSERT INTO Languages VALUES ('ru','Russian', 'rus');
-INSERT INTO Languages VALUES ('ar','Arabic', 'ara');
-INSERT INTO Languages VALUES ('cn','Chinese', 'chi');
-INSERT INTO Languages VALUES ('de','Deutsch', 'ger');
-INSERT INTO Languages VALUES ('nl','Nederlands', 'dut');
-INSERT INTO Languages VALUES ('pt','Português', 'por');
-INSERT INTO Languages VALUES ('ca','Català', 'cat');
-INSERT INTO Languages VALUES ('tr','Türkçe', 'tur');
+INSERT INTO Languages VALUES ('en','English', 'eng', 'y', 'y');
+INSERT INTO Languages VALUES ('fr','French', 'fre', 'y', 'n');
+INSERT INTO Languages VALUES ('es','Espanol', 'spa', 'y', 'n');
+INSERT INTO Languages VALUES ('ru','Russian', 'rus', 'n', 'n');
+INSERT INTO Languages VALUES ('ar','Arabic', 'ara', 'n', 'n');
+INSERT INTO Languages VALUES ('cn','Chinese', 'chi', 'n', 'n');
+INSERT INTO Languages VALUES ('de','Deutsch', 'ger', 'y', 'n');
+INSERT INTO Languages VALUES ('nl','Nederlands', 'dut', 'y', 'n');
+INSERT INTO Languages VALUES ('pt','Português', 'por', 'y', 'n');
+INSERT INTO Languages VALUES ('ca','Català', 'cat', 'n', 'n');
+INSERT INTO Languages VALUES ('tr','Türkçe', 'tur', 'n', 'n');
 
 -- ======================================================================
 -- === Table: CswServerCapabilitiesInfo
