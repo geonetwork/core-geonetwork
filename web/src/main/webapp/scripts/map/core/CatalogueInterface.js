@@ -189,8 +189,15 @@ GeoNetwork.CatalogueInterface = function() {
             var onlineResource = layerList[0][1];
             layers = layerList;
 
+            var containsVersion = (onlineResource.indexOf('version=') > -1);
+
             var params = {'service': 'WMS', 'request': 'GetCapabilities',
-                'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
+                language: GeoNetwork.OGCUtil.getLanguage()};
+
+            if (!containsVersion) {
+                params['version'] = GeoNetwork.OGCUtil.getProtocolVersion();
+            }
+
             var paramString = OpenLayers.Util.getParameterString(params);
             var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
             onlineResource += separator + paramString;

@@ -79,8 +79,14 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      * onlineResource - {String} the online resource / base url of the WMS
      */
     loadWMS: function(onlineResource) {
+        var containsVersion = (onlineResource.indexOf('version=') > -1);
+
         var params = {'service': 'WMS', 'request': 'GetCapabilities',
-            'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
+            language: GeoNetwork.OGCUtil.getLanguage()};
+
+        if (!containsVersion) {
+            params['version'] = GeoNetwork.OGCUtil.getProtocolVersion();
+        }
 
         var paramString = OpenLayers.Util.getParameterString(params);
         var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';

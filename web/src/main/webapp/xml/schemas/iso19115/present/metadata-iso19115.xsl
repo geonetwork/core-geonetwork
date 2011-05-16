@@ -1003,6 +1003,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
+            <!-- Resource name is specified -->
 			<xsl:when test="string(../../../geonet:info/dynamic)='true' and string($name)!='' and string($linkage)!=''">
 			<!-- Create a link for a WMS service that will open in InterMap opensource -->
 				<xsl:apply-templates mode="simpleElement" select=".">
@@ -1044,6 +1045,25 @@
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
+            <!-- Resource name is NOT specified -->
+            <xsl:when test="string(../../../geonet:info/dynamic)='true' and string($linkage)!='' and not(string($name))">
+                <xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
+					<xsl:with-param name="text">
+						<a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}">
+							<xsl:choose>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
+								</xsl:when>
+                                <xsl:otherwise>
+									<xsl:value-of select="/root/gui/strings/wmslayers"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</a>
+					</xsl:with-param>
+				</xsl:apply-templates>
+            </xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
@@ -1073,8 +1093,11 @@
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
 								</xsl:when>
-								<xsl:otherwise>
+								<xsl:when test="string($name)!=''">
 									<xsl:value-of select="$name"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
@@ -1809,6 +1832,18 @@
 				<!-- The old links still in use by some systems. Deprecated -->
 				<xsl:comment>The use of these links should be a</xsl:comment>
 				<xsl:choose>
+                    <!-- no protocol, but URL is for a WMS service -->
+                    <xsl:when test="(not(string(./protocol)) and contains($linkage,'service=WMS') and not(string($name)))">
+						<link type="wms">
+							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
+						</link>
+					</xsl:when>
+                    <!-- no protocol, but URL is for a WMS service -->
+                     <xsl:when test="(not(string(./protocol)) and contains($linkage,'service=WMS') and string($name)!='')">
+						<link type="wms">
+							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
+						</link>
+					</xsl:when>
 					<xsl:when test="starts-with(./protocol,'WWW:DOWNLOAD-') and contains(./protocol,'http--download') and string($linkage)!='' and not(contains($linkage,$download_check))"> <!-- FIXME -->
 						<link type="download"><xsl:value-of select="$linkage"/></link>
 					</xsl:when>
@@ -1825,6 +1860,11 @@
 						</link>
 						<link type="googleearth">
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
+						</link>
+					</xsl:when>
+                    <xsl:when test="(starts-with(./protocol,'OGC:WMS-') and contains(./protocol,'-get-map') and string($linkage)!='' and not(string($name)))  or ($protocol = 'OGC:WMS' and string($linkage)!='' and not(string($name)))">
+                    	<link type="wms">
+							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
 						</link>
 					</xsl:when>
 					<xsl:when test="(starts-with(./protocol,'OGC:WMS-') and contains(./protocol,'-get-capabilities') and string($linkage)!='') or ($protocol = 'OGC:WMS' and string($name)='' and string($linkage)!='')">

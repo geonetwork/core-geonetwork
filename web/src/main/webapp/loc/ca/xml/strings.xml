@@ -544,6 +544,7 @@
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">Servei de Mapes OGC-WMS</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Servei Capabilities OGC-WMS (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">Servei Capabilities OGC-WMS  (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Servei de Mapes OGC-WMS (ver 1.1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">Servei de Mapes OGC-WMS (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Service</protocolChoice>
@@ -1051,4 +1052,6 @@
     <cswServerFees>Tarifes</cswServerFees>
     <cswServerAccessConstraints>Restriccions d'accés</cswServerAccessConstraints>
     <cswServerContact>Contacte</cswServerContact>
+
+    <wmslayers>Capes WMS</wmslayers>
 </strings>

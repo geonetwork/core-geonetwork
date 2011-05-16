@@ -703,6 +703,7 @@ ISO 19115 не позволяет иметь более одного.
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">Cервис OGC Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Сервис OGC-WMS Capabilities service(версия 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">Сервис OGC-WMS Capabilities service(версия 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Cервис OGC Web Map Service (версия 1.1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">Cервис OGC Web Map Service (версия 1.3.0)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Файл для загрузки по FTP</protocolChoice>
@@ -1215,5 +1216,6 @@ ISO 19115 не позволяет иметь более одного.
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
-    
+
+    <wmslayers>WMS layers</wmslayers>
 </strings>
