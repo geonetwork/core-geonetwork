@@ -2523,7 +2523,7 @@
 	<!-- online resources: WMS get capabilities -->
 	<!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities')]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />

@@ -1044,7 +1044,7 @@
 	<!--
 	online resources: WMS get capabilities
 	-->
-    <xsl:template mode="iso19115" match="onLineSrc[starts-with(protocol,'OGC:WMS-') and contains(protocol,'-get-capabilities') and orName]|onLineSrc[protocol = 'OGC:WMS' and not(string(orName))]">
+    <xsl:template mode="iso19115" match="onLineSrc[starts-with(protocol,'OGC:WMS-') and contains(protocol,'-get-capabilities')]|onLineSrc[protocol = 'OGC:WMS' and not(string(orName))]">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="linkage" />
@@ -1083,6 +1083,7 @@
 
 
     <xsl:template mode="iso19115" match="onLineSrc[not(string(protocol)) and contains(linkage,'service=WMS')]" priority="2">
+        <xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="linkage" />
 		<xsl:variable name="name" select="normalize-space(orName)" />
