@@ -91,8 +91,8 @@
 	<xsl:template mode="iso19139"
 		match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"
 		priority="20" />
-	
-	
+
+
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
@@ -2734,7 +2734,7 @@
 	<!-- online resources: WMS get capabilities -->
 	<!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString eq 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities')]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
@@ -2758,6 +2758,43 @@
 									<xsl:value-of select="$description"/>
 								</xsl:when>
 								<xsl:when test="string($name)!=''">
+									<xsl:value-of select="$name"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="/root/gui/strings/wmslayers"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</a>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[not(string(gmd:protocol/gco:CharacterString)) and contains(gmd:linkage/gmd:URL,'service=WMS')]" priority="2">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
+		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
+
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<xsl:apply-templates mode="iso19139EditOnlineRes" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!=''">
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
+					<xsl:with-param name="text">
+						<a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}">
+							<xsl:choose>
+								<xsl:when test="string($description)!=''">
+									<xsl:value-of select="$description"/>
+								</xsl:when>
+                                <xsl:when test="string($name)!=''">
 									<xsl:value-of select="$name"/>
 								</xsl:when>
 								<xsl:otherwise>
