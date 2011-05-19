@@ -177,70 +177,25 @@ class Harvester
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 
-		// Use the preferred HTTP method and check one exist.
-		if (oper.getUrl != null && PREFERRED_HTTP_METHOD.equals("GET")) {
-			request.setUrl(oper.getUrl);
-            request.setServerVersion(server.getPreferredServerVersion());
-            request.setOutputSchema(oper.preferredOutputSchema);
-			request.setConstraintLanguage(ConstraintLanguage.CQL);
-			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-			request.setConstraint(getCqlConstraint(s));
-			request.setMethod(CatalogRequest.Method.GET);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
-            }
-            request.setOutputFormat(oper.preferredOutputFormat) ;
+        configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
 
-		} else if (oper.postUrl != null && PREFERRED_HTTP_METHOD.equals("POST")) {
-			request.setUrl(oper.postUrl);
-            request.setServerVersion(server.getPreferredServerVersion());
-            request.setOutputSchema(oper.preferredOutputSchema);
-			request.setConstraintLanguage(ConstraintLanguage.FILTER);
-			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-			request.setConstraint(getFilterConstraint(s));
-			request.setMethod(CatalogRequest.Method.POST);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
-            }
-            request.setOutputFormat(oper.preferredOutputFormat) ;
-
-		} else {
-			if (oper.getUrl != null) {
-				request.setUrl(oper.getUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-				request.setConstraintLanguage(ConstraintLanguage.CQL);
-				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-				request.setConstraint(getCqlConstraint(s));
-				request.setMethod(CatalogRequest.Method.GET);
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-			} else if (oper.postUrl != null) {
-				request.setUrl(oper.postUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-				request.setConstraintLanguage(ConstraintLanguage.FILTER);
-				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-				request.setConstraint(getFilterConstraint(s));
-				request.setMethod(CatalogRequest.Method.POST);	
-
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-			} else {
-				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
-			}
-		}
+		
 
 		if (params.useAccount)
 			request.setCredentials(params.username, params.password);
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
+
+        // Simple fallback mechanism. Try dummy search with PREFERRED_HTTP_METHOD method, if fails change it
+        try {
+            request.setStartPosition(start +"");
+		    doSearch(request, start, 1);
+        } catch(Exception ex) {
+            log.debug(ex.getMessage());
+            log.debug("Changing to CSW " + (PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET"));
+
+            configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET");
+        }
 
 		while (true)
 		{
@@ -292,6 +247,69 @@ class Harvester
 
 		return records;
 	}
+
+    private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
+            throws Exception {
+        // Use the preferred HTTP method and check one exist.
+		if (oper.getUrl != null && preferredMethod.equals("GET")) {
+			request.setUrl(oper.getUrl);
+            request.setServerVersion(server.getPreferredServerVersion());
+            request.setOutputSchema(oper.preferredOutputSchema);
+			request.setConstraintLanguage(ConstraintLanguage.CQL);
+			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+			request.setConstraint(getCqlConstraint(s));
+			request.setMethod(CatalogRequest.Method.GET);
+            for(String typeName: oper.typeNamesList) {
+                request.addTypeName(TypeName.getTypeName(typeName));
+            }
+            request.setOutputFormat(oper.preferredOutputFormat) ;
+
+		} else if (oper.postUrl != null && preferredMethod.equals("POST")) {
+			request.setUrl(oper.postUrl);
+            request.setServerVersion(server.getPreferredServerVersion());
+            request.setOutputSchema(oper.preferredOutputSchema);
+			request.setConstraintLanguage(ConstraintLanguage.FILTER);
+			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+			request.setConstraint(getFilterConstraint(s));
+			request.setMethod(CatalogRequest.Method.POST);
+            for(String typeName: oper.typeNamesList) {
+                request.addTypeName(TypeName.getTypeName(typeName));
+            }
+            request.setOutputFormat(oper.preferredOutputFormat) ;
+
+		} else {
+			if (oper.getUrl != null) {
+				request.setUrl(oper.getUrl);
+                request.setServerVersion(server.getPreferredServerVersion());
+                request.setOutputSchema(oper.preferredOutputSchema);
+				request.setConstraintLanguage(ConstraintLanguage.CQL);
+				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+				request.setConstraint(getCqlConstraint(s));
+				request.setMethod(CatalogRequest.Method.GET);
+                for(String typeName: oper.typeNamesList) {
+                    request.addTypeName(TypeName.getTypeName(typeName));
+                }
+                request.setOutputFormat(oper.preferredOutputFormat) ;
+
+			} else if (oper.postUrl != null) {
+				request.setUrl(oper.postUrl);
+                request.setServerVersion(server.getPreferredServerVersion());
+                request.setOutputSchema(oper.preferredOutputSchema);
+				request.setConstraintLanguage(ConstraintLanguage.FILTER);
+				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+				request.setConstraint(getFilterConstraint(s));
+				request.setMethod(CatalogRequest.Method.POST);
+
+                for(String typeName: oper.typeNamesList) {
+                    request.addTypeName(TypeName.getTypeName(typeName));
+                }
+                request.setOutputFormat(oper.preferredOutputFormat) ;
+
+			} else {
+				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
+			}
+		}
+    }
 
 	//---------------------------------------------------------------------------
 
