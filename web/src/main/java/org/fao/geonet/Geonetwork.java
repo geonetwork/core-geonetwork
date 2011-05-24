@@ -97,6 +97,7 @@ public class Geonetwork implements ApplicationHandler
 	private String 				path;				
 	private SearchManager 		searchMan;
 	private ThesaurusManager 	thesaurusMan;
+	private MetadataNotifierControl metadataNotifierControl;
 	private String						SPATIAL_INDEX_FILENAME    = "spatialindex";
 	static final String				IDS_ATTRIBUTE_NAME        = "id";
 	private ThreadPool        threadPool;
@@ -365,7 +366,7 @@ public class Geonetwork implements ApplicationHandler
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database
         // TODO: Fix DataManager.getUnregisteredMetadata and uncomment next lines
-        MetadataNotifierControl metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
+        metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
         metadataNotifierControl.runOnce();
 
 		//--- load proxy information from settings into Jeeves for observers such
@@ -622,7 +623,6 @@ public class Geonetwork implements ApplicationHandler
 
 		//------------------------------------------------------------------------
 		//--- end search
-
 		logger.info("  - search...");
 
 		try
@@ -639,8 +639,15 @@ public class Geonetwork implements ApplicationHandler
 
 		//------------------------------------------------------------------------
 		//--- end Z39.50
-
 		logger.info("  - Z39.50...");
+		
+		
+		logger.info("  - ThreadPool ...");
+		threadPool.shutDown();
+		
+		logger.info("  - MetadataNotifier ...");
+		metadataNotifierControl.shutDown();
+
 		Server.end();
 	}
 

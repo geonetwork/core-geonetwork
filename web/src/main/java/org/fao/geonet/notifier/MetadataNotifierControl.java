@@ -13,21 +13,29 @@ import java.util.concurrent.TimeUnit;
 public class MetadataNotifierControl {
     private ServiceContext srvContext;
     private GeonetContext gc;
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService scheduler = Executors
+            .newScheduledThreadPool(1);
 
     public MetadataNotifierControl(ServiceContext srvContext, GeonetContext gc) {
-		this.srvContext = srvContext;
+        this.srvContext = srvContext;
         this.gc = gc;
-	}
+    }
 
     public void runOnce() {
-    	System.out.println("MetadataNotifierControl runOnce start");
-        
+        Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce start");
+
         Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
-        final MetadataNotifierTask updateTask = new MetadataNotifierTask(srvContext, gc);
-        
+        final MetadataNotifierTask updateTask = new MetadataNotifierTask(
+                srvContext, gc);
+
         @SuppressWarnings("unused")
-		final ScheduledFuture<?> updateTaskHandle = scheduler.schedule(updateTask, 20, TimeUnit.SECONDS) ;
-        System.out.println("MetadataNotifierControl runOnce finish");
+        final ScheduledFuture<?> updateTaskHandle = scheduler.schedule(
+                updateTask, 20, TimeUnit.SECONDS);
+        Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce finish");
     }
+
+    public void shutDown() {
+        scheduler.shutdown();
+    }
+
 }
