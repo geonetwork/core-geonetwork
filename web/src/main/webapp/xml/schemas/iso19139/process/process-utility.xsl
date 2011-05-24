@@ -33,9 +33,18 @@
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="version" as="xs:string"/>
     
+    <xsl:copy-of
+      select="geonet:get-wxs-capabilities($url, 'WMS', $version)"/>
+    
+  </xsl:function>
+
+  <xsl:function name="geonet:get-wxs-capabilities" as="node()">
+    <xsl:param name="url" as="xs:string"/>
+    <xsl:param name="type" as="xs:string"/>
+    <xsl:param name="version" as="xs:string"/>
     <xsl:variable name="sep" select="if (contains($url, '?')) then '&amp;' else '?'"/>
     <xsl:copy-of
-      select="document(concat($url, $sep, 'SERVICE=WMS&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities'))"/>
+      select="document(concat($url, $sep, 'SERVICE=', $type, '&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities'))"/>
     
   </xsl:function>
 

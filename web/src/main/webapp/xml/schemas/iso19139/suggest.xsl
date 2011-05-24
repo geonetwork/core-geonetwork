@@ -10,6 +10,7 @@
   <xsl:include href="process/scale-denominator-formatter.xsl"/>
   <xsl:include href="process/add-extent-from-geokeywords.xsl"/>
   <xsl:include href="process/add-info-from-wms.xsl"/>
+  <xsl:include href="process/add-service-info-from-wxs.xsl"/>
   <xsl:include href="process/inspire-add-conformity.xsl"/>
   <xsl:include href="process/linked-data-checker.xsl"/>
   <xsl:include href="process/related-metadata-checker.xsl"/>
@@ -20,6 +21,7 @@
     <p>scale-denominator-formatter</p>
     <p>add-extent-from-geokeywords</p>
     <p>add-info-from-wms</p>
+    <p>add-service-info-from-wxs</p>
     <p>inspire-add-conformity</p>
     <p>linked-data-checker</p>
     <p>related-metadata-checker</p>

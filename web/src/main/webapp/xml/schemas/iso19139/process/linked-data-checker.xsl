@@ -26,7 +26,7 @@
     
     <!-- Check URL -->
     <xsl:variable name="httpLinks"
-      select="$root//*[starts-with(., 'http')]"/>
+      select="$root//*[starts-with(., 'http') and name(..) != 'geonet:info']"/>
     <xsl:for-each select="$httpLinks">
       <xsl:call-template name="checkUrl">
         <xsl:with-param name="url" select="."/>

@@ -2,8 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0"
-  exclude-result-prefixes="srv gco gmd exslt geonet">
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:math="http://exslt.org/math" version="2.0"
+  exclude-result-prefixes="srv gco gmd exslt geonet math">
 
   <xsl:import href="process-utility.xsl"/>
 
@@ -57,9 +57,11 @@
     <xsl:param name="root"/>
 
     <xsl:variable name="onlineResources"
-      select="$root//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') 
+      select="$root//gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') 
                                             and normalize-space(gmd:linkage/gmd:URL)!='']"/>
-
+    <xsl:variable name="srv"
+      select="$root//*[local-name(.)='SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"/>
+    
     <!-- Check if server is up and new value are available 
      <xsl:variable name="capabilities"
       select="geonet:get-wms-capabilities(gmd:linkage/gmd:URL, '1.1.1')"/>
@@ -73,8 +75,11 @@
         <params>{ setExtent:{type:'boolean', defaultValue:'<xsl:value-of select="$setExtent"/>'},
           setAndReplaceExtent:{type:'boolean', defaultValue:'<xsl:value-of
             select="$setAndReplaceExtent"/>'}, setCRS:{type:'boolean', defaultValue:'<xsl:value-of
-            select="$setCRS"/>'}, setDynamicGraphicOverview:{type:'boolean',
+            select="$setCRS"/>'}, 
+            <xsl:if test="not($srv)">
+            setDynamicGraphicOverview:{type:'boolean',
             defaultValue:'<xsl:value-of select="$setDynamicGraphicOverview"/>'},
+            </xsl:if>
             wmsServiceUrl:{type:'string', defaultValue:'<xsl:value-of select="normalize-space(gmd:linkage/gmd:URL)"/>'}
           }</params>
       </suggestion>
@@ -106,7 +111,6 @@
     <xsl:variable name="srv"
       select="local-name(.)='SV_ServiceIdentification'
             or @gco:isoType='srv:SV_ServiceIdentification'"/>
-    <xsl:message>srv:<xsl:value-of select="$srv"/></xsl:message>
 
 
     <xsl:copy>
@@ -212,7 +216,7 @@
       <!-- New extent position is after existing ones. -->
       <xsl:if test="$setExtentMode">
         <xsl:for-each
-          select="//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') and gmd:linkage/gmd:URL=$wmsServiceUrl]">
+          select="//gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') and gmd:linkage/gmd:URL=$wmsServiceUrl]">
           <xsl:call-template name="add-extent-for-wms">
             <xsl:with-param name="srv" select="$srv"/>
           </xsl:call-template>
@@ -223,7 +227,10 @@
       <xsl:copy-of select="gmd:supplementalInformation"/>
 
       <!-- End of service -->
-      <xsl:copy-of select="srv:*
+      <xsl:copy-of select="srv:coupledResource|
+                srv:couplingType|
+                srv:containsOperations|
+                srv:operatesOn
                 "/>
 
       <!-- Note: When applying this stylesheet
@@ -255,20 +262,19 @@
         |gmd:dataSetURI
         |gmd:locale
         |gmd:spatialRepresentationInfo
-        |gmd:referenceSystemInfo
         "/>
 
       <!-- Set spatial ref-->
       <xsl:if test="$setCRSMode and $capabilitiesDoc//SRS">
-        <gmd:referenceSystemInfo>
-          <gmd:MD_ReferenceSystem>
-            <xsl:for-each-group select="$capabilitiesDoc//SRS" group-by=".">
+        <xsl:for-each-group select="$capabilitiesDoc//SRS" group-by=".">
+          <gmd:referenceSystemInfo>
+            <gmd:MD_ReferenceSystem>
               <xsl:call-template name="RefSystemTypes">
                 <xsl:with-param name="srs" select="current-grouping-key()"/>
               </xsl:call-template>
-            </xsl:for-each-group>
-          </gmd:MD_ReferenceSystem>
-        </gmd:referenceSystemInfo>
+            </gmd:MD_ReferenceSystem>
+          </gmd:referenceSystemInfo>
+        </xsl:for-each-group>
       </xsl:if>
 
       <xsl:copy-of select="gmd:metadataExtensionInfo
@@ -320,10 +326,23 @@
     <xsl:param name="status" select="false()"/>
 
     <xsl:variable name="layerName" select="gmd:name/gco:CharacterString/text()"/>
-    <xsl:apply-templates select="$capabilitiesDoc//Layer[Name=$layerName]"
-      mode="create-bbox-for-wms">
-      <xsl:with-param name="srv" select="$srv"/>
-    </xsl:apply-templates>
+    
+    <xsl:choose>
+      <xsl:when test="$srv">
+        <xsl:variable name="minx" select="math:min($capabilitiesDoc//LatLonBoundingBox/@minx)"/>
+        <xsl:variable name="maxx" select="math:max($capabilitiesDoc//LatLonBoundingBox/@maxx)"/>
+        <xsl:variable name="miny" select="math:min($capabilitiesDoc//LatLonBoundingBox/@miny)"/>
+        <xsl:variable name="maxy" select="math:max($capabilitiesDoc//LatLonBoundingBox/@maxy)"/>
+        <srv:extent>
+          <xsl:copy-of select="geonet:make-iso-extent(string($minx), string($miny), string($maxx), string($maxy), '')"/>
+        </srv:extent>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="$capabilitiesDoc//Layer[Name=$layerName]"
+          mode="create-bbox-for-wms"/>
+      </xsl:otherwise>
+    </xsl:choose>
+   
   </xsl:template>
 
 
@@ -332,18 +351,9 @@
     <xsl:param name="srv" select="false()"/>
 
     <xsl:for-each select="LatLonBoundingBox">
-      <xsl:choose>
-        <xsl:when test="$srv">
-          <srv:extent>
-            <xsl:copy-of select="geonet:make-iso-extent(@minx, @miny, @maxx, @maxy, '')"/>
-          </srv:extent>
-        </xsl:when>
-        <xsl:otherwise>
-          <gmd:extent>
-            <xsl:copy-of select="geonet:make-iso-extent(@minx, @miny, @maxx, @maxy, '')"/>
-          </gmd:extent>
-        </xsl:otherwise>
-      </xsl:choose>
+      <gmd:extent>
+        <xsl:copy-of select="geonet:make-iso-extent(@minx, @miny, @maxx, @maxy, '')"/>
+      </gmd:extent>
     </xsl:for-each>
   </xsl:template>
 
