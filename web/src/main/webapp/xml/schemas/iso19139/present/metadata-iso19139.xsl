@@ -15,7 +15,7 @@
 	<xsl:include href="metadata-iso19139-utils.xsl"/>
 	<xsl:include href="metadata-iso19139-geo.xsl"/>
 	<xsl:include href="metadata-iso19139-inspire.xsl"/>
-
+  
 	<!-- main template - the way into processing iso19139 -->
 	<xsl:template match="metadata-iso19139" name="metadata-iso19139">
 		<xsl:param name="schema"/>
@@ -91,6 +91,7 @@
 	<xsl:template mode="iso19139"
 		match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"
 		priority="20" />
+
 
 
 	<!-- ===================================================================== -->
@@ -2708,9 +2709,9 @@
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
-            <!-- Resource name is NOT specified -->
-            <xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!='' and not(string($name))">
-                <xsl:apply-templates mode="simpleElement" select=".">
+      <!-- Resource name is NOT specified -->
+		  <xsl:when test="string(ancestor::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($linkage)!='' and not(string($name))">
+        <xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
@@ -2719,14 +2720,14 @@
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
 								</xsl:when>
-                                <xsl:otherwise>
+                <xsl:otherwise>
 									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
-            </xsl:when>
+      </xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
@@ -2859,13 +2860,14 @@
 		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
 		
+		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:apply-templates mode="iso19139EditOnlineRes" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/download)='true' and string($linkage)!='' and not(contains($linkage,$download_check))">
+		  <xsl:when test="string(ancestor::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/download)='true' and string($linkage)!='' and not(contains($linkage,$download_check))">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/downloadData"/>
