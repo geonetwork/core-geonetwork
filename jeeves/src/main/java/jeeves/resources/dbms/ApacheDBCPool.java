@@ -88,8 +88,7 @@ public class ApacheDBCPool implements ResourceProvider {
 	 */
 
 	public void init(String name, Element config) throws Exception {
-		this.name = name;
-
+		
 		user = config.getChildText(Jeeves.Res.Pool.USER);
 		passwd = config.getChildText(Jeeves.Res.Pool.PASSWORD);
 		url = config.getChildText(Jeeves.Res.Pool.URL);
@@ -97,12 +96,14 @@ public class ApacheDBCPool implements ResourceProvider {
 		size = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		maxw = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
 
+		this.name = url;
+
 		poolSize = (size == null) ? Jeeves.Res.Pool.DEF_POOL_SIZE : Integer
 				.parseInt(size);
 		maxWait = (maxw == null) ? Jeeves.Res.Pool.DEF_MAX_WAIT : Integer
 				.parseInt(maxw);
 
-		debug("Creating connection pool with " + poolSize + " connections ("
+		debug("Creating connection pool (" + this.name + ") with " + poolSize + " connections ("
 				+ maxWait + ")");
 
 		// register underlying JDBC driver
@@ -173,7 +174,7 @@ public class ApacheDBCPool implements ResourceProvider {
 		Class.forName(apacheDriver);
 
 		PoolingDriver pDriver = (PoolingDriver) DriverManager.getDriver(apacheUrl);
-		pDriver.registerPool(name, connectionPool);
+		pDriver.registerPool(this.name, connectionPool);
 
 		debug(toString());
 	}
@@ -225,6 +226,7 @@ public class ApacheDBCPool implements ResourceProvider {
 	 */
 
 	public synchronized Object open() throws Exception {
+		debug("Opening " + url);
 		Dbms dbms = new Dbms(apacheDriver, apacheUrl + name, url);
 		String nullStr = null;
 		dbms.connect(nullStr, nullStr);

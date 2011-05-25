@@ -126,7 +126,7 @@ public class JeevesEngine
 
 			//---------------------------------------------------------------------
 			//--- init system
-
+			info("Engine : "+ this.getClass().getName());
 			info("Java version : "+ System.getProperty("java.vm.version"));
 			info("Java vendor  : "+ System.getProperty("java.vm.vendor"));
 

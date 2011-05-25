@@ -40,19 +40,29 @@ import java.util.Hashtable;
 
 public class ThesaurusManager {
 
+	public synchronized static ThesaurusManager getInstance(String appPath, String thesauriRepository) throws Exception { 
+	 	if (_instance == null){ 
+	 	_instance = new ThesaurusManager(appPath, thesauriRepository); 
+	 	} 
+	 	return _instance; 
+	}
+	
 	private Hashtable<String, Thesaurus> thesauriTable = null;
 
 	private LocalService service = null;
 
 	private String thesauriDirectory = null;
 
+	// Single instance 
+ 	private static ThesaurusManager _instance = null; 
+ 	
 	/**
 	 * 
 	 * @param appPath
 	 * @param thesauriRepository
 	 * @throws Exception
 	 */
-	public ThesaurusManager(String appPath, String thesauriRepository)
+	private ThesaurusManager(String appPath, String thesauriRepository)
 			throws Exception {
 		// Get Sesame interface
 		service = Sesame.getService();

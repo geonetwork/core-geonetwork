@@ -212,8 +212,7 @@ public class Geonetwork implements ApplicationHandler
 
 		logger.info("  - Thesaurus...");
 
-		thesaurusMan = new ThesaurusManager(path, thesauriDir);
-
+		thesaurusMan = ThesaurusManager.getInstance(path, thesauriDir);
 
 		//------------------------------------------------------------------------
 		//--- initialize Z39.50
@@ -265,7 +264,7 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("  - Schema manager...");
 
 		String schemaPluginsDir = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMAPLUGINS_DIR);
-		SchemaManager schemaMan = new SchemaManager(path, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
+		SchemaManager schemaMan = SchemaManager.getInstance(path, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
 
 		//------------------------------------------------------------------------
 		//--- initialize search and editing

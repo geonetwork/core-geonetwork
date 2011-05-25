@@ -90,6 +90,8 @@ public class SchemaManager
 	/** Active writers count */
 	private static int activeWriters = 0;
 
+    private static SchemaManager schemaManager = null; 
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -102,7 +104,7 @@ public class SchemaManager
 		* @param defaultSchema the default schema (taken from config.xml)
 	  */
 
-	public SchemaManager(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception {
+	private SchemaManager(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception {
 
 		hmSchemas .clear();
 
@@ -139,6 +141,13 @@ public class SchemaManager
 
 	}
 
+	public synchronized static SchemaManager getInstance(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception { 
+		if (schemaManager == null) {
+			schemaManager = new SchemaManager(basePath, sPDir, defaultLang, defaultSchema);
+		}
+		return schemaManager;
+	}
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
