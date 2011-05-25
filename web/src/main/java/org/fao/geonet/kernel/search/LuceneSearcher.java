@@ -613,7 +613,7 @@ public class LuceneSearcher extends MetaSearcher
 	@SuppressWarnings({"deprecation"})
     public static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, HashSet<String> tokenizedFieldSet, HashMap<String, LuceneConfigNumericField> numericFieldSet) throws Exception
 	{
-        System.out.println("\n\n\n* * makeQuery input XML:\n" + Xml.getString(xmlQuery));
+	    Log.debug(Geonet.SEARCH_ENGINE, "MakeQuery input XML:\n" + Xml.getString(xmlQuery));
 		String name = xmlQuery.getName();
 		Query returnValue;
 		

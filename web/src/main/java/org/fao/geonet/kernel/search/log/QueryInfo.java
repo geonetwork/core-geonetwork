@@ -152,15 +152,15 @@ public class QueryInfo {
 	
 	@Override 
 	public String toString() {
-		StringBuilder b = new StringBuilder("QueryInfo fields:\n");
+		StringBuilder b = new StringBuilder("QueryInfo fields:\t");
 		
-		b.append("luc. type : ").append(this.getLuceneQueryType()).append("\n");
-		b.append("field     : ").append(this.getField()).append("\n");
-		b.append("text      : ").append(this.getText()).append("\n");
-		b.append("similarity: ").append(this.getSimilarity()).append("\n");
-		b.append("lowerText : ").append(this.getLowerText()).append("\n");
-		b.append("upperText : ").append(this.getUpperText()).append("\n");
-		b.append("inclusive : ").append(this.getInclusive()).append("\n");
+		b.append("luc. type : ").append(this.getLuceneQueryType()).append("\t");
+		b.append("field     : ").append(this.getField()).append("\t");
+		b.append("text      : ").append(this.getText()).append("\t");
+		b.append("similarity: ").append(this.getSimilarity()).append("\t");
+		b.append("lowerText : ").append(this.getLowerText()).append("\t");
+		b.append("upperText : ").append(this.getUpperText()).append("\t");
+		b.append("inclusive : ").append(this.getInclusive()).append("\t");
 		return b.toString();
 	}
 
@@ -197,7 +197,7 @@ public class QueryInfo {
 			dbms.abort();
 			Log.warning(Geonet.SEARCH_LOGGER, "an error occuring during QueryInfo database storage. Aborting :" + 
 					sqle.getMessage() + 
-					"\n" + 
+					". " + 
 					"Is rollback occured ?");
 			sqle.printStackTrace();
 		}

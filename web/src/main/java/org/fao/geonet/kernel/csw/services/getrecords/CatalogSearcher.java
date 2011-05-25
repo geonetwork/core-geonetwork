@@ -132,22 +132,20 @@ public class CatalogSearcher {
 			throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
-        System.out.println("\n\n\n*** CatS: after filter2lucene:\n"+ Xml.getString(luceneExpr));
+		Log.debug(Geonet.CSW_SEARCH, "CatS: after filter2lucene:\n"+ Xml.getString(luceneExpr));
 
 		if (luceneExpr != null) {
 			checkForErrors(luceneExpr);
 			remapFields(luceneExpr);
 		}
 
-        System.out.println("\n\n\n*** CatS: after remapfields:\n"+ Xml.getString(luceneExpr));
+		Log.debug(Geonet.CSW_SEARCH, "CatS: after remapfields:\n"+ Xml.getString(luceneExpr));
 
 
 		try {
 			if (luceneExpr != null) {
 				convertPhrases(luceneExpr);
-
-                System.out.println("\n\n\n*** CatS: after convertphrases:\n"+ Xml.getString(luceneExpr));
-
+				Log.debug(Geonet.CSW_SEARCH, "CatS: after convertphrases:\n"+ Xml.getString(luceneExpr));
 			}
 
             return performSearch(context,
@@ -330,8 +328,9 @@ public class CatalogSearcher {
 			String filterVersion, Sort sort, ResultType resultType, 
 			int startPosition, int maxRecords, int maxHitsInSummary) throws Exception {
 
-        if (luceneExpr != null) System.out.println("\n\n\n*** CatS performsearch: luceneXpr:\n"+ Xml.getString(luceneExpr));
-        if (filterExpr != null) System.out.println("\n\n\n*** CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
+        if (filterExpr != null) {
+            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
+        }
 
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
