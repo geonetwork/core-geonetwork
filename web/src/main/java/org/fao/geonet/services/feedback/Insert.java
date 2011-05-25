@@ -64,7 +64,7 @@ public class Insert implements Service
 		String org      = Util.getParam(params, Params.ORG);
 		String email    = Util.getParam(params, Params.EMAIL);
 		String comments = Util.getParam(params, Params.COMMENTS);
-		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");
+		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
 
 		String host = sm.getValue("system/feedback/mailServer/host");
 		String port = sm.getValue("system/feedback/mailServer/port");
