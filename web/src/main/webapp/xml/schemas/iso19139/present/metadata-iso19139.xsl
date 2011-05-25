@@ -92,7 +92,13 @@
 		match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"
 		priority="20" />
 
-
+   <!-- Do not try do display element with no child and having gco:nilReason attribute in view mode.
+   Usually this should not happen because GeoNetwork will add default children like gco:CharacterString. 
+   Fixed #299
+   TODO : metadocument contains geonet:element which is probably not required ?
+   -->
+  <xsl:template mode="iso19139" priority="199" match="*[@gco:nilReason='missing' and count(*)=0 and not(geonet:element)]"/>
+  
 
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
@@ -594,7 +600,7 @@
       <xsl:with-param name="delButton" select="normalize-space(gmx:FileName)!=''"/>
       <xsl:with-param name="setButton" select="normalize-space(gmx:FileName)=''"/>
       <xsl:with-param name="visible" select="false()"/>
-      <xsl:with-param name="action" select="concat('startFileUpload(', //geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
+      <xsl:with-param name="action" select="concat('startFileUpload(', /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
     </xsl:call-template>
   </xsl:template>
   
@@ -2400,13 +2406,13 @@
 		
 		<xsl:if test="$edit=false()">
 			<xsl:if test="count(gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString[contains(string(.),'download')])>1 and
-									//geonet:info/download='true'">
+			  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/download='true'">
 				<xsl:call-template name="complexElementGui">
 					<xsl:with-param name="title" select="/root/gui/strings/downloadSummary"/>
 					<xsl:with-param name="content">
 						<tr>
 							<td  align="center">
-								<button class="content" onclick="javascript:runFileDownloadSummary('{//geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
+							  <button class="content" onclick="javascript:runFileDownloadSummary('{/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
 									<xsl:value-of select="/root/gui/strings/showFileDownloadSummary"/>	
 								</button>
 							</td>
@@ -2645,7 +2651,7 @@
     <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and string(gmd:name/gco:CharacterString)]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		<xsl:variable name="metadata_id" select="//geonet:info/id" />
+    <xsl:variable name="metadata_id" select="/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id" />
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
 		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
@@ -2657,7 +2663,7 @@
 				</xsl:apply-templates>
 			</xsl:when>
              <!-- Resource name is specified -->
-			<xsl:when test="//geonet:info[dynamic='true'] and string($name)!='' and string($linkage)!=''">
+		  <xsl:when test="/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info[dynamic='true'] and string($name)!='' and string($linkage)!=''">
 			<!-- Create a link for a WMS service that will open in InterMap opensource -->
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
@@ -2694,7 +2700,7 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/viewInGE"/>
 					<xsl:with-param name="text">
-						<a href="{/root/gui/locService}/google.kml?uuid={//geonet:info/uuid}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
+					  <a href="{/root/gui/locService}/google.kml?uuid={/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/uuid}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
 							<xsl:choose>
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
@@ -2748,7 +2754,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!=''">
+		  <xsl:when test="string(/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($linkage)!=''">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -2785,7 +2791,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!=''">
+		  <xsl:when test="string(/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($linkage)!=''">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -2826,7 +2832,7 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!='' and string($name)!=''">
+		  <xsl:when test="string(/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($linkage)!='' and string($name)!=''">
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
@@ -2965,7 +2971,7 @@
 					<xsl:with-param name="edit" select="$edit"/>
 					<xsl:with-param name="title" select="/root/gui/strings/file"/>
 					<xsl:with-param name="text">
-						<button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');" type="button">
+					  <button class="content" onclick="startFileUpload({/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id}, '{$ref}');" type="button">
 							<xsl:value-of select="/root/gui/strings/insertFileMode"/>
 						</button>
 					</xsl:with-param>
