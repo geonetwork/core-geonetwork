@@ -638,7 +638,6 @@
         <name>Patrick Valsecchi's repository</name>
         <url>http://www.thus.ch/~patrick/maven</url>
     </repository>
-    
   </repositories>
 
   <pluginRepositories>
@@ -666,6 +665,7 @@
     <module>web</module>
     <module>geoserver</module>
     <module>gast</module>
+    <module>web-itest</module>
   </modules>
 
   <distributionManagement>
