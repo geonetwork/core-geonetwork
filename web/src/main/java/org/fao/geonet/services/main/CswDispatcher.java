@@ -67,8 +67,8 @@ public class CswDispatcher implements Service
 		
 		// FIXME : response should be more explicit, an exception should be return ?
 		if (!cswEnable) {
-			logger.info("CSW harvesting is disabled");
-			Element info  = new Element("info").setText("CSW harvesting is disabled");
+			logger.info("CSW is disabled");
+			Element info  = new Element("info").setText("CSW is disabled");
 			response.addContent(info);
 		} else
 			response = gc.getCatalogDispatcher().dispatch(params, context);
