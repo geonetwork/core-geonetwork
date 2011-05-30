@@ -94,11 +94,15 @@
   </servers>
  </mapViewer>
  
- <!-- 
-  Google translation service:
-  Set this parameter to "1" to activate google translation service.
-  Google AJAX API Terms of Use http://code.google.com/apis/ajaxlanguage/terms.html
- -->
+  <!-- 
+    Google translation service (http://code.google.com/apis/language/translate/overview.html):
+    Set this parameter to "1" to activate google translation service.
+    Google AJAX API Terms of Use http://code.google.com/apis/ajaxlanguage/terms.html
+    
+    WARNING: "The Google Translate API has been officially deprecated as of May 26, 2011...
+    the number of requests you may make per day will be limited and 
+    the API will be shut off completely on December 1, 2011".
+  -->
  <editor-google-translate>0</editor-google-translate>
  
  
