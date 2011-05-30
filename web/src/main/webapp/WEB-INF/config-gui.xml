@@ -140,7 +140,7 @@
   * or which non existing element must be displayed (using exception)
  
    <inspire flat="true">
-   	 <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution"/>
+     <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution,EX_BoundingPolygon"/>
      <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
      </inspire> -->
   <xml/>
