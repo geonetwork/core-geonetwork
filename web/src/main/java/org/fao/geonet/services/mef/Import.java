@@ -66,7 +66,7 @@ public class Import implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		String mefFile = Util.getParam(params, "mefFile");
-        String fileType = Util.getParam(params, "file_type");
+        String fileType = Util.getParam(params, "file_type", "mef");
 		String uploadDir = context.getUploadDir();
 
 		File file = new File(uploadDir, mefFile);
