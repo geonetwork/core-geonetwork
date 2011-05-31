@@ -6,7 +6,12 @@
             version="2.4">
             
     <display-name>geonetwork</display-name>
-
+  
+    <!-- H2 DB starter configuration / remove if you don't use H2 -->
+    <listener>
+      <listener-class>org.h2.server.web.DbStarter</listener-class>
+    </listener>
+  
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>
         <listener-class>

@@ -362,12 +362,12 @@
       <dependency>
         <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-core</artifactId>
-        <version>3.0.2</version>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-analyzers</artifactId>
-        <version>3.0.2</version>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jcs</groupId>
@@ -406,57 +406,57 @@
         <artifactId>marc4j</artifactId>
         <version>2.3.1</version>
       </dependency>
-    	<dependency> 
-     		<groupId>jdbm</groupId>
-     		<artifactId>jdbm</artifactId>
-     		<version>1.0</version>
-    	</dependency>
+      <dependency> 
+        <groupId>jdbm</groupId>
+     	<artifactId>jdbm</artifactId>
+     	<version>1.0</version>
+      </dependency>
 
       <!-- Geotools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-api</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-cql</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-shapefile</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-filter</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-extension</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-referencing</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-hsql</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-postgis</artifactId>
-        <version>2.6.2</version>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>lizard</groupId>
@@ -513,7 +513,11 @@
         <artifactId>mckoi</artifactId>
         <version>1.0.2</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.152</version>
+      </dependency> 
       <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -686,5 +690,7 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
+    <geotools.version>2.6.2</geotools.version>
+    <lucene.version>3.0.2</lucene.version>
   </properties>
 </project>
