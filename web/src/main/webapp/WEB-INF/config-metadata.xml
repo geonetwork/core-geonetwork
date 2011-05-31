@@ -68,6 +68,17 @@
 			</error>
 		</service>
 
+
+	  <service name="pdf">
+	    <class name=".services.metadata.Show" />
+	    <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
+	      <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+	      <call name="sources" class=".guiservices.util.Sources" />
+	    </output>
+	    <error id="access" sheet="error-form.xsl">
+	      <xml name="privError" file="xml/privileges-error.xml" />
+	    </error>
+	  </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.edit">

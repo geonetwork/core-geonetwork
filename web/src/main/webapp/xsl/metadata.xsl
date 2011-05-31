@@ -12,12 +12,12 @@
 	exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date">
 
   <xsl:import href="text-utilities.xsl"/>
- 
+  
   <xsl:include href="utils-fn.xsl"/>
   <xsl:include href="metadata-tab-utils.xsl"/>
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
-	
+  
   <xsl:variable name="flat" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat"/>
   <xsl:variable name="ancestorException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException/@for"/>
   <xsl:variable name="elementException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/exception/@for"/>
@@ -2097,5 +2097,11 @@
     </table>
   </xsl:template>
   
-	
+  <!-- FOP main template declaration - override when using fop in layout-pdf.xsl -->
+  <xsl:template name="blockElementFop">
+    <xsl:param name="label"/>
+    <xsl:param name="color"/>
+    <xsl:param name="block"/>
+  </xsl:template>
+
 </xsl:stylesheet>

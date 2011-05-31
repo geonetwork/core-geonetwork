@@ -1,41 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="xsl geonet">
-
+  
+  <xsl:import href="metadata.xsl"/>
+  
   <xsl:include href="metadata-fop.xsl"/>
-  <xsl:include href="metadata.xsl"/>
   <xsl:include href="utils.xsl"/>
 
+
+  <!-- =============================================
+    Start FOP layout
+  -->
   <xsl:template match="/root">
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
-      <fo:layout-master-set>
-        <fo:simple-page-master master-name="simpleA4" page-height="29.7cm" page-width="21cm"
-          margin-top=".2cm" margin-bottom=".2cm" margin-left=".6cm" margin-right=".2cm">
-          <fo:region-body margin-top="0cm"/>
-          <fo:region-after extent=".2cm"/>
-        </fo:simple-page-master>
-
-
-        <fo:page-sequence-master master-name="PSM_Name">
-          <fo:single-page-master-reference master-reference="simpleA4"/>
-        </fo:page-sequence-master>
-      </fo:layout-master-set>
+      <xsl:call-template name="fop-master"/>
 
       <fo:page-sequence master-reference="simpleA4" initial-page-number="1">
 
-        <!-- Footer with catalogue name, org name and pagination -->
-        <fo:static-content flow-name="xsl-region-after">
-          <fo:block text-align="end" font-family="{$font-family}" font-size="{$note-size}"
-            color="{$font-color}">
-            <xsl:value-of select="/root/gui/env/site/name"/> -
-            <xsl:value-of select="/root/gui/env/site/organization"/> |
-            
-            <!-- TODO : set date format according to locale -->
-            <xsl:value-of
-              select="format-dateTime(current-dateTime(),$df)"/> | <fo:page-number/> /
-              <fo:page-number-citation ref-id="terminator"/>
-          </fo:block>
-        </fo:static-content>
+        <xsl:call-template name="fop-footer"/>
 
         <fo:flow flow-name="xsl-region-body">
 

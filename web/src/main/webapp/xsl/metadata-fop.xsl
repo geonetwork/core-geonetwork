@@ -29,52 +29,39 @@
   <xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
 
 
-  <!--
-		gui to show a simple element
-	-->
-  <xsl:template name="simpleElementFop">
-    <xsl:param name="title"/>
-    <xsl:param name="text"/>
-    <xsl:param name="helpLink"/>
-    <xsl:param name="addLink"/>
-    <xsl:param name="removeLink"/>
-    <xsl:param name="upLink"/>
-    <xsl:param name="downLink"/>
-    <xsl:param name="schematronLink"/>
-    <xsl:param name="schema"/>
-    <xsl:param name="edit" select="false()"/>
-    
-    <!-- used as do*ElementAction url anchor to go back to the same position after editing operations -->
-    <xsl:param name="anchor">
-      <xsl:choose>
+  <!-- ======================================================
+    FOP master configuration A4 with margins
+    -->
+  <xsl:template name="fop-master">
+    <fo:layout-master-set>
+      <fo:simple-page-master master-name="simpleA4" page-height="29.7cm" page-width="21cm"
+        margin-top=".2cm" margin-bottom=".2cm" margin-left=".6cm" margin-right=".2cm">
+        <fo:region-body margin-top="0cm"/>
+        <fo:region-after extent=".2cm"/>
+      </fo:simple-page-master>
 
-        <!-- current node is an element -->
-        <xsl:when test="geonet:element/@ref"> _ <xsl:value-of select="geonet:element/@ref"/>
-        </xsl:when>
-
-        <!-- current node is an attribute or a new child: create anchor to parent -->
-        <xsl:when test="../geonet:element/@ref"> _ <xsl:value-of select="../geonet:element/@ref"/>
-        </xsl:when>
-
-      </xsl:choose>
-    </xsl:param>
-
-
-    <fo:table-row>
-      <fo:table-cell>
-        <fo:block>
-          <fo:inline font-weight="bold">
-            <xsl:value-of select="$title"/>
-          </fo:inline>
-        </fo:block>
-      </fo:table-cell>
-      <fo:table-cell number-columns-spanned="2">
-        <fo:block>
-          <xsl:value-of select="$text"/>
-        </fo:block>
-      </fo:table-cell>
-    </fo:table-row>
+      <fo:page-sequence-master master-name="PSM_Name">
+        <fo:single-page-master-reference master-reference="simpleA4"/>
+      </fo:page-sequence-master>
+    </fo:layout-master-set>
   </xsl:template>
+
+  <!-- ======================================================
+        Page footer with node info, date and paging info 
+  -->
+  <xsl:template name="fop-footer">
+    <!-- Footer with catalogue name, org name and pagination -->
+    <fo:static-content flow-name="xsl-region-after">
+      <fo:block text-align="end" font-family="{$font-family}" font-size="{$note-size}"
+        color="{$font-color}">
+        <xsl:value-of select="/root/gui/env/site/name"/> - <xsl:value-of
+          select="/root/gui/env/site/organization"/> | <!-- TODO : set date format according to locale -->
+        <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> | <fo:page-number/> /
+          <fo:page-number-citation ref-id="terminator"/>
+      </fo:block>
+    </fo:static-content>
+  </xsl:template>
+
 
 
   <!--
@@ -84,14 +71,6 @@
     <xsl:param name="title"/>
     <xsl:param name="text"/>
     <xsl:param name="content"/>
-    <xsl:param name="helpLink"/>
-    <xsl:param name="addLink"/>
-    <xsl:param name="removeLink"/>
-    <xsl:param name="upLink"/>
-    <xsl:param name="downLink"/>
-    <xsl:param name="schematronLink"/>
-    <xsl:param name="schema"/>
-    <xsl:param name="edit" select="false()"/>
 
     <!-- used as do*ElementAction url anchor to go back to the same position after editing operations -->
     <xsl:param name="anchor">
@@ -116,10 +95,13 @@
             <fo:table-column column-width="12cm"/>
             <fo:table-column column-width="1cm"/>
             <fo:table-body>
-              <fo:table-row>
-                <fo:table-cell number-columns-spanned="3">
+              <fo:table-row border-top-style="solid" border-right-style="solid"
+                border-left-style="solid" border-top-color="{$background-color}"
+                border-right-color="{$background-color}" border-left-color="{$background-color}">
+                <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt"
+                  margin-top="4pt" number-columns-spanned="3">
                   <fo:block border-top="2pt solid black">
-                    <fo:inline font-weight="bold">
+                    <fo:inline>
                       <xsl:text>::</xsl:text>
                       <xsl:value-of select="$title"/>
                     </fo:inline>
@@ -152,8 +134,39 @@
   </xsl:template>
 
 
-
   <!--
+   gui to show a block element
+ -->
+  <xsl:template name="blockElementFop">
+    <xsl:param name="block"/>
+    <xsl:param name="label"/>
+    <xsl:param name="color">blue</xsl:param>
+    
+      <fo:table-row >
+        <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt"
+          number-columns-spanned="2">
+            <fo:block>
+              <xsl:if test="$block != ''">
+                <xsl:if test="$label!=''">
+                <fo:inline font-size="{$title-size}" font-weight="{$title-weight}"
+                  color="{$title-color}" margin="8pt">
+                  <xsl:value-of select="$label"/>
+                </fo:inline>
+              </xsl:if>
+              <fo:table width="100%" table-layout="fixed">
+                <fo:table-column column-width="5cm"/>
+                <fo:table-column column-width="15cm"/>
+                <fo:table-body>
+                  <xsl:copy-of select="$block"/>
+                </fo:table-body>
+              </fo:table>
+              </xsl:if>
+          </fo:block>
+        </fo:table-cell>
+      </fo:table-row>
+  </xsl:template>
+
+  <!-- ===========================================
 		metadata result to fop
 	-->
   <xsl:template name="fo">
@@ -164,7 +177,6 @@
 
     <xsl:for-each select="$res/*">
 
-
       <xsl:variable name="md">
         <xsl:apply-templates mode="brief" select="."/>
       </xsl:variable>
@@ -173,10 +185,9 @@
 
 
       <xsl:if test="$metadata/geonet:info/id != ''">
-        <fo:table-row border-top-style="solid"
-          border-right-style="solid" border-left-style="solid"
-          border-top-color="{$background-color}"
-          border-right-color="{$background-color}" border-left-color="{$background-color}">
+        <fo:table-row border-top-style="solid" border-right-style="solid" border-left-style="solid"
+          border-top-color="{$background-color}" border-right-color="{$background-color}"
+          border-left-color="{$background-color}">
           <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt">
             <fo:block>
               <fo:external-graphic content-width="35pt">
@@ -193,8 +204,8 @@
             </fo:block>
           </fo:table-cell>
         </fo:table-row>
-        <fo:table-row border-bottom-style="solid" 
-          border-right-style="solid" border-left-style="solid" border-bottom-color="{$background-color}"
+        <fo:table-row border-bottom-style="solid" border-right-style="solid"
+          border-left-style="solid" border-bottom-color="{$background-color}"
           border-right-color="{$background-color}" border-left-color="{$background-color}">
           <fo:table-cell number-columns-spanned="2">
             <fo:block margin-left="2pt" margin-right="4pt" margin-top="4pt" margin-bottom="4pt">
@@ -236,50 +247,10 @@
                               <xsl:with-param name="value" select="$metadata/geonet:info/schema"/>
                             </xsl:call-template>
 
-
-
-                            <!-- display metadata url but only if its not a remote result -->
-                            <xsl:call-template name="info-rows">
-                              <xsl:with-param name="label" select="$gui/strings/resources"/>
-                              <xsl:with-param name="content">
-                                <xsl:choose>
-                                  <xsl:when test="$remote=false()"><fo:basic-link
-                                      text-decoration="underline" color="blue">
-                                      <xsl:attribute name="external-destination"> url('<xsl:value-of
-                                          select="concat('http://', $server/host,':', $server/port, $gui/locService,'/metadata.show?id=', $metadata/geonet:info/id, '&amp;currTab=simple')"
-                                        />') </xsl:attribute>
-                                      <xsl:value-of select="$gui/strings/show"/>
-                                    </fo:basic-link> | </xsl:when>
-                                  <xsl:otherwise>
-                                    <fo:block text-align="left" font-style="italic">
-                                      <xsl:text>Z3950: </xsl:text>
-                                      <xsl:value-of select="$metadata/geonet:info/server"/>
-                                      <xsl:text> </xsl:text>
-                                    </fo:block>
-                                  </xsl:otherwise>
-                                </xsl:choose>
-
-                                <xsl:if test="$metadata/geonet:info/download='true'">
-                                  <xsl:for-each select="$metadata/link[@type='download']">
-                                    <fo:basic-link text-decoration="underline" color="blue">
-                                      <xsl:attribute name="external-destination"> url('<xsl:value-of
-                                          select="."/>') </xsl:attribute>
-                                      <xsl:value-of select="$gui/strings/download"/>
-                                    </fo:basic-link> | </xsl:for-each>
-                                </xsl:if>
-
-                                <xsl:if test="$metadata/geonet:info/dynamic='true'">
-                                  <xsl:for-each
-                                    select="$metadata/link[@type='application/vnd.ogc.wms_xml']">
-                                    <fo:basic-link text-decoration="underline" color="blue">
-                                      <xsl:attribute name="external-destination"> url('<xsl:value-of
-                                          select="@href"/>') </xsl:attribute>
-                                      <xsl:value-of select="$gui/strings/visualizationService"/>
-                                      (<xsl:value-of select="@title"/>)
-                                    </fo:basic-link> | </xsl:for-each>
-                                </xsl:if>
-
-                              </xsl:with-param>
+                            <xsl:call-template name="metadata-resources">
+                              <xsl:with-param name="gui" select="$gui"/>
+                              <xsl:with-param name="server" select="$server"/>
+                              <xsl:with-param name="metadata" select="$metadata"/>
                             </xsl:call-template>
 
                           </fo:table-body>
@@ -288,32 +259,10 @@
                       </fo:block>
                     </fo:table-cell>
                     <fo:table-cell background-color="{$background-color-thumbnail}">
-                      <fo:block padding-top="4pt" padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
-                        <!-- Thumbnails - Use the first one only -->
-                        <xsl:if test="$metadata/image">
-                          <xsl:choose>
-                            <xsl:when test="contains($metadata/image[1] ,'://')">
-                              <fo:external-graphic content-width="4.6cm">
-                                <xsl:attribute name="src">
-                                  <xsl:text>url('</xsl:text>
-                                  <xsl:value-of select="$metadata/image[1]"/>
-                                  <xsl:text>')"</xsl:text>
-                                </xsl:attribute>
-                              </fo:external-graphic>
-                            </xsl:when>
-                            <xsl:otherwise>
-                              <fo:external-graphic content-width="4.6cm">
-                                <xsl:attribute name="src">
-                                  <xsl:text>url('</xsl:text>
-                                  <xsl:value-of
-                                    select="concat('http://', $server/host,':', $server/port, $metadata/image[1])"/>
-                                  <xsl:text>')"</xsl:text>
-                                </xsl:attribute>
-                              </fo:external-graphic>
-                            </xsl:otherwise>
-                          </xsl:choose>
-                        </xsl:if>
-                      </fo:block>
+                      <xsl:call-template name="metadata-thumbnail-block">
+                        <xsl:with-param name="metadata" select="$metadata"/>
+                        <xsl:with-param name="server" select="$server"/>
+                      </xsl:call-template>
                     </fo:table-cell>
                   </fo:table-row>
                 </fo:table-body>
@@ -331,6 +280,96 @@
   </xsl:template>
 
 
+  <!-- Metadata thumbnail -->
+  <xsl:template name="metadata-thumbnail-block">
+    <xsl:param name="metadata"/>
+    <xsl:param name="server"/>
+
+    <fo:block padding-top="4pt" padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
+      <!-- Thumbnails - Use the first one only -->
+      <xsl:if test="$metadata/image">
+        <xsl:choose>
+          <xsl:when test="contains($metadata/image[1] ,'://')">
+            <fo:external-graphic content-width="4.6cm">
+              <xsl:attribute name="src">
+                <xsl:text>url('</xsl:text>
+                <xsl:value-of select="$metadata/image[1]"/>
+                <xsl:text>')"</xsl:text>
+              </xsl:attribute>
+            </fo:external-graphic>
+          </xsl:when>
+          <xsl:otherwise>
+            <fo:external-graphic content-width="4.6cm">
+              <xsl:attribute name="src">
+                <xsl:text>url('</xsl:text>
+                <xsl:value-of
+                  select="concat('http://', $server/host,':', $server/port, $metadata/image[1])"/>
+                <xsl:text>')"</xsl:text>
+              </xsl:attribute>
+            </fo:external-graphic>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </fo:block>
+  </xsl:template>
+
+  <!-- ====================================
+    List of metadata resources based on online source section.
+    Metadata must be in brief format
+  -->
+  <xsl:template name="metadata-resources">
+    <xsl:param name="gui"/>
+    <xsl:param name="server"/>
+    <xsl:param name="metadata"/>
+    <xsl:param name="title" select="true()"/>
+    <xsl:param name="remote" select="false()"/>
+
+    <!-- display metadata url but only if its not a remote result -->
+    <xsl:call-template name="info-rows">
+      <xsl:with-param name="label" select="if ($title) then $gui/strings/resources else ''"/>
+      <xsl:with-param name="content">
+        <xsl:choose>
+          <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
+              <xsl:attribute name="external-destination"> url('<xsl:value-of
+                select="concat('http://', $server/host,':', $server/port, /root/gui/url,'?uuid=', $metadata/geonet:info/uuid)"
+                />') </xsl:attribute>
+              <xsl:value-of select="$gui/strings/show"/>
+          </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
+            <xsl:attribute name="external-destination"> url('<xsl:value-of
+              select="concat('http://', $server/host,':', $server/port, /root/gui/url, '/srv/en/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
+            />') </xsl:attribute>
+            <xsl:value-of select="$gui/strings/show"/> (XML)
+          </fo:basic-link> | </xsl:when>
+          <xsl:otherwise>
+            <fo:block text-align="left" font-style="italic">
+              <xsl:text>Z3950: </xsl:text>
+              <xsl:value-of select="$metadata/geonet:info/server"/>
+              <xsl:text> </xsl:text>
+            </fo:block>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:if test="$metadata/geonet:info/download='true'">
+          <xsl:for-each select="$metadata/link[@type='download']">
+            <fo:basic-link text-decoration="underline" color="blue">
+              <xsl:attribute name="external-destination"> url('<xsl:value-of select="."/>') </xsl:attribute>
+              <xsl:value-of select="$gui/strings/download"/>
+            </fo:basic-link> | </xsl:for-each>
+        </xsl:if>
+
+        <xsl:if test="$metadata/geonet:info/dynamic='true'">
+          <xsl:for-each select="$metadata/link[@type='application/vnd.ogc.wms_xml']">
+            <fo:basic-link text-decoration="underline" color="blue">
+              <xsl:attribute name="external-destination"> url('<xsl:value-of select="@href"/>') </xsl:attribute>
+              <xsl:value-of select="$gui/strings/visualizationService"/> (<xsl:value-of
+                select="@title"/>) </fo:basic-link> | </xsl:for-each>
+        </xsl:if>
+
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+
   <!--
 		main pdf banner
 	-->
@@ -341,12 +380,11 @@
       <fo:table-body>
         <fo:table-row border-bottom-style="solid" border-bottom-color="{$header-color}"
           border-bottom-width="1pt">
-          <fo:table-cell display-align="center"
-            background-color="{$background-color-banner}">
+          <fo:table-cell display-align="center" background-color="{$background-color-banner}">
             <!-- FIXME : align all text on top and capitalize ? -->
-            <fo:block font-family="{$font-family}" font-size="{$header-size}"
-              color="{$title-color}" font-weight="{$header-weight}" 
-              padding-top="4pt" padding-right="4pt" padding-left="4pt">
+            <fo:block font-family="{$font-family}" font-size="{$header-size}" color="{$title-color}"
+              font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
+              padding-left="4pt">
               <fo:external-graphic padding-right="4pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
                     select="concat('http://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
@@ -355,7 +393,7 @@
               <xsl:value-of select="upper-case(/root/gui/env/site/name)"/> (<xsl:value-of
                 select="upper-case(/root/gui/env/site/organization)"/>) </fo:block>
           </fo:table-cell>
-         <!-- <fo:table-cell display-align="right" text-align="top"
+          <!-- <fo:table-cell display-align="right" text-align="top"
             background-color="{$background-color-banner}">
             <fo:block text-align="right" font-family="{$font-family}" font-size="{$header-size}"
               color="{$header-color}" font-weight="{$header-weight}"
@@ -372,18 +410,18 @@
     <xsl:param name="label"/>
     <xsl:param name="value"/>
     <xsl:param name="content"/>
-    <fo:table-row border-bottom-style="solid" border-top-style="solid" border-top-color="{$title-color}" border-top-width=".1pt"
-      border-bottom-color="{$title-color}" border-bottom-width=".1pt">
-      <fo:table-cell background-color="{$background-color}" 
-        color="{$title-color}"
-        padding-top="4pt" padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
+    <fo:table-row border-bottom-style="solid" border-top-style="solid"
+      border-top-color="{$title-color}" border-top-width=".1pt" border-bottom-color="{$title-color}"
+      border-bottom-width=".1pt">
+      <fo:table-cell background-color="{if ($label != '') then $background-color else ''}"
+        color="{$title-color}" padding-top="4pt" padding-bottom="4pt" padding-right="4pt"
+        padding-left="4pt">
         <fo:block>
           <xsl:value-of select="$label"/>
         </fo:block>
       </fo:table-cell>
-      <fo:table-cell 
-        color="{$font-color}" padding-top="4pt" 
-        padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
+      <fo:table-cell color="{$font-color}" padding-top="4pt" padding-bottom="4pt"
+        padding-right="4pt" padding-left="4pt">
         <fo:block>
           <xsl:value-of select="$value"/>
           <xsl:copy-of select="$content"/>
@@ -391,5 +429,4 @@
       </fo:table-cell>
     </fo:table-row>
   </xsl:template>
-
 </xsl:stylesheet>

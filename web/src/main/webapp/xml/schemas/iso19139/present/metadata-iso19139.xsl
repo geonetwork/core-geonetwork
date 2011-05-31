@@ -15,6 +15,7 @@
 	<xsl:include href="metadata-iso19139-utils.xsl"/>
 	<xsl:include href="metadata-iso19139-geo.xsl"/>
 	<xsl:include href="metadata-iso19139-inspire.xsl"/>
+  <xsl:include href="metadata-iso19139-fop.xsl"/>
   
 	<!-- main template - the way into processing iso19139 -->
 	<xsl:template match="metadata-iso19139" name="metadata-iso19139">
