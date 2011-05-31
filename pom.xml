@@ -143,16 +143,20 @@
         <artifactId>cargo-maven2-plugin</artifactId>
         <configuration>
           <container>
-            <containerId>jetty6x</containerId>
+            <containerId>jetty7x</containerId>
             <type>embedded</type>
             <log>${project.build.directory}/server-logs</log>
             <output>${project.build.directory}/server-output</output>
+            <systemProperties>
+              <GEOSERVER_DATA_DIR>release/data/geoserver_data</GEOSERVER_DATA_DIR>
+	      <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
+            </systemProperties>
           </container>
           <configuration>
             <home>${project.build.directory}/test-server</home>
             <properties>
               <!-- Cargo VMARGS are not working. FIXME -->
-              <cargo.jvmargs><![CDATA[-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -XX:CompileCommandFile=hotspot_compiler -Dmime-mappings=../geonetwork/WEB-INF/mime-types.properties]]></cargo.jvmargs>
+              <cargo.jvmargs>-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m</cargo.jvmargs>
               <cargo.servlet.port>8080</cargo.servlet.port>
             </properties>
             <deployables>
@@ -252,16 +256,20 @@
      
       <!-- Jetty stuff -->
       <dependency>
-        <groupId>org.mortbay.jetty</groupId>
-        <artifactId>jetty</artifactId>
-        <version>6.1.14</version>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.mortbay.jetty</groupId>
-        <artifactId>jetty-util</artifactId>
-        <version>6.1.14</version>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+        <version>${jetty.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
 
       <!-- Apache -->
       <dependency>
@@ -676,4 +684,7 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <properties>
+    <jetty.version>7.3.1.v20110307</jetty.version>
+  </properties>
 </project>
