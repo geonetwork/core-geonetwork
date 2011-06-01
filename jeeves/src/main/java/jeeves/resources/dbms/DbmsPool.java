@@ -69,16 +69,17 @@ public class DbmsPool implements ResourceProvider
 
 	public void init(String name, Element config) throws Exception
 	{
-		this.name = name;
-
+		
 		user          = config.getChildText(Jeeves.Res.Pool.USER);
 		passwd        = config.getChildText(Jeeves.Res.Pool.PASSWORD);
-		url 				  = config.getChildText(Jeeves.Res.Pool.URL);
+		url           = config.getChildText(Jeeves.Res.Pool.URL);
 		size          = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		String driver = config.getChildText(Jeeves.Res.Pool.DRIVER);
 		String maxt   = config.getChildText(Jeeves.Res.Pool.MAX_TRIES);
 		String maxw   = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
 		String rect   = config.getChildText(Jeeves.Res.Pool.RECONNECT_TIME);
+
+		this.name = url;
 
 		int poolSize  = (size == null) ? Jeeves.Res.Pool.DEF_POOL_SIZE : Integer.parseInt(size);
 		maxTries      = (maxt == null) ? Jeeves.Res.Pool.DEF_MAX_TRIES : Integer.parseInt(maxt);
