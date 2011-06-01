@@ -86,9 +86,11 @@ public class SettingManager
 		this.dbms = dbms;
 		init(dbms);
 
-		for(ResourceProvider rp : provMan.getProviders())
-			if (rp.getName().equals(Geonet.Res.MAIN_DB))
+		for(ResourceProvider rp : provMan.getProviders()) {
+		    if (rp.getName().equals(dbms.getURL())) {
 				rp.addListener(resList);
+			}
+		}
 	}
 
 	
