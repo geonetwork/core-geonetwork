@@ -112,6 +112,23 @@
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- DB2 -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<resource enabled="false">
+			<name>main-db</name>
+			<provider>jeeves.resources.dbms.DbmsPool</provider>
+			<config>
+				<user>admin</user>
+				<password>admin</password>
+				<driver>com.ibm.db2.jcc.DB2Driver</driver>
+				<url>jdbc:db2:geonet</url>
+				<poolSize>10</poolSize>
+			</config>
+		</resource>
+
 	</resources>
 
 	<!-- ====================================================================== -->

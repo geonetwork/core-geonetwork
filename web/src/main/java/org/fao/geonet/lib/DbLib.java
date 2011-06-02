@@ -99,6 +99,8 @@ public class DbLib {
 			file = "oracle";
 		else if (url.indexOf("mckoi") != -1)
 			file = "mckoi";
+		else if (url.indexOf("db2") != -1)
+			file = "db2";
 		else if (url.indexOf("mysql") != -1)
 			file = "mysql";
 		else if (url.indexOf("postgresql") != -1)
