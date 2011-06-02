@@ -7,7 +7,8 @@
 	main html header
 	-->
 	<xsl:template name="header">
-		
+		<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
 		<link href="{/root/gui/url}/favicon.ico" rel="shortcut icon" type="image/x-icon" />
