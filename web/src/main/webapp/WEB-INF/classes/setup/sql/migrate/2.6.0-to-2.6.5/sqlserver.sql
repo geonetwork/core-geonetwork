@@ -10,7 +10,7 @@ CREATE TABLE MetadataNotifiers
     primary key(id)
   );
 
-REM ======================================================================
+-- ======================================================================
 
 CREATE TABLE MetadataNotifications
   (
@@ -19,12 +19,18 @@ CREATE TABLE MetadataNotifications
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
-    errormsg           long,
+    errormsg           text,
 
-    primary key(metadataId,notifierId)
+    primary key(metadataId,notifierId),
+
+    foreign key(notifierId) references MetadataNotifiers(id)
   );
 
-ALTER TABLE MetadataNotifications ADD FOREIGN KEY (notifierId) REFERENCES MetadataNotifiers(id);
+INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
+INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
+INSERT INTO Settings VALUES (241,240,'enable','true');
+
+-- 2.6.2 changes
 
 CREATE TABLE CswServerCapabilitiesInfo
   (
@@ -33,10 +39,10 @@ CREATE TABLE CswServerCapabilitiesInfo
     field     varchar(32)   not null,
     label     varchar(96),
 
-    primary key(idField)
-  );
+    primary key(idField),
 
-ALTER TABLE CswServerCapabilitiesInfo ADD FOREIGN KEY (langId) REFERENCES Languages (id);
+    foreign key(langId) references Languages(id)
+  );
 
 CREATE TABLE IndexLanguages
   (
@@ -119,6 +125,11 @@ INSERT INTO IndexLanguages VALUES (14, 'catalan', 'n');
 INSERT INTO IndexLanguages VALUES (15, 'turkish', 'n');
 
 -- 2.6.4 changes
+CREATE TABLE CustomElementSet
+  (
+    xpath  varchar(1000) not null
+  );
+
 ALTER TABLE Languages ADD isInspire char(1);
 ALTER TABLE Languages ADD isDefault char(1);
 
@@ -133,5 +144,5 @@ UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='pt';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ca';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
-UPDATE Settings SET value='2.6.4' WHERE name='version';
+UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

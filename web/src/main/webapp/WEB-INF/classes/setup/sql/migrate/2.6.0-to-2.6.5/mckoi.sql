@@ -26,6 +26,12 @@ CREATE TABLE MetadataNotifications
     foreign key(notifierId) references MetadataNotifiers(id)
   );
 
+INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
+INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
+INSERT INTO Settings VALUES (241,240,'enable','true');
+
+-- 2.6.2 changes
+
 CREATE TABLE CswServerCapabilitiesInfo
   (
     idField   int,
@@ -47,7 +53,7 @@ CREATE TABLE IndexLanguages
     primary key(id, languageName)
 
   );
-
+  
 ALTER TABLE Languages ADD isocode varchar(3);
 
 UPDATE Languages SET isocode = 'eng' where id ='en';
@@ -119,6 +125,11 @@ INSERT INTO IndexLanguages VALUES (14, 'catalan', 'n');
 INSERT INTO IndexLanguages VALUES (15, 'turkish', 'n');
 
 -- 2.6.4 changes
+CREATE TABLE CustomElementSet
+  (
+    xpath  varchar(1000) not null
+  );
+
 ALTER TABLE Languages ADD isInspire char(1);
 ALTER TABLE Languages ADD isDefault char(1);
 
@@ -133,5 +144,5 @@ UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='pt';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ca';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
-UPDATE Settings SET value='2.6.4' WHERE name='version';
+UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

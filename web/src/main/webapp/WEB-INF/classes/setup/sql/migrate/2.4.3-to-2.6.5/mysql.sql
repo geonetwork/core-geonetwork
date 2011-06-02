@@ -1,3 +1,5 @@
+-- ======================================================================
+
 CREATE TABLE MetadataNotifiers
   (
     id         int,
@@ -26,7 +28,7 @@ CREATE TABLE MetadataNotifications
     foreign key(notifierId) references MetadataNotifiers(id)
   );
 
-ALTER TABLE Settings ALTER COLUMN value TYPE text;
+ALTER TABLE Settings MODIFY value longtext;    
 ALTER TABLE Metadata ADD displayorder int;
 
 INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
@@ -53,9 +55,9 @@ INSERT INTO Settings VALUES (607,606,'day','0');
 INSERT INTO Settings VALUES (608,606,'hour','24');
 INSERT INTO Settings VALUES (609,606,'min','0');
 INSERT INTO Settings VALUES (700,1,'oai',NULL);
-INSERT INTO Settings VALUES (701,700,'mdmode','1');
-INSERT INTO Settings VALUES (702,700,'tokentimeout','3600');
-INSERT INTO Settings VALUES (703,700,'cachesize','60');
+INSERT INTO Settings VALUES (701,700,'mdmode',1);
+INSERT INTO Settings VALUES (702,700,'tokentimeout',3600);
+INSERT INTO Settings VALUES (703,700,'cachesize',60);
 INSERT INTO Settings VALUES (720,1,'inspire',NULL);
 INSERT INTO Settings VALUES (721,720,'enable','false');
 
@@ -154,6 +156,11 @@ INSERT INTO IndexLanguages VALUES (14, 'catalan', 'n');
 INSERT INTO IndexLanguages VALUES (15, 'turkish', 'n');
 
 -- 2.6.4 changes
+CREATE TABLE CustomElementSet
+  (
+    xpath  varchar(1000) not null
+  );
+
 ALTER TABLE Languages ADD isInspire char(1);
 ALTER TABLE Languages ADD isDefault char(1);
 
@@ -168,5 +175,5 @@ UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='pt';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ca';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
-UPDATE Settings SET value='2.6.4' WHERE name='version';
+UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
