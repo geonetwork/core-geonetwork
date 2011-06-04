@@ -1,5 +1,6 @@
 ALTER TABLE Settings ALTER COLUMN value TYPE text;
 ALTER TABLE CategoriesDes ALTER COLUMN label TYPE varchar(255);
+ALTER TABLE Settings ALTER COLUMN name TYPE varchar(64);
 ALTER TABLE Metadata ADD displayorder int;
 
 -- Poruges added
