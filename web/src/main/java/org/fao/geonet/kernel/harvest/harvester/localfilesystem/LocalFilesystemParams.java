@@ -54,7 +54,7 @@ public class LocalFilesystemParams extends AbstractParams {
 	public void create(Element node) throws BadInputEx {
 		super.create(node);
 		Element site = node.getChild("site");
-		directoryname = Util.getParam(site, "directoryname", "");
+		directoryname = Util.getParam(site, "directory", "");
 		icon = Util.getParam(site, "icon",   "filesystem.gif");
 		String recurseString = Util.getParam(site, "recurse", "true");
 		recurse = (recurseString.equals("on") || recurseString.equals("true"));
@@ -72,7 +72,7 @@ public class LocalFilesystemParams extends AbstractParams {
 	public void update(Element node) throws BadInputEx {
 		super.update(node);
 		Element site = node.getChild("site");
-		directoryname = Util.getParam(site, "directoryname", "");
+		directoryname = Util.getParam(site, "directory", "");
 		icon = Util.getParam(site, "icon",   "filesystem.gif");
 		String recurseString = Util.getParam(site, "recurse", "true");
 		recurse = (recurseString.equals("on") || recurseString.equals("true"));

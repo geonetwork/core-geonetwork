@@ -104,7 +104,7 @@ var updateTemp =
 ' <node id="{ID}" type="{TYPE}">'+ 
 '    <site>'+
 '      <name>{NAME}</name>'+
-'      <directoryname>{DIRECTORYNAME}</directoryname>'+
+'      <directory>{DIRECTORYNAME}</directory>'+
 '      <recurse>{RECURSE}</recurse>'+
 '      <nodelete>{NODELETE}</nodelete>'+
 '      <icon>{ICON}</icon>'+
