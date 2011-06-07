@@ -138,11 +138,11 @@ public class Upload implements Service {
 						"No URL or file name provided for thesaurus upload.");
 			}
 		} else {
+	                fname = param.getTextTrim();
 			if (fname.contains("..")) {
 				throw new BadParameterEx("Invalid character found in thesaurus name.", fname);
 			}
 			
-			fname = param.getTextTrim();
 			rdfFile = new File(uploadDir, fname);
 		}
 
