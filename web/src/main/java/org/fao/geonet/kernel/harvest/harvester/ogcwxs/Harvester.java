@@ -476,8 +476,6 @@ class Harvester
 		boolean exist;
 		boolean loaded 		= false;
 		
-		reg.uuid 	= UUID.randomUUID().toString();
-		
 		if (params.ogctype.substring(0,3).equals("WMS")) {
 
 			if (params.ogctype.substring(3,8).equals("1.3.0")) {
@@ -496,6 +494,8 @@ class Harvester
 		
 		log.info ("  - Loading layer: " + reg.name);
 		
+		//--- md5 the full capabilities URL + the layer, coverage or feature name
+		reg.uuid = Util.scramble (this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
 	
 		//--- Trying loading metadataUrl element
 		if (params.useLayerMd && !params.ogctype.substring(0,3).equals("WMS")) {
