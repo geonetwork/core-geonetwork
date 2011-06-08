@@ -2779,7 +2779,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[not(string(gmd:protocol/gco:CharacterString)) and contains(gmd:linkage/gmd:URL,'service=WMS')]" priority="2">
+    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[not(string(gmd:protocol/gco:CharacterString)) and contains(upper-case(gmd:linkage/gmd:URL),'SERVICE=WMS')]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
@@ -3168,13 +3168,13 @@
 				<!-- The old links still in use by some systems. Deprecated -->
 				<xsl:choose>
                      <!-- no protocol, but URL is for a WMS service -->
-                    <xsl:when test="(not(string($protocol)) and contains($linkage,'service=WMS') and not(string($name)))">
+                    <xsl:when test="(not(string($protocol)) and contains(upper-case($linkage),'SERVICE=WMS') and not(string($name)))">
 						<link type="wms">
 							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
 						</link>
 					</xsl:when>
                     <!-- no protocol, but URL is for a WMS service -->
-                     <xsl:when test="(not(string($protocol)) and contains($linkage,'service=WMS') and string($name)!='')">
+                     <xsl:when test="(not(string($protocol)) and contains(upper-case($linkage),'SERVICE=WMS') and string($name)!='')">
 						<link type="wms">
 							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
 						</link>

@@ -1109,7 +1109,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-    <xsl:template mode="iso19115" match="onLineSrc[not(string(protocol)) and contains(linkage,'service=WMS')]" priority="2">
+    <xsl:template mode="iso19115" match="onLineSrc[not(string(protocol)) and contains(upper-case(linkage),'SERVICE=WMS')]" priority="2">
         <xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="linkage" />
@@ -1872,13 +1872,13 @@
 				<xsl:comment>The use of these links should be a</xsl:comment>
 				<xsl:choose>
                     <!-- no protocol, but URL is for a WMS service -->
-                    <xsl:when test="(not(string(./protocol)) and contains($linkage,'service=WMS') and not(string($name)))">
+                    <xsl:when test="(not(string(./protocol)) and contains(upper-case($linkage),'SERVICE=WMS') and not(string($name)))">
 						<link type="wms">
 							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
 						</link>
 					</xsl:when>
                     <!-- no protocol, but URL is for a WMS service -->
-                     <xsl:when test="(not(string(./protocol)) and contains($linkage,'service=WMS') and string($name)!='')">
+                     <xsl:when test="(not(string(./protocol)) and contains(upper-case($linkage),'SERVICE=WMS') and string($name)!='')">
 						<link type="wms">
 							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
 						</link>
