@@ -137,7 +137,7 @@ attached it to the metadata for data.
 							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:operatesOn[@uuidref!=$uuidref]"/>
 						
 						<!-- Handle operatesOn -->
-                        <srv:operatesOn uuidref="{$uuidref}" xlink:href="{$siteUrl}/iso19139.xml?uuid={$uuidref}"/>
+                        <srv:operatesOn uuidref="{$uuidref}" xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
 
 			    	</srv:SV_ServiceIdentification>
 				</gmd:identificationInfo>
