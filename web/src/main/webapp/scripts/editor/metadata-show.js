@@ -75,11 +75,15 @@
 						divToHide.hide();
 					}
 					Modalbox.show(url,{title: boxTitle, width: 600, afterHide: function() {
-                        if ($("simple_search_pnl").visible()) {
+                        if ($("simple_search_pnl") && $("simple_search_pnl").visible()) {
                             runSimpleSearch();
 
-                        } else if ($("advanced_search_pnl").visible()) {
+                        } else if ($("advanced_search_pnl") && $("advanced_search_pnl").visible()) {
                             runAdvancedSearch();
+
+                        // Used in my metadata form
+                        } else if ($("metadata_search_pnl") && $("metadata_search_pnl").visible()) {
+                            location.replace(getGNServiceURL('main.search') + "?hitsPerPage=10&editable=true");
 
                         } else {
                             location.replace(getGNServiceURL('main.home'));

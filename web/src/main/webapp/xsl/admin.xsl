@@ -113,6 +113,15 @@
 							<xsl:with-param name="desc" select="/root/gui/strings/searchUnused"/>
 						</xsl:call-template>
 
+                        <xsl:call-template name="addrow">
+							<xsl:with-param name="service" select="'main.search'"/>
+							<xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true'"/>
+
+							<xsl:with-param name="title"
+								select="/root/gui/strings/mymetadata"/>
+							<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
+						</xsl:call-template>
+
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'transfer.ownership'"/>
 							<xsl:with-param name="title"
