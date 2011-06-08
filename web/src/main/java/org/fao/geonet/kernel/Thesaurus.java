@@ -262,27 +262,44 @@ public class Thesaurus {
 
 	}
 
-	public void removeElement(KeywordBean keyword)
-			throws MalformedQueryException, QueryEvaluationException,
-			IOException, AccessDeniedException {		
-		Graph myGraph = repository.getGraph();
-		ValueFactory myFactory = myGraph.getValueFactory();
-		
-		URI subject = myFactory.createURI(keyword.getNameSpaceCode(),keyword.getRelativeCode());
-		StatementIterator iter = myGraph.getStatements(subject,null,null);
-		while (iter.hasNext()) {
-			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-			if (st.get().getObject() instanceof BNode) {
-				BNode node = (BNode) st.get().getObject();
-				repository.getGraph().remove(node, null, null);
-			}
-			System.out.println(st.get().getSubject().toString() + " : "
-					+ st.get().getPredicate().getLocalName() + " : "
-					+ st.get().getObject().toString());
-		}
+    /**
+     * Remove keyword from thesaurus.
+     * 
+     * @param keyword
+     * @throws MalformedQueryException
+     * @throws QueryEvaluationException
+     * @throws IOException
+     * @throws AccessDeniedException
+     */
+    public void removeElement(KeywordBean keyword) throws MalformedQueryException,
+            QueryEvaluationException, IOException, AccessDeniedException {
+        String namespace = keyword.getNameSpaceCode();
+        String code = keyword.getRelativeCode();
 
-		myGraph.remove(subject,null,null);
-	}
+        removeElement(namespace, code);
+    }
+
+    /**
+     * Remove keyword from thesaurus.
+     * 
+     * @param namespace
+     * @param code
+     * @throws AccessDeniedException
+     */
+    public void removeElement(String namespace, String code) throws AccessDeniedException {
+        Graph myGraph = repository.getGraph();
+        ValueFactory myFactory = myGraph.getValueFactory();
+        URI subject = myFactory.createURI(namespace, code);
+        StatementIterator iter = myGraph.getStatements(subject, null, null);
+        while (iter.hasNext()) {
+            AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+            if (st.get().getObject() instanceof BNode) {
+                BNode node = (BNode) st.get().getObject();
+                repository.getGraph().remove(node, null, null);
+            }
+        }
+        myGraph.remove(subject, null, null);
+    }
 
 	public URI updateElement(String namespace, String id, String prefLab, String note, String lang)
 			throws IOException, MalformedQueryException,

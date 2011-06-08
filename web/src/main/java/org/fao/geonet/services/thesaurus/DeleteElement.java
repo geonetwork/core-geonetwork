@@ -40,51 +40,46 @@ import org.jdom.Element;
 import java.util.Iterator;
 import java.util.List;
 
-//=============================================================================
+/**
+ * For editing : removes a concept from a thesaurus. 
+ * Use parameter "namespace" and "code" to remove a specific concept, if not
+ * set, the current selection is removed ({@link SelectKeywords}).
+ * 
+ * Access is restricted
+ */
+public class DeleteElement implements Service {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-/** For editing : removes a concept from a thesaurus. Access is restricted
-  */
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        UserSession session = context.getUserSession();
 
-public class DeleteElement implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+        // Retrieve thesaurus
+        String sThesaurusName = Util.getParam(params, "pThesaurus");
+        ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+        Thesaurus thesaurus = thesaurusMan.getThesaurusByName(sThesaurusName);
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+        // Optional keyword info - if none, selection is used
+        String namespace = Util.getParam(params, "namespace", "");
+        String code = Util.getParam(params, "id", "");
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+        if ("".equals(code)) {
+            KeywordsSearcher searcher = (KeywordsSearcher) session
+                    .getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+            List<?> keywords = searcher.getSelectedKeywordsInList();
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+            Iterator<?> iter = keywords.iterator();
+            while (iter.hasNext()) {
+                KeywordBean keyword = (KeywordBean) iter.next();
+                thesaurus.removeElement(keyword);
+            }
 
-		String sThesaurusName        = Util.getParam(params, "pThesaurus");
-		
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);		
-		UserSession session = context.getUserSession();
-		
-		KeywordsSearcher searcher = (KeywordsSearcher)session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);		
-		List keywords = searcher.getSelectedKeywordsInList();
-		ThesaurusManager thesaurusMan = gc.getThesaurusManager();
-		Thesaurus thesaurus = thesaurusMan.getThesaurusByName(sThesaurusName);
-		
-		Iterator iter = keywords.iterator();		
-		while(iter.hasNext()){
-			KeywordBean keyword = (KeywordBean)iter.next();
-			thesaurus.removeElement(keyword);			
-		}
-		
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        } else {
+            thesaurus.removeElement(namespace, code);
+        }
 
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        return elResp;
+    }
 }
-
-//=============================================================================
-
