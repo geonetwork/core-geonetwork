@@ -81,8 +81,9 @@ public class Info implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		Element result = new Element("root");
-
+		
 		String schema = jeeves.utils.Util.getParam(params, "schema", "");
+		String serviceType = jeeves.utils.Util.getParam(params, "serviceType", "");
 
 		for (Iterator i=params.getChildren().iterator(); i.hasNext();)
 		{
@@ -108,6 +109,9 @@ public class Info implements Service
 				else if (type.equals("threddsFragmentSchemas"))
 					result.addContent(getSchemas(el, context, Geonet.Path.TDS_STYLESHEETS));
 
+				else if (type.equals("ogcwxsOutputSchemas"))
+					result.addContent(getSchemas(el, context, getGetCapXSLPath(serviceType)));
+
 				else if (type.equals("wfsFragmentSchemas"))
 					result.addContent(getSchemas(el, context, Geonet.Path.WFS_STYLESHEETS));
 
@@ -119,7 +123,7 @@ public class Info implements Service
 
 				else
 					throw new BadParameterEx("type", type);
-			} else if (name.equals("schema")) { // do nothing
+			} else if (name.equals("schema")||(name.equals("serviceType"))) { // do nothing
 			} else {
 					throw new BadParameterEx(name, type);
 			}
@@ -248,6 +252,17 @@ public class Info implements Service
 	}
 
 	//--------------------------------------------------------------------------
+	//--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type              
+	//--------------------------------------------------------------------------
+
+	private String getGetCapXSLPath(String serviceType) {
+		return Geonet.Path.OGC_STYLESHEETS 
+				+ "/OGC"
+				+ serviceType.substring(0,3)
+				+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
+	}
+
+	//--------------------------------------------------------------------------
 	//--- OaiPmhServer
 	//--------------------------------------------------------------------------
 
@@ -355,7 +370,7 @@ public class Info implements Service
 	private File iconPath;
 	private File oaiSchema;
 	private File importXslPath;
-
+	
 	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
 }
 

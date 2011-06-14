@@ -25,9 +25,14 @@ function OgcWxs(xmlLoader)
 	this.addGroupRow    = addGroupRow;
 	this.removeGroupRow = view.removeGroupRow;
 	this.getResultTip   = view.getResultTip;
+	this.retrieveOutputSchemas = retrieveOutputSchemas;
 
 	this.model = model;
 	this.view  = view;
+	
+	view.controller = this;
+	
+	var callbackF=null;
 
 //=====================================================================================
 //===
@@ -94,6 +99,28 @@ function init_icons_OK(data)
 		
 	for (var i=0; i<data.length; i++)
 		view.addIcon(data[i]);				
+}
+
+//-------------------------------------------------------------------------------------
+
+function retrieveOutputSchemas()
+{
+	var type = this.view.getType();
+	
+	this.model.retrieveOutputSchemas(type, ker.wrap(this, retrieveOutputSchemas_OK));	
+}
+
+//-------------------------------------------------------------------------------------
+
+function retrieveOutputSchemas_OK(data)
+{
+	view.clearOutputSchemas();
+	
+	for (var i=0; i<data.length; i++) {
+		view.addOutputSchema(data[i].id,data[i].name);				
+	}
+	
+	view.reapplySelectedSchema();
 }
 
 //=====================================================================================

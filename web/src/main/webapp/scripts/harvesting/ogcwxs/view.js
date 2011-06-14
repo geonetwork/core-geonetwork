@@ -15,8 +15,8 @@ ogcwxs.View = function(xmlLoader)
 	var valid  = new Validator(loader);
 	var shower = null;
 	
-	
 	var currSearchId = 0;
+	var selectedSchema = '';
 	
 	this.setPrefix('ogcwxs');
 
@@ -29,11 +29,17 @@ ogcwxs.View = function(xmlLoader)
 	this.setEmpty       = setEmpty;
 	this.setData        = setData;
 	this.getData        = getData;
+	this.getType        = getType;
 	this.isDataValid    = isDataValid;
 	this.clearIcons     = clearIcons;
-	this.addIcon        = addIcon;		
+	this.addIcon        = addIcon;
 	
+	this.clearOutputSchemas = clearOutputSchemas;
+	this.addOutputSchema    = addOutputSchema;
+	this.reapplySelectedSchema  = reapplySelectedSchema;
+
 	Event.observe('ogcwxs.icon', 'change', ker.wrap(this, updateIcon));
+	Event.observe('ogcwxs.ogctype', 'change', ker.wrap(this, updateOutputSchemas));
 
 //=====================================================================================
 //===
@@ -83,6 +89,11 @@ function setEmpty()
 
 	shower.update();
 	updateIcon();
+
+	//-- set output schema
+	selectedSchema = null; 	
+	this.controller.retrieveOutputSchemas(); 
+
 }
 
 //=====================================================================================
@@ -104,7 +115,6 @@ function setData(node)
 	hvutil.setOption(options, 'lang', 			  'ogcwxs.lang');
 	hvutil.setOption(options, 'datasetCategory',  'ogcwxs.datasetCategory');
 	
-	
 	//--- add privileges entries
 	
 	this.removeAllGroupRows();
@@ -117,8 +127,20 @@ function setData(node)
 	
 	shower.update();
 	updateIcon();
+
+	//-- set output schema
+	selectedSchema = hvutil.find(options, 'outputSchema'); 	
+	this.controller.retrieveOutputSchemas(); 
 }
 
+//-------------------------------------------------------------------------------------
+
+function reapplySelectedSchema()
+{
+	if (selectedSchema != null)
+		$('ogcwxs.outputSchema').value = selectedSchema;
+}
+		
 //=====================================================================================
 
 function getData()
@@ -131,6 +153,7 @@ function getData()
 	data.LANG             = $F('ogcwxs.lang');
 	data.TOPIC            = $F('ogcwxs.topic');
 	data.DATASETCATEGORY  = ($F('ogcwxs.datasetCategory')==null?'':$F('ogcwxs.datasetCategory'));
+	data.OUTPUTSCHEMA     = $F('ogcwxs.outputSchema');
 	data.CREATETHUMBNAILS = $('ogcwxs.createThumbnails').checked;
 	data.USELAYER	      = $('ogcwxs.useLayer').checked;
 	data.USELAYERMD       = $('ogcwxs.useLayerMd').checked;
@@ -141,6 +164,13 @@ function getData()
 	data.CATEGORIES = this.getSelectedCategories();
 		
 	return data;
+}
+
+//=====================================================================================
+
+function getType()
+{
+	return $F('ogcwxs.ogctype');
 }
 
 //=====================================================================================
@@ -175,6 +205,30 @@ function updateIcon()
 	var image= $('ogcwxs.icon.image');
 	
 	image.setAttribute('src', Env.url +'/images/harvesting/'+icon);
+}
+
+//=====================================================================================
+
+function clearOutputSchemas() 
+{ 
+	$('ogcwxs.outputSchema').options.length = 0;
+}
+
+//=====================================================================================
+
+function addOutputSchema(id, name)
+{
+	gui.addToSelect('ogcwxs.outputSchema', id, name);
+}
+
+//=====================================================================================
+
+function updateOutputSchemas() {
+	selectedSchema = $F('ogcwxs.outputSchema');
+	
+	if (this.controller) {
+		this.controller.retrieveOutputSchemas();
+	}
 }
 
 //=====================================================================================

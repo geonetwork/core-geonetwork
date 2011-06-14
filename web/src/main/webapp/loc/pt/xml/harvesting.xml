@@ -44,7 +44,7 @@
 	
 	<info type="ogcwxs">
 		<short>OGC WxS</short>
-		<long>Serviços de web OGC (isso é WMS, WFS, WCS, WPS, CSW)</long>
+		<long>Serviços de web OGC (isso é WMS, WFS, WCS, WPS, CSW, SOS)</long>
 	</info>
 
 	<info type="arcsde">
@@ -82,10 +82,12 @@
         <type value="WPS0.4.0">OGC Web Processing Service (WPS) Versão 0.4.0</type>
         <type value="WPS1.0.0">OGC Web Processing Service (WPS) Versão 1.0.0</type>  
 		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Versão 2.0.2</type>
+		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Versão 1.0.0</type>
 	</wxstypes>
 	
 	<wxslang>Idioma de metadados</wxslang>
 	<wxsImp>Tipo de importação</wxsImp>
+	<wxsOutputSchema>Target schema</wxsOutputSchema>
 	<wxs119Only>Por pré-definição, o harvester de GetCapabilities cria<br/> metadados apenas para serviços em ISO19119.</wxs119Only>
 	<wxs139>Criar metadados para elementos de layer usando informações de GetCapabilities.</wxs139>
 	<wxs139Layer>Criar metadados para elementos de layer usando atributos de metadadosURL (se existam, se não use-se GetCapabilities).</wxs139Layer>
@@ -391,6 +393,10 @@
 			http://HOST/PATH			
 		</tip>
 		
+		<tip id="ogcwxs.outputSchema">
+			The schema to be used for harvested metadata
+		</tip>
+
 		<tip id="ogcwxs.addSearch">
 			Adicionar uma pesquisa no servidor remoto. Para receber informações
 			do servidor remoto, você tem que especificar pelo menos uma pesquisa.

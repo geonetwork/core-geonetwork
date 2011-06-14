@@ -44,7 +44,7 @@
 
 	<info type="ogcwxs">
 		<short>OGC WxS</short>
-		<long>OGC Web services (WMS, WFS, WCS, WPS, CSW)</long>
+		<long>OGC Web services (WMS, WFS, WCS, WPS, CSW, SOS)</long>
 	</info>
 
 	<info type="arcsde">
@@ -82,10 +82,12 @@
 				<type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
 				<type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>
 		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Version 2.0.2</type>
+		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>
 	</wxstypes>
 
 	<wxslang>Язык метаданных</wxslang>
 	<wxsImp>Тип импорта</wxsImp>
+	<wxsOutputSchema>Target schema</wxsOutputSchema>
 	<wxs119Only>По умолчанию будут собраны только метаданные, представленные по
 		стандарту ISO19119.</wxs119Only>
 	<wxs139>Создать метаданные для элементов слоя, используя полученную
@@ -396,6 +398,10 @@
 			http://HOST/PATH
 		</tip>
 
+		<tip id="ogcwxs.outputSchema">
+			The schema to be used for harvested metadata
+		</tip>
+ 
 		<tip id="ogcwxs.addSearch">
 			Добавить поисковый запрос на удаленный сервер. Для получения метаднных
 			необходимо указать хотя бы один запрос.

@@ -11,11 +11,13 @@ ogcwxs.Model = function(xmlLoader)
 	var loader    = xmlLoader;
 	var callBackF = null;
 	var callBackStyleSheets = null;
+	var callBackSchemas = null;
 
 	this.retrieveImportXslts = retrieveImportXslts;
 	this.retrieveGroups    = retrieveGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.retrieveIcons     = retrieveIcons;
+	this.retrieveOutputSchemas = retrieveOutputSchemas;
 	this.getUpdateRequest  = getUpdateRequest;
 
 //=====================================================================================
@@ -91,6 +93,39 @@ function retrieveIcons_OK(xmlRes)
 
 //=====================================================================================
 
+function retrieveOutputSchemas(type, callBack)
+{
+	callBackSchemas = callBack;	
+
+	var request = ker.createRequestFromObject({
+			type: 'ogcwxsOutputSchemas',
+			serviceType: type
+		});
+	
+	ker.send('xml.harvesting.info', request, ker.wrap(this, retrieveOutputSchemas_OK));
+}
+
+//-------------------------------------------------------------------------------------
+
+function retrieveOutputSchemas_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotRetrieve'), xmlRes);
+	else
+	{
+		var data = [];
+		var list = xml.children(xml.children(xmlRes)[0]);
+		
+		for (var i=0; i<list.length; i++) {
+			data.push(xml.toObject(list[i]));
+		}
+	}
+
+	callBackSchemas(data);
+}
+
+//=====================================================================================
+
 function getUpdateRequest(data)
 {
 	var request = str.substitute(updateTemp, data);
@@ -123,6 +158,7 @@ var updateTemp =
 '      <useLayer>{USELAYER}</useLayer>' +
 '      <useLayerMd>{USELAYERMD}</useLayerMd>'+
 '      <datasetCategory>{DATASETCATEGORY}</datasetCategory>'+
+'      <outputSchema>{OUTPUTSCHEMA}</outputSchema>'+
 '    </options>'+
 
 '    <content>'+

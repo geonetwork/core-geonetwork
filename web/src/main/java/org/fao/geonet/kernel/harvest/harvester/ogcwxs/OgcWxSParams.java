@@ -67,6 +67,7 @@ public class OgcWxSParams extends AbstractParams
 		useLayer  		= Util.getParam(opt, "useLayer",  false);
 		useLayerMd		= Util.getParam(opt, "useLayerMd",  false);
 		datasetCategory	= Util.getParam(opt, "datasetCategory",  "");
+		outputSchema	= Util.getParam(opt, "outputSchema",  "");
 	}
 
 	//---------------------------------------------------------------------------
@@ -92,6 +93,7 @@ public class OgcWxSParams extends AbstractParams
 		useLayer  		= Util.getParam(opt, "useLayer",  useLayer);
 		useLayerMd		= Util.getParam(opt, "useLayerMd",  useLayerMd);
 		datasetCategory = Util.getParam(opt, "datasetCategory",  datasetCategory);
+		outputSchema 	= Util.getParam(opt, "outputSchema",  outputSchema);
 	}
 
 	//---------------------------------------------------------------------------
@@ -114,6 +116,7 @@ public class OgcWxSParams extends AbstractParams
 		copy.useLayer 			= useLayer;
 		copy.useLayerMd 		= useLayerMd;
 		copy.datasetCategory    = datasetCategory;
+		copy.outputSchema    	= outputSchema;
 		return copy;
 	}
 
@@ -133,6 +136,7 @@ public class OgcWxSParams extends AbstractParams
 	public boolean useLayer;
 	public boolean useLayerMd;
 	public String datasetCategory;
+	public String outputSchema;
 }
 
 //=============================================================================

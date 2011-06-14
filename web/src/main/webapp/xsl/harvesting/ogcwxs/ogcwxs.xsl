@@ -125,6 +125,13 @@
 
 
 			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/wxsOutputSchema"/></td>
+				<td class="padded">
+					<select id="ogcwxs.outputSchema"/>
+				</td>
+			</tr>
+
+			<tr>
 				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
 				<td class="padded">
 					<select id="ogcwxs.icon" class="content" name="icon" size="1"/>

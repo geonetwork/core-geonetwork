@@ -25,6 +25,7 @@
 		<useLayer><xsl:value-of  select="useLayer/value" /></useLayer>
 		<useLayerMd><xsl:value-of  select="useLayerMd/value" /></useLayerMd>
 		<datasetCategory><xsl:value-of  select="datasetCategory/value" /></datasetCategory>
+		<outputSchema><xsl:value-of  select="outputSchema/value" /></outputSchema>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

@@ -37,6 +37,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -81,6 +82,7 @@ import java.util.UUID;
  * 	<li>WFS</li>
  * 	<li>WCS</li>
  * 	<li>WPS</li>
+ * 	<li>SOS</li>
  * </ul>
  * 
  * Metadata produced are :
@@ -162,6 +164,7 @@ class Harvester
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
+		schemaMan = gc.getSchemamanager ();
 		SettingInfo si = new SettingInfo(context);
 
 
@@ -188,9 +191,8 @@ class Harvester
 
 
         // Try to load capabilities document
-		this.capabilitiesUrl = 
-        		params.url + (params.url.contains("?")?"":"?") +
-        		"&SERVICE=" + params.ogctype.substring(0,3) +
+		this.capabilitiesUrl = getBaseUrl(params.url) +
+        		"SERVICE=" + params.ogctype.substring(0,3) +
         		"&VERSION=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETCAPABILITIES
         		;
@@ -262,8 +264,9 @@ class Harvester
 		String uuid = Util.scramble (this.capabilitiesUrl); // is the service identifier
 		
 		//--- Loading stylesheet
-		String styleSheet = context.getAppPath() + 
-							Geonet.Path.IMPORT_STYLESHEETS 
+		String styleSheet = schemaMan.getSchemaDir(params.outputSchema) + 
+							Geonet.Path.CONVERT_STYLESHEETS
+							+ "/OGCWxSGetCapabilitiesto19119/" 
 							+ "/OGC"
 							+ params.ogctype.substring(0,3)
 							+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
@@ -295,10 +298,12 @@ class Harvester
 			XPath xp = XPath.newInstance ("//Layer[count(./*[name(.)='Layer'])=0] | " + 
 											"//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
 											"//wfs:FeatureType | " +
-											"//wcs:CoverageOfferingBrief");
+											"//wcs:CoverageOfferingBrief | " +
+											"//sos:ObservationOffering");
 			xp.addNamespace("wfs", "http://www.opengis.net/wfs");
 			xp.addNamespace("wcs", "http://www.opengis.net/wcs");
 			xp.addNamespace("wms", "http://www.opengis.net/wms");
+			xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 										
 			List<Element> layers = xp.selectNodes(capa);
 			if (layers.size()>0) {
@@ -413,6 +418,8 @@ class Harvester
 					operationValue.setText("GetFeature");
 				else if (params.ogctype.startsWith("WCS"))
 					operationValue.setText("GetCoverage");
+				else if (params.ogctype.startsWith("SOS"))
+					operationValue.setText("GetObservation");
 				operation.addContent(operationValue);
 				
 				// Create identifier (which is the metadata identifier)
@@ -474,12 +481,12 @@ class Harvester
 		DateFormat df 		= new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date dt 			= new Date ();
 		WxSLayerRegistry reg= new WxSLayerRegistry ();
-		String schema 		= "iso19139";
+		String schema;
 		String mdXml;
 		String date 		= df.format (dt);
 		//--- Loading stylesheet
-		String styleSheet 	= context.getAppPath () + 
-								Geonet.Path.CONV_STYLESHEETS +
+		String styleSheet 	= schemaMan.getSchemaDir(params.outputSchema) + 
+								Geonet.Path.CONVERT_STYLESHEETS +
 								"/OGCWxSGetCapabilitiesto19119/" + 
 								"/OGC" +
 								params.ogctype.substring(0,3) + 
@@ -503,6 +510,9 @@ class Harvester
 		} else if (params.ogctype.substring(0,3).equals("WCS")) {
 			Namespace wcs = Namespace.getNamespace("http://www.opengis.net/wcs");
 			reg.name 	= layer.getChild ("name", wcs).getValue ();
+		} else if (params.ogctype.substring(0,3).equals("SOS")) {
+			Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
+			reg.name 	= layer.getChild ("name", gml).getValue ();
 		}
 		
 		log.info ("  - Loading layer: " + reg.name);
@@ -599,6 +609,9 @@ class Harvester
             int userid = 1;
             String group = null, isTemplate = null, docType = null, title = null, category = null;
             boolean ufo = false, indexImmediate = false;
+            
+			schema = dataMan.autodetectSchema (xml);
+			
             reg.id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
@@ -742,7 +755,7 @@ class Harvester
 		// http://localhost:8080/geoserver/wms?service=WMS&request=GetMap&VERSION=1.1.1&
 		// 		LAYERS=gn:world&WIDTH=200&HEIGHT=200&FORMAT=image/png&BBOX=-180,-90,180,90&STYLES=
 		String url = 
-        		params.url + (params.url.contains("?")?"":"?") +
+        		getBaseUrl(params.url) +
         		"&SERVICE=" + params.ogctype.substring(0,3) +
         		"&VERSION=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETMAP + 
@@ -853,6 +866,24 @@ class Harvester
 		}
 	}
 
+
+	/** 
+     * Add '?' or '&' if required to url so that parameters can just be 
+     * appended to it 
+     *   
+     * @param url		Url to which parameters are going to be appended
+     * 
+     */
+	private String getBaseUrl(String url) {
+		if (url.endsWith("?")) {
+			return url;
+		} else if (url.contains("?")) {
+			return url+"&";
+		} else {
+			return url+"?";
+		}
+	}
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -864,6 +895,7 @@ class Harvester
 	private Dbms           dbms;
 	private OgcWxSParams   params;
 	private DataManager    dataMan;
+	private SchemaManager  schemaMan;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
     private OgcWxSResult   result;

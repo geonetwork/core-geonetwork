@@ -44,7 +44,7 @@
 	
 	<info type="ogcwxs">
 		<short>OGC WxS</short>
-		<long>OGC Web services (ie. WMS, WFS, WCS, WPS, CSW)</long>
+		<long>OGC Web services (ie. WMS, WFS, WCS, WPS, CSW, SOS)</long>
 	</info>
 
 	<info type="arcsde">
@@ -82,10 +82,12 @@
         <type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
         <type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>        
 		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Version 2.0.2</type>
+		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>
 	</wxstypes>
 	
 	<wxslang>Metadata language</wxslang>
 	<wxsImp>Type of import</wxsImp>
+	<wxsOutputSchema>Target schema</wxsOutputSchema>
 	<wxs119Only>By default GetCapabilities harvester will create<br/> only metadata for services in ISO19119.</wxs119Only>
 	<wxs139>Create metadata for layer elements using GetCapabilities information.</wxs139>
 	<wxs139Layer>Create metadata for layer elements using MetadataURL attributes (if existing, if not use GetCapabilities).</wxs139Layer>
@@ -395,6 +397,9 @@
 			http://HOST/PATH			
 		</tip>
 		
+		<tip id="ogcwxs.outputSchema">
+			The schema to be used for harvested metadata
+		</tip>
 		
 		
 		<tip id="ogcwxs.addSearch">
