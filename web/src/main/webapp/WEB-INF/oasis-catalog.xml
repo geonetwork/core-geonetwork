@@ -9,8 +9,15 @@
 	<!-- Each schema has an oasis-catalog file for remapping individual
 	     xsd schemaLocation hints -->
 
+	<!-- remap system id schema-ident.xsd to local copy in GeoNetwork 
+	     relative to this catalog file -->
+
+	<system systemId="http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd" 
+	        uri="../xml/validation/schemaPlugins/schema-ident.xsd"/>
+
 	<!-- remap utils-fn.xsl included in schematrons to the correct place
 	     relative to this catalog file -->
+
 
 	<uri    name="../../../xsl/utils-fn.xsl"
 					uri="../xsl/utils-fn.xsl"/>

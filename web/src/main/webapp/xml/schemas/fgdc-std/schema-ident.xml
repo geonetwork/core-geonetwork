@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gns:schema xmlns:gns="http://www.osgeo.org/geonetwork/schemas/geonet_schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.osgeo.org/geonetwork/schemas/geonet_schema http://www.osgeo.org/geonetwork/schemas/geonet_schema/geonet_schema.xsd">
+<gns:schema xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
 	<gns:name>fgdc-std</gns:name>
 	<gns:id>7cd48bd0-dde3-11df-81b4-001c2346de4c</gns:id>
 	<gns:version>1.0</gns:version>

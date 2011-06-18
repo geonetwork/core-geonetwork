@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema version="1.0" elementFormDefault="qualified" 
+        attributeFormDefault="unqualified"
+        targetNamespace="http://geonetwork-opensource.org/schemas/schema-ident"
+				xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:annotation>
+    <xs:documentation>
+    XML Schema which can be used to validate GeoNetwork schema-ident.xml
+    file used in Schema Plugins.
+    </xs:documentation>
+  </xs:annotation>
+
+<!-- ====================================================================== -->
+<!-- schema is the root element in a GeoNetwork schema identification -->
+<!-- ====================================================================== -->
+
+  <xs:element name="schema" type="gns:schemaType"/>
+
+<!-- ====================================================================== -->
+<!-- schemaType complex type -->
+<!-- ====================================================================== -->
+
+  <xs:complexType name="schemaType">
+    <xs:annotation>
+      <xs:documentation>
+			All schema identity files must have the elements defined in this
+			type:
+
+				name = unique name of the schema used in GeoNetwork (lower case,
+				       and if a profile then it should be named after the base schema
+							 using base-schema-name.profile-name eg. iso19139.mcp)
+
+				id   = unique identifier for the schema
+
+				version = official version number of the schema
+
+				schemaLocation = official URL of XML schema definitions (XSD) for this
+				                 metadata schema
+
+				autodetect = information used to detect whether a metadata record
+				             belongs to this schema
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="name"           type="xs:string" minOccurs="1"/>
+      <xs:element name="id"             type="xs:string" minOccurs="1"/>
+      <xs:element name="version"        type="xs:string" minOccurs="1"/>
+      <xs:element name="schemaLocation" type="xs:string" minOccurs="1"/>
+      <xs:element name="autodetect"     type="gns:autodetectType" 
+																				minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+<!-- ====================================================================== -->
+<!-- autodetectType complex type -->
+<!-- ====================================================================== -->
+
+  <xs:complexType name="autodetectType">
+    <xs:annotation>
+      <xs:documentation>
+			Define the information used to determine whether a
+			metadata record is defined using this schema.
+      </xs:documentation>
+    </xs:annotation>
+		<xs:sequence>
+			<xs:element name="elements"       type="gns:elementsType" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+<!-- ====================================================================== -->
+<!-- elementsType complex type -->
+<!-- ====================================================================== -->
+
+  <xs:complexType name="elementsType">
+    <xs:annotation>
+      <xs:documentation>
+			Contains the elements that must exist in a metadata record for it
+			to be identified as belonging to this schema.
+      </xs:documentation>
+    </xs:annotation>
+		<xs:sequence>
+			<xs:any namespace="##any" processContents="skip" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="type" use="optional">
+    	<xs:annotation>
+      	<xs:documentation>
+				Determines how the elements specified will be used to detect the 
+				schema.
+
+				root = the element defined is expected to be the root element
+	
+				search = the elements and their content must be present somewhere in 
+			         	 the record (default if unspecified)
+      	</xs:documentation>
+    	</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="root"/>
+					<xs:enumeration value="search"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,9 +1,9 @@
-//==============================================================================
+//=============================================================================
 //===
 //=== SchemaManager
 //===
-//==============================================================================
-//===	Copyright (C) GeoNetwork
+//=============================================================================
+//===	Copyright (C) Free Software Foundation
 //===
 //===	This program is free software; you can redistribute it and/or modify
 //===	it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ public class SchemaManager
 	private static final int MODE_ROOT = 1;
 	private static final int MODE_NEEDLEWITHVALUE = 2;
 
-	private static final String GEONET_SCHEMA_URI = "http://www.osgeo.org/geonetwork/schemas/geonet_schema";
+	private static final String GEONET_SCHEMA_URI = "http://geonetwork-opensource.org/schemas/schema-ident";
 	private static final Namespace GEONET_SCHEMA_PREFIX_NS = Namespace.getNamespace("gns", GEONET_SCHEMA_URI);
 	private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
 
@@ -703,17 +703,17 @@ public class SchemaManager
 		Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
 
 		for (String fname : fnames) {	
-			Log.info(Geonet.SCHEMA_MANAGER, "Searching for "+path+"/loc/"+defaultLang+"/"+fname);
+			Log.debug(Geonet.SCHEMA_MANAGER, "Searching for "+path+"/loc/"+defaultLang+"/"+fname);
 			if (new File(path+ FS +"loc"+ FS +defaultLang+ FS +fname).exists()) {
 				Element config = new Element("xml");
 				config.setAttribute("name",name);
 				config.setAttribute("base",base);
 				config.setAttribute("file",fname);
-				Log.info(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
+				Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
 				XmlFile xf = new XmlFile(config, defaultLang, true);
 				xfMap.put(fname, xf);
 			} else {
-				Log.info(Geonet.SCHEMA_MANAGER, "Unable to load this file");
+				Log.debug(Geonet.SCHEMA_MANAGER, "Unable to load this file");
 			}
 		}
 
@@ -991,20 +991,28 @@ public class SchemaManager
     				String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
     				String idFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_ID;
     				String oasisCatFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_OASIS;
-    
+   
+	 					String stage = "";
     				try {
+							// validate the schema-ident file before reading it
+	 						stage = "reading schema-ident file "+idFile;
+							Element root = Xml.loadFile(idFile);
+	 						stage = "validating schema-ident file "+idFile;
+							Xml.validate(new Document(root));
+
     					if (hmSchemas.containsKey(saSchemas[i])) { // exists so ignore it
     						Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchemas[i]+" already exists - cannot add!");
     					} else {
+	 							stage = "adding the schema information";
     						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile);
     						numberOfSchemasAdded++;
     					}
     				} catch (Exception e) {
-    					Log.error(Geonet.SCHEMA_MANAGER, "Failed. "+e.getMessage());
-    					Log.debug(Geonet.SCHEMA_MANAGER, e);
-    					continue; // skip this one
+    					Log.error(Geonet.SCHEMA_MANAGER, "Failed whilst "+stage+". Exception message if any is "+e.getMessage());
+							e.printStackTrace();
+    					continue; // skip this schema
     				}
-                }
+          }
 			}
 		}
 

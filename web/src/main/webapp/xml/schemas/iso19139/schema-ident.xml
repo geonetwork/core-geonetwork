@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.osgeo.org/geonetwork/schemas/geonet_schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.osgeo.org/geonetwork/schemas/geonet_schema http://www.osgeo.org/geonetwork/schemas/geonet_schema/geonet_schema.xsd">
+<schema xmlns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
 	<name>iso19139</name>
 	<id>3f95190a-dde4-11df-8626-001c2346de4c</id>
 	<version>1.0</version>

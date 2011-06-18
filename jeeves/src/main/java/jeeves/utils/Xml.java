@@ -851,6 +851,10 @@ public final class Xml
 		Schema schema = factory().newSchema();
 		ErrorHandler eh = new ErrorHandler();
 		validateRealGuts(schema, xml, eh);
+		if (eh.errors()) {
+			Element xsdXPaths = eh.getXPaths();
+			throw new XSDValidationErrorEx("XSD Validation error(s):\n"+getString(xsdXPaths), xsdXPaths);
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -865,7 +869,7 @@ public final class Xml
 	public static void validate(String schemaPath, Element xml) throws Exception
 	{
 		Element xsdXPaths = validateInfo(schemaPath,xml);
-		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s)", xsdXPaths);
+		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s):\n"+getString(xsdXPaths), xsdXPaths);
 	}
 
 	//---------------------------------------------------------------------------
@@ -982,7 +986,6 @@ public final class Xml
 		Resolver resolver = ResolverWrapper.getInstance();
 
 		ValidatorHandler vh = schema.newValidatorHandler();
-		String nullStr = null;
 		vh.setResourceResolver(resolver.getXmlResolver());
 		vh.setErrorHandler(eh);
 
