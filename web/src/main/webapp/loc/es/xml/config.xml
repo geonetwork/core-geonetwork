@@ -142,6 +142,20 @@
 	<surname>Nombre de familia</surname>
 	<firstname>Nombre</firstname>
 
+    <metadataEnableInspireSearch>Habilitar panel de b�squedas</metadataEnableInspireSearch>
+
+    <metadataViews>Vistas de metadatos</metadataViews>
+    <metadataEnableSimpleView>Habilitar vista simple</metadataEnableSimpleView>
+    <metadataEnableIsoView>Habilitar vista ISO</metadataEnableIsoView>
+    <metadataEnableInspireView>Habilitar vista INSPIRE</metadataEnableInspireView>
+    <metadataEnableXmlView>Habilitar vista XML</metadataEnableXmlView>
+    <metadataDefaultView>Vista por defecto</metadataDefaultView>
+    <metadataSimpleView>Vista simple</metadataSimpleView>
+    <metadataIsoView>Vista ISO</metadataIsoView>
+    <metadataInspireView>Vista INSPIRE</metadataInspireView>
+    <metadataXmlView>Vista XML</metadataXmlView>
+    <metadataAdvancedView>Vista avanzada</metadataAdvancedView>
+
 	<!-- Buttons -->
 
 	<save>Guardar</save>

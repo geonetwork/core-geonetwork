@@ -42,7 +42,7 @@
       </xsl:choose>
 		
 			<xsl:comment>ADV SEARCH: INSPIRE</xsl:comment>
-			<xsl:if test="/root/gui/env/inspire/enable = 'true' and not($remote)">
+			<xsl:if test="/root/gui/env/inspire/enable = 'true' and /root/gui/env/inspire/enableSearchPanel = 'true' and not($remote)">
 				<xsl:call-template name="adv_inspire"></xsl:call-template>
 			</xsl:if>
 

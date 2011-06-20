@@ -62,7 +62,16 @@ ConfigModel.prototype.getConfig_OK = function(node)
 
 			
             CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
+
             INSPIRE           : xml.evalXPath(node, 'inspire/enable'),
+            INSPIRE_SEARCH_PANEL           : xml.evalXPath(node, 'inspire/enableSearchPanel'),
+
+            METADATA_SIMPLE_VIEW             : xml.evalXPath(node, 'metadata/enableSimpleView'),
+            METADATA_ISO_VIEW                : xml.evalXPath(node, 'metadata/enableIsoView'),
+            METADATA_INSPIRE_VIEW            : xml.evalXPath(node, 'metadata/enableInspireView'),
+            METADATA_XML_VIEW                : xml.evalXPath(node, 'metadata/enableXmlView'),
+            METADATA_DEFAULT_VIEW            : xml.evalXPath(node, 'metadata/defaultView'),
+
             HARVESTER           : xml.evalXPath(node, 'harvester/enableEditing'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
             AUTO_FIXING       : xml.evalXPath(node, 'autofixing/enable'),
@@ -189,7 +198,15 @@ ConfigModel.updateTemp =
 '	</autofixing>' +
 '	<inspire>' +
 '		<enable>{INSPIRE}</enable>'+
+'		<enableSearchPanel>{INSPIRE_SEARCH_PANEL}</enableSearchPanel>'+
 '	</inspire>' +
+'	<metadata>' +
+'		<enableSimpleView>{METADATA_SIMPLE_VIEW}</enableSimpleView>'+
+'		<enableIsoView>{METADATA_ISO_VIEW}</enableIsoView>'+
+'		<enableInspireView>{METADATA_INSPIRE_VIEW}</enableInspireView>'+
+'		<enableXmlView>{METADATA_XML_VIEW}</enableXmlView>'+
+'		<defaultView>{METADATA_DEFAULT_VIEW}</defaultView>'+
+'	</metadata>' +
 '	<harvester>' +
 '		<enableEditing>{HARVESTER}</enableEditing>'+
 '	</harvester>' +

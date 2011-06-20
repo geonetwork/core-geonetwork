@@ -80,7 +80,84 @@ function ConfigView(strLoader)
 	this.geonetworkdbShower  = new RadioShower('geonetworkdb.use',     'geonetworkdb.subpanel', targetIds);
 
 	this.shibShower  = new Shower('shib.use',     'shib.subpanel');
+    this.inspireShower  = new Shower('inspire.enable',     'inspire.subpanel');
+
+    Event.observe($('inspire.enable'), 'click', function() {
+        $('inspire.enableSearchPanel').checked = $('inspire.enable').checked;
+
+        if (!$('inspire.enable').checked) {
+            $('metadata.enableInspireView').checked = false;
+        }
+
+        $('metadata.enableInspireView').disabled = !$('inspire.enable').checked;
+
+        if ($('metadata.enableInspireView').disabled) {
+            $("metadata.defaultView.Inspire").hide();
+            if ($("metadata.defaultView").value == $("metadata.defaultView.Inspire").value) {
+        		$("metadata.defaultView").value = ($('metadata.enableSimpleView').checked)?
+                                                        $("metadata.defaultView.Simple").value:$("metadata.defaultView.Advanced").value;
+            }
+
+        } else {
+            $("metadata.defaultView.Inspire").show();
+        }
+    });
+
+    Event.observe($('metadata.enableSimpleView'), 'click', function() {
+        if (!$('metadata.enableSimpleView').checked) {
+            $("metadata.defaultView.Simple").hide();
+            if ($("metadata.defaultView").value == $("metadata.defaultView.Simple").value) {
+        		$("metadata.defaultView").value = ($('metadata.enableSimpleView').checked)?
+                                                        $("metadata.defaultView.Simple").value:$("metadata.defaultView.Advanced").value;
+            }
+
+        } else {
+            $("metadata.defaultView.Simple").show();
+        }
+
+    });
+
+    Event.observe($('metadata.enableIsoView'), 'click', function() {
+        if (!$('metadata.enableIsoView').checked) {
+            $("metadata.defaultView.Iso").hide();
+            if ($("metadata.defaultView").value == $("metadata.defaultView.Iso").value) {
+        		$("metadata.defaultView").value = ($('metadata.enableSimpleView').checked)?
+                                                        $("metadata.defaultView.Simple").value:$("metadata.defaultView.Advanced").value;
+            }
+
+        } else {
+            $("metadata.defaultView.Iso").show();
+        }
+    });
+
+    Event.observe($('metadata.enableInspireView'), 'click', function() {
+        if (!$('metadata.enableInspireView').checked) {
+            $("metadata.defaultView.Inspire").hide();
+            if ($("metadata.defaultView").value == $("metadata.defaultView.Inspire").value) {
+        		$("metadata.defaultView").value = ($('metadata.enableSimpleView').checked)?
+                                                        $("metadata.defaultView.Simple").value:$("metadata.defaultView.Advanced").value;
+            }
+
+        } else {
+            $("metadata.defaultView.Inspire").show();
+        }
+    });
+
+    Event.observe($('metadata.enableXmlView'), 'click', function() {
+        if (!$('metadata.enableXmlView').checked) {
+            $("metadata.defaultView.Xml").hide();
+            if ($("metadata.defaultView").value == $("metadata.defaultView.Xml").value) {
+        		$("metadata.defaultView").value = ($('metadata.enableSimpleView').checked)?
+                                                        $("metadata.defaultView.Simple").value:$("metadata.defaultView.Advanced").value;
+            }
+
+        } else {
+            $("metadata.defaultView.Xml").show();
+        }
+
+    });
 }
+
 
 //=====================================================================================
 
@@ -130,7 +207,16 @@ ConfigView.prototype.setData = function(data)
 
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
 	$('autofixing.enable').checked = data['AUTO_FIXING'] == 'true';
+
     $('inspire.enable').checked = data['INSPIRE'] == 'true';
+    $('inspire.enableSearchPanel').checked = data['INSPIRE_SEARCH_PANEL'] == 'true';
+
+    $('metadata.enableSimpleView').checked = data['METADATA_SIMPLE_VIEW'] == 'true';
+    $('metadata.enableIsoView').checked = data['METADATA_ISO_VIEW'] == 'true';
+    $('metadata.enableInspireView').checked = data['METADATA_INSPIRE_VIEW'] == 'true';
+    $('metadata.enableXmlView').checked = data['METADATA_XML_VIEW'] == 'true';
+    $('metadata.defaultView').value = data['METADATA_DEFAULT_VIEW'];
+
     $('harvester.enableEditing').checked = data['HARVESTER'] == 'true';
 
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
@@ -172,6 +258,17 @@ ConfigView.prototype.setData = function(data)
 	this.ldapShower.update();
 	this.shibShower.update();
 	this.geonetworkdbShower.update();
+    this.inspireShower.update();
+
+    if (!$('inspire.enable').checked) {
+	    $('metadata.enableInspireView').checked = false;
+		$('metadata.enableInspireView').disabled = true;
+    }
+
+    if (!$('metadata.enableSimpleView').checked) $("metadata.defaultView.Simple").hide();
+    if (!$('metadata.enableIsoView').checked) $("metadata.defaultView.Iso").hide();
+    if (!$('metadata.enableInspireView').checked) $("metadata.defaultView.Inspire").hide();
+    if (!$('metadata.enableXmlView').checked) $("metadata.defaultView.Xml").hide();
 }
 
 //=====================================================================================
@@ -224,7 +321,16 @@ ConfigView.prototype.getData = function()
 		
 		LOCAL_RATING : $('localrating.enable').checked,
 		AUTO_FIXING : $('autofixing.enable').checked,
+
         INSPIRE : $('inspire.enable').checked,
+        INSPIRE_SEARCH_PANEL : $('inspire.enableSearchPanel').checked && $('inspire.enable').checked,
+
+        METADATA_SIMPLE_VIEW : $('metadata.enableSimpleView').checked,
+        METADATA_ISO_VIEW : $('metadata.enableIsoView').checked,
+        METADATA_INSPIRE_VIEW : $('metadata.enableInspireView').checked,
+        METADATA_XML_VIEW : $('metadata.enableXmlView').checked,
+        METADATA_DEFAULT_VIEW: $('metadata.defaultView').value,
+
         HARVESTER : $('harvester.enableEditing').checked,
 
 		PROXY_USE  : $('proxy.use') .checked,

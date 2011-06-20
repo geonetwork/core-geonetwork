@@ -406,10 +406,10 @@
 									<!-- <input id="selId" name="{$metadata/geonet:info/id}" type="checkbox" /> -->
 									<xsl:choose>
 										<xsl:when test="/root/gui/config/search/use-separate-window-for-editor-viewer">
-											<span onclick="popEditorViewer('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab={name(/root/gui/config/metadata-tab/*[@default])}','{$metadata/geonet:info/id}')" style="cursor:hand;cursor:pointer;text-decoration:underline;"><xsl:value-of select="$metadata/title"/></span>
+											<span onclick="popEditorViewer('{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab={/root/gui/env/metadata/defaultView}','{$metadata/geonet:info/id}')" style="cursor:hand;cursor:pointer;text-decoration:underline;"><xsl:value-of select="$metadata/title"/></span>
 										</xsl:when>
 										<xsl:otherwise>
-											<a href="metadata.show?id={$metadata/geonet:info/id}&amp;currTab={name(/root/gui/config/metadata-tab/*[@default])}">
+											<a href="metadata.show?id={$metadata/geonet:info/id}&amp;currTab={/root/gui/env/metadata/defaultView}">
 												<xsl:value-of select="$metadata/title"/>
 											</a>
 										</xsl:otherwise>

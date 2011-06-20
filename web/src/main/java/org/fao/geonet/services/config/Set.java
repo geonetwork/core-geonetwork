@@ -158,6 +158,14 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "localrating/enable", "system/localrating/enable"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "autofixing/enable", "system/autofixing/enable"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "inspire/enable", "system/inspire/enable"),
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "inspire/enableSearchPanel", "system/inspire/enableSearchPanel"),
+
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadata/enableSimpleView", "system/metadata/enableSimpleView"),
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadata/enableIsoView", "system/metadata/enableIsoView"),
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadata/enableInspireView", "system/metadata/enableInspireView"),
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadata/enableXmlView", "system/metadata/enableXmlView"),
+        new ConfigEntry(ConfigEntry.Type.STRING, true,  "metadata/defaultView", "system/metadata/defaultView"),
+
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "harvester/enableEditing", "system/harvester/enableEditing"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "proxy/use",                "system/proxy/use"),

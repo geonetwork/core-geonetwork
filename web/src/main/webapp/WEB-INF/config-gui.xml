@@ -128,21 +128,26 @@
   Use the default attribute in order to use this view in search result panel.
   It is recommended to use the simple or inspire view because user will not
   have access to section tab switcher.
+
+  Important:
+    * Visibility of views is now configured in GUI, inside System configuration > Metadata views
+    * Extra/advanced attributes of views like flat or other specific attributes (see INSPIRE panel) are configured in this file
+
  -->
  <metadata-tab>
-  <simple flat="true"  default="true"/>
-  <advanced/><!-- This view should not be removed as this is the only view to be able 
+  <simple flat="true" />
+  <advanced/><!-- This view should not be removed as this is the only view to be able
   to edit all elements defined in a schema. -->
   <iso/>
   <!-- This view display all INSPIRE recommended elements
   in a view : 
   * In flat mode, define which non existing children of the exception must be displayed (using ancestorException)
   * or which non existing element must be displayed (using exception)
- 
-   <inspire flat="true">
-     <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution,EX_BoundingPolygon"/>
+  -->
+  <inspire flat="true">
+   	 <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution"/>
      <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
-     </inspire> -->
+  </inspire>
   <xml/>
  </metadata-tab>
  
