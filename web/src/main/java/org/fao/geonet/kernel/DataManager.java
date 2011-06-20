@@ -1501,13 +1501,13 @@ public class DataManager
 					}
 				}
 
-				// -- now delete the element as requested
-				parent.removeContent(me);
-
 				//--- existing geonet child element not present so create it
 				if (result == null) {
 					result = editLib.createElement(schema,el,parent);
 					parent.setContent(me,result);
+				} else {
+                    // -- now delete the element as requested
+				    parent.removeContent(me);
 				}
 				result.setAttribute(Edit.ChildElem.Attr.PARENT,parentRef);
 				result.addContent(info);
