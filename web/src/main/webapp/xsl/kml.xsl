@@ -11,7 +11,7 @@
 	<xsl:include href="metadata.xsl"/>
 	<xsl:include href="utils.xsl"/>
 	
-	<xsl:variable name="siteURL" select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port)"/>
+	<xsl:variable name="siteURL" select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port)"/>
 	
 	<xsl:template match="/root">
 		

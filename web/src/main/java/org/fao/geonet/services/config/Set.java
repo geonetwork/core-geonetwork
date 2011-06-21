@@ -104,6 +104,7 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "site/name",                "system/site/name"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "site/organization",        "system/site/organization"),
 
+        new ConfigEntry(ConfigEntry.Type.STRING, true,  "server/protocol",          "system/server/protocol"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "server/host",              "system/server/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "server/port",              "system/server/port"),
 

@@ -172,7 +172,7 @@
             				<fo:external-graphic content-width="30pt">
                        <xsl:attribute name="src">
                           url('<xsl:value-of
-                            select="concat('http://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')" />')"
+                            select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')" />')"
                        </xsl:attribute>
                     </fo:external-graphic>
                   	<xsl:value-of select="concat(position()-1,' - ',$metadata/title)" />
@@ -212,7 +212,7 @@
 	            							<xsl:otherwise>
 	            								<fo:external-graphic width="125pt" content-width="scale-to-fit" scaling="uniform" content-height="100%">
 	            									<xsl:attribute name="src"><xsl:text>url('</xsl:text><xsl:value-of
-	            										select="concat('http://', $server/host,':', $server/port, $metadata/image)" /><xsl:text>')"</xsl:text></xsl:attribute>
+	            										select="concat($server/protocol, '://', $server/host,':', $server/port, $metadata/image)" /><xsl:text>')"</xsl:text></xsl:attribute>
 	            								</fo:external-graphic>
 	            							</xsl:otherwise>
 	            						</xsl:choose>
@@ -294,7 +294,7 @@
 								|<fo:basic-link text-decoration="underline" color="blue">
 									<xsl:attribute name="external-destination">
                                   			url('<xsl:value-of
-								select="concat('http://', $server/host,':', $server/port, $gui/locService,'/metadata.show?uuid=', $metadata/geonet:info/uuid, '&amp;currTab=simple')" />')
+								select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/locService,'/metadata.show?uuid=', $metadata/geonet:info/uuid, '&amp;currTab=simple')" />')
                               			</xsl:attribute>
 									<xsl:value-of select="$gui/strings/show" />
 								</fo:basic-link>|
@@ -358,7 +358,7 @@
 							<fo:external-graphic>
 								<xsl:attribute name="src">
                                 url('<xsl:value-of
-										select="concat('http://', //server/host,':', //server/port, /root/gui/url,'/images/header-left.jpg')" />')"
+										select="concat(//server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/header-left.jpg')" />')"
                                     </xsl:attribute>
 							</fo:external-graphic>
 					   </fo:block>
@@ -368,7 +368,7 @@
                     		<fo:external-graphic>
 								<xsl:attribute name="src">
                                 url('<xsl:value-of
-										select="concat('http://', //server/host,':', //server/port, /root/gui/url,'/images/header-right.gif')" />')"
+										select="concat(//server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/header-right.gif')" />')"
                                     </xsl:attribute>
 
 							</fo:external-graphic>

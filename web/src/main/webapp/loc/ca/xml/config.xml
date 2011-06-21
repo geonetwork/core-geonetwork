@@ -8,6 +8,7 @@
 	<server>Servidor</server>
 	<host>Servidor</host>
 	<port>Port</port>
+    <protocol>Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Xarxa</network>

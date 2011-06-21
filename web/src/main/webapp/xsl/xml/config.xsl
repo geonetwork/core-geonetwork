@@ -44,6 +44,7 @@
 			</site>
 
 			<server>
+                <protocol><xsl:value-of select="$server/protocol/value"/></protocol>
 				<host><xsl:value-of select="$server/host/value"/></host>
 				<port><xsl:value-of select="$server/port/value"/></port>
 			</server>

@@ -143,6 +143,16 @@
 
 		<div align="left" style="{$style}">
 			<table>
+                <tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/protocol"/></td>
+					<td class="padded">
+                        <select id="server.protocol" class="content">
+                            <option value="http">http</option>
+                            <option value="https">https</option>
+                        </select>
+
+					</td>
+				</tr>
 				<tr>
 					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/host"/></td>
 					<td class="padded"><input id="server.host" class="content" type="text" value="" size="30"/></td>

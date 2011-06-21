@@ -7,6 +7,7 @@
 	<server>Сервер</server>
 	<host>Хост</host>
 	<port>Порт</port>
+    <protocol>Protocol</protocol>
 
 	<intranet>Локальная сеть</intranet>
 	<network>Адрес</network>

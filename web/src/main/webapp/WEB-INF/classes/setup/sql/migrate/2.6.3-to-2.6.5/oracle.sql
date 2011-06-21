@@ -20,5 +20,9 @@ UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='pt';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ca';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
+-- 2.6.5 changes
+
+INSERT INTO Settings VALUES (23,20,'protocol','http');
+
 UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

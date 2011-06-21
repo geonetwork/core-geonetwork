@@ -30,6 +30,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
 		{
 			SITE_NAME         : xml.evalXPath(node, 'site/name'),
 			SITE_ORGAN        : xml.evalXPath(node, 'site/organization'),
+            SERVER_PROTOCOL   : xml.evalXPath(node, 'server/protocol'),
 			SERVER_HOST       : xml.evalXPath(node, 'server/host'),
 			SERVER_PORT       : xml.evalXPath(node, 'server/port'),
 			INTRANET_NETWORK  : xml.evalXPath(node, 'intranet/network'),
@@ -132,6 +133,7 @@ ConfigModel.updateTemp =
 '		<organization>{SITE_ORGAN}</organization>'+
 '	</site>'+
 '	<server>'+
+'		<protocol>{SERVER_PROTOCOL}</protocol>'+
 '		<host>{SERVER_HOST}</host>'+
 '		<port>{SERVER_PORT}</port>'+
 '	</server>'+

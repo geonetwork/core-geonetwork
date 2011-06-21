@@ -21,7 +21,7 @@
     </ows:ServiceIdentification>
     <ows:ServiceProvider>
         <ows:ProviderName>GeoNetwork opensource</ows:ProviderName>
-        <ows:ProviderSite xlink:href="http://$HOST:$PORT$SERVLET"/>
+        <ows:ProviderSite xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET"/>
         <ows:ServiceContact>
             <ows:IndividualName>$IND_NAME</ows:IndividualName>
             <ows:PositionName>$POS_NAME</ows:PositionName>
@@ -48,8 +48,8 @@
         <ows:Operation name="GetCapabilities">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
                 </ows:HTTP>
             </ows:DCP>
             <ows:Parameter name="sections">
@@ -65,8 +65,8 @@
         <ows:Operation name="DescribeRecord">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
+                    <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
                         <ows:Constraint name="PostEncoding">
                             <ows:Value>XML</ows:Value>
                             <ows:Value>SOAP</ows:Value>
@@ -91,16 +91,16 @@
         <ows:Operation name="GetDomain">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
                 </ows:HTTP>
             </ows:DCP>
         </ows:Operation>
         <ows:Operation name="GetRecords">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
+                    <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
                         <ows:Constraint name="PostEncoding">
                             <ows:Value>XML</ows:Value>
                             <ows:Value>SOAP</ows:Value>
@@ -136,8 +136,8 @@
         <ows:Operation name="GetRecordById">
             <ows:DCP>
                 <ows:HTTP>
-                    <ows:Get xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
+                    <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
                         <ows:Constraint name="PostEncoding">
                             <ows:Value>XML</ows:Value>
                             <ows:Value>SOAP</ows:Value>
@@ -169,8 +169,8 @@
         <ows:Operation name="Transaction">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw" />
-					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"  />
+					<ows:Get  xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw" />
+					<ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -178,8 +178,8 @@
 		<ows:Operation name="Harvest">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw" />
-					<ows:Post xlink:href="http://$HOST:$PORT$SERVLET/srv/en/csw"  />
+					<ows:Get  xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/en/csw" />
+					<ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/en/csw"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -199,12 +199,12 @@
 
         <inspire_ds:ExtendedCapabilities>
 			<inspire_common:ResourceLocator>
-				<inspire_common:URL>http://$HOST:$PORT$SERVLET/srv/$LOCALE/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_common:URL>
+				<inspire_common:URL>$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_common:URL>
 				<inspire_common:MediaType>application/vnd.ogc.wms_xml</inspire_common:MediaType>
 			</inspire_common:ResourceLocator>
 
 			<inspire_common:ResourceLocator>
-				<inspire_common:URL>http://$HOST:$PORT$SERVLET</inspire_common:URL>
+				<inspire_common:URL>$PROTOCOL://$HOST:$PORT$SERVLET</inspire_common:URL>
 				<inspire_common:MediaType>text/html</inspire_common:MediaType>
 			</inspire_common:ResourceLocator>
 

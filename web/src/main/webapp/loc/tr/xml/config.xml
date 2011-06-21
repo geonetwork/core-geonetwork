@@ -8,7 +8,8 @@
 	<server>Sunucu(Server)</server>
 	<host>Ana sistem(Host)</host>
 	<port>Bağlantı Noktası(Port)</port>
-	
+	<protocol>Protocol</protocol>
+
 	<intranet>Intranet</intranet>
 	<network>Ağ (Network)</network>
 	<netmask>Netmask***</netmask>

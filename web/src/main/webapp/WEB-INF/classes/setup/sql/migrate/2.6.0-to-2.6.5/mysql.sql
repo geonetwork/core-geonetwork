@@ -146,5 +146,6 @@ UPDATE Languages SET isInspire = 'y', isDefault = 'n' where id ='pt';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='ca';
 UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
+
 UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

@@ -8875,6 +8875,7 @@ INSERT INTO Settings VALUES (16,14,'subVersion','0');
 INSERT INTO Settings VALUES (20,1,'server',NULL);
 INSERT INTO Settings VALUES (21,20,'host','localhost');
 INSERT INTO Settings VALUES (22,20,'port','8080');
+INSERT INTO Settings VALUES (23,20,'protocol','http');
 INSERT INTO Settings VALUES (30,1,'intranet',NULL);
 INSERT INTO Settings VALUES (31,30,'network','127.0.0.1');
 INSERT INTO Settings VALUES (32,30,'netmask','255.0.0.0');
