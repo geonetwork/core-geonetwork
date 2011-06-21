@@ -163,7 +163,7 @@
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
 	<addMode>Add sections</addMode>
 	<replaceMode>Replace sections</replaceMode>
@@ -371,7 +371,7 @@
 	<confirmCancel>Weet u zeker dat u de editor wilt sluiten? (Alle niet bewaarde aanpassingen gaan verloren)</confirmCancel>
     <confirmCancelCreate>Weet u zeker dat u wilt annuleren creëren van deze metadata?</confirmCancelCreate>
 	<confirmDelete>Weet u zeker dat u de metadata wilt verwijderen uit de database?</confirmDelete>
-	<confirmMassiveDelete>Weet u zeker dat u alle $1 geselecteerde metadata wild verwijderen uit de database?</confirmMassiveDelete>
+	<confirmBatchDelete>Weet u zeker dat u alle $1 geselecteerde metadata wild verwijderen uit de database?</confirmBatchDelete>
 	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>
 	<confirmPassword>Bevestig wachtwoord</confirmPassword>
 	<constraintsTab>Beperkingen</constraintsTab>
@@ -568,11 +568,11 @@
 	<mapViewerClose>Sluiten van de viewer</mapViewerClose>
 	<mapViewerLoading>Laden van de viewer...</mapViewerLoading>
 	<mapViewerOpen>Start viewer</mapViewerOpen>
-	<massiveActions>Massieve acties : </massiveActions>
-	<massiveDeleteTitle>Massive Delete Operatie</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Massive New Owner Operatie</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Massive Update Categories Operatie</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operatie</massiveUpdatePrivilegesTitle>
+	<batchActions>Massieve acties : </batchActions>
+	<batchDeleteTitle>Batch Delete Operatie</batchDeleteTitle>
+	<batchNewOwnerTitle>Batch New Owner Operatie</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Batch Update Categories Operatie</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Batch Update Privileges Operatie</batchUpdatePrivilegesTitle>
 	<max>Maximaal</max>
 	<mdRating>Metadata Waardering</mdRating>
 	<mdUpdateError>Fout tijdens bijwerken</mdUpdateError>

@@ -163,7 +163,7 @@
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
 	<addMode>Add sections</addMode>
 	<replaceMode>Replace sections</replaceMode>
@@ -371,7 +371,7 @@
 	<confirmCancel>Tem certeza que quer sair do editor? (Todas as alterações não gravadas perderiam-se)</confirmCancel>
     <confirmCancelCreate>Tem certeza que quer cancelar a criação de metadados?</confirmCancelCreate>
 	<confirmDelete>Tem certeza que quer realmente apagar os metadados do banco de dados?</confirmDelete>
-	<confirmMassiveDelete>Tem certeza que quer realmente apagar todos os $1 metadados seleccionados do banco de dados?</confirmMassiveDelete>
+	<confirmBatchDelete>Tem certeza que quer realmente apagar todos os $1 metadados seleccionados do banco de dados?</confirmBatchDelete>
 	<confirmNewPassword>Confirmar palavra-passe nova</confirmNewPassword>
 	<confirmPassword>Confirmar palavra-passe</confirmPassword>
 	<constraintsTab>Restrição</constraintsTab>
@@ -560,11 +560,11 @@
 	<mapViewerClose>Fechar viewer de mapa</mapViewerClose>
 	<mapViewerLoading>A carregar viewer de mapa...</mapViewerLoading>
 	<mapViewerOpen>Abrir viewer de mapa</mapViewerOpen>
-	<massiveActions>Multi acções:</massiveActions>
-	<massiveDeleteTitle>Operação de multi-apagar</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Operação de multi-dono novo</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Operação de multi-actualização de categorias</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Operação de multi-actualização de privilégios</massiveUpdatePrivilegesTitle>
+	<batchActions>Multi acções:</batchActions>
+	<batchDeleteTitle>Operação de multi-apagar</batchDeleteTitle>
+	<batchNewOwnerTitle>Operação de multi-dono novo</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Operação de multi-actualização de categorias</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Operação de multi-actualização de privilégios</batchUpdatePrivilegesTitle>
 	<max>Máximo</max>
 	<mdRating>Avaliação de dados</mdRating>
 	<mdUpdateError>Erro de actualização</mdUpdateError>

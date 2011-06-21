@@ -164,7 +164,7 @@
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
 	<addMode>Add sections</addMode>
 	<replaceMode>Replace sections</replaceMode>
@@ -371,7 +371,7 @@
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
     <confirmCancelCreate>هل أنت متأكد أنك تريد إلغاء خلق هذا التعريف؟</confirmCancelCreate>
 	<confirmDelete>هل أنت متأكد من مسح البيانات الاساسية meta data من قاعدة البيانات؟</confirmDelete>
-	<confirmMassiveDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmMassiveDelete>
+	<confirmBatchDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmBatchDelete>
 	<confirmNewPassword>أعادة تأكيد كلمة المرور</confirmNewPassword>
 	<confirmPassword>إعادة تأكيد كلمة المرور</confirmPassword>
 	<constraintsTab>المعوقات</constraintsTab>
@@ -564,11 +564,11 @@
 	<mapViewerClose>Close Map Viewer</mapViewerClose>
 	<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
 	<mapViewerOpen>Open Map Viewer</mapViewerOpen>
-	<massiveActions>Massive actions:</massiveActions>
-	<massiveDeleteTitle>Massive Delete Operation</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Massive New Owner Operation</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Massive Update Categories Operation</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operation</massiveUpdatePrivilegesTitle>
+	<batchActions>Batch actions:</batchActions>
+	<batchDeleteTitle>Batch Delete Operation</batchDeleteTitle>
+	<batchNewOwnerTitle>Batch New Owner Operation</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Batch Update Categories Operation</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Batch Update Privileges Operation</batchUpdatePrivilegesTitle>
 	<max>الحد الأعلى</max>
 	<mdRating>Metadata Rating</mdRating>
 	<mdUpdateError>تحرير الخطأ</mdUpdateError>

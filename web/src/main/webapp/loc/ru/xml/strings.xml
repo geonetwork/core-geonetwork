@@ -163,7 +163,7 @@
 	<updateChildren>Изменить подчиненные</updateChildren>
 	<updateChildrenOk>Подчиненные обновлены</updateChildrenOk>
 	<updateChildrenFailed>Ошибка обновления подчиненных</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Обновление подчиненных</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Обновление подчиненных</batchUpdateChildrenTitle>
 	<updateMode>Выбор стратегии, применяемой для обновления подчиненных записей метаданных из родительских : </updateMode>
 	<addMode>Добавить разделы</addMode>
 	<replaceMode>Заменить разделы</replaceMode>
@@ -377,7 +377,7 @@ ISO 19115 не позволяет иметь более одного.
 	<confirmCancel>Вы уверены, что хотите выйти из редактора? (Вы потеряете все несохраненные изменения)</confirmCancel>
     <confirmCancelCreate>Вы уверены, что хотите отменить создание этих метаданных?</confirmCancelCreate>
 	<confirmDelete>Вы уверены, что хотите удалить метаданные из базы данных?</confirmDelete>
-	<confirmMassiveDelete>Вы уверены, что хотите удалить все выбранные метаданные из базы данных?</confirmMassiveDelete>
+	<confirmBatchDelete>Вы уверены, что хотите удалить все выбранные метаданные из базы данных?</confirmBatchDelete>
 	<confirmNewPassword>Подтверждение нового пароля</confirmNewPassword>
 	<confirmPassword>Подтверждение пароля</confirmPassword>
 	<constraintsTab>Ограничения</constraintsTab>
@@ -566,11 +566,11 @@ ISO 19115 не позволяет иметь более одного.
 	<mapViewerClose>Закрыть просмотр карт</mapViewerClose>
 	<mapViewerLoading>Загрузка просмотра...</mapViewerLoading>
 	<mapViewerOpen>Открыть просмотр карт</mapViewerOpen>
-	<massiveActions>Массовые действия:</massiveActions>
-	<massiveDeleteTitle>Массовая операция удаления</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Массовая операция назначения нового собственника</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Массовая операция изменения категории</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Массовая операция изменения привилегий</massiveUpdatePrivilegesTitle>
+	<batchActions>Массовые действия:</batchActions>
+	<batchDeleteTitle>Массовая операция удаления</batchDeleteTitle>
+	<batchNewOwnerTitle>Массовая операция назначения нового собственника</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Массовая операция изменения категории</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Массовая операция изменения привилегий</batchUpdatePrivilegesTitle>
 	<max>Максимум</max>
 	<mdRating>Рейтинг метаданных</mdRating>
 	<mdUpdateError>Ошибка обновления</mdUpdateError>

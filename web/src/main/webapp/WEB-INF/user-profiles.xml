@@ -153,12 +153,12 @@
 		<allow service="xml.ownership.groups"/>
 		<allow service="xml.ownership.transfer"/>
 
-		<!-- Massive New Owner services -->
-		<allow service="metadata.massive.newowner"/>
-		<allow service="metadata.massive.newowner.form"/>
+		<!-- Batch New Owner services -->
+		<allow service="metadata.batch.newowner"/>
+		<allow service="metadata.batch.newowner.form"/>
 		<allow service="xml.usergroups.list"/>
 		
-		<allow service="metadata.massive.processing"/>        
+		<allow service="metadata.batch.processing"/>
 		
 	</profile>
 
@@ -179,8 +179,8 @@
 		<allow service="metadata.category.form"/>
 		<allow service="category.list"/>
 		<allow service="category.get"/>
-		<allow service="metadata.massive.category.form"/>
-		<allow service="metadata.massive.update.categories"/>
+		<allow service="metadata.batch.category.form"/>
+		<allow service="metadata.batch.update.categories"/>
 
 		<!-- Allow to add a metadata record -->
 		<allow service="metadata.add"/>
@@ -189,13 +189,13 @@
 		<!-- These are the metadata privileges forms -->
 		<allow service="metadata.admin"/>
 		<allow service="metadata.admin.form"/>
-		<allow service="metadata.massive.admin.form"/>
-		<allow service="metadata.massive.update.privileges"/>
+		<allow service="metadata.batch.admin.form"/>
+		<allow service="metadata.batch.update.privileges"/>
 
 		<!-- Allow to delete a metadata record -->
 		<allow service="metadata.delete"/>
         <allow service="metadata.quiet.delete"/>
-		<allow service="metadata.massive.delete"/>
+		<allow service="metadata.batch.delete"/>
 
 		<allow service="metadata.duplicate.form"/>
 		<allow service="metadata.create.form"/>
@@ -213,8 +213,8 @@
 		<allow service="metadata.update.finish"/>
 		<allow service="metadata.update.forget"/>
 		<allow service="metadata.update.forgetandfinish"/>
-		<allow service="metadata.massive.children.form"/>
-		<allow service="metadata.massive.update.children"/>
+		<allow service="metadata.batch.children.form"/>
+		<allow service="metadata.batch.update.children"/>
 		<allow service="metadata.validate"/>
 		<allow service="xml.metadata.validate"/>
 		<allow service="metadata.processing"/>

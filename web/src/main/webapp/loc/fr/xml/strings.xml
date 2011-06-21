@@ -167,7 +167,7 @@
 	<updateChildren>Mettre à jour les enfants</updateChildren>
 	<updateChildrenOk>Enfants mis à jour</updateChildrenOk>
 	<updateChildrenFailed>Echec de la mise à jour</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Mettre à jour les enfants</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Mettre à jour les enfants</batchUpdateChildrenTitle>
 	<updateMode>Choisir la stratégie de mise à jour : </updateMode>
 	<addMode>Ajouter les sections</addMode>
 	<replaceMode>Remplacer les sections</replaceMode>
@@ -377,7 +377,7 @@
 	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
     <confirmCancelCreate>Etes-vous sûr de vouloir annuler la création de ces métadonnées?</confirmCancelCreate>
 	<confirmDelete js="true">Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete> <!-- Check if js=true is required -->
-	<confirmMassiveDelete>Êtes-vous sûr de vouloir supprimer toutes les $1 métadonnées sélectionnées ?</confirmMassiveDelete>
+	<confirmBatchDelete>Êtes-vous sûr de vouloir supprimer toutes les $1 métadonnées sélectionnées ?</confirmBatchDelete>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>
 	<confirmPassword>Confirmer le mot de passe</confirmPassword>
 	<constraintsTab>Contraintes</constraintsTab>
@@ -569,11 +569,11 @@
 	<mapViewerClose>Fermer la carte</mapViewerClose>
 	<mapViewerLoading>Chargement en cours ...</mapViewerLoading>
 	<mapViewerOpen>Afficher la carte</mapViewerOpen>
-	<massiveActions>Autre actions :</massiveActions>
-	<massiveDeleteTitle>Opération de suppression</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Opération de changement d\'auteur</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Opération de changement de catégories</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Opération de changement de privilèges</massiveUpdatePrivilegesTitle>
+	<batchActions>Autre actions :</batchActions>
+	<batchDeleteTitle>Opération de suppression</batchDeleteTitle>
+	<batchNewOwnerTitle>Opération de changement d\'auteur</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Opération de changement de catégories</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Opération de changement de privilèges</batchUpdatePrivilegesTitle>
 	<max>Maximum</max>
 	<mdRating>Note de la métadonnée</mdRating>
 	<mdUpdateError>Erreur de mise à jour</mdUpdateError>

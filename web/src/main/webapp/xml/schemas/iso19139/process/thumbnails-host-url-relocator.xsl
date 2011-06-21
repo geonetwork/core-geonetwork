@@ -9,7 +9,7 @@
     * newUrlPrefix=http://newhost.org : prefix to be replaced by.
     
     Calling the process using:
-    http://localhost:8082/geonetwork/srv/eng/metadata.massive.processing?process=thumbnails-host-url-relocator&urlPrefix=http://localhost&newUrlPrefix=http://newhost.org
+    http://localhost:8082/geonetwork/srv/eng/metadata.batch.processing?process=thumbnails-host-url-relocator&urlPrefix=http://localhost&newUrlPrefix=http://newhost.org
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" version="1.0">
 

@@ -165,7 +165,7 @@
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
 	<addMode>Add sections</addMode>
 	<replaceMode>Replace sections</replaceMode>
@@ -372,7 +372,7 @@
 	<confirmCancel>¿Está seguro de que desea abandonar el editor? (Perderá todos los cambios no guardados)</confirmCancel>
     <confirmCancelCreate>¿Está seguro que desea cancelar la creación de estos metadatos?</confirmCancelCreate>
 	<confirmDelete>¿Está seguro de que desea borrar el Metadato de la Base de Datos?</confirmDelete>
-	<confirmMassiveDelete>¿Está seguro de que desea borrar todos los $1 Metadatos seleccionados de la Base de Datos?</confirmMassiveDelete>
+	<confirmBatchDelete>¿Está seguro de que desea borrar todos los $1 Metadatos seleccionados de la Base de Datos?</confirmBatchDelete>
 	<confirmNewPassword>Confirmar nueva contraseña</confirmNewPassword>
 	<confirmPassword>Confirmar la Contraseña</confirmPassword>
 	<constraintsTab>Restricciones</constraintsTab>
@@ -561,11 +561,11 @@
 	<mapViewerClose>Cerrar visualizador de mapas</mapViewerClose>
 	<mapViewerLoading>Cargando visualizador de mapas...</mapViewerLoading>
 	<mapViewerOpen>Abrir el visualizador de mapas</mapViewerOpen>
-	<massiveActions>Massive actions:</massiveActions>
-	<massiveDeleteTitle>Massive Delete Operation</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Massive New Owner Operation</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Massive Update Categories Operation</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operation</massiveUpdatePrivilegesTitle>
+	<batchActions>Batch actions:</batchActions>
+	<batchDeleteTitle>Batch Delete Operation</batchDeleteTitle>
+	<batchNewOwnerTitle>Batch New Owner Operation</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Batch Update Categories Operation</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Batch Update Privileges Operation</batchUpdatePrivilegesTitle>
 	<max>Máximo</max>
 	<mdRating>Rating de metadatos</mdRating>
 	<mdUpdateError>Actualizar error</mdUpdateError>

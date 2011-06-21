@@ -249,10 +249,10 @@ function get_cookie ( cookie_name )
 
 
 /**********************************************************
- * Massive Operations are called through this routine
+ * Batch Operations are called through this routine
  **********************************************************/
 
-	function massiveOperation(service, title, width, message)
+	function batchOperation(service, title, width, message)
 	{
 
 		if (message != null) {
@@ -319,10 +319,10 @@ function get_cookie ( cookie_name )
 	}
 
 /**********************************************************************
- * Massive Ownership Transfer stuff
+ * Batch Ownership Transfer stuff
  **********************************************************************/
 
-	function checkMassiveNewOwner(action,title) {
+	function checkBatchNewOwner(action,title) {
 		if ($('user').value == '') {
 			alert(translate("selectNewOwner"));
 			return false;
@@ -331,7 +331,7 @@ function get_cookie ( cookie_name )
 			alert(translate("selectOwnerGroup"));
 			return false;
 		}
-		Modalbox.show(getGNServiceURL(action),{title: title, params: $('massivenewowner').serialize(true), afterHide: function() {
+		Modalbox.show(getGNServiceURL(action),{title: title, params: $('batchnewowner').serialize(true), afterHide: function() {
                 if ($("simple_search_pnl").visible()) {
 
                     runSimpleSearch();

@@ -123,7 +123,7 @@
 					</ul>
 					<br/>
 					<div align="center">
-						<button class="content" onclick="updateChildren('children','metadata.massive.update.children','{/root/gui/strings/updateChildrenFailed}')">
+						<button class="content" onclick="updateChildren('children','metadata.batch.update.children','{/root/gui/strings/updateChildrenFailed}')">
 							<xsl:value-of select="/root/gui/strings/updateChildren"/>
 						</button>
 					</div>

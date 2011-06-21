@@ -119,7 +119,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>
 
-                <!-- Editor JS is still required here at least for massive operation -->
+                <!-- Editor JS is still required here at least for batch operation -->
         		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.map.js"></script>              
             </xsl:otherwise>

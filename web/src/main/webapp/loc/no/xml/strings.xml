@@ -162,7 +162,7 @@
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
 	<addMode>Add sections</addMode>
 	<replaceMode>Replace sections</replaceMode>
@@ -299,7 +299,7 @@
 	<completeTabEditor>Avansert editor</completeTabEditor>
 	<confirmCancel>Er du sikker på at du vil gå ut av editoren? (Alt som ikke er lagret blir borte)</confirmCancel>
 	<confirmDelete>Er du sikker på at du vil slette metadataene fra databasen?</confirmDelete>
-	<confirmMassiveDelete>Er du sikker på at du vil slette alle valgte metadata fra databasen?</confirmMassiveDelete>
+	<confirmBatchDelete>Er du sikker på at du vil slette alle valgte metadata fra databasen?</confirmBatchDelete>
 	<confirmNewPassword>Bekreft nytt passord</confirmNewPassword>
 	<confirmPassword>Bekreft passord</confirmPassword>
 	<constraintsTab>Begrensninger</constraintsTab>
@@ -484,11 +484,11 @@
 	<mapViewerClose>Lukk kartvisning</mapViewerClose>
 	<mapViewerLoading>Laster kartvisning...</mapViewerLoading>
 	<mapViewerOpen>Åpne kartvisning</mapViewerOpen>
-	<massiveActions>Masseoperasjoner:</massiveActions>
-	<massiveDeleteTitle>Massivsletteoperasjon</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Massive New Owner Operation</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Massive Update Categories Operation</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Massive Update Privileges Operation</massiveUpdatePrivilegesTitle>
+	<batchActions>Masseoperasjoner:</batchActions>
+	<batchDeleteTitle>Massivsletteoperasjon</batchDeleteTitle>
+	<batchNewOwnerTitle>Batch New Owner Operation</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Batch Update Categories Operation</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Batch Update Privileges Operation</batchUpdatePrivilegesTitle>
 	<max>Maksimum</max>
 	<mdRating>Data vurdering</mdRating>
 	<mdUpdateError>Oppdateringsfeil</mdUpdateError>

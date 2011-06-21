@@ -138,8 +138,8 @@
 							<tr width="100%">
 								<td align="center" colspan="8">
 									<xsl:choose>
-										<xsl:when test="contains(/root/gui/reqService,'metadata.massive')">
-											<button class="content" onclick="checkBoxModalUpdate('privileges','metadata.massive.update.privileges',true,'{concat(/root/gui/strings/results,' ',/root/gui/strings/massiveUpdatePrivilegesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+										<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">
+											<button class="content" onclick="checkBoxModalUpdate('privileges','metadata.batch.update.privileges',true,'{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdatePrivilegesTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
 										</xsl:when>
 										<xsl:otherwise>
 											<button class="content" onclick="checkBoxModalUpdate('privileges','metadata.admin')"><xsl:value-of select="/root/gui/strings/submit"/></button>

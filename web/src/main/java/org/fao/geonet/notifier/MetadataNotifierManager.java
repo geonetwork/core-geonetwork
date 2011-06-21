@@ -60,7 +60,7 @@ public class MetadataNotifierManager {
      *
      * @throws MetadataNotifierException
      */
-    public void updateMetadataMassive(Dbms dbms, GeonetContext gc) throws MetadataNotifierException {
+    public void updateMetadataBatch(Dbms dbms, GeonetContext gc) throws MetadataNotifierException {
         Log.debug("MetadataNotifierManager", "updateMetadata unregistered");
 
         loadNotifiers(dbms);
@@ -106,7 +106,7 @@ public class MetadataNotifierManager {
 
             }
             catch (Exception ex) {
-                Log.error("MetadataNotifierManager", "updateMetadataMassive ERROR: " + ex.getMessage());
+                Log.error("MetadataNotifierManager", "updateMetadataBatch ERROR: " + ex.getMessage());
                 ex.printStackTrace();
             }
 

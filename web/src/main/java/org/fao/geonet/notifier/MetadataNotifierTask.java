@@ -18,7 +18,7 @@ public class MetadataNotifierTask implements Runnable {
 	public void run() {
 		try {
             Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-			gc.getMetadataNotifier().updateMetadataMassive(dbms, gc);
+			gc.getMetadataNotifier().updateMetadataBatch(dbms, gc);
 		}
 		catch(Exception x) {
 			System.out.println(x.getMessage());

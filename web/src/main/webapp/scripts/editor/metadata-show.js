@@ -152,7 +152,7 @@
 				);
 			}
 			
-			function massiveUpdateChildren(service, title, width) {
+			function batchUpdateChildren(service, title, width) {
 				var url = getGNServiceURL(service);
 				Modalbox.show(url,{title: title, width: width});
 			}

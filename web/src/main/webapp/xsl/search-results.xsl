@@ -59,7 +59,7 @@
 
 		    	<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
 
-                <!-- Editor JS is still required here at least for massive operation -->
+                <!-- Editor JS is still required here at least for batch operation -->
         		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
 
             </xsl:otherwise>

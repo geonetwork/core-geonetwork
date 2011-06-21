@@ -163,7 +163,7 @@
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
 	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Update children</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
 	<addMode>Add sections</addMode>
 	<replaceMode>Replace sections</replaceMode>
@@ -370,7 +370,7 @@
 	<confirmCancel>Sind Sie sicher, dass Sie die Aktione abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
     <confirmCancelCreate>Sind Sie sicher, Sie stornieren möchten Erstellung dieser Metadaten?</confirmCancelCreate>
 	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
-	<confirmMassiveDelete>Sind Sie sicher, dass Sie alle $1 ausgewählten Metadatensätze löschen wollen?</confirmMassiveDelete>
+	<confirmBatchDelete>Sind Sie sicher, dass Sie alle $1 ausgewählten Metadatensätze löschen wollen?</confirmBatchDelete>
 	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
 	<confirmPassword>Passwort bestätigen</confirmPassword>
 	<constraintsTab>Grenzen</constraintsTab>
@@ -559,11 +559,11 @@
 	<mapViewerClose>Kartenviewer schließen</mapViewerClose>
 	<mapViewerLoading>Kartenviewer wird geladen...</mapViewerLoading>
 	<mapViewerOpen>Kartenviewer öffnen</mapViewerOpen>
-	<massiveActions>Massenaktionen:</massiveActions>
-	<massiveDeleteTitle>Massen-Lösch-Operation</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Massen-Neuer-Benutzer-Operation</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Massen-Update-Kategorien-Operation</massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Massen-Update-Privilegien-Operation</massiveUpdatePrivilegesTitle>
+	<batchActions>Massenaktionen:</batchActions>
+	<batchDeleteTitle>Massen-Lösch-Operation</batchDeleteTitle>
+	<batchNewOwnerTitle>Massen-Neuer-Benutzer-Operation</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Massen-Update-Kategorien-Operation</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Massen-Update-Privilegien-Operation</batchUpdatePrivilegesTitle>
 	<max>Maximum</max>
 	<mdRating>Metadaten Bewertung</mdRating>
 	<mdUpdateError>Updatefehler</mdUpdateError>

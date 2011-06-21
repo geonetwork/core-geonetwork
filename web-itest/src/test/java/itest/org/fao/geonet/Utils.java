@@ -240,7 +240,7 @@ public class Utils {
 			final HttpClient c = new HttpClient();
 			Utils.sendRequest("xml.search", true, c);
 			Utils.sendRequest("metadata.select?selected=add-all", false, c);
-			Utils.sendRequest("metadata.massive.delete", false, c);
+			Utils.sendRequest("metadata.batch.delete", false, c);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

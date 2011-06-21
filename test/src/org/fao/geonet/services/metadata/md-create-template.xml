@@ -76,9 +76,9 @@
 					<confirmDelete>Are you sure you want to Delete the Metadata from the
 						Database?
 					</confirmDelete>
-					<confirmMassiveDelete>Are you sure you want to Delete all selected Metadata from the
+					<confirmBatchDelete>Are you sure you want to Delete all selected Metadata from the
 						Database?
-					</confirmMassiveDelete>
+					</confirmBatchDelete>
 					<confirmNewPassword>Confirm new password</confirmNewPassword>
 					<confirmPassword>Confirm password</confirmPassword>
 					<constraintsTab>Constraints</constraintsTab>
@@ -403,7 +403,7 @@
 					<mapViewerClose>Close Map Viewer</mapViewerClose>
 					<mapViewerLoading>Loading Map Viewer...</mapViewerLoading>
 					<mapViewerOpen>Open Map Viewer</mapViewerOpen>
-					<massiveActions>Massive actions :</massiveActions>
+					<batchActions>Batch actions :</batchActions>
 					<max>Maximum</max>
 					<mdRating>Data Rating</mdRating>
 					<mdUpdateError>Update error</mdUpdateError>
