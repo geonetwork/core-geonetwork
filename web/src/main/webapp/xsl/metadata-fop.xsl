@@ -192,7 +192,7 @@
             <fo:block>
               <fo:external-graphic content-width="35pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat('http://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')"
+                    select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')"
                   />')" </xsl:attribute>
               </fo:external-graphic>
             </fo:block>
@@ -303,7 +303,7 @@
               <xsl:attribute name="src">
                 <xsl:text>url('</xsl:text>
                 <xsl:value-of
-                  select="concat('http://', $server/host,':', $server/port, $metadata/image[1])"/>
+                  select="concat($server/protocol, '://', $server/host,':', $server/port, $metadata/image[1])"/>
                 <xsl:text>')"</xsl:text>
               </xsl:attribute>
             </fo:external-graphic>
@@ -331,12 +331,12 @@
         <xsl:choose>
           <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of
-                select="concat('http://', $server/host,':', $server/port, /root/gui/url,'?uuid=', $metadata/geonet:info/uuid)"
+                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url,'?uuid=', $metadata/geonet:info/uuid)"
                 />') </xsl:attribute>
               <xsl:value-of select="$gui/strings/show"/>
           </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
             <xsl:attribute name="external-destination"> url('<xsl:value-of
-              select="concat('http://', $server/host,':', $server/port, /root/gui/url, '/srv/en/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
+              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/en/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
             <xsl:value-of select="$gui/strings/show"/> (XML)
           </fo:basic-link> | </xsl:when>
@@ -387,7 +387,7 @@
               padding-left="4pt">
               <fo:external-graphic padding-right="4pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat('http://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
+                    select="concat( //server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
                   />')" </xsl:attribute>
               </fo:external-graphic>
               <xsl:value-of select="upper-case(/root/gui/env/site/name)"/> (<xsl:value-of

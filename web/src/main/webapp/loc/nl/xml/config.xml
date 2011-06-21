@@ -8,7 +8,8 @@
 	<server>Server</server>
 	<host>Host</host>
 	<port>Poort</port>
-	
+	<protocol>Protocol</protocol>
+
 	<intranet>Intranet</intranet>
 	<network>Netwerk</network>
 	<netmask>Netmask</netmask>

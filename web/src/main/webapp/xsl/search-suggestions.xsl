@@ -3,7 +3,7 @@
  <xsl:output method="text" indent="no" media-type="application/json"/>
 
  <xsl:variable name="siteURL"
-  select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port, /root/gui/locService)"/>
+  select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port, /root/gui/locService)"/>
 
  <xsl:template match="/">
   ["<xsl:value-of select="/root/request/q"/>"

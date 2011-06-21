@@ -14,11 +14,12 @@
 	
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata.xsl"/>
-	
+
+    <xsl:variable name="protocol" select="/root/gui/env/server/protocol" />
 	<xsl:variable name="host" select="/root/gui/env/server/host" />
 	<xsl:variable name="port" select="/root/gui/env/server/port" />
-	<xsl:variable name="baseURL" select="concat('http://',$host,':',$port,/root/gui/url)" />
-	<xsl:variable name="serverUrl" select="concat('http://',$host,':',$port,/root/gui/locService)" />
+	<xsl:variable name="baseURL" select="concat($protocol,'://',$host,':',$port,/root/gui/url)" />
+	<xsl:variable name="serverUrl" select="concat($protocol,'://',$host,':',$port,/root/gui/locService)" />
 
 	<xsl:template mode="css" match="/">
 		<xsl:call-template name="geoCssHeader"/>

@@ -74,10 +74,11 @@ public class SettingInfo
 
 	public String getSiteUrl()
 	{
+        String protocol = sm.getValue("system/server/protocol");
 		String host = sm.getValue("system/server/host");
 		String port = sm.getValue("system/server/port");
 
-		StringBuffer sb = new StringBuffer("http://");
+		StringBuffer sb = new StringBuffer(protocol + "://");
 
 		sb.append(host);
 

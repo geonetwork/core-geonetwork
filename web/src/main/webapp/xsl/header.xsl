@@ -28,7 +28,7 @@
 		<script language="JavaScript" type="text/javascript">
 			var Env = new Object();
 
-			Env.host = "http://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/>";
+			Env.host = "<xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/>";
 			Env.locService= "<xsl:value-of select="/root/gui/locService"/>";
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";

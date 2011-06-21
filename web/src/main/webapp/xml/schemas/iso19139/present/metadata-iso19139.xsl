@@ -3158,7 +3158,7 @@
 					<xsl:element name="link">
 						<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
 						<xsl:attribute name="href">
-							<xsl:value-of select="concat('http://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
+							<xsl:value-of select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
 						</xsl:attribute>
 						<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
 						<xsl:attribute name="type">application/vnd.google-earth.kml+xml</xsl:attribute>

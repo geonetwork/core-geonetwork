@@ -103,6 +103,15 @@ function ConfigView(strLoader)
         }
     });
 
+    Event.observe($('server.protocol'), 'change', function() {
+        if ($('server.protocol').value == 'https') {
+            $('server.port').value = '443';
+        } else {
+            $('server.port').value = '8080';
+        }
+
+    });
+
     Event.observe($('metadata.enableSimpleView'), 'click', function() {
         if (!$('metadata.enableSimpleView').checked) {
             $("metadata.defaultView.Simple").hide();
@@ -171,7 +180,8 @@ ConfigView.prototype.init = function()
 ConfigView.prototype.setData = function(data)
 {
 	$('site.name')  .value = data['SITE_NAME'];
-	$('site.organ') .value = data['SITE_ORGAN'];	
+	$('site.organ') .value = data['SITE_ORGAN'];
+    $('server.protocol').value = data['SERVER_PROTOCOL'];
 	$('server.host').value = data['SERVER_HOST'];
 	$('server.port').value = data['SERVER_PORT'];
 	
@@ -285,7 +295,8 @@ ConfigView.prototype.getData = function()
 	var data =
 	{
 		SITE_NAME   : $('site.name')  .value,	
-		SITE_ORGAN  : $('site.organ') .value,		
+		SITE_ORGAN  : $('site.organ') .value,
+        SERVER_PROTOCOL : $('server.protocol').value,
 		SERVER_HOST : $('server.host').value,
 		SERVER_PORT : $('server.port').value,
 		

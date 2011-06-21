@@ -36,6 +36,7 @@
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>
+    <protocol>Protocol</protocol>
 
 	<searchStats>Statistique sur les recherches</searchStats>
 

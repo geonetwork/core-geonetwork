@@ -27,11 +27,11 @@
 								<xsl:with-param name="uuid" select="$uuid"/>
 							</xsl:call-template>
 						</xsl:variable>
-						http://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of select="$metadataUrlValue"/>
+						<xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of select="$metadataUrlValue"/>
 					</xsl:when>
 					
 					<xsl:otherwise>
-						http://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/?uuid=<xsl:value-of select="$uuid"/>									
+						<xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/?uuid=<xsl:value-of select="$uuid"/>
 					</xsl:otherwise>
 				</xsl:choose>
 				</loc>

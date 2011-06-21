@@ -15,13 +15,13 @@
 		   </Url>
 		   <Url type="text/html">
 			<xsl:attribute name="template">
-			<xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/main.search?')"/>
+			<xsl:value-of select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/locService,'/main.search?')"/>
 			<xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
 			</xsl:attribute>
 		   </Url>
 		   <Url type="application/x-suggestions+json">
 		   	<xsl:attribute name="template">
-				<xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/main.search.suggest?')"/>
+				<xsl:value-of select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/locService,'/main.search.suggest?')"/>
 				<xsl:text>q={searchTerms}</xsl:text>
 			</xsl:attribute>
 		   </Url>
