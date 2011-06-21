@@ -98,7 +98,7 @@
 					
 				</div>		
 				<xsl:if test="/root/response/summary/@count > 0">
-					<!-- filtered search, massive actions and print pdf - - -->
+					<!-- filtered search, batch actions and print pdf - - -->
 					<div style="float:right;">	
 					 <xsl:if test="$remote=false()">
 						<xsl:value-of select="/root/gui/strings/select" />
@@ -126,28 +126,28 @@
 						</button>
 		
 						<div id="oAcOsEle" name="oAcOsEle" class="oAcEle" style="display:none;" onClick="oActions('oAcOs');">
-							<xsl:if test="/root/gui/services/service[starts-with(@name,'metadata.massive')]">
-								<xsl:if test="/root/gui/services/service/@name='metadata.massive.delete'">
-									<button onclick="massiveOperation('metadata.massive.delete','{/root/gui/strings/massiveDeleteTitle}',600,
-									    replaceStringParams('{/root/gui/strings/confirmMassiveDelete}',[$('nbselected').innerHTML]))">
+							<xsl:if test="/root/gui/services/service[starts-with(@name,'metadata.batch')]">
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.delete'">
+									<button onclick="batchOperation('metadata.batch.delete','{/root/gui/strings/batchDeleteTitle}',600,
+									    replaceStringParams('{/root/gui/strings/confirmBatchDelete}',[$('nbselected').innerHTML]))">
 										<xsl:value-of select="/root/gui/strings/delete"/>
 									</button>
 								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.massive.newowner'">
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.newowner'">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="massiveOperation('metadata.massive.newowner.form','{/root/gui/strings/massiveNewOwnerTitle}',800)">
+									<button onclick="batchOperation('metadata.batch.newowner.form','{/root/gui/strings/batchNewOwnerTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/newOwner"/>
 									</button>
 								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.categories' and /root/gui/config/category">
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.categories' and /root/gui/config/category">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',800)">
+									<button onclick="batchOperation('metadata.batch.category.form','{/root/gui/strings/batchUpdateCategoriesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updateCategories"/>
 									</button>
 								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.privileges'">
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.privileges'">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="massiveOperation('metadata.massive.admin.form','{/root/gui/strings/massiveUpdatePrivilegesTitle}',800)">
+									<button onclick="batchOperation('metadata.batch.admin.form','{/root/gui/strings/batchUpdatePrivilegesTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 									</button>
 								</xsl:if>
