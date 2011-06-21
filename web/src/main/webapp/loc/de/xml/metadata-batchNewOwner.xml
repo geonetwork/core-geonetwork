@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<groups>Wählen Sie eine Gruppe dieses Benutzers</groups>
+	<notfound>Metadatensätze nicht gefunden</notfound>
+	<notowner>Metadatensatz nicht übertragen, da Sie nicht der Besitzer sind</notowner>
+	<updated>Rechte des Metadatensatz zu neuen Benutzer übertragen</updated>
+	<resultstitle>Ergebnisse der Rechteveränderungen</resultstitle>
+	<users>Wählen Sie den neuen Besitzer</users>
+</strings>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<groups>Então escolha um grupo a qual este utilizador pertence</groups>
+	<notfound>Registos de metadados não encontrados</notfound>
+	<notowner>Registos de metadados não foram transferidos, porque você não é o dono</notowner>
+	<updated>Registos de metadados foram transferidos a um dono novo</updated>
+	<resultstitle>Resultados da transferência de direitos a um dono novo</resultstitle>
+	<users>Escolha o dono novo</users>
+</strings>

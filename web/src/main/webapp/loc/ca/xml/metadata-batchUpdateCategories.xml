@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>No s'han trobat les metadades</notfound>
+	<notowner>Hi ha metadades on no s'ha pogut modificat la categoria, donat que no en sou el propietari</notowner>
+	<updated>Metadades amb la categoria actualitzada</updated>
+	<resultstitle>Resultat de l'actualització de la categoria</resultstitle>
+</strings>

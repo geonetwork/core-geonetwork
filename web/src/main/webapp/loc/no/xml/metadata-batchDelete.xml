@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Metadata ikke funnet</notfound>
+	<notowner>Metadata som ikke ble slettet fordi det ikke er nok rettigheter (feil eierskap)</notowner>
+	<updated>Metadata slettet</updated>
+</strings>
