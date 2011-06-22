@@ -78,7 +78,14 @@
 			<xsl:apply-templates select="dct:license"/>
 			<xsl:apply-templates select="dct:mediator"/>
 			<xsl:apply-templates select="dct:medium"/>
-			<dct:modified><xsl:value-of select="/root/env/changeDate"/></dct:modified>
+            <xsl:choose>
+ 		        <xsl:when test="/root/env/changeDate">
+ 		            <dct:modified><xsl:value-of select="/root/env/changeDate"/></dct:modified>
+                 </xsl:when>
+ 		         <xsl:otherwise>
+ 		            <xsl:apply-templates select="dct:modified"/>
+                 </xsl:otherwise>
+            </xsl:choose>
 			<xsl:apply-templates select="dct:provenance"/>
 			<xsl:apply-templates select="dct:references"/>
 			<xsl:apply-templates select="dct:replaces"/>

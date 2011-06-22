@@ -36,7 +36,16 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="mdDateSt">
-		 <xsl:copy><xsl:value-of select="/root/env/changeDate"/></xsl:copy>
+        <xsl:choose>
+            <xsl:when test="/root/env/changeDate">
+                <xsl:copy>
+                    <xsl:value-of select="/root/env/changeDate"/>
+                </xsl:copy>
+ 		    </xsl:when>
+ 		    <xsl:otherwise>
+ 		        <xsl:copy-of select="."/>
+ 		    </xsl:otherwise>
+        </xsl:choose>
 	</xsl:template>
 
 	<!-- ================================================================= -->
