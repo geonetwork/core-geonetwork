@@ -747,12 +747,12 @@ public class SearchManager
 
 		try {
 			TermEnum enu = reader.terms(new Term(fld, ""));
-			while (enu.next())
-			{
+			if (enu.term()==null) return terms;
+			do	{
 				Term term = enu.term();
-				if (term.field().equals(fld))
-					terms.add(enu.term().text());
-			}
+				if (!term.field().equals(fld)) break;
+				terms.add(enu.term().text());
+			} while (enu.next());
 			return terms;
 		} finally {
 			releaseIndexReader(reader);
