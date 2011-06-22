@@ -91,6 +91,7 @@
 							<input class="md" type="hidden" name="licenseurl"/>
 							<input class="md" type="hidden" name="type"/>
 							<input class="md" type="hidden" name="editing" value="{geonet:info/id}"/>
+                            <input class="md" type="hidden" name="minor" id="minor"/>
 							<input class="md" type="hidden" name="child"/>
 							<input class="md" type="hidden" name="fname"/>
 							<input class="md" type="hidden" name="access"/>
@@ -218,7 +219,9 @@
 		</button>
             </xsl:otherwise>
         </xsl:choose>
-
+        <!-- minor edit button -->
+        <input type="checkbox" id="minorEdit" name="minorEdit" onchange="$('minor').value = this.checked"></input>
+        <label for="minorEdit"><xsl:value-of select="/root/gui/strings/minor"/></label>
 		
 		
 	</xsl:template>
