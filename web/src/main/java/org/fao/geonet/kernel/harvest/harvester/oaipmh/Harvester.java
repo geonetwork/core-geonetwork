@@ -457,7 +457,7 @@ class Harvester
             boolean index = false;
             String language = context.getLanguage();
             UserSession session = null;
-            dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString());
+            dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), null);
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both

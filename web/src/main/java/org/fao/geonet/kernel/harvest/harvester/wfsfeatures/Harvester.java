@@ -23,18 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
-
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
@@ -44,11 +32,7 @@ import jeeves.utils.Xml;
 import jeeves.utils.XmlElementReader;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
-
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -62,6 +46,17 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 /** 
@@ -127,7 +122,7 @@ class Harvester
      * @param log		
      * @param context									Jeeves context
      * @param dbms 										Database
-     * @param WfsFeaturesParam	harvesting configuration for the node
+     * @param params	harvesting configuration for the node
      * 
      * @return null
      */

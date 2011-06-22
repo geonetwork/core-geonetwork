@@ -1249,7 +1249,7 @@ public class DataManager {
 
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-		Element xml = updateFixedInfo(schema, Integer.toString(serial), uuid, Xml.loadString(data, false), parentUuid, DataManager.UpdateDatestamp.yes, dbms);
+		Element xml = updateFixedInfo(schema, Integer.toString(serial), uuid, Xml.loadString(data, false), parentUuid, DataManager.UpdateDatestamp.yes, dbms, null);
 
 		//--- store metadata
 		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner);
@@ -1303,7 +1303,7 @@ public class DataManager {
 
         if (ufo && isTemplate.equals("n")) {
             String parentUuid = null;
-            metadata = updateFixedInfo(schema, Integer.toString(id), null, metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+            metadata = updateFixedInfo(schema, Integer.toString(id), null, metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms, null);
         }
 
          if (source == null) {
@@ -1477,10 +1477,13 @@ public class DataManager {
      * @param md
      * @param validate
      * @param lang
+     * @param changeDate
+     * @param minor
+     *
      * @return
      * @throws Exception
      */
-	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, boolean ufo, boolean index, String lang, String changeDate) throws Exception {
+	public synchronized boolean updateMetadata(UserSession session, Dbms dbms, String id, Element md, boolean validate, boolean ufo, boolean index, String lang, String changeDate, String minor) throws Exception {
 		// when invoked from harvesters, session is null
         if(session != null) {
             session.removeProperty(Geonet.Session.VALIDATION_REPORT + id);
@@ -1488,10 +1491,10 @@ public class DataManager {
 		String schema = getMetadataSchema(dbms, id);
         if(ufo) {
             String parentUuid = null;
-		    md = updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
+		    md = updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, minor);
         }
 		//--- write metadata to dbms
-        XmlSerializer.update(dbms, id, md, changeDate);
+        XmlSerializer.update(dbms, id, md, changeDate, minor);
 
         String isTemplate = getMetadataTemplate(dbms, id);
         // Notifies the metadata change to metatada notifier service
@@ -1856,7 +1859,7 @@ public class DataManager {
      * @param styleSheet
      * @throws Exception
      */
-	void transformMd(Dbms dbms, String id, Element md, Element env, String schema, String styleSheet) throws Exception {
+	private void transformMd(Dbms dbms, String id, Element md, Element env, String schema, String styleSheet) throws Exception {
 		//--- setup root element
 		Element root = new Element("root");
 		root.addContent(md);
@@ -2099,10 +2102,11 @@ public class DataManager {
      * @param parentUuid
      * @param updateDatestamp
      * @param dbms
+     * @param minor
      * @return
      * @throws Exception
      */
-	public Element updateFixedInfo(String schema, String id, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, Dbms dbms) throws Exception {
+	public Element updateFixedInfo(String schema, String id, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, Dbms dbms, String minor) throws Exception {
         boolean autoFixing = settingMan.getValueAsBool("system/autofixing/enable", true);
         if(autoFixing) {
         	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info");
@@ -2123,6 +2127,11 @@ public class DataManager {
                 Element env = new Element("env");
                 env.addContent(new Element("id").setText(id));
                 env.addContent(new Element("uuid").setText(uuid));
+                if (minor != null) {
+                    if (!minor.equals("")) {
+                        env.addContent(new Element("changeDate").setText(new ISODate().toString()));
+                    }
+                }
                 if(parentUuid != null) {
                     env.addContent(new Element("parentUuid").setText(parentUuid));
                 }
@@ -2133,7 +2142,6 @@ public class DataManager {
                 Element result = new Element("root");
                 result.addContent(md);
                 // add 'environment' to result
-                env.addContent(new Element("changeDate").setText(new ISODate().toString()));
                 env.addContent(new Element("siteURL")   .setText(getSiteURL()));
                 Element system = settingMan.get("system", -1);
                 env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));

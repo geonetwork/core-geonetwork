@@ -240,7 +240,6 @@ public class XmlSerializer {
 	}
 
     /**
-     *  Updates an xml element into the database. The new data replaces the old one.
      *
      * @param dbms
      * @param id
@@ -248,23 +247,54 @@ public class XmlSerializer {
      * @param changeDate
      * @throws SQLException
      */
-	public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException {
+    public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException {
+        update(dbms, id, xml, changeDate, null);
+    }
+
+    /**
+     *  Updates an xml element into the database. The new data replaces the old one.
+     *
+     * @param dbms
+     * @param id
+     * @param xml
+     * @param changeDate
+     * @param minor
+     *
+     * @throws SQLException
+     */
+	public static void update(Dbms dbms, String id, Element xml, String changeDate, String minor) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
+        String queryMinor = "UPDATE Metadata SET data=?, root=? WHERE id=?";
+          if (minor == null) {
+              minor = "";
+          }
 
 		Vector<Serializable> args = new Vector<Serializable>();
 
 		fixCR(xml);
 		args.add(Xml.getString(xml));
 
-		if (changeDate == null)	args.add(new ISODate().toString());
-			else                 args.add(changeDate);
+        if (minor.equals("")) {
+            if (changeDate == null)	{
+                args.add(new ISODate().toString());
+            }
+            else {
+                args.add(changeDate);
+            }
+        }
+        System.out.println("valeur de mineur "+minor);
 
-		args.add(xml.getQualifiedName());
+ 		args.add(xml.getQualifiedName());
 		args.add(new Integer(id));
 
-		dbms.execute(query, args.toArray());
+        if (minor.equals(""))  {
+            dbms.execute(query, args.toArray());
+        }
+        else {
+            dbms.execute(queryMinor, args.toArray());
+        }
 	}
 
     /**

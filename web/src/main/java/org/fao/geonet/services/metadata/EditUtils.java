@@ -131,8 +131,10 @@ class EditUtils {
      */
 	public void updateContent(Element params, boolean validate, boolean embedded) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        String minor   = null;
 		String id      = Util.getParam(params, Params.ID);
 		String version = Util.getParam(params, Params.VERSION);
+        minor = params.getChildText(Params.MINOREDIT);
 
 		//--- build hashtable with changes
 		//--- each change is a couple (pos, value)
@@ -163,13 +165,13 @@ class EditUtils {
 		if (embedded) {
             Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges, version);
             if(updatedMetada != null) {
-                result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate);
+                result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, minor);
             }
    		}
         else {
             Element updatedMetada = applyChanges(dbms, id, htChanges, version);
             if(updatedMetada != null) {
-			    result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate);
+			    result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, minor);
             }
 		}
 		if (!result) {

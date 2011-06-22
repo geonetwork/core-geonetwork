@@ -275,7 +275,7 @@ public class Aligner
                 boolean index = false;
                 String language = context.getLanguage();
                 UserSession session = null;
-                dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, changeDate);
+                dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, changeDate, null);
 
 				result.updatedMetadata++;
 			}

@@ -81,6 +81,7 @@ public class Update implements Service
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
+        String minor      = params.getChildText(Params.MINOREDIT);
 
 		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
@@ -95,7 +96,7 @@ public class Update implements Service
                 boolean validate = showValidationErrors.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate)) {
+				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, minor)) {
 					throw new ConcurrentUpdateEx(id);
 				}
 			}
