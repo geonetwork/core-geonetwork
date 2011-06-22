@@ -604,6 +604,7 @@
   <failOnError>Fail on error</failOnError>
   <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
 	<min>最小值</min>
+    <minor>Minor edit</minor>
 	<missing>MISSING or EMPTY</missing>	
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<more>更多</more>

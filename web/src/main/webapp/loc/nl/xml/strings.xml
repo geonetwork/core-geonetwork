@@ -613,6 +613,7 @@
   <failOnError>Fail on error</failOnError>
   <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
   <min>Minimaal</min>
+    <minor>Minor edit</minor>
 	<missing>ONTBREEKT of LEEG</missing>
 	<missingSeeTab>ONTBREEKT - Zie de volgende groep tab in de zijkolom: </missingSeeTab>
 	<more>meer</more>

@@ -526,6 +526,7 @@
 	<metadataJSForm>Metadata fra JS skjema</metadataJSForm>
 	<metadataRecordsAdded>Totalt antall metadata poster lagt til:</metadataRecordsAdded>
 	<min>Minimum</min>
+    <minor>Minor edit</minor>
 	<missing>MANGELER eller TOM</missing>
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<more>mer</more>

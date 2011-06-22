@@ -607,6 +607,7 @@
   <failOnError>Fail on error</failOnError>
   <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
 	<min>الحد الأدني</min>
+    <minor>Minor edit</minor>
 	<missing>MISSING or EMPTY</missing>	
 	<missingSeeTab>MISSING - See the following group tab in sidebar: </missingSeeTab>
 	<more>المزيد</more>

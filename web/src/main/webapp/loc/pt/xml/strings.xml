@@ -603,6 +603,7 @@
   <failOnError>Fail on error</failOnError>
   <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
   <min>Mínimo</min>
+    <minor>Minor edit</minor>
 	<missing>DESAPARECIDO ou VAZIO</missing>	
 	<missingSeeTab>DESAPARECIDO - Veja o tabulador de grupo seguinte no sidebar: </missingSeeTab>
 	<more>Mais</more>

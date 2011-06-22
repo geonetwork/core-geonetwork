@@ -455,6 +455,7 @@
 	<metadataJSForm>Metadades des d'un formulari JS</metadataJSForm>
 	<metadataRecordsAdded>Número total de metadades afegides:</metadataRecordsAdded>
 	<min>Mínim</min>
+    <minor>Minor edit</minor>
 	<missing>INEXISTENT o BUIT</missing>	
 	<missingSeeTab>INEXISTENT - Veure la pestanya de grups: </missingSeeTab>
 	<more>més</more>

@@ -612,6 +612,7 @@
   <failOnError>Arrêt en cas d'erreur</failOnError>
   <metadataRecordsProcessed>Nombre de métadonnées traitées :</metadataRecordsProcessed>
 	<min>Minimum</min>
+    <minor>Modification mineure</minor>
 	<missing>Vide ou manquant</missing>
 	<missingSeeTab>Manquant - Voir l'onglet correspondant au groupe </missingSeeTab>
 	<more>Plus</more>
