@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.state.PermalinkProvider &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../index.html" />
+    <link rel="up" title="GeoExt.state" href="../state.html" />
+    <link rel="next" title="Ext Overrides" href="../../overrides.html" />
+    <link rel="prev" title="GeoExt.state" href="../state.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../docs.html">Documentation</a></li>
+                <li><a href="../../../examples.html">Examples</a></li>
+                <li><a href="../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../state.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">GeoExt.state</span></tt></a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.state.PermalinkProvider</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.state.PermalinkProvider</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="../state.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">GeoExt.state</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="../../overrides.html"
+                                  title="next chapter">Ext Overrides</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-state-permalinkprovider">
+<h1><a title="GeoExt.state.PermalinkProvider" class="reference internal" href="#GeoExt.state.PermalinkProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.state.PermalinkProvider</span></tt></a><a class="headerlink" href="#geoext-state-permalinkprovider" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.state.Provider">Ext.state.Provider</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.state.PermalinkProvider">
+<em class="property">class </em><tt class="descclassname">GeoExt.state.</tt><tt class="descname">PermalinkProvider</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#GeoExt.state.PermalinkProvider" title="Permalink to this definition">¶</a></dt>
+<dd>Create a permalink provider.</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Sample code displaying a new permalink each time the map is moved.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="c1">// create permalink provider</span>
+<span class="kd">var</span> <span class="nx">permalinkProvider</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">PermalinkProvider</span><span class="p">();</span>
+
+<span class="c1">// set it in the state manager</span>
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">Manager</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">permalinkProvider</span><span class="p">);</span>
+
+<span class="c1">// create a map panel, and make it stateful</span>
+<span class="kd">var</span> <span class="nx">mapPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">MapPanel</span><span class="p">({</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+    <span class="nx">layers</span><span class="o">:</span> <span class="p">[</span>
+        <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">WMS</span><span class="p">(</span>
+            <span class="s2">&quot;Global Imagery&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;http://maps.opengeo.org/geowebcache/service/wms&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="nx">layers</span><span class="o">:</span> <span class="s2">&quot;bluemarble&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+    <span class="nx">stateId</span><span class="o">:</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+    <span class="nx">prettyStateKeys</span><span class="o">:</span> <span class="kc">true</span> <span class="c1">// for pretty permalinks</span>
+<span class="p">});</span>
+
+<span class="c1">// display permalink each time state is changed</span>
+<span class="nx">permalinkProvider</span><span class="p">.</span><span class="nx">on</span><span class="p">({</span>
+    <span class="nx">statechanged</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">provider</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">provider</span><span class="p">.</span><span class="nx">getLink</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.state.Provider">Ext.state.Provider</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">encodeType</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Specifies whether type of state values should be encoded
+and decoded. Set it to false if you work with components that don&#8217;t
+require encoding types, and want pretty permalinks. Defaults to true.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.state.Provider">Ext.state.Provider</a>.</p>
+<dl class="method">
+<dt id="GeoExt.state.PermalinkProvider.getLink">
+<tt class="descclassname">PermalinkProvider.</tt><tt class="descname">getLink</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.state.PermalinkProvider.getLink" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>base</em> &#8211; <tt class="docutils literal"><span class="pre">String</span></tt> The base URL, optional.</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">String</span></tt> The permalink.</td>
+</tr>
+</tbody>
+</table>
+<p>Return the permalink corresponding to the current state.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="../../overrides.html" title="Ext Overrides"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="../state.html" title="GeoExt.state"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../state.html" ><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">GeoExt.state</span></tt></a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.state.PermalinkProvider</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

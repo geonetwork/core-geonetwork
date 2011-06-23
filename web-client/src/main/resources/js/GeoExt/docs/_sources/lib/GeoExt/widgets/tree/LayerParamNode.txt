@@ -1,0 +1,76 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.LayerParamNode`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.tree.TreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode>`_
+    
+
+
+
+
+
+
+.. class:: LayerParamNode
+
+A subclass of ``Ext.tree.TreeNode`` that represents a value of a list of
+values provided as one of an ``OpenLayers.Layer.HTTPRequest``'s params.
+The default iconCls for this node's icon is "gx-tree-layerparam-icon".
+
+To use this node type in a ``TreePanel`` config, set ``nodeType`` to
+"gx_layerparam".
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.tree.TreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode>`_.
+
+
+.. describe:: delimiter
+
+    ``String`` Delimiter of the ``param``'s value's items. Default is
+    ``,`` (comma). If the ``param``'s value is an array, this property
+    has no effect.
+
+.. describe:: item
+
+    ``String`` The param's value's item that this node represents.
+
+.. describe:: layer
+
+    ``OpenLayers.Layer.HTTPRequest|String`` The layer that this node
+    represents a subnode of. If provided as string, the string has to
+    match the title of one of the records in the ``layerStore``.
+
+.. describe:: layerStore
+
+    :class:`GeoExt.data.LayerStore` Only used if layer is provided as
+    string. The store where we can find the layer. If not provided, the
+    store of a map panel found by ``GeoExt.MapPanel::guess`` will be used.
+
+.. describe:: param
+
+    ``String`` Key for a param (key-value pair in the params object of the
+    layer) that this node represents an item of. The value can either be an
+    ``Array`` or a ``String``, delimited by the character (or string)
+    provided as ``delimiter`` config option.
+
+
+
+
+
+
+
+
+

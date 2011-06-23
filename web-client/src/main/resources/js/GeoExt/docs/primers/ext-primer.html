@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Primer: Ext &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../index.html" />
+    <link rel="up" title="Core Concepts" href="index.html" />
+    <link rel="next" title="Primer: OpenLayers" href="openlayers-primer.html" />
+    <link rel="prev" title="Core Concepts" href="index.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../docs.html">Documentation</a></li>
+                <li><a href="../examples.html">Examples</a></li>
+                <li><a href="../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Core Concepts</a> &raquo;</li>
+        <li><a href="#">Primer: Ext</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Primer: Ext</a><ul>
+<li><a class="reference external" href="#getting-started">Getting Started</a></li>
+<li><a class="reference external" href="#basic-layout">Basic Layout</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">Core Concepts</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="openlayers-primer.html"
+                                  title="next chapter">Primer: OpenLayers</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="primer-ext">
+<span id="ext-primer"></span><h1>Primer: Ext<a class="headerlink" href="#primer-ext" title="Permalink to this headline">¶</a></h1>
+<p>GeoExt extends <a class="reference external" href="http://www.sencha.com/products/js/">Ext JS</a>, a rich library of web UI
+widgets and helper classes.  Using GeoExt requires a working knowledge
+of Ext&#8217;s idioms.  This tutorial provides a quick overview of core Ext concepts.</p>
+<div class="section" id="getting-started">
+<span id="ext-getting-started"></span><h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>To start using Ext, you will first have to <a class="reference external" href="http://www.sencha.com/products/js/download.php">download</a> it.
+For more complete instructions about how configure a web page to use
+Ext, you can check the <a class="reference external" href="../tutorials/quickstart.html"><em>GeoExt QuickStart</em></a> tutorial.</p>
+<p>When you download Ext, you also get their excellent
+<a class="reference external" href="http://dev.sencha.com/deploy/dev/examples/">Examples</a> and
+<a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/">API Documentation</a>, which you can also
+look at on-line for education and reference.</p>
+<p>In order to get Ext running on a page you will need to have something
+like the following in the <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt> of an HTML page in a directory
+that is published by your web server.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;ext-3.2.1/adapter/ext/ext-base.js&quot;</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;ext-3.2.1/ext-all.js&quot;</span>  <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;ext-3.2.1/resources/css/ext-all.css&quot;</span><span class="nt">&gt;&lt;/link&gt;</span>
+</pre></div>
+</div>
+<p>This will load the code and styles for Ext.  Change the paths
+according to where you have put the Ext files.</p>
+<p>When writing Ext code, most of what you will be doing is instantiating
+classes with constructors that takes a single object&#8211;its
+configuration object&#8211;as an argument.  This snippet demonstrates this
+coding pattern:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Ext</span><span class="p">.</span><span class="nx">onReady</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">myPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">Panel</span><span class="p">({</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Hello World!&#39;</span><span class="p">,</span>
+        <span class="nx">html</span><span class="o">:</span> <span class="s1">&#39;&lt;i&gt;Hello World!&lt;/i&gt; Please enjoy this primer on Ext!&#39;</span><span class="p">,</span>
+        <span class="nx">collapsible</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span><span class="mi">300</span><span class="p">,</span>
+        <span class="nx">renderTo</span><span class="o">:</span> <span class="s1">&#39;panelDiv&#39;</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>There are a few things to note about this example:</p>
+<ul class="simple">
+<li>This code uses Ext&#8217;s <tt class="docutils literal"><span class="pre">onReady</span></tt> method to trigger the method when the
+document&#8217;s body is ready. (This is cleaner than using body&#8217;s <tt class="docutils literal"><span class="pre">onready</span></tt>
+event, and with <tt class="docutils literal"><span class="pre">Ext.onReady</span></tt> several functions can be queued for execution
+before the page loads.)</li>
+<li>When the page is ready, the <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt> constructor is called with a
+single configuration object as argument.  The Panel&#8217;s structure should
+be familiar from your desktop experience.  It has a <tt class="docutils literal"><span class="pre">title</span></tt> which
+runs across the top, and some content which in this case is <tt class="docutils literal"><span class="pre">html</span></tt>
+provided in the configuration.</li>
+<li>Many configuration options (best explored in the Ext examples and API
+documention) are available.  Here, they are represented by the
+<tt class="docutils literal"><span class="pre">collapsible</span></tt> property, which allows the user to collapse the panel
+much like you can minimize your browser&#8217;s window, and the <tt class="docutils literal"><span class="pre">width</span></tt> of
+the panel specified in pixels.</li>
+<li>Lastly, this code assumes that somewhere in the DOM of the page is a
+<tt class="docutils literal"><span class="pre">div</span></tt> with the id <tt class="docutils literal"><span class="pre">panelDiv</span></tt>.  When the Panel is constructed, it
+will be automatically rendered in this div because of the <tt class="docutils literal"><span class="pre">renderTo</span></tt>
+option. (This option can be left out and panels rendered manually, if
+desired.)</li>
+</ul>
+</div>
+<div class="section" id="basic-layout">
+<span id="ext-basic-layout"></span><h2>Basic Layout<a class="headerlink" href="#basic-layout" title="Permalink to this headline">¶</a></h2>
+<p>Ext makes it easy to separate out your UI into logical blocks.
+Most often you will be using one or more nested <em>Containers</em>.  The
+<tt class="docutils literal"><span class="pre">Ext.Panel</span></tt> built above is the most common kind of container.  You
+can nest panels using the <tt class="docutils literal"><span class="pre">items</span></tt> property.  For example:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Ext</span><span class="p">.</span><span class="nx">onReady</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">myPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">Panel</span><span class="p">({</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Top level&#39;</span><span class="p">,</span>
+        <span class="nx">layout</span><span class="o">:</span> <span class="s1">&#39;border&#39;</span><span class="p">,</span>
+        <span class="nx">items</span><span class="o">:</span> <span class="p">[{</span>
+            <span class="nx">xtype</span><span class="o">:</span><span class="s1">&#39;panel&#39;</span><span class="p">,</span>
+            <span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Sub1&#39;</span><span class="p">,</span>
+            <span class="nx">html</span><span class="o">:</span><span class="s1">&#39;Contents of sub panel 1&#39;</span><span class="p">,</span>
+            <span class="nx">region</span><span class="o">:</span> <span class="s1">&#39;east&#39;</span>
+        <span class="p">},{</span>
+            <span class="nx">xtype</span><span class="o">:</span><span class="s1">&#39;panel&#39;</span><span class="p">,</span>
+            <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Sub2&#39;</span><span class="p">,</span>
+            <span class="nx">html</span><span class="o">:</span><span class="s1">&#39;Contents of sub panel 2&#39;</span><span class="p">,</span>
+            <span class="nx">region</span><span class="o">:</span> <span class="s1">&#39;center&#39;</span>
+        <span class="p">}],</span>
+        <span class="nx">width</span><span class="o">:</span><span class="mi">300</span><span class="p">,</span>
+        <span class="nx">height</span><span class="o">:</span><span class="mi">200</span><span class="p">,</span>
+        <span class="nx">renderTo</span><span class="o">:</span><span class="s1">&#39;panelDiv&#39;</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>This code introduces some new concepts:</p>
+<ul class="simple">
+<li>Each of the objects in the <tt class="docutils literal"><span class="pre">items</span></tt> array is a configuration
+object for a panel like the one in the earlier example.</li>
+<li>The <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt> constructor is never called, however.  Instead,
+the <tt class="docutils literal"><span class="pre">xtype</span></tt> option is used.  By setting the xtype, you tell Ext
+what class the configuration is for, and Ext instantiates that class
+when appropriate.</li>
+<li>The <tt class="docutils literal"><span class="pre">layout</span></tt> property on the outer container determines the
+position of the items within it.  Here, we have set the layout to be
+a <em>border</em> layout, which requires that items be given a <tt class="docutils literal"><span class="pre">region</span></tt>
+property like &#8220;center&#8221;, &#8220;north&#8221;, &#8220;south&#8221;, &#8220;east&#8221;, or &#8220;west&#8221;.</li>
+</ul>
+<p>Ext provides a variety of other layouts, including a Tab layout and a
+Wizard layout.  The best way to explore these layouts is using the <a class="reference external" href="http://dev.sencha.com/deploy/dev/examples/layout-browser/layout-browser.html">Ext
+Layout Browser</a>
+, which demonstrates each layout and provides sample code.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="openlayers-primer.html" title="Primer: OpenLayers"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="index.html" title="Core Concepts"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" >Core Concepts</a> &raquo;</li>
+        <li><a href="#">Primer: Ext</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

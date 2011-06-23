@@ -1,0 +1,110 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.FeatureStore`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_
+    
+
+
+
+
+
+
+.. class:: FeatureStore
+
+    A store containing :class:`GeoExt.data.FeatureRecord` entries that
+    optionally synchronizes with an ``OpenLayers.Layer.Vector``.
+
+
+
+Example Use
+-----------
+
+Sample code to create a store with features from a vector layer:
+
+.. code-block:: javascript
+
+    var store = new GeoExt.data.FeatureStore({
+        layer: myLayer,
+        features: myFeatures
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. describe:: featureFilter
+
+    ``OpenLayers.Filter`` This filter is evaluated before a feature
+    record is added to the store.
+
+.. describe:: features
+
+    ``Array(OpenLayers.Feature.Vector)``  Features that will be added to the
+    store (and the layer if provided).
+
+.. describe:: initDir
+
+    ``Number``  Bitfields specifying the direction to use for the
+    initial sync between the layer and the store, if set to 0 then no
+    initial sync is done. Default is
+    ``GeoExt.data.FeatureStore.LAYER_TO_STORE|GeoExt.data.FeatureStore.STORE_TO_LAYER``.
+
+.. describe:: layer
+
+    ``OpenLayers.Layer.Vector``  Layer to synchronize the store with.
+
+.. describe:: reader
+
+    ``Ext.data.DataReader`` The reader used to produce records from objects
+    features.  Default is :class:`GeoExt.data.FeatureReader`.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. method:: FeatureStore.bind
+
+    :param layer: ``OpenLayers.Layer`` Layer that the store should be
+        synchronized with.
+    
+    Bind this store to a layer instance, once bound the store
+    is synchronized with the layer and vice-versa.
+
+.. method:: FeatureStore.getRecordFromFeature
+
+    :arg feature: ``OpenLayers.Vector.Feature``
+    :returns: :class:`GeoExt.data.FeatureRecord` The record corresponding
+        to the given feature.  Returns null if no record matches.
+    
+    Get the record corresponding to a feature.
+
+.. method:: FeatureStore.unbind
+
+    Unbind this store from the layer it is currently bound.
+
+
+
+
+

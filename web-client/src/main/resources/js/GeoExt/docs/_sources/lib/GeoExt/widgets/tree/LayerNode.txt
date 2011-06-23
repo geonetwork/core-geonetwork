@@ -1,0 +1,100 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.LayerNode`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.tree.TreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode>`_
+    
+
+
+
+
+
+
+.. class:: LayerNode(config)
+
+    A subclass of ``Ext.tree.TreeNode`` that is connected to an
+    ``OpenLayers.Layer`` by setting the node's layer property. Checking or
+    unchecking the checkbox of this node will directly affect the layer and
+    vice versa. The default iconCls for this node's icon is
+    "gx-tree-layer-icon", unless it has children.
+
+    Setting the node's layer property to a layer name instead of an object
+    will also work. As soon as a layer is found, it will be stored as layer
+    property in the attributes hash.
+
+    The node's text property defaults to the layer name.
+
+    If the node has a checkedGroup attribute configured, it will be
+    rendered with a radio button instead of the checkbox. The value of
+    the checkedGroup attribute is a string, identifying the options group
+    for the node.
+
+    To use this node type in a ``TreePanel`` config, set ``nodeType`` to
+    "gx_layer".
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.tree.TreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode>`_.
+
+
+.. describe:: layer
+
+    ``OpenLayers.Layer or String``
+    The layer that this layer node will
+    be bound to, or the name of the layer (has to match the layer's
+    name property). If a layer name is provided, ``layerStore`` also has
+    to be provided.
+
+.. describe:: layerStore
+
+    :class:`GeoExt.data.LayerStore` ``or "auto"``
+    The layer store containing the layer that this node represents.  If set
+    to "auto", the node will query the ComponentManager for a
+    :class:`GeoExt.MapPanel`, take the first one it finds and take its layer
+    store. This property is only required if ``layer`` is provided as a
+    string.
+
+.. describe:: loader
+
+    ``Ext.tree.TreeLoader|Object`` If provided, subnodes will be added to
+    this LayerNode. Obviously, only loaders that process an
+    ``OpenLayers.Layer`` or :class:`GeoExt.data.LayerRecord` (like
+    :class:`GeoExt.tree.LayerParamsLoader`) will actually generate child
+    nodes here. If provided as ``Object``, a
+    :class:`GeoExt.tree.LayerParamLoader` instance will be created, with
+    the provided object as configuration.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.tree.TreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode>`_.
+
+
+.. attribute:: LayerNode.layer
+
+    ``OpenLayers.Layer``
+    The layer this node is bound to.
+
+
+
+
+
+
+

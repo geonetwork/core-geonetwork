@@ -1,0 +1,125 @@
+
+.. currentmodule:: GeoExt.grid
+
+:class:`GeoExt.grid.FeatureSelectionModel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.grid.RowSelectionModel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.RowSelectionModel>`_
+    
+
+
+
+
+
+
+.. class:: FeatureSelectionModel
+
+    A row selection model which enables automatic selection of features
+    in the map when rows are selected in the grid and vice-versa.
+
+
+
+Example Use
+-----------
+
+Sample code to create a feature grid with a feature selection model:
+
+.. code-block:: javascript
+
+     var gridPanel = new Ext.grid.GridPanel({
+        title: "Feature Grid",
+        region: "east",
+        store: store,
+        width: 320,
+        columns: [{
+            header: "Name",
+            width: 200,
+            dataIndex: "name"
+        }, {
+            header: "Elevation",
+            width: 100,
+            dataIndex: "elevation"
+        }],
+        sm: new GeoExt.grid.FeatureSelectionModel()
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.grid.RowSelectionModel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.RowSelectionModel>`_.
+
+
+.. describe:: autoActivateControl
+
+    ``Boolean`` If true the select feature control is activated and
+    deactivated when binding and unbinding. Defaults to true.
+
+.. describe:: layer
+
+    ``OpenLayers.Layer.Vector`` The vector layer used for the creation of
+    the select feature control, it must already be added to the map. If not
+    provided, the layer bound to the grid's store, if any, will be used.
+
+.. describe:: layerFromStore
+
+    ``Boolean`` If true, and if the constructor is passed neither a
+    layer nor a select feature control, a select feature control is
+    created using the layer found in the grid's store. Set it to
+    false if you want to manually bind the selection model to a
+    layer. Defaults to true.
+
+.. describe:: selectControl
+
+    ``OpenLayers.Control.SelectFeature`` A select feature control. If not
+    provided one will be created.  If provided any "layer" config option
+    will be ignored, and its "multiple" option will be used to configure
+    the selectionModel.  If an ``Object`` is provided here, it will be
+    passed as config to the SelectFeature constructor, and the "layer"
+    config option will be used for the layer.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.grid.RowSelectionModel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.RowSelectionModel>`_.
+
+
+.. method:: FeatureSelectionModel.bind
+
+    :param obj: ``OpenLayers.Layer.Vector`` or
+        ``OpenLayers.Control.SelectFeature`` The object this selection model
+        should be bound to, either a vector layer or a select feature
+        control.
+    :param options: ``Object`` An object with a "controlConfig"
+        property referencing the configuration object to pass to the
+        ``OpenLayers.Control.SelectFeature`` constructor.
+    :return: ``OpenLayers.Control.SelectFeature`` The select feature
+        control this selection model uses.
+    
+    Bind the selection model to a layer or a SelectFeature control.
+
+.. method:: FeatureSelectionModel.unbind
+
+    :return: ``OpenLayers.Control.SelectFeature`` The select feature
+        control this selection model used.
+    
+    Unbind the selection model from the layer or SelectFeature control.
+
+
+
+
+

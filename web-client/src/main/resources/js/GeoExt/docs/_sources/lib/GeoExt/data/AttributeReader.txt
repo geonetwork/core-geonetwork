@@ -1,0 +1,49 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.AttributeReader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
+    
+
+
+
+
+
+
+.. class:: AttributeReader(meta, recordType)
+
+    :arg meta: ``Object`` Reader configuration.
+    :arg recordType: ``Array or Ext.data.Record`` An array of field
+        configuration objects or a record object.
+
+    Create a new attributes reader object.
+
+    Valid meta properties:
+
+    * format - ``OpenLayers.Format`` A parser for transforming the XHR response
+      into an array of objects representing attributes.  Defaults to
+      an ``OpenLayers.Format.WFSDescribeFeatureType`` parser.
+    * ignore - ``Object`` Properties of the ignore object should be field names.
+      Values are either arrays or regular expressions.
+    * feature - ``OpenLayers.Feature.Vector`` A vector feature. If provided
+      records created by the reader will include a field named "value"
+      referencing the attribute value as set in the feature.
+
+
+    
+
+
+
+
+
+
+
+
+

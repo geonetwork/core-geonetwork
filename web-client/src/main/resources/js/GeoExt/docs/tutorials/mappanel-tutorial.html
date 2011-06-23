@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MapPanel Tutorial &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../index.html" />
+    <link rel="up" title="Tutorials" href="index.html" />
+    <link rel="next" title="Layer Tree Tutorial" href="layertree-tutorial.html" />
+    <link rel="prev" title="GeoExt QuickStart" href="quickstart.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../docs.html">Documentation</a></li>
+                <li><a href="../examples.html">Examples</a></li>
+                <li><a href="../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Tutorials</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">MapPanel</span></tt> Tutorial</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">MapPanel</span></tt> Tutorial</a><ul>
+<li><a class="reference external" href="#a-basic-mappanel">A Basic MapPanel</a></li>
+<li><a class="reference external" href="#working-with-the-mappanel">Working with the MapPanel</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="quickstart.html"
+                                  title="previous chapter">GeoExt QuickStart</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="layertree-tutorial.html"
+                                  title="next chapter">Layer Tree Tutorial</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mappanel-tutorial">
+<h1><tt class="docutils literal"><span class="pre">MapPanel</span></tt> Tutorial<a class="headerlink" href="#mappanel-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>The <a title="GeoExt.MapPanel" class="reference external" href="../lib/GeoExt/widgets/MapPanel.html#GeoExt.MapPanel"><tt class="xref docutils literal"><span class="pre">GeoExt.MapPanel</span></tt></a> is the heart of most GeoExt applications,
+displaying rendered data. Leveraging the OpenLayers JavaScript mapping library,
+it can display rendered tiles from OWS services, perform client-side rendering
+in the browser, and use tiles from popular mapping services such as Google Maps
+or Virtual Earth. In this tutorial, we explore ways that developers can
+customize the MapPanel.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is recommended that you follow the <a class="reference external" href="quickstart.html"><em>GeoExt QuickStart</em></a> tutorial
+before moving on to this one. It really is quick; we&#8217;ll wait for you.</p>
+</div>
+<div class="section" id="a-basic-mappanel">
+<h2>A Basic MapPanel<a class="headerlink" href="#a-basic-mappanel" title="Permalink to this headline">¶</a></h2>
+<p>Taking a look at the example code from the quickstart tutorial, we can see a
+very basic map configuration:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Map</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">layer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">WMS</span><span class="p">(</span>
+    <span class="s2">&quot;Global Imagery&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;http://maps.opengeo.org/geowebcache/service/wms&quot;</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">layers</span><span class="o">:</span> <span class="s2">&quot;bluemarble&quot;</span><span class="p">}</span>
+<span class="p">);</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">layer</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">mapPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">MapPanel</span><span class="p">({</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s1">&#39;gxmap&#39;</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="mi">400</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="mi">600</span><span class="p">,</span>
+    <span class="nx">map</span><span class="o">:</span> <span class="nx">map</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;A Simple GeoExt Map&#39;</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Looking at this code we can see a few things going on:</p>
+<p>In <strong>line 1</strong> we instantiate an <tt class="xref docutils literal"><span class="pre">OpenLayers.Map</span></tt>. This isn&#8217;t required by
+the MapPanel (it will create a Map for you if none is provided) but we want to
+customize our map a bit.</p>
+<p>In <strong>lines 2-6</strong> we create a new <tt class="xref docutils literal"><span class="pre">OpenLayers.Layer</span></tt>. This particular
+layer is a WMS layer, which uses tiles from the Blue Marble layer at
+<a class="reference external" href="http://maps.opengeo.org/">http://maps.opengeo.org/</a>.</p>
+<p>In <strong>line 7</strong> we add our new layer to the map.</p>
+<p>In <strong>lines 9-15</strong> we create a new map panel with several options:</p>
+<blockquote>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">renderTo</span></tt></dt>
+<dd>This works the same as <tt class="docutils literal"><span class="pre">renderTo</span></tt> in a normal <tt class="xref docutils literal"><span class="pre">Ext.Panel</span></tt>; it
+can be an id string, DOM node, or <tt class="xref docutils literal"><span class="pre">Ext.Element</span></tt> telling the
+MapPanel where on the page it should insert itself.</dd>
+<dt><tt class="docutils literal"><span class="pre">height</span></tt>, <tt class="docutils literal"><span class="pre">width</span></tt></dt>
+<dd>These tell the map panel how much large it should draw itself.</dd>
+<dt><tt class="docutils literal"><span class="pre">map</span></tt></dt>
+<dd>This is an <tt class="xref docutils literal"><span class="pre">OpenLayers.Map</span></tt> which will be used as the actual map
+inside the panel.</dd>
+<dt><tt class="docutils literal"><span class="pre">title</span></tt></dt>
+<dd>This is the normal <tt class="docutils literal"><span class="pre">title</span></tt> property for ExtJS components. It will be
+rendered nicely across the top of the panel.</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="working-with-the-mappanel">
+<h2>Working with the MapPanel<a class="headerlink" href="#working-with-the-mappanel" title="Permalink to this headline">¶</a></h2>
+<p>While using <tt class="docutils literal"><span class="pre">OpenLayers.Map.addLayer()</span></tt> to add layers is a convenient way to
+customize the map, a hand-coded, static list of map layers is not always what we
+want. In order to make manipulating the layer list more accessible to ExtJS
+widgets, the MapPanel exposes a <cite>layers</cite> property which is an
+<tt class="xref docutils literal"><span class="pre">Ext.data.Store</span></tt> that will automatically be updated when layers are
+added, removed, changed, or reordered, with all of the Ext events that go with
+it. We can use this to, for example, populate an <tt class="xref docutils literal"><span class="pre">Ext.grid.GridPanel</span></tt>
+with a live list of layers in the map:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">GridPanel</span><span class="p">({</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s1">&#39;layerlist&#39;</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nx">autoScroll</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">store</span><span class="o">:</span> <span class="nx">mapPanel</span><span class="p">.</span><span class="nx">layers</span><span class="p">,</span>
+    <span class="nx">columns</span><span class="o">:</span> <span class="p">[{</span><span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="nx">heading</span><span class="o">:</span> <span class="s1">&#39;Name&#39;</span><span class="p">}]</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>In the HTML, you&#8217;ll need to add a <tt class="docutils literal"><span class="pre">div</span></tt> for the grid panel to render itself in:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;layerlist&#39;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre></div>
+</div>
+<p>More information on the <tt class="xref docutils literal"><span class="pre">Ext.grid.GridPanel</span></tt> is available from the <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.GridPanel">ExtJS
+API documentation</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This code is only meant as an example to demonstrate the map panel&#8217;s
+integration with Ext. An <tt class="xref docutils literal"><span class="pre">Ext.tree.TreePanel</span></tt> with
+<a title="GeoExt.tree.LayerNode" class="reference external" href="../lib/GeoExt/widgets/tree/LayerNode.html#GeoExt.tree.LayerNode"><tt class="xref docutils literal"><span class="pre">GeoExt.tree.LayerNode</span></tt></a>s is a a much nicer way to display the layers in
+a map, with optional support for hiding/showing layers and reordering. The
+TreePanel approach is discussed in the <a class="reference external" href="layertree-tutorial.html"><em>Layer Tree Tutorial</em></a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="layertree-tutorial.html" title="Layer Tree Tutorial"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="quickstart.html" title="GeoExt QuickStart"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" >Tutorials</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">MapPanel</span></tt> Tutorial</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.form.FormPanel &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../../index.html" />
+    <link rel="up" title="Widgets" href="../../widgets.html" />
+    <link rel="next" title="GeoExt.form.SearchAction" href="SearchAction.html" />
+    <link rel="prev" title="GeoExt.form.BasicForm" href="BasicForm.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../../docs.html">Documentation</a></li>
+                <li><a href="../../../../examples.html">Examples</a></li>
+                <li><a href="../../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../../widgets.html" accesskey="U">Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.form.FormPanel</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.form.FormPanel</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="BasicForm.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.form.BasicForm</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="SearchAction.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.form.SearchAction</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-form-formpanel">
+<h1><a title="GeoExt.form.FormPanel" class="reference internal" href="#GeoExt.form.FormPanel"><tt class="xref docutils literal"><span class="pre">GeoExt.form.FormPanel</span></tt></a><a class="headerlink" href="#geoext-form-formpanel" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.FormPanel">Ext.form.FormPanel</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_formpanel</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.form.FormPanel">
+<em class="property">class </em><tt class="descclassname">GeoExt.form.</tt><tt class="descname">FormPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#GeoExt.form.FormPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A specific <tt class="docutils literal"><span class="pre">Ext.form.FormPanel</span></tt> whose internal form is a
+<a title="GeoExt.form.BasicForm" class="reference external" href="BasicForm.html#GeoExt.form.BasicForm"><tt class="xref docutils literal"><span class="pre">GeoExt.form.BasicForm</span></tt></a> instead of <tt class="docutils literal"><span class="pre">Ext.form.BasicForm</span></tt>.
+One would use this form to do search requests through
+an <tt class="docutils literal"><span class="pre">OpenLayers.Protocol</span></tt> object (<tt class="docutils literal"><span class="pre">OpenLayers.Protocol.WFS</span></tt>
+for example).</p>
+<p>Look at <a title="GeoExt.form.SearchAction" class="reference external" href="SearchAction.html#GeoExt.form.SearchAction"><tt class="xref docutils literal"><span class="pre">GeoExt.form.SearchAction</span></tt></a> to understand how
+form fields must be named for appropriate filters to be
+passed to the protocol.</p>
+</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Sample code showing how to use a GeoExt form panel.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">formPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">FormPanel</span><span class="p">({</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s2">&quot;formpanel&quot;</span><span class="p">,</span>
+    <span class="nx">protocol</span><span class="o">:</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Protocol</span><span class="p">.</span><span class="nx">WFS</span><span class="p">({</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;http://publicus.opengeo.org/geoserver/wfs&quot;</span><span class="p">,</span>
+        <span class="nx">featureType</span><span class="o">:</span> <span class="s2">&quot;tasmania_roads&quot;</span><span class="p">,</span>
+        <span class="nx">featureNS</span><span class="o">:</span> <span class="s2">&quot;http://www.openplans.org/topp&quot;</span>
+    <span class="p">}),</span>
+    <span class="nx">items</span><span class="o">:</span> <span class="p">[{</span>
+        <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;textfield&quot;</span><span class="p">,</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name__ilike&quot;</span><span class="p">,</span>
+        <span class="nx">value</span><span class="o">:</span> <span class="s2">&quot;mont&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+        <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;textfield&quot;</span><span class="p">,</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;elevation__ge&quot;</span><span class="p">,</span>
+        <span class="nx">value</span><span class="o">:</span> <span class="s2">&quot;2000&quot;</span>
+    <span class="p">}],</span>
+    <span class="nx">listeners</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">actioncomplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">form</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// this listener triggers when the search request</span>
+            <span class="c1">// is complete, the OpenLayers.Protocol.Response</span>
+            <span class="c1">// resulting from the request is available</span>
+            <span class="c1">// in &quot;action.response&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">formPanel</span><span class="p">.</span><span class="nx">addButton</span><span class="p">({</span>
+    <span class="nx">text</span><span class="o">:</span> <span class="s2">&quot;search&quot;</span><span class="p">,</span>
+    <span class="nx">handler</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">search</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="nx">scope</span><span class="o">:</span> <span class="nx">formPanel</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.FormPanel">Ext.form.FormPanel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">protocol</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Protocol</span></tt> The protocol instance this form panel
+is configured with, actions resulting from this form
+will be performed through the protocol.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.FormPanel">Ext.form.FormPanel</a>.</p>
+<dl class="method">
+<dt id="GeoExt.form.FormPanel.search">
+<tt class="descclassname">FormPanel.</tt><tt class="descname">search</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.form.FormPanel.search" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>options</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The options passed to the
+<a title="GeoExt.form.SearchAction" class="reference external" href="SearchAction.html#GeoExt.form.SearchAction"><tt class="xref docutils literal"><span class="pre">GeoExt.form.SearchAction</span></tt></a> constructor.</td>
+</tr>
+</tbody>
+</table>
+<p>Shortcut to the internal form&#8217;s search method.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="SearchAction.html" title="GeoExt.form.SearchAction"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="BasicForm.html" title="GeoExt.form.BasicForm"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../../widgets.html" >Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.form.FormPanel</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+
+.. currentmodule:: GeoExt.plugins
+
+:class:`GeoExt.plugins.TreeNodeRadioButton`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+
+
+
+ptype
+    ``gx_treenoderadiobutton``
+
+
+
+A plugin to create tree node UIs with radio buttons. Can be plugged into
+any ``Ext.tree.TreePanel`` and will be applied to nodes that are extended
+with the :class:`GeoExt.Tree.TreeNodeUIEventMixin`, in particular
+:class:`GeoExt.tree.LayerNodeUI` nodes.
+
+A tree with a ``GeoExt.plugins.TreeNodeRadioButton`` fires the additional
+``radiochange`` event when a node's radio button is clicked.
+
+Only if a node is configured ``radioGroup`` attribute, it will be rendered
+with a radio button next to its icon. The ``radioGroup`` works like a
+HTML checkbox with its ``name`` attribute, and ``radioGroup`` is a string
+that identifies the options group.
+
+
+
+
+Example Use
+-----------
+
+Sample code to create a tree with a node that has a radio button:
+
+.. code-block:: javascript
+
+    var UIClass = Ext.extend(
+        Ext.tree.TreeNodeUI,
+        GeoExt.tree.TreeNodeUIEventMixin
+    );
+    var tree = new Ext.tree.TreePanel({
+        plugins: [
+            new GeoExt.plugins.TreeNodeRadioButton({
+                listeners: {
+                    "radiochange": function(node) {
+                        alert(node.text + "'s radio button was clicked.");
+                    }
+                }
+            })
+        ],
+        root: {
+            nodeType: "node",
+            uiProvider: UIClass,
+            text: "My Node",
+            radioGroup: "myGroupId"
+        }
+    }
+
+    
+
+
+
+
+
+
+
+
+Events
+------
+
+Events.
+
+
+.. describe:: radiochange
+
+    Fires when a radio button is clicked.
+    
+    Listener arguments:
+    
+    * node - ``Ext.TreeNode`` The node of the clicked radio button.
+
+
+

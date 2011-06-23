@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.grid.FeatureSelectionModel &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../../index.html" />
+    <link rel="up" title="Widgets" href="../../widgets.html" />
+    <link rel="next" title="GeoExt.tree.BaseLayerContainer" href="../tree/BaseLayerContainer.html" />
+    <link rel="prev" title="GeoExt.form.SearchAction" href="../form/SearchAction.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../../docs.html">Documentation</a></li>
+                <li><a href="../../../../examples.html">Examples</a></li>
+                <li><a href="../../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../../widgets.html" accesskey="U">Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.grid.FeatureSelectionModel</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.grid.FeatureSelectionModel</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="../form/SearchAction.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">GeoExt.form.SearchAction</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="../tree/BaseLayerContainer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.tree.BaseLayerContainer</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-grid-featureselectionmodel">
+<h1><a title="GeoExt.grid.FeatureSelectionModel" class="reference internal" href="#GeoExt.grid.FeatureSelectionModel"><tt class="xref docutils literal"><span class="pre">GeoExt.grid.FeatureSelectionModel</span></tt></a><a class="headerlink" href="#geoext-grid-featureselectionmodel" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.RowSelectionModel">Ext.grid.RowSelectionModel</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.grid.FeatureSelectionModel">
+<em class="property">class </em><tt class="descclassname">GeoExt.grid.</tt><tt class="descname">FeatureSelectionModel</tt><a class="headerlink" href="#GeoExt.grid.FeatureSelectionModel" title="Permalink to this definition">¶</a></dt>
+<dd>A row selection model which enables automatic selection of features
+in the map when rows are selected in the grid and vice-versa.</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Sample code to create a feature grid with a feature selection model:</p>
+<div class="highlight-javascript"><div class="highlight"><pre> <span class="kd">var</span> <span class="nx">gridPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">GridPanel</span><span class="p">({</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Feature Grid&quot;</span><span class="p">,</span>
+    <span class="nx">region</span><span class="o">:</span> <span class="s2">&quot;east&quot;</span><span class="p">,</span>
+    <span class="nx">store</span><span class="o">:</span> <span class="nx">store</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="mi">320</span><span class="p">,</span>
+    <span class="nx">columns</span><span class="o">:</span> <span class="p">[{</span>
+        <span class="nx">header</span><span class="o">:</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="nx">dataIndex</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+        <span class="nx">header</span><span class="o">:</span> <span class="s2">&quot;Elevation&quot;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="nx">dataIndex</span><span class="o">:</span> <span class="s2">&quot;elevation&quot;</span>
+    <span class="p">}],</span>
+    <span class="nx">sm</span><span class="o">:</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">FeatureSelectionModel</span><span class="p">()</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.RowSelectionModel">Ext.grid.RowSelectionModel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">autoActivateControl</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If true the select feature control is activated and
+deactivated when binding and unbinding. Defaults to true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layer</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Layer.Vector</span></tt> The vector layer used for the creation of
+the select feature control, it must already be added to the map. If not
+provided, the layer bound to the grid&#8217;s store, if any, will be used.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layerFromStore</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If true, and if the constructor is passed neither a
+layer nor a select feature control, a select feature control is
+created using the layer found in the grid&#8217;s store. Set it to
+false if you want to manually bind the selection model to a
+layer. Defaults to true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">selectControl</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Control.SelectFeature</span></tt> A select feature control. If not
+provided one will be created.  If provided any &#8220;layer&#8221; config option
+will be ignored, and its &#8220;multiple&#8221; option will be used to configure
+the selectionModel.  If an <tt class="docutils literal"><span class="pre">Object</span></tt> is provided here, it will be
+passed as config to the SelectFeature constructor, and the &#8220;layer&#8221;
+config option will be used for the layer.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.grid.RowSelectionModel">Ext.grid.RowSelectionModel</a>.</p>
+<dl class="method">
+<dt id="GeoExt.grid.FeatureSelectionModel.bind">
+<tt class="descclassname">FeatureSelectionModel.</tt><tt class="descname">bind</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.grid.FeatureSelectionModel.bind" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><em>obj</em> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Layer.Vector</span></tt> or
+<tt class="docutils literal"><span class="pre">OpenLayers.Control.SelectFeature</span></tt> The object this selection model
+should be bound to, either a vector layer or a select feature
+control.</li>
+<li><em>options</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> An object with a &#8220;controlConfig&#8221;
+property referencing the configuration object to pass to the
+<tt class="docutils literal"><span class="pre">OpenLayers.Control.SelectFeature</span></tt> constructor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">OpenLayers.Control.SelectFeature</span></tt> The select feature
+control this selection model uses.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Bind the selection model to a layer or a SelectFeature control.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GeoExt.grid.FeatureSelectionModel.unbind">
+<tt class="descclassname">FeatureSelectionModel.</tt><tt class="descname">unbind</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.grid.FeatureSelectionModel.unbind" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">OpenLayers.Control.SelectFeature</span></tt> The select feature
+control this selection model used.</td>
+</tr>
+</tbody>
+</table>
+<p>Unbind the selection model from the layer or SelectFeature control.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="../tree/BaseLayerContainer.html" title="GeoExt.tree.BaseLayerContainer"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="../form/SearchAction.html" title="GeoExt.form.SearchAction"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../../widgets.html" >Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.grid.FeatureSelectionModel</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

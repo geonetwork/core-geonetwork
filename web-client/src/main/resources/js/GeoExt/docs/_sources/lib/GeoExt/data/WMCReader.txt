@@ -1,0 +1,41 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.WMCReader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
+    
+
+
+
+
+
+
+.. class:: WMCReader(meta, recordType)
+
+    :param meta: ``Object`` Reader configuration.
+    :param recordType: ``Array | Ext.data.Record`` An array of field
+        configuration objects or a record object.  Default is
+        :class:`GeoExt.data.LayerRecord`.
+
+    Data reader class to create an array of
+    :class:`GeoExt.data.LayerRecord` objects from a WMS GetCapabilities
+    response.
+
+
+    
+
+
+
+
+
+
+
+
+

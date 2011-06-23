@@ -1,0 +1,101 @@
+
+.. currentmodule:: GeoExt.plugins
+
+:class:`GeoExt.plugins.PrintPageField`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
+
+
+
+
+ptype
+    ``gx_printpagefield``
+
+
+
+.. class:: PrintPageField
+
+A plugin for ``Ext.form.Field`` components which provides synchronization
+with a :class:`GeoExt.data.PrintPage`. The field name has to match the
+respective property of the printPage (e.g. ``scale``, ``rotation``).
+
+
+
+Example Use
+-----------
+
+A form with a combo box for the scale and text fields for rotation and a
+page title. The page title is a custom parameter of the print module's
+page configuration:
+
+.. code-block:: javascript
+
+    var printPage = new GeoExt.data.PrintPage({
+        printProvider: new GeoExt.data.PrintProvider({
+            capabilities: printCapabilities
+        })
+    });
+    new Ext.form.FormPanel({
+        renderTo: "form",
+        width: 200,
+        height: 300,
+        items: [{
+            xtype: "combo",
+            displayField: "name",
+            store: printPage.scales, // printPage.scale
+            name: "scale",
+            fieldLabel: "Scale",
+            typeAhead: true,
+            mode: "local",
+            forceSelection: true,
+            triggerAction: "all",
+            selectOnFocus: true,
+            plugins: new GeoExt.plugins.PrintPageField({
+                printPage: printPage
+            })
+        }, {
+            xtype: "textfield",
+            name: "rotation", // printPage.rotation
+            fieldLabel: "Rotation",
+            plugins: new GeoExt.plugins.PrintPageField({
+                printPage: printPage
+            })
+        }, {
+            xtype: "textfield",
+            name: "mapTitle", // printPage.customParams["mapTitle"]
+            fieldLabel: "Map Title",
+            plugins: new GeoExt.plugins.PrintPageField({
+                printPage: printPage
+            })
+        }]
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: printPage
+
+    ``GeoExt.data.PrintPage`` The print page to synchronize with.
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.ProtocolProxy`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataProxy <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataProxy>`_
+    
+
+
+
+
+
+
+.. class:: ProtocolProxy
+
+    A data proxy for use with ``OpenLayers.Protocol`` objects.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.data.DataProxy <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataProxy>`_.
+
+
+.. describe:: abortPrevious
+
+    ``Boolean``
+    Abort any previous request before issuing another.  Default is ``true``.
+
+.. describe:: protocol
+
+    ``OpenLayers.Protocol``
+    The protocol used to fetch features.
+
+.. describe:: setParamsAsOptions
+
+    ``Boolean``
+    Should options.params be set directly on options before passing it into
+    the protocol's read method? Default is ``false``.
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,101 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.LayerParamLoader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
+
+
+
+
+
+
+.. class:: LayerParamLoader
+
+    A loader that creates children from its node's layer
+    (``OpenLayers.Layer.HTTPRequest``) by items in one of the values in
+    the layer's params object.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: delimiter
+
+    ``String`` Delimiter of the ``param``'s value's items. Default is
+    ``,`` (comma). If the ``param``'s value is an array, this property has
+    no effect.
+
+.. describe:: param
+
+    ``String`` Key for a param (key-value pair in the params object of the
+    layer) that this loader uses to create childnodes from its items. The
+    value can either be an ``Array`` or a ``String``, delimited by the
+    character (or string) provided as ``delimiter`` config option.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. method:: LayerParamLoader.createNode
+
+    :param attr: ``Object`` attributes for the new node
+    
+    Override this function for custom TreeNode node implementation, or to
+    modify the attributes at creation time.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: beforeload
+
+    Triggered before loading children. Return false to avoid
+    loading children.
+    
+    Listener arguments:
+    
+    * loader - :class:`GeoExt.tree.LayerLoader` this loader
+    * node - ``Ex.tree.TreeNode`` the node that this loader is
+        configured with
+
+.. describe:: load
+
+    Triggered after children were loaded.
+    
+    Listener arguments:
+    
+    * loader - :class:`GeoExt.tree.LayerLoader` this loader
+    * node - ``Ex.tree.TreeNode`` the node that this loader is
+        configured with
+
+
+

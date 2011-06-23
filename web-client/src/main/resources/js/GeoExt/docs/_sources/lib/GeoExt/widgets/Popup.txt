@@ -1,0 +1,117 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.Popup`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Window <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Window>`_
+    
+
+
+
+xtype
+    ``gx_popup``
+
+
+
+
+.. class:: Popup(config)
+
+    Popups are a specialized Window that supports anchoring
+    to a particular location in a MapPanel.  When a popup
+    is anchored to a location, that means that the popup
+    will visibly point to the location on the map, and move
+    accordingly when the map is panned or zoomed.
+
+
+
+Example Use
+-----------
+
+Sample code to create a popup anchored to a feature:
+
+.. code-block:: javascript
+
+    var popup = new GeoExt.Popup({
+        title: "My Popup",
+        location: feature,
+        width: 200,
+        html: "<div>Popup content</div>",
+        collapsible: true
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Window <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Window>`_.
+
+
+.. describe:: ancCls
+
+    ``String``  CSS class name for the popup's anchor.
+
+.. describe:: anchored
+
+    ``Boolean``  The popup begins anchored to its location.  Default is
+    ``true``.
+
+.. describe:: location
+
+    ``OpenLayers.Feature.Vector`` or ``OpenLayers.LonLat`` or
+    ``OpenLayers.Pixel`` or ``OpenLayers.Geometry`` A location for this
+    popup's anchor.
+
+.. describe:: map
+
+    ``OpenLayers.Map`` or :class:`GeoExt.MapPanel`
+    The map this popup will be anchored to (only required if ``anchored``
+    is set to true and the map cannot be derived from the ``location``'s
+    layer.
+
+.. describe:: panIn
+
+    ``Boolean`` The popup should pan the map so that the popup is
+    fully in view when it is rendered.  Default is ``true``.
+
+.. describe:: popupCls
+
+    ``String`` CSS class name for the popup DOM elements.  Default is
+    "gx-popup".
+
+.. describe:: unpinnable
+
+    ``Boolean`` The popup should have a "unpin" tool that unanchors it from
+    its location.  Default is ``true``.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Window <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Window>`_.
+
+
+.. method:: Popup.setSize
+
+    :param w: ``Integer``
+    :param h: ``Integer``
+    
+    Sets the size of the popup, taking into account the size of the anchor.
+
+
+
+
+

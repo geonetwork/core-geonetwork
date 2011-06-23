@@ -1,0 +1,107 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.WMSLegend`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Container <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Container>`_
+    * :class:`GeoExt.LayerLegend`
+
+
+
+xtype
+    ``gx_wmslegend``
+
+
+
+
+.. class:: WMSLegend(config)
+
+Show a legend image for a WMS layer. The image can be read from the styles
+field of a layer record (if the record comes e.g. from a
+:class:`GeoExt.data.WMSCapabilitiesReader`). If not provided, a
+GetLegendGraphic request will be issued to retrieve the image.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Container <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. describe:: baseParams
+
+    ``Object``
+     Optional parameters to add to the legend url, this can e.g. be used to
+     support vendor-specific parameters in a SLD WMS GetLegendGraphic
+     request. To override the default MIME type of image/gif use the
+     FORMAT parameter in baseParams.
+    
+     .. code-block:: javascript
+    
+         var legendPanel = new GeoExt.LegendPanel({
+             map: map,
+             title: 'Legend Panel',
+             defaults: {
+                 style: 'padding:5px',
+                 baseParams: {
+                     FORMAT: 'image/png',
+                     LEGEND_OPTIONS: 'forceLabels:on'
+                 }
+             }
+         });
+
+.. describe:: defaultStyleIsFirst
+
+    ``Boolean``
+    The WMS spec does not say if the first style advertised for a layer in
+    a Capabilities document is the default style that the layer is
+    rendered with. We make this assumption by default. To be strictly WMS
+    compliant, set this to false, but make sure to configure a STYLES
+    param with your WMS layers, otherwise LegendURLs advertised in the
+    GetCapabilities document cannot be used.
+
+.. describe:: labelCls
+
+    ``String``
+    Optional css class to use for the layer title labels.
+
+.. describe:: layerRecord
+
+    :class:`GeoExt.data.LayerRecord`  The layer record for the legend
+
+.. describe:: legendTitle
+
+    ``String``
+    Optional title to be displayed instead of the layer title.  If this is
+    set, the value of ``showTitle`` will be ignored (assumed to be true).
+
+.. describe:: showTitle
+
+    ``Boolean``
+    Whether or not to show the title of a layer. This can be overridden
+    on the LayerStore record using the hideTitle property.
+
+.. describe:: useScaleParameter
+
+    ``Boolean``
+    Should we use the optional SCALE parameter in the SLD WMS
+    GetLegendGraphic request? Defaults to true.
+
+
+
+
+
+
+
+
+

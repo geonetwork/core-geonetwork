@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>BoxSelect</title>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+<link href="../../ext/resources/css/ext-all.css" media="screen" rel="Stylesheet" type="text/css" />
+<link href="../../ext/examples/examples.css" media="screen" rel="Stylesheet" type="text/css" />
+
+<script src="../../ext/adapter/ext/ext-base.js" type="text/javascript"></script>
+<script src="../../ext/ext-all-debug.js" type="text/javascript"></script>
+<script src="../../ext/examples/form/states.js" type="text/javascript"></script>
+<script type="text/javascript" src="Ext.ux.BoxSelect.js"></script>
+
+<link href="boxselect.css" media="screen" rel="Stylesheet" type="text/css" />
+
+<script type="text/javascript">
+	Ext.onReady(function() {
+
+		Ext.QuickTips.init();
+
+		var states = new Ext.data.SimpleStore({
+			fields: ['abbr', 'state', 'nick'],
+			data: Ext.exampledata.states,
+			sortInfo: {field: 'state', direction: 'ASC'}
+		});
+		
+
+		var select = new Ext.ux.BoxSelect({
+			fieldLabel: 'State',
+			resizable: true,
+			name: 'to[]',
+			anchor:'100%',
+			store: states,
+			mode: 'local',
+			displayField: 'state',
+			displayFieldTpl: '{state} ({abbr})',
+			valueField: 'abbr',
+			addUniqueValues: false,
+			value: new Ext.data.ArrayReader({
+					id: 0
+				}, Ext.data.Record.create([
+				{name: 'abbr'},
+				{name: 'state'}
+			])).readRecords([['AL', 'Alabama'], ['NY', 'New York'], ['MN', 'Minessota']]).records
+			//value: ['AL', 'NY', 'MN']
+			//value: 'AL, NY, MN'
+		});
+		
+		var form = new Ext.form.FormPanel({
+			baseCls: 'x-plain',
+			labelWidth: 55,
+			defaultType: 'textfield',
+			autoHeight: true,
+			items: [
+				select,
+				{
+					fieldLabel: 'Subject',
+					name: 'subject',
+					anchor: '100%'
+				},
+				{
+					xtype: 'textarea',
+					hideLabel: true,
+					name: 'msg',
+					height: 150,
+					anchor: '100%'
+				}
+			]
+		});
+		
+		var window = new Ext.Window({
+			title: 'Resize Me',
+			width: 500,
+			minWidth: 300,
+			layout: 'fit',
+			plain:true,
+			bodyStyle:'padding:5px;',
+			buttonAlign:'center',
+			items: form,
+			maximizable: true,
+			buttons: [{
+				text: "setValue('AK,CA,CO')",
+				scope: this,
+				handler: function(){
+					select.setValue('AK,CA,CO');
+				}
+			},{
+				text: 'enable()',
+				scope: this,
+				handler: function(){
+					select.enable();
+				}
+			}, {
+				text: 'disable()',
+				scope: this,
+				handler: function(){
+					select.disable();
+				}
+			}, {
+				text: 'getValue()',
+				scope: this,
+				handler: function(){
+					alert(select.getValue());
+				}
+			}]
+		});
+		
+		window.show();
+		
+		select.focus();
+		window.focus();
+	});
+</script>
+
+</head>
+<body>
+
+</body>
+</html>

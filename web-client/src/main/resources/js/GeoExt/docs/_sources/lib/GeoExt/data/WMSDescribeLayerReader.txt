@@ -1,0 +1,41 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.WMSDescribeLayerReader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
+    
+
+
+
+
+
+
+.. class:: WMSDescribeLayerReader(meta, recordType)
+
+    :param meta: ``Object`` Reader configuration.
+    :param recordType: ``Array | Ext.data.Record`` An array of field
+        configuration objects or a record object.  Default has
+        fields for owsType, owsURL, and typeName.
+
+    Data reader class to create an array of
+    layer description objects from a WMS DescribeLayer
+    response.
+
+
+    
+
+
+
+
+
+
+
+
+

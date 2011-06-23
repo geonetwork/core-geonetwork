@@ -1,0 +1,86 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.ZoomSliderTip`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Tip <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Tip>`_
+    * :class:`GeoExt.SliderTip`
+
+
+
+
+
+
+.. class:: ZoomSliderTip(config)
+
+    Create a slider tip displaying :class:`GeoExt.ZoomSlider` values.
+
+
+
+Example Use
+-----------
+
+Sample code to create a slider tip to display scale and resolution:
+
+.. code-block:: javascript
+
+    var slider = new GeoExt.ZoomSlider({
+        renderTo: document.body,
+        width: 200,
+        map: map,
+        plugins: new GeoExt.ZoomSliderTip({
+            template: "Scale: 1 : {scale}<br>Resolution: {resolution}"
+        })
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Tip <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Tip>`_.
+
+
+.. describe:: hover
+
+    ``Boolean``
+    Display the tip when hovering over the thumb.  If ``false``, tip will
+    only be displayed while dragging.  Default is ``true``.
+
+.. describe:: minWidth
+
+    ``Number``
+    Minimum width of the tip.  Default is 10.
+
+.. describe:: offsets
+
+    ``Array(Number)``
+    A two item list that provides x, y offsets for the tip.  Default is
+    [0, -10].
+
+.. describe:: template
+
+    ``String``
+    Template for the tip. Can be customized using the following keywords in
+    curly braces:
+    
+    * ``zoom`` - the zoom level
+    * ``resolution`` - the resolution
+    * ``scale`` - the scale denominator
+
+
+
+
+
+
+
+
+

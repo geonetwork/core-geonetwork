@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Widgets &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../index.html" />
+    <link rel="up" title="API Reference" href="../index.html" />
+    <link rel="next" title="GeoExt.Action" href="widgets/Action.html" />
+    <link rel="prev" title="API Reference" href="../index.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../docs.html">Documentation</a></li>
+                <li><a href="../../examples.html">Examples</a></li>
+                <li><a href="../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">API Reference</a> &raquo;</li>
+        <li><a href="#">Widgets</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Widgets</a><ul>
+</ul>
+</li>
+<li><a class="reference external" href="#module-GeoExt.grid"><tt class="docutils literal"><span class="pre">GeoExt.form</span></tt></a><ul>
+</ul>
+</li>
+<li><a class="reference external" href="#module-GeoExt.tree"><tt class="docutils literal"><span class="pre">GeoExt.grid</span></tt></a><ul>
+</ul>
+</li>
+<li><a class="reference external" href="#geoext-tree"><tt class="docutils literal"><span class="pre">GeoExt.tree</span></tt></a><ul>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="../index.html"
+                                  title="previous chapter">API Reference</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="widgets/Action.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.Action</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-GeoExt.form">
+<h1>Widgets<a class="headerlink" href="#module-GeoExt.form" title="Permalink to this headline">¶</a></h1>
+<p>GeoExt widgets are a collection of specialized map related components.</p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="widgets/Action.html"><tt class="docutils literal"><span class="pre">GeoExt.Action</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/FeatureRenderer.html"><tt class="docutils literal"><span class="pre">GeoExt.FeatureRenderer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/LayerLegend.html"><tt class="docutils literal"><span class="pre">GeoExt.LayerLegend</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/LayerOpacitySlider.html"><tt class="docutils literal"><span class="pre">GeoExt.LayerOpacitySlider</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/LegendImage.html"><tt class="docutils literal"><span class="pre">GeoExt.LegendImage</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/LegendPanel.html"><tt class="docutils literal"><span class="pre">GeoExt.LegendPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/MapPanel.html"><tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/Popup.html"><tt class="docutils literal"><span class="pre">GeoExt.Popup</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/PrintMapPanel.html"><tt class="docutils literal"><span class="pre">GeoExt.PrintMapPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/UrlLegend.html"><tt class="docutils literal"><span class="pre">GeoExt.UrlLegend</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/VectorLegend.html"><tt class="docutils literal"><span class="pre">GeoExt.VectorLegend</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/WMSLegend.html"><tt class="docutils literal"><span class="pre">GeoExt.WMSLegend</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/ZoomSlider.html"><tt class="docutils literal"><span class="pre">GeoExt.ZoomSlider</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tips/LayerOpacitySliderTip.html"><tt class="docutils literal"><span class="pre">GeoExt.LayerOpacitySliderTip</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tips/SliderTip.html"><tt class="docutils literal"><span class="pre">GeoExt.SliderTip</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tips/ZoomSliderTip.html"><tt class="docutils literal"><span class="pre">GeoExt.ZoomSliderTip</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="module-GeoExt.grid">
+<h1><tt class="xref docutils literal"><span class="pre">GeoExt.form</span></tt><a class="headerlink" href="#module-GeoExt.grid" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="xref docutils literal"><span class="pre">GeoExt.form</span></tt> module contains classes that extend map related
+functionality to <tt class="docutils literal"><span class="pre">Ext.form</span></tt> classes.</p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="widgets/form/BasicForm.html"><tt class="docutils literal"><span class="pre">GeoExt.form.BasicForm</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/form/FormPanel.html"><tt class="docutils literal"><span class="pre">GeoExt.form.FormPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/form/SearchAction.html"><tt class="docutils literal"><span class="pre">GeoExt.form.SearchAction</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="module-GeoExt.tree">
+<h1><tt class="xref docutils literal"><span class="pre">GeoExt.grid</span></tt><a class="headerlink" href="#module-GeoExt.tree" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="xref docutils literal"><span class="pre">GeoExt.grid</span></tt> module contains classes that extend map related
+functionality to <tt class="docutils literal"><span class="pre">Ext.grid</span></tt> classes.</p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="widgets/grid/FeatureSelectionModel.html"><tt class="docutils literal"><span class="pre">GeoExt.grid.FeatureSelectionModel</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="geoext-tree">
+<h1><tt class="xref docutils literal"><span class="pre">GeoExt.tree</span></tt><a class="headerlink" href="#geoext-tree" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="xref docutils literal"><span class="pre">GeoExt.tree</span></tt> module contains classes that extend map related
+functionality to <tt class="docutils literal"><span class="pre">Ext.tree</span></tt> classes.</p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/BaseLayerContainer.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.BaseLayerContainer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/LayerContainer.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.LayerContainer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/LayerLoader.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.LayerLoader</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/LayerNode.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.LayerNode</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/LayerParamLoader.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.LayerParamLoader</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/LayerParamNode.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.LayerParamNode</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/OverlayLayerContainer.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.OverlayLayerContainer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/TreeNodeUIEventMixin.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.TreeNodeUIEventMixin</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="widgets/tree/WMSCapabilitiesLoader.html"><tt class="docutils literal"><span class="pre">GeoExt.tree.WMSCapabilitiesLoader</span></tt></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="widgets/Action.html" title="GeoExt.Action"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="../index.html" title="API Reference"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../index.html" >API Reference</a> &raquo;</li>
+        <li><a href="#">Widgets</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

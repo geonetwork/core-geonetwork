@@ -1,0 +1,140 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.FeatureRenderer`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_
+    
+
+
+
+xtype
+    ``gx_renderer``
+
+
+
+
+.. class:: FeatureRenderer(config)
+
+    Create a box component for rendering a vector feature.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_.
+
+
+.. describe:: feature
+
+    ``OpenLayers.Feature.Vector``
+    Optional vector to be drawn.  If not provided, and if ``symbolizers``
+    is configured with an array of plain symbolizer objects, ``symbolType``
+    should be configured.
+
+.. describe:: symbolizers
+
+    ``Array(Object)``
+    An array of ``OpenLayers.Symbolizer`` instances or plain symbolizer
+    objects (in painters order) for rendering a  feature.  If no
+    symbolizers are provided, the OpenLayers default will be used. If a
+    symbolizer is an instance of ``OpenLayers.Symbolizer``, its type will
+    override the symbolType for rendering.
+
+.. describe:: symbolType
+
+    ``String``
+    One of ``"Point"``, ``"Line"``, or ``"Polygon"``.  Only pertinent if
+    OpenLayers.Symbolizer objects are not used.  If ``feature``
+    is provided, it will be preferred.  The default is "Polygon".
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_.
+
+
+.. method:: FeatureRenderer.setFeature
+
+    :arg feature: ``OpenLayers.Feature.Vector`` The feature to be rendered.
+        If none is provided, one will be created based on ``symbolType``.
+    :arg options: ``Object``
+    
+    Update the feature and redraw.
+    
+    Valid options:
+    
+    * draw - ``Boolean`` Draw the feature after setting it.  Default is ``true``.
+
+.. method:: FeatureRenderer.setSymbolizers
+
+    :arg symbolizers: ``Array(Object)`` An array of symbolizers
+    :arg options: ``Object``
+    
+    Update the symbolizers used to render the feature.
+    
+    Valid options:
+    
+    * draw - ``Boolean`` Draw the feature after setting it.  Default is ``true``.
+
+.. method:: FeatureRenderer.setSymbolType
+
+    :arg type: ``String`` One of the ``symbolType`` strings.
+    :arg options: ``Object``
+    
+    Create a new feature based on the geometry type and render it.
+    
+    Valid options:
+    
+    * draw - ``Boolean`` Draw the feature after setting it.  Default is ``true``.
+
+.. method:: FeatureRenderer.update
+
+    :arg options: ``Object`` Object with properties to be updated.
+    
+    Update the ``symbolType`` or ``feature`` and ``symbolizer`` and redraw
+    the feature.
+    
+    Valid options:
+    
+    * feature - ``OpenLayers.Feature.Vector`` The new or updated feature.
+        If provided, the feature gets precedence over ``symbolType``.
+    * symbolType - ``String`` One of the allowed ``symbolType`` values.
+    * symbolizers - ``Array(Object)`` An array of symbolizer objects.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_.
+
+
+.. describe:: click
+
+    Fires when the feature is clicked on.
+    
+    Listener arguments:
+    
+    * renderer - :class:`GeoExt.FeatureRenderer` This feature renderer.
+
+
+

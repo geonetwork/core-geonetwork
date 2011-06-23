@@ -1,0 +1,458 @@
+/*
+ * Copyright (C) 2001-2011 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ * 
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+Ext.namespace('GeoNetwork');
+
+/** api: (define) 
+ *  module = GeoNetwork
+ *  class = MetadataResultsToolbar
+ *  base_link = `Ext.Toolbar <http://extjs.com/deploy/dev/docs/?class=Ext.Toolbar>`_
+ *
+ */
+/** api: constructor 
+ *  .. class:: MetadataResultsToolbar(config)
+ *
+ *     Create a metadata results tool bar which interact with
+ *     :class:`GeoNetwork.MetadataResultsView`
+ *
+ *
+ */
+GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
+    /** api: config[catalogue] 
+     * ``GeoNetwork.Catalogue`` Catalogue to use
+     */
+    catalogue: undefined,
+    
+    /** api: config[metadataResultsView] 
+     * ``GeoNetwork.MetadataResultsView`` to interact with
+     */
+    metadataResultsView: undefined,
+    
+    /** property: config[mdSelectionInfoCmp] 
+     *  Component to use to display selection information
+     */
+    mdSelectionInfoCmp: undefined,
+    
+    /** api: config[searchBtCmp] 
+     *  Search button component use to trigger search
+     *  when sort parameter change. Maybe passing
+     *  search form and trigger submit could be better.
+     */
+    searchBtCmp: undefined,
+    
+    /** api: config[sortByCmp] 
+     *  Sort by component to keep in synch with toolbar sort by combo.
+     */
+    sortByCmp: undefined,
+    
+    /** property: config[sortByCombo] 
+     *  Sort by combo
+     */
+    sortByCombo: undefined,
+    
+    mdSelectionInfo: 'md-selection-info',
+    
+    selectionActions: [],
+    
+    deleteAction: undefined,
+    
+    otherItem: undefined,
+    
+    ownerAction: undefined,
+    
+    updateCategoriesAction: undefined,
+    
+    updatePrivilegesAction: undefined,
+    
+    createMetadataAction: undefined,
+    
+    newMetadataWindow: undefined,
+    
+    mdImportAction: undefined,
+    
+    adminAction: undefined,
+    
+    actionMenu: undefined,
+    
+    item: null,
+    
+    actionOnSelectionMenu: undefined,
+    
+    admin: false,
+    /** private: method[initComponent] 
+     *  Initializes the toolbar results view.
+     */
+    initComponent: function(){
+        var cmp = [];
+        cmp.push(this.createSelectionToolBar());
+        
+        cmp.push(['->']);
+        
+        var sortOption = this.getSortByCombo();
+        cmp.push(OpenLayers.i18n('sortBy'), sortOption, '|');
+        
+        cmp.push(this.createTemplateMenu());
+        cmp.push(this.createOtherActionMenu());
+        
+        GeoNetwork.MetadataResultsToolbar.superclass.initComponent.call(this);
+        
+        this.add(cmp);
+        this.catalogue.on('selectionchange', this.updateSelectionInfo, this);
+        this.catalogue.on('afterLogin', this.updatePrivileges, this);
+        this.catalogue.on('afterLogout', this.updatePrivileges, this);
+        
+        this.updateSelectionInfo(this.catalogue, 0);
+    },
+    getSortByCombo: function(){
+        var tb = this;
+        
+        this.sortByCombo = new Ext.form.ComboBox({
+            mode: 'local',
+            id: 'sortByToolBar',
+            triggerAction: 'all',
+            value: 'relevance',
+            width: 130,
+            store: GeoNetwork.util.SearchFormTools.getSortByStore(),
+            valueField: 'id',
+            displayField: 'name',
+            listeners: {
+                select: function(cb, record, idx){
+                    if (this.sortByCmp) {
+                        this.sortByCmp.setValue(cb.getValue());
+                        
+                        /* Adapt sort order according to sort field */
+                        var tokens = cb.getValue().split('#');
+                        Ext.getCmp('E_sortBy').setValue(tokens[0]);
+                        Ext.getCmp('sortOrder').setValue(tokens[1]);
+                    }
+                    if (this.searchBtCmp) {
+                        this.searchBtCmp.fireEvent('click');
+                    }
+                },
+                scope: tb
+            }
+        });
+        
+        return this.sortByCombo;
+    },
+    clickTemplateMenu: function(item, pressed){
+        if (pressed) {
+            this.applyTemplate(item.getId());
+        }
+        this.initRatingWidget();
+    },
+    createMassiveActionMenu: function(hide){
+        /* FIXME : GUEST users should not see them */
+        this.deleteAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('delete'),
+            iconCls: 'cancel',
+            id: 'deleteAction',
+            handler: function(){
+                this.catalogue.massiveOp('Delete');
+            },
+            scope: this,
+            hidden: hide
+        });
+        this.ownerAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('newOwner'),
+            id: 'ownerAction',
+            handler: function(){
+                this.catalogue.massiveOp('NewOwner');
+            },
+            scope: this,
+            hidden: hide
+        });
+        
+        this.updateCategoriesAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('updateCategories'),
+            id: 'updateCategoriesAction',
+            handler: function(){
+                this.catalogue.massiveOp('Categories');
+            },
+            scope: this,
+            hidden: hide
+        });
+        this.updatePrivilegesAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('updatePrivileges'),
+            id: 'updatePrivilegesAction',
+            iconCls : 'privIcon',
+            handler: function(){
+                this.catalogue.massiveOp('Privileges');
+            },
+            scope: this,
+            hidden: hide
+        });
+       
+        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, this.updatePrivilegesAction);
+        
+        this.actionMenu.addItem(this.deleteAction);
+        this.actionMenu.addItem(this.ownerAction);
+        this.actionMenu.addItem(this.updateCategoriesAction);
+        this.actionMenu.addItem(this.updatePrivilegesAction);
+    },
+    /** private: method[createAdminMenu] 
+     *  Create quick admin action menu to not require to go to
+     *  the admin page.
+     */
+    createAdminMenu: function(hide){
+        this.actionMenu.addItem('-');
+        this.otherItem = new Ext.menu.TextItem({
+            html: '<b class="menu-title">' + OpenLayers.i18n('adminAction') + '</b>',
+            hidden: true
+        });
+        this.actionMenu.addItem(this.otherItem);
+        this.createMetadataAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('newMetadata'),
+            iconCls: 'addIcon',
+            handler: function(){
+                // FIXME : could be improved. Here we clean the window
+                // A simple template reload could be enough probably
+                if (this.newMetadataWindow) {
+                    this.newMetadataWindow.close();
+                    this.newMetadataWindow = undefined;
+                }
+                
+                // Create a window to choose the template and the group
+                if (!this.newMetadataWindow) {
+                    var newMetadataPanel = new GeoNetwork.editor.NewMetadataPanel({
+                                getGroupUrl: this.catalogue.services.getGroups,
+                                catalogue: this.catalogue
+                            });
+                    
+                    this.newMetadataWindow = new Ext.Window({
+                        title: OpenLayers.i18n('newMetadata'),
+                        width: 600,
+                        height: 420,
+                        layout: 'fit',
+                        modal: true,
+                        items: newMetadataPanel,
+                        closeAction: 'hide',
+                        constrain: true,
+                        iconCls: 'addIcon'
+                    });
+                }
+                this.newMetadataWindow.show();
+            },
+            scope: this,
+            hidden: hide
+        });
+        
+        this.actionMenu.addItem(this.createMetadataAction);
+        
+        this.mdImportAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('importMetadata'),
+            handler: function(){
+                this.catalogue.metadataImport();
+            },
+            scope: this,
+            hidden: hide
+            });
+        this.actionMenu.addItem(this.mdImportAction);
+        
+        this.adminAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('administration'),
+            handler: function(){
+                this.catalogue.admin();
+            },
+            scope: this,
+            hidden: hide
+            });
+        this.actionMenu.addItem(this.adminAction);
+
+    },
+    /** private: method[createTemplateMenu] 
+     *  Create template menu which is toggle menu with icon.
+     *  Templates are defined in attached data view.
+     *  Template icon is based on template key lower-cased.
+     */
+    createTemplateMenu: function(){
+        var tpls = this.metadataResultsView.getTemplates();
+        var data = [];
+        var t;
+        for (t in tpls) {
+            if (tpls.hasOwnProperty(t)) {
+                var tg = new Ext.Button({
+                    text: '',
+                    enableToggle: true,
+                    toggleGroup: 'tpl',
+                    id: t,
+                    iconCls: 'mn-view-' + t.toLowerCase(),
+                    toggleHandler: this.clickTemplateMenu,
+                    scope: this.metadataResultsView,
+                    pressed: (t === 'FULL' ? true : false)
+                });
+                data.push(tg);
+            }
+        }
+        
+        return [data, '|'];
+    },
+    /** private: method[createOtherActionMenu] 
+     *
+     */
+    createOtherActionMenu: function(){
+        this.actionMenu = new Ext.menu.Menu();
+        
+        /* Export action
+         */
+        var csvExportAction = new Ext.Action({
+            text: OpenLayers.i18n('exportCsv'),
+            handler: function(){
+                this.catalogue.csvExport();
+            },
+            scope: this
+        });
+        
+        var mefExportAction = new Ext.Action({
+            text: OpenLayers.i18n('exportZip'),
+            iconCls: 'md-mn-zip',
+            handler: function(){
+                this.catalogue.mefExport();
+            },
+            scope: this
+        });
+        
+        var printAction = new Ext.Action({
+                text: OpenLayers.i18n('printSel'),
+                iconCls: 'md-mn-pdf',
+                handler: function(){
+                    this.catalogue.pdfExport();
+                },
+                scope: this
+            });
+            
+        this.selectionActions.push(mefExportAction, csvExportAction, printAction);
+        
+        this.actionMenu.add(
+            '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>',
+            mefExportAction, 
+            csvExportAction, 
+            printAction // ,{
+        // text : 'Display selection only'
+        // }
+        );
+        
+        this.createMassiveActionMenu(!this.catalogue.isIdentified());
+        this.createAdminMenu(!this.catalogue.isIdentified());
+        
+        this.actionOnSelectionMenu = new Ext.Button({
+            text: OpenLayers.i18n('otherActions'),
+            menu: this.actionMenu
+        });
+        
+        return this.actionOnSelectionMenu;
+    },
+    /** private: method[createSelectionToolBar] 
+     *
+     */
+    createSelectionToolBar: function(){
+        /* Selection action and events */
+        var selectAllInPageAction = new Ext.Action({
+            text: OpenLayers.i18n('allInPage'),
+            handler: function(){
+                /* Select currently selected nodes assuming catalogue action will work fine */
+                this.metadataResultsView.selectAllInPage();
+            },
+            scope: this
+        });
+        var selectAllAction = new Ext.Action({
+            text: OpenLayers.i18n('all'),
+            handler: function(){
+                this.catalogue.metadataSelectAll();
+                this.metadataResultsView.selectAll();
+            },
+            scope: this
+        });
+        var selectNoneAction = new Ext.Action({
+            text: OpenLayers.i18n('none'),
+            handler: function(){
+                this.catalogue.metadataSelectNone();
+                this.metadataResultsView.selectNone();
+            },
+            scope: this
+        });
+        
+        /* Selection information status */
+        var mdSelectionInfoCmp = {
+            id: 'md-selection-info',
+            xtype: 'tbtext',
+            text: OpenLayers.i18n('noneSelected')
+        };
+        this.catalogue.on('selectionchange', this.updateSelectionInfo, this);
+        
+        return [mdSelectionInfoCmp, '|', {
+            xtype: 'tbtext',
+            text: OpenLayers.i18n('select')
+        }, selectAllInPageAction, {
+            xtype: 'tbtext',
+            text: ', '
+        }, selectAllAction, {
+            xtype: 'tbtext',
+            text: ', '
+        }, selectNoneAction];
+    },
+    /** api: method[updateSelectionInfo] 
+     *  Update selection and selection information
+     */
+    updateSelectionInfo: function(catalogue, nb){
+        if (!this.mdSelectionInfoCmp) {
+            this.mdSelectionInfoCmp = Ext.getCmp(this.mdSelectionInfo);
+        }
+        
+        Ext.each(this.selectionActions, function(e){
+            if (nb === 0) {
+                e.disable();
+            } else {
+                e.enable();
+            }
+        });
+        
+        this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
+    },
+    /** api: method[updatePrivileges] 
+     *  Update privileges after user login
+     */
+    updatePrivileges: function(catalogue, user){
+        var actions = [this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
+                        this.updatePrivilegesAction, this.createMetadataAction, this.mdImportAction,
+                        this.mdImportAction, this.adminAction, this.otherItem];
+        Ext.each(actions, function(){
+            this.setVisible(user);
+        });
+    },
+    /** private: method[onDestroy] 
+     *
+     *  Private method called during the destroy
+     *  sequence.
+     *
+     *  TODO : what to do in destroy ?
+     */
+    onDestroy: function(){
+//        if (this.mdSelectionInfoCmp) {
+//            // TODO ?
+//        }
+        GeoNetwork.MetadataResultsToolbar.superclass.onDestroy.apply(this, arguments);
+    }
+});
+
+/** api: xtype = gn_metadataresultstoolbar */
+Ext.reg('gn_metadataresultstoolbar', GeoNetwork.MetadataResultsToolbar);

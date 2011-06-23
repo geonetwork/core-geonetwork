@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.tree.LayerParamNode &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../../index.html" />
+    <link rel="up" title="Widgets" href="../../widgets.html" />
+    <link rel="next" title="GeoExt.tree.OverlayLayerContainer" href="OverlayLayerContainer.html" />
+    <link rel="prev" title="GeoExt.tree.LayerParamLoader" href="LayerParamLoader.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../../docs.html">Documentation</a></li>
+                <li><a href="../../../../examples.html">Examples</a></li>
+                <li><a href="../../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../../widgets.html" accesskey="U">Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.tree.LayerParamNode</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.tree.LayerParamNode</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="LayerParamLoader.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">GeoExt.tree.LayerParamLoader</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="OverlayLayerContainer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.tree.OverlayLayerContainer</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-tree-layerparamnode">
+<h1><a title="GeoExt.tree.LayerParamNode" class="reference internal" href="#GeoExt.tree.LayerParamNode"><tt class="xref docutils literal"><span class="pre">GeoExt.tree.LayerParamNode</span></tt></a><a class="headerlink" href="#geoext-tree-layerparamnode" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode">Ext.tree.TreeNode</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.tree.LayerParamNode">
+<em class="property">class </em><tt class="descclassname">GeoExt.tree.</tt><tt class="descname">LayerParamNode</tt><a class="headerlink" href="#GeoExt.tree.LayerParamNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A subclass of <tt class="docutils literal"><span class="pre">Ext.tree.TreeNode</span></tt> that represents a value of a list of
+values provided as one of an <tt class="docutils literal"><span class="pre">OpenLayers.Layer.HTTPRequest</span></tt>&#8216;s params.
+The default iconCls for this node&#8217;s icon is &#8220;gx-tree-layerparam-icon&#8221;.</p>
+<p>To use this node type in a <tt class="docutils literal"><span class="pre">TreePanel</span></tt> config, set <tt class="docutils literal"><span class="pre">nodeType</span></tt> to
+&#8220;gx_layerparam&#8221;.</p>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeNode">Ext.tree.TreeNode</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">delimiter</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Delimiter of the <tt class="docutils literal"><span class="pre">param</span></tt>&#8216;s value&#8217;s items. Default is
+<tt class="docutils literal"><span class="pre">,</span></tt> (comma). If the <tt class="docutils literal"><span class="pre">param</span></tt>&#8216;s value is an array, this property
+has no effect.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">item</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> The param&#8217;s value&#8217;s item that this node represents.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layer</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Layer.HTTPRequest|String</span></tt> The layer that this node
+represents a subnode of. If provided as string, the string has to
+match the title of one of the records in the <tt class="docutils literal"><span class="pre">layerStore</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layerStore</tt></dt>
+<dd><a title="GeoExt.data.LayerStore" class="reference external" href="../../data/LayerStore.html#GeoExt.data.LayerStore"><tt class="xref docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt></a> Only used if layer is provided as
+string. The store where we can find the layer. If not provided, the
+store of a map panel found by <tt class="docutils literal"><span class="pre">GeoExt.MapPanel::guess</span></tt> will be used.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">param</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Key for a param (key-value pair in the params object of the
+layer) that this node represents an item of. The value can either be an
+<tt class="docutils literal"><span class="pre">Array</span></tt> or a <tt class="docutils literal"><span class="pre">String</span></tt>, delimited by the character (or string)
+provided as <tt class="docutils literal"><span class="pre">delimiter</span></tt> config option.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="OverlayLayerContainer.html" title="GeoExt.tree.OverlayLayerContainer"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="LayerParamLoader.html" title="GeoExt.tree.LayerParamLoader"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../../widgets.html" >Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.tree.LayerParamNode</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

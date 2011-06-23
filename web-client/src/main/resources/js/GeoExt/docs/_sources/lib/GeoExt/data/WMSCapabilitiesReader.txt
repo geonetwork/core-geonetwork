@@ -1,0 +1,66 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.WMSCapabilitiesReader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
+    
+
+
+
+
+
+
+.. class:: WMSCapabilitiesReader(meta, recordType)
+
+    :param meta: ``Object`` Reader configuration from which:
+        ``layerOptions`` is an optional object passed as default options
+        to the ``OpenLayers.Layer.WMS`` constructor.
+        ``layerParams`` is an optional set of parameters to pass into the
+        ``OpenLayers.Layer.WMS`` constructor.
+    :param recordType: ``Array | Ext.data.Record`` An array of field
+        configuration objects or a record object.  Default is
+        :class:`GeoExt.data.LayerRecord` with the following fields:
+        name, title, abstract, queryable, opaque, noSubsets, cascaded,
+        fixedWidth, fixedHeight, minScale, maxScale, prefix, formats,
+        styles, srs, dimensions, bbox, llbbox, attribution, keywords,
+        identifiers, authorityURLs, metadataURLs.
+        The type of these fields is the same as for the matching fields in
+        the object returned from
+        ``OpenLayers.Format.WMSCapabilities::read()``.
+
+    Data reader class to create an array of
+    :class:`GeoExt.data.LayerRecord` objects from a WMS GetCapabilities
+    response.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_.
+
+
+.. describe:: attributionCls
+
+    ``String`` CSS class name for the attribution DOM elements.
+    Element class names append "-link", "-image", and "-title" as
+    appropriate.  Default is "gx-attribution".
+
+
+
+
+
+
+
+
+

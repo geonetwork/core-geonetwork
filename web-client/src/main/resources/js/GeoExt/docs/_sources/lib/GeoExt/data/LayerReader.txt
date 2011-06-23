@@ -1,0 +1,68 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.LayerReader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
+    
+
+
+
+
+
+
+.. class:: LayerReader(meta, recordType)
+
+    Data reader class to create an array of
+    :class:`GeoExt.data.LayerRecord` objects from an array of
+    ``OpenLayers.Layer`` objects for use in a
+    :class:`GeoExt.data.LayerStore` object.
+
+
+
+Example Use
+-----------
+
+Sample using a reader to create records from an array of layers:
+
+.. code-block:: javascript
+
+    var reader = new GeoExt.data.LayerReader();
+    var layerData = reader.readRecords(map.layers);
+    var numRecords = layerData.totalRecords;
+    var layerRecords = layerData.records;
+
+    
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_.
+
+
+.. method:: LayerReader.readRecords
+
+    :param layers: ``Array(OpenLayers.Layer)`` List of layers for creating
+        records.
+    :return: ``Object``  An object with ``records`` and ``totalRecords``
+        properties.
+    
+    From an array of ``OpenLayers.Layer`` objects create a data block
+    containing :class:`GeoExt.data.LayerRecord` objects.
+
+
+
+
+

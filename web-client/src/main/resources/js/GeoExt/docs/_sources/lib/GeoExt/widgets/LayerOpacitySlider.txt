@@ -1,0 +1,162 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.LayerOpacitySlider`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Slider <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Slider>`_
+    
+
+
+
+xtype
+    ``gx_opacityslider``
+
+
+
+
+.. class:: LayerOpacitySlider(config)
+
+    Create a slider for controlling a layer's opacity.
+
+
+
+Example Use
+-----------
+
+Sample code to render a slider outside the map viewport:
+
+.. code-block:: javascript
+
+    var slider = new GeoExt.LayerOpacitySlider({
+        renderTo: document.body,
+        width: 200,
+        layer: layer
+    });
+
+Sample code to add a slider to a map panel:
+
+.. code-block:: javascript
+
+    var layer = new OpenLayers.Layer.WMS(
+        "Global Imagery",
+        "http://maps.opengeo.org/geowebcache/service/wms",
+        {layers: "bluemarble"}
+    );
+    var panel = new GeoExt.MapPanel({
+        renderTo: document.body,
+        height: 300,
+        width: 400,
+        map: {
+            controls: [new OpenLayers.Control.Navigation()]
+        },
+        layers: [layer],
+        extent: [-5, 35, 15, 55],
+        items: [{
+            xtype: "gx_opacityslider",
+            layer: layer,
+            aggressive: true,
+            vertical: true,
+            height: 100,
+            x: 10,
+            y: 20
+        }]
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Slider <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Slider>`_.
+
+
+.. describe:: aggressive
+
+    ``Boolean``
+    If set to true, the opacity is changed as soon as the thumb is moved.
+    Otherwise when the thumb is released (default).
+
+.. describe:: changeVisibility
+
+    ``Boolean``
+    If set to true, the layer's visibility is handled by the
+    slider, the slider makes the layer invisible when its
+    value is changed to the min value, and makes the layer
+    visible again when its value goes from the min value
+    to some other value. The layer passed to the constructor
+    must be visible, as its visibility is fully handled by
+    the slider. Defaults to false.
+
+.. describe:: changeVisibilityDelay
+
+    ``Number`` Time in milliseconds before changing the layer's visibility.
+    If the value changes again within that time, the layer's visibility
+    change does not occur. Only applicable if changeVisibility is true.
+    Defaults to 5.
+
+.. describe:: complementaryLayer
+
+    ``OpenLayers.Layer`` or :class:`GeoExt.data.LayerRecord`
+    If provided, a layer that will be made invisible (its visibility is
+    set to false) when the slider value is set to its max value. If this
+    slider is used to fade visibility between to layers, setting
+    ``complementaryLayer`` and ``changeVisibility`` will make sure that
+    only visible tiles are loaded when the slider is set to its min or max
+    value. (optional)
+
+.. describe:: delay
+
+    ``Number`` Time in milliseconds before setting the opacity value to the
+    layer. If the value change again within that time, the original value
+    is not set. Only applicable if aggressive is true.
+
+.. describe:: inverse
+
+    ``Boolean``
+    If true, we will work with transparency instead of with opacity.
+    Defaults to false.
+
+.. describe:: layer
+
+    ``OpenLayers.Layer`` or :class:`GeoExt.data.LayerRecord`
+    The layer this slider changes the opacity of. (required)
+
+.. describe:: value
+
+    ``Number``
+    The value to initialize the slider with. This value is
+    taken into account only if the layer's opacity is null.
+    If the layer's opacity is null and this value is not
+    defined in the config object then the slider initializes
+    it to the max value.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Slider <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Slider>`_.
+
+
+.. method:: LayerOpacitySlider.setLayer
+
+    :param layer: ``OpenLayers.Layer`` or :class:`GeoExt.data.LayerRecord`
+    
+    Bind a new layer to the opacity slider.
+
+
+
+
+

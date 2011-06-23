@@ -1,0 +1,79 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.ScaleStore`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_
+    
+
+
+
+
+
+
+.. class:: ScaleStore
+
+    A store that contains a cache of available zoom levels.  The store can
+    optionally be kept synchronized with an ``OpenLayers.Map`` or
+    :class:`GeoExt.MapPanel` object.
+
+    Records have the following fields:
+
+    * level - ``Number``  The zoom level.
+    * scale - ``Number`` The scale denominator.
+    * resolution - ``Number`` The map units per pixel.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. describe:: map
+
+    ``OpenLayers.Map`` or :class:`GeoExt.MapPanel`
+    Optional map or map panel from which to derive scale values.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. method:: ScaleStore.bind
+
+    :param map: :class:`GeoExt.MapPanel` or ``OpenLayers.Map`` Panel or map
+        to which we should bind.
+    
+    Bind this store to a map; that is, maintain the zoom list in sync with
+    the map's current configuration.  If the map does not currently have a
+    set scale list, then the store will remain empty until the map is
+    configured with one.
+
+.. method:: ScaleStore.unbind
+
+    Un-bind this store from the map to which it is currently bound.  The
+    currently stored zoom levels will remain, but no further changes from
+    the map will affect it.
+
+
+
+
+

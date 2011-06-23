@@ -1,0 +1,495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.data.PrintProvider &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../index.html" />
+    <link rel="up" title="GeoExt.data" href="../data.html" />
+    <link rel="next" title="GeoExt.data.ProtocolProxy" href="ProtocolProxy.html" />
+    <link rel="prev" title="GeoExt.data.PrintPage" href="PrintPage.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../docs.html">Documentation</a></li>
+                <li><a href="../../../examples.html">Examples</a></li>
+                <li><a href="../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../data.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">GeoExt.data</span></tt></a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="PrintPage.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">GeoExt.data.PrintPage</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="ProtocolProxy.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.data.ProtocolProxy</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-data-printprovider">
+<h1><a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a><a class="headerlink" href="#geoext-data-printprovider" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.data.PrintProvider">
+<em class="property">class </em><tt class="descclassname">GeoExt.data.</tt><tt class="descname">PrintProvider</tt><a class="headerlink" href="#GeoExt.data.PrintProvider" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Provides an interface to a Mapfish or GeoServer print module. For printing,
+one or more instances of <a title="GeoExt.data.PrintPage" class="reference external" href="PrintPage.html#GeoExt.data.PrintPage"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintPage</span></tt></a> are also required
+to tell the PrintProvider about the scale and extent (and optionally
+rotation) of the page(s) we want to print.</p>
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Minimal code to print as much of the current map extent as possible as
+soon as the print service capabilities are loaded, using the first layout
+reported by the print service:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">mapPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">MapPanel</span><span class="p">({</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s2">&quot;mappanel&quot;</span><span class="p">,</span>
+    <span class="nx">layers</span><span class="o">:</span> <span class="p">[</span><span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">WMS</span><span class="p">(</span><span class="s2">&quot;wms&quot;</span><span class="p">,</span> <span class="s2">&quot;/geoserver/wms&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="nx">layers</span><span class="o">:</span> <span class="s2">&quot;topp:tasmania_state_boundaries&quot;</span><span class="p">})],</span>
+    <span class="nx">center</span><span class="o">:</span> <span class="p">[</span><span class="mf">146.56</span><span class="p">,</span> <span class="o">-</span><span class="mf">41.56</span><span class="p">],</span>
+    <span class="nx">zoom</span><span class="o">:</span> <span class="mi">7</span>
+<span class="p">});</span>
+<span class="kd">var</span> <span class="nx">printProvider</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">PrintProvider</span><span class="p">({</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;/geoserver/pdf&quot;</span><span class="p">,</span>
+    <span class="nx">listeners</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;loadcapabilities&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">printPage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">PrintPage</span><span class="p">({</span>
+                <span class="nx">printProvider</span><span class="o">:</span> <span class="nx">printProvider</span>
+            <span class="p">});</span>
+            <span class="nx">printPage</span><span class="p">.</span><span class="nx">fit</span><span class="p">(</span><span class="nx">mapPanel</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+            <span class="nx">printProvider</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="nx">mapPanel</span><span class="p">,</span> <span class="nx">printPage</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">autoLoad</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to true, the capabilities will be loaded upon
+instance creation, and <tt class="docutils literal"><span class="pre">loadCapabilities</span></tt> does not need to be called
+manually. Setting this when <tt class="docutils literal"><span class="pre">capabilities</span></tt> and no <tt class="docutils literal"><span class="pre">url</span></tt> is provided
+has no effect. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">baseParams</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Key-value pairs of base params to be add to every
+request to the service. Optional.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">capabilities</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Capabilities of the print service. Only required if <tt class="docutils literal"><span class="pre">url</span></tt>
+is not provided. This is the object returned by the <tt class="docutils literal"><span class="pre">info.json</span></tt>
+endpoint of the print service, and is usually obtained by including a
+script tag pointing to
+<a class="reference external" href="http://path/to/printservice/info.json?var=myvar">http://path/to/printservice/info.json?var=myvar</a> in the head of the
+html document, making the capabilities accessible as <tt class="docutils literal"><span class="pre">window.myvar</span></tt>.
+This property should be used when no local print service or proxy is
+available, or when you do not listen for the <tt class="docutils literal"><span class="pre">loadcapabilities</span></tt>
+events before creating components that require the PrintProvider&#8217;s
+capabilities to be available.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">customParams</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Key-value pairs of custom data to be sent to the print
+service. Optional. This is e.g. useful for complex layout definitions
+on the server side that require additional parameters.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">method</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Either <tt class="docutils literal"><span class="pre">POST</span></tt> or <tt class="docutils literal"><span class="pre">GET</span></tt> (case-sensitive). Method to use
+when sending print requests to the servlet. If the print service is at
+the same origin as the application (or accessible via proxy), then
+<tt class="docutils literal"><span class="pre">POST</span></tt> is recommended. Use <tt class="docutils literal"><span class="pre">GET</span></tt> when accessing a remote print
+service with no proxy available, but expect issues with character
+encoding and URLs exceeding the maximum length. Default is <tt class="docutils literal"><span class="pre">POST</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">url</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Base url of the print service. Only required if
+<tt class="docutils literal"><span class="pre">capabilities</span></tt> is not provided. This
+is usually something like <a class="reference external" href="http://path/to/mapfish/print">http://path/to/mapfish/print</a> for Mapfish,
+and <a class="reference external" href="http://path/to/geoserver/pdf">http://path/to/geoserver/pdf</a> for GeoServer with the printing
+extension installed. This property requires that the print service is
+at the same origin as the application (or accessible via proxy).</dd></dl>
+
+</div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="attribute">
+<dt id="GeoExt.data.PrintProvider.customParams">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">customParams</tt><a class="headerlink" href="#GeoExt.data.PrintProvider.customParams" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Key-value pairs of custom data to be sent to the print
+service. Optional. This is e.g. useful for complex layout definitions
+on the server side that require additional parameters.</dd></dl>
+
+<dl class="attribute">
+<dt id="GeoExt.data.PrintProvider.dpi">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">dpi</tt><a class="headerlink" href="#GeoExt.data.PrintProvider.dpi" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> the record for the currently used resolution.
+Read-only, use <tt class="docutils literal"><span class="pre">setDpi</span></tt> to set the value.</dd></dl>
+
+<dl class="attribute">
+<dt id="GeoExt.data.PrintProvider.dpis">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">dpis</tt><a class="headerlink" href="#GeoExt.data.PrintProvider.dpis" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Ext.data.JsonStore</span></tt> read-only. A store representing the dpis
+available.</p>
+<p>Fields of records in this store:</p>
+<ul class="simple">
+<li>name - <tt class="docutils literal"><span class="pre">String</span></tt> the name of the dpi</li>
+<li>value - <tt class="docutils literal"><span class="pre">Float</span></tt> the dots per inch</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GeoExt.data.PrintProvider.layout">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">layout</tt><a class="headerlink" href="#GeoExt.data.PrintProvider.layout" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> the record of the currently used layout. Read-only,
+use <tt class="docutils literal"><span class="pre">setLayout</span></tt> to set the value.</dd></dl>
+
+<dl class="attribute">
+<dt id="GeoExt.data.PrintProvider.layouts">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">layouts</tt><a class="headerlink" href="#GeoExt.data.PrintProvider.layouts" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Ext.data.JsonStore</span></tt> read-only. A store representing the layouts
+available.</p>
+<p>Fields of records in this store:</p>
+<ul class="simple">
+<li>name - <tt class="docutils literal"><span class="pre">String</span></tt> the name of the layout</li>
+<li>size - <tt class="docutils literal"><span class="pre">Object</span></tt> width and height of the map in points</li>
+<li>rotation - <tt class="docutils literal"><span class="pre">Boolean</span></tt> indicates if rotation is supported</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GeoExt.data.PrintProvider.scales">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">scales</tt><a class="headerlink" href="#GeoExt.data.PrintProvider.scales" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Ext.data.JsonStore</span></tt> read-only. A store representing the scales
+available.</p>
+<p>Fields of records in this store:</p>
+<ul class="simple">
+<li>name - <tt class="docutils literal"><span class="pre">String</span></tt> the name of the scale</li>
+<li>value - <tt class="docutils literal"><span class="pre">Float</span></tt> the scale denominator</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="method">
+<dt id="GeoExt.data.PrintProvider.loadCapabilities">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">loadCapabilities</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.data.PrintProvider.loadCapabilities" title="Permalink to this definition">¶</a></dt>
+<dd>Loads the capabilities from the print service. If this instance is
+configured with either <tt class="docutils literal"><span class="pre">capabilities</span></tt> or a <tt class="docutils literal"><span class="pre">url</span></tt> and <tt class="docutils literal"><span class="pre">autoLoad</span></tt>
+set to true, then this method does not need to be called from the
+application.</dd></dl>
+
+<dl class="method">
+<dt id="GeoExt.data.PrintProvider.print">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">print</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.data.PrintProvider.print" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>map</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span></tt> or <tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt> The map to print.</li>
+<li><em>pages</em> &#8211; <tt class="docutils literal"><span class="pre">Array</span></tt> of <a title="GeoExt.data.PrintPage" class="reference external" href="PrintPage.html#GeoExt.data.PrintPage"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintPage</span></tt></a> or
+<a title="GeoExt.data.PrintPage" class="reference external" href="PrintPage.html#GeoExt.data.PrintPage"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintPage</span></tt></a> page(s) to print.</li>
+<li><em>options</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> of additional options, see below.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sends the print command to the print service and opens a new window
+with the resulting PDF.</p>
+<p>Valid properties for the <tt class="docutils literal"><span class="pre">options</span></tt> argument:</p>
+<blockquote>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">legend</span></tt> - <a title="GeoExt.LegendPanel" class="reference external" href="../widgets/LegendPanel.html#GeoExt.LegendPanel"><tt class="xref docutils literal"><span class="pre">GeoExt.LegendPanel</span></tt></a> If provided, the legend
+will be added to the print document. For the printed result to
+look like the LegendPanel, the following <tt class="docutils literal"><span class="pre">!legends</span></tt> block
+should be included in the <tt class="docutils literal"><span class="pre">items</span></tt> of your page layout in the
+print module&#8217;s configuration file:</p>
+<div class="highlight-none"><div class="highlight"><pre>- !legends
+    maxIconWidth: 0
+    maxIconHeight: 0
+    classIndentation: 0
+    layerSpace: 5
+    layerFontSize: 10
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">overview</span></tt> - <tt class="xref docutils literal"><span class="pre">OpenLayers.Control.OverviewMap</span></tt> If provided,
+the layers for the overview map in the printout will be taken from
+the OverviewMap control. If not provided, the print service will
+use the main map&#8217;s layers for the overview map. Applies only for
+layouts configured to print an overview map.</p>
+</li>
+</ul>
+</blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="GeoExt.data.PrintProvider.setDpi">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">setDpi</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.data.PrintProvider.setDpi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>dpi</em> &#8211; <tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> the dpi record.</td>
+</tr>
+</tbody>
+</table>
+<p>Sets the dpi for this printProvider.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GeoExt.data.PrintProvider.setLayout">
+<tt class="descclassname">PrintProvider.</tt><tt class="descname">setLayout</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.data.PrintProvider.setLayout" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layout</em> &#8211; <tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> the record of the layout.</td>
+</tr>
+</tbody>
+</table>
+<p>Sets the layout for this printProvider.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">beforeencodelayer</tt></dt>
+<dd><p>Triggered before a layer is encoded. This can be used to
+exclude layers from the printing, by having the listener
+return false.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>layer - <tt class="docutils literal"><span class="pre">OpenLayers.Layer</span></tt> the layer which is about to be
+encoded.</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">beforeprint</tt></dt>
+<dd><p>Triggered when the print method is called.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>map - <tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt> the map being printed</li>
+<li>pages - Array of <a title="GeoExt.data.PrintPage" class="reference external" href="PrintPage.html#GeoExt.data.PrintPage"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintPage</span></tt></a> the print
+pages being printed</li>
+<li>options - <tt class="docutils literal"><span class="pre">Object</span></tt> the options to the print command</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">dpichange</tt></dt>
+<dd><p>Triggered when the dpi value is changed.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>dpi - <tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> the new dpi record</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">encodelayer</tt></dt>
+<dd><p>Triggered when a layer is encoded. This can be used to modify
+the encoded low-level layer object that will be sent to the
+print service.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>layer - <tt class="docutils literal"><span class="pre">OpenLayers.Layer</span></tt> the layer which is about to be
+encoded.</li>
+<li>encodedLayer - <tt class="docutils literal"><span class="pre">Object</span></tt> the encoded layer that will be
+sent to the print service.</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layoutchange</tt></dt>
+<dd><p>Triggered when the layout is changed.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>layout - <tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> the new layout</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">loadcapabilities</tt></dt>
+<dd><p>Triggered when the capabilities have finished loading. This
+event will only fire when <tt class="docutils literal"><span class="pre">capabilities</span></tt> is not  configured.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>capabilities - <tt class="docutils literal"><span class="pre">Object</span></tt> the capabilities</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">print</tt></dt>
+<dd><p>Triggered when the print document is opened.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>url - <tt class="docutils literal"><span class="pre">String</span></tt> the url of the print document</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">printexception</tt></dt>
+<dd><p>Triggered when using the <tt class="docutils literal"><span class="pre">POST</span></tt> method, when the print
+backend returns an exception.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>printProvider - <a title="GeoExt.data.PrintProvider" class="reference internal" href="#GeoExt.data.PrintProvider"><tt class="xref docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a> this
+PrintProvider</li>
+<li>response - <tt class="docutils literal"><span class="pre">Object</span></tt> the response object of the XHR</li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="ProtocolProxy.html" title="GeoExt.data.ProtocolProxy"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="PrintPage.html" title="GeoExt.data.PrintPage"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../data.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">GeoExt.data</span></tt></a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.data.PrintProvider</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

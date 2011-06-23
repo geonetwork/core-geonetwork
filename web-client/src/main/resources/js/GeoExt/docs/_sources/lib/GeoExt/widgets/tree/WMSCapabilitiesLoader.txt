@@ -1,0 +1,63 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.WMSCapabilitiesLoader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.tree.TreeLoader <http://www.dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeLoader>`_
+    
+
+
+
+
+
+
+.. class:: WMSCapabilitiesLoader
+
+    A loader that will load create a tree of all layers of a Web Map
+    Service (WMS), maintaining its tree structure. Nodes created by this
+    loader are instances of ``Ext.tree.TreeNode``. If the WMS Capabilities
+    advertise a name for a layer, an OpenLayers.Layer.WMS instance will
+    be set on the node in its ``layer`` attribute.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.tree.TreeLoader <http://www.dev.sencha.com/deploy/dev/docs/?class=Ext.tree.TreeLoader>`_.
+
+
+.. describe:: layerOptions
+
+    ``Object``
+    Optional options to set on the WMS layers which will be created by
+    this loader.
+
+.. describe:: layerParams
+
+    ``Object``
+    Optional parameters to set on the WMS layers which will be created by
+    this loader.
+
+.. describe:: url
+
+    ``String``
+    The online resource of the Web Map Service.
+
+
+
+
+
+
+
+
+

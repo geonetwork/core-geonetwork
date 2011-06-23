@@ -1,0 +1,106 @@
+
+.. currentmodule:: GeoExt.plugins
+
+:class:`GeoExt.plugins.PrintProviderField`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
+
+
+
+
+ptype
+    ``gx_printproviderfield``
+
+
+
+.. class:: PrintProviderField
+
+A plugin for ``Ext.form.Field`` components which provides synchronization
+with a :class:`GeoExt.data.PrintProvider`.
+
+
+
+Example Use
+-----------
+
+A form with combo boxes for layout and resolution, and a text field for a
+map title. The latter is a custom parameter to the print module, which is
+a default for all print pages. For setting custom parameters on the page
+level, use :class:`GeoExt.plugins.PrintPageField`):
+
+.. code-block:: javascript
+
+    var printProvider = new GeoExt.data.PrintProvider({
+        capabilities: printCapabilities
+    });
+    new Ext.form.FormPanel({
+        renderTo: "form",
+        width: 200,
+        height: 300,
+        items: [{
+            xtype: "combo",
+            displayField: "name",
+            store: printProvider.layouts, // printProvider.layout
+            fieldLabel: "Layout",
+            typeAhead: true,
+            mode: "local",
+            forceSelection: true,
+            triggerAction: "all",
+            selectOnFocus: true,
+            plugins: new GeoExt.plugins.PrintProviderField({
+                printProvider: printProvider
+            })
+        }, {
+            xtype: "combo",
+            displayField: "name",
+            store: printProvider.dpis, // printProvider.dpi
+            fieldLabel: "Resolution",
+            typeAhead: true,
+            mode: "local",
+            forceSelection: true,
+            triggerAction: "all",
+            selectOnFocus: true,
+            plugins: new GeoExt.plugins.PrintProviderField({
+                printProvider: printProvider
+            })
+        }, {
+            xtype: "textfield",
+            name: "mapTitle", // printProvider.customParams.mapTitle
+            fieldLabel: "Map Title",
+            plugins: new GeoExt.plugins.PrintProviderField({
+                printProvider: printProvider
+            })
+        }]
+    }):
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: printProvider
+
+    ``GeoExt.data.PrintProvider`` The print provider to use with this
+    plugin's field. Not required if set on the owner container of the
+    field.
+
+
+
+
+
+
+
+
+

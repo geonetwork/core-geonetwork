@@ -1,0 +1,15 @@
+﻿ul.holder { margin: 0; overflow: hidden; height: auto ! important; }
+ul.holder li { float: left; display: inline; list-style-type: none; margin: 3px 2px 2px 1px; line-height: 1em; -moz-user-select: none}
+body.ext-ie7 ul.holder li {margin: 3px 0 2px 3px;line-height: 1.2em;padding-bottom: 2px}
+body.ext-ie6 ul.holder li {margin: 2px 0 2px 3px;line-height:1.1em;padding-bottom: 2px}
+body.ext-gecko ul.holder li {margin: 1px 0 2px 3px;}
+ul.holder li.bit-box { position:relative; -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 1px 15px 1px 5px; }
+ul.holder li.bit-hover { background: #BBCEF1; border: 1px solid #6D95E0; }
+ul.holder li.bit-box-focus { border-color: #598BEC; background: #598BEC; color: #fff; }
+ul.holder li.bit-input{}
+ul.holder li.bit-input input { margin: 1px 0 2px 0; border: 0; outline: 0; padding: 0; }
+ /* no left/right padding here please */ulul.holder li.bit-input input.smallinput { width: 20px; }
+.holder li.bit-box a.closebutton { position: absolute; right: 4px; top: 5px; display: block; width: 7px; height: 7px; font-size: 1px; background: url(close.gif); }
+ul.holder li.bit-box a.closebutton:hover { background-position: 7px; }
+ul.holder li.bit-box-focus a.closebutton, ul.holder li.bit-box-focus a.closebutton:hover { background-position: bottom; }
+li.bit-input input{background:none;}

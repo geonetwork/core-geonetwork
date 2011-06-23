@@ -1,0 +1,30 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head><title>Templating search results</title>
+      <link rel="stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+      <link rel="stylesheet" type="text/css" href="../resources/css/metadata-view.css" />
+      
+      <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+      <script type="text/javascript" src="../../ext/ext-all-debug.js"></script>
+      <script type="text/javascript" src="../../OpenLayers/lib/OpenLayers.js"></script>
+      <script type="text/javascript" src="../../GeoExt/script/GeoExt.js"></script>
+      <script type="text/javascript" src="../lib/GeoNetwork.js"></script>
+      <script type="text/javascript" src="example.js"></script>
+      <script type="text/javascript" src="search-results-templates.js"></script>
+  </head>
+    <body>
+        <h1>Templating search results</h1>
+        <div id="search-form"></div>
+        <hr/>
+        <h1>Simple template</h1>
+        <div id="metadata-view" class="md-view"></div>
+        <br/>
+        <hr/>
+        <h1>Thumbnail template</h1>
+        <div id="metadata-view-thumbnail" class="md-view"></div>
+        <br/>
+        <hr/>
+        <h1>Full template</h1>
+        <div id="metadata-view-full" class="md-view"></div>
+    </body>
+</html>

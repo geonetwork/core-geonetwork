@@ -1,0 +1,68 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.LayerContainer`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.tree.AsyncTreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.AsyncTreeNode>`_
+    
+
+
+
+
+
+
+.. class:: LayerContainer
+
+    A subclass of ``Ext.tree.AsyncTreeNode`` that will collect all layers of an
+    OpenLayers map. Only layers that have displayInLayerSwitcher set to true
+    will be included. The childrens' iconCls defaults to
+    "gx-tree-layer-icon".
+
+    Note: if this container is loaded by an ``Ext.tree.TreeLoader``, the
+    ``applyLoader`` config option of that loader needs to be set to
+    "false". Also note that the list of available uiProviders will be
+    taken from the ownerTree if this container's loader is configured
+    without one.
+
+    To use this node type in ``TreePanel`` config, set nodeType to
+    "gx_layercontainer".
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.tree.AsyncTreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.AsyncTreeNode>`_.
+
+
+.. describe:: layerStore
+
+    :class:`GeoExt.data.LayerStore` The layer store containing layers to be
+    displayed in the container. If loader is not provided or provided as
+    ``Object``, this property will be set as the store option of the
+    loader. Otherwise it will be ignored.
+
+.. describe:: loader
+
+    :class:`GeoExt.tree.LayerLoader` or ``Object`` The loader to use with
+    this container. If an ``Object`` is provided, a
+    :class:`GeoExt.tree.LayerLoader`, configured with the the properties
+    from the provided object, will be created.
+
+
+
+
+
+
+
+
+

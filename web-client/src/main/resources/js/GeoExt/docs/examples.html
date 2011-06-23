@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="index.html" />
+    <link rel="next" title="GeoExt Community Involvement" href="developer/index.html" />
+    <link rel="prev" title="Primer: OpenLayers" href="primers/openlayers-primer.html" />
+    
+    
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="http://extjs.cachefly.net/ext-3.2.1/ext-all.js"></script>
+    <script src="_static/examples.js"></script>
+    <script>
+        var docversion = "1.0";
+    </script>
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="docs.html">Documentation</a></li>
+                <li><a href="#">Examples</a></li>
+                <li><a href="downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="index.html">GeoExt</a> &raquo;</li>
+        <li><a href="#">Examples</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Examples</a><ul>
+<li><a class="reference external" href="#attribute-form">Attribute Form</a></li>
+<li><a class="reference external" href="#attribute-store-reader">Attribute Store &amp; Reader</a></li>
+<li><a class="reference external" href="#grid-with-features">Grid with Features</a></li>
+<li><a class="reference external" href="#layer-tree">Layer Tree</a></li>
+<li><a class="reference external" href="#layer-opacity-slider">Layer Opacity Slider</a></li>
+<li><a class="reference external" href="#legend-panel">Legend Panel</a></li>
+<li><a class="reference external" href="#map-panel">Map Panel</a></li>
+<li><a class="reference external" href="#map-panel-in-a-viewport">Map Panel (in a Viewport)</a></li>
+<li><a class="reference external" href="#map-panel-in-a-window">Map Panel (in a Window)</a></li>
+<li><a class="reference external" href="#permalink">Permalink</a></li>
+<li><a class="reference external" href="#feature-popup">Feature Popup</a></li>
+<li><a class="reference external" href="#modifying-popups">Modifying Popups</a></li>
+<li><a class="reference external" href="#interactive-print-extent">Interactive Print Extent</a></li>
+<li><a class="reference external" href="#print-configuration-with-a-form">Print Configuration with a Form</a></li>
+<li><a class="reference external" href="#print-your-map">Print Your Map</a></li>
+<li><a class="reference external" href="#print-preview-window">Print Preview Window</a></li>
+<li><a class="reference external" href="#printing-openstreetmap">Printing OpenStreetMap</a></li>
+<li><a class="reference external" href="#feature-renderer">Feature Renderer</a></li>
+<li><a class="reference external" href="#filter-form-panel">Filter Form Panel</a></li>
+<li><a class="reference external" href="#toolbar-with-actions">Toolbar with Actions</a></li>
+<li><a class="reference external" href="#tree-nodes">Tree Nodes</a></li>
+<li><a class="reference external" href="#tree-legend">Tree Legend</a></li>
+<li><a class="reference external" href="#vector-legend">Vector Legend</a></li>
+<li><a class="reference external" href="#wms-capabilities-store">WMS Capabilities Store</a></li>
+<li><a class="reference external" href="#wms-capabilities-tree">WMS Capabilities Tree</a></li>
+<li><a class="reference external" href="#scale-chooser">Scale Chooser</a></li>
+<li><a class="reference external" href="#zoom-slider">Zoom Slider</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="primers/openlayers-primer.html"
+                                  title="previous chapter">Primer: OpenLayers</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="developer/index.html"
+                                  title="next chapter">GeoExt Community Involvement</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="exampleblock example-attribute-form section" id="attribute-form">
+<span id="example-attribute-form"></span><h2>Attribute Form<a class="headerlink" href="#attribute-form" title="Permalink to this headline">¶</a></h2>
+<p>Create a form with fields from attributes read from a WFS
+DescribeFeatureType response</p>
+</div>
+<div class="exampleblock example-attributes section" id="attribute-store-reader">
+<span id="example-attributes"></span><h2>Attribute Store &amp; Reader<a class="headerlink" href="#attribute-store-reader" title="Permalink to this headline">¶</a></h2>
+<p>Create records with attribute types and values with an AttributeStore.</p>
+</div>
+<div class="exampleblock example-feature-grid section" id="grid-with-features">
+<span id="example-feature-grid"></span><h2>Grid with Features<a class="headerlink" href="#grid-with-features" title="Permalink to this headline">¶</a></h2>
+<p>Synchronize selection of features between a grid and a layer.</p>
+</div>
+<div class="exampleblock example-layercontainer section" id="layer-tree">
+<span id="example-layercontainer"></span><h2>Layer Tree<a class="headerlink" href="#layer-tree" title="Permalink to this headline">¶</a></h2>
+<p>Create a layer tree with a LayerContainer.</p>
+</div>
+<div class="exampleblock example-layeropacityslider section" id="layer-opacity-slider">
+<span id="example-layeropacityslider"></span><h2>Layer Opacity Slider<a class="headerlink" href="#layer-opacity-slider" title="Permalink to this headline">¶</a></h2>
+<p>Use a slider to control layer opacity.</p>
+</div>
+<div class="exampleblock example-legendpanel section" id="legend-panel">
+<span id="example-legendpanel"></span><h2>Legend Panel<a class="headerlink" href="#legend-panel" title="Permalink to this headline">¶</a></h2>
+<p>Display a layer legend in a panel.</p>
+</div>
+<div class="exampleblock example-mappanel-div section" id="map-panel">
+<span id="example-mappanel-div"></span><h2>Map Panel<a class="headerlink" href="#map-panel" title="Permalink to this headline">¶</a></h2>
+<p>Render a map panel in any block level page element.</p>
+</div>
+<div class="exampleblock example-mappanel-viewport section" id="map-panel-in-a-viewport">
+<span id="example-mappanel-viewport"></span><h2>Map Panel (in a Viewport)<a class="headerlink" href="#map-panel-in-a-viewport" title="Permalink to this headline">¶</a></h2>
+<p>Render a map panel in a viewport.</p>
+</div>
+<div class="exampleblock example-mappanel-window section" id="map-panel-in-a-window">
+<span id="example-mappanel-window"></span><h2>Map Panel (in a Window)<a class="headerlink" href="#map-panel-in-a-window" title="Permalink to this headline">¶</a></h2>
+<p>Render a map panel in a Window.</p>
+</div>
+<div class="exampleblock example-permalink section" id="permalink">
+<span id="example-permalink"></span><h2>Permalink<a class="headerlink" href="#permalink" title="Permalink to this headline">¶</a></h2>
+<p>Display a permalink each time the map changes position.</p>
+</div>
+<div class="exampleblock example-popup section" id="feature-popup">
+<span id="example-popup"></span><h2>Feature Popup<a class="headerlink" href="#feature-popup" title="Permalink to this headline">¶</a></h2>
+<p>Display a popup with feature information.</p>
+</div>
+<div class="exampleblock example-popup-more section" id="modifying-popups">
+<span id="example-popup-more"></span><h2>Modifying Popups<a class="headerlink" href="#modifying-popups" title="Permalink to this headline">¶</a></h2>
+<p>Update a popup with information from multiple locations.</p>
+</div>
+<div class="exampleblock example-print-extent section" id="interactive-print-extent">
+<span id="example-print-extent"></span><h2>Interactive Print Extent<a class="headerlink" href="#interactive-print-extent" title="Permalink to this headline">¶</a></h2>
+<p>Change print scale, center and rotation with the PrintExtent plugin.</p>
+</div>
+<div class="exampleblock example-print-form section" id="print-configuration-with-a-form">
+<span id="example-print-form"></span><h2>Print Configuration with a Form<a class="headerlink" href="#print-configuration-with-a-form" title="Permalink to this headline">¶</a></h2>
+<p>Use form field plugins to control print output.</p>
+</div>
+<div class="exampleblock example-print-page section" id="print-your-map">
+<span id="example-print-page"></span><h2>Print Your Map<a class="headerlink" href="#print-your-map" title="Permalink to this headline">¶</a></h2>
+<p>Print the visible extent of a MapPanel with PrintPage and PrintProvider.</p>
+</div>
+<div class="exampleblock example-print-preview section" id="print-preview-window">
+<span id="example-print-preview"></span><h2>Print Preview Window<a class="headerlink" href="#print-preview-window" title="Permalink to this headline">¶</a></h2>
+<p>Use the PrintMapPanel for interactive print previews.</p>
+</div>
+<div class="exampleblock example-print-preview-osm section" id="printing-openstreetmap">
+<span id="example-print-preview-osm"></span><h2>Printing OpenStreetMap<a class="headerlink" href="#printing-openstreetmap" title="Permalink to this headline">¶</a></h2>
+<p>PrintMapPanel with an OSM map.</p>
+</div>
+<div class="exampleblock example-renderer section" id="feature-renderer">
+<span id="example-renderer"></span><h2>Feature Renderer<a class="headerlink" href="#feature-renderer" title="Permalink to this headline">¶</a></h2>
+<p>Render a vector feature with multiple symbolizers in a box component.</p>
+</div>
+<div class="exampleblock example-search-form section" id="filter-form-panel">
+<span id="example-search-form"></span><h2>Filter Form Panel<a class="headerlink" href="#filter-form-panel" title="Permalink to this headline">¶</a></h2>
+<p>Use a form to build an OpenLayers filter.</p>
+</div>
+<div class="exampleblock example-toolbar section" id="toolbar-with-actions">
+<span id="example-toolbar"></span><h2>Toolbar with Actions<a class="headerlink" href="#toolbar-with-actions" title="Permalink to this headline">¶</a></h2>
+<p>Create a toolbar with GeoExt Actions.</p>
+</div>
+<div class="exampleblock example-tree section" id="tree-nodes">
+<span id="example-tree"></span><h2>Tree Nodes<a class="headerlink" href="#tree-nodes" title="Permalink to this headline">¶</a></h2>
+<p>Create all kinds of tree nodes.</p>
+</div>
+<div class="exampleblock example-tree-legend section" id="tree-legend">
+<span id="example-tree-legend"></span><h2>Tree Legend<a class="headerlink" href="#tree-legend" title="Permalink to this headline">¶</a></h2>
+<p>Render layer nodes with legends.</p>
+</div>
+<div class="exampleblock example-vector-legend section" id="vector-legend">
+<span id="example-vector-legend"></span><h2>Vector Legend<a class="headerlink" href="#vector-legend" title="Permalink to this headline">¶</a></h2>
+<p>Render a legend for a vector layer.</p>
+</div>
+<div class="exampleblock example-wms-capabilities section" id="wms-capabilities-store">
+<span id="example-wms-capabilities"></span><h2>WMS Capabilities Store<a class="headerlink" href="#wms-capabilities-store" title="Permalink to this headline">¶</a></h2>
+<p>Create layer records from WMS capabilities documents.</p>
+</div>
+<div class="exampleblock example-wms-tree section" id="wms-capabilities-tree">
+<span id="example-wms-tree"></span><h2>WMS Capabilities Tree<a class="headerlink" href="#wms-capabilities-tree" title="Permalink to this headline">¶</a></h2>
+<p>Create a tree loader from WMS capabilities documents.</p>
+</div>
+<div class="exampleblock example-zoom-chooser section" id="scale-chooser">
+<span id="example-zoom-chooser"></span><h2>Scale Chooser<a class="headerlink" href="#scale-chooser" title="Permalink to this headline">¶</a></h2>
+<p>Use a ComboBox to display available map scales.</p>
+</div>
+<div class="exampleblock example-zoomslider section" id="zoom-slider">
+<span id="example-zoomslider"></span><h2>Zoom Slider<a class="headerlink" href="#zoom-slider" title="Permalink to this headline">¶</a></h2>
+<p>Use a slider to control map scale.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="developer/index.html" title="GeoExt Community Involvement"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="primers/openlayers-primer.html" title="Primer: OpenLayers"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="index.html">GeoExt</a> &raquo;</li>
+        <li><a href="#">Examples</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.OverlayLayerContainer`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.tree.AsyncTreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.AsyncTreeNode>`_
+    * :class:`GeoExt.tree.LayerContainer`
+
+
+
+
+
+
+.. class:: OverlayLayerContainer
+
+    A layer container that will collect all overlay layers of an OpenLayers
+    map. Only layers that have displayInLayerSwitcher set to true will be
+    included.
+
+    To use this node type in ``TreePanel`` config, set nodeType to
+    "gx_overlaylayercontainer".
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.tree.AsyncTreeNode <http://dev.sencha.com/deploy/dev/docs/?class=Ext.tree.AsyncTreeNode>`_.
+
+
+.. describe:: layerStore
+
+    :class:`GeoExt.data.LayerStore` The layer store containing layers to be
+    displayed in the container. If loader is not provided or provided as
+    ``Object``, this property will be set as the store option of the
+    loader. Otherwise it will be ignored.
+
+.. describe:: loader
+
+    :class:`GeoExt.tree.LayerLoader` or ``Object`` The loader to use with
+    this container. If an ``Object`` is provided, a
+    :class:`GeoExt.tree.LayerLoader`, configured with the the properties
+    from the provided object, will be created.
+
+
+
+
+
+
+
+
+

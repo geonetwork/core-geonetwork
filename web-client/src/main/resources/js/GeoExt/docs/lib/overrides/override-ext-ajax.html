@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ext.Ajax Overrides &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../index.html" />
+    <link rel="up" title="Ext Overrides" href="../overrides.html" />
+    <link rel="next" title="Download GeoExt" href="../../downloads.html" />
+    <link rel="prev" title="Ext Overrides" href="../overrides.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../docs.html">Documentation</a></li>
+                <li><a href="../../examples.html">Examples</a></li>
+                <li><a href="../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../overrides.html" accesskey="U">Ext Overrides</a> &raquo;</li>
+        <li><a href="#">Ext.Ajax Overrides</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Ext.Ajax Overrides</a><ul>
+<li><a class="reference external" href="#workaround-for-existing-builds">Workaround for Existing Builds</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="../overrides.html"
+                                  title="previous chapter">Ext Overrides</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="../../downloads.html"
+                                  title="next chapter">Download GeoExt</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ext-ajax-overrides">
+<span id="overrides-ext-ajax"></span><h1>Ext.Ajax Overrides<a class="headerlink" href="#ext-ajax-overrides" title="Permalink to this headline">¶</a></h1>
+<p>GeoExt provides an override for the functionality in
+<a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.Ajax">Ext.Ajax</a>.  If you include
+the <tt class="docutils literal"><span class="pre">override-ext-ajax.js</span></tt> file in your build, any calls to <tt class="docutils literal"><span class="pre">Ext.Ajax</span></tt>
+methods will be routed through <tt class="docutils literal"><span class="pre">OpenLayers.Request</span></tt> methods.  The practical
+implication of this is that you can set the <tt class="docutils literal"><span class="pre">OpenLayers.ProxyHost</span></tt> property
+in your application and have this proxy used by Ext components that call
+<tt class="docutils literal"><span class="pre">Ext.Ajax</span></tt> methods.</p>
+<p>To include <tt class="docutils literal"><span class="pre">override-ext-ajax.js</span></tt> in your build, the GeoExt section in
+your build config should look like one of the following:</p>
+<div class="highlight-ini"><pre># include everything (including override-ext-ajax.js)
+[GeoExt.js]
+root = ../lib
+license = geoext-license.js
+exclude =
+    GeoExt.js
+    GeoExt/SingleFile.js</pre>
+</div>
+<p>or</p>
+<div class="highlight-ini"><pre># custom build
+[GeoExt.js]
+root = ../lib
+license = geoext-license.js
+include =
+    overrides/override-ext-ajax.js
+    # other files listed here ...</pre>
+</div>
+<div class="section" id="workaround-for-existing-builds">
+<h2>Workaround for Existing Builds<a class="headerlink" href="#workaround-for-existing-builds" title="Permalink to this headline">¶</a></h2>
+<p>If you are using a build of GeoExt that includes the Ajax overrides (e.g. the
+0.6 release or earlier), you can work around any issues you may have using this
+override in your appliction by protecting the <tt class="docutils literal"><span class="pre">Ext.lib.Ajax</span></tt> object before
+loading file:<cite>GeoExt.js</cite>.</p>
+<p>The example markup below will remove the effect of the override on Ajax methods.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;path/to/ext.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+    <span class="nx">Ext</span><span class="p">.</span><span class="nx">lib</span><span class="p">.</span><span class="nx">_Ajax</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">lib</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">;</span> <span class="c1">// protect the original</span>
+    <span class="nx">Ext</span><span class="p">.</span><span class="nx">lib</span><span class="p">.</span><span class="nx">Ajax</span> <span class="o">=</span> <span class="p">{};</span>  <span class="c1">// create dummy for override</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;path/to/GeoExt.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+    <span class="nx">Ext</span><span class="p">.</span><span class="nx">lib</span><span class="p">.</span><span class="nx">Ajax</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">lib</span><span class="p">.</span><span class="nx">_Ajax</span><span class="p">;</span> <span class="c1">// restore the original</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>Note that issues with the Ajax override present in 0.6 will be fixed in
+subsequent releases.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="../../downloads.html" title="Download GeoExt"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="../overrides.html" title="Ext Overrides"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../overrides.html" >Ext Overrides</a> &raquo;</li>
+        <li><a href="#">Ext.Ajax Overrides</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

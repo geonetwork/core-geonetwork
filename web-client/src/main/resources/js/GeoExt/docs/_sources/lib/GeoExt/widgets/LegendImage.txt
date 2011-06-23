@@ -1,0 +1,73 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.LegendImage`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_
+    
+
+
+
+xtype
+    ``gx_legendimage``
+
+
+
+
+.. class:: LegendImage(config)
+
+    Show a legend image in a BoxComponent and make sure load errors are
+    dealt with.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_.
+
+
+.. describe:: defaultImgSrc
+
+    ``String`` Path to image that will be used if the legend image fails
+    to load.  Default is Ext.BLANK_IMAGE_URL.
+
+.. describe:: imgCls
+
+    ``String``  Optional css class to apply to img tag
+
+.. describe:: url
+
+    ``String``  The url of the image to load
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.BoxComponent <http://dev.sencha.com/deploy/dev/docs/?class=Ext.BoxComponent>`_.
+
+
+.. method:: LegendImage.setUrl
+
+    :param url: ``String`` The new URL.
+    
+    Sets the url of the legend image.
+
+
+
+
+

@@ -1,0 +1,82 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.LayerRecord`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.Record <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Record>`_
+    
+
+
+
+
+
+
+.. class:: LayerRecord
+
+    A record that represents an ``OpenLayers.Layer``. This record
+    will always have at least the following fields:
+
+    * title ``String``
+
+
+    
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.data.Record <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Record>`_.
+
+
+.. method:: LayerRecord.clone
+
+    :param id: ``String`` (optional) A new Record id.
+    :return: class:`GeoExt.data.LayerRecord` A new layer record.
+    
+    Creates a clone of this LayerRecord.
+
+.. method:: LayerRecord.getLayer
+
+    :return: ``OpenLayers.Layer``
+    
+    Gets the layer for this record.
+
+.. method:: LayerRecord.setLayer
+
+    :param layer: ``OpenLayers.Layer``
+    
+    Sets the layer for this record.
+
+
+
+
+
+
+Class Methods
+-------------
+
+Class methods in addition to static methods
+listed for `Ext.data.Record <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Record>`_.
+
+
+.. classmethod:: LayerRecord.create
+
+    :param o: ``Array`` Field definition as in ``Ext.data.Record.create``. Can
+        be omitted if no additional fields are required.
+    :return: ``Function`` A specialized :class:`GeoExt.data.LayerRecord`
+        constructor.
+    
+    Creates a constructor for a :class:`GeoExt.data.LayerRecord`, optionally
+    with additional fields.
+

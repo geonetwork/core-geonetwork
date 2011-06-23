@@ -1,0 +1,21 @@
+GeoExt 1.0 Builder
+==================
+
+Customize Your Build
+--------------------
+
+.. cssclass:: builder-form-text
+
+Choose the components used by your application from the form below.
+
+Download
+--------
+
+.. cssclass:: download-button-text
+
+When you are finished, click the "download" link to build a customized version
+of the library for your application.
+
+.. cssclass:: credit
+
+Custom build tool hosted by `OpenGeo <http://opengeo.org>`__.

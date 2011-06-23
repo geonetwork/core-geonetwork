@@ -1,0 +1,107 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.LayerStore`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_
+    
+
+
+
+
+
+
+.. class:: LayerStore
+
+    A store that contains a cache of :class:`GeoExt.data.LayerRecord`
+    objects.
+
+
+
+Example Use
+-----------
+
+Sample to create a new store containing a cache of
+:class:`GeoExt.data.LayerRecord` instances derived from map layers.
+
+.. code-block:: javascript
+
+    var store = new GeoExt.data.LayerStore({
+        map: myMap,
+        layers: myLayers
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. describe:: fields
+
+    ``Array``
+    If provided a custom layer record type with additional fields will be
+    used. Default fields for every layer record are `layer`
+    (``OpenLayers.Layer``) `title` (``String``). The value of this option is
+    either a field definition objects as passed to the
+    :meth:`GeoExt.data.LayerRecord.create` function or a
+    :class:`GeoExt.data.LayerRecord` constructor created using
+    :meth:`GeoExt.data.LayerRecord.create`.
+
+.. describe:: initDir
+
+    ``Number``
+    Bitfields specifying the direction to use for the initial sync between
+    the map and the store, if set to 0 then no initial sync is done.
+    Defaults to ``GeoExt.data.LayerStore.MAP_TO_STORE|GeoExt.data.LayerStore.STORE_TO_MAP``
+
+.. describe:: layers
+
+    ``Array(OpenLayers.Layer)``
+    Layers that will be added to the store (and the map, depending on the
+    value of the ``initDir`` option.
+
+.. describe:: map
+
+    ``OpenLayers.Map``
+    Map that this store will be in sync with. If not provided, the
+    store will not be bound to a map.
+
+.. describe:: reader
+
+    ``Ext.data.DataReader`` The reader used to produce
+    :class:`GeoExt.data.LayerRecord` objects from ``OpenLayers.Layer``
+    objects.  If not provided, a :class:`GeoExt.data.LayerReader` will be
+    used.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. attribute:: LayerStore.map
+
+    ``OpenLayers.Map``
+    Map that the store is synchronized with, if any.
+
+
+
+
+
+
+

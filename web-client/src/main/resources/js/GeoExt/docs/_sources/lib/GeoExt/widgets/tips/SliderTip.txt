@@ -1,0 +1,73 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.SliderTip`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Tip <http://dev.sencha.com/deploy/dev/docs/?class=Ext.slider.Tip>`_
+    
+
+
+
+
+
+
+.. class:: SliderTip(config)
+
+    Create a slider tip displaying ``Ext.Slider`` values over slider thumbs.
+
+
+
+Example Use
+-----------
+
+Sample code to create a slider tip to display slider value on hover:
+
+.. code-block:: javascript
+
+    var slider = new Ext.Slider({
+        renderTo: document.body,
+        width: 200,
+        plugins: new GeoExt.SliderTip()
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Tip <http://dev.sencha.com/deploy/dev/docs/?class=Ext.slider.Tip>`_.
+
+
+.. describe:: hover
+
+    ``Boolean``
+    Display the tip when hovering over the thumb.  If ``false``, tip will
+    only be displayed while dragging.  Default is ``true``.
+
+.. describe:: minWidth
+
+    ``Number``
+    Minimum width of the tip.  Default is 10.
+
+.. describe:: offsets
+
+    ``Array(Number)``
+    A two item list that provides x, y offsets for the tip.  Default is
+    [0, -10].
+
+
+
+
+
+
+
+
+

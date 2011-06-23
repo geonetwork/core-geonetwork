@@ -1,0 +1,66 @@
+
+.. currentmodule:: GeoExt.form
+
+:class:`GeoExt.form.BasicForm`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.form.BasicForm <http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.BasicForm>`_
+    
+
+
+
+
+
+
+.. class:: BasicForm(config)
+
+    A specific ``Ext.form.BasicForm`` whose doAction method creates
+    a :class:`GeoExt.form.SearchAction` if it is passed the string
+    "search" as its first argument.
+
+    In most cases one would not use this class directly, but
+    :class:`GeoExt.form.FormPanel` instead.
+
+
+    
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.form.BasicForm <http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.BasicForm>`_.
+
+
+.. method:: BasicForm.doAction
+
+    :param action: ``String or Ext.form.Action`` Either the name
+        of the action or a ``Ext.form.Action`` instance.
+    :param options: ``Object`` The options passed to the Action
+        constructor.
+    :return: :class:`GeoExt.form.BasicForm` This form.
+    
+    Performs the action, if the string "search" is passed as the
+    first argument then a :class:`GeoExt.form.SearchAction` is created.
+
+.. method:: BasicForm.search
+
+    :param options: ``Object`` The options passed to the Action
+        constructor.
+    :return: :class:`GeoExt.form.BasicForm` This form.
+    
+    Shortcut to do a search action.
+
+
+
+
+

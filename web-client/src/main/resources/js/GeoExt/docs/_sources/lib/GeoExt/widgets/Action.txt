@@ -1,0 +1,71 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.Action`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Action <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Action>`_
+    
+
+
+
+
+
+
+.. class:: Action(config)
+
+    Create a GeoExt.Action instance. A GeoExt.Action is created
+    to insert an OpenLayers control in a toolbar as a button or
+    in a menu as a menu item. A GeoExt.Action instance can be
+    used like a regular Ext.Action, look at the Ext.Action API
+    doc for more detail.
+
+
+
+Example Use
+-----------
+
+Sample code to create a toolbar with an OpenLayers control into it.
+
+.. code-block:: javascript
+
+    var action = new GeoExt.Action({
+        text: "max extent",
+        control: new OpenLayers.Control.ZoomToMaxExtent(),
+        map: map
+    });
+    var toolbar = new Ext.Toolbar([action]);
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Action <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Action>`_.
+
+
+.. describe:: control
+
+    ``OpenLayers.Control`` The OpenLayers control wrapped in this action.
+
+.. describe:: map
+
+    ``OpenLayers.Map`` The OpenLayers map that the control should be added
+    to.  For controls that don't need to be added to a map or have already
+    been added to one, this config property may be omitted.
+
+
+
+
+
+
+
+
+

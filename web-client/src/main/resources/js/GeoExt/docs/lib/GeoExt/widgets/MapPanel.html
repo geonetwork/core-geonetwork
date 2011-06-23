@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.MapPanel &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="GeoExt.Popup" href="Popup.html" />
+    <link rel="prev" title="GeoExt.LegendPanel" href="LegendPanel.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../docs.html">Documentation</a></li>
+                <li><a href="../../../examples.html">Examples</a></li>
+                <li><a href="../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.MapPanel</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="LegendPanel.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">GeoExt.LegendPanel</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="Popup.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.Popup</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-mappanel">
+<h1><a title="GeoExt.MapPanel" class="reference internal" href="#GeoExt.MapPanel"><tt class="xref docutils literal"><span class="pre">GeoExt.MapPanel</span></tt></a><a class="headerlink" href="#geoext-mappanel" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_mappanel</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.MapPanel">
+<em class="property">class </em><tt class="descclassname">GeoExt.</tt><tt class="descname">MapPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#GeoExt.MapPanel" title="Permalink to this definition">¶</a></dt>
+<dd>Create a panel container for a map.</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Sample code to create a panel with a new map:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">mapPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">MapPanel</span><span class="p">({</span>
+    <span class="nx">border</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s2">&quot;div-id&quot;</span><span class="p">,</span>
+    <span class="nx">map</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">maxExtent</span><span class="o">:</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Bounds</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Sample code to create a map panel with a bottom toolbar in a Window:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">win</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">Window</span><span class="p">({</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;My Map&quot;</span><span class="p">,</span>
+    <span class="nx">items</span><span class="o">:</span> <span class="p">[{</span>
+        <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;gx_mappanel&quot;</span><span class="p">,</span>
+        <span class="nx">bbar</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">Toolbar</span><span class="p">()</span>
+    <span class="p">}]</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">center</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.LonLat</span> <span class="pre">or</span> <span class="pre">Array(Number)</span></tt>  A location for the map center.  If
+an array is provided, the first two items should represent x &amp; y coordinates.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">extent</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Bounds</span> <span class="pre">or</span> <span class="pre">Array(Number)</span></tt>  An initial extent for the map (used
+if center and zoom are not provided.  If an array, the first four items
+should be minx, miny, maxx, maxy.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layers</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span> <span class="pre">or</span> <span class="pre">GeoExt.data.GroupingStore</span> <span class="pre">or</span> <span class="pre">Array(OpenLayers.Layer)</span></tt>
+A store holding records. The layers provided here will be added to this
+MapPanel&#8217;s map when it is rendered.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">map</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span> <span class="pre">or</span> <span class="pre">Object</span></tt>  A configured map or a configuration object
+for the map constructor.  A configured map will be available after
+construction through the <tt class="xref docutils literal"><span class="pre">map</span></tt> property.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">prettyStateKeys</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set this to true if you want pretty strings in the MapPanel&#8217;s
+state keys. More specifically, layer.name instead of layer.id will be used
+in the state keys if this option is set to true. But in that case you have
+to make sure you don&#8217;t have two layers with the same name. Defaults to
+false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">zoom</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Number</span></tt>  An initial zoom level for the map.</dd></dl>
+
+</div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="attribute">
+<dt id="GeoExt.MapPanel.layers">
+<tt class="descclassname">MapPanel.</tt><tt class="descname">layers</tt><a class="headerlink" href="#GeoExt.MapPanel.layers" title="Permalink to this definition">¶</a></dt>
+<dd><a title="GeoExt.data.LayerStore" class="reference external" href="../data/LayerStore.html#GeoExt.data.LayerStore"><tt class="xref docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt></a>  A store containing
+<a title="GeoExt.data.LayerRecord" class="reference external" href="../data/LayerRecord.html#GeoExt.data.LayerRecord"><tt class="xref docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></a> objects.</dd></dl>
+
+<dl class="attribute">
+<dt id="GeoExt.MapPanel.map">
+<tt class="descclassname">MapPanel.</tt><tt class="descname">map</tt><a class="headerlink" href="#GeoExt.MapPanel.map" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt> or <tt class="docutils literal"><span class="pre">Object</span></tt>  A map or map configuration.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="Popup.html" title="GeoExt.Popup"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="LegendPanel.html" title="GeoExt.LegendPanel"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.MapPanel</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

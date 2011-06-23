@@ -1,0 +1,481 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Primer: OpenLayers &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../index.html" />
+    <link rel="up" title="Core Concepts" href="index.html" />
+    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="prev" title="Primer: Ext" href="ext-primer.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../docs.html">Documentation</a></li>
+                <li><a href="../examples.html">Examples</a></li>
+                <li><a href="../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Core Concepts</a> &raquo;</li>
+        <li><a href="#">Primer: OpenLayers</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Primer: OpenLayers</a><ul>
+<li><a class="reference external" href="#layers">Layers</a><ul>
+<li><a class="reference external" href="#the-wms-layer">The WMS Layer</a></li>
+<li><a class="reference external" href="#the-vector-layer">The Vector Layer</a></li>
+<li><a class="reference external" href="#other-layers">Other Layers</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#controls">Controls</a><ul>
+<li><a class="reference external" href="#navigationhistory-control">NavigationHistory Control</a></li>
+<li><a class="reference external" href="#initialization-w-controls">Initialization w/ Controls</a></li>
+<li><a class="reference external" href="#more-controls">More Controls</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#events">Events</a><ul>
+<li><a class="reference external" href="#geoext-events">GeoExt Events</a></li>
+<li><a class="reference external" href="#openlayers-events">OpenLayers Events</a></li>
+<li><a class="reference external" href="#more-information">More Information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="ext-primer.html"
+                                  title="previous chapter">Primer: Ext</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="../examples.html"
+                                  title="next chapter">Examples</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="primer-openlayers">
+<h1>Primer: OpenLayers<a class="headerlink" href="#primer-openlayers" title="Permalink to this headline">¶</a></h1>
+<p>The OpenLayers mapping library is the key component of GeoExt, performing the
+core map-related functions of every GeoExt-based application. To get up to speed
+with GeoExt, let&#8217;s discover some OpenLayers basics.</p>
+<div class="section" id="layers">
+<h2>Layers<a class="headerlink" href="#layers" title="Permalink to this headline">¶</a></h2>
+<p>As its name suggests, OpenLayers manages a list of layers that together form a
+web-based mapping client. Each layer represents a different set of data. For
+instance, one layer might be responsible for displaying the boundary of a
+country. Another layer responsible for that country&#8217;s roads.</p>
+<p>OpenLayers contains many types of layers (you can see them all at the
+<a class="reference external" href="http://trac.openlayers.org/browser/trunk/openlayers/lib/OpenLayers/Layer">OpenLayers website</a>).
+For this primer, we&#8217;ll focus on two different layer types: <tt class="docutils literal"><span class="pre">WMS</span></tt> and
+<tt class="docutils literal"><span class="pre">Vector</span></tt>.</p>
+<div class="section" id="the-wms-layer">
+<h3>The WMS Layer<a class="headerlink" href="#the-wms-layer" title="Permalink to this headline">¶</a></h3>
+<p>This is the canonical layer type found in almost all GeoExt applications, where
+one or more images are used to display map-related information to the user. This
+type is named &#8216;WMS&#8217; because it implements the <a class="reference external" href="http://www.opengeospatial.org/standards/wms">Web Map Service</a> standard set by the <a class="reference external" href="http://www.opengeospatial.org/">Open
+Geospatial Consortium.</a></p>
+<p>If you followed the <a class="reference external" href="../tutorials/quickstart.html"><em>GeoExt QuickStart</em></a> guide, you will have already
+encountered a <tt class="docutils literal"><span class="pre">MapPanel</span></tt> and created your very own WMS layer. Let&#8217;s dissect
+what you did:</p>
+<blockquote>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">layer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">WMS</span><span class="p">(</span>
+    <span class="s2">&quot;Global Imagery&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;http://maps.opengeo.org/geowebcache/service/wms&quot;</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">layers</span><span class="o">:</span> <span class="s2">&quot;bluemarble&quot;</span><span class="p">}</span>
+<span class="p">);</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">layer</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+</blockquote>
+<p>This tells OpenLayers that you&#8217;d like to create a new WMS layer referenced by
+the <tt class="docutils literal"><span class="pre">layer</span></tt> variable, and that you&#8217;d like to add that layer to the map. In
+this case, we&#8217;re adding the <a class="reference external" href="http://earthobservatory.nasa.gov/Features/BlueMarble/">Blue Marble data set</a> provided by NASA.</p>
+<p>In <strong>line 2</strong> we provide &#8220;Global Imagery&#8221; as the name of the layer. This can be
+anything, and is only used to reference the layer on screen.</p>
+<p>In <strong>line 3</strong> we provide the location of the WMS server tasked with providing
+the images. Here, we use a GeoWebCache instance located at
+<tt class="docutils literal"><span class="pre">maps.opengeo.org</span></tt>.</p>
+<p>In <strong>line 4</strong> we provide extra parameters for the WMS server. Since many servers
+host different data sets, we need to specify which set we&#8217;d like. We do this by
+creating a new object and setting the <tt class="docutils literal"><span class="pre">layers</span></tt> property to <tt class="docutils literal"><span class="pre">&quot;bluemarble&quot;</span></tt>,
+the identifier for the Blue Marble data set.</p>
+<p>Note that <tt class="docutils literal"><span class="pre">layers</span></tt> isn&#8217;t the only WMS parameter we can provide. You can find
+out more in the <a class="reference external" href="http://dev.openlayers.org/apidocs">OpenLayers API Documentation</a>, by selecting &#8216;Layer&#8217; and then
+&#8216;WMS&#8217; in the navigation.</p>
+<p>And that&#8217;s it! Now let&#8217;s move on to the vector layer.</p>
+</div>
+<div class="section" id="the-vector-layer">
+<h3>The Vector Layer<a class="headerlink" href="#the-vector-layer" title="Permalink to this headline">¶</a></h3>
+<p>The WMS Layer, and many of the layer types provided by OpenLayers, use raster
+files (images like JPG, GIF, and PNG) to display maps. However, OpenLayers can
+also render map features directly in the browser, simply by adding an
+<tt class="docutils literal"><span class="pre">OpenLayers.Layer.Vector</span></tt> to the map. This is useful when displaying data from
+an OGC <cite>Web Feature Service &lt;http://www.opengeospatial.org/standards/wfs&gt;</cite>, a
+KML document, or even sketched in by the user. Here&#8217;s an example that generates
+some random data and displays it in a vector layer:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">vectorLayer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">Vector</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">180</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">360</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="o">-</span><span class="mi">90</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">180</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">numSides</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">6</span><span class="p">);</span>
+    <span class="nx">vectorLayer</span><span class="p">.</span><span class="nx">addFeature</span><span class="p">(</span>
+        <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Feature</span><span class="p">.</span><span class="nx">Vector</span><span class="p">(</span>
+            <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Geometry</span><span class="p">.</span><span class="nx">Polygon</span><span class="p">.</span><span class="nx">createRegularPolygon</span><span class="p">(</span>
+                <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Geometry</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span>
+                <span class="nx">numSides</span><span class="p">)));</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Map</span><span class="p">();</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">vectorLayer</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>While OpenLayers provides customized vector layers for loading data from
+existing sources, the GeoExt team recommends that you use the generic vector
+layer and populate it using <a title="GeoExt.data.FeatureStore" class="reference external" href="../lib/GeoExt/data/FeatureStore.html#GeoExt.data.FeatureStore"><tt class="xref docutils literal"><span class="pre">GeoExt.data.FeatureStore</span></tt></a>. For more
+information on doing this, see <a class="reference external" href="../tutorials/remote-features-tutorial.html"><em>Vector Data Tutorial</em></a>.</p>
+</div>
+<div class="section" id="other-layers">
+<h3>Other Layers<a class="headerlink" href="#other-layers" title="Permalink to this headline">¶</a></h3>
+<p>WMS and Vector are not the only layer types in OpenLayers. There are plenty more
+available, including Google Maps, Virtual Earth, and many more. Browse the
+<a class="reference external" href="http://dev.openlayers.org/apidocs">OpenLayers API documentation</a> for more
+information.</p>
+</div>
+</div>
+<div class="section" id="controls">
+<h2>Controls<a class="headerlink" href="#controls" title="Permalink to this headline">¶</a></h2>
+<p>Although OpenLayers is great at managing layers, it also provides a way to
+interact with those layers, primarily through the use of controls.</p>
+<p>Controls are primary user interface elements and/or API hooks that control and
+manage interaction with an OpenLayers map. For instance, panning and navigating
+a map is handled by the <tt class="docutils literal"><span class="pre">OpenLayers.Control.Navigation</span></tt> control. If you want a
+zoom bar in addition to zoom buttons, you&#8217;d add a <tt class="docutils literal"><span class="pre">PanZoomBar</span></tt> control. If you
+then want to see where you&#8217;ve navigated, you&#8217;d use the <tt class="docutils literal"><span class="pre">NavigationHistory</span></tt>
+control.</p>
+<p>Each control provides different and unique functionality. For this primer, we&#8217;ll
+focus only on the <tt class="docutils literal"><span class="pre">NavigationHistory</span></tt> control.</p>
+<div class="section" id="navigationhistory-control">
+<h3>NavigationHistory Control<a class="headerlink" href="#navigationhistory-control" title="Permalink to this headline">¶</a></h3>
+<p>Take a look at the OpenLayers <a class="reference external" href="http://openlayers.org/dev/examples/navigation-history.html">NavigationHistory control example</a>. If you view the
+source, you&#8217;ll come across code like this:</p>
+<blockquote>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Map</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">nav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">.</span><span class="nx">NavigationHistory</span><span class="p">();</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addControl</span><span class="p">(</span><span class="nx">nav</span><span class="p">);</span>
+</pre></div>
+</div>
+</blockquote>
+<p>The above code is fairly straightforward. First create a map, then a
+<tt class="docutils literal"><span class="pre">NavigationHistory</span></tt> control, and then finally add that control to the map. If
+you were to then look at your map in a web browser, you would only see the
+layers that you had added &#8211; no special user interface elements for exploring
+the navigation history.</p>
+<p>This is because without more intervention, the NavigationHistory control only
+provides an API allowing you to scroll through the history using a programmable
+interface.</p>
+<p>But the <tt class="docutils literal"><span class="pre">NavigationHistory</span></tt> control also provides a user interface. Let&#8217;s
+continue on through the example:</p>
+<blockquote>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">panel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">.</span><span class="nx">Panel</span><span class="p">({</span>
+    <span class="nx">div</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;panel&quot;</span><span class="p">)</span>
+<span class="p">});</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">addControls</span><span class="p">([</span><span class="nx">nav</span><span class="p">.</span><span class="nx">next</span><span class="p">,</span> <span class="nx">nav</span><span class="p">.</span><span class="nx">previous</span><span class="p">]);</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addControl</span><span class="p">(</span><span class="nx">panel</span><span class="p">);</span>
+</pre></div>
+</div>
+</blockquote>
+<p>To expose this interface, we first create a <tt class="docutils literal"><span class="pre">Panel</span></tt> control, and then add the
+<tt class="docutils literal"><span class="pre">next</span></tt> and <tt class="docutils literal"><span class="pre">previous</span></tt> buttons to the panel giving the user something to
+click on. We finally add the panel to the map.</p>
+<p>Now try the example again in your browser. <em>Beautiful ain&#8217;t it?</em></p>
+</div>
+<div class="section" id="initialization-w-controls">
+<h3>Initialization w/ Controls<a class="headerlink" href="#initialization-w-controls" title="Permalink to this headline">¶</a></h3>
+<p>In the above examples, we only added controls to the map using the
+<tt class="docutils literal"><span class="pre">map.addControl()</span></tt> method. Often, controls are added when the map is
+initialized bypassing the <tt class="docutils literal"><span class="pre">map.addControl()</span></tt> method. This is done simply by
+using the <tt class="docutils literal"><span class="pre">controls</span></tt> key and passing an array of controls, as seen below.</p>
+<blockquote>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+    <span class="nx">controls</span><span class="o">:</span> <span class="p">[</span>
+        <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">.</span><span class="nx">Navigation</span><span class="p">(),</span>
+        <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">.</span><span class="nx">Measure</span><span class="p">()</span>
+    <span class="p">]</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you use the <tt class="docutils literal"><span class="pre">controls</span></tt> key, <strong>you will not be given the default
+controls</strong> when initializing the map. You will have to add those controls
+yourself instead. <a class="reference external" href="http://docs.openlayers.org/library/controls.html">Find out more.</a></p>
+</div>
+</div>
+<div class="section" id="more-controls">
+<h3>More Controls<a class="headerlink" href="#more-controls" title="Permalink to this headline">¶</a></h3>
+<p>You can find more controls by
+<a class="reference external" href="http://trac.openlayers.org/browser/trunk/openlayers/lib/OpenLayers/Control">browsing the OpenLayers source code</a>
+or by reading <a class="reference external" href="http://docs.openlayers.org/library/controls.html">OpenLayers&#8217; Control documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events are the main mechanism for notifying multiple objects that something has
+happened. For instance, the <tt class="docutils literal"><span class="pre">NavigationHistory</span></tt> control listens to the map&#8217;s
+<tt class="docutils literal"><span class="pre">zoomend</span></tt> event to save the user&#8217;s zoom history for a later date; similarly,
+other objects may listen to the same event without interfering or knowing about
+the <tt class="docutils literal"><span class="pre">NavigationHistory</span></tt> control. This makes events very powerful, allowing
+objects to perform their desired function while decreasing coupling within
+OpenLayers and Ext applications.</p>
+<p>Both GeoExt and OpenLayers make extensive use of events. However, the OpenLayers
+events are slightly different from those in GeoExt, though they provide the same
+functionality. Let&#8217;s explore those differences.</p>
+<div class="section" id="geoext-events">
+<h3>GeoExt Events<a class="headerlink" href="#geoext-events" title="Permalink to this headline">¶</a></h3>
+<p>GeoExt uses the event library that comes standard with Ext. GeoExt events are
+synonymous with Ext events.</p>
+<p>Ext events can be used in any Ext or GeoExt components that extend the
+<tt class="docutils literal"><span class="pre">Ext.util.Observable</span></tt> class. <a class="reference external" href="http://www.slideshare.net/sdhjl2000/ext-j-s-observable">More here.</a></p>
+<p>To throw an event in any component that extends <tt class="docutils literal"><span class="pre">Ext.util.Observable</span></tt>, you
+must first tell the component that the event may be thrown. For instance, in a
+custom <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt> class, this is done using the <tt class="docutils literal"><span class="pre">addEvents()</span></tt> method below.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">MyPanel</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Ext</span><span class="p">.</span><span class="nx">Panel</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">initComponent</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">addEvents</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span> <span class="cm">/*, &quot;event2&quot;, ... etc.*/</span> <span class="p">);</span>
+
+        <span class="nx">MyPanel</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">initComponent</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Finally triggering the event is easy:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">MyPanel</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Ext</span><span class="p">.</span><span class="nx">Panel</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="c1">// ...</span>
+
+    <span class="nx">myFunction</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">arg1</span> <span class="o">=</span> <span class="s2">&quot;somevalue&quot;</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">fireEvent</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span><span class="p">,</span> <span class="nx">arg1</span> <span class="cm">/*, arg2, ... etc. */</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Great! Now in order for the event to be useful, we have to listen to it. Below
+is an example of adding two listeners to an instance of <tt class="docutils literal"><span class="pre">MyPanel</span></tt> using the
+<tt class="docutils literal"><span class="pre">on()</span></tt> function, and then finally triggering the event by calling
+<tt class="docutils literal"><span class="pre">myFunction()</span></tt>.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">panel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyPanel</span><span class="p">(</span><span class="cm">/* ... */</span><span class="p">);</span>
+
+<span class="c1">// First listener.</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;First listener responded. Got &quot;</span> <span class="o">+</span> <span class="nx">arg1</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Second listener.</span>
+<span class="nx">panel</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Second listener responded. Got &quot;</span> <span class="o">+</span> <span class="nx">arg1</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">panel</span><span class="p">.</span><span class="nx">myFunction</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <tt class="docutils literal"><span class="pre">on()</span></tt> function takes an optional third parameter that specifies
+the scope of the listening function. If given, the <tt class="docutils literal"><span class="pre">this</span></tt> identifier
+within the listening function will refer to the object passed.</p>
+</div>
+<p>And that&#8217;s it! Now let&#8217;s see how to do the same thing in OpenLayers.</p>
+</div>
+<div class="section" id="openlayers-events">
+<h3>OpenLayers Events<a class="headerlink" href="#openlayers-events" title="Permalink to this headline">¶</a></h3>
+<p>OpenLayers provides similar functionality as the <tt class="docutils literal"><span class="pre">Ext.util.Observable</span></tt> class,
+but it does so using the <tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt> class. Unlike
+<tt class="docutils literal"><span class="pre">Ext.util.Observable</span></tt>, OpenLayers classes do not extend <tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt>.</p>
+<p>Instead, it is customary for OpenLayers classes to create an attribute called
+<tt class="docutils literal"><span class="pre">events</span></tt> that is an instance of <tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt>, as per the code below.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">MyControl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Class</span><span class="p">(</span><span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="nx">events</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Events</span><span class="p">(</span>
+            <span class="k">this</span><span class="p">,</span>
+            <span class="kc">null</span><span class="p">,</span>
+            <span class="p">[</span><span class="s2">&quot;event1&quot;</span> <span class="cm">/*, &quot;event2&quot;, ... etc. */</span><span class="p">]</span>
+            <span class="kc">false</span>
+        <span class="p">);</span>
+
+        <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initialize</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>The first parameter to the <tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt> constructor is the object that
+will &#8216;own&#8217; these events &#8211; in other words, the caller that triggers the event.
+In situations like the example above, it is usually <tt class="docutils literal"><span class="pre">this</span></tt>.</p>
+<p>The second parameter specifies a <tt class="docutils literal"><span class="pre">div</span></tt> that will listen to events thrown by
+the browser. Here, this functionality is ignored; see the note below.</p>
+<p>The third parameter is an array specifying the events that this
+<tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt> object can throw. This is analogous to
+<tt class="docutils literal"><span class="pre">Ext.util.Observable</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">addEvents()</span></tt> method, and can accept any number of
+events.</p>
+<p>The fourth parameter is the <tt class="docutils literal"><span class="pre">fallthrough</span></tt>, a boolean that is related to the
+second parameter above. For our purposes, we&#8217;ll leave it as <tt class="docutils literal"><span class="pre">false</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt> class handles both browser events like when
+the window resizes, as well as handling developer-created events like
+<tt class="docutils literal"><span class="pre">event1</span></tt> above. This makes initializing an <tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt> object
+fairly mucky, though using it like we did above is nearly the same. See more
+below.</p>
+</div>
+<p>Triggering an event is just as easy as Ext&#8217;s <tt class="docutils literal"><span class="pre">fireEvent()</span></tt>, except here we use
+<tt class="docutils literal"><span class="pre">triggerEvent()</span></tt>:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">MyControl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Class</span><span class="p">(</span><span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Control</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="c1">// ...</span>
+
+    <span class="nx">myFunction</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">evt</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">arg1</span><span class="o">:</span> <span class="s2">&quot;somevalue&quot;</span> <span class="cm">/*, arg2: ..., ... etc.*/</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">triggerEvent</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span><span class="p">,</span> <span class="nx">evt</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="docutils literal"><span class="pre">OpenLayers.Events</span></tt> passes data to listeners using a single object
+with properties &#8211; otherwise called &#8216;the event object&#8217; &#8211; instead of passing
+function arguments like Ext. All listener functions, then, should only
+expect one named argument. See example below.</p>
+</div>
+<p>Finally, let&#8217;s add two listeners and call <tt class="docutils literal"><span class="pre">myFunction()</span></tt>:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">control</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyControl</span><span class="p">(</span><span class="cm">/* ... */</span><span class="p">);</span>
+
+<span class="c1">// First listener.</span>
+<span class="nx">control</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;First listener responded. Got &quot;</span> <span class="o">+</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">arg1</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Second listener.</span>
+<span class="nx">control</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s2">&quot;event1&quot;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Second listener responded. Got &quot;</span> <span class="o">+</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">arg1</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">control</span><span class="p">.</span><span class="nx">myFunction</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Like Ext&#8217;s <tt class="docutils literal"><span class="pre">on()</span></tt> function, OpenLayer&#8217;s <tt class="docutils literal"><span class="pre">register()</span></tt> function also
+takes an optional <tt class="docutils literal"><span class="pre">scope</span></tt> value in order to specify the scope of the
+listening function, but it expects this value as the second parameter passed
+to the function. We don&#8217;t have a scope for our listeners in this example,
+hence the <tt class="docutils literal"><span class="pre">null</span></tt> parameters.</p>
+</div>
+<p>And that&#8217;s it! Events in GeoExt should now be old hat. Fire away!</p>
+</div>
+<div class="section" id="more-information">
+<h3>More Information<a class="headerlink" href="#more-information" title="Permalink to this headline">¶</a></h3>
+<p>More information about both event types can be found at the links below:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://dev.openlayers.org/docs/files/OpenLayers/Events-js.html">OpenLayers Events Class Documentation</a></li>
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable Class Documentation</a></li>
+<li><a class="reference external" href="http://www.slideshare.net/sdhjl2000/ext-j-s-observable">Ext.util.Observable SlideShare</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="../examples.html" title="Examples"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="ext-primer.html" title="Primer: Ext"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" >Core Concepts</a> &raquo;</li>
+        <li><a href="#">Primer: OpenLayers</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

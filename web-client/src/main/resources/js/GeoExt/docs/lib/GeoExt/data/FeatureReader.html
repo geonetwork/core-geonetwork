@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoExt.data.FeatureReader &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../../../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../../../index.html" />
+    <link rel="up" title="GeoExt.data" href="../data.html" />
+    <link rel="next" title="GeoExt.data.FeatureRecord" href="FeatureRecord.html" />
+    <link rel="prev" title="GeoExt.data.AttributeStore" href="AttributeStore.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../../../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../../../docs.html">Documentation</a></li>
+                <li><a href="../../../examples.html">Examples</a></li>
+                <li><a href="../../../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../../../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../../../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../data.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">GeoExt.data</span></tt></a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.data.FeatureReader</span></tt></a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">GeoExt.data.FeatureReader</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="AttributeStore.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="FeatureRecord.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">GeoExt.data.FeatureRecord</span></tt></a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geoext-data-featurereader">
+<h1><a title="GeoExt.data.FeatureReader" class="reference internal" href="#GeoExt.data.FeatureReader"><tt class="xref docutils literal"><span class="pre">GeoExt.data.FeatureReader</span></tt></a><a class="headerlink" href="#geoext-data-featurereader" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader">Ext.data.DataReader</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="GeoExt.data.FeatureReader">
+<em class="property">class </em><tt class="descclassname">GeoExt.data.</tt><tt class="descname">FeatureReader</tt><big>(</big><em>meta</em>, <em>recordType</em><big>)</big><a class="headerlink" href="#GeoExt.data.FeatureReader" title="Permalink to this definition">¶</a></dt>
+<dd>Data reader class to create an array of
+<a title="GeoExt.data.FeatureRecord" class="reference external" href="FeatureRecord.html#GeoExt.data.FeatureRecord"><tt class="xref docutils literal"><span class="pre">GeoExt.data.FeatureRecord</span></tt></a> objects from an
+<tt class="docutils literal"><span class="pre">OpenLayers.Protocol.Response</span></tt> object for use in a
+<a title="GeoExt.data.FeatureStore" class="reference external" href="FeatureStore.html#GeoExt.data.FeatureStore"><tt class="xref docutils literal"><span class="pre">GeoExt.data.FeatureStore</span></tt></a> object.</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Typical usage in a store:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">Store</span><span class="p">({</span>
+    <span class="nx">reader</span><span class="o">:</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">FeatureReader</span><span class="p">({},</span> <span class="p">[</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;elevation&#39;</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;float&#39;</span><span class="p">}</span>
+    <span class="p">])</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader">Ext.data.DataReader</a>.</p>
+<dl class="method">
+<dt id="GeoExt.data.FeatureReader.readRecords">
+<tt class="descclassname">FeatureReader.</tt><tt class="descname">readRecords</tt><big>(</big><big>)</big><a class="headerlink" href="#GeoExt.data.FeatureReader.readRecords" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>features</em> &#8211; <tt class="docutils literal"><span class="pre">Array(OpenLayers.Feature.Vector)</span></tt> List of
+features for creating records</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Object</span></tt>  An object with <tt class="docutils literal"><span class="pre">records</span></tt> and <tt class="docutils literal"><span class="pre">totalRecords</span></tt>
+properties.</td>
+</tr>
+</tbody>
+</table>
+<p>Create a data block containing <a title="GeoExt.data.FeatureRecord" class="reference external" href="FeatureRecord.html#GeoExt.data.FeatureRecord"><tt class="xref docutils literal"><span class="pre">GeoExt.data.FeatureRecord</span></tt></a>
+objects from an array of features.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../../../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../../../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="FeatureRecord.html" title="GeoExt.data.FeatureRecord"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="AttributeStore.html" title="GeoExt.data.AttributeStore"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="../../index.html" >API Reference</a> &raquo;</li>
+          <li><a href="../data.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">GeoExt.data</span></tt></a> &raquo;</li>
+        <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">GeoExt.data.FeatureReader</span></tt></a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

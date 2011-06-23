@@ -1,0 +1,277 @@
+
+.. _examples:
+
+Examples
+========
+
+
+.. _example.attribute-form:
+
+.. cssclass:: exampleblock example-attribute-form
+
+Attribute Form
+--------------
+Create a form with fields from attributes read from a WFS
+DescribeFeatureType response
+
+
+
+.. _example.attributes:
+
+.. cssclass:: exampleblock example-attributes
+
+Attribute Store & Reader
+------------------------
+Create records with attribute types and values with an AttributeStore.
+
+
+
+.. _example.feature-grid:
+
+.. cssclass:: exampleblock example-feature-grid
+
+Grid with Features
+------------------
+Synchronize selection of features between a grid and a layer.
+
+
+
+.. _example.layercontainer:
+
+.. cssclass:: exampleblock example-layercontainer
+
+Layer Tree
+----------
+Create a layer tree with a LayerContainer.
+
+
+
+.. _example.layeropacityslider:
+
+.. cssclass:: exampleblock example-layeropacityslider
+
+Layer Opacity Slider
+--------------------
+Use a slider to control layer opacity.
+
+
+
+.. _example.legendpanel:
+
+.. cssclass:: exampleblock example-legendpanel
+
+Legend Panel
+------------
+Display a layer legend in a panel.
+
+
+
+.. _example.mappanel-div:
+
+.. cssclass:: exampleblock example-mappanel-div
+
+Map Panel
+---------
+Render a map panel in any block level page element.
+
+
+
+.. _example.mappanel-viewport:
+
+.. cssclass:: exampleblock example-mappanel-viewport
+
+Map Panel (in a Viewport)
+-------------------------
+Render a map panel in a viewport.
+
+
+
+.. _example.mappanel-window:
+
+.. cssclass:: exampleblock example-mappanel-window
+
+Map Panel (in a Window)
+-------------------------
+Render a map panel in a Window.
+
+
+
+.. _example.permalink:
+
+.. cssclass:: exampleblock example-permalink
+
+Permalink
+---------
+Display a permalink each time the map changes position.
+
+
+
+.. _example.popup:
+
+.. cssclass:: exampleblock example-popup
+
+Feature Popup
+-------------
+Display a popup with feature information.
+
+
+
+.. _example.popup-more:
+
+.. cssclass:: exampleblock example-popup-more
+
+Modifying Popups
+----------------
+Update a popup with information from multiple locations.
+
+
+
+.. _example.print-extent:
+
+.. cssclass:: exampleblock example-print-extent
+
+Interactive Print Extent
+------------------------
+Change print scale, center and rotation with the PrintExtent plugin.
+
+
+
+.. _example.print-form:
+
+.. cssclass:: exampleblock example-print-form
+
+Print Configuration with a Form
+-------------------------------
+Use form field plugins to control print output.
+
+
+
+.. _example.print-page:
+
+.. cssclass:: exampleblock example-print-page
+
+Print Your Map
+--------------
+Print the visible extent of a MapPanel with PrintPage and PrintProvider.
+
+
+
+.. _example.print-preview:
+
+.. cssclass:: exampleblock example-print-preview
+
+Print Preview Window
+--------------------
+Use the PrintMapPanel for interactive print previews.
+
+
+
+.. _example.print-preview-osm:
+
+.. cssclass:: exampleblock example-print-preview-osm
+
+Printing OpenStreetMap
+----------------------------------------
+PrintMapPanel with an OSM map.
+
+
+
+.. _example.renderer:
+
+.. cssclass:: exampleblock example-renderer
+
+Feature Renderer
+----------------
+Render a vector feature with multiple symbolizers in a box component.
+
+
+
+.. _example.search-form:
+
+.. cssclass:: exampleblock example-search-form
+
+Filter Form Panel
+-----------------
+Use a form to build an OpenLayers filter.
+
+
+
+.. _example.toolbar:
+
+.. cssclass:: exampleblock example-toolbar
+
+Toolbar with Actions
+--------------------
+Create a toolbar with GeoExt Actions.
+
+
+
+.. _example.tree:
+
+.. cssclass:: exampleblock example-tree
+
+Tree Nodes
+----------
+Create all kinds of tree nodes.
+
+
+
+.. _example.tree-legend:
+
+.. cssclass:: exampleblock example-tree-legend
+
+Tree Legend
+-----------
+Render layer nodes with legends.
+
+
+
+.. _example.vector-legend:
+
+.. cssclass:: exampleblock example-vector-legend
+
+Vector Legend
+-------------------------
+Render a legend for a vector layer.
+
+
+
+.. _example.wms-capabilities:
+
+.. cssclass:: exampleblock example-wms-capabilities
+
+WMS Capabilities Store
+----------------------
+Create layer records from WMS capabilities documents.
+
+
+
+.. _example.wms-tree:
+
+.. cssclass:: exampleblock example-wms-tree
+
+WMS Capabilities Tree
+---------------------
+Create a tree loader from WMS capabilities documents.
+
+
+
+.. _example.zoom-chooser:
+
+.. cssclass:: exampleblock example-zoom-chooser
+
+Scale Chooser
+-------------
+Use a ComboBox to display available map scales.
+
+
+
+.. _example.zoomslider:
+
+.. cssclass:: exampleblock example-zoomslider
+
+Zoom Slider
+-----------
+Use a slider to control map scale.
+
+

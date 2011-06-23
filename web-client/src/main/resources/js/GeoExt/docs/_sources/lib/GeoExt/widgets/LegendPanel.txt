@@ -1,0 +1,76 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.LegendPanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_
+    
+
+
+
+xtype
+    ``gx_legendpanel``
+
+
+
+
+.. class:: LegendPanel(config)
+
+A panel showing legends of all layers in a layer store.
+Depending on the layer type, a legend renderer will be chosen.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. describe:: dynamic
+
+    ``Boolean``
+    If false the LegendPanel will not listen to the add, remove and change
+    events of the LayerStore. So it will load with the initial state of
+    the LayerStore and not change anymore.
+
+.. describe:: filter
+
+    ``Function``
+    A function, called in the scope of the legend panel, with a layer record
+    as argument. Is expected to return true for layers to be displayed, false
+    otherwise. By default, all layers will be displayed.
+    
+    .. code-block:: javascript
+    
+        filter: function(record) {
+            return record.getLayer().isBaseLayer;
+        }
+
+.. describe:: layerStore
+
+    ``GeoExt.data.LayerStore``
+    The layer store containing layers to be displayed in the legend
+    container. If not provided it will be taken from the MapPanel.
+
+.. describe:: preferredTypes
+
+    ``Array(String)`` An array of preferred legend types.
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,220 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.VectorLegend`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Container <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Container>`_
+    * :class:`GeoExt.LayerLegend`
+
+
+
+xtype
+    ``gx_vectorlegend``
+
+
+
+
+.. class:: VectorLegend(config)
+
+    Create a vector legend.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Container <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. describe:: bodyBorder
+
+    ``Boolean``
+    Show a border around the legend panel. Default is ``false``.
+
+.. describe:: clickableSymbol
+
+    ``Boolean``
+    Set cursor style to "pointer" for symbolizers.  Register for
+    the ``symbolclick`` event to handle clicks.  Note that click events
+    are fired regardless of this value.  If ``false``, no cursor style will
+    be set.  Default is ``false``.
+
+.. describe:: clickableTitle
+
+    ``Boolean``
+    Set cursor style to "pointer" for rule titles.  Register for
+    the ``titleclick`` event to handle clicks.  Note that click events
+    are fired regardless of this value.  If ``false``, no cursor style will
+    be set.  Default is ``false``.
+
+.. describe:: enableDD
+
+    ``Boolean``
+    Allow drag and drop of rules. Default is ``false``.
+
+.. describe:: labelCls
+
+    ``String``
+    Optional css class to use for the layer title labels.
+
+.. describe:: layer
+
+    ``OpenLayers.Layer.Vector``
+    The layer that this legend will be based on.  One of ``layer``,
+    ``rules``, or ``layerRecord`` must be specified in the config.
+
+.. describe:: layerRecord
+
+    :class:`GeoExt.data.LayerRecord`
+    The record containing a vector layer that this legend will be based on.
+    One of ``layerRecord``, ``layer``,  or ``rules`` must be specified in
+    the config.
+
+.. describe:: legendTitle
+
+    ``String``
+    Optional title to be displayed instead of the layer title.  If this is
+    set, the value of ``showTitle`` will be ignored (assumed to be true).
+
+.. describe:: rules
+
+    ``Array(OpenLayers.Rule)``
+     List of rules.  One of ``rules``, ``layer``, or ``layerRecord`` must be
+     specified in the config.  The ``symbolType`` property must also be
+     provided if only ``rules`` are given in the config.
+
+.. describe:: selectOnClick
+
+    ``Boolean``
+    Set to true if a rule should be selected by clicking on the
+    symbol or title. Selection will trigger the ruleselected event, and
+    a click on a selected rule will unselect it and trigger the
+    ``ruleunselected`` event. Default is ``false``.
+
+.. describe:: showTitle
+
+    ``Boolean``
+    Whether or not to show the title of a layer. This can be overridden
+    on the LayerStore record using the hideTitle property.
+
+.. describe:: symbolType
+
+    ``String``
+    The symbol type for legend swatches.  Must be one of ``"Point"``,
+    ``"Line"``, or ``"Polygon"``.  If not provided, the ``layer`` or
+    ``layerRecord`` config property must be specified, and the geometry type
+    of the first feature found on the layer will be used. If a rule does
+    not have a symbolizer for ``symbolType``, we look at the symbolizers
+    for the rule, and see if it has a ``"Point"``, ``"Line"`` or
+    ``"Polygon"`` symbolizer, which we use for rendering a swatch of the
+    respective geometry type.
+
+.. describe:: untitledPrefix
+
+    ``String``
+    The prefix to use as a title for rules with no title or
+    name.  Default is ``"Untitled "``.  Prefix will be appended with a
+    number that corresponds to the index of the rule (1 for first rule).
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Container <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. method:: VectorLegend.setCurrentScaleDenominator
+
+    :arg scale: ``Number`` The scale denominator.
+    
+    Set the current scale denominator.  This will hide entries for any
+    rules that don't apply at the current scale.
+
+.. method:: VectorLegend.update
+
+    Update rule titles and symbolizers.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.Container <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. describe:: ruleclick
+
+    Fires when a rule entry is clicked (fired with symbolizer or
+    title click).
+    
+    Listener arguments:
+    
+    * comp - :class:`GeoExt.VectorLegend`` This component.
+    * rule - ``OpenLayers.Rule`` The rule that was clicked.
+
+.. describe:: rulemoved
+
+    Fires when a rule is moved.
+    
+    Listener arguments:
+    
+    * comp - :class:`GeoExt.VectorLegend`` This component.
+    * rule - ``OpenLayers.Rule`` The rule that was moved.
+
+.. describe:: ruleselected
+
+    Fires when a rule is clicked and ``selectOnClick`` is set to
+    ``true``.
+    
+    Listener arguments:
+    
+    * comp - :class:`GeoExt.VectorLegend`` This component.
+    * rule - ``OpenLayers.Rule`` The rule that was selected.
+
+.. describe:: ruleunselected
+
+    Fires when the selected rule is clicked and ``selectOnClick``
+    is set to ``true``, or when a rule is unselected by selecting a
+    different one.
+    
+    Listener arguments:
+    
+    * comp - :class:`GeoExt.VectorLegend`` This component.
+    * rule - ``OpenLayers.Rule`` The rule that was unselected.
+
+.. describe:: symbolclick
+
+    Fires when a rule symbolizer is clicked.
+    
+    Listener arguments:
+    
+    * comp - :class:`GeoExt.VectorLegend`` This component.
+    * rule - ``OpenLayers.Rule`` The rule whose symbol was clicked.
+
+.. describe:: titleclick
+
+    Fires when a rule title is clicked.
+    
+    Listener arguments:
+    
+    * comp - :class:`GeoExt.VectorLegend`` This component.
+    * rule - ``OpenLayers.Rule`` The rule whose title was clicked.
+
+
+

@@ -1,0 +1,71 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.FeatureReader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
+    
+
+
+
+
+
+
+.. class:: FeatureReader(meta, recordType)
+
+    Data reader class to create an array of
+    :class:`GeoExt.data.FeatureRecord` objects from an
+    ``OpenLayers.Protocol.Response`` object for use in a
+    :class:`GeoExt.data.FeatureStore` object.
+
+
+
+Example Use
+-----------
+
+Typical usage in a store:
+
+.. code-block:: javascript
+
+    var store = new Ext.data.Store({
+        reader: new GeoExt.data.FeatureReader({}, [
+            {name: 'name', type: 'string'},
+            {name: 'elevation', type: 'float'}
+        ])
+    });
+
+
+    
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.data.DataReader <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.DataReader>`_.
+
+
+.. method:: FeatureReader.readRecords
+
+    :param features: ``Array(OpenLayers.Feature.Vector)`` List of
+        features for creating records
+    :return: ``Object``  An object with ``records`` and ``totalRecords``
+        properties.
+    
+    Create a data block containing :class:`GeoExt.data.FeatureRecord`
+    objects from an array of features.
+
+
+
+
+

@@ -1,0 +1,62 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.WMSDescribeLayerStore`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_
+    
+
+
+
+
+
+
+.. class:: WMSDescribeLayerStore
+
+    Small helper class to make creating stores for remote WMS layer description
+    easier.  The store is pre-configured with a built-in
+    ``Ext.data.HttpProxy`` and :class:`GeoExt.data.WMSDescribeLayerReader`.
+    The proxy is configured to allow caching and issues requests via GET.
+    If you require some other proxy/reader combination then you'll have to
+    configure this with your own proxy or create a basic
+    store and configure as needed.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.data.Store <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Store>`_.
+
+
+.. describe:: fields
+
+    ``Array | Function``
+    Either an Array of field definition objects as passed to
+    ``Ext.data.Record.create``, or a record constructor created using
+    ``Ext.data.Record.create``.  Defaults to ``["name", "type"]``.
+
+.. describe:: format
+
+    ``OpenLayers.Format``
+    A parser for transforming the XHR response into an array of objects
+    representing attributes.  Defaults to an ``OpenLayers.Format.WMSDescribeLayer``
+    parser.
+
+
+
+
+
+
+
+
+

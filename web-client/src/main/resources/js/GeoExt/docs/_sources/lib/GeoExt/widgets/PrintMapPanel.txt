@@ -1,0 +1,209 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.PrintMapPanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_
+    * :class:`GeoExt.MapPanel`
+
+
+
+xtype
+    ``gx_printmappanel``
+
+
+
+
+.. class:: PrintMapPanel
+
+A map panel that controls scale and center of a print page. Based on the
+current view (i.e. layers and extent) of a source map, this panel will be
+sized according to the aspect ratio of the print page. As the user zooms
+and pans in the :class:`GeoExt.PrintMapPanel`, the print page will update
+its scale and center accordingly. If the scale on the print page changes
+(e.g. by setting it using a combo box with a
+:class:`GeoExt.plugins.PrintPageField`), the extent of the
+:class:`GeoExt.PrintMapPanel` will be updated to match the page bounds.
+
+.. note:: The ``zoom``, ``center`` and ``extent`` config options will have
+    no affect, as they will be determined by the ``sourceMap``.
+
+
+
+Example Use
+-----------
+
+A map with a "Print..." button. If clicked, a dialog containing a
+PrintMapPanel will open, with a "Create PDF" button.
+
+.. code-block:: javascript
+
+    var mapPanel = new GeoExt.MapPanel({
+        renderTo: "map",
+        layers: [new OpenLayers.Layer.WMS("Tasmania State Boundaries",
+            "http://demo.opengeo.org/geoserver/wms",
+            {layers: "topp:tasmania_state_boundaries"}, {singleTile: true})],
+        center: [146.56, -41.56],
+        zoom: 6,
+        bbar: [{
+            text: "Print...",
+            handler: function() {
+                var printDialog = new Ext.Window({
+                    autoHeight: true,
+                    width: 350,
+                    items: [new GeoExt.PrintMapPanel({
+                        sourceMap: mapPanel,
+                        printProvider: {
+                            capabilities: printCapabilities
+                        }
+                    })],
+                    bbar: [{
+                        text: "Create PDF",
+                        handler: function() {
+                            printDialog.items.get(0).print();
+                        }
+                    }]
+                });
+                printDialog.show();
+            }
+        }]
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. describe:: center
+
+    ``OpenLayers.LonLat`` or ``Array(Number)``  A location for the map
+    center. Do not set, as this will be overridden with the ``sourceMap``
+    center.
+
+.. describe:: extent
+
+    ``OpenLayers.Bounds or Array(Number)``  An initial extent for the map.
+    Do not set, because the initial extent will be determined by the
+    ``sourceMap``.
+
+.. describe:: layers
+
+    ``GeoExt.data.LayerStore or GeoExt.data.GroupingStore or Array(OpenLayers.Layer)``
+    A store holding records. The layers provided here will be added to this
+    MapPanel's map when it is rendered.
+
+.. describe:: limitScales
+
+    ``Boolean`` If set to true, the printPage cannot be set to scales that
+    would generate a preview in this :class:`GeoExt.PrintMapPanel` with a
+    completely different extent than the one that would appear on the
+    printed map. Default is false.
+
+.. describe:: map
+
+    ``Object`` Optional configuration for the ``OpenLayers.Map`` object
+    that this PrintMapPanel creates. Useful e.g. to configure a map with a
+    custom set of controls, or to add a ``preaddlayer`` listener for
+    filtering out layer types that cannot be printed.
+
+.. describe:: prettyStateKeys
+
+    ``Boolean`` Set this to true if you want pretty strings in the MapPanel's
+    state keys. More specifically, layer.name instead of layer.id will be used
+    in the state keys if this option is set to true. But in that case you have
+    to make sure you don't have two layers with the same name. Defaults to
+    false.
+
+.. describe:: printProvider
+
+    :class:`GeoExt.data.PrintProvider` or ``Object`` PrintProvider to use
+    for printing. If an ``Object`` is provided, a new PrintProvider will
+    be created and configured with the object.
+    
+    .. note:: The PrintMapPanel requires the printProvider's capabilities
+      to be available upon initialization. This means that a PrintMapPanel
+      configured with an ``Object`` as ``printProvider`` will only work
+      when ``capabilities`` is provided in the printProvider's
+      configuration object. If ``printProvider`` is provided as an instance
+      of :class:`GeoExt.data.PrintProvider`, the capabilities must be
+      loaded before PrintMapPanel initialization.
+
+.. describe:: sourceMap
+
+    :class:`GeoExt.MapPanel` or ``OpenLayers.Map`` The map that is to be
+    printed.
+
+.. describe:: zoom
+
+    ``Number``  An initial zoom level for the map. Do not set, because the
+    initial extent will be determined by the ``sourceMap``.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. attribute:: PrintMapPanel.layers
+
+    :class:`GeoExt.data.LayerStore`  A store containing
+    :class:`GeoExt.data.LayerRecord` objects.
+
+.. attribute:: PrintMapPanel.map
+
+    ``OpenLayers.Map`` or ``Object``  A map or map configuration.
+
+.. attribute:: PrintMapPanel.previewScales
+
+    ``Ext.data.Store`` A data store with a subset of the printProvider's
+    scales. By default, this contains all the scales of the printProvider.
+    If ``limitScales`` is set to true, it will only contain print scales
+    that can properly be previewed with this :class:`GeoExt.PrintMapPanel`.
+
+.. attribute:: PrintMapPanel.printPage
+
+    :class:`GeoExt.data.PrintPage` PrintPage for this PrintMapPanel.
+    Read-only.
+
+.. attribute:: PrintMapPanel.printProvider
+
+    :class:`GeoExt.data.PrintProvider` PrintProvider for this
+    PrintMapPanel.
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. method:: PrintMapPanel.print
+
+    :param options: ``Object`` options for
+        the :class:`GeoExt.data.PrintProvider` :: ``print``  method.
+    
+    Convenience method for printing the map, without the need to
+    interact with the printProvider and printPage.
+
+
+
+
+

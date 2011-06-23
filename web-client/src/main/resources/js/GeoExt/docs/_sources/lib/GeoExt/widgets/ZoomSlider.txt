@@ -1,0 +1,128 @@
+
+.. currentmodule:: GeoExt
+
+:class:`GeoExt.ZoomSlider`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Slider <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Slider>`_
+    
+
+
+
+xtype
+    ``gx_zoomslider``
+
+
+
+
+.. class:: ZoomSlider(config)
+
+    Create a slider for controlling a map's zoom level.
+
+
+
+Example Use
+-----------
+
+Sample code to render a slider outside the map viewport:
+
+.. code-block:: javascript
+
+    var slider = new GeoExt.ZoomSlider({
+        renderTo: document.body,
+        width: 200,
+        map: map
+    });
+
+Sample code to add a slider to a map panel:
+
+.. code-block:: javascript
+
+    var panel = new GeoExt.MapPanel({
+        renderTo: document.body,
+        height: 300,
+        width: 400,
+        map: {
+            controls: [new OpenLayers.Control.Navigation()]
+        },
+        layers: [new OpenLayers.Layer.WMS(
+            "Global Imagery",
+            "http://maps.opengeo.org/geowebcache/service/wms",
+            {layers: "bluemarble"}
+        )],
+        extent: [-5, 35, 15, 55],
+        items: [{
+            xtype: "gx_zoomslider",
+            aggressive: true,
+            vertical: true,
+            height: 100,
+            x: 10,
+            y: 20
+        }]
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Slider <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Slider>`_.
+
+
+.. describe:: aggressive
+
+    ``Boolean``
+    If set to true, the map is zoomed as soon as the thumb is moved. Otherwise
+    the map is zoomed when the thumb is released (default).
+
+.. describe:: baseCls
+
+    ``String``
+    The CSS class name for the slider elements.  Default is "gx-zoomslider".
+
+.. describe:: map
+
+    ``OpenLayers.Map`` or :class:`GeoExt.MapPanel`
+    The map that the slider controls.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Slider <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Slider>`_.
+
+
+.. method:: ZoomSlider.getResolution
+
+    :return: ``Number`` The map resolution.
+    
+    Get the resolution for the associated map based on the slider value.
+
+.. method:: ZoomSlider.getScale
+
+    :return: ``Number`` The map scale denominator.
+    
+    Get the scale denominator for the associated map based on the slider value.
+
+.. method:: ZoomSlider.getZoom
+
+    :return: ``Number`` The map zoom level.
+    
+    Get the zoom level for the associated map based on the slider value.
+
+
+
+
+

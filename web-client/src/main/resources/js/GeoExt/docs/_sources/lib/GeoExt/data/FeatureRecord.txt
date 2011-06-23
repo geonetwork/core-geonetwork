@@ -1,0 +1,77 @@
+
+.. currentmodule:: GeoExt.data
+
+:class:`GeoExt.data.FeatureRecord`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.data.Record <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Record>`_
+    
+
+
+
+
+
+
+.. class:: FeatureRecord
+
+    A record that represents an ``OpenLayers.Feature.Vector``. This record
+    will always have at least the following fields:
+
+    * state ``String``
+    * fid ``String``
+
+
+
+    
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.data.Record <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Record>`_.
+
+
+.. method:: FeatureRecord.getFeature
+
+    :return: ``OpenLayers.Feature.Vector``
+    
+    Gets the feature for this record.
+
+.. method:: FeatureRecord.setLayer
+
+    :param layer: ``OpenLayers.Feature.Vector``
+    
+    Sets the feature for this record.
+
+
+
+
+
+
+Class Methods
+-------------
+
+Class methods in addition to static methods
+listed for `Ext.data.Record <http://dev.sencha.com/deploy/dev/docs/?class=Ext.data.Record>`_.
+
+
+.. classmethod:: FeatureRecord.create
+
+    :param o: ``Array`` Field definition as in ``Ext.data.Record.create``. Can
+        be omitted if no additional fields are required.
+    :return: ``Function`` A specialized :class:`GeoExt.data.FeatureRecord`
+        constructor.
+    
+    Creates a constructor for a :class:`GeoExt.data.FeatureRecord`, optionally
+    with additional fields.
+

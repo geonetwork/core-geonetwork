@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector Data Tutorial &mdash; GeoExt v1.0</title>
+    <link rel="stylesheet" href="../_static/geoext.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="GeoExt v1.0" href="../index.html" />
+    <link rel="up" title="Tutorials" href="index.html" />
+    <link rel="next" title="Core Concepts" href="../primers/index.html" />
+    <link rel="prev" title="Map Tool Tutorial" href="control-button-tutorial.html" />
+    
+    
+    
+    
+    
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="wrap">
+            <h1 id="logo"><a href="../index.html">GeoExt</a></h1>
+            <ul id="top-nav">
+                <li class="first"><a href="../docs.html">Documentation</a></li>
+                <li><a href="../examples.html">Examples</a></li>
+                <li><a href="../downloads.html">Download</a></li>
+                <li><a href="http://trac.geoext.org/">Development</a></li>
+            </ul>
+            <div id="searchbox">
+                <form class="search" action="../search.html" method="get">
+                    <input id="searchbox-query" type="text" name="q" size="25" value="Search &hellip;" tabindex="3" onblur="if(this.value=='') this.value='Search &hellip;';" onfocus="if(this.value=='Search &hellip;') this.value='';" />
+                    <input id="searchbox-submit" type="image" value="Search" src="../_static/img/search_icon_green.png" />
+                    <input type="hidden" name="check_keywords" value="yes" />
+                    <input type="hidden" name="area" value="default" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Tutorials</a> &raquo;</li>
+        <li><a href="#">Vector Data Tutorial</a></li>
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Vector Data Tutorial</a><ul>
+<li><a class="reference external" href="#reading-kml">Reading KML</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="control-button-tutorial.html"
+                                  title="previous chapter">Map Tool Tutorial</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="../primers/index.html"
+                                  title="next chapter">Core Concepts</a></p>
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vector-data-tutorial">
+<h1>Vector Data Tutorial<a class="headerlink" href="#vector-data-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Base layers such as OpenStreetMap and Google Maps are generally distributed in
+pre-rendered tiles using file formats such as PNG or JPG. While these are great
+for <strong>displaying</strong> maps, they are not very useful for getting at the data behind
+a map. They don&#8217;t allow you to provide functionality such as informational
+popups, selection and highlighting of individual features, and editing of data.
+For these, you need to use <strong>vector data</strong>, provided through file formats such
+as KML, GeoJSON, or GML which provide information about each feature on the map,
+rather than just the pixels to put on the screen.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Web browsers impose a same origin policy on JavaScript code to protect
+users from cross-site scripting attacks. This means that if your GeoExt
+application is hosted on a different host or port from your vector data, you
+will need to configure a proxy service.</p>
+</div>
+<div class="section" id="reading-kml">
+<h2>Reading KML<a class="headerlink" href="#reading-kml" title="Permalink to this headline">¶</a></h2>
+<p>As an introduction to using vector data in GeoExt, let&#8217;s create a simple map
+that displays data from a KML. Copy <a href="../_downloads/sundials.kml"><strong class="xref">this sample KML file</strong></a> to the same directory with your GeoExt and Ext libraries. Then
+we can load it with some JavaScript:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Openlayers</span><span class="p">.</span><span class="nx">Map</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">bluemarble</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">WMS</span><span class="p">(</span>
+    <span class="s2">&quot;Global Imagery&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;http://maps.opengeo.org/geowebcache/service/wms&quot;</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">layers</span><span class="o">:</span> <span class="s2">&quot;bluemarble&quot;</span><span class="p">}</span>
+<span class="p">);</span>
+<span class="kd">var</span> <span class="nx">sundials</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">Vector</span><span class="p">(</span><span class="s2">&quot;Sundials&quot;</span><span class="p">);</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">bluemarble</span><span class="p">);</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">sundials</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">FeatureStore</span><span class="p">({</span>
+    <span class="nx">layer</span><span class="o">:</span> <span class="nx">sundials</span><span class="p">,</span>
+    <span class="nx">proxy</span><span class="o">:</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">ProtocolProxy</span><span class="p">({</span>
+        <span class="nx">protocol</span><span class="o">:</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Protocol</span><span class="p">.</span><span class="nx">HTTP</span><span class="p">({</span>
+            <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;sundials.kml&quot;</span><span class="p">,</span>
+            <span class="nx">format</span><span class="o">:</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Format</span><span class="p">.</span><span class="nx">KML</span><span class="p">()</span>
+        <span class="p">})</span>
+    <span class="p">}),</span>
+    <span class="nx">fields</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nx">autoLoad</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">mapPanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeoExt</span><span class="p">.</span><span class="nx">MapPanel</span><span class="p">({</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Sundials&quot;</span><span class="p">,</span>
+    <span class="nx">map</span><span class="o">:</span> <span class="nx">map</span><span class="p">,</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s1">&#39;mapPanel&#39;</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="mi">400</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="mi">600</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Here, we set up a map with two layers. <tt class="docutils literal"><span class="pre">bluemarble</span></tt> is a WMS layer, which you
+should have seen before in other tutorials. <tt class="docutils literal"><span class="pre">sundials</span></tt> is a vector layer,
+which handles client-side rendering of vector data.</p>
+<p>In <strong>line 10</strong> we initialize a <a title="GeoExt.data.FeatureStore" class="reference external" href="../lib/GeoExt/data/FeatureStore.html#GeoExt.data.FeatureStore"><tt class="xref docutils literal"><span class="pre">GeoExt.data.FeatureStore</span></tt></a>. This class
+functions as a normal <tt class="docutils literal"><span class="pre">Ext.data.Store</span></tt> to interoperate with ExtJS classes, as
+well as providing the ability to <strong>bind</strong> to an <tt class="docutils literal"><span class="pre">OpenLayers.Layer.Vector</span></tt> in
+order to display features on a map. In this example, we set up the store
+completely through constructor parameters:</p>
+<blockquote>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">layer:</span> <span class="pre">sundials</span></tt></dt>
+<dd>tells the store to render features using the <tt class="docutils literal"><span class="pre">sundials</span></tt> layer. This is
+equivalent to calling <tt class="docutils literal"><span class="pre">store.bind(sundials)</span></tt> after initializing the
+store.</dd>
+<dt><tt class="docutils literal"><span class="pre">proxy:</span> <span class="pre">new</span> <span class="pre">GeoExt.data.ProtocolProxy(</span></tt></dt>
+<dd>tells the store to use a <tt class="docutils literal"><span class="pre">ProtocolProxy</span></tt> for fetching features.
+<tt class="docutils literal"><span class="pre">ProtocolProxy</span></tt> wraps OpenLayers Protocol objects. Here we use an
+<tt class="docutils literal"><span class="pre">OpenLayers.Protocol.HTTP</span></tt> to fetch data over the web. The <tt class="docutils literal"><span class="pre">HTTP</span></tt>
+protocol works with a variety of <tt class="docutils literal"><span class="pre">OpenLayers.Format</span></tt> types; here we
+use <tt class="docutils literal"><span class="pre">KML</span></tt> to match our dataset. You can see all the available
+<tt class="docutils literal"><span class="pre">Protocol</span></tt>s and <tt class="docutils literal"><span class="pre">Format</span></tt>s in the <a class="reference external" href="http://openlayers.org">OpenLayers API documentation</a>.</dd>
+<dt><tt class="docutils literal"><span class="pre">fields:</span> <span class="pre">[...]</span></tt></dt>
+<dd>tells the store which extra properties (aside from just the geometry) to
+look for. Here, we know that KML includes a <tt class="docutils literal"><span class="pre">title</span></tt> and a
+<tt class="docutils literal"><span class="pre">description</span></tt> for each point, and that both are string values.</dd>
+<dt><tt class="docutils literal"><span class="pre">autoLoad:</span> <span class="pre">true</span></tt></dt>
+<dd>tells the store to go ahead and fetch the feature data as soon as the
+constructor finishes. This is equivalent to calling <tt class="docutils literal"><span class="pre">store.load()</span></tt>
+after the store is initialized.</dd>
+</dl>
+</blockquote>
+<p>Now we have a map with a background and some data hosted on our server. It looks
+like any other map; we can pan and zoom normally to navigate around.</p>
+<p>However, since GeoExt has access to the data <em>behind</em> the map, we now have some
+options that weren&#8217;t available to us before. For example, we can add a control
+that allows us to view the features in a tabular format:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">GridPanel</span><span class="p">({</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Sundials&#39;</span><span class="p">,</span>
+    <span class="nx">store</span><span class="o">:</span> <span class="nx">store</span>
+    <span class="nx">columns</span><span class="o">:</span> <span class="p">[{</span><span class="nx">heading</span><span class="o">:</span> <span class="s1">&#39;Title&#39;</span><span class="p">,</span> <span class="nx">dataIndex</span><span class="o">:</span> <span class="s1">&#39;title&#39;</span><span class="p">},</span>
+              <span class="p">{</span><span class="nx">heading</span><span class="o">:</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="nx">dataIndex</span><span class="o">:</span> <span class="s1">&#39;description&#39;</span><span class="p">}],</span>
+    <span class="nx">renderTo</span><span class="o">:</span> <span class="s2">&quot;grid&quot;</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="mi">600</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+            <li class="right" style="margin-right: 10px">
+              <a href="../genindex.html" title="General Index"
+                 accesskey="I">index</a></li>
+            <li class="right" >
+              <a href="../modindex.html" title="Global Module Index"
+                 accesskey="M">modules</a> |</li>
+            <li class="right" >
+              <a href="../primers/index.html" title="Core Concepts"
+                 accesskey="N">next</a> |</li>
+            <li class="right" >
+              <a href="control-button-tutorial.html" title="Map Tool Tutorial"
+                 accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GeoExt</a> &raquo;</li>
+          <li><a href="index.html" >Tutorials</a> &raquo;</li>
+        <li><a href="#">Vector Data Tutorial</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2009-2010, GeoExt Community.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+
+.. currentmodule:: GeoExt.plugins
+
+:class:`GeoExt.plugins.PrintExtent`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+
+
+
+ptype
+    ``gx_printextent``
+
+
+
+.. class:: PrintExtent
+
+Provides a way to show and modify the extents of print pages on the map. It
+uses a layer to render the page extent and handle features of print pages,
+and provides a control to modify them. Must be set as a plugin to a
+:class:`GeoExt.MapPanel`.
+
+
+
+Example Use
+-----------
+
+Sample code to create a MapPanel with a PrintExtent, and print it
+immediately:
+
+.. code-block:: javascript
+
+    var printExtent = new GeoExt.plugins.PrintExtent({
+        printProvider: new GeoExt.data.PrintProvider({
+            capabilities: printCapabilities
+        })
+    });
+
+    var mapPanel = new GeoExt.MapPanel({
+        border: false,
+        renderTo: "div-id",
+        layers: [new OpenLayers.Layer.WMS("Tasmania", "http://demo.opengeo.org/geoserver/wms",
+            {layers: "topp:tasmania_state_boundaries"}, {singleTile: true})],
+        center: [146.56, -41.56],
+        zoom: 6,
+        plugins: printExtent
+    });
+
+    printExtent.addPage();
+
+    // print the map
+    printExtent.print();
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties.
+
+
+.. describe:: layer
+
+    ``OpenLayers.Layer.Vector`` The layer used to render extent and handle
+    features to. Optional, will be created if not provided.
+
+.. describe:: pages
+
+    Array of :class:`GeoExt.data.PrintPage` The pages that this plugin
+    controls. Optional. If not provided, it will be created with one page
+    that is completely contained within the visible map extent.
+    
+    .. note:: All pages must use the same PrintProvider.
+
+.. describe:: printProvider
+
+    :class:`GeoExt.data.PrintProvider` The print provider this form
+    is connected to. Optional if pages are provided.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties.
+
+
+.. attribute:: PrintExtent.page
+
+    :class:`GeoExt.data.PrintPage` The page currently set for
+    transformation.
+
+.. attribute:: PrintExtent.pages
+
+    Array of :class:`GeoExt.data.PrintPage` The pages that this component
+    controls. Read-only.
+
+.. attribute:: PrintExtent.printProvider
+
+    :class:`GeoExt.data.PrintProvider` The print provider this form
+    is connected to. Read-only.
+
+
+
+
+Public Methods
+--------------
+
+Public methods.
+
+
+.. method:: PrintExtent.addPage
+
+    :param page: :class:`GeoExt.data.PrintPage` The page to add
+         to this plugin. If not provided, a page that fits the current
+         extent is created.
+    :return: page :class:``GeoExt.data.PrintPage``
+    
+    Adds a page to the list of pages that this plugin controls.
+
+.. method:: PrintExtent.hide
+
+    Tear downs the plugin, removing the
+    ``OpenLayers.Control.TransformFeature`` control and
+    the ``OpenLayers.Layer.Vector`` layer.
+
+.. method:: PrintExtent.print
+
+    :param options: ``Object`` Options to send to the PrintProvider's
+        print method. See :class:`GeoExt.data.PrintProvider` :: ``print``.
+    
+    Prints all pages as shown on the map.
+
+.. method:: PrintExtent.removePage
+
+    :param page: :class:`GeoExt.data.PrintPage` The page to remove
+         from this plugin.
+    
+    Removes a page from the list of pages that this plugin controls.
+
+.. method:: PrintExtent.selectPage
+
+    :param page: :class:`GeoExt.data.PrintPage` The page to select
+    
+    Selects the given page (ie. calls the setFeature on the modify feature
+    control)
+
+.. method:: PrintExtent.show
+
+    Sets up the plugin, initializing the ``OpenLayers.Layer.Vector``
+    layer and ``OpenLayers.Control.TransformFeature``, and centering
+    the first page if no pages were specified in the configuration.
+
+
+
+
+Events
+------
+
+Events.
+
+
+.. describe:: selectpage
+
+    Triggered when a page has been selected using the control
+    
+    Listener arguments:
+    * printPage - :class:`GeoExt.data.PrintPage` this printPage
+
+
+

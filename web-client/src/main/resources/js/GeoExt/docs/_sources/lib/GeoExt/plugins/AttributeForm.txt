@@ -1,0 +1,81 @@
+
+.. currentmodule:: GeoExt.plugins
+
+:class:`GeoExt.plugins.AttributeForm`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+
+
+
+ptype
+    ``gx_attributeform``
+
+
+
+.. class:: AttributeForm
+
+This plugin allows creating form items from attribute records
+and fill a form panel with these items.
+
+
+
+Example Use
+-----------
+
+Sample code showing how to use an Ext form panel as a feature
+attribute form (for editing features for example).
+
+.. code-block:: javascript
+
+    var formPanel = new Ext.form.FormPanel({
+        autoScroll: true,
+        height: 300,
+        width: 350,
+        defaults: {
+            maxLengthText: "too long",
+            minLengthText: "too short"
+        }
+        plugins: [
+            new GeoExt.plugins.AttributeForm({
+                attributeStore: new GeoExt.data.AttributeStore({
+                    url: "http://some.wfs",
+                    baseParams: {
+                        "SERVICE": "WFS",
+                        "VERSION": "1.1.0",
+                        "REQUEST": "DescribeFeatureType",
+                        "TYPENAME": "the_typename"
+                    }
+                })
+            })
+        ]
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties.
+
+
+.. describe:: attributeStore
+
+    ``Ext.data.Store`` The attribute store to bind to this plugin.
+    It can be any Ext store configured with a
+    :class:`GeoExt.data.AttributeReader`. If set form items
+    will be created from the attribute records in the form. In
+    most cases this store will be a :class:`GeoExt.data.AttributeStore`.
+
+
+
+
+
+
+
+
+

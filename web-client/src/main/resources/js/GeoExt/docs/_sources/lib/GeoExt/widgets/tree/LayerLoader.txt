@@ -1,0 +1,122 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.LayerLoader`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
+
+
+
+
+
+
+.. class:: LayerLoader
+
+    A loader that will load all layers of a :class:`GeoExt.data.LayerStore`
+    By default, only layers that have displayInLayerSwitcher set to true
+    will be included. The childrens' iconCls defaults to
+    "gx-tree-layer-icon".
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: baseAttrs
+
+    An object containing attributes to be added to all nodes created by
+    this loader.
+
+.. describe:: filter
+
+    ``Function``
+    A function, called in the scope of this loader, with a layer record
+    as argument. Is expected to return true for layers to be loaded, false
+    otherwise. By default, the filter checks for displayInLayerSwitcher:
+    
+    .. code-block:: javascript
+    
+        filter: function(record) {
+            return record.getLayer().displayInLayerSwitcher == true
+        }
+
+.. describe:: store
+
+    :class:`GeoExt.data.LayerStore`
+    The layer store containing layers to be added by this loader.
+
+.. describe:: uiProviders
+
+    ``Object``
+    An optional object containing properties which specify custom
+    GeoExt.tree.LayerNodeUI implementations. If the optional uiProvider
+    attribute for child nodes is a string rather than a reference to a
+    TreeNodeUI implementation, then that string value is used as a
+    property name in the uiProviders object. If not provided, the
+    uiProviders object will be taken from the ownerTree's loader.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. method:: LayerLoader.createNode
+
+    :param attr: ``Object`` attributes for the new node
+    
+    Override this function for custom TreeNode node implementation, or to
+    modify the attributes at creation time.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://dev.sencha.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: beforeload
+
+    Triggered before loading children. Return false to avoid
+    loading children.
+    
+    Listener arguments:
+    
+    * loader - :class:`GeoExt.tree.LayerLoader` this loader
+    * node - ``Ex.tree.TreeNode`` the node that this loader is
+        configured with
+
+.. describe:: load
+
+    Triggered after children wer loaded.
+    
+    Listener arguments:
+    
+    * loader - :class:`GeoExt.tree.LayerLoader` this loader
+    * node - ``Ex.tree.TreeNode`` the node that this loader is
+        configured with
+
+
+

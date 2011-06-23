@@ -1,0 +1,116 @@
+
+.. currentmodule:: GeoExt.form
+
+:class:`GeoExt.form.FormPanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.form.FormPanel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.FormPanel>`_
+    
+
+
+
+xtype
+    ``gx_formpanel``
+
+
+
+
+.. class:: FormPanel(config)
+
+    A specific ``Ext.form.FormPanel`` whose internal form is a
+    :class:`GeoExt.form.BasicForm` instead of ``Ext.form.BasicForm``.
+    One would use this form to do search requests through
+    an ``OpenLayers.Protocol`` object (``OpenLayers.Protocol.WFS``
+    for example).
+
+    Look at :class:`GeoExt.form.SearchAction` to understand how
+    form fields must be named for appropriate filters to be
+    passed to the protocol.
+
+
+
+Example Use
+-----------
+
+Sample code showing how to use a GeoExt form panel.
+
+.. code-block:: javascript
+
+    var formPanel = new GeoExt.form.FormPanel({
+        renderTo: "formpanel",
+        protocol: new OpenLayers.Protocol.WFS({
+            url: "http://publicus.opengeo.org/geoserver/wfs",
+            featureType: "tasmania_roads",
+            featureNS: "http://www.openplans.org/topp"
+        }),
+        items: [{
+            xtype: "textfield",
+            name: "name__ilike",
+            value: "mont"
+        }, {
+            xtype: "textfield",
+            name: "elevation__ge",
+            value: "2000"
+        }],
+        listeners: {
+            actioncomplete: function(form, action) {
+                // this listener triggers when the search request
+                // is complete, the OpenLayers.Protocol.Response
+                // resulting from the request is available
+                // in "action.response"
+            }
+        }
+    });
+
+    formPanel.addButton({
+        text: "search",
+        handler: function() {
+            this.search();
+        },
+        scope: formPanel
+    });
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.form.FormPanel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.FormPanel>`_.
+
+
+.. describe:: protocol
+
+    ``OpenLayers.Protocol`` The protocol instance this form panel
+    is configured with, actions resulting from this form
+    will be performed through the protocol.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.form.FormPanel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.form.FormPanel>`_.
+
+
+.. method:: FormPanel.search
+
+    :param options: ``Object`` The options passed to the
+        :class:`GeoExt.form.SearchAction` constructor.
+    
+    Shortcut to the internal form's search method.
+
+
+
+
+

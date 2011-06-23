@@ -1,0 +1,68 @@
+
+.. currentmodule:: GeoExt.tree
+
+:class:`GeoExt.tree.TreeNodeUIEventMixin`
+================================================================================
+
+
+
+A mixin that adds events to TreeNodeUIs. With these events, tree plugins
+can modify the node ui's DOM when it is rendered, and react to raw click
+events on tree nodes.
+
+
+
+Example Use
+-----------
+
+Sample code to create a tree with a node that uses the
+:class:`GeoExt.tree.TreeNodeUIEventMixin`:
+
+.. code-block:: javascript
+
+    var UIClass = Ext.extend(
+        Ext.tree.TreeNodeUI,
+        GeoExt.tree.TreeNodeUIEventMixin
+    );
+    var tree = new Ext.tree.TreePanel({
+        root: {
+            nodeType: "node",
+            uiProvider: UIClass,
+            text: "My Node"
+        }
+    }
+
+    
+
+
+
+
+
+
+
+
+Events
+------
+
+Events.
+
+
+.. describe:: rawclicknode
+
+    Fires on the tree when a node is clicked.
+    
+    Listener arguments:
+    
+    * node - ``Ext.TreeNode`` The clicked node.
+    * event - ``Ext.EventObject`` The click event.
+
+.. describe:: rendernode
+
+    Fires on the tree when a node is rendered.
+    
+    Listener arguments:
+    
+    * node - ``Ext.TreeNode`` The rendered node.
+
+
+

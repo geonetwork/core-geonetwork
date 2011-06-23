@@ -1,0 +1,174 @@
+<html> 
+<head> 
+    <script src="../../../lib/OpenLayers.js"></script>
+    <script type="text/javascript">
+    
+    function test_PropertyIsBetween(t) {
+
+        t.plan(6);
+
+        var test_wml, parser, xml;
+
+        parser = new OpenLayers.Format.Filter.v1();
+        xml = new OpenLayers.Format.XML();
+
+        test_xml =
+            '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">' +
+                '<ogc:PropertyIsBetween>' +
+                    '<ogc:PropertyName>number</ogc:PropertyName>' +
+                    '<ogc:LowerBoundary>' +
+                        '<ogc:Literal>0</ogc:Literal>' +
+                    '</ogc:LowerBoundary>' +
+                    '<ogc:UpperBoundary>' +
+                        '<ogc:Literal>100</ogc:Literal>' +
+                    '</ogc:UpperBoundary>' +
+                '</ogc:PropertyIsBetween>' +
+            '</ogc:Filter>';
+
+        var filter = parser.read(xml.read(test_xml).documentElement);
+        t.eq(filter.type, OpenLayers.Filter.Comparison.BETWEEN,
+             "[0] read correct type");
+        t.eq(filter.lowerBoundary, 0,
+             "[0] record correct lower boundary value");
+        t.eq(filter.upperBoundary, 100,
+             "[0] record correct upper boundary value");
+
+        test_xml =
+            '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">' +
+                '<ogc:PropertyIsBetween>' +
+                    '<ogc:PropertyName>number</ogc:PropertyName>' +
+                    '<ogc:LowerBoundary>0</ogc:LowerBoundary>' +
+                    '<ogc:UpperBoundary>100</ogc:UpperBoundary>' +
+                '</ogc:PropertyIsBetween>' +
+            '</ogc:Filter>';
+
+        var filter = parser.read(xml.read(test_xml).documentElement);
+        t.eq(filter.type, OpenLayers.Filter.Comparison.BETWEEN,
+             "[1] read correct type");
+        t.eq(filter.lowerBoundary, 0,
+             "[1] record correct lower boundary value");
+        t.eq(filter.upperBoundary, 100,
+             "[1] record correct upper boundary value");
+    }
+
+
+    function test_Intersects(t) {
+        
+        t.plan(4);
+        
+        var str =
+            '<Filter xmlns="http://www.opengis.net/ogc">' +
+                '<Intersects>' +
+                    '<PropertyName>Geometry</PropertyName>' +
+                    '<gml:Polygon xmlns:gml="http://www.opengis.net/gml">' +
+                        '<gml:outerBoundaryIs>' +
+                            '<gml:LinearRing>' +
+                                '<gml:coordinates decimal="." cs="," ts=" ">2488789,289552 2588789,289552 2588789,389552 2488789,389552 2488789,289552</gml:coordinates>' +
+                            '</gml:LinearRing>' +
+                        '</gml:outerBoundaryIs>' +
+                    '</gml:Polygon>' +
+                '</Intersects>' +
+            '</Filter>';
+
+        var format = new OpenLayers.Format.Filter.v1_0_0();
+        var filter = new OpenLayers.Filter.Spatial({
+            type: OpenLayers.Filter.Spatial.INTERSECTS,
+            property: "Geometry",
+            value: OpenLayers.Geometry.fromWKT("POLYGON((2488789 289552, 2588789 289552, 2588789 389552, 2488789 389552, 2488789 289552))")
+        });
+        
+        // test writing
+        var node = format.write(filter);
+        t.xml_eq(node, str, "filter correctly written");
+        
+        // test reading
+        var doc = (new OpenLayers.Format.XML).read(str);
+        var got = format.read(doc.firstChild);
+        t.eq(got.type, filter.type, "read correct type");
+        t.eq(got.property, filter.property, "read correct property");
+        t.geom_eq(got.value, filter.value, "read correct value");
+
+    }
+
+    function test_Within(t) {
+        
+        t.plan(4);
+        
+        var str =
+            '<Filter xmlns="http://www.opengis.net/ogc">' +
+                '<Within>' +
+                    '<PropertyName>Geometry</PropertyName>' +
+                    '<gml:Polygon xmlns:gml="http://www.opengis.net/gml">' +
+                        '<gml:outerBoundaryIs>' +
+                            '<gml:LinearRing>' +
+                                '<gml:coordinates decimal="." cs="," ts=" ">2488789,289552 2588789,289552 2588789,389552 2488789,389552 2488789,289552</gml:coordinates>' +
+                            '</gml:LinearRing>' +
+                        '</gml:outerBoundaryIs>' +
+                    '</gml:Polygon>' +
+                '</Within>' +
+            '</Filter>';
+
+        var format = new OpenLayers.Format.Filter.v1_0_0();
+        var filter = new OpenLayers.Filter.Spatial({
+            type: OpenLayers.Filter.Spatial.WITHIN,
+            property: "Geometry",
+            value: OpenLayers.Geometry.fromWKT("POLYGON((2488789 289552, 2588789 289552, 2588789 389552, 2488789 389552, 2488789 289552))")
+        });
+        
+        // test writing
+        var node = format.write(filter);
+        t.xml_eq(node, str, "filter correctly written");
+        
+        // test reading
+        var doc = (new OpenLayers.Format.XML).read(str);
+        var got = format.read(doc.firstChild);
+        t.eq(got.type, filter.type, "read correct type");
+        t.eq(got.property, filter.property, "read correct property");
+        t.geom_eq(got.value, filter.value, "read correct value");
+
+    }
+
+    function test_Contains(t) {
+        
+        t.plan(4);
+        
+        var str =
+            '<Filter xmlns="http://www.opengis.net/ogc">' +
+                '<Contains>' +
+                    '<PropertyName>Geometry</PropertyName>' +
+                    '<gml:Polygon xmlns:gml="http://www.opengis.net/gml">' +
+                        '<gml:outerBoundaryIs>' +
+                            '<gml:LinearRing>' +
+                                '<gml:coordinates decimal="." cs="," ts=" ">2488789,289552 2588789,289552 2588789,389552 2488789,389552 2488789,289552</gml:coordinates>' +
+                            '</gml:LinearRing>' +
+                        '</gml:outerBoundaryIs>' +
+                    '</gml:Polygon>' +
+                '</Contains>' +
+            '</Filter>';
+
+        var format = new OpenLayers.Format.Filter.v1_0_0();
+        var filter = new OpenLayers.Filter.Spatial({
+            type: OpenLayers.Filter.Spatial.CONTAINS,
+            property: "Geometry",
+            value: OpenLayers.Geometry.fromWKT("POLYGON((2488789 289552, 2588789 289552, 2588789 389552, 2488789 389552, 2488789 289552))")
+        });
+        
+        // test writing
+        var node = format.write(filter);
+        t.xml_eq(node, str, "filter correctly written");
+        
+        // test reading
+        var doc = (new OpenLayers.Format.XML).read(str);
+        var got = format.read(doc.firstChild);
+        t.eq(got.type, filter.type, "read correct type");
+        t.eq(got.property, filter.property, "read correct property");
+        t.geom_eq(got.value, filter.value, "read correct value");
+
+    }
+
+
+    </script> 
+</head> 
+<body>
+</body> 
+</html> 
