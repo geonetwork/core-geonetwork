@@ -85,8 +85,9 @@ public class Insert implements Service
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
-		 if (isTemplate.equals("s") && title.length() == 0)
-			 throw new MissingParameterEx("title");
+//		Sub template does not need a title.
+//		 if (isTemplate.equals("s") && title.length() == 0)
+//			 throw new MissingParameterEx("title");
 
 		//-----------------------------------------------------------------------
 		//--- add the DTD to the input xml to perform validation
@@ -156,6 +157,7 @@ public class Insert implements Service
 		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
+	        response.addContent(new Element(Params.UUID).setText(String.valueOf(uuid)));
 
 		return response;
 	};

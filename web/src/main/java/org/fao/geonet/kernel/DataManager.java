@@ -317,7 +317,8 @@ public class DataManager {
 	public void indexMetadata(Dbms dbms, String id, boolean indexGroup) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
-
+            int id$ = new Integer(id);
+            
             // get metadata, extracting and indexing any xlinks
             Element md   = XmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id);
             if (XmlSerializer.resolveXLinks()) {
@@ -340,17 +341,17 @@ public class DataManager {
             }
 
             // get metadata table fields
-            String  root = md.getName();
+            String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, root, " +
+                "title, uuid, isHarvested, owner, groupOwner, popularity, rating FROM Metadata WHERE id = ?";
 
-            String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, isHarvested, owner, groupOwner, popularity, rating FROM Metadata WHERE id = " + id;
-
-            Element rec = dbms.select(query).getChild("record");
+            Element rec = dbms.select(query, id$).getChild("record");
 
             String  schema     = rec.getChildText("schemaid");
             String  createDate = rec.getChildText("createdate");
             String  changeDate = rec.getChildText("changedate");
             String  source     = rec.getChildText("source");
             String  isTemplate = rec.getChildText("istemplate");
+            String  root       = rec.getChildText("root");
             String  title      = rec.getChildText("title");
             String  uuid       = rec.getChildText("uuid");
             String  isHarvested= rec.getChildText("isharvested");
@@ -380,7 +381,9 @@ public class DataManager {
                 moreFields.add(makeField("_groupOwner", groupOwner, true, true, false));
 
             // get privileges
-            List operations = dbms.select("SELECT groupId, operationId FROM OperationAllowed WHERE metadataId = " + id + " ORDER BY operationId ASC").getChildren();
+            List operations = dbms
+                                .select("SELECT groupId, operationId FROM OperationAllowed WHERE metadataId = ? ORDER BY operationId ASC", id$)
+                                    .getChildren();
 
             for (Object operation1 : operations) {
                 Element operation = (Element) operation1;
@@ -389,7 +392,9 @@ public class DataManager {
                 moreFields.add(makeField("_op" + operationId, groupId, true, true, false));
             }
             // get categories
-            List categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories WHERE metadataId = " + id + " AND categoryId = id ORDER BY id").getChildren();
+            List categories = dbms
+                                .select("SELECT id, name FROM MetadataCateg, Categories WHERE metadataId = ? AND categoryId = id ORDER BY id", id$)
+                                    .getChildren();
 
             for (Object category1 : categories) {
                 Element category = (Element) category1;
@@ -401,7 +406,9 @@ public class DataManager {
             // -1 : not evaluated
             // 0 : invalid
             // 1 : valid
-            List<Element> validationInfo = dbms.select("SELECT valType, status FROM Validation WHERE metadataId=?", new Integer(id)).getChildren();
+            List<Element> validationInfo = dbms
+                                             .select("SELECT valType, status FROM Validation WHERE metadataId = ?", id$)
+                                                 .getChildren();
             if (validationInfo.size() == 0) {
                 moreFields.add(makeField("_valid", "-1", true, true, false));
             }
@@ -426,7 +433,7 @@ public class DataManager {
             }
         }
 		catch (Exception x) {
-			Log.error(Geonet.DATA_MANAGER, "The metadata document index with id="+id+" is corrupt/invalid - ignoring it. Error: " + x.getMessage());
+			Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + id + " is corrupt/invalid - ignoring it. Error: " + x.getMessage());
 			x.printStackTrace();
 		}
 	}
@@ -1229,12 +1236,13 @@ public class DataManager {
      * @param source
      * @param owner
      * @param parentUuid
+     * @param isTemplate TODO
      * @return
      * @throws Exception
      */
 	public String createMetadata(Dbms dbms, String templateId, String groupOwner,
 										  SerialFactory sf, String source, int owner,
-										  String parentUuid) throws Exception {
+										  String parentUuid, String isTemplate) throws Exception {
 		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
 		List listTempl = dbms.select(query).getChildren();
 
@@ -1249,10 +1257,15 @@ public class DataManager {
 
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-		Element xml = updateFixedInfo(schema, Integer.toString(serial), uuid, Xml.loadString(data, false), parentUuid, DataManager.UpdateDatestamp.yes, dbms, null);
-
+		
+		// Update fixed info for metadata record only
+		Element xml = Xml.loadString(data, false);
+		if (isTemplate.equals('n')) {
+		    xml = updateFixedInfo(schema, Integer.toString(serial), uuid, xml, parentUuid, DataManager.UpdateDatestamp.yes, dbms, null);
+		}
+		
 		//--- store metadata
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner, isTemplate, null);
 		copyDefaultPrivForGroup(dbms, id, groupOwner);
 
 		//--- store metadata categories copying them from the template

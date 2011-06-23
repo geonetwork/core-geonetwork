@@ -27,28 +27,27 @@
 
 package org.fao.geonet.kernel;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
+
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
-import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
 
 
 //=============================================================================
@@ -273,65 +272,59 @@ public class EditLib
 		return child;
 	}
 	
-	/**
-	 * Add XML fragments to the metadata.
-	 * 
-	 * @param schema
-	 * @param el
-	 * @param qname
-	 * @param fragment
-	 * @throws Exception
-	 */
-	public void addFragment(String schema, Element el, String qname, String fragment) throws Exception {
-
-		String name = getUnqualifiedName(qname);
-		String ns = getNamespace(qname, el, scm.getSchema(schema));
-		String prefix = getPrefix(qname);
-		String parentName = getParentNameFromChild(el);
-
-		Element root = new Element(name, prefix, ns);
-
-		try {
-			Element fragElt = Xml.loadString(fragment, false);
-			// Clean children if exist before loading new fragment.
-			root.removeContent();
-			// Add XML fragment collection
-			root.addContent(fragElt);
-		} catch (Exception e) {
-			Log.error("EditLib : Error adding element ", e.toString());
-			throw new IllegalStateException("EditLib : Error adding element " + e.getMessage());
-			
-		}
-		
-		MetadataSchema mdSchema = scm.getSchema(schema);
-		String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
- 		MetadataType type = mdSchema.getTypeInfo(typeName);
- 		
- 		//--- collect all children, adding the new one at the end of the others
-		Vector<Element> children = new Vector<Element>();
-
-		for(int i=0; i<type.getElementCount(); i++)
-		{
-			List<Element> list = getChildren(el, type.getElementAt(i));
-
+    /**
+     * Add XML fragment to the metadata record in the last element 
+     * of the type of the element in its parent.
+     * 
+     * @param schema The metadata schema
+     * @param el The element
+     * @param qname The qualified name of the element
+     * @param fragment XML fragment
+     * 
+     * @throws Exception
+     * @throws IllegalStateException Fail to parse the fragment.
+     */
+    public void addFragment(String schema, Element el, String qname, String fragment)
+            throws Exception {
+        
+        MetadataSchema mdSchema = scm.getSchema(schema);
+        String parentName = getParentNameFromChild(el);
+        Element fragElt;
+        
+        Log.debug(Geonet.EDITORADDELEMENT, "Add XML fragment for element name:" + qname
+                + ", parent: " + parentName);
+        
+        
+        try {
+            fragElt = Xml.loadString(fragment, false);
+        } catch (JDOMException e) {
+            Log.error("EditLib : Error parsing XML fragment, ", e.toString());
+            throw new IllegalStateException("EditLib : Error when loading XML fragment, "
+                    + e.getMessage());
+        }
+        
+        String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
+        MetadataType type = mdSchema.getTypeInfo(typeName);
+        
+        // --- collect all children, adding the new one at the end of the others
+        Vector<Element> children = new Vector<Element>();
+        
+        for (int i = 0; i < type.getElementCount(); i++) {
+            List<Element> list = getChildren(el, type.getElementAt(i));
             for (Element aList : list) {
                 children.add(aList);
             }
-
-			if (qname.equals(type.getElementAt(i)))
-				children.add(root);
-		}
-		//--- remove everything and then add all collected children to the element 
-		//--- to assure a correct position for the new one
-
-		el.removeContent();
+            
+            if (qname.equals(type.getElementAt(i)))
+                children.add(fragElt);
+        }
+        // --- remove everything and then add all collected children to the element
+        // --- to assure a correct position for the new one
+        el.removeContent();
         for (Element aChildren : children) {
             el.addContent(aChildren);
         }
-
-		//--- add mandatory sub-tags
-		//fillElement(mdSchema, mdSugg, el, child);
-	}
+    }
 
 	//--------------------------------------------------------------------------
 	//---

@@ -45,7 +45,7 @@ public class LuceneIndexReaderFactory {
   }    
 
   public synchronized void releaseReader(IndexReader reader) throws IOException {
-		reader.decRef();
+      reader.decRef();
   }
 
 	//===========================================================================

@@ -162,8 +162,8 @@ public class XmlSerializer {
      * @throws SQLException
      */
 	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, String isTemplate,
-										 String title, int owner, String groupOwner) throws SQLException {
+	                            String source, String uuid, int owner, String groupOwner, 
+	                            String isTemplate, String title) throws SQLException {
 		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner, "");
 	}
 

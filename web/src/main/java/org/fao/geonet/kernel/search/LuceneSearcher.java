@@ -945,7 +945,7 @@ public class LuceneSearcher extends MetaSearcher
         
         // Root element is using root element name if not using only the index content (ie. dumpAllField)
         // probably because the XSL need that info later ?
-        Element md = new Element(dumpAllField?"metadata":root);
+        Element md = new Element("metadata");
         
         Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
         

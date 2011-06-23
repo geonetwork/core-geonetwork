@@ -58,6 +58,7 @@ public class Create implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
 		String child = Util.getParam(params, Params.CHILD, "n");
+		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String id = "";
 		String uuid = "";
 		
@@ -85,7 +86,7 @@ public class Create implements Service
 
 		String newId = dm.createMetadata(dbms, id, groupOwner, context.getSerialFactory(),
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
-												  (child.equals("n")?null:uuid));
+												  (child.equals("n")?null:uuid), isTemplate);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));

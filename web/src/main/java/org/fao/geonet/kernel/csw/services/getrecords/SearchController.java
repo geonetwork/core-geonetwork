@@ -194,8 +194,13 @@ public class SearchController
 		params.put("displayInfo", 
 				resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 		
-		res = Xml.transform(res, styleSheet, params);
-
+		try {
+		    res = Xml.transform(res, styleSheet, params);
+		} catch (Exception e) {
+		    context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+	            context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+		    return null;
+		}
 		//--- if the client has specified some ElementNames, then we search for them
 		//--- if they are in anything else other that csw:Record, if csw:Record 
 		//--- remove only the unwanted ones

@@ -158,7 +158,7 @@ public class Info implements Service {
 
     // --------------------------------------------------------------------------
 
-    private Element getHelp(SchemaManager scm, Element elem, String fileName, String schema,
+    public static Element getHelp(SchemaManager scm, Element elem, String fileName, String schema,
             String name, String parent, String xpath, String isoType, ServiceContext context)
             throws Exception {
 
@@ -188,7 +188,7 @@ public class Info implements Service {
 
     // --------------------------------------------------------------------------
 
-    private Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
+    private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
             String name, String isoType) throws OperationAbortedEx {
 
         for (Object o : entries.getChildren()) {
@@ -220,7 +220,7 @@ public class Info implements Service {
 
     // --------------------------------------------------------------------------
 
-    private String findNamespace(String name, SchemaManager scm, String schema) {
+    public static String findNamespace(String name, SchemaManager scm, String schema) {
         int pos = name.indexOf(':');
 
         if (pos == -1) {
@@ -239,7 +239,7 @@ public class Info implements Service {
 
     // --------------------------------------------------------------------------
 
-    private Element buildError(Element elem, String error) {
+    private static Element buildError(Element elem, String error) {
         elem = (Element) elem.clone();
         elem.setAttribute("error", error);
 

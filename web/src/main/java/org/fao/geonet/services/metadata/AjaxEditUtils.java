@@ -33,26 +33,58 @@ import java.util.Map;
  */
 public class AjaxEditUtils extends EditUtils {
 
+    private static final String XML_FRAGMENT_SEPARATOR = "&&&";
+    private static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
+    private static final String COLON_SEPARATOR = "COLON";
+    private static final int COLON_SEPARATOR_SIZE = COLON_SEPARATOR.length();
+    
     public AjaxEditUtils(ServiceContext context) {
         super(context);
     }
     /**
-     * TODO javadoc.
-     *
+     * Apply a list of changes to the metadata record in current editing session.
+     * 
+     * <p>
+     * The changes are a list of KVP. A key contains at least the element identifier from
+     * the meta-document. A key starting with an "X" should contain an XML fragment 
+     * for the value.
+     * </p>
+     * 
+     * The following KVP combinations are allowed:
+     * <ul>
+     * <li>ElementId=ElementValue </li>
+     * <li>ElementId_AttributeName=AttributeValue</li>
+     * <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
+     * <li>XElementId=ElementValue</li>
+     * <li>XElementId_ElementName=ElementValue</li>
+     * </ul>
+     * 
+     * ElementName MUST contain "{@value #COLON_SEPARATOR}" instead of ":" for prefixed elements.
+     * 
+     * <p>
+     * When using X key, value could contains many XML fragments (eg. 
+     * &lt;gmd:keywords .../&gt;{@value #XML_FRAGMENT_SEPARATOR}&lt;gmd:keywords .../&gt;)
+     * separated by {@link #XML_FRAGMENT_SEPARATOR}. All those fragments are inserted
+     * to the last element of this type in its parent if ElementName is set.
+     * If not, the element with ElementId is replaced.
+     * <p>
+     * 
      * @param dbms
-     * @param id
-     * @param changes
-     * @param currVersion
-     * @return
+     * @param id        Metadata internal identifier.
+     * @param changes   List of changes to apply.
+     * @param currVersion       Editing version which is checked against current editing version.
+     * @return  The update metadata record
      * @throws Exception
      */
-    protected Element applyChangesEmbedded(Dbms dbms, String id, Hashtable changes, String currVersion) throws Exception {
+    protected Element applyChangesEmbedded(Dbms dbms, String id, 
+                                        Hashtable changes, String currVersion) throws Exception {
         String schema = dataManager.getMetadataSchema(dbms, id);
         EditLib editLib = dataManager.getEditLib();
 
         // --- check if the metadata has been modified from last time
         if (currVersion != null && !editLib.getVersion(id).equals(currVersion)) {
-            Log.error(Geonet.EDITOR, "Version mismatch: had " + currVersion + " but expected " + editLib.getVersion(id));
+            Log.error(Geonet.EDITOR, "Version mismatch: had " + currVersion + 
+                                            " but expected " + editLib.getVersion(id));
             return null;
         }
 
@@ -65,113 +97,117 @@ public class AjaxEditUtils extends EditUtils {
         // --- update elements
         for (Enumeration e = changes.keys(); e.hasMoreElements();) {
             String ref = ((String) e.nextElement()).trim();
-            String val = ((String) changes.get(ref)).trim();
-            String attr = null;
-
+            String value = ((String) changes.get(ref)).trim();
+            String attribute = null;
+            
+            // Avoid empty key
+            if (ref.equals("")) {
+                continue;
+            }
+            
             // Catch element starting with a X to replace XML fragments
             if (ref.startsWith("X")) {
                 ref = ref.substring(1);
-                xmlInputs.put(ref, val);
+                xmlInputs.put(ref, value);
                 continue;
             }
 
-            if (ref.equals(""))
-                continue;
-
-            if (updatedLocalizedTextElement(md, ref, val, editLib)) {
+            if (updatedLocalizedTextElement(md, ref, value, editLib)) {
                 continue;
             }
 
             int at = ref.indexOf('_');
             if (at != -1) {
-                attr = ref.substring(at + 1);
+                attribute = ref.substring(at + 1);
                 ref = ref.substring(0, at);
             }
-
+            
             Element el = editLib.findElement(md, ref);
             if (el == null) {
-                Log.error(Geonet.EDITOR, "Element not found at ref = " + ref);
+                Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
-
-            if (attr != null) {
-                Integer indexColon = attr.indexOf("COLON");
+            
+            // Process attribute
+            if (attribute != null) {
+                Integer indexColon = attribute.indexOf(COLON_SEPARATOR);
+                
+                // ... with qualified name
                 if (indexColon != -1) {
-                    String prefix = attr.substring(0, indexColon);
-                    String localname = attr.substring(indexColon + 5);
+                    String prefix = attribute.substring(0, indexColon);
+                    String localname = attribute.substring(indexColon + COLON_SEPARATOR_SIZE);
                     String namespace = editLib.getNamespace(prefix + ":" + localname, md, dataManager.getSchema(schema));
                     Namespace attrNS = Namespace.getNamespace(prefix, namespace);
                     if (el.getAttribute(localname, attrNS) != null) {
-                        el.setAttribute(new Attribute(localname, val, attrNS));
+                        el.setAttribute(new Attribute(localname, value, attrNS));
+                    }
+                } else {
+                    if (el.getAttribute(attribute) != null) {
+                        el.setAttribute(new Attribute(attribute, value));
                     }
                 }
-                else {
-                    if (el.getAttribute(attr) != null) {
-                        el.setAttribute(new Attribute(attr, val));
-                    }
-                }
-            }
-            else {
+            } else {
+                // Process element value
                 List content = el.getContent();
-
+                
                 for (int i = 0; i < content.size(); i++) {
                     if (content.get(i) instanceof Text) {
                         el.removeContent((Text) content.get(i));
                         i--;
                     }
                 }
-                el.addContent(val);
+                el.addContent(value);
             }
         }
-
+        
         // Deals with XML fragments to insert or update
         if (!xmlInputs.isEmpty()) {
-
+            
             // Loop over each XML fragments to insert or replace
             for (String ref : xmlInputs.keySet()) {
                 String value = xmlInputs.get(ref);
-
                 String name = null;
                 int addIndex = ref.indexOf('_');
                 if (addIndex != -1) {
                     name = ref.substring(addIndex + 1);
                     ref = ref.substring(0, addIndex);
                 }
-
+                
                 // Get element to fill
                 Element el = editLib.findElement(md, ref);
-
                 if (el == null) {
-                    throw new IllegalStateException("Element not found at ref = " + ref);
+                    Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                    continue;
                 }
-
+                
                 if (value != null && !value.equals("")) {
-                    String[] fragments = value.split("&&&");
+                    String[] fragments = value.split(XML_FRAGMENT_SEPARATOR);
                     for (String fragment : fragments) {
                         if (name != null) {
-                            name = name.replace("COLON", ":");
+                            Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment 
+                                    + " to element with ref: " + ref);
+                            name = name.replace(COLON_SEPARATOR, ":");
                             editLib.addFragment(schema, el, name, fragment);
-                        }
-                        else {
+                        } else {
+                            Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment 
+                                    + " to element with ref: " + ref + " replacing content.");
+                            
                             // clean before update
                             el.removeContent();
-
                             fragment = addNamespaceToFragment(fragment);
-
+                            
                             // Add content
                             el.addContent(Xml.loadString(fragment, false));
                         }
                     }
-                    Log.debug(Geonet.EDITOR, "replacing XML content");
                 }
             }
         }
-
+        
         // --- remove editing info
         editLib.removeEditingInfo(md);
-
-		editLib.contractElements(md);
-
+        editLib.contractElements(md);
+        
         return (Element) md.detach();
     }
 
@@ -250,7 +286,7 @@ public class AjaxEditUtils extends EditUtils {
 		EditLib editLib = dataManager.getEditLib();
         Element el = editLib.findElement(md, ref);
 		if (el == null)
-			throw new IllegalStateException("Element not found at ref = " + ref);
+			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- locate the geonet:element and geonet:info elements and clone for
 		//--- later re-use
@@ -355,7 +391,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException("Element not found at ref = " + ref);
+			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 
 		String uName = el.getName();
@@ -471,7 +507,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element elSwap = editLib.findElement(md, ref);
 
 		if (elSwap == null)
-			throw new IllegalStateException("Element not found at ref = " + ref);
+			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- swap the elements
 		int iSwapIndex = -1;
@@ -557,7 +593,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			Log.error(Geonet.DATA_MANAGER, "Element not found at ref = " + ref);
+			Log.error(Geonet.DATA_MANAGER, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 			//throw new IllegalStateException("Element not found at ref = " + ref);
 
 		//--- remove editing info added by previous call
@@ -615,7 +651,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException("Element not found at ref = " + ref);
+			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
