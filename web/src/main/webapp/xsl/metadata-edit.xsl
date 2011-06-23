@@ -150,7 +150,7 @@
 		</table>
 	</xsl:template>
 	
-	<xsl:template name="editButtons" match="*">
+	<xsl:template name="editButtons">
 		<xsl:param name="top" select="true()"/>
 		
 		<!-- reset button -->
@@ -226,7 +226,7 @@
 		
 	</xsl:template>
 	
-	<xsl:template name="templateChoice" match="*">
+	<xsl:template name="templateChoice">
 		
 		<b><xsl:value-of select="/root/gui/strings/type"/></b>
 		<xsl:text>&#160;</xsl:text>

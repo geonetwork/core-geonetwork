@@ -45,20 +45,32 @@
 	<xsl:template match="gn:gboundaries">
 		<record>
 
-			<!-- boundingPolygon -->
-
+			<!-- boundingPolygon 
 			<fragment id="geoservertest.boundingpolygon" uuid="{@gml:id}_boundingpolygon" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':boundingpoly')}">
-				<gmd:geographicElement>
-					<gmd:EX_BoundingPolygon>
-						<gmd:polygon>
-							<xsl:copy-of select="gn:the_geom/*"/>
-						</gmd:polygon>
-					</gmd:EX_BoundingPolygon>
-				</gmd:geographicElement>
-			</fragment>
+				<gmd:EX_BoundingPolygon>
+					<gmd:polygon>
+						<xsl:copy-of select="gn:the_geom/*"/>
+					</gmd:polygon>
+				</gmd:EX_BoundingPolygon>
+				</fragment>-->
 
-			<!-- pointOfContact -->
+		  <!-- extent -->
+		  <fragment id="geoservertest.boundingpolygon" uuid="{@gml:id}_boundingpolygon" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':boundingpoly')}">
+		    <gmd:EX_Extent>
+		      <gmd:description>
+		        <gco:CharacterString><xsl:value-of select="gn:ADM0NAME"/></gco:CharacterString>
+		      </gmd:description>
+		      <gmd:geographicElement>
+		        <gmd:EX_BoundingPolygon>
+    		      <gmd:polygon>
+    		        <xsl:copy-of select="gn:the_geom/*"/>
+    		      </gmd:polygon>
+		        </gmd:EX_BoundingPolygon>
+		      </gmd:geographicElement>
+		      </gmd:EX_Extent>
+		  </fragment>
 
+			<!-- pointOfContact 
 			<fragment id="geoservertest.contactinfo" uuid="{@gml:id}_contactinfo" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':contactinfo')}">
 				<gmd:CI_ResponsibleParty>
    				<gmd:individualName>
@@ -75,30 +87,27 @@
     			</gmd:role> 	
 				</gmd:CI_ResponsibleParty>
 			</fragment>
-
+			-->
+		  
 			<!-- keywords -->
-
 			<fragment id="geoservertest.keywords" uuid="{@gml:id}_keywords" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':keywords')}">
-				<gmd:descriptiveKeywords>
-					<gmd:MD_Keywords>
-						<gmd:keyword>
-							<gco:CharacterString><xsl:value-of select="gn:CONTINENT_"/></gco:CharacterString>
-						</gmd:keyword>
-						<gmd:keyword>
-							<gco:CharacterString><xsl:value-of select="gn:REGION_"/></gco:CharacterString>
-						</gmd:keyword>
-						<gmd:keyword>
-							<gco:CharacterString>Country</gco:CharacterString>
-						</gmd:keyword>
-						<gmd:type>
-							<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
-						</gmd:type>
-					</gmd:MD_Keywords>
-				</gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<gco:CharacterString><xsl:value-of select="gn:CONTINENT_"/></gco:CharacterString>
+					</gmd:keyword>
+					<gmd:keyword>
+						<gco:CharacterString><xsl:value-of select="gn:REGION_"/></gco:CharacterString>
+					</gmd:keyword>
+					<gmd:keyword>
+						<gco:CharacterString>Country</gco:CharacterString>
+					</gmd:keyword>
+					<gmd:type>
+						<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+					</gmd:type>
+				</gmd:MD_Keywords>
 			</fragment>
 
-			<!-- citation -->
-
+			<!-- citation 
 			<fragment id="geoservertest.citation" uuid="{@gml:id}_citation" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':citation')}">
 				<gmd:CI_Citation>
 					<gmd:title>
@@ -116,12 +125,12 @@
 							</gmd:dateType>
 						</gmd:CI_Date>
 					</gmd:date>
-					<!-- xlink to contactinfo fragment defined above -->
 					<gmd:citedResponsibleParty xlink:href="#{@fid}_contactinfo"/>
 				</gmd:CI_Citation>
 			</fragment>
-
-			<!-- abstract -->
+		  -->
+		  
+			<!-- abstract 
 
 			<fragment id="geoservertest.abstract" uuid="{@gml:id}_abstract" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':abstract')}">
 				<gmd:abstract>
@@ -134,23 +143,20 @@
 					</gco:CharacterString>
 				</gmd:abstract>
 			</fragment>
-
+			-->
 			<!-- temporal extent = validity -->
 
 			<fragment id="geoservertest.tempextent" uuid="{@gml:id}_tempextent" title="{concat(gn:ADM0NAME,':',gn:ADM0_CODE,':tempextent')}">
-				<gmd:temporalElement>
-					<gmd:EX_TemporalExtent>
-						<gmd:extent>
-							<gml:TimePeriod gml:id="{@gml:id}_timeperiod">
-								<gml:beginPosition indeterminatePosition="unknown">unknown</gml:beginPosition>
-								<gml:endPosition><xsl:value-of select="gn:LAST_UPD"/></gml:endPosition>
-							</gml:TimePeriod>
-						</gmd:extent>
-					</gmd:EX_TemporalExtent>
-				</gmd:temporalElement>
+				<gmd:EX_TemporalExtent>
+					<gmd:extent>
+						<gml:TimePeriod gml:id="{@gml:id}_timeperiod">
+							<gml:beginPosition indeterminatePosition="unknown">unknown</gml:beginPosition>
+							<gml:endPosition><xsl:value-of select="gn:LAST_UPD"/></gml:endPosition>
+						</gml:TimePeriod>
+					</gmd:extent>
+				</gmd:EX_TemporalExtent>
 			</fragment>
 			
 		</record>
 	</xsl:template>
-
 </xsl:stylesheet>

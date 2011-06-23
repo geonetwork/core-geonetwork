@@ -14,8 +14,9 @@
 
 	<xsl:include href="metadata-iso19139-utils.xsl"/>
 	<xsl:include href="metadata-iso19139-geo.xsl"/>
-	<xsl:include href="metadata-iso19139-inspire.xsl"/>
+  <xsl:include href="metadata-iso19139-inspire.xsl"/>
   <xsl:include href="metadata-iso19139-fop.xsl"/>
+  <xsl:include href="metadata-iso19139-subtemplates.xsl"/>
   
 	<!-- main template - the way into processing iso19139 -->
 	<xsl:template match="metadata-iso19139" name="metadata-iso19139">
@@ -92,15 +93,15 @@
 	<xsl:template mode="iso19139"
 		match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='thumbnail' or gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString='large_thumbnail']"
 		priority="20" />
-
-   <!-- Do not try do display element with no child and having gco:nilReason attribute in view mode.
-   Usually this should not happen because GeoNetwork will add default children like gco:CharacterString. 
-   Fixed #299
-   TODO : metadocument contains geonet:element which is probably not required ?
+	
+  <!-- Do not try do display element with no child and having gco:nilReason attribute in view mode.
+  Usually this should not happen because GeoNetwork will add default children like gco:CharacterString. 
+  Fixed #299
+  TODO : metadocument contains geonet:element which is probably not required ?
    -->
   <xsl:template mode="iso19139" priority="199" match="*[@gco:nilReason='missing' and count(*)=0 and not(geonet:element)]"/>
   
-
+  
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
@@ -2407,13 +2408,13 @@
 		
 		<xsl:if test="$edit=false()">
 			<xsl:if test="count(gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString[contains(string(.),'download')])>1 and
-			  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/download='true'">
+			                /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/download='true'">
 				<xsl:call-template name="complexElementGui">
 					<xsl:with-param name="title" select="/root/gui/strings/downloadSummary"/>
 					<xsl:with-param name="content">
 						<tr>
 							<td  align="center">
-							  <button class="content" onclick="javascript:runFileDownloadSummary('{/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
+							  <button class="content" onclick="javascript:runFileDownloadSummary('{/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/uuid}', '{/root/gui/strings/downloadSummary}')" type="button">
 									<xsl:value-of select="/root/gui/strings/showFileDownloadSummary"/>	
 								</button>
 							</td>
@@ -2649,7 +2650,7 @@
 	<!-- online resources: WMS get map -->
 	<!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and string(gmd:name/gco:CharacterString)]" priority="2">
+  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and string(gmd:name/gco:CharacterString)]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
     <xsl:variable name="metadata_id" select="/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id" />
@@ -2663,16 +2664,13 @@
 					<xsl:with-param name="schema" select="$schema"/>
 				</xsl:apply-templates>
 			</xsl:when>
-             <!-- Resource name is specified -->
-		  <xsl:when test="/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info[dynamic='true'] and string($name)!='' and string($linkage)!=''">
-			<!-- Create a link for a WMS service that will open in InterMap opensource -->
+		  <!-- Resource name is specified -->
+      <xsl:when test="/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info[dynamic='true'] and string($name)!='' and string($linkage)!=''">
+			<!-- Create a link for a WMS service that will open in the map viewer -->
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-						<!-- ETj
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType}&amp;type=2')" title="{/root/strings/interactiveMap}">
-						-->
 						<a href="javascript:addWMSLayer([['{$name}','{$linkage}','{$name}','{$metadata_id}']])" title="{/root/strings/interactiveMap}">
 								<xsl:choose>
 								<xsl:when test="string($description)!=''">
@@ -2683,17 +2681,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
-						
-						<!--a href="javascript:runIM_addService('{$linkage}','{$name}',2)" title="{/root/strings/interactiveMap}">
-							<xsl:choose>
-								<xsl:when test="string($description)!=''">
-									<xsl:value-of select="$description"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$name"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</a--><br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/> )
+						<br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/> )
 					</xsl:with-param>
 				</xsl:apply-templates>
 				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
@@ -2715,25 +2703,25 @@
 						</a>
 					</xsl:with-param>
 				</xsl:apply-templates>
-			</xsl:when>
-      <!-- Resource name is NOT specified -->
+      </xsl:when>
+		  <!-- Resource name is NOT specified -->
 		  <xsl:when test="string(ancestor::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($linkage)!='' and not(string($name))">
         <xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema"  select="$schema"/>
-					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
-					<xsl:with-param name="text">
-						<a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}">
-							<xsl:choose>
-								<xsl:when test="string($description)!=''">
-									<xsl:value-of select="$description"/>
-								</xsl:when>
-                <xsl:otherwise>
-									<xsl:value-of select="/root/gui/strings/wmslayers"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</a>
-					</xsl:with-param>
-				</xsl:apply-templates>
+    		  <xsl:with-param name="schema"  select="$schema"/>
+    		  <xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
+    		  <xsl:with-param name="text">
+      		  <a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}">
+        		  <xsl:choose>
+          		  <xsl:when test="string($description)!=''">
+            		  <xsl:value-of select="$description"/>
+          		  </xsl:when>
+          		  <xsl:otherwise>
+          		    <xsl:value-of select="/root/gui/strings/wmslayers"/>
+          		  </xsl:otherwise>
+        		  </xsl:choose>
+      		  </a>
+    		  </xsl:with-param>
+  		  </xsl:apply-templates>
       </xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -2742,7 +2730,7 @@
 	<!-- online resources: WMS get capabilities -->
 	<!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities')]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
+  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-capabilities')]|gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'OGC:WMS' and not(string(gmd:name/gco:CharacterString))]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
@@ -2765,10 +2753,10 @@
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
 								</xsl:when>
-								<xsl:when test="string($name)!=''">
-									<xsl:value-of select="$name"/>
-								</xsl:when>
-								<xsl:otherwise>
+							  <xsl:when test="string($name)!=''">
+							    <xsl:value-of select="$name"/>
+							  </xsl:when>
+							  <xsl:otherwise>
 									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -2802,11 +2790,10 @@
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
 								</xsl:when>
-                                <xsl:when test="string($name)!=''">
-									<xsl:value-of select="$name"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="/root/gui/strings/wmslayers"/>
+                <xsl:when test="string($name)!=''">
+                  <xsl:value-of select="$name"/>
+                </xsl:when>
+							  <xsl:otherwise>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
@@ -2838,8 +2825,7 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-<!--	ETj					<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={gmd:linkage/gmd:URL}&amp;service={gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType}&amp;type=1')" title="{/root/strings/interactiveMap}">
--->						<a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}">
+                <a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}">
 								<xsl:choose>
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
@@ -2866,7 +2852,6 @@
 		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
 		<xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
 		<xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
-		
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -3091,11 +3076,20 @@
 	<xsl:template match="iso19139Brief">
 	 <xsl:for-each select="/metadata/*[1]">
 		<metadata>
-		 <xsl:call-template name="iso19139-brief"/>
+		  <xsl:choose>
+		    <xsl:when test="geonet:info/isTemplate='s'">
+		      <xsl:apply-templates mode="iso19139-subtemplate" select="."/>
+		      <xsl:copy-of select="geonet:info" copy-namespaces="no"/>
+		    </xsl:when>
+		    <xsl:otherwise>
+		      <xsl:call-template name="iso19139-brief"/>
+		    </xsl:otherwise>
+		  </xsl:choose>
 		</metadata>
 	 </xsl:for-each>
 	</xsl:template>
-
+  
+  
 	<xsl:template name="iso19139-brief">
 			<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
 			<xsl:variable name="info" select="geonet:info"/>
@@ -3184,29 +3178,23 @@
 					</xsl:when>
 					<xsl:when test="starts-with($protocol,'ESRI:AIMS-') and contains($protocol,'-get-image') and string($linkage)!='' and string($name)!=''">
 						<link type="arcims">
-<!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=1&#34;)')"/>-->
 							<xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 1)' )"/>
 						</link>
 					</xsl:when>
-					<xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!='') or ($protocol = 'OGC:WMS' and string($linkage)!='' and string($name)!='')">
+				  <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!='') or ($protocol = 'OGC:WMS' and string($linkage)!='' and string($name)!='')">
 						<link type="wms">
-<!--							<xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',$linkage,'&amp;service=',$name,'&amp;type=2&#34;)')"/>-->
-							
-							<!--xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 2)' )"/-->
 							<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
-
 						</link>
 						<link type="googleearth">
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
 						</link>
-					</xsl:when>
-                    <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and not(string($name))) or ($protocol = 'OGC:WMS' and string($linkage)!='' and not(string($name)))">
-						<link type="wms">
-							<!--xsl:value-of select="concat('javascript:runIM_selectService(&#34;'  ,  $linkage  ,  '&#34;, 2,',$id,')' )"/-->
-							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
-						</link>
-					</xsl:when>
-					<xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!='') or ($protocol = 'OGC:WMS' and string($name)='' and string($linkage)!='')">
+				  </xsl:when>
+				  <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and not(string($name))) or ($protocol = 'OGC:WMS' and string($linkage)!='' and not(string($name)))">
+				    <link type="wms">
+				      <xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
+				    </link>
+				  </xsl:when>
+				  <xsl:when test="(starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-capabilities') and string($linkage)!='') or ($protocol = 'OGC:WMS' and string($name)='' and string($linkage)!='')">
 						<link type="wms">
 							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;' ,  $linkage  ,  '&#34;)' )"/>
 						</link>
@@ -3337,70 +3325,29 @@
 					<end><xsl:apply-templates mode="brieftime" select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/></end>
 				</temporalExtent>
 			</xsl:for-each>
-
+	  
 			<xsl:if test="not($info/server)">
 				<xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
 				  <xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
 				  <xsl:if test="$fileName != ''">
 						<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
+				    
 						<xsl:choose>
-
 							<!-- the thumbnail is an url -->
-
 							<xsl:when test="contains($fileName ,'://')">
-								<image type="unknown"><xsl:value-of select="$fileName"/></image>								
+								<image type="unknown"><xsl:value-of select="$fileName"/></image>
 							</xsl:when>
-
-							<!-- small thumbnail -->
-
-							<xsl:when test="string($fileDescr)='thumbnail'">
-								<xsl:choose>
-									<xsl:when test="$info/isHarvested = 'y'">
-									  <xsl:choose>
-									    <xsl:when test="$info/harvestInfo/smallThumbnail">
-									      <image type="thumbnail">
-									        <xsl:value-of select="concat($info/harvestInfo/smallThumbnail, $fileName)"/>
-									      </image>
-									    </xsl:when>
-									    <xsl:otherwise>
-									      <!-- When harvested, thumbnail is stored in local node (eg. ogcwxs). 
-									      Only GeoNetHarvester set smallThumbnail elements.
-									      -->
-									      <image type="thumbnail">
-									        <xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
-									      </image>
-									    </xsl:otherwise>
-									  </xsl:choose>
-									</xsl:when>
-									
-									<xsl:otherwise>
-										<image type="thumbnail">
-											<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
-										</image>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
-
-							<!-- large thumbnail -->
-
-							<xsl:when test="string($fileDescr)='large_thumbnail'">
-								<xsl:choose>
-									<xsl:when test="$info/isHarvested = 'y'">
-										<xsl:if test="$info/harvestInfo/largeThumbnail">
-											<image type="overview">
-												<xsl:value-of select="concat($info/harvestInfo/largeThumbnail, $fileName)"/>
-											</image>
-										</xsl:if>
-									</xsl:when>
-									
-									<xsl:otherwise>
-										<image type="overview">
-											<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
-										</image>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
-
+						  <!-- GN 2.0.x only retrieve the XML not the MEF. So link thumbnail to remote resources.get service -->
+						  <xsl:when test="$info/smallThumbnail">
+						    <image type="thumbnail">
+						      <xsl:value-of select="concat($info/smallThumbnail, $fileName)"/>
+						    </image>
+						  </xsl:when>
+						  <xsl:otherwise>
+						    <image type="thumbnail">
+						      <xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+						    </image>
+						  </xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
 				</xsl:for-each>
@@ -3906,6 +3853,7 @@
 					or name(.)='gmd:evaluationMethodDescription'
           or name(.)='gmd:measureDescription'
           or name(.)='gmd:maintenanceNote'
+          or name(.)='gmd:credit'
           or name(.)='gmd:otherConstraints'
           or name(.)='gmd:handlingDescription'
           or name(.)='gmd:userNote'
@@ -4255,6 +4203,7 @@
 				geonet:child[@name='referenceSystemInfo' and @prefix='gmd']">
 		<xsl:text>showCRSSelectionPanel</xsl:text>
 	</xsl:template>
-  <xsl:template mode="addXMLFragment" match="*|@*"></xsl:template>
+  <xsl:template mode="addXMLFragment" match="*|@*"/>
+  
   
 </xsl:stylesheet>

@@ -12,7 +12,9 @@
 	<ca>Català</ca> <!-- Do not translate! -->
 	<no>Norsk</no>  <!-- Do not translate! -->
 
-	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+  <subtemplate.admin>Manage directories</subtemplate.admin>
+  <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
+  <surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
 	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
 	<emailMandatory>email address is Mandatory</emailMandatory>
 	<forgottenPassword>Forgot your password?</forgottenPassword>
@@ -443,7 +445,8 @@
     <metadata-samples-add>Afegir metadades d'exemple</metadata-samples-add>
     <metadata-samples-add-failed>Error a l'afegir les metadades d'exemple</metadata-samples-add-failed>
     <metadata-samples-add-success>S'ha afegit les metadades d'exemple</metadata-samples-add-success>
-	<metadata-template-order>Ordenar plantilles</metadata-template-order>
+  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+  <metadata-template-order>Ordenar plantilles</metadata-template-order>
 	<metadata-template-order-desc>Ordenar les vostres plantilles</metadata-template-order-desc>
 	<metadata-template-add-default>Afegir plantilles</metadata-template-add-default>	
 	<metadata-template-add-default-desc>Afegir plantilles per defecte</metadata-template-add-default-desc>

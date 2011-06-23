@@ -3,8 +3,11 @@
 
 	<xsl:include href="main.xsl"/>
 
+  <!-- Use the link parameter to display a custom hyperlink instead of 
+  a default GeoNetwork Jeeves service URL. -->
 	<xsl:template name="addrow">
-		<xsl:param name="service"/>
+	  <xsl:param name="service"/>
+	  <xsl:param name="link"/>
 		<xsl:param name="args" select="''"/>
 	  <xsl:param name="displayLink" select="true()"/>
 		<xsl:param name="title"/>
@@ -25,7 +28,10 @@
 
 		<xsl:if test="/root/gui/services/service/@name=$service">
 			<xsl:variable name="url">
-				<xsl:choose>
+			  <xsl:choose>
+			    <xsl:when test="normalize-space($link)!=''">
+			      <xsl:value-of select="$link"/>
+			    </xsl:when>
 					<xsl:when test="normalize-space($args)='' and normalize-space($modalArg)=''">
 						<xsl:value-of select="concat(/root/gui/locService,'/',$service)"/>
 					</xsl:when>
@@ -101,6 +107,12 @@
 					<xsl:variable name="mdServices">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.create.form'"/>
+						  <xsl:with-param name="link">
+						    <!-- When client application is the widget redirect to that app 
+						    FIXME : hl parameter is only available for GUI widget experimental client.
+						    -->
+						    <xsl:if test="/root/gui/config/client/@widget='true'"><xsl:value-of select="concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, /root/gui/config/client/@createParameter)"/></xsl:if>
+						  </xsl:with-param>
 							<xsl:with-param name="title" select="/root/gui/strings/newMetadata"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/newMdDes"/>
 							<xsl:with-param name="icon">page_add.png</xsl:with-param>
@@ -215,7 +227,7 @@
 											<td style="align:center;width:20%;vertical-align:bottom;">
 											  <div id="addTemplatesSamplesButtons">
   												<button class="content"
-  													onclick="addTemplate('{/root/gui/strings/metadata-schema-select}');"
+  												  onclick="addTemplate('{/root/gui/strings/metadata-schema-select}', '{/root/gui/strings/metadata-template-add-success}');"
   													id="tplBtn">
   													<xsl:value-of
   														select="/root/gui/strings/metadata-template-add-default"
@@ -398,6 +410,18 @@
 							/>
 						</xsl:call-template>
 
+            <!-- Only add the subtemplate if the client is widget based -->
+					  <xsl:if test="/root/gui/config/client/@widget">
+  					  <tr>
+  					    <td class="spacer"/>
+  					  </tr>
+  					  
+  					  <xsl:call-template name="addrow">
+  					    <xsl:with-param name="service" select="'subtemplate.admin'"/>
+  					    <xsl:with-param name="title" select="/root/gui/strings/subtemplate.admin"/>
+  					    <xsl:with-param name="desc" select="/root/gui/strings/subtemplate.admin.desc"/>
+  					  </xsl:call-template>
+            </xsl:if>
 					</xsl:variable>
 
 					<xsl:call-template name="addTitle">

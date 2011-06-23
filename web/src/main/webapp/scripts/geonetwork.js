@@ -593,7 +593,7 @@ function toggleFieldset(btn, elem) {
  *
  */
 
-function addTemplate(msgSelectSomething) {
+function addTemplate(msgSelectSomething, successMsg) {
                           
 	var url = "metadata.templates.add.default?schema=";
 	var selectedSchemas = $('metadata.schemas.select');
@@ -632,13 +632,13 @@ function addTemplate(msgSelectSomething) {
 							$(btn).style.display = 'block';
 
 							if (resp == "true")
-								alert ("ok");
+                                alert (successMsg);
 							else
 								alert(translate('error'));
 
 							var selectedSchemas = $('metadata.schemas.select');
 							for (i = 0;i < selectedSchemas.length;i++) {
-								selectedSchemas.options[i].selected = false 
+								selectedSchemas.options[i].selected = false;
 							}
 						},
 						onFailure: function(originalRequest){

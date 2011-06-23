@@ -12,7 +12,7 @@
 	<!-- ====================================================================== -->
 
 	<default>
-		<service>main.home</service>
+		<service>home</service>
 		<!-- the following service is called if there is an exception raised
 		     during the initialization of resources or 
 				 the appHandler org.fao.geonet.Geonetwork
@@ -113,6 +113,7 @@
 	      <reconnectTime>3600</reconnectTime>
 	    </config>
 	  </resource>
+	  
 	  
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mckoi standalone -->
@@ -276,7 +277,11 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-
+	  
+	  <service name="home">
+	    <output sheet="home.xsl"/>
+	  </service>
+	  
 		<service name="main.home">
 			<output sheet="main-page.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
@@ -832,7 +837,7 @@
 		<service name="user.login">
 			<class name=".services.login.Login" />
 
-			<output forward="main.home" />
+			<output forward="home" />
 
 			<error id="user-login" sheet="error.xsl" statusCode="401">
 				<xml name="error" file="xml/login-error.xml" />
@@ -844,7 +849,7 @@
 		<service name="shib.user.login">
 			<class name=".services.login.ShibLogin" />
 
-			<output forward="main.home" />
+			<output forward="home" />
 
 			<error id="user-login" sheet="error.xsl" statusCode="401">
 				<xml name="error" file="xml/login-error.xml" />
@@ -855,7 +860,7 @@
 
 		<service name="user.logout">
 			<class name=".services.login.Logout" />
-			<output forward="main.home" />
+			<output forward="home" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1076,6 +1081,8 @@
 			<class name=".services.main.XmlSearch" />
 
 			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
+		  
+		  <error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
 		</service>
 
     <service name="q">
@@ -1437,7 +1444,9 @@
 	<!-- ====================================================================== -->
 
 	<include>config-metadata.xml</include>
-	<include>config-harvesting.xml</include>
+  <include>config-metadata-experimental.xml</include>
+  <include>config-subtemplate.xml</include>
+  <include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
 	<include>config-statistics.xml</include>

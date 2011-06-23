@@ -595,7 +595,8 @@
     <metadata-samples-add>Add sample metadata</metadata-samples-add>
     <metadata-samples-add-failed>Add sample metadata failed</metadata-samples-add-failed>
     <metadata-samples-add-success>Added sample metadata</metadata-samples-add-success>
-	<metadata-template-order>Sort templates</metadata-template-order>	
+  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+  <metadata-template-order>Sort templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>بيانات أساسية</metadata>

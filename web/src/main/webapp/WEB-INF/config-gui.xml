@@ -5,6 +5,19 @@
  Updating a parameter don't need a restart (but need an XSL cache refresh if XSL caching is on).
 -->
 <config>
+  
+  <!-- Client configuration in order to redirect to default UI 
+    (ie. main.home service) or to another custom client.
+  -->
+  <!-- Default main.home client interface -->
+  <client type="redirect" url="main.home"/>
+  <!-- Widget experimental client -->
+  <!--<client type="redirect" widget="true" url="../../apps/search/" createParameter="#create"/>-->
+  <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="extent=-5.1,41,9.7,51" createParameter="#create"/>-->
+  <!-- Widget with a custom extent in debug mode in french --> 
+  <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fr" createParameter="#create"/>-->
+  
+  
  <!-- Comment out languages to hide them
  from language selector. -->
  <languages>
@@ -114,7 +127,7 @@
  <!-- Display error only when loading validation report 
   <editor-validation-errors-only-on-load/>-->
  
- <!-- Display the geopublisher option for all updloaded files
+  <!-- Display the geopublisher option for all updloaded files
  	<editor-geopublisher/>  -->
  
  
@@ -135,7 +148,7 @@
 
  -->
  <metadata-tab>
-  <simple flat="true" />
+  <simple flat="true"/>
   <advanced/><!-- This view should not be removed as this is the only view to be able
   to edit all elements defined in a schema. -->
   <iso/>
@@ -163,6 +176,41 @@
   <compute-extent-from-keyword/> 
  </editor-actions>
  
+ 
+ 
+ 
+  <!-- Subtemplate configuration.
+  
+  Subtemplate only works with the GUI widget client interface.
+  The configuration allows to define the types of supported subtemplate
+  and their parent (where they can be inserted). 
+  Subtemplate are only supported for iso19139 or profile records.
+  -->
+  
+  <editor-subtemplate>
+    <mapping>
+      <subtemplate type="gmd:CI_ResponsibleParty">
+        <parent id="gmd:pointOfContact"/>
+        <parent id="gmd:userContactInfo"/>
+        <parent id="gmd:distributorContact"/>
+        <parent id="gmd:citedResponsibleParty"/>
+        <parent id="gmd:contact"/>
+        <parent id="gmd:source"/>
+        <parent id="gmd:processor"/>
+        <parent id="gmd:responsibleParty"/>
+      </subtemplate>
+      <subtemplate type="gmd:EX_Extent">
+        <parent id="gmd:extent"/>
+      </subtemplate>
+      <subtemplate type="gmd:MD_Keywords">
+        <parent id="gmd:descriptiveKeywords"/>
+      </subtemplate>
+      <subtemplate type="gmd:DQ_FormatConsistency">
+        <parent id="gmd:report"/>
+      </subtemplate>
+    </mapping>
+  </editor-subtemplate>
+
  <!-- Proxy URL to use for XHR. 
  Check that the proxy could query allowed hosts.
  <proxy-url>/cgi-bin/proxy.cgi</proxy-url>

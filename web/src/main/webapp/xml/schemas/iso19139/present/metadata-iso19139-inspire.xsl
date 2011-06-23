@@ -246,7 +246,7 @@
 				<xsl:with-param name="content">
 
 					<xsl:for-each select="*:extent/gmd:EX_Extent">
-					  <xsl:apply-templates mode="simpleElement"
+					  <xsl:apply-templates mode="elementEP"
 					    select="
 					    gmd:description
 					    ">
@@ -374,21 +374,7 @@
 					select="generate-id(/root/gui/strings/inspireSection/conformity/title)" />
 				<xsl:with-param name="content">
 
-					<xsl:if
-						test="not (../../gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult[contains(gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE')])">
-						<xsl:choose>
-							<xsl:when test="$edit = true()">
-							  <xsl:value-of select="/root/gui/strings/inspireAddConformity" />&#160;
-							  <a
-									href="metadata.processing?uuid={../../geonet:info/uuid}&amp;process=inspire-add-conformity"
-									alt="{/root/gui/strings/inspireAddConformity}" title="{/root/gui/strings/inspireAddConformity}">
-									<img src="../../images/plus.gif" align="absmiddle" />
-								</a>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:if>
-
-					<xsl:apply-templates mode="iso19139"
+				  <xsl:apply-templates mode="complexElement"
 						select="../../gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report[gmd:DQ_DomainConsistency]">
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />

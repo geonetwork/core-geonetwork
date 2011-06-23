@@ -42,15 +42,6 @@
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
 		
-		<xsl:choose>
-			<!-- subtemplate -->
-			<xsl:when test="geonet:info/isTemplate='s'">
-				<metadata>
-					<title><xsl:value-of select="geonet:info/title"/></title>
-					<xsl:copy-of select="geonet:info"/>
-				</metadata>
-			</xsl:when>
-
 			<!-- create XML fragment with name of schema Brief template to 
 					 select plus all info in /root and the metadata we are
 					 handling - 
@@ -67,19 +58,16 @@
 
 					 All schema definitions need to define the Brief template eg.
 					 iso19139Brief and unpack the metadata from /metadata -->
-			<xsl:otherwise>
-				<xsl:variable name="briefSchemaCallBack">
-					<xsl:element name="{concat($schema,'Brief')}"/>
-					<xsl:copy-of select="/root"/>
-					<xsl:element name="metadata">
-						<xsl:copy-of select="."/>
-					</xsl:element>
-				</xsl:variable>
+			
+			<xsl:variable name="briefSchemaCallBack">
+				<xsl:element name="{concat($schema,'Brief')}"/>
+				<xsl:copy-of select="/root"/>
+				<xsl:element name="metadata">
+					<xsl:copy-of select="."/>
+				</xsl:element>
+			</xsl:variable>
 
-				<xsl:apply-templates select="exslt:node-set($briefSchemaCallBack/*[1])"/>
-			</xsl:otherwise>
-
-		</xsl:choose>
+			<xsl:apply-templates select="exslt:node-set($briefSchemaCallBack/*[1])"/>
 	</xsl:template>
 
 	<!--

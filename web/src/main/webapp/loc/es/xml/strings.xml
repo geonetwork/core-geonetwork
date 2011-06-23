@@ -13,7 +13,9 @@
     <no>Norsk</no>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
-	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+  <subtemplate.admin>Manage directories</subtemplate.admin>
+  <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
+  <surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
 	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
 	<emailMandatory>email address is Mandatory</emailMandatory>
 	<forgottenPassword>Forgot your password?</forgottenPassword>
@@ -592,7 +594,8 @@
     <metadata-samples-add>Añadir metadatos de ejemplo</metadata-samples-add>
     <metadata-samples-add-failed>Ocurrió un fallo al añadir los metadatos de ejemplo</metadata-samples-add-failed>
     <metadata-samples-add-success>Añadidos los metadatos de ejemplo</metadata-samples-add-success>
-	<metadata-template-order>Ordenar plantillas</metadata-template-order>
+  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+  <metadata-template-order>Ordenar plantillas</metadata-template-order>
 	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
 	<metadata-template-add-default>Añadir plantillas</metadata-template-add-default>
 	<metadata>Metadatos</metadata>

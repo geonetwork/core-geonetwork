@@ -45,7 +45,7 @@
 				</div>
 
 				<xsl:if test="not(/root/request/modal)">
-					<xsl:apply-templates mode="loading" select="/"/>                
+					<xsl:apply-templates mode="loading" select="/"/>
 				</xsl:if>
 			</body>
 		</html>

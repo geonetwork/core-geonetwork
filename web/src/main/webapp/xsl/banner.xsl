@@ -23,7 +23,7 @@
 			<!-- buttons -->
 			<tr class="banner">
 				<td class="banner-menu" width="380px">
-					<a class="banner" href="{/root/gui/locService}/main.home"><xsl:value-of select="/root/gui/strings/home"/></a>
+					<a class="banner" href="{/root/gui/locService}/home"><xsl:value-of select="/root/gui/strings/home"/></a>
 					|
 					<xsl:if test="$modal">
 						<xsl:if test="/root/gui/services/service/@name='metadata.add.form'">

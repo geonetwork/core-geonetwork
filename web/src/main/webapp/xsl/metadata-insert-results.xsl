@@ -48,13 +48,28 @@
 
       <xsl:with-param name="buttons">
         <xsl:if test="/root/response/id">
-          <button class="content" onclick="goBack()" id="back"><xsl:value-of
-              select="/root/gui/strings/back"/></button> &#160; <button class="content"
-            onclick="load('{/root/gui/locService}/metadata.show?id={/root/response/id}')"
-              ><xsl:value-of select="/root/gui/strings/show"/></button> &#160; <button
-            class="content"
-            onclick="load('{/root/gui/locService}/metadata.edit?id={/root/response/id}')"
-              ><xsl:value-of select="/root/gui/strings/edit"/></button>
+          
+          <xsl:choose>
+            <xsl:when test="/root/gui/config/client/@widget='true'">
+              <button class="content" onclick="goBack()" id="back"><xsl:value-of
+                select="/root/gui/strings/back"/></button> &#160; <button class="content"
+                  onclick="load('{/root/gui/config/client/@url}?hl={/root/gui/language}#uuid={/root/response/uuid}')"
+                  ><xsl:value-of select="/root/gui/strings/show"/></button> &#160; <button
+                    class="content"
+                    onclick="load('{/root/gui/config/client/@url}?hl={/root/gui/language}#edit={/root/response/id}')"
+                    ><xsl:value-of select="/root/gui/strings/edit"/></button>
+            </xsl:when>
+            <xsl:otherwise>
+              <button class="content" onclick="goBack()" id="back"><xsl:value-of
+                select="/root/gui/strings/back"/></button> &#160; <button class="content"
+                  onclick="load('{/root/gui/locService}/metadata.show?id={/root/response/id}')"
+                  ><xsl:value-of select="/root/gui/strings/show"/></button> &#160; <button
+                    class="content"
+                    onclick="load('{/root/gui/locService}/metadata.edit?id={/root/response/id}')"
+                    ><xsl:value-of select="/root/gui/strings/edit"/></button>
+            </xsl:otherwise>
+          </xsl:choose>
+          
         </xsl:if>
       </xsl:with-param>
     </xsl:call-template>

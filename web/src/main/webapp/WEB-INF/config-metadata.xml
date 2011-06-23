@@ -94,7 +94,7 @@
 				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
 				<call name="subtemplates"  class ="jeeves.services.db.Select">
 					<param name="db"    value="main-db"/>
-					<param name="query" value="SELECT id, schemaId, root, title FROM Metadata WHERE isTemplate='s' ORDER BY root, title"/>
+					<param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
 				</call>
 			</output>
 		</service>
@@ -113,7 +113,7 @@
 				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
 				<call name="subtemplates"  class ="jeeves.services.db.Select">
 					<param name="db"    value="main-db"/>
-					<param name="query" value="SELECT id, schemaId, root, title FROM Metadata WHERE isTemplate='s' ORDER BY root, title"/>
+					<param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
 				</call>
 			</output>
 
@@ -133,7 +133,7 @@
 				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
 				<call name="subtemplates"  class ="jeeves.services.db.Select">
 					<param name="db"    value="main-db"/>
-					<param name="query" value="SELECT id, schemaId, root, title FROM Metadata WHERE isTemplate='s' ORDER BY root, title"/>
+					<param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
 				</call>
 			</output>
 
@@ -204,7 +204,7 @@
 
 		<service name="xml.metadata.validate">
 			<class name=".services.metadata.Validate"/>
-		  <output sheet="validate.xsl" contentType="text/xml; charset=UTF-8">
+		  <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
 		    <xml name="validation" file="xml/metadata-validate.xml" />
 		  </output>
 		</service>
@@ -215,7 +215,7 @@
 		
 	  <service name="xml.relation">
 	    <class name=".guiservices.metadata.GetRelated"/>
-	    <output sheet="relation.xsl" contentType="text/xml; charset=UTF-8"/>
+	    <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
 	  </service>
 	  
 

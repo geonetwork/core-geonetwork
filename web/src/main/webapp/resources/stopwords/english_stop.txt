@@ -13,7 +13,6 @@
 
            | PRONOUNS FORMS
              | 1st person sing
-
 i              | subject, always in upper case of course
 
 me             | object

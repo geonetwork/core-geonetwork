@@ -544,5 +544,4 @@
 			<!-- inspire annex cannot be established: leave empty -->
 		</xsl:choose>
 	</xsl:template>
-								
 </xsl:stylesheet>

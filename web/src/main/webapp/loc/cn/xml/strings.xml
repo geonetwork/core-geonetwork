@@ -13,7 +13,9 @@
 	<no>Norsk</no>  <!-- Do not translate! -->
 
 
-    <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>
+  <subtemplate.admin>Manage directories</subtemplate.admin>
+  <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
+  <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>
     <rebuildIndexMessage>如果你改变这些值，建议您重建Lucene索引。</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->
 	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
@@ -592,7 +594,8 @@
     <metadata-samples-add>Add sample metadata</metadata-samples-add>
     <metadata-samples-add-failed>Add sample metadata failed</metadata-samples-add-failed>
     <metadata-samples-add-success>Added sample metadata</metadata-samples-add-success>
-	<metadata-template-order>Sort templates</metadata-template-order>	
+  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+  <metadata-template-order>Sort templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>元数据</metadata>

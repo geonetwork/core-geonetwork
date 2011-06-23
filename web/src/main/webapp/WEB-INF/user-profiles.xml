@@ -116,6 +116,7 @@
     <allow service="stat.deleteTmpGraphics"/>
     <allow service="stat.tableExport"/>
 
+
     <!-- index languages-->
     <allow service="index.languages.get"/>
     <allow service="index.languages.set"/>
@@ -182,6 +183,7 @@
 		<allow service="metadata.batch.category.form"/>
 		<allow service="metadata.batch.update.categories"/>
 
+
 		<!-- Allow to add a metadata record -->
 		<allow service="metadata.add"/>
 		<allow service="metadata.add.form"/>
@@ -200,24 +202,31 @@
 		<allow service="metadata.duplicate.form"/>
 		<allow service="metadata.create.form"/>
 		<allow service="metadata.create"/>
+	  <allow service="metadata.create.new"/>
 		<allow service="metadata.create.edit"/>
 
 		<!-- Allow to edit a metadata record -->
 		<allow service="metadata.edit"/>
-		<allow service="metadata.elem.add"/>
+	  <allow service="metadata.elem.add.new"/>
+	  <allow service="metadata.elem.add"/>
 		<allow service="metadata.elem.delete"/>
+	  <allow service="metadata.elem.delete.new"/>
 		<allow service="metadata.elem.down"/>
 		<allow service="metadata.elem.up"/>
 		<allow service="metadata.attr.delete"/>
 		<allow service="metadata.update"/>
+	  <allow service="metadata.update.new"/>
 		<allow service="metadata.update.finish"/>
 		<allow service="metadata.update.forget"/>
+	  <allow service="metadata.update.forget.new"/>
 		<allow service="metadata.update.forgetandfinish"/>
 		<allow service="metadata.batch.children.form"/>
 		<allow service="metadata.batch.update.children"/>
 		<allow service="metadata.validate"/>
+	  <allow service="metadata.suggestion"/>
 		<allow service="xml.metadata.validate"/>
 		<allow service="metadata.processing"/>
+	  <allow service="metadata.processing.new"/>
 		<allow service="xml.metadata.processing"/>
 
         <!-- Allow to retrieve user owned metadata -->
@@ -231,13 +240,18 @@
 		<!-- Allow to upload a file -->
 		<allow service="file.upload"/>
 		<allow service="resources.upload"/>
+	  <allow service="resources.upload.new"/>
 		<allow service="resources.prepare.upload"/>
 		<allow service="resources.del"/>
+	  <allow service="resources.del.new"/>
+	  
 
 		<!-- Allow thumbnail services -->
 		<allow service="metadata.thumbnail.form"/>
 		<allow service="metadata.thumbnail.set"/>
+	  <allow service="metadata.thumbnail.set.new"/>
 		<allow service="metadata.thumbnail.unset"/>
+	  <allow service="metadata.thumbnail.unset.new"/>
 
 		<!-- Allow GeoNetwork Mapping services -->
 		<allow service="xml.metadata.insert"/>
@@ -246,7 +260,7 @@
 
 		<!-- MEF facilities -->
 		<allow service="mef.import"/>
-        <allow service="mef.import.ui"/>
+	  <allow service="mef.import.ui"/>
 
 		<!-- Relation services -->
 		<allow service="xml.relation.insert"/>
@@ -255,6 +269,9 @@
 		<!-- GeoServer publication -->
 		<allow service="geoserver.publisher"/>
 		
+		<!-- Subtemplate -->
+	  <allow service="subtemplate.types"/>
+	  <allow service="subtemplate.admin"/>
 	</profile>
 
 	<!-- ====================================================================== -->
@@ -277,8 +294,9 @@
 	<profile name="Guest">
 
 		<!-- Basic services to search and display the results -->
-		<allow service="main.home"/>
-		<allow service="main.error"/> <!-- for servlet startup errors -->
+	  <allow service="home"/>
+	  <allow service="main.home"/>
+	  <allow service="main.error"/> <!-- for servlet startup errors -->
 		<allow service="xml.main.error"/> <!-- for servlet startup errors -->
 		<allow service="main.searchform.simple.embedded"/> <!--  ETj -->		
 		<allow service="main.searchform.advanced.embedded"/> <!--  ETj -->		
@@ -289,9 +307,11 @@
 		<allow service="main.present"/>
 		<allow service="main.present.embedded"/> <!--  ETj -->
 		<allow service="metadata.show"/>
-	  <allow service="pdf"/>
-		<allow service="metadata.relation"/>
-		<allow service="metadata.show.embedded"/> <!--  ETj -->
+	  <allow service="metadata.thumbnail"/>
+	  <allow service="metadata.relation"/>
+	  <allow service="xml.relation"/>
+
+	  <allow service="metadata.show.embedded"/> <!--  ETj -->
 		<allow service="remote.show"/>
 		<allow service="rating.popup"/>
 
@@ -331,6 +351,7 @@
 		<allow service="selection.search"/>
 		<allow service="pdf.selection.search"/>
 		<allow service="pdf.present"/>
+	  <allow service="pdf"/>
 		
 		<!-- WMC -->
 		<allow service="intermap.wmc.setWmcContext"/>
@@ -349,9 +370,12 @@
 		<allow service="xml.keyword.get"/>
 		<allow service="xml.file.disclaimer"/>
 		<allow service="xml.file.download"/>
+	  <allow service="search"/>
+	  <allow service="view"/>
+	  <allow service="edit"/>
 	  <allow service="q"/>
-	  
-		<!-- Portal XML services -->
+
+	  <!-- Portal XML services -->
 		<allow service="portal.search"/>
 		<allow service="portal.opensearch"/>
 		<allow service="portal.search.keywords"/>
@@ -432,17 +456,28 @@
 		<!-- Test CSW ISO server -->
 		<allow service="test.csw"/>
 
-		<!--  forgotten password services -->
-		<allow service="xml.password.emaillink"/>
-		<allow service="xml.password.change"/>
-		<allow service="password.forgotten.form"/>
-		<allow service="password.forgotten.submit"/>
-		<allow service="password.change.form"/>
-		<allow service="password.change.submit"/>
-
 		<!-- User self registration -->
 		<allow service="user.register.get"/>
 		<allow service="user.register.submit"/>
+	  
+	  <!--  forgotten password services -->
+	  <allow service="xml.password.emaillink"/>
+	  <allow service="xml.password.change"/>
+	  <allow service="password.forgotten.form"/>
+	  <allow service="password.forgotten.submit"/>
+	  <allow service="password.change.form"/>
+	  <allow service="password.change.submit"/>
+	  
+	  
+   <!-- Contact search services -->
+   <allow service="contacts.search"/>
+   <allow service="contacts.sort"/>
+   <allow service="contacts.select"/>
+   <allow service="contacts.editsearch"/>
+   <allow service="contacts.getselected"/>
+   <allow service="contacts.getRole"/>
+	  
+	  <allow service="subtemplate"/>
 	</profile>
 
 	<!-- ====================================================================== -->

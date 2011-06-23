@@ -13,6 +13,8 @@
     <no>Norsk</no>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+  <subtemplate.admin>Gestion des annuaires</subtemplate.admin>
+  <subtemplate.admin.desc>Ajouter/modifier/supprimer les annuaires (eg. annuaire de contact)</subtemplate.admin.desc>
 	<surnameMandatory>Le nom est obligatoire</surnameMandatory>
 	<firstnameMandatory>Le prénom est obligatoire</firstnameMandatory>
 	<emailMandatory>Le mail est obligatoire</emailMandatory>
@@ -600,7 +602,8 @@
     <metadata-samples-add>Ajouter les exemples</metadata-samples-add>
     <metadata-samples-add-failed>Echec de l\'ajout des exemples</metadata-samples-add-failed>
     <metadata-samples-add-success>Exemples ajoutés</metadata-samples-add-success>
-	<metadata-template-order>Ordonner les modèles</metadata-template-order>	
+  <metadata-template-add-success>Modèles ajoutés.</metadata-template-add-success>
+  <metadata-template-order>Ordonner les modèles</metadata-template-order>	
 	<metadata-template-order-desc>Ordonner les modèles de saisie</metadata-template-order-desc>
 	<metadata-template-add-default>Ajouter les modèles</metadata-template-add-default>
 	<metadata>Métadonnées</metadata>

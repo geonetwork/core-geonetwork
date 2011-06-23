@@ -11,7 +11,9 @@
     <pt>Рortuguês</pt> <!-- Do not translate! -->
 	<ca>Català</ca> <!-- Do not translate! -->
     <no>Norsk</no>  <!-- Do not translate! -->
-
+  
+  <subtemplate.admin>Manage directories</subtemplate.admin>
+  <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
 	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
 	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
 	<emailMandatory>email address is Mandatory</emailMandatory>
@@ -590,9 +592,10 @@
 	<metadata.admin.index>Index manager</metadata.admin.index>
     <metadata-samples>Sample metadata</metadata-samples>
     <metadata-samples-add>Add sample metadata</metadata-samples-add>
-    <metadata-samples-add-failed>Add sample metadata failed</metadata-samples-add-failed>
-    <metadata-samples-add-success>Added sample metadata</metadata-samples-add-success>
-	<metadata-template-order>Sort templates</metadata-template-order>	
+    <metadata-samples-add-failed>Failed to add sample metadata.</metadata-samples-add-failed>
+    <metadata-samples-add-success>Sample metadata added.</metadata-samples-add-success>
+  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+  <metadata-template-order>Sort templates</metadata-template-order>	
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
     <metadata>Metadata</metadata>

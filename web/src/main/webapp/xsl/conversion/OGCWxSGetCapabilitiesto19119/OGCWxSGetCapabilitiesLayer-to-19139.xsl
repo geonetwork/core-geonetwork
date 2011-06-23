@@ -144,7 +144,7 @@
 			<xsl:choose>
 				<!-- WMS 1.1.0 is space separated -->
 				<xsl:when test="@version='1.1.0' or @version='1.0.0'">
-					<xsl:for-each select="tokenize(//Layer[Name=$Name]/SRS, ' ') and /@version='1.1.1'">
+					<xsl:for-each select="tokenize(//Layer[Name=$Name]/SRS, ' ') ">
 						<referenceSystemInfo>
 							<MD_ReferenceSystem>
 								<xsl:call-template name="RefSystemTypes">

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Comprendre la ressource</understandResource>
+  <relatedResources>Service disponible et données associées</relatedResources>
+  <techInfo>Les informations techniques</techInfo>
+  <contactInfo>Les contacts</contactInfo>
+  <temporalRef>Référence(s) temporelle(s)</temporalRef>
+  <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
+</strings>

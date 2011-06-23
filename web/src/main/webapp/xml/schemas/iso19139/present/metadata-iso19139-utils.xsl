@@ -6,7 +6,8 @@
     xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:geonet="http://www.fao.org/geonetwork"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
-    version="2.0">
+    version="2.0"
+    exclude-result-prefixes="#all">
 
 
     <!-- Template used to return a gco:CharacterString element

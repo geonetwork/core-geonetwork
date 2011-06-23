@@ -1,36 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
-
-	<!-- NOTE: this file is automatically updated by GeoNetwork -->
-
-	<!-- this catalog is used to map blank schema presentation xslts included
+  <!-- NOTE: this file is automatically updated by GeoNetwork -->
+  <!-- this catalog is used to map blank schema presentation xslts included
 	     in metadata-utils.xsl to the presentation xslts of schemas that are
 			 plugged into GeoNetwork 
 			 
 			 we use this process to avoid having to make changes to GeoNetwork xslts
 			 to include presentation xslts from schemas that are plugged in -->
-
-	<!-- plug in the builtin schemas that come with GeoNetwork -->
-
-	<uri    name="blanks/metadata-schema01.xsl"
-					uri="../xml/schemas/iso19115/present/metadata-iso19115.xsl"/>
-
-	<uri    name="blanks/metadata-schema02.xsl"
-					uri="../xml/schemas/iso19139/present/metadata-iso19139.xsl"/>
-
-	<uri    name="blanks/metadata-schema03.xsl"
-					uri="../xml/schemas/iso19110/present/metadata-iso19110.xsl"/>
-
-	<uri    name="blanks/metadata-schema04.xsl"
-					uri="../xml/schemas/fgdc-std/present/metadata-fgdc-std.xsl"/>
-
-	<uri    name="blanks/metadata-schema05.xsl"
-					uri="../xml/schemas/dublin-core/present/metadata-dublin-core.xsl"/>
-
-	<uri    name="blanks/metadata-schema06.xsl"
-					uri="../xml/schemas/csw-record/present/metadata-csw-record.xsl"/>
-
-	<!-- plug in schemas - come next - managed by schema.add/update/delete -->
-
+  <!-- plug in the builtin schemas that come with GeoNetwork -->
+  <uri name="blanks/metadata-schema01.xsl" uri="../xml/schemas/iso19115/present/metadata-iso19115.xsl" />
+  <uri name="blanks/metadata-schema01-edit.xsl" uri="../xml/schemas/iso19115/present/metadata-iso19115-edit.xsl" />
+  <uri name="blanks/metadata-schema02.xsl" uri="../xml/schemas/iso19139/present/metadata-iso19139.xsl" />
+  <uri name="blanks/metadata-schema02-edit.xsl" uri="../xml/schemas/iso19139/present/metadata-iso19139-edit.xsl" />
+  <uri name="blanks/metadata-schema03.xsl" uri="../xml/schemas/iso19110/present/metadata-iso19110.xsl" />
+  <uri name="blanks/metadata-schema03-edit.xsl" uri="../xml/schemas/iso19110/present/metadata-iso19110-edit.xsl" />
+  <uri name="blanks/metadata-schema04.xsl" uri="../xml/schemas/fgdc-std/present/metadata-fgdc-std.xsl" />
+  <uri name="blanks/metadata-schema04-edit.xsl" uri="../xml/schemas/fgdc-std/present/metadata-fgdc-std-edit.xsl" />
+  <uri name="blanks/metadata-schema05.xsl" uri="../xml/schemas/dublin-core/present/metadata-dublin-core.xsl" />
+  <uri name="blanks/metadata-schema05-edit.xsl" uri="../xml/schemas/dublin-core/present/metadata-dublin-core-edit.xsl" />
+  <uri name="blanks/metadata-schema06.xsl" uri="../xml/schemas/csw-record/present/metadata-csw-record.xsl" />
+  <uri name="blanks/metadata-schema06-edit.xsl" uri="../xml/schemas/csw-record/present/metadata-csw-record-edit.xsl" />
+  <!-- plug in schemas - come next - managed by schema.add/update/delete -->
 </catalog>
 
