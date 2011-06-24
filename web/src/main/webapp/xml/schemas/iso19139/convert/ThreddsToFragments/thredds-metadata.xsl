@@ -670,6 +670,14 @@
 				
 				<xsl:variable name="service-suffix">	<xsl:if test="@serviceType='OPENDAP'">.html</xsl:if></xsl:variable>
 				
+				<xsl:variable name="protocol">
+					<xsl:choose>
+						<xsl:when test="@serviceType='WMS'">OGC:WMS</xsl:when>
+						<xsl:when test="@serviceType='WCS'">OGC:WCS</xsl:when>
+						<xsl:otherwise>WWW:LINK-1.0-http--downloaddata</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
 				<fragment uuid="{util:toString(util:randomUUID())}" title="{concat($datasetName,'_service_url')}">
 					<gmd:onLine>
 						<gmd:CI_OnlineResource>
@@ -677,7 +685,7 @@
 								<gmd:URL><xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath,$service-suffix)"/></gmd:URL>
 							</gmd:linkage>
 							<gmd:protocol>
-								<gco:CharacterString>WWW:LINK-1.0-http--downloaddata</gco:CharacterString>
+								<gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
 							</gmd:protocol>
 							<gmd:name gco:nilReason="missing">
 								<gco:CharacterString/>
