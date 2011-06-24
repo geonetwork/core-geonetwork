@@ -96,7 +96,12 @@ public class ApacheDBCPool implements ResourceProvider {
 		size = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		maxw = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
 
-		this.name = url;
+		// hack the url for postgis to postgres
+		String actualUrl = url;
+		if (actualUrl.contains("postgis"))
+			actualUrl = actualUrl.replaceFirst("postgis", "postgresql");
+
+		this.name = actualUrl;
 
 		poolSize = (size == null) ? Jeeves.Res.Pool.DEF_POOL_SIZE : Integer
 				.parseInt(size);
@@ -140,14 +145,10 @@ public class ApacheDBCPool implements ResourceProvider {
 				GenericObjectPool.DEFAULT_TEST_WHILE_IDLE);
 
 		// create the connection factory with the url provided in the config
-		// hack the url for postgis to postgres
-		String actualUrl = url;
 		String validationQuery = "Select 1";
 		boolean defaultReadOnly = false;
 		boolean defaultAutoCommit = false;
 
-		if (actualUrl.contains("postgis"))
-			actualUrl = actualUrl.replaceFirst("postgis", "postgresql");
 		ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
 				actualUrl, user, passwd);
 
