@@ -1265,7 +1265,7 @@ public class DataManager {
 		}
 		
 		//--- store metadata
-		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, owner, groupOwner, isTemplate, null);
+		String id = XmlSerializer.insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, null, owner, groupOwner, "");
 		copyDefaultPrivForGroup(dbms, id, groupOwner);
 
 		//--- store metadata categories copying them from the template
@@ -1883,7 +1883,7 @@ public class DataManager {
 
 		md = Xml.transform(root, styleSheet);
         String changeDate = null;
-		XmlSerializer.update(dbms, id, md, changeDate);
+		XmlSerializer.update(dbms, id, md, changeDate, null);
 
         // Notifies the metadata change to metatada notifier service
         notifyMetadataChange(dbms, md, id);
@@ -2372,8 +2372,7 @@ public class DataManager {
 			Element childForUpdate = new Element("root");
 			childForUpdate = Xml.transform(rootEl, styleSheet, params);
 			
-			XmlSerializer.update(dbms, childId, childForUpdate, new ISODate()
-					.toString());
+			XmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), null);
 
 
             // Notifies the metadata change to metatada notifier service

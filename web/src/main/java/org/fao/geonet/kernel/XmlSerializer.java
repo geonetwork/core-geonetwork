@@ -117,7 +117,8 @@ public class XmlSerializer {
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is
      * converted into xml, XLinks are NOT resolved even if they are config'd on - this is used when you want to do XLink
-     * processing yourself
+     * processing yourself.
+     *
      * @param dbms
      * @param table
      * @param id
@@ -129,45 +130,7 @@ public class XmlSerializer {
 	}
 
     /**
-     *
-     * @param dbms
-     * @param schema
-     * @param xml
-     * @param serial
-     * @param source
-     * @param uuid
-     * @param owner
-     * @param groupOwner
-     * @return
-     * @throws SQLException
-     */
-	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, int owner, String groupOwner) throws SQLException {
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, "n", null, owner, groupOwner, "");
-	}
-
-    /**
-     *
-     * @param dbms
-     * @param schema
-     * @param xml
-     * @param serial
-     * @param source
-     * @param uuid
-     * @param isTemplate
-     * @param title
-     * @param owner
-     * @param groupOwner
-     * @return
-     * @throws SQLException
-     */
-	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-	                            String source, String uuid, int owner, String groupOwner, 
-	                            String isTemplate, String title) throws SQLException {
-		return insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, title, owner, groupOwner, "");
-	}
-
-    /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param schema
@@ -238,18 +201,6 @@ public class XmlSerializer {
 
 		return Integer.toString(serial);
 	}
-
-    /**
-     *
-     * @param dbms
-     * @param id
-     * @param xml
-     * @param changeDate
-     * @throws SQLException
-     */
-    public static void update(Dbms dbms, String id, Element xml, String changeDate) throws SQLException {
-        update(dbms, id, xml, changeDate, null);
-    }
 
     /**
      *  Updates an xml element into the database. The new data replaces the old one.

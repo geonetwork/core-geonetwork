@@ -607,7 +607,7 @@ public class AjaxEditUtils extends EditUtils {
         String parentUuid = null;
 		md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, null);
         String changeDate = null;
-		XmlSerializer.update(dbms, id, md, changeDate);
+		XmlSerializer.update(dbms, id, md, changeDate, null);
 
         // Notifies the metadata change to metatada notifier service
         dataManager.notifyMetadataChange(dbms, md, id);
@@ -663,7 +663,7 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, null);
 
         String changeDate = null;
-		XmlSerializer.update(dbms, id, md, changeDate);
+		XmlSerializer.update(dbms, id, md, changeDate, null);
 
         // Notifies the metadata change to metatada notifier service
         dataManager.notifyMetadataChange(dbms, md, id);
