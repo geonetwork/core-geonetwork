@@ -76,6 +76,7 @@
 		<allow service="thesaurus.edit"/>
 		<allow service="thesaurus.update"/>
 		<allow service="thesaurus.upload"/>
+	  <allow service="xml.thesaurus.upload"/>
 		<allow service="thesaurus.download"/>
 		<allow service="thesaurus.delete"/>
 		<allow service="thesaurus.editelement"/>

@@ -1362,7 +1362,10 @@
 		  <class name=".services.thesaurus.Upload" />
 		  <output forward="thesaurus.admin" />
 		</service>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	  <service name="xml.thesaurus.upload">
+	    <class name=".services.thesaurus.Upload" />
+	  </service>
+	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<service name="thesaurus.download">
 		  <class name=".services.thesaurus.Download" />
 		  <error id="file-not-found" sheet="error.xsl" statusCode="404">
