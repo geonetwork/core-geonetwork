@@ -136,7 +136,7 @@
 				<xsl:variable name="id" select="@uuid"/>
 				<xsl:variable name="addLink">
 					<xsl:choose>
-						<xsl:when test="geonet:choose or $subtemplates">
+						<xsl:when test="geonet:choose">
 							<xsl:value-of select="concat('doNewORElementAction(',$apos,'/metadata.elem.add',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'.value,',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"/>
 						</xsl:when>
 						<xsl:otherwise>
