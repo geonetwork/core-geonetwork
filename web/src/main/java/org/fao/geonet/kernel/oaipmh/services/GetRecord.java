@@ -110,6 +110,10 @@ public class GetRecord implements OaiPmhService
 			if (schemaLocAtt != null) {
 				if (md.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
 					md.setAttribute(schemaLocAtt);
+					// make sure namespace declaration for schemalocation is present -
+					// remove it first (does nothing if not there) then add it
+					md.removeNamespaceDeclaration(schemaLocAtt.getNamespace()); 
+					md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
 				}
 			}
 		} else {

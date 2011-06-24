@@ -331,9 +331,15 @@ class Harvester
 
 		ArrayList<Element> queriables = new ArrayList<Element>();
 
+		//--- make sure that any freetext value has wildcards
+		String freeText = s.freeText;
+		if (freeText.length() > 0) {
+			if (!freeText.contains("%")) freeText = "%"+freeText+"%";
+		}
+
 		// FIXME :
 		// old GeoNetwork node does not understand AnyText (csw:AnyText instead).
-		buildFilterQueryable(queriables, "csw:AnyText", s.freeText);
+		buildFilterQueryable(queriables, "csw:AnyText", freeText);
 		buildFilterQueryable(queriables, "dc:title", s.title);
 		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
 		buildFilterQueryable(queriables, "dc:subject", s.subject);
@@ -442,6 +448,7 @@ class Harvester
 		{
 			log.info("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
 			Element response = request.execute();
+			log.debug("Sent request "+request.getSentData());
 			log.debug("Search results:\n"+Xml.getString(response));
 
 			return response;

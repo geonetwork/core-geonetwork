@@ -136,6 +136,10 @@ public class Show implements Service
 		if (schemaLocAtt != null) {
 			if (elMd.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
 				elMd.setAttribute(schemaLocAtt);
+				// make sure namespace declaration for schemalocation is present -
+				// remove it first (does nothing if not there) then add it
+				elMd.removeNamespaceDeclaration(schemaLocAtt.getNamespace()); 
+				elMd.addNamespaceDeclaration(schemaLocAtt.getNamespace());
 			}
 		}
 
