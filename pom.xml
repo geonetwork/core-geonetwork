@@ -680,6 +680,7 @@
     <module>oaipmh</module>
     <module>sde</module>
     <module>web</module>
+    <module>web-client</module>
     <module>geoserver</module>
     <module>gast</module>
     <module>web-itest</module>
