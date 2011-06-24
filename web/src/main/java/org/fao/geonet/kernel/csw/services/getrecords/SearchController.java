@@ -104,24 +104,24 @@ public class SearchController
 	
 	List<ResultItem> resultsList = summaryAndSearchResults.two();
 	int counter = 0;
-	if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY) && resultsList.size() > 0) {
-		for (int i=0; (i<maxRecords) && (i<resultsList.size()); i++) {
-
-            ResultItem resultItem = resultsList.get(i);
-            //System.out.println("result: " + resultItem.getID() + " " );
-
-		    String id = resultItem.getID();
-		    Element md = retrieveMetadata(context, id, setName, outSchema, elemNames, resultType);
-
-		    if (md == null) {
-                context.warning("SearchController : Metadata not found or invalid schema : "+ id);
-            }
-		    else {
+    for (int i=0; (i<maxRecords) && (i<resultsList.size()); i++) {
+        ResultItem resultItem = resultsList.get(i);
+        String  id = resultItem.getID();
+        Element md = retrieveMetadata(context, id, setName, outSchema, elemNames, resultType);
+        // metadata cannot be retrieved
+        if (md == null) {
+            context.warning("SearchController : Metadata not found or invalid schema : "+ id);
+        }
+        // metadata can be retrieved
+        else {
+            // metadata must be included in response
+            if((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
                 results.addContent(md);
-                counter++;
             }
-		}
-	}
+            counter++;
+        }
+    }
+
 
 	Element summary = summaryAndSearchResults.one();
 
