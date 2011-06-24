@@ -475,11 +475,16 @@
 								<xsl:when test="//sos:ObservationOffering/sos:time/gml:TimePosition[@indeterminatePosition='now']|//sos:ObservationOffering/sos:time/gml:TimePeriod/gml:beginPosition[@indeterminatePosition='now']">
 									<xsl:attribute name="indeterminatePosition" select="now"/>	
 								</xsl:when>
-								<xsl:when test="//sos:ObservationOffering/sos:time/gml:TimePosition[@indeterminatePosition='unknown']|//sos:ObservationOffering/sos:time/gml:TimePeriod/gml:beginPosition[@indeterminatePosition='unknown']">
+								<xsl:when test="//sos:ObservationOffering/sos:time/gml:TimePosition[@indeterminatePosition='unknown']|
+								        //sos:ObservationOffering/sos:time/gml:TimePeriod/gml:beginPosition[@indeterminatePosition='unknown']|
+								        //sos:ObservationOffering/sos:time/gml:TimePeriod[gml:beginPosition='']|
+								        //sos:ObservationOffering/sos:time[gml:TimePosition='']
+								        ">
 									<xsl:attribute name="indeterminatePosition" select="unknown"/>	
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="min((//sos:ObservationOffering/sos:time/gml:TimePeriod/xs:dateTime(gml:beginPosition),//sos:ObservationOffering/sos:time/xs:dateTime(gml:TimePosition)))"/>
+								  
+								  <xsl:value-of select="min((//sos:ObservationOffering/sos:time/gml:TimePeriod/xs:dateTime(gml:beginPosition),//sos:ObservationOffering/sos:time/xs:dateTime(gml:TimePosition)))"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</gml:beginPosition>
@@ -488,7 +493,10 @@
 								<xsl:when test="//sos:ObservationOffering/sos:time/gml:TimePosition[@indeterminatePosition='now']|//sos:ObservationOffering/sos:time/gml:TimePeriod/gml:endPosition[@indeterminatePosition='now']">
 									<xsl:attribute name="indeterminatePosition" select="'now'"/>	
 								</xsl:when>
-								<xsl:when test="//sos:ObservationOffering/sos:time/gml:TimePosition[@indeterminatePosition='unknown']|//sos:ObservationOffering/sos:time/gml:TimePeriod/gml:endPosition[@indeterminatePosition='unknown']">
+								<xsl:when test="//sos:ObservationOffering/sos:time/gml:TimePosition[@indeterminatePosition='unknown']|
+            								  //sos:ObservationOffering/sos:time/gml:TimePeriod/gml:endPosition[@indeterminatePosition='unknown']|
+            								  //sos:ObservationOffering/sos:time/gml:TimePeriod[gml:beginPosition='']|
+            								  //sos:ObservationOffering/sos:time[gml:TimePosition='']">
 									<xsl:attribute name="indeterminatePosition" select="'unknown'"/>	
 								</xsl:when>
 								<xsl:otherwise>
