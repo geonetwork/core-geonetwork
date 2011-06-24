@@ -118,9 +118,9 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public void loadProfiles(String file) throws Exception
+	public void loadProfiles(JeevesServlet servlet, String file) throws Exception
 	{
-		profilMan = new ProfileManager(appPath + Jeeves.Path.WEBINF + file);
+		profilMan = new ProfileManager(servlet, appPath + Jeeves.Path.WEBINF + file);
 	}
 
 	//---------------------------------------------------------------------------

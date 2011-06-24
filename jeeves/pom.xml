@@ -31,6 +31,10 @@
 
   <dependencies>
     <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+    </dependency>
+      <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
     </dependency>

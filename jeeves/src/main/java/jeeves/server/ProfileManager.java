@@ -25,6 +25,7 @@ package jeeves.server;
 
 import jeeves.constants.Jeeves;
 import jeeves.constants.Profiles;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -59,9 +60,10 @@ public class ProfileManager
 	  */
 
 	@SuppressWarnings("unchecked")
-	public ProfileManager(String profilesFile) throws Exception
+	public ProfileManager(JeevesServlet servlet, String profilesFile) throws Exception
 	{
 		Element elProfiles = Xml.loadFile(profilesFile);
+        ConfigurationOverrides.updateWithOverrides(profilesFile, servlet, elProfiles);
 
 		htProfiles  = new Hashtable<String, Element>(50);
 
