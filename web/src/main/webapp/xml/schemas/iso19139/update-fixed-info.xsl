@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="gmd">
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
 
@@ -51,20 +51,18 @@
 	<!-- ================================================================= -->
 
 	<xsl:template match="gmd:dateStamp">
-		<xsl:copy>
-            <xsl:choose>
-                <xsl:when test="/root/env/changeDate">
-                    <xsl:copy>
-                            <gco:DateTime>
-                                <xsl:value-of select="/root/env/changeDate"/>
-                            </gco:DateTime>
-                    </xsl:copy>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:copy-of select="."/>
-                </xsl:otherwise>
-            </xsl:choose>
-		</xsl:copy>
+    <xsl:choose>
+        <xsl:when test="/root/env/changeDate">
+            <xsl:copy>
+                    <gco:DateTime>
+                        <xsl:value-of select="/root/env/changeDate"/>
+                    </gco:DateTime>
+            </xsl:copy>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:copy-of select="."/>
+        </xsl:otherwise>
+    </xsl:choose>
 	</xsl:template>
 
 	<!-- ================================================================= -->
