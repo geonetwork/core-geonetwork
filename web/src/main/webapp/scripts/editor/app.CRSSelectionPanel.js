@@ -264,7 +264,8 @@ app.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
       this.first = true;
       store.each(
     	function(record) {
-	    	var tpl = "<gmd:MD_ReferenceSystem xmlns:gmd='http://www.isotc211.org/2005/gmd'  xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+            var tpl = "<gmd:referenceSystemInfo xmlns:gmd='http://www.isotc211.org/2005/gmd'  xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+                      "<gmd:MD_ReferenceSystem>" +
 							"<gmd:referenceSystemIdentifier>" +
 								"<gmd:RS_Identifier>" +
 									"<gmd:code>" +
@@ -280,7 +281,8 @@ app.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
 									"</gmd:version>" +
 								"</gmd:RS_Identifier>" +
 							"</gmd:referenceSystemIdentifier>" +
-						"</gmd:MD_ReferenceSystem>";
+						"</gmd:MD_ReferenceSystem>" +
+                    "</gmd:referenceSystemInfo>";
 	    	
 	    	this.crsSelected += (this.first?"":"&amp;&amp;&amp;") + tpl;
 	    	this.first = false;

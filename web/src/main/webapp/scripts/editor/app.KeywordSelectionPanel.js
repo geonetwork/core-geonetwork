@@ -312,8 +312,10 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
         scope: this,
         success: function(response) {
           var keyword = response.responseText;
-          if (keyword.indexOf('<gmd:MD_Keywords') != -1)
-          	this.keywordsSelected.push(response.responseText);
+          if (keyword.indexOf('<gmd:MD_Keywords') !== -1) {
+              this.keywordsSelected.push("<gmd:descriptiveKeywords xmlns:gmd='http://www.isotc211.org/2005/gmd'>" 
+                        + response.responseText + "</gmd:descriptiveKeywords>");
+          }
           Ext.getCmp('keywordSearchValidateButton').enable();
           this.ThesaurusCount -= 1;
           if (this.ThesaurusCount == 0) {
