@@ -84,6 +84,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
@@ -1069,6 +1070,73 @@ public class LuceneSearcher extends MetaSearcher
 					if (uuid != null) response.add(uuid);
         }
         return response;
+    }
+
+	
+	/**
+	 * <p>
+	 * Gets all metadata info as a int HashMap in current searcher
+	 * </p>
+	 * 
+	 * 
+	 * @throws IOException 
+	 * @throws CorruptIndexException 
+	 */
+    public Map<Integer,MdInfo> getAllMdInfo(int maxHits) throws Exception {
+
+			FieldSelector mdInfoSelector = new FieldSelector() {
+				public final FieldSelectorResult accept(String name) {
+					if (name.equals("_id"))          return FieldSelectorResult.LOAD;
+					if (name.equals("_root"))        return FieldSelectorResult.LOAD;
+					if (name.equals("_schema"))      return FieldSelectorResult.LOAD;
+					if (name.equals("_createDate"))  return FieldSelectorResult.LOAD;
+					if (name.equals("_changeDate"))  return FieldSelectorResult.LOAD;
+					if (name.equals("_source"))      return FieldSelectorResult.LOAD;
+					if (name.equals("_isTemplate"))  return FieldSelectorResult.LOAD;
+					if (name.equals("_title"))       return FieldSelectorResult.LOAD;
+					if (name.equals("_uuid"))        return FieldSelectorResult.LOAD;
+					if (name.equals("_isHarvested")) return FieldSelectorResult.LOAD;
+					if (name.equals("_owner"))       return FieldSelectorResult.LOAD;
+					if (name.equals("_groupOwner"))  return FieldSelectorResult.LOAD;
+					else return FieldSelectorResult.NO_LOAD;
+				}
+			};
+
+      Map<Integer,MdInfo> response = new HashMap<Integer,MdInfo>();
+			TopDocs tdocs = performQuery(0, maxHits, false);
+
+      for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+        Document doc = _reader.document(sdoc.doc, mdInfoSelector);
+
+				MdInfo mdInfo = new MdInfo();
+				mdInfo.id           = doc.get("_id");
+        mdInfo.uuid         = doc.get("_uuid");
+        mdInfo.schemaId     = doc.get("_schema");
+				String isTemplate   = doc.get("_isTemplate");
+				if (isTemplate.equals("y")) {
+					mdInfo.template = MdInfo.Template.TEMPLATE;
+				} else if (isTemplate.equals("s")) {
+					mdInfo.template = MdInfo.Template.SUBTEMPLATE;
+				} else {
+					mdInfo.template = MdInfo.Template.METADATA;
+				}
+				String isHarvested  = doc.get("_isHarvested");
+				if (isHarvested != null) {
+        	mdInfo.isHarvested  = doc.get("_isHarvested").equals("y");
+				} else {
+					mdInfo.isHarvested  = false;
+				}
+        mdInfo.createDate   = doc.get("_createDate");
+        mdInfo.changeDate   = doc.get("_changeDate");
+        mdInfo.source       = doc.get("_source");
+        mdInfo.title        = doc.get("_title");
+        mdInfo.root         = doc.get("_root");
+        mdInfo.owner        = doc.get("_owner");
+        mdInfo.groupOwner   = doc.get("_groupOwner");
+
+				response.put(Integer.parseInt(mdInfo.id), mdInfo);
+      }
+      return response;
     }
 
 	//--------------------------------------------------------------------------------
