@@ -514,6 +514,7 @@ public class Geonetwork implements ApplicationHandler
 		} catch (Exception e) {
 			logger.info("    Failed to open database connection, Check config.xml db file configuration."
 					+ "Error is: " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		String dbURL = dbms.getURL();
@@ -661,7 +662,7 @@ public class Geonetwork implements ApplicationHandler
 
 		DataStore ds = null;
 		try {
-			if (url.contains("postgis")) {
+			if (url.contains("postGIS")) {
 				ds = createPostgisDatastore(user, passwd, url);
 			} else if (url.contains("oracle")) {
 				ds = createOracleDatastore(user, passwd, url);
@@ -753,7 +754,7 @@ public class Geonetwork implements ApplicationHandler
 	//---------------------------------------------------------------------------
 
 	private String getDatabase(String url, String[] values) throws Exception {
-		if (url.contains("postgis")) {
+		if (url.contains("postGIS")) {
 			return values[3];
 		} else if (url.contains("oracle")) {
 			return values[5];
@@ -765,7 +766,7 @@ public class Geonetwork implements ApplicationHandler
 	//---------------------------------------------------------------------------
 
 	private String getHost(String url, String[] values) throws Exception {
-		if (url.contains("postgis")) {
+		if (url.contains("postGIS")) {
 			String value = values[2];
 			return value.substring(0,value.indexOf(':'));
 		} else if (url.contains("oracle")) {
@@ -778,7 +779,7 @@ public class Geonetwork implements ApplicationHandler
 	//---------------------------------------------------------------------------
 
 	private String getPort(String url, String values[]) throws Exception {
-		if (url.contains("postgis")) {
+		if (url.contains("postGIS")) {
 			String value = values[2];
 			return value.substring(value.indexOf(':')+1);
 		} else if (url.contains("oracle")) {

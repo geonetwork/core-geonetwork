@@ -96,12 +96,7 @@ public class ApacheDBCPool implements ResourceProvider {
 		size = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		maxw = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
 
-		// hack the url for postgis to postgres
-		String actualUrl = url;
-		if (actualUrl.contains("postgis"))
-			actualUrl = actualUrl.replaceFirst("postgis", "postgresql");
-
-		this.name = actualUrl;
+		this.name = url;
 
 		poolSize = (size == null) ? Jeeves.Res.Pool.DEF_POOL_SIZE : Integer
 				.parseInt(size);
@@ -150,13 +145,13 @@ public class ApacheDBCPool implements ResourceProvider {
 		boolean defaultAutoCommit = false;
 
 		ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-				actualUrl, user, passwd);
+				url, user, passwd);
 
 		PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(
 				connectionFactory, connectionPool, keyConnectionPool,
 				validationQuery, defaultReadOnly, defaultAutoCommit);
 
-		if (actualUrl.toUpperCase().contains("MCKOI")) {
+		if (url.toUpperCase().contains("MCKOI")) {
       // McKoi doesn't work unless you use TRANSACTION_SERIALIZABLE
       poolableConnectionFactory.
         setDefaultTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);

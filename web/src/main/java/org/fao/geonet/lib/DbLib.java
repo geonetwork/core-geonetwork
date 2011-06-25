@@ -95,20 +95,21 @@ public class DbLib {
 		String url = dbms.getURL();
 		String file = "default";
 
-		if (url.indexOf("oracle") != -1)
+		if (url.startsWith("jdbc:oracle:")) {
 			file = "oracle";
-		else if (url.indexOf("mckoi") != -1)
+		} else if (url.startsWith("jdbc:mckoi:")) {
 			file = "mckoi";
-		else if (url.indexOf("db2") != -1)
+		} else if (url.startsWith("jdbc:db2:")) {
 			file = "db2";
-		else if (url.indexOf("mysql") != -1)
+		} else if (url.startsWith("jdbc:mysql:")) {
 			file = "mysql";
-		else if (url.indexOf("postgresql") != -1)
+		} else if (url.startsWith("jdbc:postgresql:")) {
 			file = "postgres";
-		else if (url.indexOf("postgis") != -1)
+		} else if (url.startsWith("jdbc:postgresql_postGIS:")) {
 			file = "postgis";
-        else if (url.indexOf("sqlserver") != -1)
+    } else if (url.startsWith("jdbc:sqlserver:")) {
 			file = "sqlserver";
+		}
 
 		return file;
 	}

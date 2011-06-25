@@ -104,18 +104,16 @@ public class Dbms
 
 	public void connect(String username, String password) throws SQLException
 	{
-		String actualUrl = url;
-		if (actualUrl.contains("postgis")) actualUrl = actualUrl.replaceFirst("postgis","postgresql");
 
 		if (username != null && password != null) {
-			conn = DriverManager.getConnection(actualUrl, username, password);
+			conn = DriverManager.getConnection(url, username, password);
 		} else {
-			conn = DriverManager.getConnection(actualUrl);
+			conn = DriverManager.getConnection(url);
 		}
 
 		conn.setAutoCommit(false);
-		if (!actualUrl.contains(apacheUrl)) { 
-			if (actualUrl.toUpperCase().contains("MCKOI")) {
+		if (!url.contains(apacheUrl)) { 
+			if (url.toUpperCase().contains("MCKOI")) {
 				conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			} else {
 				conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);

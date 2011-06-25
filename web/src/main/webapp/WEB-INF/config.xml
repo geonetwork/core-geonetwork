@@ -197,17 +197,21 @@
 			<config>
 				<user>www-data</user>
 				<password>www-data</password>
-				<driver>org.postgresql.Driver</driver>
+				<!-- we use org.postgis.DriverWrapper in place of
+				     org.postgresql.Driver to support both postgresql and postgis -->
+				<driver>org.postgis.DriverWrapper</driver>
 				<!-- 					
 					jdbc:postgresql:database
 					jdbc:postgresql://host/database
 					jdbc:postgresql://host:port/database
 					
-					or
+					or if you are using postgis and want the spatial index loaded
+					into postgis
+
+					jdbc:postgresql_postGIS://host:port/database
 					
-					jdbc:postgis://host:port/database
 				-->
-                <url>jdbc:postgresql://localhost:5432/geonetwork</url>
+        <url>jdbc:postgresql_postGIS://localhost:5432/geonetwork</url>
 				<poolSize>10</poolSize>
 			</config>
 		</resource>
