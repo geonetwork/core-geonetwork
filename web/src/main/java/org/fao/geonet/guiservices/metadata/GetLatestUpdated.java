@@ -53,6 +53,7 @@ public class GetLatestUpdated implements Service
 	private int      			 _maxItems;
 	private long    			 _timeBetweenUpdates;
 
+	private Element 			 _response;
 	private long    			 _lastUpdateTime;
 
 	private ServiceConfig  _config;
@@ -87,8 +88,6 @@ public class GetLatestUpdated implements Service
 		_request.addContent(new Element("from").setText("1"));
 		_request.addContent(new Element("to")  .setText(""));
 
-		Element _response = new Element(Jeeves.Elem.RESPONSE);
-
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -98,6 +97,8 @@ public class GetLatestUpdated implements Service
 			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 			_request.getChild("to").setText(""+_maxItems);
+
+			_response = new Element(Jeeves.Elem.RESPONSE);
 
 			// perform the search and return the results read from the index
 			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
@@ -120,7 +121,7 @@ public class GetLatestUpdated implements Service
 			_lastUpdateTime = System.currentTimeMillis();
 		}
 
-		return _response;
+		return (Element)_response.clone();
 	}
 }
 
