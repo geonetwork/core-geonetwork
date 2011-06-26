@@ -883,7 +883,7 @@ public class SchemaManager
         		if (baseNrInt <= Geonet.File.METADATA_MAX_BLANKS) {
         			String zero = "";
         			if (baseNrInt < 10) zero = "0";
-        			newBlank.setAttribute("name", Geonet.File.METADATA_BLANK + zero + baseNrInt + ".xsl");
+        			newBlank.setAttribute("name", Geonet.File.METADATA_BLANK + zero + baseNrInt + suffix + ".xsl");
         			newBlank.setAttribute("uri",  buildSchemaPresentXslt(name, suffix)); // main presentation xslt
         		} else {
         			throw new IllegalArgumentException("Exceeded maximum number of plugin schemas "+Geonet.File.METADATA_MAX_BLANKS);
