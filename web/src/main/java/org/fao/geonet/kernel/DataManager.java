@@ -1312,7 +1312,7 @@ public class DataManager {
         String id$ = Integer.toString(id);
 
         //--- force namespace prefix for iso19139 metadata
-        setNamespacePrefixUsingSchemas(metadata);
+        setNamespacePrefixUsingSchemas(schema, metadata);
 
         if (ufo && isTemplate.equals("n")) {
             String parentUuid = null;
@@ -2549,7 +2549,8 @@ public class DataManager {
 	
 	//---------------------------------------------------------------------------
 	//---
-	//--- Static methods - GAST is the only thing that should use these
+	//--- Static methods are for external modules like GAST to be able to use
+	//--- them.
 	//---
 	//---------------------------------------------------------------------------
 
@@ -2588,7 +2589,7 @@ public class DataManager {
      * @param md
      * @throws Exception
      */
-	private void setNamespacePrefixUsingSchemas(Element md) throws Exception {
+	private void setNamespacePrefixUsingSchemas(String schema, Element md) throws Exception {
 		//--- if the metadata has no namespace or already has a namespace prefix
 		//--- then we must skip this phase
 
@@ -2596,7 +2597,8 @@ public class DataManager {
     if (ns == Namespace.NO_NAMESPACE)  
       return;
 
-		MetadataSchema mds = findSchema(md, ns);
+		MetadataSchema mds = schemaMan.getSchema(schema);
+
 		//--- get the namespaces and add prefixes to any that are
 		//--- default ie. prefix is ''
 		
@@ -2619,26 +2621,6 @@ public class DataManager {
             }
         }
     }
-
-    /**
-     *
-     * @param md
-     * @param ns
-     * @return
-     * @throws Exception
-     */
-	private MetadataSchema findSchema(Element md, Namespace ns) throws Exception {
-		String nsUri = ns.getURI();
-		for (String schema : getSchemas()) {
-			MetadataSchema mds = getSchema(schema);
-			String nsSchema = mds.getPrimeNS();
-			if (nsSchema != null && nsUri.equals(nsSchema)) {
-				Log.debug(Geonet.DATA_MANAGER, "Found schema "+schema+" with NSURI "+nsSchema);
-				return mds;
-			}
-		}
-		throw new IllegalArgumentException("Cannot find a namespace to set for element "+md.getQualifiedName()+" with namespace URI "+nsUri);
-	}
 
     /**
      *
