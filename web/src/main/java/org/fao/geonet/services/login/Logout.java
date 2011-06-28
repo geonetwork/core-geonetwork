@@ -45,7 +45,7 @@ public class Logout implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		context.getUserSession().authenticate(null, null, null, null, null);
+		context.getUserSession().clear();
 
 		return new Element("ok");
 	}

@@ -96,6 +96,15 @@ public class UserSession
 		htProperties.remove(name);
 	}
 
+    /**
+     * Clears user session properties and authentication
+     */
+    public void clear() {
+        authenticate(null, null, null, null, null);
+
+        htProperties = new Hashtable(10, .75f);
+    }
+
 	//--------------------------------------------------------------------------
 	/** Says that the user is authenticated and this id and profile must be used
 	  */
