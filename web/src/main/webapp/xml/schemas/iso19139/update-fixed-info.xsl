@@ -129,7 +129,7 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:attribute name="codeList">
-				<xsl:value-of select="concat('http://www.isotc211.org/2005/resources/codeList.xml#',local-name(.))"/>
+  			        <xsl:value-of select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#',local-name(.))"/>
 			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
