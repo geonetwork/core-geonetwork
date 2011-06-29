@@ -5672,6 +5672,12 @@ INSERT INTO OperationsDes VALUES (2,'ca','Editar');
 INSERT INTO OperationsDes VALUES (3,'ca','Notificar');
 INSERT INTO OperationsDes VALUES (5,'ca','Mapa interactiu');
 INSERT INTO OperationsDes VALUES (6,'ca','Featured');
+INSERT INTO OperationsDes VALUES (0,'tr','Yayınla');
+INSERT INTO OperationsDes VALUES (1,'tr','İndir');
+INSERT INTO OperationsDes VALUES (2,'tr','Düzenle');
+INSERT INTO OperationsDes VALUES (3,'tr','Uyar');
+INSERT INTO OperationsDes VALUES (5,'tr','Etkileşimli Harita');
+INSERT INTO OperationsDes VALUES (6,'tr','Özellikli');
 
 -- ======================================================================
 -- === Table: Regions

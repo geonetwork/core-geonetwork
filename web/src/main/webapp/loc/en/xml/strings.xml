@@ -71,11 +71,11 @@
 	</helpShortcutsEditor>
 	<validationReport js="true">Validation report</validationReport>
 	<errorsOnly>View errors only</errorsOnly>
-	<schematronReport>Compliance to metadata recommandations (Schematron)</schematronReport>
+	<schematronReport>Compliance to metadata recommendations (Schematron)</schematronReport>
 	<xsdReport>Compliance to metadata standard (XML Schema)</xsdReport>
 	<rules name="schematron-rules-inspire">INSPIRE implementing rules</rules>
 	<rules name="schematron-rules-iso">ISO 19115/19119 rules</rules>
-	<rules name="schematron-rules-geonetwork">GeoNetwork recommandations</rules>	
+	<rules name="schematron-rules-geonetwork">GeoNetwork recommendations</rules>	
 	<getCapabilitiesLayer js="true">GetCapabilities layer</getCapabilitiesLayer>
 	<ServiceUpdateError js="true">Error during service metadata update</ServiceUpdateError>
 	<NotOwnerError js="true">You don't have privileges to update this related record.</NotOwnerError>

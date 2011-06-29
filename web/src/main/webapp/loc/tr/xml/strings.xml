@@ -1074,6 +1074,5 @@
 	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
     <custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
     <custom-elementset-add>Eleman Ekle</custom-elementset-add>
-
     <wmslayers>WMS layers</wmslayers>
 </strings>
