@@ -740,7 +740,9 @@ public class LuceneSearcher extends MetaSearcher
                     }
                 }
                 // remove leading *
-                starsPreserved = starsPreserved.substring(1);
+                if (!org.apache.commons.lang.StringUtils.isEmpty(starsPreserved)) {
+                    starsPreserved = starsPreserved.substring(1);
+                }
 
                 // restore ending wildcard
                 if (string.endsWith("*")) {
