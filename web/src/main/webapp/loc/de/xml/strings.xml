@@ -409,7 +409,7 @@
 	<longitude>geographische Länge (zwischen -180 und 180) in Grad</longitude>
 	<longMax>long (max)</longMax>
 	<longMin>long (min)</longMin>
-	<mainpageTitle>Finden Sie Interaktive Karten, GIS Datensätze und weitere räumliche Daten aus dem D A CH +-Raum</mainpageTitle>
+	<mainpageTitle>Finden Sie Interaktive Karten, GIS Datensätze und weitere räumliche Daten</mainpageTitle>
 	<maintenanceTab>Maintenance</maintenanceTab>
 	<management>Management</management>
 	<mandatory>verbindlich</mandatory>
@@ -663,7 +663,7 @@
 	<timeoutChoice value="10">nach 10 Sekunden</timeoutChoice>
 	<timeoutChoice value="20">nach 20 Sekunden</timeoutChoice>
 	<timeoutChoice value="30">nach 30 Sekunden</timeoutChoice>
-	<title>D A CH + - GeoPortal</title>
+	<title>Geonetwork - Das Portal zu räumlichen Information</title>
 	<to>Nach</to>
 	<toDateSelector>Auswahl des Enddatums</toDateSelector>
 	<tools>Werkzeuge</tools>
