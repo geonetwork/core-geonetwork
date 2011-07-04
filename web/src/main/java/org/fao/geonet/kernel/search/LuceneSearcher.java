@@ -738,7 +738,9 @@ public class LuceneSearcher extends MetaSearcher
                 }
             }
             // remove leading *
-            starsPreserved = starsPreserved.substring(1);
+            if (StringUtils.hasLength(starsPreserved)) {
+                starsPreserved = starsPreserved.substring(1);
+            }
 
             // restore ending wildcard
             if (string.endsWith("*")) {
