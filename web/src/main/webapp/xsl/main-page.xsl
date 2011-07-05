@@ -465,7 +465,7 @@
 
 		<xsl:comment>MAIN CONTENT TABLE</xsl:comment>
 		<div class="geosearchmain">
-			<h1 id="loadingMD" style="text-align: center; display: none; width:100%"><xsl:value-of select="/root/gui/strings/searching"/></h1>
+			<h1 id="loadingMD" style="text-align: center; display: none; width:100%"> <img src="{/root/gui/url}/images/loading.gif" width="20" height="21" /><xsl:value-of select="/root/gui/strings/searching"/></h1>
 								
 			<!-- This DIV contains a first-time message that will be removed when the first search will be run -->
 			<div id="resultList">

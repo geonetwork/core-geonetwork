@@ -685,13 +685,15 @@ function gn_showSingleMetadata(id)
 
 function gn_showSingleMet(pars)
 {
-
+   if ($("loadingMD")) $("loadingMD").show();
    var myAjax = new Ajax.Request(
         getGNServiceURL('metadata.show.embedded'),
         {
             method: 'get',
             parameters: pars,
             onSuccess: function (req) {
+                if ($("loadingMD")) $("loadingMD").hide();
+
                 var parent = $('resultList');
                 clearNode(parent);
                 // create new element
