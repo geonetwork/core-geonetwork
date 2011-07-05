@@ -2060,6 +2060,7 @@
                         <option name=""/>
 
                         <xsl:for-each select="/root/gui/isoLang/record">
+                            <xsl:sort select="label/child::*[name() = $lang]"/>
                             <option value="{code}">
                                 <xsl:if test="code = $value">
                                     <xsl:attribute name="selected"/>
