@@ -103,7 +103,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     setContainer : function (el) {
         if (!this.container) {
             this.container = el;
-            this.container.on('hide', this.onEditorClosed, this);
         }
     },
     showLogoSelectionPanel : function(ref){
