@@ -63,8 +63,9 @@ public class ProfileManager
 	public ProfileManager(JeevesServlet servlet, String profilesFile) throws Exception
 	{
 		Element elProfiles = Xml.loadFile(profilesFile);
-        ConfigurationOverrides.updateWithOverrides(profilesFile, servlet, elProfiles);
-
+		if (servlet != null) {
+		      ConfigurationOverrides.updateWithOverrides(profilesFile, servlet, elProfiles);
+		}
 		htProfiles  = new Hashtable<String, Element>(50);
 
 		List<Element> profList = elProfiles.getChildren(Profiles.Elem.PROFILE);

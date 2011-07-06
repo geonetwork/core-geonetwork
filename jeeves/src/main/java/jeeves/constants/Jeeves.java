@@ -247,6 +247,9 @@ public final class Jeeves
 			public static final int DEF_POOL_SIZE      = 2;
 			public static final int DEF_MAX_TRIES      = 20;  // number of connection attempts
 			public static final int DEF_MAX_WAIT       = 200; // msecs between attempts
+			public static final String MAX_IDLE = "maxIdle";
+			public static final String MIN_IDLE = "minIdle";
+			public static final String MAX_ACTIVE = "maxActive";
 		}
 	}
 

@@ -76,7 +76,7 @@ public class ApacheDBCPool implements ResourceProvider {
 	String size;
 	String driver;
 	String maxw;
-
+	
 	// --------------------------------------------------------------------------
 	// ---
 	// --- API
@@ -95,7 +95,10 @@ public class ApacheDBCPool implements ResourceProvider {
 		driver = config.getChildText(Jeeves.Res.Pool.DRIVER);
 		size = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		maxw = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
-
+		String maxIdle  = config.getChildText(Jeeves.Res.Pool.MAX_IDLE);
+		String minIdle = config.getChildText(Jeeves.Res.Pool.MIN_IDLE);
+		String maxActive = config.getChildText(Jeeves.Res.Pool.MAX_ACTIVE);
+		
 		this.name = url;
 
 		poolSize = (size == null) ? Jeeves.Res.Pool.DEF_POOL_SIZE : Integer
@@ -121,9 +124,23 @@ public class ApacheDBCPool implements ResourceProvider {
 				error("Connection was closed: " + pc.toString());
 			}
 		};
-		connectionPool.setMaxActive(poolSize);
 		// configure the rest of the pool from params
-		connectionPool.setMaxIdle(poolSize);
+		// http://commons.apache.org/dbcp/configuration.html
+		if (maxActive != null) {
+			connectionPool.setMaxActive(Integer.parseInt(maxActive));
+		} else {
+			connectionPool.setMaxActive(poolSize);
+		}
+		if (maxIdle != null) {
+			connectionPool.setMaxIdle(Integer.parseInt(maxIdle));
+		} else {
+			connectionPool.setMaxIdle(poolSize);
+		}
+		if (minIdle != null) {
+			connectionPool.setMinIdle(Integer.parseInt(minIdle));
+		} else {
+			connectionPool.setMinIdle(0);
+		}
 		connectionPool.setMaxWait(maxWait);
 
 		// GenericObjectPool connectionPool = new GenericObjectPool(null);
