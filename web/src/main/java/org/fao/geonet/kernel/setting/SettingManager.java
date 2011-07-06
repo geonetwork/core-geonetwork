@@ -27,6 +27,9 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -229,12 +232,13 @@ public class SettingManager
 			{
 				String path = entry.getKey();
 				String value= makeString(entry.getValue());
+                                Log.debug(Geonet.SETTINGS, "Set path: " + path + ", value: " + value); 
 
 				Setting s = resolve(path);
 
 				if (s == null) {
 					success = false;
-					System.out.println("SettingManager: Unable to find Settings row to save " + path + " to.");
+					Log.debug(Geonet.SETTINGS, "Unable to find Settings row."); 
 				}
 				else
 				{
@@ -244,9 +248,7 @@ public class SettingManager
 			}
 
 			return success;
-		}
-		finally
-		{
+		} finally {
 			lock.writeLock().unlock();
 		}
 	}
