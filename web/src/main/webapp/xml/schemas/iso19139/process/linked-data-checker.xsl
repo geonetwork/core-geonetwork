@@ -27,11 +27,11 @@
     <!-- Check URL -->
     <xsl:variable name="httpLinks"
       select="$root//*[starts-with(., 'http') and name(..) != 'geonet:info']"/>
-    <xsl:for-each select="$httpLinks">
+    <xsl:for-each-group select="$httpLinks" group-by=".">
       <xsl:call-template name="checkUrl">
         <xsl:with-param name="url" select="."/>
       </xsl:call-template>
-    </xsl:for-each>
+    </xsl:for-each-group>
   </xsl:template>
 
   <xsl:template name="checkUrl">
@@ -46,7 +46,7 @@
         <name xml:lang="en">
           <xsl:value-of select="$type"/> <xsl:value-of select="."/>
           <xsl:value-of select="geonet:i18n($linked-data-checker-loc, 'a', $guiLang)"/> 
-          <xsl:value-of select="."/>:<xsl:value-of select="$status"/>
+          <xsl:value-of select="$status"/>
           <xsl:value-of select="geonet:i18n($linked-data-checker-loc, 'b', $guiLang)"/></name>
         <operational>true</operational>
         <params>{ linkUrl:{type:'string', defaultValue:'<xsl:value-of select="normalize-space($url)"/>'}

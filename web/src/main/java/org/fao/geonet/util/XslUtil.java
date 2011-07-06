@@ -1,15 +1,17 @@
 package org.fao.geonet.util;
 
-import jeeves.utils.Log;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -181,18 +183,32 @@ public final class XslUtil
     public static String getUrlStatus(String url){
         URL u;
         URLConnection conn;
+        int connectionTimeout = 500;
         try {
             u = new URL(url);
             conn = u.openConnection();
+            conn.setConnectTimeout(connectionTimeout);
+            
             // TODO : set proxy
-            conn.setConnectTimeout(500);
-            conn.getInputStream().close();
-        } catch (MalformedURLException e) {
+            
+            if (conn instanceof HttpURLConnection) {
+               HttpURLConnection httpConnection = (HttpURLConnection) conn;
+               httpConnection.setInstanceFollowRedirects(true);
+               httpConnection.connect();
+               httpConnection.disconnect();
+               // FIXME : some URL return HTTP200 with an empty reply from server 
+               // which trigger SocketException unexpected end of file from server
+               int code = httpConnection.getResponseCode();
+
+               if (code == HttpURLConnection.HTTP_OK) {
+                   return "";
+               } else {
+                   return "Status: " + code;
+               } 
+            } // TODO : Other type of URLConnection
+        } catch (Exception e) {
             e.printStackTrace();
-            return e.getMessage();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         
         return "";
