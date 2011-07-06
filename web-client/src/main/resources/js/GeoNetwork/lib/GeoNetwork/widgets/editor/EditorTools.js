@@ -434,20 +434,32 @@ function checkForFileUpload(fref, pref, protocolBeforeEdit){
     var finput = Ext.get('di_' + fref);
     var fbuttn = Ext.get('db_' + fref);
     
-    if (protocolDownload) {
-        if (finput != null) finput.hide();
-        if (fbuttn != null) fbuttn.show();
-    } else {
-        if (finput != null) finput.show();
-        if (fbuttn != null) fbuttn.hide();
-    }
-    
     // protocol change is ok so set the protocol value to that selected
     protoIn.value = protoSelect.value;
+
+    if (protocolDownload) {
+        if (finput !== null) {
+            finput.hide();
+        }
+        if (fbuttn !== null) {
+            fbuttn.show();
+        }
+        
+        // Reload the editor in order to make the import file button
+        // appear for the name element (if existing).
+        Ext.getCmp('editorPanel').callAction('metadata.update.new');
+    } else {
+        if (finput !== null) {
+            finput.show();
+        }
+        if (fbuttn !== null) {
+            fbuttn.hide();
+        }
+    }
 }
 
 function handleCheckboxAsBoolean (input, ref) {
-    if (input.checked)  {
+    if (input.checked) {
         Ext.getDom(ref).value='true';
     } else {
         Ext.getDom(ref).value='false';
