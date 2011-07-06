@@ -97,6 +97,8 @@ public class GetRelated implements Service {
         
         if (info == null) {
             String mdId = Utils.getIdentifierFromParameters(params, context);
+            if (mdId == null)
+                throw new MetadataNotFoundEx("Metadata not found.");
 
             uuid = dm.getMetadataUuid(dbms, mdId);
             if (uuid == null)
