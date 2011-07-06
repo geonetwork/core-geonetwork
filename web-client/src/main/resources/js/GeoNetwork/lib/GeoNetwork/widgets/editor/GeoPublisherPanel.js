@@ -404,14 +404,11 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
      */
     getGeoPublicationMapPanel: function(){
     
-        var map = new OpenLayers.Map(), mapLayers = [], i;
-        for (i = 0; i < this.layers.length; i++) {
-            mapLayers.push(new OpenLayers.Layer.WMS(this.layers[i][0], this.layers[i][1], this.layers[i][2], this.layers[i][3]));
-        }
+        var map = new OpenLayers.Map(), i;
         this.geoPublicationMapPanel = new GeoExt.MapPanel({
             id: 'mapPanel',
             extent: this.extent,
-            layers: mapLayers,
+            layers: GeoNetwork.map.BACKGROUND_LAYERS || [],
             //title : OpenLayers.i18n('mapPreview'),
             map: map,
             width: this.width,
