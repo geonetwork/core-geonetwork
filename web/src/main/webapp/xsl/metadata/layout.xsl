@@ -180,12 +180,12 @@
           <xsl:choose>
             <xsl:when test="geonet:choose">
               <xsl:value-of
-                select="concat('doNewORElementAction(',$apos,'/metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'.value,',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"
+                select="concat('doNewORElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',document.mainForm._',$parentName,'_',$qname,'.value,',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"
               />
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of
-                select="concat('doNewElementAction(',$apos,'/metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"
+                select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',$parentName,',',$apos,$name,$apos,',',$apos,$id,$apos,',',$apos,@action,$apos,',',$max,');')"
               />
             </xsl:otherwise>
           </xsl:choose>
@@ -425,7 +425,7 @@
         <xsl:with-param name="addLink">
           <xsl:if test="@add='true'">
             <xsl:value-of
-              select="concat('doNewAttributeAction(',$apos,'/metadata.elem.add.new',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',',
+              select="concat('doNewAttributeAction(',$apos,'metadata.elem.add.new',$apos,',',../geonet:element/@ref,',',$apos,@name,$apos,',',
 							$apos,$id,$apos,',',$apos,'add',$apos,');')"
             />
           </xsl:if>
@@ -565,21 +565,21 @@
     </xsl:variable>
     <xsl:variable name="removeLink">
       <xsl:value-of
-        select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+        select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
       <xsl:if test="not(geonet:element/@del='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="upLink">
       <xsl:value-of
-        select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+        select="concat('doMoveElementAction(',$apos,'metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
       <xsl:if test="not(geonet:element/@up='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="downLink">
       <xsl:value-of
-        select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+        select="concat('doMoveElementAction(',$apos,'metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
       <xsl:if test="not(geonet:element/@down='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
@@ -637,20 +637,20 @@
       <!-- place + because schema insists ie. next element is geonet:child -->
       <xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
         <xsl:value-of
-          select="concat('doNewElementAction(',$apos,'/metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
+          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
         />
       </xsl:when>
       <!-- place optional + for use when re-ordering etc -->
       <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
         <xsl:value-of
-          select="concat('doNewElementAction(',$apos,'/metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');!OPTIONAL')"
+          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');!OPTIONAL')"
         />
       </xsl:when>
       <!-- place + because schema insists but no geonet:child nextBrother 
 			     this case occurs in the javascript handling of the + -->
       <xsl:when test="geonet:element/@add='true' and not($newBrother/*/geonet:choose)">
         <xsl:value-of
-          select="concat('doNewElementAction(',$apos,'/metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
+          select="concat('doNewElementAction(',$apos,'metadata.elem.add.new',$apos,',',geonet:element/@parent,',',$apos,name(.),$apos,',',$apos,$id,$apos,',',$apos,'add',$apos,',',geonet:element/@max,');')"
         />
       </xsl:when>
     </xsl:choose>
@@ -839,21 +839,21 @@
     </xsl:variable>
     <xsl:variable name="removeLink">
       <xsl:value-of
-        select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+        select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
       <xsl:if test="not(geonet:element/@del='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="upLink">
       <xsl:value-of
-        select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+        select="concat('doMoveElementAction(',$apos,'metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
       <xsl:if test="not(geonet:element/@up='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="downLink">
       <xsl:value-of
-        select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+        select="concat('doMoveElementAction(',$apos,'metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
       <xsl:if test="not(geonet:element/@down='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
