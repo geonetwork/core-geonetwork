@@ -229,9 +229,12 @@ table.related * a,
 }
 
 table.related * a:hover,
-#mn-top div a:hover,
-.mn-main:hover {
+#mn-top div a:hover {
   color : #959532;
+}
+
+.mn-main {
+  vertical-align: top;
 }
 
 /* Icon based on protocol prefix in related resource table */

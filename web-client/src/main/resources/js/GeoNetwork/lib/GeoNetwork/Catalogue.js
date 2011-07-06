@@ -303,6 +303,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             harvestingAdd: serviceUrl + 'xml.harvesting.add',
             harvestingUpdate: serviceUrl + 'xml.harvesting.update',
             harvestingRemove: serviceUrl + 'xml.harvesting.remove',
+            thesaurusAdd: serviceUrl + 'thesaurus.add',
+            thesaurusDelete: serviceUrl + 'thesaurus.delete',
+            thesaurusUpload: serviceUrl + 'xml.thesaurus.upload',
+            thesaurusConceptUpdate: serviceUrl + 'thesaurus.updateelement',
+            thesaurusConceptAdd: serviceUrl + 'thesaurus.addelement',
             getIcons: serviceUrl + 'xml.harvesting.info?type=icons',
             opensearchSuggest: serviceUrl + 'main.search.suggest',
             massiveOp: {
@@ -317,6 +322,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getRegions: serviceUrl + 'xml.info?type=regions',
             getSources: serviceUrl + 'xml.info?type=sources',
             getUsers: serviceUrl + 'xml.info?type=users',
+            getSiteInfo: serviceUrl + 'xml.info?type=site',
             schemaInfo: serviceUrl + 'xml.schema.info',
             getZ3950repositories: serviceUrl + 'xml.info?type=z3950repositories',
             getCategories: serviceUrl + 'xml.info?type=categories',
@@ -450,6 +456,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     onSelectionChange: function(){
         this.fireEvent('selectionchange', this, this.getSelectedRecords());
+    },/** api: method[getInfo]
+     *  
+     *  Return catalogue information (site name, organization, id).
+     */
+    getInfo: function(){
+        var info = {};
+        var properties = ['name', 'organization', 'siteId'];
+        var request = OpenLayers.Request.GET({
+            url: this.services.getSiteInfo,
+            async: false
+        });
+
+        if (request.responseXML) {
+            var xml = request.responseXML.documentElement;
+            Ext.each(properties, function(item, idx){
+                info[item] = xml.getElementsByTagName(item)[0].childNodes[0].nodeValue;
+            });
+        }
+        return info;
     },
     /** private: method[updateStatus]
      *
@@ -1069,12 +1094,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             info: error.getElementsByTagName('Error')[0].firstChild.nodeValue
         };
     },
-    /**	api: method[csvExport]
+    /** api: method[admin]
      *
-     *	Export current selection in CSV format.
+     *  Open the administration interface according to adminAppUrl properties.
      */
     admin: function(){
-        window.open(this.adminAppUrl);
+        location.replace(this.adminAppUrl);
     },
     metadataImport: function(){
         location.replace(this.services.mdImport);

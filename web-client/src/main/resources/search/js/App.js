@@ -515,6 +515,11 @@ GeoNetwork.app = function(){
         }
     }
     
+    function createHeader(){
+        var info = catalogue.getInfo();
+        Ext.getDom('title').innerHTML = '<img class="catLogo" src="../../images/logos/' + info.siteId + '.gif"/>&nbsp;' + info.name;
+    }
+    
     // public space:
     return {
         init: function(){
@@ -541,6 +546,8 @@ GeoNetwork.app = function(){
                 editMode: 2, // TODO : create constant
                 metadataEditFn: edit
             });
+            
+            createHeader();
             
             // Override xml search service value
             catalogue.setServiceUrl('xmlSearch', GeoNetwork.Settings.searchService);
