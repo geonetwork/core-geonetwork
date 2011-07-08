@@ -4,7 +4,7 @@
         <gco:CharacterString>44ffcb13-30cc-48bf-b02d-cd1cb467e495</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:language>
-        <gco:CharacterString>eng</gco:CharacterString>
+        <gmd:LanguageCode codeList="" codeListValue="eng"></gmd:LanguageCode>
     </gmd:language>
     <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>

@@ -2571,6 +2571,10 @@
     <label>Sprache</label>
     <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
   </element>
+  <element name="gmd:LanguageCode">
+	<label>ISO Language code</label>
+	<description>Language code</description>
+  </element>
   <element name="gmd:characterEncoding">
     <label>Zeichensatz</label>
     <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>

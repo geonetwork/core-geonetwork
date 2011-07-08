@@ -151,8 +151,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LanguageCode">
-		<label>Language code</label>
-		<description>Language code</description>
+		<label>Codigo ISO del idioma</label>
+		<description>Codigo del idioma</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:locale">

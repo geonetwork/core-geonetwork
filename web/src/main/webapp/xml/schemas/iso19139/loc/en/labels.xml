@@ -2358,6 +2358,10 @@
         <label>Language</label>
         <description>Language code</description>
     </element>
+    <element name="gmd:LanguageCode">
+		<label>ISO Language code</label>
+		<description>Language code</description>
+	</element>
     <element name="gmd:characterEncoding">
         <label>Character encoding</label>
         <description>CharacterEncoding</description>

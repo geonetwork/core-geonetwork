@@ -2291,6 +2291,10 @@
         <label>Dil</label>
         <description>Dil kodu</description>
     </element>
+    <element name="gmd:LanguageCode">
+		<label>ISO Language code</label>
+		<description>Language code</description>
+	</element>
     <element name="gmd:characterEncoding">
         <label>Karakter kodlaması</label>
         <description>Karakter kodlaması</description>

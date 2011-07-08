@@ -17,7 +17,7 @@
         <sch:title>$loc/strings/M500</sch:title>
         <sch:rule
             context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
-            <sch:let name="language" value="gmd:language/gco:CharacterString"/>
+        	<sch:let name="language" value="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
             <sch:let name="localeAndNoLanguage" value="not(gmd:locale and gmd:language/@gco:nilReason='missing')
                 and not(gmd:locale and not(gmd:language))"/>
             <sch:let name="duplicateLanguage" value="not(gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue=$language)"/>
@@ -27,7 +27,7 @@
             <sch:assert test="$localeAndNoLanguage"
                 >$loc/strings/alert.M500</sch:assert>
             <sch:report test="$localeAndNoLanguage"
-                ><sch:value-of select="$loc/strings/report.M500"/> "<sch:value-of select="$language"/>"</sch:report>
+                ><sch:value-of select="$loc/strings/report.M500"/> "<sch:value-of select="normalize-space($language)"/>"</sch:report>
             
     
             <!-- 
