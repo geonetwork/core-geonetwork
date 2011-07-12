@@ -39,6 +39,8 @@
     <script type="text/javascript" language="JavaScript">
       var catalogue;
       Ext.onReady(function(){
+        GeoNetwork.Util.setLang('<xsl:value-of select="/root/gui/language"/>');
+        
         catalogue = new GeoNetwork.Catalogue({
                       statusBarId : 'info',
                       hostUrl: '../..',
