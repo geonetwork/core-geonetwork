@@ -39,26 +39,6 @@
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="embedded" select="$embedded" />
-			<xsl:with-param name="usedot" select="true()"/>
-			<xsl:fallback>
-				<xsl:message>Fall back as no saxon:call-template exists</xsl:message>
-
-				<xsl:variable name="metadataMode">
-					<xsl:element name="{$schemaTemplate}"/>
-					<xsl:copy-of select="/root"/>
-					<xsl:element name="metadata">
-						<xsl:attribute name="ref">
-							<xsl:value-of select="geonet:element/@ref"/>
-						</xsl:attribute>
-					</xsl:element>
-				</xsl:variable>
-
-				<xsl:apply-templates select="exslt:node-set($metadataMode/*[1])">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="embedded" select="$embedded" />
-				</xsl:apply-templates>
-			</xsl:fallback>
 		</saxon:call-template>
 
 	</xsl:template>

@@ -8,34 +8,21 @@
   <xsl:include href="metadata-fgdc-std-fop.xsl"/>
   
 	<!-- main template - the way into processing fgdc-std -->
-	<xsl:template match="metadata-fgdc-std" name="metadata-fgdc-std">
+	<xsl:template name="metadata-fgdc-std">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
-		<xsl:param name="usedot" select="false()"/>
 	
-		<xsl:choose>
-			<xsl:when test="$usedot">
-    		<xsl:apply-templates mode="fgdc-std" select="." >
-      		<xsl:with-param name="schema" select="$schema"/>
-      		<xsl:with-param name="edit"   select="$edit"/>
-      		<xsl:with-param name="embedded" select="$embedded" />
-    		</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:variable name="refName" select="/metadata/@ref"/>	
-    		<xsl:apply-templates mode="fgdc-std" select="//*[geonet:element/@ref=$refName]" >
-      		<xsl:with-param name="schema" select="$schema"/>
-      		<xsl:with-param name="edit"   select="$edit"/>
-      		<xsl:with-param name="embedded" select="$embedded" />
-    		</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
+    <xsl:apply-templates mode="fgdc-std" select="." >
+    	<xsl:with-param name="schema" select="$schema"/>
+     	<xsl:with-param name="edit"   select="$edit"/>
+     	<xsl:with-param name="embedded" select="$embedded" />
+    </xsl:apply-templates>
   </xsl:template>
 
 	<!-- CompleteTab template - fgdc just calls completeTab from 
 	     metadata-utils.xsl -->
-	<xsl:template match="fgdc-stdCompleteTab">
+	<xsl:template name="fgdc-stdCompleteTab">
 		<xsl:param name="tabLink"/>
 
 		<xsl:call-template name="completeTab">

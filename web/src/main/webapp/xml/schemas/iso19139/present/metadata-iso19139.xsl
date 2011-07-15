@@ -19,29 +19,16 @@
   <xsl:include href="metadata-iso19139-subtemplates.xsl"/>
   
 	<!-- main template - the way into processing iso19139 -->
-	<xsl:template match="metadata-iso19139" name="metadata-iso19139">
+	<xsl:template name="metadata-iso19139">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
-		<xsl:param name="usedot" select="false()"/>
 
-		<xsl:choose>
-			<xsl:when test="$usedot">
-   			<xsl:apply-templates mode="iso19139" select="." >
-     			<xsl:with-param name="schema" select="$schema"/>
-     			<xsl:with-param name="edit"   select="$edit"/>
-     			<xsl:with-param name="embedded" select="$embedded" />
-   			</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:variable name="refName" select="/metadata/@ref"/>
-   			<xsl:apply-templates mode="iso19139" select="//*[geonet:element/@ref=$refName]" >
-     			<xsl:with-param name="schema" select="$schema"/>
-     			<xsl:with-param name="edit"   select="$edit"/>
-     			<xsl:with-param name="embedded" select="$embedded" />
-   			</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
+   	<xsl:apply-templates mode="iso19139" select="." >
+    	<xsl:with-param name="schema" select="$schema"/>
+     	<xsl:with-param name="edit"   select="$edit"/>
+     	<xsl:with-param name="embedded" select="$embedded" />
+   	</xsl:apply-templates>
   </xsl:template>
 
 	<!-- =================================================================== -->
@@ -3411,7 +3398,7 @@
 	<!-- iso19139 complete tab template	-->
 	<!-- ============================================================================= -->
 
-	<xsl:template name="iso19139CompleteTab" match="iso19139CompleteTab">
+	<xsl:template name="iso19139CompleteTab">
 		<xsl:param name="tabLink"/>
 		<xsl:param name="schema"/>
 		

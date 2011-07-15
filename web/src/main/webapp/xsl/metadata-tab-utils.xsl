@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
+	xmlns:saxon="http://saxon.sf.net/"
+	xmlns:exslt="http://exslt.org/common"
+	extension-element-prefixes="saxon"
+	exclude-result-prefixes="exslt geonet saxon">
 
 	<!--
 	hack to extract geonet URI; I know, I could have used a string constant like
@@ -87,7 +90,7 @@
 		  
 			<!-- Tab visibility is managed in config-gui.xml -->
 			<!-- simple tab -->
-            <xsl:if test="/root/gui/env/metadata/enableSimpleView = 'true'">
+      <xsl:if test="/root/gui/env/metadata/enableSimpleView = 'true'">
 				<xsl:call-template name="displayTab">
 					<xsl:with-param name="tab"     select="'simple'"/>
 					<xsl:with-param name="text"    select="/root/gui/strings/simpleTab"/>
@@ -102,24 +105,17 @@
 				<xsl:otherwise>
 				
 					<!-- metadata type-specific complete tab -->
-					<xsl:variable name="schemaCompleteTabCallBack">
-						<xsl:element name="{concat($schema,'CompleteTab')}"/>
-						<xsl:copy-of select="/root"/>
-						<xsl:element name="metadata">
-							<xsl:copy-of select="."/>
-						</xsl:element>
-					</xsl:variable>
-
-					<xsl:apply-templates select="exslt:node-set($schemaCompleteTabCallBack/*[1])">
+					<xsl:variable name="tabTemplate" select="concat($schema,'CompleteTab')"/>
+					<saxon:call-template name="{$tabTemplate}"> 
 						<xsl:with-param name="tabLink" select="$tabLink"/>
 						<xsl:with-param name="schema" select="$schema"/>
-					</xsl:apply-templates>
+					</saxon:call-template>
 						
 				</xsl:otherwise>
 			</xsl:choose>
 			
 			<!-- xml tab -->
-            <xsl:if test="/root/gui/env/metadata/enableXmlView = 'true'">
+      <xsl:if test="/root/gui/env/metadata/enableXmlView = 'true'">
 				<xsl:call-template name="displayTab">
 					<xsl:with-param name="tab"     select="'xml'"/>
 					<xsl:with-param name="text"    select="/root/gui/strings/xmlTab"/>
