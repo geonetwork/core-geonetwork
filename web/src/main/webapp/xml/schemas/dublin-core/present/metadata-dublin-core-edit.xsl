@@ -8,29 +8,16 @@
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
 	<!-- main template - the way into processing dublin-core -->
-  <xsl:template match="metadata-dublin-core" name="metadata-dublin-core">
+  <xsl:template name="metadata-dublin-core">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
-		<xsl:param name="usedot" select="false()"/>
-
-		<xsl:choose>
-			<xsl:when test="$usedot">
-    		<xsl:apply-templates mode="dublin-core" select="." >
-      		<xsl:with-param name="schema" select="$schema"/>
-      		<xsl:with-param name="edit"   select="$edit"/>
-      		<xsl:with-param name="embedded" select="$embedded" />
-    		</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:variable name="refName" select="/metadata/@ref"/>	
-    		<xsl:apply-templates mode="dublin-core" select="//*[geonet:element/@ref=$refName]" >
-      		<xsl:with-param name="schema" select="$schema"/>
-      		<xsl:with-param name="edit"   select="$edit"/>
-      		<xsl:with-param name="embedded" select="$embedded" />
-    		</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
+			
+    <xsl:apply-templates mode="dublin-core" select="." >
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="embedded" select="$embedded" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <!-- simple -->
@@ -55,7 +42,7 @@
 
 	<!-- CompleteTab template - dc just calls completeTab from 
 	     metadata-utils.xsl -->
-	<xsl:template match="dublin-coreCompleteTab">
+	<xsl:template name="dublin-coreCompleteTab">
 		<xsl:param name="tabLink"/>
 
 	  <xsl:call-template name="mainTab">
@@ -128,6 +115,18 @@
 			<xsl:with-param name="text"><xsl:value-of select="."/></xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
+	
+	
+  <xsl:template mode="dublin-core" match="dc:descriptionTextArea">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    <xsl:message><xsl:value-of select="$edit"/>##<xsl:value-of select="name(.)"/></xsl:message>
+    <!--<xsl:call-template name="getElementText">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="class">medium</xsl:with-param>
+    </xsl:call-template>-->
+  </xsl:template>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- dublin-core brief formatting -->

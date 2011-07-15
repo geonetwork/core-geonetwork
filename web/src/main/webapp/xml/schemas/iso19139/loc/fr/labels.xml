@@ -2234,11 +2234,10 @@
     
   </element>
   <element name="gmd:pointOfContact" id="29.0">
-    <label>Point de contact</label>
+    <label>Contact pour la ressource</label>
     <description>Identification, et mode de communication avec, des personnes ou des organisations associées aux ressources</description>
     <help>Identification de la personne (voire des personnes) ou de l'organisation (voire des organisations) responsable du jeu de données décrit et mode de communication avec elle. Cette personne ou ce service endosse un rôle (propriétaire, prestataire, gestionnaire, etc.) bien spécifique pouvant être sélectionné dans la liste proposée. Les données correspondantes de la personne ou du service sont gérées dans la classe CI_ResponsibleParty. Ce rôle peut également servir à l'affectation d'un jeu de données à une commune. Exemple : le rôle de "propriétaire" permet ici d'affecter un lot de la MO à la commune correspondante.</help>
     <condition/>
-    
   </element>
   <element name="gmd:polygon" id="342.0">
     <label>Polygone</label>
