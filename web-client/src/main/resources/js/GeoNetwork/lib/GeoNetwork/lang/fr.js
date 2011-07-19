@@ -303,6 +303,7 @@ GeoNetwork.Lang.fr = {
     'associateService': "Associer une métadonnée de service",
     'associateDataset': "Associer une métadonnée de données",
     'logoSelectionWindow': "Sélectionner un logo",
+    'fileUploadWindow': 'Ajouter des données ou des documents',
     'selectedCRS': "Systèmes sélectionnés",
     'foundCRS': "Systèmes disponibles",
     'search': 'Rechercher',
@@ -404,6 +405,34 @@ GeoNetwork.Lang.fr = {
     'linked-data-checkerlinkUrl': 'Lien à supprimer',
     'related-metadata-checkeruuidToRemove': 'Identifiant à supprimer',
     'add-service-info-from-wxssetAndReplaceOperations': 'Remplacer les opérations existantes',
-    'add-service-info-from-wxswxsServiceUrl': 'URL du service'
+    'add-service-info-from-wxswxsServiceUrl': 'URL du service',
+    
+    // Admin
+    'manageDirectories' : 'Gestion des annuaires',
+    'directory': 'Annuaire',
+    'thesaurusManager': 'Gestion des thésaurus',
+    'Theme': 'Thème',
+    'thesaurusFilePath': 'Fichier (.rdf)',
+    'ThesaurusName': 'Nom du thésaurus',
+    'createThesaurusFromURL': 'A partir d\'une URL',
+    'createThesaurusFromRepository': 'A partir du dépôt partagé',
+    'creationMode': 'Créer',
+    'thesaurusFromRepository': 'Thésaurus',
+    'externalThesaurusURL': 'URL',
+    'thesaurusCreation': 'Ajout d\'un thésaurus',
+    'Type': 'Type',
+    'Activated': 'Activé',
+    'emptyThesaurus': 'Nouveau thésaurus vide',
+    'thesaurusFromFile': 'A partir d\'un fichier local',
+    'thesaurusFromURL': 'A partir d\'un fichier distant (URL)',
+    'id': 'Identifiant',
+    'label': 'Libellé',
+    'definition': 'Définition',
+    'xmin': 'X min',
+    'ymin': 'Y min',
+    'xmax': 'X max',
+    'ymax': 'Y max',
+    'newLabel': 'Libellé',
+    'newDefinition': 'Définition'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

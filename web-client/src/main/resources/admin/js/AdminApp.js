@@ -335,12 +335,19 @@ GeoNetwork.adminApp = function() {
     }
     
     function createSubTemplateManagerPanel() {
-         var subTemplatePanel = new GeoNetwork.admin.SubTemplateManagerPanel({
-            catalogue: catalogue
-        });
-        return subTemplatePanel;
-    }
+        var subTemplatePanel = new GeoNetwork.admin.SubTemplateManagerPanel({
+           catalogue: catalogue
+       });
+       return subTemplatePanel;
+   }
     
+    function createThesaurusManagerPanel() {
+        var thesaurusPanel = new GeoNetwork.admin.ThesaurusManagerPanel({
+           catalogue: catalogue
+       });
+       return thesaurusPanel;
+   }
+   
     function createHarvestingPanel () {
 
         harvesterStore = GeoNetwork.data.HarvesterStore(catalogue.services.getHarvesters);
@@ -368,6 +375,7 @@ GeoNetwork.adminApp = function() {
             catalogue = new GeoNetwork.Catalogue({
                         statusBarId : 'info',
                         hostUrl: '../../',
+                        lang: 'en', 
                         mdOverlayedCmpId : 'resultsPanel'
                     });
             // Declare default store to be used for records and summary
@@ -383,6 +391,7 @@ GeoNetwork.adminApp = function() {
             // Could we create an array of
             // name : panel url and create Viewport content ?
             this.subTemplatePanel = createSubTemplateManagerPanel();
+            this.thesaurusPanel = createThesaurusManagerPanel();
 
             var margins = '35 0 0 0';
             var viewport = new Ext.Viewport({
@@ -394,7 +403,7 @@ GeoNetwork.adminApp = function() {
                         top : '35px',
                         position : 'absolute'
                     },
-                    activeGroup : 0,
+                    activeGroup : 4,
                     items : [{
                                 items : createMetadataGroup(),
                                 listeners: {
@@ -484,7 +493,8 @@ GeoNetwork.adminApp = function() {
                             }, {
                                 expanded : false,
                                 margins : margins,
-                                items : [{
+                                items : [
+                                         {
                                             title : 'Thesaurus & category',
                                             iconCls : 'x-icon-configuration',
                                             tabTip : 'Configuration tabtip',
@@ -501,7 +511,7 @@ GeoNetwork.adminApp = function() {
                                             iconCls : 'x-icon-templates',
                                             tabTip : 'Templates tabtip',
                                             style : 'padding: 10px;',
-                                            html : 'Add default templates'
+                                            items : this.thesaurusPanel
                                         }]
                             },{
                                 expanded : true,

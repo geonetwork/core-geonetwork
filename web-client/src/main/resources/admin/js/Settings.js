@@ -7,11 +7,26 @@ OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 // Define a constant with the base url to the MapFish web service.
 //mapfish.SERVER_BASE_URL = '../../../../../'; // '../../';
 
+OpenLayers.ProxyHostURL = '../../proxy?url=';
+
+OpenLayers.ProxyHost = function(url){
+    /**
+     * Do not use proxy for local domain.
+     * This is required to keep the session activated.
+     */
+    if (url && url.indexOf(window.location.host) != -1) {
+        return url;
+    } else {
+        return OpenLayers.ProxyHostURL + encodeURIComponent(url);
+    }
+};
+
 // Remove pink background when a tile fails to load
 OpenLayers.Util.onImageLoadErrorColor = "transparent";
 
 // Lang
 OpenLayers.Lang.setCode(GeoNetwork.defaultLocale);
+
 
 OpenLayers.Util.onImageLoadError = function() {
 	this._attempts = (this._attempts) ? (this._attempts + 1) : 1;

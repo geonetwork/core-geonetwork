@@ -207,7 +207,8 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
          */
         GeoNetwork.editor.keyword.thesaurusStore = new GeoNetwork.data.ThesaurusStore({
             url: this.catalogue.services.getThesaurus,
-            allOption: true
+            allOption: true,
+            activatedOnly: true
         });
         
         return {

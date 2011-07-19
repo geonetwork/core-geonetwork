@@ -37,8 +37,8 @@ GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-180,-90,180,90);
 //GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-5.1,41,9.7,51);
 
 GeoNetwork.map.BACKGROUND_LAYERS = [
-    new OpenLayers.Layer.WMS("Background layer", "/geoserver/wms", {layers: 'gn:gboundaries', format: 'image/jpeg'}, {isBaseLayer: true})
-    //new OpenLayers.Layer.WMS("Background layer", "/geoserver/wms", {layers: 'gn:world,gn:gboundaries', format: 'image/jpeg'}, {isBaseLayer: true})
+    //new OpenLayers.Layer.WMS("Background layer", "/geoserver/wms", {layers: 'gn:gboundaries', format: 'image/jpeg'}, {isBaseLayer: true})
+    new OpenLayers.Layer.WMS("Background layer", "/geoserver/wms", {layers: 'gn:world,gn:gboundaries', format: 'image/jpeg'}, {isBaseLayer: true})
     //new OpenLayers.Layer.WMS("Background layer", "http://www2.demis.nl/mapserver/wms.asp?", {layers: 'Countries', format: 'image/jpeg'}, {isBaseLayer: true})
     ];
 

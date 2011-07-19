@@ -43,6 +43,8 @@ GeoNetwork.data.ThesaurusStore = function(config){
         mapping: 'key'
     }, {
         name: 'type'
+    }, {
+        name: 'activated'
     }]);
     
     var store = new Ext.data.Store({
@@ -50,16 +52,31 @@ GeoNetwork.data.ThesaurusStore = function(config){
         reader: new Ext.data.XmlReader({
             record: 'thesaurus'
         }, DataRecord),
-        fields: ['filename', 'theme', 'id', 'type']
+        sortInfo: {
+            field: 'id',
+            direction: 'ASC'
+        },
+        fields: ['filename', 'theme', 'id', 'type', 'activated']
     });
     
     if (config.allOption) {
         // add the "any thesaurus" record
         var record = new DataRecord({
-            filename: OpenLayers.i18n('anyThesaurus')
+            filename: OpenLayers.i18n('anyThesaurus'),
+            activated: 'y'
         });
         record.set('id', '');
         store.add(record);
+    }
+    
+    if (config.activatedOnly) {
+        // Filter activated thesaurus only
+        store.on('load', function() {
+            var coll = this.query('activated', 'n');
+            coll.each(function (item, idx) {
+                this.removeAt(this.indexOf(item));
+                }, store);
+        }, store);
     }
     
     store.load({

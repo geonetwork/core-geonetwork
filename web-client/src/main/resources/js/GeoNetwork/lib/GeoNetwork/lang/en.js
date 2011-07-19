@@ -303,6 +303,7 @@ GeoNetwork.lang.en = {
     'associateService': "Link service metadata",
     'associateDataset': "Link dataset metadata",
     'logoSelectionWindow': "Choose a logo",
+    'fileUploadWindow': 'Upload data or document',
     'selectedCRS': "Selected coordinate systems",
     'foundCRS': "Available coordinate systems",
     'search': 'Search',
@@ -407,8 +408,31 @@ GeoNetwork.lang.en = {
     
     // Admin
     'manageDirectories' : 'Manage directories',
-    'directory': 'Directory'
-    
+    'directory': 'Directory',
+    'thesaurusManager': 'Thesaurus manager',
+    'Theme': 'Theme',
+    'thesaurusFilePath': 'Thesaurus file (.rdf)',
+    'ThesaurusName': 'Thesaurus name',
+    'createThesaurusFromURL': 'from URL',
+    'createThesaurusFromRepository': 'from thesaurus repository',
+    'creationMode': 'Create',
+    'thesaurusFromRepository': 'Thesaurus',
+    'externalThesaurusURL': 'URL',
+    'thesaurusCreation': 'Add a thesaurus',
+    'Type': 'Type',
+    'Activated': 'Activated',
+    'emptyThesaurus': 'New empty thesaurus',
+    'thesaurusFromFile': 'From local file',
+    'thesaurusFromURL': 'From remote file (URL)',
+    'id': 'Identifier',
+    'label': 'Label',
+    'definition': 'Definition',
+    'xmin': 'X min',
+    'ymin': 'Y min',
+    'xmax': 'X max',
+    'ymax': 'Y max',
+    'newLabel': 'Label',
+    'newDefinition': 'Definition'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);

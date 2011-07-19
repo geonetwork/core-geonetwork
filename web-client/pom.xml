@@ -285,25 +285,29 @@
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/util/Old.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/util/SearchFormTools.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/util/CSWSearchTools.js</include>
+
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/CatalogueSourceStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/CategoryStore.js</include>
-                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/GroupStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/CodeListStore.js</include>
-                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusStore.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/GroupStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/HarvesterStore.js</include>
-                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/SubTemplateTypeStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/MetadataCSWResultsStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/MetadataRelationStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/MetadataResultsStore.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/MetadataResultsFastStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/MetadataSummaryStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/MetadataThumbnailStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/OpenSearchSuggestionReader.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/OpenSearchSuggestionStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/RegionStore.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/SubTemplateTypeStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/SuggestionStore.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusFeedStore.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/UserStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/ValidationRuleStore.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/data/Z3950RepositoryStore.js</include>
+
 
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/form/GeometryMapField.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/form/OpenSearchSuggestionTextField.js</include>
@@ -324,7 +328,6 @@
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js</include>
 
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/SubTemplateSelectionPanel.js</include>
-                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ContactSelectionPanel.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/CRSSelectionPanel.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/EditorPanel.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/EditorToolbar.js</include>
@@ -340,8 +343,12 @@
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ThumbnailPanel.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ValidationPanel.js</include>
 
+
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/admin/AdminTools.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/admin/HarvesterPanel.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js</include>
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/admin/SubTemplateManagerPanel.js</include>
+                <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js</include>
 
                 <include>${project.build.directory}/classes/js/GeoNetwork/lib/GeoNetwork/widgets/OGCServiceQuickRegister.js</include>
 
