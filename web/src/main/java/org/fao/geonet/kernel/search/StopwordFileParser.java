@@ -7,6 +7,10 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+
 /**
  * Parses stopword files. Stopword files have lines with zero or more stopwords. Any content from the character | until
  * the end of the line is ignored.
@@ -23,7 +27,7 @@ public class StopwordFileParser {
      */
     public static Set<String> parse(String filepath) {
         filepath = filepath + "_stop.txt";
-        System.out.println("StopwordParser parsing file: " + filepath);
+        Log.debug(Geonet.INDEX_ENGINE, "StopwordParser parsing file: " + filepath);
         Set<String> stopwords = null;
         try {
             File file = new File(filepath);
@@ -46,19 +50,19 @@ public class StopwordFileParser {
             }
             // file does not exist
             else {
-               System.out.println("Did not find requested stopwords file: " + file.getAbsolutePath());
+                Log.debug(Geonet.INDEX_ENGINE, "Did not find requested stopwords file: " + file.getAbsolutePath());
             }
         }
         catch(IOException x) {
             System.out.println(x.getMessage());
             x.printStackTrace();
-            System.out.println("This exception is swallowed");
+            Log.debug(Geonet.INDEX_ENGINE, "This exception is swallowed");
         }
         if(stopwords != null) {
-            System.out.println("Added # " + stopwords.size() + " stopwords");
+            Log.debug(Geonet.INDEX_ENGINE, "Added # " + stopwords.size() + " stopwords");
         }
         else {
-            System.out.println("Added 0 stopwords");
+            Log.debug(Geonet.INDEX_ENGINE, "Added 0 stopwords");
         }
         return stopwords;
     }
