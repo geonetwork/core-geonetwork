@@ -35,6 +35,21 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <xsl:template name="iso19110CompleteTab">
+    <xsl:param name="tabLink"/>
+    <xsl:param name="schema"/>
+    
+    <xsl:if test="/root/gui/config/metadata-tab/advanced">
+      <xsl:call-template name="mainTab">
+        <xsl:with-param name="title" select="/root/gui/strings/byPackage"/>
+        <xsl:with-param name="default">advanced</xsl:with-param>
+        <xsl:with-param name="menu">
+          <item label="byPackage">advanced</item>
+        </xsl:with-param>
+      </xsl:call-template>
+      </xsl:if>
+  </xsl:template>
+
     <!-- =================================================================== -->
     <!-- default: in simple mode just a flat list -->
     <!-- =================================================================== -->
