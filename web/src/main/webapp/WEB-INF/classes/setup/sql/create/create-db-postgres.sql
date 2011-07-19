@@ -400,3 +400,10 @@ CREATE TABLE CswServerCapabilitiesInfo
   );
 
 -- ======================================================================
+
+CREATE TABLE Thesaurus
+  (
+    id   varchar(250),
+    activated    varchar(1),
+    primary key(id)
+  );

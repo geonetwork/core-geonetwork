@@ -13,8 +13,6 @@
     <link rel="stylesheet" type="text/css" href="{$widgetPath}/js/ext/resources/css/ext-all.css"/>
     <link rel="stylesheet" type="text/css"
       href="{$widgetPath}/js/ext-ux/FileUploadField/file-upload.css"/>
-    <link rel="stylesheet" type="text/css"
-      href="{$widgetPath}/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
     <link rel="stylesheet" type="text/css" href="{$widgetPath}/css/gnmapdefault.css"/>
     <link rel="stylesheet" type="text/css" href="{$widgetPath}/css/gnmetadatadefault.css"/>
     <link rel="stylesheet" type="text/css"
@@ -22,6 +20,7 @@
   </xsl:template>
 
   <xsl:template mode="script" match="/" priority="2">
+
     <script type="text/javascript" src="{$widgetPath}/js/ext/adapter/ext/ext-base.js"/>
     <script type="text/javascript" src="{$widgetPath}/js/ext/ext-all-debug.js"/>
     <script type="text/javascript" src="{$widgetPath}/js/proj4js-compressed.js"/>
@@ -37,19 +36,15 @@
                       lang: '<xsl:value-of select="/root/gui/language"/>',
                       mdOverlayedCmpId : 'resultsPanel'
                   });
-        // Declare default store to be used for records and summary
-        catalogue.metadataStore = GeoNetwork.data.MetadataResultsStore();
-        catalogue.summaryStore = GeoNetwork.data.MetadataSummaryStore();
         
-        var manager = new GeoNetwork.admin.SubTemplateManagerPanel({
+        
+        var manager = new GeoNetwork.admin.ThesaurusManagerPanel({
               catalogue: catalogue,
               renderTo: 'manager',
               autoWidth : true,
               layout : 'border',
               height: 680
         });
-        
-        manager.refresh();
       })
     </script>
   </xsl:template>
@@ -82,7 +77,7 @@
             <td class="padded-content" width="{$indent}"/>
             <td class="dots"/>
             <td class="padded-content" style="height:25px;">
-              <h1><xsl:value-of select="/root/gui/strings/subtemplate.admin"/></h1>
+              <h1><xsl:value-of select="/root/gui/strings/thesaurus/management"/></h1>
             </td>
       </tr>
       <tr>

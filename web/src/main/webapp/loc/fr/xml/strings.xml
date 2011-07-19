@@ -1007,7 +1007,7 @@
 			</help>
 		</constraint>
         <org>
-            <title>Organisations responsable de la réalisation, gestion, maintenance et distribution</title>
+          <title>Organisation(s) responsable(s) de la ressource</title>
         <help>
 				<div>
 					For the purposes of Article 5(2)(d) and Article 11(2)(g) of Directive 2007/2/EC, the following two metadata elements shall be provided:

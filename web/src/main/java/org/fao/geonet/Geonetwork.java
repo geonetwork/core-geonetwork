@@ -164,11 +164,16 @@ public class Geonetwork implements ApplicationHandler
 					"Update " + webappName + ".data.dir environment variable or dataDir parameter in config.xml." );
 		
 		
-		String thesauriDir = dataDir + "/codelist/";
+		String defaultThesaurusDir = handlerConfig.getValue(Geonet.Config.CODELIST_DIR, null);
+                String thesaurusSystemDir = System.getProperty(webappName + ".codeList.dir");
+                String thesauriDir = (thesaurusSystemDir != null ? thesaurusSystemDir : 
+                                        (defaultThesaurusDir != null ? defaultThesaurusDir : dataDir + "/codelist/")
+                                        );
 		handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
-		
+		System.setProperty(webappName + ".codeList.dir", thesauriDir);
+                
 		System.setProperty(webappName + ".data.dir", dataDir);
-		
+                
 		logger.info("   - Data directory is:" + dataDir);
 
 

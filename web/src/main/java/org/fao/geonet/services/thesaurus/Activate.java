@@ -29,68 +29,58 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
 
-import java.io.File;
-
-//=============================================================================
 
 /**
- * For editing : adds a tag to a thesaurus. Access is restricted
+ * Activate a thesaurus. Parameters:
+ * <ul>
+ * <li>fname: thesaurus identifier</li>
+ * <li>activated: "y" or "n"</li>
+ * </ul>
  */
+public class Activate implements Service {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-public class Add implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+        String fname = Util.getParam(params, Params.REF);
+        String activated = Util.getParam(params, "activated");
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager tm = gc.getThesaurusManager();
+        Thesaurus t = tm.getThesaurusByName(fname);
 
-		String fname = Util.getParam(params, "fname");
-		String dname = Util.getParam(params, "dname");
-		String type = Util.getParam(params, "type");
-		String activated = Util.getParam(params, "activated", "y");
+        if (t != null) {
+            // Save activated status in the database
+            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+            String checkQuery = "SELECT count(*) AS existing FROM Thesaurus WHERE id = ?";
+            Element records = dbms.select(checkQuery, fname);
 
-		fname = fname.trim();
-		
-		if (!fname.endsWith(".rdf")){
-			fname = fname + ".rdf";
-		}
-		
-		ThesaurusManager tm = gc.getThesaurusManager();
+            if (records.getChild("record").getChildText("existing").equals("0")) {
+                String query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
+                dbms.execute(query, fname, activated);
+            } else {
+                String query = "UPDATE Thesaurus SET activated = ? WHERE id = ?";
+                dbms.execute(query, activated, fname);
+            }
 
-		String filePath = tm.buildThesaurusFilePath(fname, type, dname);
-		
-		File rdfFile = new File(filePath);		
-		Thesaurus thesaurus = new Thesaurus(fname,type,dname,rdfFile);		
-		tm.addThesaurus(thesaurus);
+        } else {
+            // Thesaurus does not exist
+            throw new Exception("Thesaurus not found");
+        }
 
-		// Save activated status in the database
-		String query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
-                Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-		dbms.execute(query, fname, activated);
-		
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		Element elRef = new Element("ref");		
-		elRef.addContent(thesaurus.getKey());
-		elResp.addContent(elRef);
-		Element elName = new Element("thesaName").setText(fname);
-		elResp.addContent(elName);
-		
-		return elResp;
-	}
+        return new Element(Jeeves.Elem.RESPONSE)
+                .addContent(params.getChild(Params.REF).detach())
+                .addContent(params.getChild("activated").detach());
+    }
 }
 
 // =============================================================================

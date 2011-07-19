@@ -74,11 +74,8 @@ public class GetInfo implements Service {
 		
 		String luceneDir = gc.getHandlerConfig().getMandatoryValue(
 				Geonet.Config.LUCENE_DIR);
-		String dataDir = gc.getHandlerConfig().getMandatoryValue(
-				Geonet.Config.DATA_DIR);
-
 		loadSystemInfo();
-		loadCatalogueInfo(dataDir);
+		loadCatalogueInfo(gc);
 		loadIndexInfo(luceneDir);
 		loadDatabaseInfo(context);
 
@@ -106,14 +103,19 @@ public class GetInfo implements Service {
 		return info;
 	}
 
-	/**
-	 * Load catalogue properties
-	 * 
-	 * @param dataDir
-	 */
-	private void loadCatalogueInfo(String dataDir) {
-		catProperties.put("data.dir", dataDir);
-	}
+    /**
+     * Load catalogue properties
+     * 
+     * @param dataDir
+     */
+    private void loadCatalogueInfo(GeonetContext gc) {
+
+        String dataDir = gc.getHandlerConfig().getMandatoryValue(Geonet.Config.DATA_DIR);
+
+        String codeListDir = gc.getHandlerConfig().getMandatoryValue(Geonet.Config.CODELIST_DIR);
+        catProperties.put("data.dir", dataDir);
+        catProperties.put("codeList.dir", codeListDir);
+    }
 
 
 	/**

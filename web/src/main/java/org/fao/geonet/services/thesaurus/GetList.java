@@ -23,18 +23,22 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 //=============================================================================
 
@@ -61,11 +65,11 @@ public class GetList implements Service {
 		
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		ThesaurusManager th = gc.getThesaurusManager();
 		Hashtable<String, Thesaurus> thTable = th.getThesauriTable();
 		
-		response.addContent(buildResultfromThTable(thTable));
+		response.addContent(buildResultfromThTable(thTable, dbms));
 		
 		return response;
 	}
@@ -74,15 +78,16 @@ public class GetList implements Service {
 	/**
 	 * @param thTable
 	 * @return {@link Element}
+	 * @throws SQLException 
 	 */
-	private Element buildResultfromThTable(Hashtable<String, Thesaurus> thTable) {
+	private Element buildResultfromThTable(Hashtable<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
 		
 		Element elRoot = new Element("thesauri");
 		
 		Enumeration<Thesaurus> e = thTable.elements();
 		while (e.hasMoreElements()) {
-			Element elLoop = new Element("thesaurus");
-			Thesaurus currentTh = e.nextElement();
+		        Thesaurus currentTh = e.nextElement();
+		        Element elLoop = new Element("thesaurus");
 			
 			Element elKey = new Element("key");
 			String key = currentTh.getKey();
@@ -100,10 +105,21 @@ public class GetList implements Service {
 			String type = currentTh.getType();
 			elType.addContent(type);
 			
+			Element elActivated= new Element("activated");
+			String activated = "y";
+                        // Thesaurus are activated by default
+                        String checkQuery = "SELECT count(*) as disabled FROM Thesaurus WHERE id = ? and activated = 'n'";
+                        Element records = dbms.select(checkQuery, currentTh.getKey());
+                        if (records.getChild("record").getChildText("disabled").equals("1")) {
+                            activated = "n";
+                        }
+                        elActivated.setText(activated);
+			
 			elLoop.addContent(elKey);
 			elLoop.addContent(elDname);
 			elLoop.addContent(elFname);
 			elLoop.addContent(elType);
+			elLoop.addContent(elActivated);
 			
 			elRoot.addContent(elLoop);
 		}

@@ -388,6 +388,7 @@
 	</tips>
 	
 	<data.dir>Data directory:</data.dir>
+  <codeList.dir>Thesaurus directory:</codeList.dir>
 	<xslt.factory>XSLT factory:</xslt.factory>
 	<java.vm.name>JVM name:</java.vm.name>
 	<java.vm.vendor>JVM vendor:</java.vm.vendor>

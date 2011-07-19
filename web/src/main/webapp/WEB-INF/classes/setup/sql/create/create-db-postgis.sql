@@ -416,3 +416,9 @@ CREATE INDEX spatialIndexNDX2 on spatialIndex USING GIST(the_geom);
 
 -- ======================================================================
 
+CREATE TABLE Thesaurus
+  (
+    id   varchar(250),
+    activated    varchar(1),
+    primary key(id)
+  );

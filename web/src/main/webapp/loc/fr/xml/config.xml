@@ -354,6 +354,7 @@
 	</tips>
 	
 	<data.dir>Répertoire des données :</data.dir>
+  <codeList.dir>Répertoire des thesaurus :</codeList.dir>
 	<xslt.factory>XSLT factory :</xslt.factory>
 	<java.vm.name>JVM nom :</java.vm.name>
 	<java.vm.vendor>JVM vendeur :</java.vm.vendor>

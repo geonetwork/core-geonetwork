@@ -73,7 +73,7 @@
 
 		<!-- Thesaurus facilities -->
 		<allow service="thesaurus.admin"/>
-		<allow service="thesaurus.edit"/>
+	  <allow service="thesaurus.edit"/>
 		<allow service="thesaurus.update"/>
 		<allow service="thesaurus.upload"/>
 	  <allow service="xml.thesaurus.upload"/>
@@ -83,7 +83,8 @@
 		<allow service="thesaurus.addelement"/>
 		<allow service="thesaurus.deleteelement"/>
 		<allow service="thesaurus.updateelement"/>
-		<allow service="thesaurus.add"/>
+	  <allow service="thesaurus.add"/>
+	  <allow service="thesaurus.activate"/>
 
 		<allow service="config"/>
 		<allow service="xml.config.get"/>
@@ -381,7 +382,6 @@
 		<allow service="portal.opensearch"/>
 		<allow service="portal.search.keywords"/>
 		<allow service="portal.search.credits"/>
-		<allow service="portal.search.titles"/>
 		<allow service="portal.search.present"/>
 		<allow service="portal.present"/>
 		<allow service="portal.full"/>
@@ -437,8 +437,6 @@
 		<allow service="xml.metadata.rate"/>
 		
 		<!-- Thesaurus services -->
-	 	<allow service="keywords.search"/>
-	 	<allow service="keywords.sort"/>
 	 	<allow service="keywords.select"/>
 	 	<allow service="keywords.editsearch"/>
 		<allow service="keywords.getselected"/>

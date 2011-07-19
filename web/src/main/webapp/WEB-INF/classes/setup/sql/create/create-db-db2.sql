@@ -338,6 +338,12 @@ CREATE TABLE CswServerCapabilitiesInfo
   );
 
 -- ======================================================================
+CREATE TABLE Thesaurus
+  (
+    id   varchar(250),
+    activated    varchar(1),
+    primary key(id)
+  );
 
 -- CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);

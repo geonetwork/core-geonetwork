@@ -28,7 +28,7 @@
 				<param name="maxSummaryKeys" value="1000" />
 				<param name="maxHitsInSummary" value="10000" />
 			</class>
-			<output sheet="thesaurus-keywordlist.xsl" contentType="text/xml; charset=UTF-8"/>
+			<output sheet="thesaurus/thesaurus-keywordlist.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

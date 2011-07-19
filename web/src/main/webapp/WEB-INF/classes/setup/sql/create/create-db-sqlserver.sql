@@ -396,3 +396,10 @@ CREATE INDEX ParamsNDX1 ON Params(requestId);
 CREATE INDEX ParamsNDX2 ON Params(queryType);
 CREATE INDEX ParamsNDX3 ON Params(termField);
 CREATE INDEX ParamsNDX4 ON Params(termText);
+
+CREATE TABLE Thesaurus
+  (
+    id   varchar(250),
+    activated    varchar(1),
+    primary key(id)
+  );
