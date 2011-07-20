@@ -66,8 +66,6 @@
 						<a class="banner" onclick="doBannerButton('{/root/gui/locService}/password.forgotten.form','{/root/gui/strings/changePassword}','1',300)" href="javascript:void(0);">
 							<xsl:value-of select="/root/gui/strings/forgottenPassword"/>
 						</a>
-					</xsl:if>
-					<xsl:if test="string(/root/gui/session/userId)=''">
 						|
 						<a class="banner" onclick="doBannerButton('{/root/gui/locService}/user.register.get','{/root/gui/strings/registerTitle}','{$modal}',600)" href="javascript:void(0);">
 							<xsl:value-of select="/root/gui/strings/register"/>
