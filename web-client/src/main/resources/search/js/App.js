@@ -687,8 +687,13 @@ GeoNetwork.app = function(){
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
             Ext.getCmp('nextBt').setDisabled(catalogue.startRecord + 
                     parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
-            Ext.getCmp('sortByToolBar').setValue(Ext.getCmp('E_sortBy').getValue());
-            
+            if (Ext.getCmp('E_sortBy').getValue()) {
+              Ext.getCmp('sortByToolBar').setValue(Ext.getCmp('E_sortBy').getValue()  + "#" + Ext.getCmp('sortOrder').getValue() );
+
+            } else {
+              Ext.getCmp('sortByToolBar').setValue(Ext.getCmp('E_sortBy').getValue());
+
+            }
             
             resultsPanel.syncSize();
             resultsPanel.setHeight(Ext.getCmp('center').getHeight());
