@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.XPath;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -41,12 +40,15 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -152,7 +154,8 @@ public class SearchController
      *          the schema (eg. fgdc record could not be converted to ISO).
      * @throws CatalogException
      */
-    public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName, OutputSchema outSchema, Set<String> elemNames, ResultType resultType) throws CatalogException {
+  public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName, OutputSchema outSchema, Set<String> elemNames, ResultType resultType) throws CatalogException {
+
 	try	{
 		//--- get metadata from DB
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -162,7 +165,9 @@ public class SearchController
 		if (res==null) {
             return null;
         }
-		String schema = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
+		Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
+
 		String FS = File.separator;
 		
 		// --- transform iso19115 record to iso19139
@@ -194,8 +199,7 @@ public class SearchController
 
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("lang", context.getLanguage());
-		params.put("displayInfo", 
-				resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 		
 		try {
 		    res = Xml.transform(res, styleSheet, params);
@@ -205,57 +209,40 @@ public class SearchController
 	            context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
 		    return null;
 		}
-		//--- if the client has specified some ElementNames, then we search for them
-		//--- if they are in anything else other that csw:Record, if csw:Record 
-		//--- remove only the unwanted ones
+
+		//--- if the client has specified some ElementNames, then we search for 
+		//--- them (all are relative XPaths to the root element) 
 		if (elemNames != null) {
-		    if (outSchema != OutputSchema.OGC_CORE) {
-						Element frags = (Element)res.clone();
-						frags.removeContent();
-						for (String s : elemNames) {
-							try {
-								Content o = (Content)XPath.getElement(res, s);
-								if (o != null) frags.addContent((Content)o.clone());
-							} catch (Exception e) {
-								e.printStackTrace();
-								throw new InvalidParameterValueEx("elementName has invalid XPath : "+s,e.getMessage());
-							}
+			MetadataSchema mds = scm.getSchema(schema);
+			Element frags = (Element)res.clone();
+			frags.removeContent();
+			for (String s : elemNames) {
+				try {
+					List obs = Xml.selectNodes(res, s, mds.getSchemaNS());
+					for (Object o : obs) {
+						if (o instanceof Element) {
+							Element elem = (Element)o;
+							frags.addContent((Content)elem.clone());
 						}
-						res = frags;
-				} else {
-		    		removeElements(res, elemNames);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new InvalidParameterValueEx("elementName has invalid XPath : "+s,e.getMessage());
 				}
+			}
+			if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
+				frags.addContent((Content)info.clone());
+			}
+			res = frags;
 		}
 		return res;
-	}
-    catch (Exception e) {
+	} catch (Exception e) {
 		context.error("Error while getting metadata with id : "+ id);
 		context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
-
 		throw new NoApplicableCodeEx("Raised exception while getting metadata :"+ e);
   }
+
 	}
-
-
-    /**
-     * TODO javadoc.
-     *
-     * @param md
-     * @param elemNames
-     */
-    private static void removeElements(Element md, Set<String> elemNames) {
-	Iterator i=md.getChildren().iterator();
-
-	while (i.hasNext())
-	    {
-		Element elem = (Element) i.next();
-
-		if (!FieldMapper.match(elem, elemNames))
-		    i.remove();
-	    }
-    }
-
-    //---------------------------------------------------------------------------
 
 }
 
