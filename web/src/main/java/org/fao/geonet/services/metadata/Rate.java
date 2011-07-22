@@ -56,6 +56,8 @@ import java.util.List;
  * if "localrating/enabled" is true then 'local rating' is applied, counting only rating from
  * users of this node itself.
  *
+ * When a remote rating is applied, the local rating is not updated. It will be updated 
+ * on the next harvest run (FIXME ?).
  */
 public class Rate implements Service
 {
