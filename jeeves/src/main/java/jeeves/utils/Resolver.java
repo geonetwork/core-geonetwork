@@ -23,6 +23,7 @@
 
 package jeeves.utils;
 
+import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 
 import java.util.Vector;
@@ -61,7 +62,8 @@ public final class Resolver implements ProxyInfoObserver
 	//--------------------------------------------------------------------------
 
 	private void setUpXmlResolver() {
-		catResolver = new CatalogResolver();
+		CatalogManager catMan = new CatalogManager();
+		catResolver = new CatalogResolver(catMan);
 		Vector catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
 		String[] cats = new String[catalogs.size()];
 		System.arraycopy(catalogs.toArray(), 0, cats, 0, catalogs.size());
