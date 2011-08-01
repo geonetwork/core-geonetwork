@@ -156,8 +156,8 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             displayField: 'name',
             tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>',
             listeners: {
-                select: function(field, newValue, oldValue){
-                    this.selectedGroup = newValue;
+                select: function(field, record, idx){
+                    this.selectedGroup = record.get('id');
                     this.validate();
                 },
                 scope: this
