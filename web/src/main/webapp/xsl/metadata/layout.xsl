@@ -138,19 +138,27 @@
       <xsl:if test="(geonet:choose or name($prevBrother)!=$name or $name='gmd:graphicOverview')">
         <xsl:variable name="text">
           <xsl:if test="geonet:choose">
+            
+            <xsl:variable name="options">
+              <options>
+                <xsl:for-each select="geonet:choose">
+                  <option name="{@name}">
+                    <xsl:call-template name="getTitle">
+                      <xsl:with-param name="name" select="@name"/>
+                      <xsl:with-param name="schema" select="$schema"/>
+                    </xsl:call-template>
+                  </option>
+                </xsl:for-each>
+              </options>
+            </xsl:variable>
+            
             <select class="md" name="_{$parentName}_{$qname}" size="1">
               <xsl:if test="$isXLinked">
                 <xsl:attribute name="disabled">disabled</xsl:attribute>
               </xsl:if>
-              <xsl:for-each select="geonet:choose">
-                <!-- FIXME : here we should sort by title ? -->
-                <xsl:sort select="@name"/>
-                <option value="{@name}">
-                  <xsl:call-template name="getTitle">
-                    <xsl:with-param name="name" select="@name"/>
-                    <xsl:with-param name="schema" select="$schema"/>
-                  </xsl:call-template>
-                  <xsl:text> </xsl:text> (<xsl:value-of select="@name"/>) </option>
+              <xsl:for-each select="exslt:node-set($options)//option">
+                <xsl:sort select="."/>
+                <option value="{@name}"><xsl:value-of select="concat(., ' (', @name, ')')"/></option>
               </xsl:for-each>
             </select>
           </xsl:if>
@@ -1429,27 +1437,30 @@
 
           </td>
         </tr>
+        <xsl:if test="$nEl">
+          <tr>
+            <td colspan="3">
+              <xsl:apply-templates mode="coordinateElementGUI" select="$nEl/gco:Decimal">
+                <!-- FIXME make it schema generic -->
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit" select="$edit"/>
+                <xsl:with-param name="name" select="'gmd:northBoundLatitude'"/>
+                <xsl:with-param name="eltRef" select="concat('n', $eltRef)"/>
+              </xsl:apply-templates>
+            </td>
+          </tr>
+        </xsl:if>
         <tr>
-          <td colspan="3">
-            <xsl:apply-templates mode="coordinateElementGUI" select="$nEl/gco:Decimal">
-              <!-- FIXME make it schema generic -->
-              <xsl:with-param name="schema" select="$schema"/>
-              <xsl:with-param name="edit" select="$edit"/>
-              <xsl:with-param name="name" select="'gmd:northBoundLatitude'"/>
-              <xsl:with-param name="eltRef" select="concat('n', $eltRef)"/>
-            </xsl:apply-templates>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <xsl:apply-templates mode="coordinateElementGUI" select="$wEl/gco:Decimal">
-              <xsl:with-param name="schema" select="$schema"/>
-              <xsl:with-param name="edit" select="$edit"/>
-              <xsl:with-param name="name" select="'gmd:westBoundLongitude'"/>
-              <xsl:with-param name="eltRef" select="concat('w', $eltRef)"/>
-            </xsl:apply-templates>
-          </td>
-
+          <xsl:if test="$wEl">
+            <td>
+              <xsl:apply-templates mode="coordinateElementGUI" select="$wEl/gco:Decimal">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit" select="$edit"/>
+                <xsl:with-param name="name" select="'gmd:westBoundLongitude'"/>
+                <xsl:with-param name="eltRef" select="concat('w', $eltRef)"/>
+              </xsl:apply-templates>
+            </td>
+          </xsl:if>
           <td>
             <xsl:variable name="wID">
               <xsl:choose>
@@ -1503,26 +1514,29 @@
               <xsl:with-param name="descRef" select="$descId"/>
             </xsl:call-template>
           </td>
-
-          <td>
-            <xsl:apply-templates mode="coordinateElementGUI" select="$eEl/gco:Decimal">
-              <xsl:with-param name="schema" select="$schema"/>
-              <xsl:with-param name="edit" select="$edit"/>
-              <xsl:with-param name="name" select="'gmd:eastBoundLongitude'"/>
-              <xsl:with-param name="eltRef" select="concat('e', $eltRef)"/>
-            </xsl:apply-templates>
-          </td>
+          <xsl:if test="$eEl">
+            <td>
+              <xsl:apply-templates mode="coordinateElementGUI" select="$eEl/gco:Decimal">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit" select="$edit"/>
+                <xsl:with-param name="name" select="'gmd:eastBoundLongitude'"/>
+                <xsl:with-param name="eltRef" select="concat('e', $eltRef)"/>
+              </xsl:apply-templates>
+            </td>
+          </xsl:if>
         </tr>
-        <tr>
-          <td colspan="3">
-            <xsl:apply-templates mode="coordinateElementGUI" select="$sEl/gco:Decimal">
-              <xsl:with-param name="schema" select="$schema"/>
-              <xsl:with-param name="edit" select="$edit"/>
-              <xsl:with-param name="name" select="'gmd:southBoundLatitude'"/>
-              <xsl:with-param name="eltRef" select="concat('s', $eltRef)"/>
-            </xsl:apply-templates>
-          </td>
-        </tr>
+        <xsl:if test="$sEl">
+          <tr>
+            <td colspan="3">
+              <xsl:apply-templates mode="coordinateElementGUI" select="$sEl/gco:Decimal">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit" select="$edit"/>
+                <xsl:with-param name="name" select="'gmd:southBoundLatitude'"/>
+                <xsl:with-param name="eltRef" select="concat('s', $eltRef)"/>
+              </xsl:apply-templates>
+            </td>
+          </tr>
+        </xsl:if>
       </tbody>
     </table>
   </xsl:template>
