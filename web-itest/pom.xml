@@ -53,7 +53,7 @@
         <configuration>   
 	  <connectors>
            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-             <port>8080</port>
+             <port>8010</port>
              <maxIdleTime>60000</maxIdleTime>
            </connector>
           </connectors>
@@ -62,7 +62,7 @@
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>
 	  <stopKey>GEONETWORK_STOP</stopKey>
-	  <stopPort>8079</stopPort>
+	  <stopPort>8011</stopPort>
         </configuration>
         <executions>
           <execution>

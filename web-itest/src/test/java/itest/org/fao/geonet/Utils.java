@@ -21,7 +21,7 @@ import org.junit.Ignore;
 
 @Ignore
 public class Utils {
-	public static final String geonetworkUri = "http://localhost:8080/geonetwork/srv/en/";
+	public static final String geonetworkUri = "http://localhost:8010/geonetwork/srv/en/";
 	public static final String usernameAdmin = "admin";
 	public static final String passwordAdmin = "admin";
 	public static final String defaultGroup = "2";
