@@ -170,7 +170,7 @@ GeoNetwork.app = function(){
                 // Add advanced mode criteria to simple form - start
         var advancedCriteria = [];
         var services = catalogue.services;
-        var themekeyField = new GeoNetwork.form.OpenSearchSuggestionTextField({
+        var orgNameField = new GeoNetwork.form.OpenSearchSuggestionTextField({
             hideLabel: false,
             minChars: 1,
             hideTrigger: false,
@@ -179,7 +179,7 @@ GeoNetwork.app = function(){
             name: 'E_orgName', 
             fieldLabel: OpenLayers.i18n('org')
         });
-        var orgNameField = new GeoNetwork.form.OpenSearchSuggestionTextField({
+        var themekeyField = new GeoNetwork.form.OpenSearchSuggestionTextField({
             hideLabel: false,
             minChars: 1,
             hideTrigger: false,
