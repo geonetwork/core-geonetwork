@@ -4,8 +4,8 @@
 
 	<general>
 		<profiles>user-profiles.xml</profiles>
-		<uploadDir>../../data/tmp</uploadDir>
-		<maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer), 100MB by default -->
+		<uploadDir>${geonetwork.config.uploadDir}</uploadDir>
+		<maxUploadSize>${geonetwork.config.maxUploadSize}</maxUploadSize> <!-- Size must be in megabyte (integer), 100MB by default -->
 		<debug>true</debug>
 	</general>
 
@@ -18,7 +18,7 @@
 				 the appHandler org.fao.geonet.Geonetwork
 				 -->
 		<startupErrorService>main.error</startupErrorService>
-		<language>en</language>
+		<language>${geonetwork.language}</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
 
@@ -91,6 +91,18 @@
 	-->
   
 	<resources>
+	  <resource enabled="true">
+	    <name>main-db</name>
+	    <provider>${geonetwork.config.dbms.pool}</provider>
+	    <config>
+	      <user>${geonetwork.config.dbms.username}</user>
+	      <password>${geonetwork.config.dbms.password}</password>
+	      <driver>${geonetwork.config.dbms.driver}</driver>
+	      <url>${geonetwork.config.dbms.url}</url>
+	      <poolSize>${geonetwork.config.dbms.poolSize}</poolSize>
+	      <reconnectTime>${geonetwork.config.dbms.reconnectTime}</reconnectTime>
+	    </config>
+	  </resource>
 	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	    H2 database  http://www.h2database.com/
 	    When GeoNetwork don't use H2 database, the listener DBStarter
@@ -101,7 +113,7 @@
 	    It may be relevant to turn on MVCC mode
 	    http://www.h2database.com/html/advanced.html#mvcc
 	    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	  <resource enabled="true">
+	  <resource enabled="false">
 	    <name>main-db</name>
 	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
@@ -113,7 +125,6 @@
 	      <reconnectTime>3600</reconnectTime>
 	    </config>
 	  </resource>
-	  
 	  
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mckoi standalone -->
@@ -238,13 +249,13 @@
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-		<param name="luceneDir" value="WEB-INF/lucene" />
-		<param name="dataDir" value="WEB-INF/data" />
+	  <param name="luceneDir" value="${geonetwork.config.luceneDir}" />
+	  <param name="dataDir" value="${geonetwork.config.dataDir}" />
 
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />
 		
-		<param name="schemaPluginsDir" value="../../schemaPlugins" />
+		<param name="schemaPluginsDir" value="${geonetwork.config.schemaPluginsDir}" />
 
 		<param name="licenseDir" value="WEB-INF/licenses" />
 	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
@@ -260,7 +271,7 @@
 			interested for having metadata in a specific
 			ISO profil.
 		-->
-		<param name="preferredSchema" value="iso19139" />
+		<param name="preferredSchema" value="${geonetwork.config.preferredSchema}" />
 		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
 

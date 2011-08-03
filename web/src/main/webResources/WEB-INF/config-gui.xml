@@ -9,8 +9,14 @@
   <!-- Client configuration in order to redirect to default UI 
     (ie. main.home service) or to another custom client.
   -->
+  <client type="redirect" 
+    widget="${geonetwork.config-gui.widget}" 
+    url="${geonetwork.config-gui.widget.url}"
+    parameters="${geonetwork.config-gui.widget.parameters}"
+    createParameter="${geonetwork.config-gui.widget.create}"/>
+  
   <!-- Default main.home client interface -->
-  <client type="redirect" url="main.home"/>
+  <!--<client type="redirect" url="main.home"/>-->
   <!-- Widget experimental client -->
   <!--<client type="redirect" widget="true" url="../../apps/search/" createParameter="#create"/>-->
   <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="extent=-5.1,41,9.7,51" createParameter="#create"/>-->
@@ -127,8 +133,8 @@
  <!-- Display error only when loading validation report 
   <editor-validation-errors-only-on-load/>-->
  
-  <!-- Display the geopublisher option for all updloaded files
- 	<editor-geopublisher/>  -->
+  <!-- Display the geopublisher option for all updloaded files-->
+ 	<editor-geopublisher/>
  
  
  <!-- Display metadata tabs in edit and view mode. 
@@ -270,6 +276,6 @@
 	
 	
   <repository>
-    <thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
+    <thesaurus>${geonetwork.config-gui.thesaurusRepositoryUrl}</thesaurus>
   </repository>
 </config>

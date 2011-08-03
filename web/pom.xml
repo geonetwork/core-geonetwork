@@ -309,7 +309,31 @@
   </dependencies>
   
   <build>
+    <filters>
+      <filter>src/main/filters/${env}.properties</filter>
+    </filters>
+    
     <plugins>
+      <plugin> 
+        <groupId>org.codehaus.mojo</groupId> 
+        <artifactId>buildnumber-maven-plugin</artifactId> 
+        <version>1.0</version> 
+        <executions> 
+          <execution> 
+            <phase>validate</phase> 
+            <goals> 
+              <goal>create</goal> 
+            </goals> 
+          </execution> 
+        </executions> 
+        <configuration> 
+          <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat> 
+          <doCheck>false</doCheck> 
+          <doUpdate>false</doUpdate> 
+        </configuration> 
+      </plugin>
+      
+      
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
@@ -320,7 +344,7 @@
                 This phase does not belong to the default lifecycle for a jar/war packaging.
                 It has to be run explicitely as mvn command argument for generating obfuscated js. 
              --> 
-            <phase>initialize</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>compress</goal>
               <!--<goal>jslint</goal>-->
@@ -604,6 +628,32 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
+          <!-- Filter resources according to current profile properties
+              (see src/main/filters) and copy them to the webapp -->
+          <webResources>
+            <resource>
+              <directory>src/main/webResources</directory>
+              <filtering>true</filtering>
+              <excludes>
+                <exclude>**/.svn</exclude>
+              </excludes>
+            </resource>
+          </webResources>
+          <!-- Also filter and publish to the src/main/webapp
+            in order to set configuration files when running 
+            a server on eclipse.
+            -->
+          <webResources>
+            <resource>
+              <directory>src/main/webResources</directory>
+              <filtering>true</filtering>
+              <targetPath>../../src/main/webapp</targetPath>
+              <excludes>
+                <exclude>**/.svn</exclude>
+              </excludes>
+            </resource>
+          </webResources>
+          
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           
 <!-- Remove comment tag to include documentation in the build. 
@@ -669,8 +719,63 @@ Python and Latex are required to build the documentation. -->
       </plugin>
     </plugins>
   </build>
+  
+  <!-- Define profiles for running configuration using -Denv=profile.id parameter 
+    Profiles configuration is defined in src/main/filters.
+    -->
+  <profiles>
+    <profile>
+      <id>env-prod</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+      </properties>
+    </profile>
+    <profile>
+      <id>env-dev</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>dev</value>
+        </property>
+      </activation>
+      <properties>
+        <env>dev</env>
+      </properties>
+    </profile>
+    <profile>
+      <id>env-inspire</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>inspire</value>
+        </property>
+      </activation>
+      <properties>
+        <env>inspire</env>
+      </properties>
+    </profile>
+  </profiles>
+  
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <properties>
+    <geonetwork.version>${project.version}</geonetwork.version>
+    <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
