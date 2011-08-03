@@ -418,15 +418,16 @@ public class AjaxEditUtils extends EditUtils {
 					}
 				}
 
+				// -- now delete the element as requested
+				parent.removeContent(me);
+				
 				//--- existing geonet child element not present so create it and insert it
 				//--- where the last element was deleted
 				if (result == null) {
 					result = editLib.createElement(schema,el,parent);
 					parent.addContent(me,result);
-				} else {
-                    // -- now delete the element as requested
-				    parent.removeContent(me);
 				}
+
 				result.setAttribute(Edit.ChildElem.Attr.PARENT,parentRef);
 				result.addContent(info);
 			}
