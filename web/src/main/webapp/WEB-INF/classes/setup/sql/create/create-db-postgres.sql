@@ -342,6 +342,8 @@ CREATE TABLE OperationAllowed
     foreign key(operationId) references Operations(id)
   );
 
+CREATE INDEX OperationAllowedNDX1 ON OperationAllowed(metadataId);
+
 -- ======================================================================
 
 CREATE TABLE MetadataRating

@@ -286,6 +286,8 @@ CREATE TABLE OperationAllowed
     primary key(groupId,metadataId,operationId)
   );
 
+CREATE INDEX OperationAllowedNDX1 ON OperationAllowed(metadataId);
+
 REM ======================================================================
 
 CREATE TABLE MetadataRating
