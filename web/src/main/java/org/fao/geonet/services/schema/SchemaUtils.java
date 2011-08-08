@@ -86,8 +86,8 @@ public class SchemaUtils {
 			}
 
 			// -- get metadata
-            boolean forEditing = false, withValidationErrors = false;
-            Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
 			if (elMd == null) {
      		    throw new OperationAbortedEx("Metadata record "+uuid+" doesn't exist");

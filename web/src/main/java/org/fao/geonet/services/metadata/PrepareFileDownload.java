@@ -94,8 +94,8 @@ public class PrepareFileDownload implements Service
 		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
 
 		//--- get metadata
-        boolean withValidationErrors = false;
-        Element elMd = gc.getDataManager().getMetadata(context, id, addEdit, withValidationErrors);
+        boolean withValidationErrors = false, keepXlinkAttributes = false;
+        Element elMd = gc.getDataManager().getMetadata(context, id, addEdit, withValidationErrors, keepXlinkAttributes);
 
 		if (elMd == null)
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");

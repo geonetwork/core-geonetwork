@@ -224,8 +224,8 @@ public class DownloadArchive implements Service
     }
 
 		//--- get metadata
-        boolean forEditing = false, withValidationErrors = false;
-        Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+        Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
 		if (elMd == null)
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");

@@ -159,8 +159,8 @@ public class SearchController
 	try	{
 		//--- get metadata from DB
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean forEditing = false, withValidationErrors = false;
-        Element res = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+        Element res = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 		SchemaManager scm = gc.getSchemamanager();
 		if (res==null) {
             return null;

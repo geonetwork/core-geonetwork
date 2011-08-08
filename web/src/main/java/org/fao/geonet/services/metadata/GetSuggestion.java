@@ -111,8 +111,8 @@ public class GetSuggestion implements Service {
         // Retrieve metadata record
         String id = Utils.getIdentifierFromParameters(params, context);
         MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-        boolean forEditing = false, withValidationErrors = false;
-        Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+        Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
         // List or analyze all suggestions process registered for this schema
         if ("list".equals(action) || "analyze".equals(action)) {

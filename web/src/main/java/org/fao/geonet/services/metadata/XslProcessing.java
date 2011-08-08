@@ -185,10 +185,10 @@ public class XslProcessing implements Service {
 				return null;
 			}
 			// --- Process metadata
-            boolean forEditing = false, withValidationErrors = false;
-            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
+            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
-			// -- here we send parameters set by user from URL if needed.
+            // -- here we send parameters set by user from URL if needed.
 			List<Element> children = params.getChildren();
 			Map<String, String> xslParameter = new HashMap<String, String>();
 	        xslParameter.put("guiLang", context.getLanguage());
@@ -200,7 +200,7 @@ public class XslProcessing implements Service {
             xslParameter.put("siteUrl", siteUrl);
 
 			Element processedMetadata = Xml.transform(md, filePath, xslParameter);
-
+			
 			// --- save metadata and return status
             if (save) {
                 boolean validate = true;

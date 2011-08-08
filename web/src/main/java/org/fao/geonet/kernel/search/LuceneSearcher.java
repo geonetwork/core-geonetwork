@@ -243,8 +243,8 @@ public class LuceneSearcher extends MetaSearcher
 					} else if ("index".equals(sFast)) {
 					    md = getMetadataFromIndex(doc, id, true);
                     } else if (srvContext != null) {
-                        boolean forEditing = false, withValidationErrors = false;
-                        md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors);
+                        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+                        md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
 					}
 	
 					//--- a metadata could have been deleted just before showing 

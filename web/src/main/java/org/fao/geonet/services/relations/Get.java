@@ -81,8 +81,8 @@ public class Get implements Service {
 		Element response = new Element("response");
 
 		for (String mdId : result) {
-            boolean forEditing = false, withValidationErrors = false;
-            Element md = dm.getMetadata(context, mdId, forEditing, withValidationErrors);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element md = dm.getMetadata(context, mdId, forEditing, withValidationErrors, keepXlinkAttributes);
 
 			// --- we could have a race condition so, just perform a simple check
 			if (md != null)

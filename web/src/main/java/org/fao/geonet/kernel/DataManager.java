@@ -1361,22 +1361,23 @@ public class DataManager {
      * @throws Exception
      */
 	public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
-		Element md = getMetadata(srvContext, id, false, false);
+	    Element md = getMetadata(srvContext, id, false, false, false);
 		md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 		return md;
 	}
 
     /**
      * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if requested.
-     *
+     * 
      * @param srvContext
      * @param id
-     * @param forEditing
+     * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
      * @param withEditorValidationErrors
+     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
      * @return
      * @throws Exception
      */
-	public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors) throws Exception {
+	public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 		boolean doXLinks = XmlSerializer.resolveXLinks();
 		Element md = XmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id);
@@ -1397,7 +1398,13 @@ public class DataManager {
             }
 		}
         else {
-			if (doXLinks) Processor.detachXLink(md);
+			if (doXLinks) {
+			    if (keepXlinkAttributes) {
+			        Processor.processXLink(md);
+			    } else {
+			        Processor.detachXLink(md);
+			    }
+			}
 		}
 
 		md.addNamespaceDeclaration(Edit.NAMESPACE);
@@ -2318,8 +2325,8 @@ public class DataManager {
 		String parentSchema = params.get(Params.SCHEMA);
 
 		// --- get parent metadata in read/only mode
-        boolean forEditing = false, withValidationErrors = false;
-        Element parent = getMetadata(srvContext, parentId, forEditing, withValidationErrors);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+        Element parent = getMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
 
 		Element env = new Element("update");
 		env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -2340,7 +2347,7 @@ public class DataManager {
 				continue;
 			}
 
-            Element child = getMetadata(srvContext, childId, forEditing, withValidationErrors);
+            Element child = getMetadata(srvContext, childId, forEditing, withValidationErrors, keepXlinkAttributes);
 
 			String childSchema = child.getChild(Edit.RootChild.INFO,
 					Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);

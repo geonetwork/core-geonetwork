@@ -112,8 +112,8 @@ public class Show implements Service
 		Element elMd;
 		boolean addEditing = false;
 		if (!skipInfo) {
-            boolean withValidationErrors = false;
-            elMd = gc.getDataManager().getMetadata(context, id, addEditing, withValidationErrors);
+            boolean withValidationErrors = false, keepXlinkAttributes = false;
+            elMd = gc.getDataManager().getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
 		}
         else {
 			elMd = dm.getMetadataNoInfo(context, id);

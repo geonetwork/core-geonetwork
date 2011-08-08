@@ -153,8 +153,8 @@ public class AddLimitations implements Service
 		addElement(response,Params.ACCESS,access);
 
     //--- get metadata
-    boolean forEditing = false, withValidationErrors = false;
-    Element elMd = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
+    boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+    Element elMd = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
     if (elMd == null)
        throw new IllegalArgumentException("Metadata not found --> " + id);	

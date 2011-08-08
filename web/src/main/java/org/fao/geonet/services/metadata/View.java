@@ -98,7 +98,8 @@ public class View implements Service {
 		Element elMd;
 		boolean addEditing = false;
 		if (!skipInfo) {
-			elMd = dm.getMetadata(context, id, false, false);
+            boolean withValidationErrors = false, keepXlinkAttributes = false;
+			elMd = dm.getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
 		} else {
 			elMd = dm.getMetadataNoInfo(context, id);
 		}

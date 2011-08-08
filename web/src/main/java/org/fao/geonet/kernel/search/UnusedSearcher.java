@@ -131,8 +131,8 @@ class UnusedSearcher extends MetaSearcher
 		if (getTo() > 0) {
 			for(int i = getFrom() -1; i < getTo(); i++) {
 				String  id = alResult.get(i);
-                boolean forEditing = false, withValidationErrors = false;
-                Element md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors);
+                boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+                Element md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
 				response.addContent(md);
 			}
 		}

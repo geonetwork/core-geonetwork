@@ -116,8 +116,8 @@ public class GetRelated implements Service {
             relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
         }
         if (type.equals("") || type.equals("parent")) {
-            boolean forEditing = false, withValidationErrors = false;
-            Element md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors, keepXlinkAttributes);
             if (md != null) {
                 Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
                 Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
@@ -128,7 +128,7 @@ public class GetRelated implements Service {
 
                     try {
                         Lib.resource.checkPrivilege(context, parentId, AccessManager.OPER_VIEW);
-                        Element content = dm.getMetadata(context, parentId, forEditing, withValidationErrors);
+                        Element content = dm.getMetadata(context, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
                         relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(content)));
                     }
                     catch (Exception e) {
@@ -143,7 +143,7 @@ public class GetRelated implements Service {
         // Get datasets related to service search
         if (type.equals("") || type.equals("dataset")) {
             boolean forEditing = false, withValidationErrors = false;
-            Element md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors);
+            Element md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors, false);
 
             Iterator<Element> i = md.getDescendants(new ElementFilter ("operatesOn", Namespace.getNamespace("http://www.isotc211.org/2005/srv")));
             StringBuffer uuids = new StringBuffer("");

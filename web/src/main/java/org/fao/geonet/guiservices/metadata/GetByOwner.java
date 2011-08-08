@@ -96,8 +96,8 @@ public class GetByOwner implements Service {
         for (Iterator iter = result.getChildren().iterator(); iter.hasNext();) {
             Element rec = (Element)iter.next();
             String  id = rec.getChildText("id");
-            boolean forEditing = false, withValidationErrors = false;
-            Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
             _response.addContent(md);
         }
 

@@ -79,8 +79,8 @@ public class Remove implements Service
 		Lib.resource.checkEditPrivilege(context, id);
 
 		// get online resource name
-        boolean forEditing = false, withValidationErrors = false;
-        Element metadata = dataMan.getMetadata(context, id, forEditing, withValidationErrors);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+        Element metadata = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
 		Element elem     = dataMan.getElementByRef(metadata, ref);
 

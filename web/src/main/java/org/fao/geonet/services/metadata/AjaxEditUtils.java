@@ -259,7 +259,8 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public Element getMetadataEmbedded(ServiceContext srvContext, String id, boolean forEditing, boolean withValidationErrors) throws Exception {
-		Element md = dataManager.getMetadata(srvContext, id, forEditing, withValidationErrors);
+	    boolean keepXlinkAttributes = false;
+		Element md = dataManager.getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
 		UserSession session = srvContext.getUserSession();
 		setMetadataIntoSession(session, md, id);
 		return md;
@@ -417,7 +418,7 @@ public class AjaxEditUtils extends EditUtils {
 						break;
 					}
 				}
-
+				
 				// -- now delete the element as requested
 				parent.removeContent(me);
 				
