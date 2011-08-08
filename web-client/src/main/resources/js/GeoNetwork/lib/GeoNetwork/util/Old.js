@@ -64,7 +64,7 @@ function checkBoxModalUpdate(div, service, modalbox, title){
         pars += "id=" + Ext.getDom('metadataid').value;
     }
     Ext.each(boxes, function(s){
-        if (s.checked) {
+        if (s.checked && s.name != "") {
             pars += "&" + s.name + "=on";
         }
     });

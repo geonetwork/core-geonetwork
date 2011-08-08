@@ -270,13 +270,12 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         } else {
             tpl += ' x-unselectable"';
         }
-        tpl += '>{title} ({uuid})</div></tpl>';
+        tpl += '>{title}</div></tpl>';
         
         this.itemSelector = new Ext.ux.ItemSelector({
             name: "itemselector",
             fieldLabel: "ItemSelector",
             dataFields: ["uuid", "title"],
-            // TODO : build xlink 
             toData: [],
             msWidth: 320,
             msHeight: 230,
