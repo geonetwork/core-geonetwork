@@ -24,7 +24,7 @@
             <xsl:otherwise>
 		        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
 		    	<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>    
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
             </xsl:otherwise>
         </xsl:choose>
 	</xsl:template>
@@ -65,6 +65,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fr.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
                 
@@ -76,7 +77,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"></script>
               
                 <!-- For now using standard OpenLayers.js and GeoExt.js compressed files.  TODO: Change to use gn.geo.libs.js -->  
-                <!--script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.geo.libs.js"></script--> 
+                <!--script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.geo.libs.js"></script-->
                 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"></script>
@@ -88,12 +89,13 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fr.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
                                 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/geoext/GeoExt.js"></script>			
-                <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>            
+                <script type="text/javascript" src="{/root/gui/url}/scripts/geoext/GeoExt.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>
             </xsl:otherwise>
         </xsl:choose>
         

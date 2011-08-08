@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Metatietoja ei voida näyttää</heading>
+	<message>Pyydettyjä metatietoja ei löydy tai niitä ei voida näyttää. Metatiedot on joko poistettu tai sinulla ei ole oikeuksia nähdä niitä.</message>
+	<button>Takaisin</button>
+</strings>
