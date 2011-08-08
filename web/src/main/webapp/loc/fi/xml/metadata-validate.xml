@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Metatietojen validointi</heading>
+	<message>Validointi skeemamäärityksiä vastaan onnistui.</message>
+	<schemaTronError>Virheitä ilmeni schematronia vastaan validoitaessa.</schemaTronError>
+	<schemaTronValid>Validointi schematron-määrityksiä vastaan onnistui.</schemaTronValid>
+	<schemaTronReport>Schematron-raportti on saatavilla täällä.</schemaTronReport> 
+</strings>

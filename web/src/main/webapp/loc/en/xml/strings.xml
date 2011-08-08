@@ -11,7 +11,8 @@
     <pt>Рortuguês</pt> <!-- Do not translate! -->
 	<ca>Català</ca> <!-- Do not translate! -->
     <no>Norsk</no>  <!-- Do not translate! -->
-  
+    <fi>Suomeksi</fi>  <!-- Do not translate! -->
+
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
 	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>

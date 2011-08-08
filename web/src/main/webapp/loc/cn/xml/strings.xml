@@ -11,6 +11,7 @@
 	<pt>Рortuguês</pt> <!-- Do not translate! -->
 	<ca>Català</ca> <!-- Do not translate! -->	
 	<no>Norsk</no>  <!-- Do not translate! -->
+    <fi>Finnish</fi>  <!-- Do not translate! -->
 
 
   <subtemplate.admin>Manage directories</subtemplate.admin>

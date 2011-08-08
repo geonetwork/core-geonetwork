@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+<strings>
+	<heading>Virhe kirjautumisessa</heading>
+	<message>Virheilmoitus</message>
+	<message1>
+	Pyydettyä operaatiota ei voitu suorittaa. 
+	</message1>
+	<message2>
+	Jos epäilet että kyseessä on järjestelmän virhe, ota yhteyttä: 
+	</message2>
+	<email>
+	metatieto@maanmittauslaitos.fi
+	</email>
+	<button>Takaisin</button>
+</strings>
+</strings>

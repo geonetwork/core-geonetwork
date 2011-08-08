@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows"
+	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct = "http://purl.org/dc/terms/">
+	<!-- ==================================================== -->
+	<element name="csw:Record">
+		<label>Metatiedot</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Nimi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Metatietojen luoja</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Aihe ja avainsanat</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Kuvailu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Julkaisija</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Myötävaikuttaneet tahot</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Päivämäärä</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Resurssin tyyppi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Formaatti</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Resurssin tunniste</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Alkuperä</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Kieli</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Suhde</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Kattavuus</label>
+		<description>Esimerkki: "Pohjoinen 90, etelä -90, itä 180, länsi -180. Maailmanlaajuinen."</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Oikeuksienhallinta</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Muokkauspäivä</label>
+		<description>Päivä, jolloin metatietoja on muokattu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Tiivistelmä</label>
+		<description>Tiivistelmä resurssin sisällöstä.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Sijainti</label>
+		<description>Resurssin sisällön sijaintiin liittyvät ominaisuudet.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Kohderyhmä</label>
+		<description>Käyttäjäryhmä, jolle aineisto on tarkoitettu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Lisäysmenetelmä</label>
+		<description>Menetelmä, jolla aineistoon lisätään kohteita.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Lisäystiheys</label>
+		<description>Ajallinen tiheys, jolla kohteita lisätään aineistoon.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Lisäysehdot</label>
+		<description>Ehdot, joilla kohteita lisätään aineistoon.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Ohjeistusmenetelmä</label>
+		<description>Menetelmä, jolla aineiston käyttäjille annetaan opastusta.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Tekijänoikeudet</label>
+		<description>Ehdot, joilla aineistoa saa käyttää.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Tekijänoikeuksien omistaja</label>
+		<description>Taho, jolla on oikeudet aineistoon.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ows:BoundingBox">
+		<label>Sijaintia rajaava suorakaide</label>
+	</element>
+	<element name="ows:UpperCorner">
+		<label>Yläkulma</label>
+	</element>
+	<element name="ows:LowerCorner">
+		<label>Alakulma</label>
+	</element>
+	<element name="crs">
+		<label>Koordinaattireferenssijärjestelmä</label>
+	</element>
+</labels>

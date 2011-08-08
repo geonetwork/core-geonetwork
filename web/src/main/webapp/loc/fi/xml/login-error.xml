@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Virhe kirjautumisessa</heading>
+	<message1>
+	Käyttäjätunnus tai salasana on virheellinen. 
+	</message1>
+	<message2>
+	Paina Takaisin-nappulaa ja yritä uudelleen, tai ota yhteyttä ylläpitoon 
+	</message2>
+	<email>
+	metatieto@maanmittauslaitos.fi
+	</email>
+	<button>Takaisin</button>
+</strings>
