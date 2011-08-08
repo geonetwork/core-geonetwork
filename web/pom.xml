@@ -309,11 +309,59 @@
   </dependencies>
   
   <build>
-    <filters>
-      <filter>src/main/filters/${env}.properties</filter>
-    </filters>
-    
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy-filter-webResource</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${build.webapp.resources}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webResources</directory>
+                  <filtering>true</filtering>
+                  <targetPath>${build.webapp.resources}</targetPath>
+                  <excludes>
+                    <exclude>**/.svn</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+              <filters>
+                <filter>${basedir}/src/main/filters/${env}.properties</filter>
+              </filters>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-webapp</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${build.webapp.resources}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/webapp</directory>
+                  <filtering>false</filtering>
+                  <targetPath>${build.webapp.resources}</targetPath>
+                  <excludes>
+                    <exclude>**/.svn</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+              <overwrite>false</overwrite>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin> 
         <groupId>org.codehaus.mojo</groupId> 
         <artifactId>buildnumber-maven-plugin</artifactId> 
@@ -364,7 +412,7 @@
           </excludes>
           <aggregations>
             <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.js</output>
+              <output>${build.webapp.resources}/scripts/lib/gn.libs.js</output>
               <!-- files to include, path relative to output's directory or absolute path-->
               <includes>
                 <include>${geonetwork.build.dir}/scripts/sarissa.js</include>
@@ -632,25 +680,7 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
-              <directory>src/main/webResources</directory>
-              <filtering>true</filtering>
-              <excludes>
-                <exclude>**/.svn</exclude>
-              </excludes>
-            </resource>
-          </webResources>
-          <!-- Also filter and publish to the src/main/webapp
-            in order to set configuration files when running 
-            a server on eclipse.
-            -->
-          <webResources>
-            <resource>
-              <directory>src/main/webResources</directory>
-              <filtering>true</filtering>
-              <targetPath>../../src/main/webapp</targetPath>
-              <excludes>
-                <exclude>**/.svn</exclude>
-              </excludes>
+              <directory>${build.webapp.resources}</directory>
             </resource>
           </webResources>
           
@@ -710,6 +740,7 @@ Python and Latex are required to build the documentation. -->
             </connector>
           </connectors>
           <webApp>${project.build.directory}/geonetwork</webApp>
+          <webAppSourceDirectory>${build.webapp.resources}</webAppSourceDirectory>
           <webAppConfig>
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>
@@ -781,5 +812,6 @@ Python and Latex are required to build the documentation. -->
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
     <geonetwork.webapp.css.dir>${geonetwork.webapp.dir}</geonetwork.webapp.css.dir>
     <minify.verbose>false</minify.verbose>
+    <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
   </properties>
 </project>
