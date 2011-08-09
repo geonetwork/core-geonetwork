@@ -421,7 +421,7 @@ public class Importer {
 			}
 		}
         catch (Exception e) {
-			throw new Exception(" Existing metadata with same UUID could not be deleted.");
+            throw new Exception(" Existing metadata with UUID " + uuid + " could not be deleted. Error is: " + e.getMessage());
 		}
 
 
