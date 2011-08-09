@@ -829,6 +829,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.metadataId = document.mainForm.id.value;
         this.versionId = document.mainForm.version.value;
         
+        this.toolbar.setIsMinor(document.mainForm.minor.value);
         this.toolbar.setIsTemplate(this.metadataType.value);
         // If panel was disabled on startup, enable it after initialization
         if (this.disabled) {

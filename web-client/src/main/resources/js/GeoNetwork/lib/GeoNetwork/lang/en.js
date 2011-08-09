@@ -380,6 +380,8 @@ GeoNetwork.lang.en = {
     'resultBy': ' result(s) / ',
     'subTemplateImport': 'Directory entry import',
     'xmlData': 'XML',
+    'minorEdit': 'Minor edit',
+    'minorEditTT': '',
     // Shortcuts
     'runASearch': 'Run a search.',
     'focusOnAny': 'Move focus to the full text search field.',

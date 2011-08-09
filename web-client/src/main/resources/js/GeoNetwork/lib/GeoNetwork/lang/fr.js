@@ -382,6 +382,8 @@ GeoNetwork.Lang.fr = {
     'resultBy': ' resultat(s) / ',
     'subTemplateImport': 'Importer un élément dans un annuaire',
     'xmlData': 'XML',
+    'minorEdit': 'Modif. mineure',
+    'minorEditTT': 'Lorsque cette option est activée, la date de mise à jour des métadonnées n\'est pas changée. Lors de l\'utilisation des suggestions, ou de la mise à jour d\'une imagette, cette option est sans effet, la date est mise à jour.',
     // Shortcuts
     'runSearch': 'Lancer la recherche.',
     'focusOnAny': 'Déplacer le curseur sur le critère plein texte.',

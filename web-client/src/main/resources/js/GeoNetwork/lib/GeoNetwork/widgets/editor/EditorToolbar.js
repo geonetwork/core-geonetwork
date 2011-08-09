@@ -61,7 +61,8 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
     checkAction: undefined,
     resetAction: undefined,
     cancelAction: undefined,
-    
+    minorCheckbox: undefined,
+    minorEdit: false,
     
     /** private: method[initComponent] 
      *  Initializes the toolbar for the metadata editor.
@@ -75,8 +76,6 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             cmp.push(this.createTypeMenu());
             cmp.push(['-']);
         }
-        cmp.push(this.createViewMenu());
-        cmp.push(['-']);
         
         this.saveAction = new Ext.Action({
             text: OpenLayers.i18n('save'),
@@ -86,7 +85,6 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this.editor
         });
-        cmp.push(this.saveAction);
         
         this.checkAction = new Ext.Action({
             text: OpenLayers.i18n('saveAndCheck'),
@@ -96,10 +94,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this.editor
         });
-        cmp.push(this.checkAction);
         
-        
-    
         this.saveAndCloseAction = new Ext.Action({
             text: OpenLayers.i18n('saveAndClose'),
             iconCls: 'quitMetadata',
@@ -108,9 +103,28 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this.editor
         });
-        cmp.push(this.saveAndCloseAction);
         
-        cmp.push(['->']);
+//        this.minorCheckbox = new Ext.form.Checkbox({
+//            checked: false,
+//            boxLabel: OpenLayers.i18n('minorEdit'),
+//            listeners: {
+//                check: function(c, checked){
+//                    document.mainForm.minor.value = this.minorEdit = checked;
+//                },
+//                scope: this
+//            }
+//        });
+        this.minorCheckbox = new Ext.Button({
+        	enableToggle: true,
+            text: OpenLayers.i18n('minorEdit'),
+            tooltip: OpenLayers.i18n('minorEditTT'),
+            listeners: {
+                toggle: function(c, pressed){
+                    document.mainForm.minor.value = this.minorEdit = pressed;
+                },
+                scope: this
+            }
+        });
         
         this.resetAction = new Ext.Action({
             text: OpenLayers.i18n('reset'),
@@ -121,7 +135,6 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this.editor
         });
-        cmp.push(this.resetAction);
         
         this.cancelAction = new Ext.Action({
             text: OpenLayers.i18n('cancel'),
@@ -131,8 +144,10 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this.editor
         });
-        cmp.push(this.cancelAction);
         
+        cmp.push(this.createViewMenu(), ['-'], this.saveAction, this.checkAction, this.saveAndCloseAction, this.minorCheckbox, 
+                ['->'], this.resetAction, this.cancelAction);
+
         GeoNetwork.editor.EditorToolbar.superclass.initComponent.call(this);
         
         this.add(cmp);
@@ -143,6 +158,13 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             Ext.getCmp('type_y').setChecked(isTemplate);
             Ext.getCmp('type_n').setChecked(!isTemplate);
         }
+    },
+    setIsMinor: function(minor){
+        var state = true;
+        if (minor==='' || minor==='false') {
+            state = false;
+        }
+        this.minorCheckbox.toggle(state);
     },
     /**
      * Unused menu
