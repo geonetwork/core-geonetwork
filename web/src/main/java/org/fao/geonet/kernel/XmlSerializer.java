@@ -209,41 +209,35 @@ public class XmlSerializer {
      * @param id
      * @param xml
      * @param changeDate
-     * @param minor
+     * @param updateDateStamp
      *
      * @throws SQLException
      */
-	public static void update(Dbms dbms, String id, Element xml, String changeDate, String minor) throws SQLException {
+	public static void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
         String queryMinor = "UPDATE Metadata SET data=?, root=? WHERE id=?";
-          if (minor == null) {
-              minor = "";
-          }
 
 		Vector<Serializable> args = new Vector<Serializable>();
 
 		fixCR(xml);
 		args.add(Xml.getString(xml));
 
-        if (minor.equals("")) {
+        if (updateDateStamp) {
             if (changeDate == null)	{
                 args.add(new ISODate().toString());
-            }
-            else {
+            } else {
                 args.add(changeDate);
             }
         }
-        System.out.println("valeur de mineur "+minor);
 
  		args.add(xml.getQualifiedName());
 		args.add(new Integer(id));
 
-        if (minor.equals(""))  {
+        if (updateDateStamp)  {
             dbms.execute(query, args.toArray());
-        }
-        else {
+        } else {
             dbms.execute(queryMinor, args.toArray());
         }
 	}

@@ -207,7 +207,9 @@ public class XslProcessing implements Service {
                 boolean ufo = true;
                 boolean index = true;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(session, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), null);
+                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
+                boolean updateDateStamp = true;
+                dataMan.updateMetadata(session, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
     			if (useIndexGroup) {
     				dataMan.indexMetadataGroup(dbms, id);
     			}

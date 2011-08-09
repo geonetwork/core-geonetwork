@@ -296,7 +296,7 @@ public class Aligner
                 boolean index = false;
                 String language = context.getLanguage();
                 UserSession session = null;
-				dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate, null);
+				dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
 
 				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
 				addPrivileges(id);

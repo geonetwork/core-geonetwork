@@ -81,7 +81,7 @@ public class Update implements Service
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
-        String minor      = params.getChildText(Params.MINOREDIT);
+        String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
 		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
@@ -94,9 +94,10 @@ public class Update implements Service
 
                 String changeDate = null;
                 boolean validate = showValidationErrors.equals("true");
+                boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, minor)) {
+				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
 					throw new ConcurrentUpdateEx(id);
 				}
 			}
@@ -116,7 +117,9 @@ public class Update implements Service
         if(justCreated) {
             elResp.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
         }
-		//--- if finished then remove the XML from the session
+        elResp.addContent(new Element(Params.MINOREDIT).setText(minor));
+        
+        //--- if finished then remove the XML from the session
 		if (finished) {
 			ajaxEditUtils.removeMetadataEmbedded(session, id);
 		}

@@ -131,10 +131,9 @@ class EditUtils {
      */
 	public void updateContent(Element params, boolean validate, boolean embedded) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        String minor   = null;
 		String id      = Util.getParam(params, Params.ID);
 		String version = Util.getParam(params, Params.VERSION);
-        minor = params.getChildText(Params.MINOREDIT);
+        String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
 		//--- build hashtable with changes
 		//--- each change is a couple (pos, value)
@@ -161,17 +160,19 @@ class EditUtils {
         boolean ufo = true;
         // whether to index on update
         boolean index = true;
+        
+        boolean updateDateStamp = !minor.equals("true");
         String changeDate = null;
 		if (embedded) {
             Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges, version);
             if(updatedMetada != null) {
-                result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, minor);
+                result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
             }
    		}
         else {
             Element updatedMetada = applyChanges(dbms, id, htChanges, version);
             if(updatedMetada != null) {
-			    result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, minor);
+			    result = dataManager.updateMetadata(context.getUserSession(), dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
             }
 		}
 		if (!result) {

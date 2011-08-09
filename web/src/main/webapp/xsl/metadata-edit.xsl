@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	exclude-result-prefixes="geonet">
 
@@ -91,7 +91,7 @@
 							<input class="md" type="hidden" name="licenseurl"/>
 							<input class="md" type="hidden" name="type"/>
 							<input class="md" type="hidden" name="editing" value="{geonet:info/id}"/>
-                            <input class="md" type="hidden" name="minor" id="minor"/>
+						  <input class="md" type="hidden" name="minor" id="minor" value="{/root/request/minor}"/>
 							<input class="md" type="hidden" name="child"/>
 							<input class="md" type="hidden" name="fname"/>
 							<input class="md" type="hidden" name="access"/>
@@ -220,7 +220,11 @@
             </xsl:otherwise>
         </xsl:choose>
         <!-- minor edit button -->
-        <input type="checkbox" id="minorEdit" name="minorEdit" onchange="$('minor').value = this.checked"></input>
+	  <input type="checkbox" id="minorEdit" name="minorEdit" onchange="$('minor').value = this.checked">
+	    <xsl:if test="/root/request/minor='true'">
+	      <xsl:attribute name="checked">checked</xsl:attribute>
+	    </xsl:if>
+	  </input>
         <label for="minorEdit"><xsl:value-of select="/root/gui/strings/minor"/></label>
 		
 		
