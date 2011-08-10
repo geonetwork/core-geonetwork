@@ -27,6 +27,20 @@
     <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
     <script type="text/javascript" language="JavaScript">
       var catalogue;
+      
+      OpenLayers.ProxyHostURL = '../../proxy?url=';
+      
+      OpenLayers.ProxyHost = function(url){
+          /**
+           * Do not use proxy for local domain.
+           * This is required to keep the session activated.
+           */
+          if (url &amp;&amp; url.indexOf(window.location.host) != -1) {
+              return url;
+          } else {
+              return OpenLayers.ProxyHostURL + encodeURIComponent(url);
+          }
+      };
       Ext.onReady(function(){
         GeoNetwork.Util.setLang('<xsl:value-of select="/root/gui/language"/>');
         
