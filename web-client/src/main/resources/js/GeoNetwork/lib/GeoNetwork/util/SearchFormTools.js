@@ -815,7 +815,7 @@ GeoNetwork.util.SearchFormTools = {
             name: 'B_paper'
         }, {
             hideLabel: true,
-            boxLabel: OpenLayers.i18n('download'),
+            boxLabel: OpenLayers.i18n('downloadable'),
             name: 'B_download'
         }, {
             hideLabel: true,

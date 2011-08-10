@@ -177,6 +177,7 @@ GeoNetwork.lang.en = {
     'digital': 'Digital',
     'hardCopy': 'Hard copy',
     'download': 'Download',
+    'downloadable': 'Download',
     'interactive': 'Interactive',
     'resourceType': 'Resource type',
     'dataset': 'Dataset',
