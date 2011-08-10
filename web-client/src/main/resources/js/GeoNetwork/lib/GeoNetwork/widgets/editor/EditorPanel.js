@@ -754,12 +754,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             text: OpenLayers.i18n(action) + ' (' + action + ')'
         });
     },
-    failureCallback: function(el, response){
-    
-    },
-    successCallback: function(el, response){
-    
-    },
     closeCallback: function(){
         this.onEditorClosed();
         this.ownerCt.hide();
@@ -999,6 +993,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
         }
     },
+    /**
+     * Populate the toolbar view menu with the list of available views according
+     * to the metadata tabs defined in the returned HTML page and register the
+     * switchTab action.
+     */
     updateViewMenu: function(){
         var modes = Ext.query('span.mode', this.body.dom),
             menu = [],
@@ -1008,6 +1007,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             if (modes[i].firstChild) {
                 var id = modes[i].getAttribute('id');
                 var next = Ext.get(modes[i]).next();
+                var label = modes[i].innerHTML;
                 var tabs = next.query('LI');
                 var current = next.query('LI[id=' + document.mainForm.currTab.value + ']');
                 var activeMode = current.length === 1;
@@ -1029,7 +1029,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         }
                     }
                 }
-                menu.push([modes[i].innerHTML, id, activeMode]);
+                menu.push([label, id, activeMode]);
             }
         }
         this.toolbar.updateViewMenu(menu);

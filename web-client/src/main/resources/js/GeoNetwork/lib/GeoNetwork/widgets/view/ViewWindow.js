@@ -124,6 +124,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         for (i = 0; i < modes.length; i++) {
             if (modes[i].firstChild) {
                 var id = modes[i].getAttribute('id');
+                var label = modes[i].innerHTML;
                 var next = Ext.get(modes[i]).next();
                 var tabs = next.query('LI');
                 var current = next.query('LI[id=' + this.currTab + ']');
@@ -147,8 +148,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
                         }
                     }
                 }
-                
-                menu.push([modes[i].innerHTML, id, activeMode]);
+                menu.push([label, id, activeMode]);
             }
         }
         this.updateToolbar(menu);
