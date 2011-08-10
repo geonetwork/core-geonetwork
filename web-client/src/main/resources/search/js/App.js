@@ -488,7 +488,7 @@ GeoNetwork.app = function(){
                     },
                     scope: this
                 }],
-                title: translate('Editor'),
+                title: OpenLayers.i18n('mdEditor'),
                 id : 'editorWindow',
                 layout: 'fit',
                 modal: false,
