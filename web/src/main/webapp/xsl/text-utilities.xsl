@@ -146,7 +146,7 @@
 		<xsl:choose>
 			<!-- http links -->
 			<xsl:when test="substring($word-to-use, 0, 8) = 'http://'">
-				<a style="font-weight:bolder;">
+				<a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="$word-to-use"/>
 					</xsl:attribute>
@@ -158,7 +158,7 @@
 			</xsl:when>			
 			<!-- https links -->
 			<xsl:when test="substring($word-to-use, 0, 9) = 'https://'">
-				<a style="font-weight:bolder;">
+				<a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="$word-to-use"/>
 					</xsl:attribute>
@@ -170,7 +170,7 @@
 			</xsl:when>
 			<!-- ftp links -->
 			<xsl:when test="substring($word-to-use, 0, 7) = 'ftp://'">
-				<a style="font-weight:bolder;">
+				<a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="$word-to-use"/>
 					</xsl:attribute>
@@ -182,7 +182,7 @@
 			</xsl:when>
 			<!-- mailto links -->
 			<xsl:when test="contains($word-to-use, '@')">
-				<a style="font-weight:bolder;">
+				<a>
 					<xsl:attribute name="href">
 						<xsl:text>mailto:</xsl:text><xsl:value-of select="$word-to-use"/>
 					</xsl:attribute>

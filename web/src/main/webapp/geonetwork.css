@@ -67,6 +67,10 @@ a {
 	color: #064377;
 }
 
+td.padded a {
+  font-weight: bolder;
+}
+
 a:hover
 {
 	text-decoration: underline;
