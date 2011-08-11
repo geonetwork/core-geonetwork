@@ -24,9 +24,13 @@
       </xsl:with-param>
       <xsl:with-param name="exportButton"/>
       <xsl:with-param name="abstract">
-        <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:abstract">
-          <xsl:with-param name="langId" select="$langId"/>
-        </xsl:apply-templates>
+        <xsl:call-template name="addHyperlinksAndLineBreaks">
+          <xsl:with-param name="txt">
+            <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:abstract">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:apply-templates>
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="logo">
         <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo"/>

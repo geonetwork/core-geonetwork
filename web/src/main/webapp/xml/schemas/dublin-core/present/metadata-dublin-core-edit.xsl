@@ -27,7 +27,13 @@
     <xsl:call-template name="md-content">
       <xsl:with-param name="title" select="//dc:title"/>
       <xsl:with-param name="exportButton"/>
-      <xsl:with-param name="abstract" select="dc:description/text()"/>
+      <xsl:with-param name="abstract">
+        <xsl:call-template name="addHyperlinksAndLineBreaks">
+          <xsl:with-param name="txt">
+            <xsl:value-of select="dc:description/text()"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="logo">
         <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo"/>
       </xsl:with-param>
