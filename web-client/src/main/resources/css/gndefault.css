@@ -6,6 +6,9 @@ body {
   font-size : 12px;
   background-color : #fff !important;
 }
+a {
+  color: #0076A1;
+}
 p {
   margin-bottom : 15px;
 }

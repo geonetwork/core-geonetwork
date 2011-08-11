@@ -1,4 +1,6 @@
-
+.metadata a {
+  font-weight : bold;
+}
 
 /* Specific elements */
 .title {

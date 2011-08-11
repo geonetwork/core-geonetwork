@@ -121,9 +121,28 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
     /** api: property[checkBt] 
      */
     checkBt: null,
+    /** api: property[protocols] List of protocols to be added to the online source section 
+     */
+    protocols: {
+        wms: {
+            checked: true,
+            label: 'OGC:WMS',
+        },
+        wfs: {
+            checked: false,
+            label: 'OGC:WFS'
+        },
+        wcs: {
+            checked: false,
+            label: 'OGC:WCS'
+        },
+    },
     /** api: property[addOnLineSourceBt] 
      */
     addOnLineSourceBt: null,
+    /** api: property[addOnLineSourceMenu] 
+     */
+    addOnLineSourceMenu: null,
     /** api: property[enableStyler] 
      */
     enableStyler: false,
@@ -155,6 +174,8 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
             name: 'wmsUrl'
         }, {
             name: 'wfsUrl'
+        }, {
+            name: 'wcsUrl'
         }, {
             name: 'stylerUrl'
         }, {
@@ -324,17 +345,41 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
         /**
          * Add online source information to current metadata record.
          */
-        this.addOnLineSourceBt = new Ext.Button({
+        this.addOnLineSourceBt = {
             text: OpenLayers.i18n('addOnlineSource'),
-            iconCls: 'processMetadata',
             tooltip: '',
+            iconCls: 'processMetadata',
             handler: function(){
                 var node = this.geoserverStore.getById(this.nodeId);
-                this.fireEvent('addOnLineSource', this, node.get('wmsUrl'), node.get('namespacePrefix') +
-                ":" +
-                this.layerName, '');
+                this.fireEvent('addOnLineSource', this, node, this.protocols);
             },
             scope: this
+        };
+        
+        // Create protocols check item
+        var items = [];
+        for (p in this.protocols) {
+            if (this.protocols.hasOwnProperty(p)) {
+                var item = this.protocols[p];
+                items.push({
+                    text: item.label,
+                    canActivate: false,
+                    hideOnClick: false,
+                    checked: item.checked,
+                    checkHandler: this.protocolChecked,
+                    scope: item
+                });
+            }
+        }
+        items.push('-', this.addOnLineSourceBt);
+        
+        this.addOnLineSourceMenu = new Ext.Button({
+            iconCls: 'processMetadata',
+            text: OpenLayers.i18n('addOnlineSourceTitle'),
+            tooltip: OpenLayers.i18n('addOnlineSourceTT'),
+            menu: new Ext.menu.Menu({
+                items: items
+            })
         });
         
         /**
@@ -359,7 +404,8 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
         });
         
         this.geoPublicationTb = new Ext.Toolbar({
-            items: [this.getGeoserverCombo(), this.checkBt, this.publishBt, this.unpublishBt, this.addOnLineSourceBt, this.stylerBt]
+            items: [this.getGeoserverCombo(), this.checkBt, this.publishBt, this.unpublishBt, 
+                    this.addOnLineSourceMenu, this.stylerBt]
         });
         
         this.statusBar = new Ext.form.Label({
@@ -505,6 +551,11 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
             this.checkBt.fireEvent('click');
         }
     },
+    /** private: method[procolChecked]
+     */
+    protocolChecked: function(item, checked){
+        this.checked = checked;
+    },
     /** private: method[updatePrivileges]
      *
      *  step=null Check only available.
@@ -519,7 +570,7 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
         }
         this.publishBt.disable();
         this.unpublishBt.disable();
-        this.addOnLineSourceBt.disable();
+        this.addOnLineSourceMenu.disable();
         this.stylerBt.disable();
         
         switch (step) {
@@ -529,7 +580,7 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
         case 1:
             this.publishBt.enable();
             this.unpublishBt.enable();
-            this.addOnLineSourceBt.enable();
+            this.addOnLineSourceMenu.enable();
             
             if (this.fileName.indexOf('tif') !== -1 || 
                     !this.enableStyler) {
