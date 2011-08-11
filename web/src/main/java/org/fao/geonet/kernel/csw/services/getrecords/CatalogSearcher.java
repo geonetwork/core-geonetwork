@@ -82,7 +82,7 @@ public class CatalogSearcher {
 	private HashMap<String, LuceneConfigNumericField> _numericFieldSet;
 	private FieldSelector _selector;
 	private Query         _query;
-	private IndexReader   _reader;
+	private volatile IndexReader   _reader;
 	private CachingWrapperFilter _filter;
 	private Sort          _sort;
 	private String        _lang;
@@ -343,8 +343,10 @@ public class CatalogSearcher {
 		String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
 		if ((sessionRequestId != null && !sessionRequestId.equals(requestId)) || sessionRequestId == null) {
 			Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
-			if (_reader != null) sm.releaseIndexReader(_reader);
-			_reader = sm.getIndexReader();
+			synchronized(this) {
+				if (_reader != null) sm.releaseIndexReader(_reader);
+					_reader = sm.getIndexReader();
+			}
 		}
 
 		if (luceneExpr != null) {
