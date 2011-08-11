@@ -19,6 +19,8 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
 
 GeoNetwork.lang.en = {
+    'connectIssue': "Catalogue connection issue",
+    'connectIssueMsg': "Error 404. Can't connect to catalogue at url ",
     'featureInfoTooltipTitle': "Feature info",
     'featureInfoTooltipText': "Click in the map to get feature info from all visible layers.",
     'zoomToMaxExtentTooltipTitle': "Full extent",
@@ -110,6 +112,7 @@ GeoNetwork.lang.en = {
     'gazetteerAddressField4Label': "'Gemeente'",
     'gazetteerAddressField5Label': "House number",
     'searchOptionButton': "Search",
+    'resetSearchForm': "Reset search form values.",
     'GazetteerWindowTitle': "Search for address",
     'searchResults': "Search results",
     'errorTitle': "Error",

@@ -232,6 +232,24 @@ GeoNetwork.app = function(){
         // Add advanced mode criteria to simple form - end
         
         
+        // Hide or show extra fields after login event
+        var adminFields = [groupField, metadataTypeField, validField];
+        Ext.each(adminFields, function(item){
+            item.setVisible(false);
+        });
+        
+        catalogue.on('afterLogin', function(){
+            Ext.each(adminFields, function(item){
+                item.setVisible(true);
+            });
+        });
+        catalogue.on('afterLogout', function(){
+            Ext.each(adminFields, function(item){
+                item.setVisible(false);
+            });
+        });
+        
+        
         return new Ext.FormPanel({
             id: 'searchForm',
             border: false,
@@ -247,7 +265,7 @@ GeoNetwork.app = function(){
             },
             items: formItems,
             buttons: [{
-                tooltip: 'Reset search form values.',
+                tooltip: OpenLayers.i18n('resetSearchForm'),
                 // iconCls: 'md-mn-reset',
                 id: 'resetBt',
                 icon: '../images/default/cross.png',
@@ -551,15 +569,15 @@ GeoNetwork.app = function(){
             
             // Override xml search service value
             catalogue.setServiceUrl('xmlSearch', GeoNetwork.Settings.searchService);
+
+            // Search form
+            searchForm = createSearchForm();
             
             // Top navigation widgets
             createModeSwitcher();
             createLanguageSwitcher(lang);
             createLoginForm();
             edit();
-            
-            // Search form
-            searchForm = createSearchForm();
             
             // Search result
             resultsPanel = createResultsPanel();

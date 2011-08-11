@@ -19,6 +19,8 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'connectIssue': "Échec de connexion au catalogue",
+    'connectIssueMsg': "Erreur 404. Impossible de se connecter à l'URL ",
     'featureInfoTooltipTitle': "caractéristique",
     'featureInfoTooltipText': "Cliquer sur la carte pour obtenir des informations sur les données affichees.",
     'zoomToMaxExtentTooltipTitle': "Zoom optimal",
@@ -110,6 +112,7 @@ GeoNetwork.Lang.fr = {
     'searchOptionButton': "Recherche",
     'GazetteerWindowTitle': "Résultat pour l'adresse",
     'searchResults': "Recherche les résultats",
+    'resetSearchForm': "Réinitialiser le formulaire de recherche.",
     'errorTitle': "Erreur",
     'SearchOptionLoadFailureMsg': "Pas de résultats trouvés. \n Le serveur peut être indisponible. \n",
     'gazetteerTooltipTitle': "Recherche basée sur l'adresse",

@@ -51,7 +51,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  Create a simple form
      */
-    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent){
+    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist){
         var fields = [];
         if (services) {
             fields.push(new GeoNetwork.form.OpenSearchSuggestionTextField({
@@ -67,7 +67,7 @@ GeoNetwork.util.SearchFormTools = {
         }
         
         if (withTypes) {
-            fields.push(GeoNetwork.util.SearchFormTools.getTypesField());
+            fields.push(GeoNetwork.util.SearchFormTools.getTypesField(typeCodelist));
         }
         
         if (layers) {
@@ -851,10 +851,12 @@ GeoNetwork.util.SearchFormTools = {
     /** api:method[getTypesField]
      *  :return: Type selection using combo box based
      *  on hierarchy level values.
-     *
-     *  // TODO : Add other options
      */
-    getTypesField: function(){
+    getTypesField: function(codeList){
+        var defaultCodeList = [['dataset', OpenLayers.i18n('dataset')], 
+                               ['series', OpenLayers.i18n('series')],
+                               ['service', OpenLayers.i18n('service')]];
+        
         var metadataType = new Ext.form.ComboBox({
             name: 'E_type',
             mode: 'local',
@@ -864,9 +866,7 @@ GeoNetwork.util.SearchFormTools = {
             store: new Ext.data.ArrayStore({
                 id: 0,
                 fields: ['id', 'name'],
-                data: [['dataset', OpenLayers.i18n('dataset')], 
-                        ['series', OpenLayers.i18n('series')],
-                        ['service', OpenLayers.i18n('service')]]
+                data: codeList || defaultCodeList
             }),
             valueField: 'id',
             displayField: 'name'
@@ -890,8 +890,6 @@ GeoNetwork.util.SearchFormTools = {
                        ['vector', OpenLayers.i18n('vector')], 
                        ['video', OpenLayers.i18n('video')]];
         
-        codeList = codeList || defaultCodeList;
-        
          var spatialRepresentationType = new Ext.form.ComboBox({
             name: 'E_spatialRepresentationType',
             mode: 'local',
@@ -901,7 +899,7 @@ GeoNetwork.util.SearchFormTools = {
             store: new Ext.data.ArrayStore({
                 id: 0,
                 fields: ['id', 'name'],
-                data: codeList
+                data: codeList || defaultCodeList
             }),
             valueField: 'id',
             displayField: 'name'

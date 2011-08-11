@@ -976,8 +976,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             this.onAfterLogin();
             return true;
         } else if (response.status === 404) {
-            this.showError('Catalogue connection issue', 
-                'Error 404. Can\'t connect to catalogue at url ' + this.services.rootUrl + 'main.home.');
+            this.showError(OpenLayers.i18n('connectIssue'), 
+                OpenLayers.i18n('connectIssueMsg') + this.services.rootUrl + '.');
         } else if (exception) {
             this.checkError();
         } else {
