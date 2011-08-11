@@ -438,6 +438,12 @@ div.button {
 .attachedAdd {
   background-image : url(../images/default/folder_go.png) !important;
 }
+.uploadIconAdd {
+  background-image : url(../images/default/folder_page_white.png) !important;
+}
+.uploadIcon {
+  background-image : url(../images/default/folder_go.png) !important;
+}
 .suggestionIcon {
   background-image : url(../images/default/cog.png) !important;
 }

@@ -183,7 +183,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     name: 'f_' + ref,
                     buttonText: '',
                     buttonCfg: {
-                        iconCls: 'upload-icon'
+                        iconCls: 'uploadIconAdd'
                     }
                 }],
                 buttons: [{
