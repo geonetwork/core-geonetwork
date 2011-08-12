@@ -197,15 +197,15 @@ INSERT INTO CategoriesDes VALUES (7,'tr','Fotoğraf');
 INSERT INTO CategoriesDes VALUES (8,'tr','Ses/Video');
 INSERT INTO CategoriesDes VALUES (9,'tr','Dizinler');
 INSERT INTO CategoriesDes VALUES (10,'tr','Diğer bilgi kaynakları');
-INSERT INTO CategoriesDes VALUES (1,'fi','Maps & graphics');
-INSERT INTO CategoriesDes VALUES (2,'fi','Datasets');
-INSERT INTO CategoriesDes VALUES (3,'fi','Interactive resources');
-INSERT INTO CategoriesDes VALUES (4,'fi','Applications');
-INSERT INTO CategoriesDes VALUES (5,'fi','Case studies, best practices');
-INSERT INTO CategoriesDes VALUES (6,'fi','Conference proceedings');
-INSERT INTO CategoriesDes VALUES (7,'fi','Photo');
-INSERT INTO CategoriesDes VALUES (8,'fi','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'fi','Directories');
+INSERT INTO CategoriesDes VALUES (1,'fi','Kartat & kuvat');
+INSERT INTO CategoriesDes VALUES (2,'fi','Tietoaineistot');
+INSERT INTO CategoriesDes VALUES (3,'fi','Vuorovaikutteiset resurssit');
+INSERT INTO CategoriesDes VALUES (4,'fi','Sovellukset');
+INSERT INTO CategoriesDes VALUES (5,'fi','Esimerkkitapaukset, parhaat käytännöt');
+INSERT INTO CategoriesDes VALUES (6,'fi','Konferenssijulkaisut');
+INSERT INTO CategoriesDes VALUES (7,'fi','Valokuvat');
+INSERT INTO CategoriesDes VALUES (8,'fi','Äänitteet / Videot');
+INSERT INTO CategoriesDes VALUES (9,'fi','Hakemistot');
 INSERT INTO CategoriesDes VALUES (10,'fi','Other information resources');
 
 -- ======================================================================
@@ -261,10 +261,10 @@ INSERT INTO GroupsDes VALUES (-1,'tr','Misafir');
 INSERT INTO GroupsDes VALUES (0,'tr','Çevrimiçi');
 INSERT INTO GroupsDes VALUES (1,'tr','Tüm');
 INSERT INTO GroupsDes VALUES (2,'tr','Örnek Grup');
-INSERT INTO GroupsDes VALUES (-1,'fi','Guest');
+INSERT INTO GroupsDes VALUES (-1,'fi','Vierailija');
 INSERT INTO GroupsDes VALUES (0,'fi','Intranet');
-INSERT INTO GroupsDes VALUES (1,'fi','All');
-INSERT INTO GroupsDes VALUES (2,'fi','Sample group');
+INSERT INTO GroupsDes VALUES (1,'fi','Kaikki');
+INSERT INTO GroupsDes VALUES (2,'fi','Ryhmä');
 
 -- ======================================================================
 -- === Table: IsoLanguages
@@ -6156,11 +6156,11 @@ INSERT INTO OperationsDes VALUES (3,'ca','Notificar');
 INSERT INTO OperationsDes VALUES (5,'ca','Mapa interactiu');
 INSERT INTO OperationsDes VALUES (6,'ca','Featured');
 INSERT INTO OperationsDes VALUES (0,'fi','Publish');
-INSERT INTO OperationsDes VALUES (1,'fi','Download');
-INSERT INTO OperationsDes VALUES (2,'fi','Editing');
-INSERT INTO OperationsDes VALUES (3,'fi','Notify');
-INSERT INTO OperationsDes VALUES (5,'fi','Interactive Map');
-INSERT INTO OperationsDes VALUES (6,'fi','Featured');
+INSERT INTO OperationsDes VALUES (1,'fi','Tallenna');
+INSERT INTO OperationsDes VALUES (2,'fi','Muokkaa');
+INSERT INTO OperationsDes VALUES (3,'fi','Merkitse');
+INSERT INTO OperationsDes VALUES (5,'fi','Lisää kartta');
+INSERT INTO OperationsDes VALUES (6,'fi','Nosta etusivulle');
 
 -- ======================================================================
 -- === Table: Regions
