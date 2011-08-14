@@ -644,7 +644,7 @@ function addTemplate(msgSelectSomething, successMsg) {
 						onFailure: function(originalRequest){
 							$(wait).style.display = 'none';
 							$(btn).style.display = 'block';
-							alert(msgFailed);
+							alert('Failed');
 				}
 	});
 }
@@ -730,7 +730,7 @@ function idxOperation(service, wait, btn, warning)
 					        if (resp == "true")
   					          alert (translate('metadata.admin.index.success'));
 					        else
- 					          alert(msgFailed);
+ 					          alert(translate('metadata.admin.index.wait'));
 					      },
 					      onFailure: function(originalRequest){
 					        $(wait).style.display = 'none';

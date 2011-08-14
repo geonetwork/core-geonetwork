@@ -435,6 +435,7 @@
 	<messageNotPerformed>L'operació sol·licitada no s'ha pogut realitzar.</messageNotPerformed>
 	<metadata.admin.index.desc>Regenerar l'índex de Lucene</metadata.admin.index.desc>
 	<metadata.admin.index.failed>No s'ha pogut regenerar l'índex de Lucene.</metadata.admin.index.failed>
+	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.success>La regeneració de l'índex de Lucene s'ha completat amb èxit.</metadata.admin.index.success>
 	<metadata.admin.index.optimize.desc>Optimitzar l'índex de Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>

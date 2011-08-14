@@ -114,6 +114,8 @@ public class Set implements Service
 
 		new ConfigEntry(ConfigEntry.Type.INT,    true,  "selectionmanager/maxrecords",         "system/selectionmanager/maxrecords"),
 
+		new ConfigEntry(ConfigEntry.Type.INT,    true,  "threadedindexing/maxthreads",         "system/threadedindexing/maxthreads"),
+
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "indexoptimizer/enable",  "system/indexoptimizer/enable"),
 		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/hour",  "system/indexoptimizer/at/hour"),
 		new ConfigEntry(ConfigEntry.Type.INT,    true,  "indexoptimizer/at/min",  "system/indexoptimizer/at/min"),

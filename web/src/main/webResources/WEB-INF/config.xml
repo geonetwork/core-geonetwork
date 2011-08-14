@@ -283,6 +283,14 @@
 		<param name="statLogAsynch" value="true" />
 		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
 		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
+
+		<!-- The maximum number of writes in a transaction on the spatial index 
+		     When using PostGIS on machines with fast/large pipe to disk, set 
+				 this number to 1 which means that the auto_commit transaction is
+				 used. Also if having a long running transaction causes issues eg. 
+				 when database connections are reset by a firewall then set this
+				 number to 1 -->
+		<param name="maxWritesInTransaction" value="1" />
 	</appHandler>
 
 	<!-- ====================================================================== -->

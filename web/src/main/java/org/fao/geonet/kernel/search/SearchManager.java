@@ -329,7 +329,7 @@ public class SearchManager
 	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, 
 			String summaryConfigXmlFile, LuceneConfig lc, 
 			boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude, 
-			DataStore dataStore, SettingInfo si, SchemaManager scm) throws Exception
+			DataStore dataStore, int maxWritesInTransaction, SettingInfo si, SchemaManager scm) throws Exception
 	{
 		_scm = scm;
 		_dataDir = dataDir;
@@ -359,7 +359,7 @@ public class SearchManager
 
      _luceneDir.getParentFile().mkdirs();
 
-     _spatial = new Spatial(dataStore);
+     _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
      	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;
@@ -1262,24 +1262,35 @@ public class SearchManager
             }
             _types = Collections.unmodifiableMap(types);
         }
-        private final Transaction                                       _transaction;
-        private final Timer                                             _timer;
-        private final Parser                                            _gmlParser;
-        private final Lock                                              _lock;
-        private SpatialIndexWriter                                      _writer;
-        private Committer                                               _committerTask;
+        private final Transaction                     _transaction;
+        private final int                             _maxWritesInTransaction;
+        private final Timer                           _timer;
+        private final Parser                          _gmlParser;
+        private final Lock                            _lock;
+        private SpatialIndexWriter                    _writer;
+        private Committer                             _committerTask;
 
         /**
          * TODO javadoc.
          *
          * @param dataStore
+         * @param maxWritesInTransaction - Number of features to write 
+				 * to before commit - set 1 and the transaction will be
+				 * autocommit which results in faster loading for some (all?) 
+				 * configurations and does not keep a long running transaction 
+				 * open. 
          * @throws Exception
          */
-        public Spatial(DataStore dataStore) throws Exception
+        public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception
         {
             _lock = new ReentrantLock();
             _datastore = dataStore;
-            _transaction = new DefaultTransaction("SpatialIndexWriter");
+						if (maxWritesInTransaction > 1) {
+            	_transaction = new DefaultTransaction("SpatialIndexWriter");
+						} else {
+            	_transaction = Transaction.AUTO_COMMIT;
+						}
+						_maxWritesInTransaction = maxWritesInTransaction;
             _timer = new Timer(true);
             _gmlParser = new Parser(new GMLConfiguration());
             boolean rebuildIndex;
@@ -1308,7 +1319,7 @@ public class SearchManager
             boolean rebuildIndex;
             try {
                 _writer = new SpatialIndexWriter(datastore, _gmlParser,
-                        _transaction, _lock);
+                        _transaction, _maxWritesInTransaction, _lock);
                 rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             } catch (Exception e) {
 								String exceptionString = Xml.getString(JeevesException.toElement(e));
@@ -1433,7 +1444,7 @@ public class SearchManager
         {
             if (_writer == null) {
                 _writer = new SpatialIndexWriter(_datastore, _gmlParser,
-                        _transaction, _lock);
+                        _transaction, _maxWritesInTransaction, _lock);
             }
             return _writer;
         }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:threadUtils="java:org.fao.geonet.util.ThreadUtils">
 	
 	<!-- ============================================================================================= -->
 
@@ -46,6 +47,7 @@
 		<xsl:call-template name="server"/>
 		<xsl:call-template name="intranet"/>
 		<xsl:call-template name="selectionmanager"/>
+		<xsl:call-template name="threadedindexing"/>
 		<xsl:call-template name="indexoptimizer"/>
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="oai"/>
@@ -332,13 +334,42 @@
 
 	<!-- ============================================================================================= -->
 
+	<xsl:template name="threadedindexing">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/threadedindexing"/></h1>
+
+		<div align="left" style="{$style}">
+			<table>
+				<xsl:variable name="nrProcs" select="threadUtils:getNumberOfProcessors()"/>
+				<td class="padded"><xsl:value-of select="/root/gui/config/maxthreads"/></td>
+				<td class="padded">
+					<input id="threadedindexing.maxthreads" class="content" type="text" size="5">
+						<xsl:if test="$nrProcs='1'">
+							<xsl:attribute name="value">1</xsl:attribute>
+							<xsl:attribute name="style">display:none;</xsl:attribute>
+						</xsl:if>
+					</input>
+					<xsl:if test="$nrProcs='1'">
+						<xsl:value-of select="concat(':  ',$nrProcs,'  (',/root/gui/config/reasonForOne,')')"/>
+					</xsl:if>
+				</td>
+				<xsl:if test="$nrProcs!='1'">
+					<td class="padded">
+						<xsl:value-of select="/root/gui/config/recommendedThreads"/>: <span style="font-weight:bold"><xsl:value-of select="$nrProcs"/></span>&#160;<xsl:value-of select="concat('(',/root/gui/config/reasonForMore,')')"/>
+					</td>
+				</xsl:if>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
 	<xsl:template name="selectionmanager">
 		<h1 align="left"><xsl:value-of select="/root/gui/config/selectionmanager"/></h1>
 
 		<div align="left" style="{$style}">
 			<table>
 				<td class="padded"><xsl:value-of select="/root/gui/config/maxrecords"/></td>
-				<td class="padded"><input id="selection.maxrecords" class="content" type="text" value="" size="20"/></td>
+				<td class="padded"><input id="selection.maxrecords" class="content" type="text" value="" size="10"/></td>
 			</table>
 		</div>
 	</xsl:template>

@@ -11,6 +11,12 @@
 
 	<searchStats>Search Statistics</searchStats>
 
+	<threadedindexing>Multi-threaded Indexing</threadedindexing>
+	<maxthreads>Number of processing threads</maxthreads>
+	<recommendedThreads>Recommended</recommendedThreads>
+	<reasonForOne>Database not tested or doesn't support</reasonForOne>
+	<reasonForMore>From number of processors</reasonForMore>
+
 	<intranet>Локальная сеть</intranet>
 	<network>Адрес</network>
 	<netmask>Маска</netmask>

@@ -703,8 +703,16 @@ function gn_present(frompage, topage)
 }
 
 function gn_search_complete(req) {
+		//if (req.status == 0) {
+		//FIXME: Sometimes status is returned as 0 - must rerun search again
+		// Needs more research as this happens in other javascript places!    
+		//alert('Returned status 0, rerun search');
+		//var GNCookie = Ext.state.Manager.getProvider();
+		//var cookie = GNCookie.get('params');
+		//var params = cookie.searchParams;
+		//gn_search(params);
+		//}
     var rlist = $('resultList');
-
     rlist.innerHTML = req.responseText;
 
     $('loadingMD').hide();

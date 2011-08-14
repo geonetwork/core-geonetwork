@@ -36,6 +36,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
@@ -53,6 +54,7 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -72,6 +74,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.BlockingQueue; 
+import java.util.concurrent.Executors; 
+import java.util.concurrent.ExecutorService;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -195,8 +200,7 @@ public class DataManager {
 		// if anything to index then schedule it to be done after servlet is
 		// up so that any links to local fragments are resolvable
 		if ( toIndex.size() > 0 ) {
-			Timer t = new Timer();
-			t.schedule(new IndexMetadataTask(context, toIndex), 10);
+			startThreadsToReindex(context,toIndex);
 		}
 
 		if (docs.size() > 0) { // anything left?
@@ -230,40 +234,84 @@ public class DataManager {
 			Processor.clearCache();	
 
 			// execute indexing operation
-			Timer t = new Timer();
-			t.schedule(new IndexMetadataTask(context, toIndex), 10);
+			startThreadsToReindex(context,toIndex);
 		}
 	}
 
     /**
-     *
+     * Splits a list of metadata ids into groups and assigned them to threads
+		 * for reindexing.
+		 *
+     * @param context
+     * @param ids
      */
-	class IndexMetadataTask extends TimerTask {
-		ServiceContext context;
-		ArrayList<Integer> toIndex;
-
-        IndexMetadataTask(ServiceContext context, ArrayList<Integer> toIndex) {
-			this.context = context;
-			this.toIndex = toIndex;
-		}
-
-		public void run() {
+	public void startThreadsToReindex(ServiceContext context, ArrayList<Integer> ids) {
 
 			try {
 
+				// split reindexing task according to number of processors we can
+				// assign
+				int threadCount = ThreadUtils.getNumberOfThreads();
+    		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+				int perThread;
+    		if (ids.size() < threadCount) perThread = ids.size();
+    		else perThread = ids.size() / threadCount;
+    		int index = 0;
+
+    		while(index < ids.size()) {
+      		int start = index;
+      		int count = Math.min(perThread,ids.size()-start);
+      		// create threads to process this chunk of ids
+      		Runnable worker = new IndexMetadataTask(context, ids, start, count);
+      		executor.execute(worker);
+      		index += count;
+    		}
+
+    		executor.shutdown();
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+
+				finishRebuilding();
+			}
+		}
+
+  /**
+    * Task to reindex the entire catalog at startup or from the 
+	  * Administration menu. Creates number of threads according to 
+		* number allocated to JVM.
+    */
+	class IndexMetadataTask implements Runnable {
+
+		private final ServiceContext context;
+		private final ArrayList<Integer> ids;
+		private final int beginIndex, count;
+
+		IndexMetadataTask(ServiceContext context, ArrayList<Integer> ids, int beginIndex, int count) {
+			this.context = context;
+			this.ids = ids;
+			this.beginIndex = beginIndex;
+			this.count = count;
+		}
+
+		@Override
+    public void run() {
+			try {
+				Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 				// poll context to see whether servlet is up yet
 				while (!context.isServletInitialized()) {
 					Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing.."); 
 					Thread.sleep(10000); // sleep 10 seconds
 				}
-
+	
 				// servlet up so safe to index all metadata that needs indexing
-
-				Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 				startIndexGroup();
 				try {
-					for ( Integer id : toIndex ) {
-						indexMetadataGroup(dbms, id.toString());
+     			for(int i=beginIndex; i<beginIndex+count; i++) {
+						indexMetadataGroup(dbms, ids.get(i).toString());
 					}
 				} finally {
 					endIndexGroup();
@@ -273,12 +321,12 @@ public class DataManager {
 				//-- to avoid exhausting Dbms pool
 				context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
 			} catch (Exception e) {
+				Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
 				e.printStackTrace();
-			} finally {
-				finishRebuilding();
 			}
-		}
-	}
+    }
+
+  }
 
     /**
      *

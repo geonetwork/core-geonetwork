@@ -33,6 +33,12 @@
 	<surname>Nom</surname>
 	<firstname>Prénom</firstname>
 	
+	<threadedindexing>Multi-threaded Indexing</threadedindexing>
+	<maxthreads>Number of processing threads</maxthreads>
+	<recommendedThreads>Recommended</recommendedThreads>
+	<reasonForOne>Database not tested or doesn't support</reasonForOne>
+	<reasonForMore>From number of processors</reasonForMore>
+
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>

@@ -20,9 +20,8 @@ import java.io.IOException;
 
 public class LuceneIndexReaderFactory {
 
-  private IndexReader currentReader;
+  private volatile IndexReader currentReader;
   private boolean reopening;
-	private Object mutex = new Object(); // for debugging
 
 	//===========================================================================
 	// Constructor
@@ -73,7 +72,7 @@ public class LuceneIndexReaderFactory {
 
     startReopen();
     try {
-       IndexReader newReader = currentReader.reopen(); 
+       final IndexReader newReader = currentReader.reopen(); 
        if (newReader != currentReader) {
 				warm(newReader);
        	swapReader(newReader);

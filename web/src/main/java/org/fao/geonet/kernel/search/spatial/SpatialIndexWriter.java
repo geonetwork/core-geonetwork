@@ -80,17 +80,29 @@ public class SpatialIndexWriter
     static final String                                          IDS_ATTRIBUTE_NAME        = "id";
     static final String                                          GEOM_ATTRIBUTE_NAME       = "the_geom";
     static final String                                          SPATIAL_INDEX_TYPENAME    = "spatialindex";
-    private static final int                                     MAX_WRITES_IN_TRANSACTION = 5000;
+    public static final int                                      MAX_WRITES_IN_TRANSACTION = 5000;
 
-    private final Parser                                         _parser;
-    private final Transaction                                    _transaction;
-    private final Lock                                           _lock;
-    private FeatureStore<SimpleFeatureType, SimpleFeature>       _featureStore;
-    private STRtree                                              _index;
-    private static int                                           _writes;
+    private final Parser                              _parser;
+    private final Transaction                         _transaction;
+    private final  int                                _maxWrites;
+    private final Lock                                _lock;
+    private FeatureStore<SimpleFeatureType, SimpleFeature> _featureStore;
+    private STRtree                                   _index;
+    private static int                                _writes;
 
+		/**
+			* TODO: javadoc.
+			* 
+			* @param dataStore
+			* @param parser
+			* @param transaction
+			* @param maxWrites Maximum number of writes in a transaction. If set to
+			* 1 then AUTO_COMMIT is being used.
+			* @param lock
+			*/
     public SpatialIndexWriter(DataStore datastore, Parser parser,
-            Transaction transaction, Lock lock) throws Exception
+            Transaction transaction, int maxWrites, Lock lock) 
+						throws Exception
     {
         // Note: The Configuration takes a long time to create so it is worth
         // re-using the same Configuration
@@ -99,6 +111,7 @@ public class SpatialIndexWriter
         _parser.setStrict(false);
         _parser.setValidating(false);
         _transaction = transaction;
+				_maxWrites = maxWrites;
 
         _featureStore = createFeatureStore(datastore);
         _featureStore.setTransaction(_transaction);
@@ -140,7 +153,7 @@ public class SpatialIndexWriter
 
                 _writes++;
 
-                if (_writes > MAX_WRITES_IN_TRANSACTION) {
+                if (_writes > _maxWrites) {
                     _transaction.commit();
                     _writes = 0;
                 }

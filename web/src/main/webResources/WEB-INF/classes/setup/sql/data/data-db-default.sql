@@ -9001,6 +9001,8 @@ INSERT INTO Settings VALUES (912,910,'enableIsoView','${geonetwork.metadata.enab
 INSERT INTO Settings VALUES (913,910,'enableInspireView','${geonetwork.metadata.enableInspireView}');
 INSERT INTO Settings VALUES (914,910,'enableXmlView','${geonetwork.metadata.enableXmlView}');
 INSERT INTO Settings VALUES (915,910,'defaultView','${geonetwork.metadata.defaultView}');
+INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
+INSERT INTO Settings VALUES (921,920,'maxthreads','1');
 
 -- ======================================================================
 -- === Table: Users

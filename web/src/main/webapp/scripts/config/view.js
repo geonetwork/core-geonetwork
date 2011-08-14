@@ -24,6 +24,8 @@ function ConfigView(strLoader)
 
 		{ id:'selection.maxrecords',   type:'integer',  minValue:1000, maxValue:10000, empty:false },
 
+		{ id:'threadedindexing.maxthreads',   type:'integer',  minValue:1, maxValue:10, empty:false },
+
 		{ id:'indexoptimizer.at.hour',   type:'integer',  minValue:0, maxValue:23, empty:false }, 
 		{ id:'indexoptimizer.at.min',   type:'integer',  minValue:0, maxValue:59, empty:false }, 
 		{ id:'indexoptimizer.at.sec',   type:'integer',  minValue:0, maxValue:59, empty:false }, 
@@ -205,6 +207,8 @@ ConfigView.prototype.setData = function(data)
 
 	$('selection.maxrecords')  .value   = data['SELECTION_MAXRECORDS'];
 
+	$('threadedindexing.maxthreads')  .value   = data['THREADEDINDEXING_MAXTHREADS'];
+
 	$('indexoptimizer.enable').checked = data['INDEXOPTIMIZER_ENABLE'] == 'true';
 	$('indexoptimizer.at.hour').value = data['INDEXOPTIMIZER_AT_HOUR'];
 	$('indexoptimizer.at.min').value  = data['INDEXOPTIMIZER_AT_MIN'];
@@ -319,6 +323,8 @@ ConfigView.prototype.getData = function()
 		DOWNLOADSERVICE_LEAVE : $('downloadservice.leave').checked,
 
 		SELECTION_MAXRECORDS   : $('selection.maxrecords')  .value,
+
+		THREADEDINDEXING_MAXTHREADS   : $('threadedindexing.maxthreads')  .value,
 
 		INDEXOPTIMIZER_ENABLE: $('indexoptimizer.enable')  .checked,
 		INDEXOPTIMIZER_AT_HOUR: $('indexoptimizer.at.hour').value,

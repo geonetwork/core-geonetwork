@@ -61,6 +61,7 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -70,6 +71,7 @@ import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
+import org.fao.geonet.util.ThreadUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.postgis.PostgisDataStoreFactory;
 import org.geotools.data.shapefile.indexed.IndexType;
@@ -288,10 +290,19 @@ public class Geonetwork implements ApplicationHandler
         logger.info(lc.toString());
         
 		DataStore dataStore = createDataStore(context.getResourceManager().getProps(Geonet.Res.MAIN_DB), luceneDir);
+		String maxWritesInTransactionStr = handlerConfig.getMandatoryValue(Geonet.Config.MAX_WRITES_IN_TRANSACTION);
+		int maxWritesInTransaction = SpatialIndexWriter.MAX_WRITES_IN_TRANSACTION;
+		try {
+			maxWritesInTransaction = Integer.parseInt(maxWritesInTransactionStr);
+		} catch (NumberFormatException nfe) {
+			logger.error ("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction), Using "+maxWritesInTransaction+" instead.");
+			nfe.printStackTrace();
+		}
 	
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, lc, 
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
-				dataStore, new SettingInfo(settingMan), schemaMan);
+				dataStore, maxWritesInTransaction, 
+				new SettingInfo(settingMan), schemaMan);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -384,7 +395,11 @@ public class Geonetwork implements ApplicationHandler
 			String  password       = settingMan.getValue("system/proxy/password");
 			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
 		}
-		
+	
+		//--- initialize ThreadUtils with setting manager and rm props
+		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
+		              	 settingMan); 
+
 		return gnContext;
 	}
 

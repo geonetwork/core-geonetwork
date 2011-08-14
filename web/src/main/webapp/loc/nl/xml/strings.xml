@@ -592,6 +592,7 @@
 	<metadata.admin.index.desc>Vernieuw Lucene index</metadata.admin.index.desc>
 	<metadata.admin.index.failed js="true">Index operation failed.</metadata.admin.index.failed>
 	<metadata.admin.index.success js="true">Index operation was successful.</metadata.admin.index.success>
+	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>

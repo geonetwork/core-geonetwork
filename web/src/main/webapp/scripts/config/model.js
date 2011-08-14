@@ -38,6 +38,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 
 			SELECTION_MAXRECORDS : xml.evalXPath(node, 'selectionmanager/maxrecords'),
 
+			THREADEDINDEXING_MAXTHREADS : xml.evalXPath(node, 'threadedindexing/maxthreads'),
+
 			INDEXOPTIMIZER_ENABLE	  : xml.evalXPath(node, 'indexoptimizer/enable'),
 			INDEXOPTIMIZER_AT_HOUR  : xml.evalXPath(node, 'indexoptimizer/at/hour'),
 			INDEXOPTIMIZER_AT_MIN   : xml.evalXPath(node, 'indexoptimizer/at/min'),
@@ -156,6 +158,9 @@ ConfigModel.updateTemp =
 '	<selectionmanager>'+
 '		<maxrecords>{SELECTION_MAXRECORDS}</maxrecords>'+
 '	</selectionmanager>'+
+'	<threadedindexing>'+
+'		<maxthreads>{THREADEDINDEXING_MAXTHREADS}</maxthreads>'+
+'	</threadedindexing>'+
 ' <indexoptimizer>'+
 '		<enable>{INDEXOPTIMIZER_ENABLE}</enable>'+
 '		<at>'+

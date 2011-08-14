@@ -37,6 +37,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Element;
 
 import java.io.File;
@@ -44,7 +45,14 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 // FIXME: this class could be moved to DataManager
 
@@ -167,12 +175,49 @@ public class ImportFromDir implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+	public class ImportCallable implements Callable<List<String>> {
+		private final File files[];
+		private final int beginIndex, count;
+		private final Element params;
+		private final String stylePath;
+		private final boolean failOnError;
+		private final ServiceContext context;
+
+		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError) {
+			this.files = files;
+			this.beginIndex = beginIndex;
+			this.count = count;
+			this.params = params;
+			this.context = context;
+			this.stylePath = stylePath;
+			this.failOnError = failOnError;
+		}
+
+		@Override
+		public List<String> call() throws Exception {
+			List<String> exceptions = new ArrayList<String>();
+
+			for(int i=beginIndex; i<beginIndex+count; i++) {
+				try {
+					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
+				} catch (Exception e) {
+					if (failOnError)
+						throw e;
+					
+					exceptions.add(e.getMessage());
+				}
+			}
+			return exceptions;
+		}
+	}
+
 	public class ImportMetadataReindexer extends MetadataIndexerProcessor {
 		Element params;
 		File files[];
 		String stylePath;
 		ServiceContext context;
 		ArrayList<String> exceptions = new ArrayList<String>();
+
 
 		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath, boolean failOnError) {
 			super (dm);
@@ -183,17 +228,38 @@ public class ImportFromDir implements Service
 		}
 
 		public void process() throws Exception {
-			for(int i=0; i<files.length; i++) {
+			int threadCount = ThreadUtils.getNumberOfThreads();
+
+			ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+			int perThread;
+			if (files.length < threadCount) perThread = files.length;
+			else perThread = files.length / threadCount;
+			int index = 0;
+
+			List<Future<List<String>>> submitList = new ArrayList<Future<List<String>>>();
+			while(index < files.length) {
+				int start = index;
+				int count = Math.min(perThread,files.length-start);
+				// create threads to process this chunk of files
+				Callable<List<String>> worker = new ImportCallable(files, start, count, params, context, stylePath, failOnError);
+				Future<List<String>> submit = executor.submit(worker);
+				submitList.add(submit);
+				index += count;
+			}
+
+			for (Future<List<String>> future : submitList) {
 				try {
-					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
-				} catch (Exception e) {
-					if (failOnError)
-						throw e;
-					
-					exceptions.add(e.getMessage());
+					exceptions.addAll(future.get());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
 				}
 			}
+			executor.shutdown();
 		}
+
 		public ArrayList<String> getExceptions() {
 			return exceptions;
 		}

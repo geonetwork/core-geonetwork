@@ -1832,3 +1832,8 @@ CREATE INDEX ParamsNDX4 ON Params(termText);
 
 UPDATE Settings SET value='2.7.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
+
+CREATE INDEX OperationAllowedNDX1 ON OperationAllowed(metadataId);
+
+INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
+INSERT INTO Settings VALUES (921,920,'maxthreads','1');

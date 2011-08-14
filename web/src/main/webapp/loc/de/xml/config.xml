@@ -16,6 +16,12 @@
 	
 	<searchStats>Search Statistics</searchStats>
 
+	<threadedindexing>Multi-threaded Indexing</threadedindexing>
+	<maxthreads>Number of processing threads</maxthreads>
+	<recommendedThreads>Recommended</recommendedThreads>
+	<reasonForOne>Database not tested or doesn't support</reasonForOne>
+	<reasonForMore>From number of processors</reasonForMore>
+
 	<selectionmanager>Metadata Search Results</selectionmanager>
 	<maxrecords>Maximum selected records</maxrecords>
 

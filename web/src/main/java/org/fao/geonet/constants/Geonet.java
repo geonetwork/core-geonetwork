@@ -471,6 +471,7 @@ public class Geonet
 		public static final String STAT_LOG_SPATIAL_OBJECTS  = "statLogSpatialObjects";
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
 		public static final String STAT_LOG_ASYNCH = "statLogAsynch";
+		public static final String MAX_WRITES_IN_TRANSACTION = "maxWritesInTransaction";
         
 	}
 

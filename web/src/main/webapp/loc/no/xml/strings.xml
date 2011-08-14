@@ -513,6 +513,7 @@
 	<metadata-template-add-default>Legg til maler</metadata-template-add-default>	
 	<metadata.admin.index.desc>Lag ny søkeindeks</metadata.admin.index.desc>
 	<metadata.admin.index.optimize.desc>Optimalisér søkeindeks</metadata.admin.index.optimize.desc>
+	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
     <metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
 	<reload>Reload</reload>
