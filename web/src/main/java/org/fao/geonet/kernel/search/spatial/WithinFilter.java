@@ -23,16 +23,19 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+
 import org.apache.lucene.search.Query;
 import org.geotools.data.FeatureSource;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import java.io.IOException;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * This filter filters out all documents that do not intersect the requested
@@ -46,7 +49,7 @@ public class WithinFilter extends SpatialFilter
     private static final long serialVersionUID = 1114543251684147194L;
 
     public WithinFilter(Query query, Geometry geom,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
     {
         super(query, geom, featureSource, index);
     }

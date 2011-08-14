@@ -214,6 +214,10 @@ public class Geonetwork implements ApplicationHandler
 		// --- Migrate database if an old one is found
 		migrateDatabase(dbms, settingMan, version, subVersion);
 		
+		//--- initialize ThreadUtils with setting manager and rm props
+		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
+		              	 settingMan); 
+
 		//------------------------------------------------------------------------
 		//--- Initialize thesaurus
 
@@ -396,9 +400,6 @@ public class Geonetwork implements ApplicationHandler
 			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
 		}
 	
-		//--- initialize ThreadUtils with setting manager and rm props
-		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
-		              	 settingMan); 
 
 		return gnContext;
 	}

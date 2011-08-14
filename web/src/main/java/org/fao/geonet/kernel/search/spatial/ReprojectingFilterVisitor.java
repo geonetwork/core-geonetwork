@@ -307,10 +307,14 @@ public class ReprojectingFilterVisitor extends DuplicatingFilterVisitor {
         try {
             // reproject
             CoordinateReferenceSystem geomCRS = (CoordinateReferenceSystem) geom.getUserData();
-            Geometry transformed = JTS.transform(geom, CRS.findMathTransform(geomCRS, propertyCrs, true));
-            transformed.setUserData(propertyCrs);
-            
-            return transformed;
+            if(CRS.equalsIgnoreMetadata(geomCRS, propertyCrs)) {
+                return geom;
+            } else {
+                Geometry transformed = JTS.transform(geom, CRS.findMathTransform(geomCRS, propertyCrs, true));
+                transformed.setUserData(propertyCrs);
+
+                return transformed;
+            }
         } catch(Exception e) {
             throw new RuntimeException("Could not reproject geometry " + value, e);
         }

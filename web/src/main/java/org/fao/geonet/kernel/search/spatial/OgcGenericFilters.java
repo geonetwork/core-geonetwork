@@ -1,10 +1,12 @@
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
@@ -12,21 +14,25 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.filter.spatial.WithinImpl;
 import org.geotools.filter.visitor.DefaultFilterVisitor;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.And;
 import org.opengis.filter.BinaryLogicOperator;
 import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.Not;
 import org.opengis.filter.Or;
+import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BBOX;
 import org.opengis.filter.spatial.Beyond;
@@ -39,10 +45,12 @@ import org.opengis.filter.spatial.Intersects;
 import org.opengis.filter.spatial.Overlaps;
 import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
+import org.opengis.geometry.BoundingBox;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 // -- define the featureType that will be used in the reprojectFilter
 class Reproject {
@@ -66,7 +74,7 @@ public class OgcGenericFilters
 
     @SuppressWarnings("serial")
     public static SpatialFilter create(Query query,
-            Element filterExpr, FeatureSource featureSource,
+            Element filterExpr, FeatureSource<SimpleFeatureType, SimpleFeature> featureSource,
             SpatialIndex index, Parser parser) throws Exception
     {
 				// -- parse Filter and report any validation issues
@@ -103,22 +111,25 @@ public class OgcGenericFilters
 
 				// -- finally reproject all geometry in the Filter to match GeoNetwork
 				// -- default of WGS84 (long/lat ordering)
-				visitor = new ReprojectingFilterVisitor(filterFactory2, Reproject.fType);
-				final Filter finalFilter = (Filter) remappedFilter.accept(visitor, null);
-        Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+finalFilter);
+		visitor = new ReprojectingFilterVisitor(filterFactory2, Reproject.fType);
+		final Filter reprojectedFilter = (Filter) remappedFilter.accept(visitor, null);
+        Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+reprojectedFilter);
 
 				// -- extract an envelope/bbox for the whole filter expression
-        Envelope bounds = (Envelope) finalFilter.accept(
+        Envelope bounds = (Envelope) reprojectedFilter.accept(
                 ExtractBoundsFilterVisitor.BOUNDS_VISITOR,
                 DefaultGeographicCRS.WGS84);
 				Log.debug(Geonet.SEARCH_ENGINE,"Filter Envelope is "+bounds);
         
+		final Filter finalFilter = (Filter) remappedFilter.accept(new WithinUpdater(), null);
+        Log.debug(Geonet.SEARCH_ENGINE,"Adjusted within Filter is "+reprojectedFilter);
+
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
             return new FullScanFilter(query, bounds,
                     featureSource, index){
                 @Override
-                protected Filter createFilter(FeatureSource source)
+                protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
                     return finalFilter;
                 }
@@ -127,13 +138,34 @@ public class OgcGenericFilters
             return new SpatialFilter(query, bounds,
                     featureSource, index){
                 @Override
-                protected Filter createFilter(FeatureSource source)
+                protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
                     return finalFilter;
                 }
             };
         }
 
+    }
+
+    private static final class WithinUpdater extends DuplicatingFilterVisitor
+    {
+        public Object visit(Within filter, Object extraData)
+        {
+            final WithinImpl impl = (WithinImpl) filter;
+            FilterFactory factory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
+            return new WithinImpl(factory, impl.getExpression1(), impl.getExpression2())
+            {
+
+                @Override
+                public boolean evaluate(Object feature)
+                {
+                    Geometry leftGeom = getLeftGeometry(feature);
+                    Geometry rightGeom = getRightGeometry(feature);
+                    boolean equals2 = leftGeom.equalsExact(rightGeom, 0.01);
+                    return equals2 || super.evaluate(feature);
+                }
+            };
+        };
     }
 
 
@@ -154,14 +186,14 @@ public class OgcGenericFilters
         @Override
         public Object visit(BBOX filter, Object extraData)
         {
+            if(filter.getExpression2() instanceof Literal && ((Literal) filter.getExpression2()).getValue() instanceof BoundingBox) {
+                BoundingBox expr2 = (BoundingBox) ((Literal) filter.getExpression2()).getValue();
 
-            double minx=filter.getMinX();
-            double miny=filter.getMinY();
-            double maxx=filter.getMaxX();
-            double maxy=filter.getMaxY();
-            String srs=filter.getSRS();
-            
-            return getFactory(extraData).bbox(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, minx, miny, maxx, maxy, srs);
+                FilterFactory2 factory = getFactory(extraData);
+                return factory.bbox(factory.property(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME), expr2);
+            } else {
+                return filter;
+            }
         }
     }
 

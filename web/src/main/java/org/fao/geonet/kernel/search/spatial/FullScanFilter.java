@@ -60,13 +60,13 @@ public class FullScanFilter extends SpatialFilter
     private Set<String>       _matches;
 
     public FullScanFilter(Query query, Geometry geom,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
     {
         super(query, geom, featureSource, index);
     }
 
     protected FullScanFilter(Query query, Envelope bounds,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
     {
         super(query, bounds, featureSource, index);
     }
@@ -95,7 +95,7 @@ public class FullScanFilter extends SpatialFilter
                 try {
                     document = reader.document(doc, _selector);
                     if (matches.contains(document.get("_id"))) {
-                        bits.set(doc);
+                        bits.set(docBase + doc);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);

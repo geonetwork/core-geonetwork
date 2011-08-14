@@ -31,8 +31,11 @@ import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.DataStore;
+import org.geotools.data.FeatureEvent;
+import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
@@ -74,12 +77,13 @@ import java.util.logging.Level;
  * @author jeichar
  */
 @SuppressWarnings("unchecked")
-public class SpatialIndexWriter
+public class SpatialIndexWriter implements FeatureListener
 {
 
     static final String                                          IDS_ATTRIBUTE_NAME        = "id";
     static final String                                          GEOM_ATTRIBUTE_NAME       = "the_geom";
     static final String                                          SPATIAL_INDEX_TYPENAME    = "spatialindex";
+		static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
     public static final int                                      MAX_WRITES_IN_TRANSACTION = 5000;
 
     private final Parser                              _parser;
@@ -115,6 +119,7 @@ public class SpatialIndexWriter
 
         _featureStore = createFeatureStore(datastore);
         _featureStore.setTransaction(_transaction);
+        _featureStore.addFeatureListener(this);
 
     }
 
@@ -137,7 +142,7 @@ public class SpatialIndexWriter
                     schemaDir, metadata, _parser);
 
             if (geometry != null) {
-                FeatureCollection features = FeatureCollections.newCollection();
+                FeatureCollection<SimpleFeatureType, SimpleFeature> features = FeatureCollections.newCollection();
                 Object[] data;
                 SimpleFeatureType schema = _featureStore.getSchema();
 				if(schema.getDescriptor(0) == schema.getGeometryDescriptor()){
@@ -149,7 +154,11 @@ public class SpatialIndexWriter
                 features.add(SimpleFeatureBuilder.build(schema, data,
                         SimpleFeatureBuilder.createDefaultFeatureId()));
 
-                _featureStore.addFeatures(features);
+                List<FeatureId> ids = _featureStore.addFeatures(features);
+                for (FeatureId featureId : ids) {
+	                String id2 = featureId.getID();
+					SpatialFilter.getJCSCache().remove(id2);
+                }
 
                 _writes++;
 
@@ -179,7 +188,7 @@ public class SpatialIndexWriter
         }
     }
 
-    public FeatureSource getFeatureSource()
+    public FeatureSource<SimpleFeatureType, SimpleFeature> getFeatureSource()
     {
         return _featureStore;
     }
@@ -314,6 +323,7 @@ public class SpatialIndexWriter
     {
         Object value = parser.parse(new StringReader(gml));
         if (value instanceof HashMap) {
+            @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
             List<Polygon> geoms = new ArrayList<Polygon>();
             for (Object entry : map.values()) {
@@ -340,6 +350,7 @@ public class SpatialIndexWriter
         if (entry instanceof Polygon) {
             geoms.add((Polygon) entry);
         } else if (entry instanceof Collection) {
+            @SuppressWarnings("rawtypes")
             Collection collection = (Collection) entry;
             for (Object object : collection) {
                 geoms.add((Polygon) object);
@@ -364,10 +375,10 @@ public class SpatialIndexWriter
         }
     }
 
-	private FeatureStore createFeatureStore(DataStore datastore) throws Exception
+	private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception
     {
 
-        return (FeatureStore) datastore.getFeatureSource(SPATIAL_INDEX_TYPENAME);
+        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(SPATIAL_INDEX_TYPENAME);
     }
 
 	public static MultiPolygon toMultiPolygon(Geometry geometry)
@@ -383,6 +394,33 @@ public class SpatialIndexWriter
         String message = geometry.getClass()+" cannot be converted to a polygon. Check Metadata";
         Log.error(Geonet.INDEX_ENGINE, message);
         throw new IllegalArgumentException(message);
+    }
+
+    public void changed(FeatureEvent featureEvent) {
+        try {
+            switch (featureEvent.getType()) {
+            case ADDED:
+                break;
+            case CHANGED:
+                SpatialFilter.getJCSCache().clear();
+                break;
+            case REMOVED:
+                SpatialFilter.getJCSCache().clear();
+                break;
+            case COMMIT:
+                SpatialFilter.getJCSCache().clear();
+                break;
+            case ROLLBACK:
+                SpatialFilter.getJCSCache().clear();
+                break;
+            default:
+                SpatialFilter.getJCSCache().clear();
+                break;
+            }
+        } catch (CacheException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
