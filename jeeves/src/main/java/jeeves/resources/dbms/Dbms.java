@@ -26,7 +26,6 @@ package jeeves.resources.dbms;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -57,11 +56,8 @@ public class Dbms
 	public static final String DEFAULT_TIME_FORMAT      = "HH:mm:ss";
 	public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-	private String apacheUrl = "jdbc:apache:commons:dbcp:";
-
-	private String     url;
-	private String     driverUrl; // if different from actual url eg. for
-	                              // apache db commons pool
+	private DataSource ds;
+	private String url;
 	private Connection conn;
 	private long       lastConnTime;
 
@@ -73,25 +69,10 @@ public class Dbms
 
 	/** Constructs a DBMS object that contains a jdbc connection */
 
-	public Dbms(String driver, String url) throws ClassNotFoundException
+	public Dbms(DataSource ds, String url) throws ClassNotFoundException
 	{
-		// loads the driver
-		Class.forName(driver);
-
+		this.ds = ds;
 		this.url = url;
-		this.driverUrl = url;
-	}
-	
-	/** Constructs a DBMS object that contains a jdbc connection and uses
-	    the apacheurl */
-
-	public Dbms(String driver, String url, String driverUrl) throws ClassNotFoundException
-	{
-		// loads the driver
-		Class.forName(driver);
-
-		this.url = url;
-		this.driverUrl = driverUrl;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -105,20 +86,8 @@ public class Dbms
 	public void connect(String username, String password) throws SQLException
 	{
 
-		if (username != null && password != null) {
-			conn = DriverManager.getConnection(url, username, password);
-		} else {
-			conn = DriverManager.getConnection(url);
-		}
-
-		conn.setAutoCommit(false);
-		if (!url.contains(apacheUrl)) { 
-			if (url.toUpperCase().contains("MCKOI")) {
-				conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			} else {
-				conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-			}
-		}
+		// ignore username and password
+		conn = ds.getConnection();
 
 		lastConnTime = System.currentTimeMillis();
 		
@@ -131,8 +100,7 @@ public class Dbms
 	public void disconnect()
 	{
 
-		Log.debug(Log.RESOURCES, 
-				"Close connection: "+ conn.hashCode());
+		Log.debug(Log.RESOURCES, "Close connection: "+ conn.hashCode());
 		try {
 			if (!conn.isClosed())
 				conn.close();
@@ -151,7 +119,7 @@ public class Dbms
 
 	//--------------------------------------------------------------------------
 
-	public String getURL() { return driverUrl; }
+	public String getURL() { return url; }
 
 	//--------------------------------------------------------------------------
 

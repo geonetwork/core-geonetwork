@@ -242,14 +242,18 @@ public final class Jeeves
 			public static final String POOL_SIZE      = "poolSize";
 			public static final String MAX_TRIES      = "maxTries";
 			public static final String MAX_WAIT       = "maxWait";
-			public static final String RECONNECT_TIME = "reconnectTime";
 
-			public static final int DEF_POOL_SIZE      = 2;
-			public static final int DEF_MAX_TRIES      = 20;  // number of connection attempts
+			public static final int DEF_POOL_SIZE      = 10;
 			public static final int DEF_MAX_WAIT       = 200; // msecs between attempts
 			public static final String MAX_IDLE = "maxIdle";
 			public static final String MIN_IDLE = "minIdle";
 			public static final String MAX_ACTIVE = "maxActive";
+			public static final String TEST_WHILE_IDLE = "testWhileIdle";
+			public static final String TIME_BETWEEN_EVICTION_RUNS_MILLIS = "timeBetweenEvictionRunsMillis";
+			public static final String MIN_EVICTABLE_IDLE_TIME_MILLIS = "minEvictableIdleTimeMillis";
+			public static final String NUM_TESTS_PER_EVICTION_RUN = "numTestsPerEvictionRun";
+			public static final String CONTEXT = "context";
+			public static final String RESOURCE_NAME = "resourceName";
 		}
 	}
 

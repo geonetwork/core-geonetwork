@@ -65,13 +65,61 @@
 
 	<!-- ====================================================================== -->
 	<!-- 
-		The ressources section defines which database to be used by GeoNetwork.
+		The resources section defines the database to be used by GeoNetwork.
 		
 		Update the enabled attribute to true to use a connection.
-		Only one resource could be enabled at a time.
-		
-		Default connection is using a mckoi database started by the webapp on port 9157 (see db/db.conf).
-		
+		Only one resource can be enabled at a time, the others must be disabled.
+
+		GeoNetwork uses Apache Commons Database Connection Pooling (DBCP) code.
+		You can specify a JNDI datasource and place the DBCP config params in the 
+    container context.xml (eg. for tomcat this is conf/context.xml) or 
+ 		you can config a subset of the DBCP parameters explicitly for h2, mckoi, 
+    oracle, postgres/gis, db2 and sql-server as follows:
+
+		maxActive - pool size/maximum number of active connections (default 10)
+		maxIdle   - pool size/maximum number of idle connections 
+		            (default maxActive)
+		minIdle   - pool size/minimum number of idle connections (default 0)
+		maxWait   - number of milliseconds to wait for a connection to become
+		            available (default 200)
+
+		timeBetweenEvictionRunsMillis - time between eviction runs 
+		                          (default -1 which means the next three params 
+															 are ignored)
+		testWhileIdle - test connections when idle (default false)
+		minEvictableIdleTimeMillis - idle time before connection can be evicted 
+		                          (default 30 x 60 x 1000 millisecs)
+		numTestsPerEvictionRun - number of connections tested per eviction run
+		                          (default 3)
+
+		The following params are set by GeoNetwork:
+
+		removeAbandoned - true
+		removeAbandonedTimeout - 60 x 60 seconds = 1 hour
+		logAbandoned - true
+		testOnBorrow - true
+		validationQuery - 'SELECT 1'
+		defaultReadOnly - false
+		defaultAutoCommit - false
+		initialSize - maxActive
+
+		Note: Some firewalls kill idle connections to databases after say
+	  1 hour (= 3600 secs) 
+	  to keep idle connections alive by testing them with 'select 1', 
+		set minEvictableIdleTimeMillis to something less than timeout
+		interval (eg. 2 mins = 120 secs = 120000 millisecs), 
+		set testWhileIdle to true and 
+		set timeBetweenEvictionRunsMillis and numTestsPerEvictionRun
+		high enough to visit connections frequently
+		eg 15 mins = 900 secs = 900000 millisecs and 4 connections per test
+			
+			eg.
+
+				<testWhileIdle>true</testWhileIdle>
+				<minEvictableIdleTimeMillis>120000</minEvictableIdleTimeMillis>
+				<timeBetweenEvictionRunsMillis>900000</timeBetweenEvictionRunsMillis>
+				<numTestsPerEvictionRun>4</numTestsPerEvictionRun>
+
 					!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!! 
 					
 		When changing the resource to use, you could point to an old version of
@@ -100,7 +148,6 @@
 	      <driver>${geonetwork.config.dbms.driver}</driver>
 	      <url>${geonetwork.config.dbms.url}</url>
 	      <poolSize>${geonetwork.config.dbms.poolSize}</poolSize>
-	      <reconnectTime>${geonetwork.config.dbms.reconnectTime}</reconnectTime>
 	    </config>
 	  </resource>
 	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,16 +169,28 @@
 	      <driver>org.h2.Driver</driver>
 	      <url>jdbc:h2:geonetwork</url>
 	      <poolSize>33</poolSize>
-	      <reconnectTime>3600</reconnectTime>
 	    </config>
 	  </resource>
 	  
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- JNDI through container -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<resource enabled="false">
+      <name>main-db</name>
+      <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+      <config>
+        <context>java:/comp/env</context>
+        <resourceName>jdbc/geonetwork</resourceName>
+				<!-- NOTE any other parameter specified here is ignored as this 
+             should be handled in the container -->
+      </config>
+    </resource>	
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mckoi standalone -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<resource enabled="false">
 			<name>main-db</name>
-			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>BayACrsQ</user>
@@ -150,7 +209,6 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>admin</user>
@@ -168,7 +226,6 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>admin</user>
@@ -185,7 +242,6 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>db2inst1</user>
@@ -203,7 +259,6 @@
 		
 		<resource enabled="false">
 			<name>main-db</name>
-			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>www-data</user>
@@ -233,7 +288,6 @@
 
 		<resource enabled="false">
 			<name>main-db</name>
-			<!-- <provider>jeeves.resources.dbms.DbmsPool</provider> -->
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
 				<user>www-data</user>
