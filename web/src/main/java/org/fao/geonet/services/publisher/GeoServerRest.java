@@ -277,7 +277,26 @@ public class GeoServerRest {
 
 		return status == 201;
 	}
+	public boolean createDatastore(String ws, String ds, String file,
+            boolean createStyle) throws IOException {
+	    String type = "";
+	    String extension = file.substring(file.lastIndexOf('.'), file.length());
+	    if (file.startsWith("http://")) {
+	        type = "url";
+	    } else if (file.startsWith("file://")) {
+            type = "external";
+        } 
+	    
+        int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+                + "/datastores/" + ds + "/" + type + extension, file, null,
+                "text/plain", false);
 
+        if (createStyle) {
+            createStyle(ds);
+        }
+
+        return status == 201;
+    }
 	/**
 	 * Create datastore in default workspace
 	 * 
@@ -291,7 +310,10 @@ public class GeoServerRest {
 			throws IOException {
 		return createDatastore(getDefaultWorkspace(), ds, f, createStyle);
 	}
-
+    public boolean createDatastore(String ds, String file, boolean createStyle)
+            throws IOException {
+        return createDatastore(getDefaultWorkspace(), ds, file, createStyle);
+    }
 	/**
 	 * Delete a datastore
 	 * 
@@ -454,7 +476,7 @@ public class GeoServerRest {
 	 *            REST API parameter
 	 * @param postData
 	 *            XML data
-	 * @param f
+	 * @param file
 	 *            File to upload
 	 * @param contentType
 	 *            type of content in case of post data or file updload.
@@ -463,7 +485,7 @@ public class GeoServerRest {
 	 * @throws IOException
 	 */
 	public int sendREST(String method, String urlParams, String postData,
-			File f, String contentType, Boolean saveResponse)
+			File file, String contentType, Boolean saveResponse)
 			throws IOException {
 
 		response = "";
@@ -476,10 +498,9 @@ public class GeoServerRest {
 		HttpMethod m;
 		if (method.equals(METHOD_PUT)) {
 			m = new PutMethod(url);
-
-			if (f != null) {
+			if (file != null) {
 				((PutMethod) m).setRequestEntity(new InputStreamRequestEntity(
-						new FileInputStream(f)));
+						new FileInputStream(file)));
 			}
 			if (postData != null) {
 				((PutMethod) m).setRequestEntity(new StringRequestEntity(

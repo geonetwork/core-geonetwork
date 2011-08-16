@@ -208,13 +208,15 @@ public class Do implements Service {
 				
 				return publishDbTable(action, gs, "postgis", host, port, user, password, db, table, "postgis", g.getNamespaceUrl());
 			} else {
-
-				// Get ZIP file from data directory
-				File dir = new File(Lib.resource
-						.getDir(context, access, metadataId));
-				File f = new File(dir, file);
-				
-				return addZipFile(action, gs, f, file);
+			    if (file.startsWith("file://") || file.startsWith("http://")) {
+			        return addExternalFile(action, gs, file);
+			    } else {
+			        // Get ZIP file from data directory
+	                File dir = new File(Lib.resource
+	                        .getDir(context, access, metadataId));
+	                File f = new File(dir, file);
+	                return addZipFile(action, gs, f, file);
+			    }
 			}
 		}
 		return null;
@@ -341,6 +343,16 @@ public class Do implements Service {
 		return null;
 	}
 
+	private Element addExternalFile(Do.ACTION action, GeoServerRest gs, String file)
+            throws IOException {
+	    // TODO vector or raster file ? Currently GeoServer does not support RASTER for external
+	    if (publishExternal(file, gs, action)) {
+            return report(SUCCESS, VECTOR, getReport());
+        } else {
+            return report(EXCEPTION, VECTOR, getErrorCode());
+        }
+	}
+	
 	private Element report(String name, String type, String msg) {
 		Element report = new Element(name);
 		if (type != null)
@@ -395,6 +407,42 @@ public class Do implements Service {
 		return false;
 	}
 
+	private boolean publishExternal(String file, GeoServerRest g, ACTION action) {
+
+        String dsName = file.substring(file.lastIndexOf("/") + 1, file.lastIndexOf("."));
+        try {
+            if (action.equals(ACTION.CREATE)) {
+                g.createDatastore(dsName, file, true);
+            } else if (action.equals(ACTION.UPDATE)) {
+                g.createDatastore(dsName, file, false);
+            } else if (action.equals(ACTION.DELETE)) {
+                String report = "";
+                if (!g.deleteLayer(dsName))
+                    report += "Layer: " + g.getStatus();
+                if (!g.deleteFeatureType(dsName, dsName))
+                    report += "Feature type: " + g.getStatus();
+                if (!g.deleteDatastore(dsName))
+                    report += "Datastore: " + g.getStatus();
+
+                if (!report.equals("")) {
+                    setErrorCode(report);
+                    return false;
+                }
+            }
+            if (g.getLayer(dsName)) {
+                setReport(Xml.loadString(g.getResponse(), false));
+            } else {
+                setErrorCode(g.getStatus() + "");
+                return false;
+            }
+            return true;
+
+        } catch (Exception e) {
+            setErrorCode(e.getMessage());
+            Log.error(MODULE, "Exception " + e.getMessage());
+        }
+        return false;
+    }
 	private boolean publishRaster(File f, GeoServerRest g, ACTION action) {
 		String cs = f.getName();
 		String csName = cs.substring(0, cs.lastIndexOf("."));
