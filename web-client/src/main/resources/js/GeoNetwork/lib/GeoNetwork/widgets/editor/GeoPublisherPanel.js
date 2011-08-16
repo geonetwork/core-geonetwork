@@ -538,13 +538,19 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
     setRef: function(id, fileName, accessStatus){
         this.metadataId = id;
         this.fileName = fileName;
+        this.accessStatus = accessStatus;
         if (this.fileName.indexOf('jdbc') !== -1) {
+            // Extract the table name
             this.layerName = this.fileName.substr(this.fileName.indexOf('#') + 1, 
                                 this.fileName.length);
+        } else if (this.accessStatus === 'fileOrUrl') {
+            // Extract the file name with no extension
+            var from = this.fileName.lastIndexOf('/') + 1;
+            var to = this.fileName.lastIndexOf('.');
+            this.layerName = this.fileName.substr(from, to - from);
         } else {
             this.layerName = this.fileName.substr(0, this.fileName.indexOf('.'));
         }
-        this.accessStatus = accessStatus;
         this.cleanLayerPreview();
         this.updatePrivileges();
         if (this.nodeId !== null) {
