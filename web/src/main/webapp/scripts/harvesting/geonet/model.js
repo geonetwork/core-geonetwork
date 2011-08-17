@@ -122,6 +122,8 @@ var updateTemp =
 '      <host>{HOST}</host>'+
 '      <port>{PORT}</port>'+
 '      <servlet>{SERVLET}</servlet>'+
+'      <createRemoteCategory>{CREATE_REMOTE_CATEGORY}</createRemoteCategory>'+
+'      <mefFormatFull>{MEF_FULL}</mefFormatFull>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+

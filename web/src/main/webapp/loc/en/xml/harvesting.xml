@@ -103,6 +103,9 @@
 	<username>Username</username>
 	<password>Password</password>
 	
+  <createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+  <mefFormatFull>Use full MEF format</mefFormatFull>
+  
 	<search>Search criteria</search>
 	<siteName>Site name</siteName>
 	

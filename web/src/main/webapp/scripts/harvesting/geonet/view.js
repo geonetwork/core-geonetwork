@@ -89,7 +89,10 @@ function setEmpty()
 	$('gn.host')      .value = '';	
 	$('gn.port')      .value = '';
 	$('gn.servlet')   .value = '';
-		
+
+    $('gn.createRemoteCategory').checked = false;
+    $('gn.mefFormatFull').checked = false;
+    
 	shower.update();
 }
 
@@ -107,7 +110,9 @@ function setData(node)
 	hvutil.setOption(site, 'host',    'gn.host');
 	hvutil.setOption(site, 'port',    'gn.port');
 	hvutil.setOption(site, 'servlet', 'gn.servlet');
-	
+	hvutil.setOption(site, 'createRemoteCategory', 'gn.createRemoteCategory');
+	hvutil.setOption(site, 'mefFormatFull', 'gn.mefFormatFull');
+
 	//--- add search entries
 	
 	var list = searches.getElementsByTagName('search');
@@ -148,7 +153,8 @@ function getData()
 	data.HOST    = $F('gn.host');
 	data.PORT    = $F('gn.port');
 	data.SERVLET = $F('gn.servlet');	
-	
+	data.CREATE_REMOTE_CATEGORY = $('gn.createRemoteCategory').checked;
+	data.MEF_FULL = $('gn.mefFormatFull').checked;
 	//--- retrieve search information
 	
 	var searchData = [];

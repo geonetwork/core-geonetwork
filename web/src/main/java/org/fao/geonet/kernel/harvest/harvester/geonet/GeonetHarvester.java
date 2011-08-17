@@ -148,7 +148,9 @@ public class GeonetHarvester extends AbstractHarvester
 		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
 		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
 		settingMan.add(dbms, "id:"+siteId, "servlet", params.servlet);
-
+		settingMan.add(dbms, "id:"+siteId, "createRemoteCategory", params.createRemoteCategory);
+		settingMan.add(dbms, "id:"+siteId, "mefFormatFull", params.mefFormatFull);
+		
 		//--- store search nodes
 
 		for (Search s : params.getSearches())

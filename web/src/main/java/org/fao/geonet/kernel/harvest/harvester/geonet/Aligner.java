@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.mef.IMEFVisitor;
+import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -220,10 +221,6 @@ public class Aligner
 					BinaryFile.copy(is, os, false, true);
 					outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
 				}
-
-				//--------------------------------------------------------------------
-
-				public void handlePrivateFile() {}
 				
 				public void handleFeatureCat(Element md, int index)
 						throws Exception {
@@ -231,7 +228,16 @@ public class Aligner
 				}
 
 				public void handlePrivateFile(String file, String changeDate,
-						InputStream is, int index) throws IOException {}
+						InputStream is, int index) throws IOException {
+				    if (params.mefFormatFull) {
+				        log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
+	                    String dir = Lib.resource.getDir(context, "private", id[index]);
+	                    File outFile = new File(dir, file);
+	                    FileOutputStream os = new FileOutputStream(outFile);
+	                    BinaryFile.copy(is, os, false, true);
+	                    outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
+				    }
+				}
 			});
 		}
 		catch(Exception e)
@@ -268,7 +274,9 @@ public class Aligner
         //
         int userid = 1;
         String group = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        // If MEF format is full, private file links needs to be updated
+        boolean ufo = params.mefFormatFull;
+        boolean indexImmediate = false;
         String id = dataMan.insertMetadata(dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, siteId,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
@@ -293,6 +301,12 @@ public class Aligner
 		new File(priDir).mkdirs();
 
 		addCategories(id);
+		if (params.createRemoteCategory) {
+    		Element categs = info.getChild("categories");
+    		if (categs != null) {
+    		    Importer.addCategories(dataMan, dbms, id, categs);
+    		}
+		}
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
@@ -453,6 +467,7 @@ public class Aligner
 	{
 		final Element md[]     = { null };
 		final Element publicFiles[] = { null };
+		final Element privateFiles[] = { null };
 
 		if (localUuids.getID(ri.uuid) == null)
 			log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
@@ -480,19 +495,16 @@ public class Aligner
 					{
 						updateMetadata(ri, id, md[index], info, localRating);
 						publicFiles[index] = info.getChild("public");
+						privateFiles[index] = info.getChild("private");
 					}
 
 					//-----------------------------------------------------------------
 
 					public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
 					{
-						updateFile(id, file, changeDate, is, publicFiles[index]);
+						updateFile(id, file, "public", changeDate, is, publicFiles[index]);
 					}
 
-					//-----------------------------------------------------------------
-
-					public void handlePrivateFile() {}
-								
 					public void handleFeatureCat(Element md, int index)
 							throws Exception {
 						// Feature Catalog not managed for harvesting
@@ -500,7 +512,9 @@ public class Aligner
 
 					public void handlePrivateFile(String file,
 							String changeDate, InputStream is, int index)
-							throws IOException {}
+							throws IOException {
+	                       updateFile(id, file, "private", changeDate, is, privateFiles[index]);
+					}
 					
 				});
 			}
@@ -534,7 +548,7 @@ public class Aligner
 			log.debug("  - Updating local metadata with id="+ id);
 
             boolean validate = false;
-            boolean ufo = false;
+            boolean ufo = params.mefFormatFull;
             boolean index = false;
             String language = context.getLanguage();
             UserSession session = null;
@@ -558,7 +572,13 @@ public class Aligner
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
 		addCategories(id);
-
+		if (params.createRemoteCategory) {
+            Element categs = info.getChild("categories");
+            if (categs != null) {
+                Importer.addCategories(dataMan, dbms, id, categs);
+            }
+        }
+		
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
 		addPrivileges(id, info.getChild("privileges"));
 
@@ -570,33 +590,33 @@ public class Aligner
 	//--- Public file update methods
 	//--------------------------------------------------------------------------
 
-	private void updateFile(String id, String file, String changeDate, InputStream is,
-									Element files) throws IOException
+	private void updateFile(String id, String file, String dir, String changeDate,
+									InputStream is, Element files) throws IOException
 	{
 		if (files == null)
-			log.debug("  - No 'public' element in info.xml. Cannot update public file :"+ file);
+			log.debug("  - No file found in info.xml. Cannot update file:" + file);
 		else
 		{
-			removeOldFile(id, files);
-			updateChangedFile(id, file, changeDate, is);
+			removeOldFile(id, files, dir);
+			updateChangedFile(id, file, dir, changeDate, is);
 		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	private void removeOldFile(String id, Element infoFiles)
+	private void removeOldFile(String id, Element infoFiles, String dir)
 	{
-		File pubDir = new File(Lib.resource.getDir(context, "public", id));
+		File resourcesDir = new File(Lib.resource.getDir(context, dir, id));
 
-		File files[] = pubDir.listFiles();
+		File files[] = resourcesDir.listFiles();
 
 		if (files == null)
-			log.error("  - Cannot scan directory for public files : "+ pubDir.getAbsolutePath());
+			log.error("  - Cannot scan directory for " + dir + " files : "+ resourcesDir.getAbsolutePath());
 
 		else for (File file : files)
 			if (!existsFile(file.getName(), infoFiles))
 			{
-				log.debug("  - Removing old public file with name="+ file.getName());
+				log.debug("  - Removing old " + dir + " file with name="+ file.getName());
 				file.delete();
 			}
 	}
@@ -621,18 +641,18 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private void updateChangedFile(String id, String file, String changeDate,
-											 InputStream is) throws IOException
+	private void updateChangedFile(String id, String file, String dir,
+											 String changeDate, InputStream is) throws IOException
 	{
-		String pubDir  = Lib.resource.getDir(context, "public", id);
-		File   locFile = new File(pubDir, file);
+		String resourcesDir  = Lib.resource.getDir(context, dir, id);
+		File   locFile = new File(resourcesDir, file);
 
 		ISODate locIsoDate = new ISODate(locFile.lastModified());
 		ISODate remIsoDate = new ISODate(changeDate);
 
 		if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
 		{
-			log.debug("  - Adding remote public file with name:"+ file);
+			log.debug("  - Adding remote " + dir + "  file with name:"+ file);
 
 			FileOutputStream os = new FileOutputStream(locFile);
 			BinaryFile.copy(is, os, false, true);
@@ -640,7 +660,7 @@ public class Aligner
 		}
 		else
 		{
-			log.debug("  - Nothing to do to public file with name:"+ file);
+			log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);
 		}
 	}
 
@@ -667,7 +687,7 @@ public class Aligner
 	{
 		request.clearParams();
 		request.addParam("uuid",   uuid);
-		request.addParam("format", "partial");
+		request.addParam("format", (params.mefFormatFull ? "full" : "partial"));
 
 		request.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 

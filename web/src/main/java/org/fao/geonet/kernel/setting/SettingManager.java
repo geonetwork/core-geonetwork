@@ -238,7 +238,7 @@ public class SettingManager
 
 				if (s == null) {
 					success = false;
-					Log.debug(Geonet.SETTINGS, "Unable to find Settings row."); 
+					Log.warning(Geonet.SETTINGS, "Unable to find Settings row for: " + path + ". Check settings table."); 
 				}
 				else
 				{

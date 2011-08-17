@@ -2679,9 +2679,18 @@
       <metadatacreationdate>
         <xsl:value-of select="gmd:dateStamp/*"/>
       </metadatacreationdate>
-
       <geonet:info>
-        <xsl:copy-of select="geonet:info/*"/>
+        <xsl:copy-of select="geonet:info/*[name(.)!='edit']"/>
+        <xsl:choose>
+          <xsl:when test="/root/gui/env/harvester/enableEditing='false' and geonet:info/isHarvested='y' and geonet:info/edit='true'">
+            <edit>false</edit>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="geonet:info/edit"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        
+         
         <!-- 
           Internal category could be define using different informations
         in a metadata record (according to standard). This could be improved.

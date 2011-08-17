@@ -14,6 +14,8 @@
 		<host><xsl:value-of    select="host/value" /></host>
 		<port><xsl:value-of    select="port/value" /></port>
 		<servlet><xsl:value-of select="servlet/value" /></servlet>
+	  <createRemoteCategory><xsl:value-of select="createRemoteCategory/value"/></createRemoteCategory>
+	  <mefFormatFull><xsl:value-of select="mefFormatFull"/></mefFormatFull>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

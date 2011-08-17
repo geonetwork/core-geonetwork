@@ -125,11 +125,11 @@ public class MEFVisitor implements IVisitor {
 				if (fullName.equals(DIR_PUBLIC) || fullName.equals(DIR_PRIVATE))
 					continue;
 
-				if (fullName.startsWith(DIR_PUBLIC))
+				if (fullName.startsWith(DIR_PUBLIC) || fullName.startsWith("/" + DIR_PUBLIC))
 					v.handlePublicFile(simpleName, MEFLib.getChangeDate(
 							pubFiles, simpleName), isb, 0);
 
-				else if (fullName.startsWith(DIR_PRIVATE))
+				else if (fullName.startsWith(DIR_PRIVATE) || fullName.startsWith("/" + DIR_PRIVATE))
 					v.handlePrivateFile(simpleName, MEFLib.getChangeDate(
 							prvFiles, simpleName), isb, 0);
 

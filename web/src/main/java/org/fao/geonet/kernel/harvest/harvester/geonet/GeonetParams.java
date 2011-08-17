@@ -64,7 +64,9 @@ public class GeonetParams extends AbstractParams
 		host    = Util.getParam(site, "host",    "");
 		port    = Util.getParam(site, "port",    80);
 		servlet = Util.getParam(site, "servlet", "geonetwork");
-
+		createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
+		mefFormatFull = Util.getParam(site, "mefFormatFull", false);
+		
 		checkPort(port);
 		addSearches(searches);
 		addCopyPolicy(policy);
@@ -87,6 +89,8 @@ public class GeonetParams extends AbstractParams
 		host    = Util.getParam(site, "host",    host);
 		port    = Util.getParam(site, "port",    port);
 		servlet = Util.getParam(site, "servlet", servlet);
+        createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
+        mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
 
 		checkPort(port);
 
@@ -123,7 +127,9 @@ public class GeonetParams extends AbstractParams
 		copy.host    = host;
 		copy.port    = port;
 		copy.servlet = servlet;
-
+		copy.createRemoteCategory = createRemoteCategory;
+		copy.mefFormatFull = mefFormatFull;
+		
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
 
@@ -180,7 +186,9 @@ public class GeonetParams extends AbstractParams
 	public String  host;
 	public int     port;
 	public String  servlet;
-
+	public boolean createRemoteCategory;
+	public boolean mefFormatFull;
+	
 	private ArrayList<Search> alSearches   = new ArrayList<Search>();
 	private ArrayList<Group>  alCopyPolicy = new ArrayList<Group>();
 }
