@@ -342,7 +342,7 @@ CREATE TABLE CswServerCapabilitiesInfo
 -- ======================================================================
 CREATE TABLE Thesaurus
   (
-    id   varchar(250),
+    id   varchar(250) not null,
     activated    varchar(1),
     primary key(id)
   );
