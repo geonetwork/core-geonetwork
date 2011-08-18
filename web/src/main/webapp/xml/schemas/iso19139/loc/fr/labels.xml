@@ -1946,7 +1946,16 @@
     <description>Nom des formats de transfert des données</description>
     <help>Nom du format de transfert de données, par exemple TIFF, ZIP, etc.</help>
     <condition>Obligatoire</condition>
-    
+    <helper>
+      <option value="Texte">Texte</option>
+      <option value="ESRI Shapefile">ESRI Shapefile</option>
+      <option value="Mapinfo MIF/MID">Mapinfo MIF/MID</option>
+      <option value="Mapinfo TAB">Mapinfo TAB</option>
+      <option value="KML">KML</option>
+      <option value="TIFF">TIFF</option>
+      <option value="ECW">ECW</option>
+      <option value="ZIP">ZIP</option>
+    </helper>
   </element>
   <element name="gmd:name" id="307.0" context="gmd:MD_ExtendedElementInformation">
     <label>Nom</label>
