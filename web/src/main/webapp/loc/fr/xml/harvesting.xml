@@ -105,7 +105,10 @@
 	
 	<search>Recherche</search>
 	<siteName>Nom du site</siteName>
-	
+  
+  <createRemoteCategory>Attribuer les catégories si elles existent localement</createRemoteCategory>
+  <mefFormatFull>Utiliser le format MEF complet</mefFormatFull>
+  
 	<freeText>Texte libre</freeText>
 	<title>Titre</title>
 	<abstract>Résumé</abstract>
