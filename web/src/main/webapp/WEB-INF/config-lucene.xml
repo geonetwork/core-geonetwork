@@ -127,10 +127,6 @@
 		<Field name="orgName"/>
 		<Field name="specificationTitle"/>
 		<Field name="levelName"/>
-		<!-- from SearchManager/static -->
-		<Field name="_uuid"/>
-		<Field name="parentUuid"/>
-		<Field name="operatesOn"/>
 		<Field name="subject"/>
 	</tokenized>
 	

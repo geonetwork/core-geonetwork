@@ -127,7 +127,6 @@ public class LuceneQueryTest extends TestCase {
       // build lucene query
       Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
       // verify query
-      System.out.println( query.toString());
       assertEquals("+(+any:hoeper +any:*) +_isTemplate:n", query.toString());
     }
 
@@ -203,7 +202,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
 		// verify query
-		assertEquals("+(_uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
+		assertEquals("+_uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250 +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -221,8 +220,26 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
 		// verify query
-		assertEquals("+(_uuid:63c2378a-17a7-b863-bff4-cc3ef507d10d _uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
+		assertEquals("+(_uuid:63C2378A-17A7-B863-BFF4-CC3EF507D10D _uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
 	}
+
+	/**
+     * 'uuid' parameter with a double token value.
+     */
+    public void testDoubleTokenUUIDWithNonStandardUUID() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element uuid = factory.element("uuid");
+        uuid.addContent("63C2378A-17A7-B863-BFF4-CC3EF507D10D or BAR_DEN");
+        request.addContent(uuid);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        // build lucene query
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
+        // verify query
+        assertEquals("+(_uuid:63C2378A-17A7-B863-BFF4-CC3EF507D10D _uuid:BAR_DEN) +_isTemplate:n", query.toString());
+    }
 
 
 	/**

@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.search;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -70,6 +69,7 @@ import com.google.common.base.Splitter;
 public class LuceneQueryBuilder {
 
     private static final String OR_SEPARATOR = " or ";
+    private static final String STRING_TOKENIZER_DELIMITER = " \n\r\t";
     private Set<String> _tokenizedFieldSet;
     private PerFieldAnalyzerWrapper _analyzer;
     private Map<String, LuceneConfig.LuceneConfigNumericField> _numericFieldSet;
@@ -165,9 +165,20 @@ public class LuceneQueryBuilder {
                     // 'or's and handle like an 'or' query
                     // if more than one uuid parameter is set, then a 'and'
                     // query is made
-                    fieldValue = fieldValue.replaceAll("\\sor\\s", " ");
-                    addNotRequiredTextField(fieldValue, LuceneIndexField.UUID,
-                            similarity, (criteriaIsASet ? bq : query));
+                    if (fieldValue.contains(OR_SEPARATOR)) {
+                        // Add all separated values to the boolean query
+                        BooleanQuery uuidBooleanQuery = new BooleanQuery();
+                        addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.UUID, uuidBooleanQuery);
+                        BooleanClause booleanClause = new BooleanClause(uuidBooleanQuery, BooleanClause.Occur.MUST);
+                        if (criteriaIsASet) {
+                            bq.add(booleanClause);
+                        } else {
+                            query.add(booleanClause);
+                        }
+                    } else {
+                        addNotRequiredTextField(fieldValue, LuceneIndexField.UUID,
+                                similarity, (criteriaIsASet ? bq : query));    
+                    }
                 } else if (LuceneIndexField.NORTH.equals(fieldName)
                         || LuceneIndexField.SOUTH.equals(fieldName)
                         || LuceneIndexField.EAST.equals(fieldName)
@@ -242,7 +253,7 @@ public class LuceneQueryBuilder {
 								.convertRequiredAndProhibitedToOccur(true,
 										false);
 						// tokenize phrase
-						StringTokenizer st = new StringTokenizer(fieldValue);
+						StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
 						while (st.hasMoreTokens()) {
 							String phraseElement = st.nextToken();
 							phraseElement = phraseElement.trim().toLowerCase();
@@ -539,7 +550,7 @@ public class LuceneQueryBuilder {
 					matchAllDocsQuery, occur);
 			booleanQuery.add(matchAllDocsClause);
 			// tokenize searchParam
-			StringTokenizer st = new StringTokenizer(searchParam.trim());
+			StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				// ignore fuzziness in without-queries
@@ -587,7 +598,7 @@ public class LuceneQueryBuilder {
 				query.add(clause);
 			} else {
 				// tokenize searchParam
-				StringTokenizer st = new StringTokenizer(searchParam.trim());
+				StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
 				BooleanQuery booleanQuery = new BooleanQuery();
 				while (st.hasMoreTokens()) {
 					String token = st.nextToken();
@@ -636,7 +647,7 @@ public class LuceneQueryBuilder {
 				query.add(clause);
 			} else {
 				// tokenize searchParam only if tokenized when indexing
-				StringTokenizer st = new StringTokenizer(searchParam);
+				StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
 				if (st.countTokens() == 1) {
 					String token = st.nextToken();
 					Query subQuery = textFieldToken(token, luceneIndexField,
@@ -704,7 +715,7 @@ public class LuceneQueryBuilder {
 				.convertRequiredAndProhibitedToOccur(true, false);
 		if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
 			// tokenize searchParam
-			StringTokenizer st = new StringTokenizer(any);
+			StringTokenizer st = new StringTokenizer(any, STRING_TOKENIZER_DELIMITER);
 			if (st.countTokens() == 1) {
 				String token = st.nextToken();
 				Query subQuery = textFieldToken(token, LuceneIndexField.ANY,
