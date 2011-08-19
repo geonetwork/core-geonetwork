@@ -202,7 +202,12 @@
         <parent id="gmd:distributorContact"/>
         <parent id="gmd:citedResponsibleParty"/>
         <parent id="gmd:contact"/>
-        <parent id="gmd:source"/>
+        <!--
+          TODO : gmd:source could be find in
+          LI_Lineage an in MD_ExtendedElementInformation_Type
+          <parent id="gmd:source"/>
+          It's not a CI_ResponsibleParty in LI_Lineage
+        -->
         <parent id="gmd:processor"/>
         <parent id="gmd:responsibleParty"/>
       </subtemplate>
