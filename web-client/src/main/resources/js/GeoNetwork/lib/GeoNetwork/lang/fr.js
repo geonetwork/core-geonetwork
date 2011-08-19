@@ -233,7 +233,7 @@ GeoNetwork.Lang.fr = {
     'selectFile': 'Sélectionner un fichier',
     'image': 'Image',
     'uploading': 'Transfert en cours ...',
-    'upload': 'Transfert',
+    'upload': 'Transférer',
     'success': 'Succès',
     'failure': 'Échec',
     'error': 'Erreur',
@@ -441,6 +441,11 @@ GeoNetwork.Lang.fr = {
     'xmax': 'X max',
     'ymax': 'Y max',
     'newLabel': 'Libellé',
-    'newDefinition': 'Définition'
+    'newDefinition': 'Définition',
+    'selDirectoryTT': "Choisir un type d'annuaire. Un annuaire est constitué d'éléments ayant la même balise racine (eg. les éléments gmd:CI_ResponsibleParty font partie de l'annuaire de contact)",
+    'privTplElTT': 'Gérer les privilèges sur la sélection.',
+    'addTplElTT': "Ajouter un élément à partir d'un fragment d'XML. L'annuaire cible est basé sur le nom de la balise racine (eg. gmd:CI_ResponsibleParty).",
+    'copyTplElTT': "Créer un nouvel élément dans l'annuaire à partir de l'élément sélectionné.",
+    'delTplElTT': 'Supprimer la sélection.'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

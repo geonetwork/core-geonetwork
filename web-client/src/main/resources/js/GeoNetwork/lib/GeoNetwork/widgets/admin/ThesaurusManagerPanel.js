@@ -467,6 +467,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             tbar: {
                 disabled: true,
                 items: [{
+                    id: 'add_keyword_button',
                     text: OpenLayers.i18n('add'),
                     iconCls: 'addIcon',
                     handler: function(){
@@ -574,10 +575,19 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
     
     /**
      * Method: updateKeywordToolbar
+     * 
+     * Activate delete button for local thesaurus concepts only
      */
     updateKeywordToolbar: function(){
-        var selectedCells = this.keywordGrid.getSelectionModel().getSelectedCell();
-        Ext.getCmp('delete_keyword_button').setDisabled(!selectedCells);
+        var record = this.thesaurusGrid.getSelectionModel().getSelected();
+        if (record) {
+            var thesaurusType = record.data.type;
+            var isLocal = thesaurusType === 'local';
+            if (isLocal) {
+                var selectedCells = this.keywordGrid.getSelectionModel().getSelectedCell();
+                Ext.getCmp('delete_keyword_button').setDisabled(!selectedCells);
+            }
+        }
     },
 
     /**
@@ -586,11 +596,12 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
     updateKeywordGridAndToolbar: function(){
         var record = this.thesaurusGrid.getSelectionModel().getSelected();
         
-        if (record ){
+        if (record){
             this.keywordGrid.getTopToolbar().enable();
 
             var thesaurusTheme = record.data.theme;
             var thesaurusType = record.data.type;
+            var isLocal = thesaurusType === 'local';
             var thesaurusId = record.data.id;
             
             this.keywordStore.removeAll();
@@ -609,14 +620,18 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                     this.keywordGrid.getColumnModel().getIndexById('south'), hidden);
             this.keywordGrid.getColumnModel().setHidden(
                     this.keywordGrid.getColumnModel().getIndexById('north'), hidden);
+            
+            // Column are not editable for external thesaurus
+            for (var i=0; i < this.keywordGrid.getColumnModel().getColumnCount(); i++) {
+                this.keywordGrid.getColumnModel().setEditable(i, isLocal);
+            }
+            Ext.getCmp('delete_keyword_button').setDisabled(!isLocal);
+            Ext.getCmp('add_keyword_button').setDisabled(!isLocal);
+          
         } else {
             this.keywordGrid.getTopToolbar().disable();
         }
         
-        // Column are not editable for external thesaurus
-        for (var i=0; i < this.keywordGrid.getColumnModel().getColumnCount(); i++) {
-            this.keywordGrid.getColumnModel().setEditable(i, thesaurusType === 'local');
-        }
     },
 
     /**

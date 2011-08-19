@@ -440,7 +440,12 @@ GeoNetwork.lang.en = {
     'xmax': 'X max',
     'ymax': 'Y max',
     'newLabel': 'Label',
-    'newDefinition': 'Definition'
+    'newDefinition': 'Definition',
+    'selDirectoryTT': 'Select a type of directory. A directory group all elements having the same root element name (eg. gmd:CI_ResponsibleParty is a contact directory)',
+    'privTplElTT': 'Manage privileges for the current selection.',
+    'addTplElTT': 'Add an element from an XML fragment to a directory. The destination directory is based on the root element name (eg. gmd:CI_ResponsibleParty).',
+    'copyTplElTT': 'Create a new entry in the directory from the current selection.',
+    'delTplElTT': 'Remove selected entry from the directory.'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);

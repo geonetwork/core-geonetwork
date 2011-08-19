@@ -343,7 +343,7 @@ span.buttons a.small span {
 }
 .buttons a.findsub span {
   padding-left : 15px !important;
-  background-image : url(../images/default/report_magnify.png);
+  background-image : url(../images/default/find.png);
 }
 .buttons a.error span {
   padding-left : 15px !important;

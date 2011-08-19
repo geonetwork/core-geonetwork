@@ -580,7 +580,7 @@ GeoNetwork.adminApp = function() {
 };
 
 Ext.onReady(function() {
-    // Ext.QuickTips.init();
+    Ext.QuickTips.init();
 
     app = new GeoNetwork.adminApp();
     app.init();

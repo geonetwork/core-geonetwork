@@ -187,7 +187,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     }
                 }],
                 buttons: [{
-                    text: OpenLayers.i18n('save'),
+                    text: OpenLayers.i18n('upload'),
                     iconCls: 'attachedAdd',
                     handler: function(){
                         if (fileUploadPanel.getForm().isValid()) {

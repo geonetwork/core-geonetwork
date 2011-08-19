@@ -78,6 +78,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
             xtype: 'combo',
             name: 'E__root',
             mode: 'local',
+            title: OpenLayers.i18n('selDirectoryTT'),
             triggerAction: 'all',
             store: this.subTemplateTypeStore,
             valueField: 'type',
@@ -195,7 +196,12 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                 this.searchField
             ]
         });
-        
+        var events = ['afterDelete'];
+        Ext.each(events, function (e) {
+            this.catalogue.on(e, function(){
+                this.search();
+            }, this);
+        }, this);
         
         // Results grid
         this.searchResultGrid = new Ext.grid.GridPanel({
@@ -208,7 +214,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
             // of sub-template. For example, sort by organisation, name or email for contacts
             columns: [{
                 id: 'title',
-                header: 'Title',
+                header: OpenLayers.i18n('title'),
                 dataIndex: 'title'
             }, {
                 id: 'uuid',
@@ -227,7 +233,9 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
             },
             bbar: {
                 items: [{
+                    xtype: 'button',
                     text: OpenLayers.i18n('add'),
+                    tooltip: OpenLayers.i18n('addTplElTT'),
                     iconCls: 'addIcon',
                     handler: function(){
                         var metadataType = 's';
@@ -236,6 +244,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     scope: this
                 },{
                     text: OpenLayers.i18n('duplicate'),
+                    tooltip: OpenLayers.i18n('copyTplElTT'),
                     iconCls: 'md-mn-copy',
                     disabled: true,
                     handler: function(){
@@ -245,6 +254,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     scope: this
                 },{
                     text: OpenLayers.i18n('delete'),
+                    tooltip: OpenLayers.i18n('delTplElTT'),
                     iconCls: 'md-mn-del',
                     disabled: true,
                     handler: function(){
@@ -256,6 +266,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     scope: this
                 },{
                     text: OpenLayers.i18n('privileges'),
+                    tooltip: OpenLayers.i18n('privTplElTT'),
                     iconCls : 'privIcon',
                     disabled: true,
                     handler: function(){
