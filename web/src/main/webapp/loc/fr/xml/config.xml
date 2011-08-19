@@ -33,11 +33,11 @@
 	<surname>Nom</surname>
 	<firstname>Prénom</firstname>
 	
-	<threadedindexing>Multi-threaded Indexing</threadedindexing>
-	<maxthreads>Number of processing threads</maxthreads>
-	<recommendedThreads>Recommended</recommendedThreads>
-	<reasonForOne>Database not tested or doesn't support</reasonForOne>
-	<reasonForMore>From number of processors</reasonForMore>
+	<threadedindexing>Indexation Multi-threaded</threadedindexing>
+	<maxthreads>Nombre de processus</maxthreads>
+	<recommendedThreads>Recommandé</recommendedThreads>
+	<reasonForOne>Fonction non testée ou non supportée pour la base de données</reasonForOne>
+	<reasonForMore>A partir du nombre de processeurs</reasonForMore>
 
 	<server>Serveur</server>
 	<host>Hôte</host>
@@ -145,19 +145,19 @@
 	<proxy>Proxy</proxy>
 	<use>Activé</use>
 
-    <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+    <metadataEnableInspireSearch>Activer le panneau de recherche</metadataEnableInspireSearch>
 
-    <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
-    <metadataDefaultView>Default view</metadataDefaultView>
-    <metadataSimpleView>Simple view</metadataSimpleView>
-    <metadataIsoView>ISO view</metadataIsoView>
-    <metadataInspireView>INSPIRE view</metadataInspireView>
-    <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Advanced view</metadataAdvancedView>
+    <metadataViews>Affichage des métadonnées</metadataViews>
+    <metadataEnableSimpleView>Activer la vue simple</metadataEnableSimpleView>
+    <metadataEnableIsoView>Activer la vue ISO</metadataEnableIsoView>
+    <metadataEnableInspireView>Activer la vue INSPIRE</metadataEnableInspireView>
+    <metadataEnableXmlView>Activer la vue XML</metadataEnableXmlView>
+    <metadataDefaultView>Vue par défaut</metadataDefaultView>
+    <metadataSimpleView>Vue simple</metadataSimpleView>
+    <metadataIsoView>Vue ISO</metadataIsoView>
+    <metadataInspireView>Vue INSPIRE</metadataInspireView>
+    <metadataXmlView>Vue XML</metadataXmlView>
+    <metadataAdvancedView>Vue avancée</metadataAdvancedView>
 
 	<!-- Buttons -->
 
