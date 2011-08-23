@@ -29,11 +29,12 @@
 								<!-- loop on all categories -->
 		
 								<xsl:for-each select="/root/response/categories/category">
-									<xsl:sort select="name"/>
+								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<xsl:variable name="categId" select="id"/>
 									<tr>
 										<td class="padded">
 											<label for="_{$categId}">
+											  <img class="category" src="../../images/category/{name}.png"/>
 												<xsl:value-of select="label/child::*[name() = $lang]"/>
 											</label>
 										</td>
