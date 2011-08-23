@@ -2066,9 +2066,6 @@
           <xsl:with-param name="text">
             <a href="{$linkage}" target="_new">
               <xsl:choose>
-                <xsl:when test="string($description)!=''">
-                  <xsl:value-of select="$description"/>
-                </xsl:when>
                 <xsl:when test="string($name)!=''">
                   <xsl:value-of select="$name"/>
                 </xsl:when>
@@ -2077,6 +2074,9 @@
                 </xsl:otherwise>
               </xsl:choose>
             </a>
+            <xsl:if test="string($description)!=''">
+              <br/><xsl:value-of select="$description"/>
+            </xsl:if>
           </xsl:with-param>
         </xsl:apply-templates>
       </xsl:when>
