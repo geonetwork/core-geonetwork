@@ -146,10 +146,10 @@ public class BatchNewOwner implements Service
 	private Vector<String> retrievePrivileges(Dbms dbms, String id, String userId, String groupId) throws Exception
 	{
 
-		Object args[] = { new Integer(id), new Integer(userId), new Integer(groupId) };
+		Object args[] = { new Integer(id), new Integer(id), new Integer(userId), new Integer(groupId) };
 		String query = "SELECT * "+
 							"FROM OperationAllowed, Metadata "+
-							"WHERE metadataId=? AND owner=? AND groupId=?";
+							"WHERE metadataId=? AND id =? AND owner=? AND groupId=?";
 
 		List list = dbms.select(query, args).getChildren();
 
