@@ -508,6 +508,8 @@ class Harvester
 		} else if (name.equals("MD_Metadata")) {
             try {
                 XPath xpath = XPath.newInstance("gmd:fileIdentifier/gco:CharacterString");
+                xpath.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                xpath.addNamespace("gco", "http://www.isotc211.org/2005/gco");
                 Element identif = (Element) xpath.selectSingleNode(record);
 
                 if (identif == null)
