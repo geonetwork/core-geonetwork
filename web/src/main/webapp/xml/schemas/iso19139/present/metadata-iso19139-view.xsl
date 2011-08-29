@@ -354,15 +354,17 @@
   <!-- Extract logo -->
   <xsl:template mode="logo" match="gmd:graphicOverview">
     <xsl:variable name="fileName" select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
-    <xsl:variable name="url"
-      select="if (contains($fileName, '://')) 
-      then $fileName 
-      else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
-
-    <a href="{$url}" rel="lightbox-viewset">
-      <img class="logo" src="{$url}" alt="thumbnail"
-        title="{gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString}"/>
-    </a>
+    <xsl:if test="normalize-space($fileName)!=''">
+      <xsl:variable name="url"
+        select="if (contains($fileName, '://')) 
+        then $fileName 
+        else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
+  
+      <a href="{$url}" rel="lightbox-viewset">
+        <img class="logo" src="{$url}" alt="thumbnail"
+          title="{gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString}"/>
+      </a>
+    </xsl:if>
   </xsl:template>
 
 
