@@ -290,6 +290,21 @@ public class LuceneQueryBuilder {
 			}
 		}
 
+        //
+        // harvestUuid
+        //
+		String harvestUuidParam = luceneQueryInput.getHarvestUuid();
+		if(harvestUuidParam != null) {
+			harvestUuidParam = harvestUuidParam.trim();
+			if(harvestUuidParam.length() > 0) {
+				// the harvestUuidParam param is an 'or' separated list. Remove the 'or's and handle like an 'or' query:
+				harvestUuidParam = harvestUuidParam.replaceAll("\\sor\\s", " ");
+				BooleanClause harvestUuidQuery = notRequiredTextField(harvestUuidParam, LuceneIndexField.HARVESTUUID, similarity);
+				if(harvestUuidQuery != null) {
+					query.add(harvestUuidQuery);
+				}
+			}
+		}
 		//
 		// any
 		//

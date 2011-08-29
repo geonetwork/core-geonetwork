@@ -333,7 +333,7 @@ public class DataManager
 		String  root = md.getName();
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, uuid, "+
-									"isHarvested, owner, groupOwner, popularity, rating FROM Metadata WHERE id = " + id;
+									"isHarvested, harvestuuid, owner, groupOwner, popularity, rating FROM Metadata WHERE id = " + id;
 
 		Element rec = dbms.select(query).getChild("record");
 
@@ -343,7 +343,8 @@ public class DataManager
 		String  source     = rec.getChildText("source");
 		String  isTemplate = rec.getChildText("istemplate");
 		String  title      = rec.getChildText("title");
-		String  uuid       = rec.getChildText("uuid");
+        String  uuid       = rec.getChildText("uuid");
+        String  harvestUuid = rec.getChildText("harvestuuid");
 		String  isHarvested= rec.getChildText("isharvested");
 		String  owner      = rec.getChildText("owner");
 		String  groupOwner = rec.getChildText("groupowner");
@@ -361,7 +362,8 @@ public class DataManager
 		moreFields.add(makeField("_isTemplate",  isTemplate,  true, true, false));
 		moreFields.add(makeField("_title",       title,       true, true, false));
 		moreFields.add(makeField("_uuid",        uuid,        true, true, false));
-		moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
+        moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
+        moreFields.add(makeField("harvestUuid", harvestUuid, true, true, false));
 		moreFields.add(makeField("_owner",       owner,       true, true, false));
 		moreFields.add(makeField("_dummy",       "0",        false, true, false));
 		moreFields.add(makeField("_popularity",  popularity,  true, true, false));

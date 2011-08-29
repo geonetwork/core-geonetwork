@@ -41,6 +41,7 @@ public class SearchParameter {
     public static final String TOPICCATEGORY = "topic-category";
     public static final String SIMILARITY = "similarity";
     public static final String UUID = "uuid";
+    public static final String HARVESTUUID = "harvestUuid";
     public static final String ANY = "any";
     public static final String ALL = "all";
     public static final String OR = "or";

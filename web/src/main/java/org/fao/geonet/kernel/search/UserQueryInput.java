@@ -39,6 +39,7 @@ public class UserQueryInput {
 
     private String similarity;
     private String uuid;
+    private String harvestUuid;
     private String any;
     private String all;
     private String or;
@@ -91,6 +92,7 @@ public class UserQueryInput {
     public UserQueryInput(Element jdom) {
         setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
         setUuid(jdom.getChildText(SearchParameter.UUID));
+        setHarvestUuid(jdom.getChildText(SearchParameter.HARVESTUUID));
         setAny(jdom.getChildText(SearchParameter.ANY));
         setAll(jdom.getChildText(SearchParameter.ALL));
         setOr(jdom.getChildText(SearchParameter.OR));
@@ -193,6 +195,7 @@ public class UserQueryInput {
         }
         return new StringBuffer().append(" similarity: ").append(similarity)
                 .append(" uuid: ").append(uuid)
+                .append(" harvestUuid: ").append(harvestUuid)
                 .append(" any: ").append(any)
                 .append(" all: ").append(all)
                 .append(" or: ").append(or)
@@ -259,6 +262,14 @@ public class UserQueryInput {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getHarvestUuid() {
+        return harvestUuid;
+    }
+
+    public void setHarvestUuid(String harvestUuid) {
+        this.harvestUuid = harvestUuid;
     }
 
     public String getAny() {
