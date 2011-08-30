@@ -57,14 +57,15 @@ public class ProfileManager
 
 	/** Given the user-profiles.xml file name, loads it abd inits its internal data
 	  * putting data in memory into a convenient way
+	 * @param appPath 
 	  */
 
 	@SuppressWarnings("unchecked")
-	public ProfileManager(JeevesServlet servlet, String profilesFile) throws Exception
+	public ProfileManager(JeevesServlet servlet, String appPath, String profilesFile) throws Exception
 	{
 		Element elProfiles = Xml.loadFile(profilesFile);
 		if (servlet != null) {
-		      ConfigurationOverrides.updateWithOverrides(profilesFile, servlet, elProfiles);
+		      ConfigurationOverrides.updateWithOverrides(profilesFile, servlet, appPath, elProfiles);
 		}
 		htProfiles  = new Hashtable<String, Element>(50);
 

@@ -1,34 +1,39 @@
 package jeeves.server;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.List;
+
 import jeeves.utils.Xml;
+
 import org.apache.log4j.Level;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class ConfigurationOveridesTest {
     final ClassLoader classLoader = getClass().getClassLoader();
-    final ConfigurationOverrides.ResourceLoader loader = new ClasspathResourceLoader();
-
-
+    String appPath = new File(new File(classLoader.getResource("test-config.xml").getFile()).getParentFile(),"correct-webapp").getAbsolutePath();
+    String falseAppPath = new File(new File(classLoader.getResource("test-config.xml").getFile()).getParentFile(),"false-webapp").getAbsolutePath();
+    final ConfigurationOverrides.ResourceLoader loader = new ConfigurationOverrides.ServletResourceLoader(null, appPath);
+    
     @Test
     public void updateLoggingConfig() throws JDOMException, IOException {
-        final Element overrides = Xml.loadFile(classLoader.getResource("config-overrides.xml"));
+        final Element overrides = Xml.loadFile(classLoader.getResource("correct-webapp/WEB-INF/config-overrides.xml"));
 
         ConfigurationOverrides.doUpdateLogging(overrides, loader);
         assertEquals(Level.DEBUG, org.apache.log4j.Logger.getRootLogger().getLevel());
     }
     @Test
     public void imports() throws JDOMException, IOException {
-        Element config = loader.loadXmlResource("config-overrides.xml");
+        Element config = loader.loadXmlResource("/WEB-INF/config-overrides.xml");
         assertEquals(6, Xml.selectElement(config,"properties").getChildren().size());
         assertEquals(10, Xml.selectElement(config,"file[@name = 'config.xml']").getChildren().size());
         assertEquals(1, Xml.selectNodes(config,"file[@name = 'config3.xml']").size());
@@ -40,8 +45,9 @@ public class ConfigurationOveridesTest {
     public void updateConfig() throws JDOMException, IOException {
         Element config = Xml.loadFile(classLoader.getResource("test-config.xml"));
         Element config2 = (Element) Xml.loadFile(classLoader.getResource("test-config.xml")).clone();
-        ConfigurationOverrides.updateConfig(loader, "config-overrides.xml","config.xml", config);
-        ConfigurationOverrides.updateConfig(loader, "config-overrides.xml","config2.xml", config2);
+            
+        ConfigurationOverrides.updateWithOverrides("config.xml", null, appPath, config);
+        ConfigurationOverrides.updateWithOverrides("config2.xml", null, appPath, config2);
 
         assertLang("fr",config);
         assertLang("de", config2);
@@ -71,12 +77,40 @@ public class ConfigurationOveridesTest {
         assertEquals(1,lang.size());
         assertEquals(expected, ((Element)lang.get(0)).getTextTrim());
     }
-
-    class ClasspathResourceLoader extends ConfigurationOverrides.ResourceLoader {
-
-        @Override
-        protected InputStream loadInputStream(String resource) throws JDOMException, IOException {
-            return classLoader.getResourceAsStream(resource);
-        }
+    @Test
+    public void loadFile() throws JDOMException, IOException {
+    	URL resourceAsStream = classLoader.getResource("test-sql.sql");
+    	BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream.openStream(), "UTF-8"));
+    	try {
+    	    // note first , is intentional to verify that it will be ignored
+    	    System.setProperty("geonetwork."+ConfigurationOverrides.OVERRIDES_KEY, ",/WEB-INF/config-overrides.xml,/WEB-INF/config-overrides-overlay.xml");
+			List<String> lines = ConfigurationOverrides.loadFileAndUpdate("test-sql.sql", null, appPath,  reader);
+			
+			assertEquals("CREATE TABLE NewRelations", lines.get(0).trim());
+			assertEquals("(", lines.get(1).trim());
+			assertEquals("primary key(id,overridden)", lines.get(2).trim());
+			assertEquals(");", lines.get(3).trim());
+			assertEquals("INSERT INTO Settings VALUES (21,20,'host','localhost');", lines.get(4).trim());
+			assertEquals("INSERT INTO Settings VALUES (22,20,'port','8080');", lines.get(5).trim());
+    	}finally {
+    		reader.close();
+    	}
     }
+
+    @Test
+    public void noUpdateConfig() throws JDOMException, IOException {
+        Element config = Xml.loadFile(classLoader.getResource("test-config.xml"));
+        Element unchanged = (Element) config.clone();
+        ConfigurationOverrides.updateWithOverrides("config.xml", null, falseAppPath, config);
+        
+
+        assertLang("en",config);
+
+        assertEquals(Xml.selectString(unchanged,"default/gui/xml[@name = 'countries']/@file"), Xml.selectString(config,"default/gui/xml[@name = 'countries']/@file"));
+    }
+    
+    // TODO no property
+    // no overrides
+    // invalid appPath
+    
 }

@@ -120,7 +120,7 @@ public class ServiceManager
 
 	public void loadProfiles(JeevesServlet servlet, String file) throws Exception
 	{
-		profilMan = new ProfileManager(servlet, appPath + Jeeves.Path.WEBINF + file);
+		profilMan = new ProfileManager(servlet, appPath, appPath + Jeeves.Path.WEBINF + file);
 	}
 
 	//---------------------------------------------------------------------------

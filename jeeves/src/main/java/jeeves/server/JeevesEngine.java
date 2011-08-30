@@ -67,6 +67,7 @@ import java.util.Vector;
 
 public class JeevesEngine
 {
+	private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
 	private String  defaultSrv;
 	private String	startupErrorSrv;
 	private String  profilesFile;
@@ -104,7 +105,7 @@ public class JeevesEngine
 	{
 		try
 		{
-            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servlet);
+            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servlet, appPath);
 
 			this.appPath = appPath;
 
@@ -132,7 +133,7 @@ public class JeevesEngine
 			info("Java version : "+ System.getProperty("java.vm.version"));
 			info("Java vendor  : "+ System.getProperty("java.vm.vendor"));
 
-            setupXSLTTransformerFactory();
+            setupXSLTTransformerFactory(servlet);
 
 			info("Path    : "+ appPath);
 			info("BaseURL : "+ baseUrl);
@@ -198,15 +199,19 @@ public class JeevesEngine
      * @throws IOException
      * @throws TransformerConfigurationException
      */
-    private void setupXSLTTransformerFactory() throws IOException, TransformerConfigurationException {
-        InputStream in = null;
-        File f = new File(appPath + "WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory");
-        
+    private void setupXSLTTransformerFactory(JeevesServlet servlet) throws IOException, TransformerConfigurationException {
+    	
+    	InputStream in = null;
+    	// In debug mode, Jeeves may load a different file
+    	// Load javax.xml.transform.TransformerFactory from application path instead
+    	if(servlet != null) {
+    		in = servlet.getServletContext().getResourceAsStream(TRANSFORMER_PATH);
+    	}
+    	if(in == null){
+    		File f = new File(appPath + TRANSFORMER_PATH);
+    		in = new FileInputStream(f);
+    	}        
         try {
-            // In debug mode, Jeeves may load a different file
-        	// Load javax.xml.transform.TransformerFactory from application path instead
-        	// in = this.getClass().getClassLoader().getResourceAsStream("META-INF/services/javax.xml.transform.TransformerFactory");
-            in = new FileInputStream(f);
             
             if(in != null) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -222,7 +227,11 @@ public class JeevesEngine
             }
         }
         catch(IOException x) {
-        	warning("Definition of XSLT transformer not found (tried: " + f.getCanonicalPath() + ")");
+        	String msg = "Definition of XSLT transformer not found (tried: " + new File(appPath + TRANSFORMER_PATH).getCanonicalPath() + ")";
+        	if(servlet != null) {
+        		msg += " and servlet.getServletContext().getResourceAsStream("+TRANSFORMER_PATH+")";
+        	}
+        	warning(msg);
             error(x.getMessage());
             x.printStackTrace();
         }
@@ -245,7 +254,7 @@ public class JeevesEngine
 
 		Element configRoot = Xml.loadFile(file);
 
-        ConfigurationOverrides.updateWithOverrides(file, servlet, configRoot);
+        ConfigurationOverrides.updateWithOverrides(file, servlet, appPath, configRoot);
 
 		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);

@@ -242,7 +242,7 @@ public final class Jeeves
 			public static final String POOL_SIZE      = "poolSize";
 			public static final String MAX_TRIES      = "maxTries";
 			public static final String MAX_WAIT       = "maxWait";
-
+			public static final String VALIDATION_QUERY = "validationQuery";
 			public static final int DEF_POOL_SIZE      = 10;
 			public static final int DEF_MAX_WAIT       = 200; // msecs between attempts
 			public static final String MAX_IDLE = "maxIdle";

@@ -1,0 +1,10 @@
+<overrides>
+	<!-- a normal file tag is for updating XML configuration files -->
+     <!-- textFile tags are for updating normal text files like sql files -->
+     <textFile name="test-sql.sql">
+     	<!-- each line in the text file is matched against the linePattern attribute and the new value is used for substitution -->
+     	<update linePattern="(.*)relatedId(.*)">$1${aparam}$2</update>
+		<update linePattern="(INSERT INTO Settings VALUES \(\d+,\d+,'host',').+?('.*)">$1localhost$2</update>
+		<update linePattern="INSERT INTO Settings VALUES \((\d+),(\d+),'port','.+?('.*)">INSERT INTO Settings VALUES ($1,$2,'port','8080$3</update>
+     </textFile>
+ </overrides>

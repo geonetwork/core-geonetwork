@@ -148,6 +148,10 @@ public class ServiceContext extends BasicContext
 	{
 		this.headers = headers;
 	}
+
+	public JeevesServlet getServlet() {
+        return servlet;
+    }
 }
 
 //=============================================================================

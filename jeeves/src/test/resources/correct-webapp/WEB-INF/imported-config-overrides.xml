@@ -20,4 +20,7 @@
     <file name="config3.xml">
          <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file" value="${dir}/other.xml"/>
      </file>
+     <textFile name="test-sql.sql">
+     	<update linePattern="(.*) Relations">$1 NewRelations</update>
+     </textFile>
  </overrides>

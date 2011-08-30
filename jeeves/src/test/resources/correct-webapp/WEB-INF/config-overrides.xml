@@ -8,8 +8,8 @@
     <!-- properties previously loaded.  This allows one to have shared configuration in -->
     <!-- one log file and more specific configuration in other files -->
     <logging>
-        <logFile>logfile1.properties</logFile>
-        <logFile>logfile2.properties</logFile>
+        <logFile>/WEB-INF/logfile1.properties</logFile>
+        <logFile>/WEB-INF/logfile2.properties</logFile>
     </logging>
      <!-- properties allow some properties to be defined that will be substituted -->
      <!-- into text or attributes where ${property} is the substitution pattern -->

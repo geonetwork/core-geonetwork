@@ -115,6 +115,7 @@ public class ApacheDBCPool implements ResourceProvider {
 		String timeBetweenEvictionRunsMillisStr = config.getChildText(Jeeves.Res.Pool.TIME_BETWEEN_EVICTION_RUNS_MILLIS);
 		String minEvictableIdleTimeMillisStr = config.getChildText(Jeeves.Res.Pool.MIN_EVICTABLE_IDLE_TIME_MILLIS);
 		String numTestsPerEvictionRunStr = config.getChildText(Jeeves.Res.Pool.NUM_TESTS_PER_EVICTION_RUN);
+		String validationQuery = config.getChildText(Jeeves.Res.Pool.VALIDATION_QUERY);
 		
 		this.name = url;
 
@@ -186,7 +187,9 @@ public class ApacheDBCPool implements ResourceProvider {
 		ds.setPoolPreparedStatements(true);
 		ds.setMaxOpenPreparedStatements(-1);
 
-		ds.setValidationQuery("Select 1");
+		if (validationQuery != null && validationQuery.trim().length() > 0) {
+			ds.setValidationQuery(validationQuery);
+		}
 		ds.setDefaultReadOnly(false);
 		ds.setDefaultAutoCommit(false);
 
