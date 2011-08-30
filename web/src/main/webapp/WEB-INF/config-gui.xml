@@ -10,10 +10,10 @@
     (ie. main.home service) or to another custom client.
   -->
   <client type="redirect" 
-    widget="${geonetwork.config-gui.widget}" 
-    url="${geonetwork.config-gui.widget.url}"
-    parameters="${geonetwork.config-gui.widget.parameters}"
-    createParameter="${geonetwork.config-gui.widget.create}"/>
+    widget="false" 
+    url="main.home"
+    parameters=""
+    createParameter=""/>
   
   <!-- Default main.home client interface -->
   <!--<client type="redirect" url="main.home"/>-->
@@ -282,6 +282,6 @@
 	
 	
   <repository>
-    <thesaurus>${geonetwork.config-gui.thesaurusRepositoryUrl}</thesaurus>
+    <thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
   </repository>
 </config>

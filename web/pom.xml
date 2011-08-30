@@ -306,6 +306,12 @@
       <artifactId>opendap</artifactId>
       <version>2.1</version>
     </dependency>
+		<dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>geonetwork-client</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   
   <build>
@@ -316,51 +322,40 @@
         <version>2.5</version>
         <executions>
           <execution>
-            <id>copy-filter-webResource</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${build.webapp.resources}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/webResources</directory>
-                  <filtering>true</filtering>
-                  <targetPath>${build.webapp.resources}</targetPath>
-                  <excludes>
-                    <exclude>**/.svn</exclude>
-                  </excludes>
-                </resource>
-              </resources>
-              <filters>
-                <filter>${basedir}/src/main/filters/${env}.properties</filter>
-              </filters>
-              <overwrite>true</overwrite>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-webapp</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${build.webapp.resources}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/webapp</directory>
-                  <filtering>false</filtering>
-                  <targetPath>${build.webapp.resources}</targetPath>
-                  <excludes>
-                    <exclude>**/.svn</exclude>
-                  </excludes>
-                </resource>
-              </resources>
-              <overwrite>false</overwrite>
-            </configuration>
-          </execution>
-        </executions>
+             <id>copy-filter-webResource</id>
+             <phase>process-resources</phase>
+             <goals>
+               <goal>copy-resources</goal>
+             </goals>
+             <configuration>
+               <includeEmptyDirs>false</includeEmptyDirs>
+               <outputDirectory>${build.webapp.resources}</outputDirectory>
+               <resources>
+                 <resource>
+                   <directory>${basedir}/src/main/webResources</directory>
+                   <filtering>true</filtering>
+                   <targetPath>${build.webapp.resources}</targetPath>
+                   <excludes>
+                     <exclude>**/.svn</exclude>
+                   </excludes>
+                 </resource>
+                 <resource>
+                   <directory>${basedir}/src/main/webapp/scripts/lib/</directory>
+                   <filtering>false</filtering>
+                   <targetPath>${build.webapp.resources}/scripts/lib/</targetPath>
+                   <excludes>
+                     <exclude>**/.svn</exclude>
+                     <exclude>**/*.js</exclude>
+                   </excludes>
+                 </resource>
+               </resources>
+               <filters>
+                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
+               </filters>
+               <overwrite>true</overwrite>
+             </configuration>
+           </execution>
+         </executions>
       </plugin>
       <plugin> 
         <groupId>org.codehaus.mojo</groupId> 
@@ -380,7 +375,6 @@
           <doUpdate>false</doUpdate> 
         </configuration> 
       </plugin>
-      
       
       <plugin>
         <groupId>net.alchim31.maven</groupId>
@@ -681,10 +675,17 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
+              <directory>${basedir}/src/main/webapp</directory>
               <directory>${build.webapp.resources}</directory>
             </resource>
           </webResources>
-          
+          <overlays>
+            <overlay>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>geonetwork-client</artifactId>
+              <type>jar</type>
+            </overlay>
+          </overlays>          
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           
 <!-- Remove comment tag to include documentation in the build. 
@@ -741,9 +742,13 @@ Python and Latex are required to build the documentation. -->
             </connector>
           </connectors>
           <webApp>${project.build.directory}/geonetwork</webApp>
-          <webAppSourceDirectory>${build.webapp.resources}</webAppSourceDirectory>
+          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
+<!--      <webAppSourceDirectory>${build.webapp.resources}</webAppSourceDirectory> -->
           <webAppConfig>
             <contextPath>/geonetwork</contextPath>
+            <baseResource implementation="org.mortbay.resource.ResourceCollection">
+              <resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+            </baseResource>
           </webAppConfig>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>
@@ -793,6 +798,13 @@ Python and Latex are required to build the documentation. -->
         <env>inspire</env>
       </properties>
     </profile>
+    <profile>
+      <id>widgets</id>
+      <properties>
+        <web.xml.widget.config.overrides>,/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
   </profiles>
   
   <reporting>
@@ -814,5 +826,9 @@ Python and Latex are required to build the documentation. -->
     <geonetwork.webapp.css.dir>${geonetwork.webapp.dir}</geonetwork.webapp.css.dir>
     <minify.verbose>false</minify.verbose>
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
+    <web.xml.main.config.overrides>/WEB-INF/config-overrides-${env}.xml</web.xml.main.config.overrides>
+    <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
+    <widgets.webapp.resources></widgets.webapp.resources>
+    <system.specific.overrides></system.specific.overrides>
   </properties>
 </project>

@@ -23,6 +23,8 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.server.ConfigurationOverrides;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Util;
 
 import java.io.BufferedReader;
@@ -47,46 +49,17 @@ public class TextLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public List<String> load(String file) throws FileNotFoundException, IOException
+	public List<String> load(JeevesServlet jeevesServlet, String appPath, String file) throws FileNotFoundException, IOException
 	{
-		FileInputStream is = new FileInputStream(file);
-		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, "ISO-8859-1"));
-
-		ArrayList<String> al = new ArrayList<String>();
-
-		String line;
-
-		try
-		{
-			while ((line = ir.readLine()) != null)
-				al.add(line);
-
-			return al;
-		}
-		finally
-		{
-			ir.close();
-		}
+		return load(jeevesServlet, appPath, file, "ISO-8859-1");
 	}
 
-	public List<String> load(String file, String encoding) throws FileNotFoundException, IOException
+	public List<String> load(JeevesServlet jeevesServlet, String appPath, String file, String encoding) throws FileNotFoundException, IOException
 	{
 		FileInputStream is = new FileInputStream(file);
 		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, encoding));
 
-		ArrayList<String> al = new ArrayList<String>();
-		
-		String line;
-		try
-		{
-			while ((line = ir.readLine()) != null)
-				al.add(line);
-			return al;
-		}
-		finally
-		{
-			ir.close();
-		}
+		return ConfigurationOverrides.loadFileAndUpdate(file, jeevesServlet, appPath, ir);
 	}
 	
 	//---------------------------------------------------------------------------

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="overrides">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="import"/>
+        <xs:element ref="properties"/>
+        <xs:element maxOccurs="unbounded" ref="file"/>
+        <xs:element maxOccurs="unbounded" ref="textFile"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="import">
+    <xs:annotation>
+      <xs:documentation>Import values.  The imported values are put at top of sections</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="file" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="properties">
+    <xs:annotation>
+      <xs:documentation>
+        Properties allow some properties to be defined that will be substituted
+        into text or attributes where ${property} is the substitution pattern
+        The properties can reference other properties
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="file">
+    <xs:annotation>
+      <xs:documentation>XML file overrides configuration</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="replaceAtt"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="replaceText"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="replaceXML"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="addXML"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="removeXML"/>
+        </xs:sequence>
+      </xs:choice>
+      <xs:attribute name="name" use="required">
+        <xs:annotation>
+          <xs:documentation>A regular expression for matching the file affected.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="replaceAtt">
+    <xs:complexType>
+      <xs:attribute name="attName" use="required" type="xs:NCName"/>
+      <xs:attribute name="value" use="required" type="xs:NCName"/>
+      <xs:attribute name="xpath" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="replaceXML">
+    <xs:annotation>
+      <xs:documentation>This sub-element will replace all the xml with the contained xml</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all/>
+      <xs:attribute name="xpath" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addXML">
+    <xs:annotation>
+      <xs:documentation>Append xml as a child to a section (If xpath == "" then that indicates the root of the document),
+        this case adds nodes to the root document</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all/>
+      <xs:attribute name="xpath" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="removeXML">
+    <xs:annotation>
+      <xs:documentation>This will remove the xml identified by the XPath</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="xpath" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="replaceText">
+    <xs:annotation>
+      <xs:documentation>This will replace the text of an element</xs:documentation>
+    </xs:annotation>
+    <xs:complexType mixed="true">
+      <xs:attribute name="xpath" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="textFile">
+    <xs:annotation>
+      <xs:documentation>Text file overrides configuration</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="update"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="update">
+    <xs:complexType mixed="true">
+      <xs:attribute name="linePattern" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

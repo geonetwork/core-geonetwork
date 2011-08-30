@@ -32,6 +32,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,12 +41,15 @@ import jeeves.JeevesProxyInfo;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
 import jeeves.utils.ProxyInfo;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import jeeves.utils.XmlResolver;
 import jeeves.xlink.Processor;
 
@@ -104,6 +108,7 @@ public class Geonetwork implements ApplicationHandler
 	static final String				IDS_ATTRIBUTE_NAME        = "id";
 	private ThreadPool        threadPool;
 	private String   FS         = File.separator;
+	private Element dbConfiguration;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -131,7 +136,7 @@ public class Geonetwork implements ApplicationHandler
 		String baseURL = context.getBaseUrl();
 		String webappName = baseURL.substring(1);
 
-		ServerLib sl = new ServerLib(path);
+		ServerLib sl = new ServerLib(context.getServlet(), path);
 		String version = sl.getVersion();
 		String subVersion = sl.getSubVersion();
 
@@ -195,6 +200,10 @@ public class Geonetwork implements ApplicationHandler
 		
 
 		// --- Check current database and create database if an emty one is found
+		String dbConfigurationFilePath = path + "/WEB-INF/config-db.xml";
+		dbConfiguration = Xml.loadFile(dbConfigurationFilePath);
+        ConfigurationOverrides.updateWithOverrides(dbConfigurationFilePath, context.getServlet(), path, dbConfiguration);
+
 		Dbms dbms = initDatabase(context);
 
 		//------------------------------------------------------------------------
@@ -212,7 +221,7 @@ public class Geonetwork implements ApplicationHandler
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
 		// --- Migrate database if an old one is found
-		migrateDatabase(dbms, settingMan, version, subVersion);
+		migrateDatabase(context.getServlet(), dbms, settingMan, version, subVersion);
 		
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
@@ -430,6 +439,23 @@ public class Geonetwork implements ApplicationHandler
 		}
 	}
 
+    /**
+     * Parse a version number removing extra "-*" element and returning an integer. "2.7.0-SNAPSHOT"
+     * is returned as 270.
+     * 
+     * @param number The version number to parse
+     * @return The version number as an integer
+     * @throws Exception
+     */
+    private int parseVersionNumber(String number) throws Exception {
+        // Remove extra "-SNAPSHOT" info which may be in version number
+        int dashIdx = number.indexOf("-");
+        if (dashIdx != -1) {
+            number = number.substring(0, number.indexOf("-"));
+        }
+        return Integer.valueOf(number.replaceAll("\\.", ""));
+    }
+    
 	/**
 	 * Check if current database is running same version as the web application.
 	 * If not, apply migration SQL script :
@@ -438,10 +464,10 @@ public class Geonetwork implements ApplicationHandler
 	 * 
 	 * @param dbms
 	 * @param settingMan
-	 * @param version
+	 * @param webappVersion
 	 * @param subVersion
 	 */
-	private void migrateDatabase(Dbms dbms, SettingManager settingMan, String version, String subVersion) {
+	private void migrateDatabase(JeevesServlet jeevesServlet, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion) {
 		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
@@ -449,72 +475,97 @@ public class Geonetwork implements ApplicationHandler
 		String dbSubVersion = settingMan.getValue("system/platform/subVersion");
 		
 		// Migrate db if needed
-		logger.debug("      Webapp   version:" + version + " subversion:" + subVersion);
-		logger.debug("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
+		logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
+		logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
+		if (dbVersion == null || webappVersion == null) {
+			logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork database with data." + 
+							"      Migration step aborted.");
+			return;
+		}
 		
-		if (version.equals(dbVersion)
+		int from = 0, to = 0;
+
+		try {
+		    from = parseVersionNumber(dbVersion);
+		    to = parseVersionNumber(webappVersion);
+		} catch(Exception e) {
+		    logger.warning("      Error parsing version numbers: " + e.getMessage());
+            e.printStackTrace();
+		}
+		
+		if (from == to
 				//&& subVersion.equals(dbSubVersion) Check only on version number
 		) {
 			logger.info("      Webapp version = Database version, no migration task to apply.");
 		} else {
 			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
 			String dbType = Lib.db.getDBType(dbms);
-			logger.info("      Migrating from " + dbVersion + " to " + version + " (dbtype:" + dbType + ")...");
-			String sqlScriptPath = "";
-			String sqlMigrationScriptPath = path + "/WEB-INF/classes/setup/sql/migrate/" + 
-				 dbVersion + "-to-" + version + "/" + dbType + ".sql";
-			String defaultSqlMigrationScriptPath = path + "/WEB-INF/classes/setup/sql/migrate/" + 
-			 dbVersion + "-to-" + version + "/default.sql";
-		
-			File sqlMigrationScript = new File(sqlMigrationScriptPath);
-			File defaultSqlMigrationScript = new File(defaultSqlMigrationScriptPath);
-			File script = null;
+			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
-			// Use specific db script or default one
-			if (sqlMigrationScript.exists()) {
-				script = sqlMigrationScript;
-			} else if (defaultSqlMigrationScript.exists()) {
-				script = defaultSqlMigrationScript;
-			} 
+			boolean anyMigrationAction = false;
+			boolean anyMigrationError = false;
 			
-			if (script != null) {
-				try {
-					sqlScriptPath = script.getCanonicalPath();
-					// Run the SQL migration
-					logger.info("      Running SQL migration step ...");
-					Lib.db.runSQL(dbms, script);
-					
-					// Refresh setting manager in case the migration task added some new settings.
-					settingMan.refresh(dbms);
-					
-					// Update the logo 
-					String siteId = settingMan.getValue("system/site/siteId");
-					initLogo(dbms, siteId);
-					
-					// TODO : Maybe a force rebuild index is required in such situation.
-				} catch (Exception e) {
-					logger.info("      Errors occurs during SQL migration task: " + sqlScriptPath 
-							+ " or when refreshing settings manager.");
-					e.printStackTrace();
-				}
-				
-				logger.info("      Successfull migration.\n" +
-							"      Catalogue administrator still need to update the catalogue\n" +
-							"      logo and data directory in order to complete the migration process.\n" +
-							"      Lucene index rebuild is also recommended after migration."
-				);
-				
-			} else {
-				logger.info("      No migration task found between webapp and database version.\n" +
-						"      The system may be unstable or may failed to start if you try to run \n" +
-						"      the current GeoNetwork " + version + " with an older database (ie. " + dbVersion + "\n" +
-						"      ). Try to run the migration task manually on the current database\n" +
-						"      before starting the application or start with a new empty database.\n" +
-						"      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
-						);
-				
+		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
+	        List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
+            for(Element version : versions) {
+                int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
+                if (versionNumber > from && versionNumber <= to) {
+                    logger.info("       - running tasks for " + versionNumber + "...");
+                    List<Element> versionConfiguration = version.getChildren();
+                    for(Element file : versionConfiguration) {
+                        String filePath = path + file.getAttributeValue("path");
+                        String filePrefix = file.getAttributeValue("filePrefix");
+                        anyMigrationAction = true;
+                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+                        try {
+                            Lib.db.insertData(jeevesServlet, dbms, path, filePath, filePrefix);
+                        } catch (Exception e) {
+                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                            e.printStackTrace();
+                            anyMigrationError = true;
+                        }
+                    }
+                }
+            }
+			
+    		
+			// Refresh setting manager in case the migration task added some new settings.
+            try {
+                settingMan.refresh(dbms);
+            } catch (Exception e) {
+                logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
+                e.printStackTrace();
+                anyMigrationError = true;
+            }
+			
+			// Update the logo 
+			String siteId = settingMan.getValue("system/site/siteId");
+			initLogo(dbms, siteId);
+			
+			// TODO : Maybe a force rebuild index is required in such situation.
+			
+			if (anyMigrationAction && !anyMigrationError) {
+			    logger.info("      Successfull migration.\n" +
+                        "      Catalogue administrator still need to update the catalogue\n" +
+                        "      logo and data directory in order to complete the migration process.\n" +
+                        "      Lucene index rebuild is also recommended after migration."
+			            );
 			}
 			
+			if (!anyMigrationAction) {
+                logger.warning("      No migration task found between webapp and database version.\n" +
+                        "      The system may be unstable or may failed to start if you try to run \n" +
+                        "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion + "\n" +
+                        "      ). Try to run the migration task manually on the current database\n" +
+                        "      before starting the application or start with a new empty database.\n" +
+                        "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
+                        );
+                
+            }
+			
+			if (anyMigrationError) {
+                logger.warning("      Error occurs during migration. Check the log file for more details.");
+            }
 			// TODO : Maybe some migration stuff has to be done in Java ?
 		}
 	}
@@ -541,16 +592,30 @@ public class Geonetwork implements ApplicationHandler
 		String dbURL = dbms.getURL();
 		logger.info("  - Database connection on " + dbURL + " ...");
 		
+
 		// Create db if empty
 		if (!Lib.db.touch(dbms)) {
 			logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
+
+			List<Element> createConfiguration = dbConfiguration.getChild("create").getChildren();
+			for(Element file : createConfiguration) {
+			    String filePath = path + file.getAttributeValue("path");
+			    String filePrefix = file.getAttributeValue("filePrefix");
+			    logger.info("         - SQL create file:" + filePath + " prefix:" + filePrefix + " ...");
+                // Do we need to remove object before creating the database ?
+    			Lib.db.removeObjects(context.getServlet(), dbms, path, filePath, filePrefix);
+    			Lib.db.createSchema(context.getServlet(), dbms, path, filePath, filePrefix);
+			}
 			
-			// Do we need to remove object before creating the database ?
-			Lib.db.removeObjects(dbms, path);
-			Lib.db.createSchema(dbms, path);
-			dbms.commit();
-			Lib.db.insertData(dbms, path);
-			
+	        List<Element> dataConfiguration = dbConfiguration.getChild("data").getChildren();
+	        for(Element file : dataConfiguration) {
+                String filePath = path + file.getAttributeValue("path");
+                String filePrefix = file.getAttributeValue("filePrefix");
+                logger.info("         - SQL data file:" + filePath + " prefix:" + filePrefix + " ...");
+                Lib.db.insertData(context.getServlet(), dbms, path, filePath, filePrefix);
+	        }
+	        dbms.commit();
+            
 			// Copy logo
 			String uuid = UUID.randomUUID().toString();
 			initLogo(dbms, uuid);
@@ -558,7 +623,6 @@ public class Geonetwork implements ApplicationHandler
 		} else {
 			logger.info("      Found an existing GeoNetwork database.");
 		}
-		
 		return dbms;
 	}
 

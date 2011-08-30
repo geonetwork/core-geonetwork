@@ -24,6 +24,7 @@
 package org.fao.geonet.lib;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -47,7 +48,6 @@ public class DbLib {
 	// -----------------------------------------------------------------------------
 
 	private static final String SQL_EXTENSION = ".sql";
-	private static final String SETUP_SQL_PATH = "/WEB-INF/classes/setup/sql/";
 
 	public Element select(Dbms dbms, String table, String name)
 			throws SQLException {
@@ -118,15 +118,16 @@ public class DbLib {
 	 * Remove all objects in the database. Read the SQL file and check all
 	 * CREATE TABLE statements to collect the list of table to remove.
 	 * 
+	 * @param jeevesServlet 
 	 * @param dbms
 	 * @param cb
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void removeObjects(Dbms dbms, String appPath)
+	public void removeObjects(JeevesServlet jeevesServlet, Dbms dbms, String appPath, String filePath, String filePrefix)
 			throws FileNotFoundException, IOException {
 		Log.debug(Geonet.DB, "Removing database objects");
-		List<String> schema = loadSchemaFile(dbms, appPath);
+		List<String> schema = loadSchemaFile(jeevesServlet, dbms, appPath, filePath, filePrefix);
 
 		// --- step 1 : collect objects to remove
 		ArrayList<ObjectInfo> objects = new ArrayList<ObjectInfo>();
@@ -172,20 +173,21 @@ public class DbLib {
 
 	/**
 	 * Create database schema.
+	 * @param jeevesServlet 
 	 * 
 	 * @param dbms
 	 */
-	public void createSchema(Dbms dbms, String appPath) throws Exception {
+	public void createSchema(JeevesServlet jeevesServlet, Dbms dbms, String appPath, String filePath, String filePrefix) throws Exception {
 		Log.debug(Geonet.DB, "Creating database schema");
 
-		List<String> schema = loadSchemaFile(dbms, appPath);
+		List<String> schema = loadSchemaFile(jeevesServlet, dbms, appPath, filePath, filePrefix);
 		runSQL(dbms, schema);
 	}
 
-	public void insertData(Dbms dbms, String appPath) throws Exception {
+	public void insertData(JeevesServlet jeevesServlet, Dbms dbms, String appPath, String filePath, String filePrefix) throws Exception {
 		Log.debug(Geonet.DB, "Filling database tables");
 
-		List<String> data = loadSqlDataFile(dbms, appPath);
+		List<String> data = loadSqlDataFile(jeevesServlet, dbms, appPath, filePath, filePrefix);
 		runSQL(dbms, data);
 	}
 
@@ -196,12 +198,12 @@ public class DbLib {
 	 * @param sqlFile
 	 * @throws Exception
 	 */
-	public void runSQL(Dbms dbms, File sqlFile) throws Exception {
-		runSQL(dbms, sqlFile, true);
+	public void runSQL(JeevesServlet jeevesServlet, Dbms dbms, File sqlFile) throws Exception {
+		runSQL(jeevesServlet, dbms, sqlFile, true);
 	}
 
-	public void runSQL(Dbms dbms, File sqlFile, boolean failOnError) throws Exception {
-		List<String> data = Lib.text.load(sqlFile.getCanonicalPath(), "UTF-8");
+	public void runSQL(JeevesServlet jeevesServlet, Dbms dbms, File sqlFile, boolean failOnError) throws Exception {
+		List<String> data = Lib.text.load(jeevesServlet, sqlFile.getCanonicalPath(), "UTF-8");
 		runSQL(dbms, data, failOnError);
 	}
 	
@@ -267,12 +269,13 @@ public class DbLib {
 
 	/**
 	 * 
+	 * @param jeevesServlet 
 	 * @param dbms
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private List<String> loadSchemaFile(Dbms dbms, String appPath) // FIXME :
+	private List<String> loadSchemaFile(JeevesServlet jeevesServlet, Dbms dbms, String appPath, String filePath, String filePrefix) // FIXME :
 																	// use
 																	// resource
 																	// dir
@@ -281,45 +284,45 @@ public class DbLib {
 																	// appPath
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms schema to load
-		String file = checkFilePath(appPath, "create/create-db-", getDBType(dbms));
+		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
 		
-		Log.debug(Geonet.DB, "Database creation script is:" + file);
+		Log.debug(Geonet.DB, "  Loading script:" + file);
 
 		// --- load the dbms schema
-		return Lib.text.load(file);
+		return Lib.text.load(jeevesServlet, appPath, file);
 	}
 
 	/**
 	 * Check if db specific SQL script exist, if not return default SQL script path.
 	 * 
-	 * @param appPath
+	 * @param filePath
 	 * @param prefix
 	 * @param type
 	 * @return
 	 */
-	private String checkFilePath (String appPath, String prefix, String type) {
-		String dbFilePath = appPath + SETUP_SQL_PATH + prefix + type + SQL_EXTENSION;
+	private String checkFilePath (String filePath, String prefix, String type) {
+		String dbFilePath = filePath + "/" +  prefix + type + SQL_EXTENSION;
 		File dbFile = new File(dbFilePath);
 		if (dbFile.exists())
 			return dbFilePath;
 		
-		String defaultFilePath = appPath + SETUP_SQL_PATH + prefix + "default" + SQL_EXTENSION;
+		String defaultFilePath = filePath + "/" +  prefix + "default" + SQL_EXTENSION;
 		File defaultFile = new File(defaultFilePath);
 		if (defaultFile.exists())
 			return defaultFilePath;
 		else
-			Log.debug(Geonet.DB, "No default SQL script found: " + defaultFilePath);
+			Log.debug(Geonet.DB, "  No default SQL script found: " + defaultFilePath);
 
 		return "";
 	}
 	
-	private List<String> loadSqlDataFile(Dbms dbms, String appPath)
+	private List<String> loadSqlDataFile(JeevesServlet jeevesServlet, Dbms dbms, String appPath, String filePath, String filePrefix)
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms data file to load
-		String file = checkFilePath(appPath, "data/data-db-", getDBType(dbms));
+		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
 		
 		// --- load the sql data
-		return Lib.text.load(file, "UTF-8");
+		return Lib.text.load(jeevesServlet, appPath, file, "UTF-8");
 	}
 
 	private String getObjectName(String createStatem) {

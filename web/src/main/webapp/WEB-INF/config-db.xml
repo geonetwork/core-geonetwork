@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db>
+  <!--
+  This file described the DB creation (structure and data) and migration phases 
+  which run at startup.
+  Each tasks are described by a set of files to run (in order).
+  
+  For the migration phase, the id is used to compare the current database version
+  and the target webapp version. All required versions steps are triggered
+  (ie. dbversion < versionSteps <= webappVersion).
+  
+  For each file description, the db specific file is searched and if it exists
+  it is used, if not the "default" file is used.
+  
+    -->
+  <create>
+    <file path="WEB-INF/classes/setup/sql/create" filePrefix="create-db-"/>
+  </create>
+  <data>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-en-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fr-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-de-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-es-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ru-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-pt-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-cn-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-nl-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-no-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ar-"/><!-- Draft to be improved-->
+    <!--<file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vi-"/> Draft to be improved-->
+    <!-- ca missing from 2.6.x -->
+    <!-- tr missing from 2.6.x -->
+  </data>
+  <migrate>
+    <version id="243">
+      <file path="WEB-INF/classes/setup/sql/migrate/243" filePrefix="migrate-"/>
+    </version>
+    <version id="260">
+      <file path="WEB-INF/classes/setup/sql/migrate/260" filePrefix="migrate-db-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/260" filePrefix="migrate-"/>
+    </version>
+    <version id="261">
+      <file path="WEB-INF/classes/setup/sql/migrate/261" filePrefix="migrate-"/>
+    </version>
+    <version id="262">
+      <file path="WEB-INF/classes/setup/sql/migrate/262" filePrefix="migrate-"/>
+    </version>
+    <version id="263">
+      <file path="WEB-INF/classes/setup/sql/migrate/263" filePrefix="migrate-"/>
+    </version>
+    <version id="264">
+      <file path="WEB-INF/classes/setup/sql/migrate/264" filePrefix="migrate-"/>
+    </version>
+    <version id="265">
+      <file path="WEB-INF/classes/setup/sql/migrate/265" filePrefix="migrate-"/>
+    </version>
+    <version id="270">
+      <file path="WEB-INF/classes/setup/sql/migrate/270" filePrefix="migrate-"/>
+    </version>
+  </migrate>
+</db>

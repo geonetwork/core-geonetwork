@@ -1,0 +1,3 @@
+<overrides>
+	<import file="/WEB-INF/server-props-overrides.xml"/>
+</overrides>

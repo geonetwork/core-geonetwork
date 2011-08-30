@@ -4,8 +4,8 @@
 
 	<general>
 		<profiles>user-profiles.xml</profiles>
-		<uploadDir>${geonetwork.config.uploadDir}</uploadDir>
-		<maxUploadSize>${geonetwork.config.maxUploadSize}</maxUploadSize> <!-- Size must be in megabyte (integer), 100MB by default -->
+		<uploadDir>./data/tmp</uploadDir>
+		<maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer), 100MB by default -->
 		<debug>true</debug>
 	</general>
 
@@ -18,7 +18,7 @@
 				 the appHandler org.fao.geonet.Geonetwork
 				 -->
 		<startupErrorService>main.error</startupErrorService>
-		<language>${geonetwork.language}</language>
+		<language>en</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
 
@@ -82,7 +82,9 @@
 		minIdle   - pool size/minimum number of idle connections (default 0)
 		maxWait   - number of milliseconds to wait for a connection to become
 		            available (default 200)
-
+        validationQuery - optional, sql statement for verifying a connection, 
+                    the statement must return a least one row, empty 
+                    result sets may cause problems
 		timeBetweenEvictionRunsMillis - time between eviction runs 
 		                          (default -1 which means the next three params 
 															 are ignored)
@@ -98,7 +100,6 @@
 		removeAbandonedTimeout - 60 x 60 seconds = 1 hour
 		logAbandoned - true
 		testOnBorrow - true
-		validationQuery - 'SELECT 1'
 		defaultReadOnly - false
 		defaultAutoCommit - false
 		initialSize - maxActive
@@ -141,13 +142,14 @@
 	<resources>
 	  <resource enabled="true">
 	    <name>main-db</name>
-	    <provider>${geonetwork.config.dbms.pool}</provider>
+	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
-	      <user>${geonetwork.config.dbms.username}</user>
-	      <password>${geonetwork.config.dbms.password}</password>
-	      <driver>${geonetwork.config.dbms.driver}</driver>
-	      <url>${geonetwork.config.dbms.url}</url>
-	      <poolSize>${geonetwork.config.dbms.poolSize}</poolSize>
+	      <user>admin</user>
+	      <password>gnos</password>
+	      <driver>org.h2.Driver</driver>
+	      <url>jdbc:h2:/tmp/dummygeonetwork</url>
+	      <poolSize>33</poolSize>
+	      <validationQuery>SELECT 1</validationQuery>
 	    </config>
 	  </resource>
 	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -169,6 +171,7 @@
 	      <driver>org.h2.Driver</driver>
 	      <url>jdbc:h2:geonetwork</url>
 	      <poolSize>33</poolSize>
+	      <validationQuery>SELECT 1</validationQuery> 
 	    </config>
 	  </resource>
 	  
@@ -198,6 +201,7 @@
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
+                <validationQuery>SELECT 1</validationQuery> 
 			</config>
 
 
@@ -217,6 +221,7 @@
 			  <url>jdbc:mysql://localhost:3306/geonetwork</url>
 				<poolSize>10</poolSize>
 				<reconnectTime>3600</reconnectTime>
+                <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 
@@ -233,6 +238,7 @@
 				<driver>oracle.jdbc.driver.OracleDriver</driver>
 				<url>jdbc:oracle:thin:@localhost:1521:geonetwork</url>
 				<poolSize>10</poolSize>
+				<validationQuery>SELECT 1 FROM DUAL</validationQuery>
 			</config>
 		</resource>
 
@@ -249,6 +255,7 @@
 				<driver>com.ibm.db2.jcc.DB2Driver</driver>
 				<url>jdbc:db2:geonet</url>
 				<poolSize>10</poolSize>
+				<validationQuery>SELECT 1 FROM SYSIBM.SYSDUMMY1</validationQuery>
 			</config>
 		</resource>
 
@@ -279,6 +286,7 @@
 				-->
 			  <url>jdbc:postgresql_postGIS://localhost:5432/geonetwork</url>
 				<poolSize>10</poolSize>
+                <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 
@@ -295,6 +303,7 @@
 				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
                 <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
 				<poolSize>10</poolSize>
+                <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 	    
@@ -303,13 +312,13 @@
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-	  <param name="luceneDir" value="${geonetwork.config.luceneDir}" />
-	  <param name="dataDir" value="${geonetwork.config.dataDir}" />
+	  <param name="luceneDir" value="WEB-INF/lucene" />
+	  <param name="dataDir" value="WEB-INF/data" />
 
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />
 		
-		<param name="schemaPluginsDir" value="${geonetwork.config.schemaPluginsDir}" />
+		<param name="schemaPluginsDir" value="../../schemaPlugins" />
 
 		<param name="licenseDir" value="WEB-INF/licenses" />
 	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
@@ -325,7 +334,7 @@
 			interested for having metadata in a specific
 			ISO profil.
 		-->
-		<param name="preferredSchema" value="${geonetwork.config.preferredSchema}" />
+		<param name="preferredSchema" value="iso19139" />
 		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
 

@@ -23,9 +23,16 @@
 
 package org.fao.geonet.lib;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.List;
 import java.util.Properties;
+
+import jeeves.server.ConfigurationOverrides;
+import jeeves.server.sources.http.JeevesServlet;
 
 //=============================================================================
 
@@ -37,15 +44,27 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public ServerLib(String appPath) throws IOException
+	public ServerLib(JeevesServlet servlet, String appPath) throws IOException
 	{
 		this.appPath = appPath;
 
 		serverProps = new Properties();
 
-		FileInputStream is = new FileInputStream(appPath + SERVER_PROPS);
-		serverProps.load(is);
-		is.close();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(appPath + SERVER_PROPS), "UTF-8"));
+		try {
+			List<String> lines = ConfigurationOverrides.loadFileAndUpdate(
+					SERVER_PROPS, servlet, appPath, reader);
+			StringBuilder b = new StringBuilder();
+			for (String string : lines) {
+				b.append(string);
+				b.append("\n");
+			}
+			serverProps.load(new StringReader(b.toString()));
+		} finally {
+			reader.close();
+		}
+
 	}
 
 	//---------------------------------------------------------------------------
