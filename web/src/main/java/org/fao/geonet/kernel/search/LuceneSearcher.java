@@ -335,9 +335,10 @@ public class LuceneSearcher extends MetaSearcher
             for (String fieldName : UserQueryInput.SECURITY_FIELDS){
                 request.removeChildren(fieldName);
             }
-            
+
 			// if 'restrict to' is set then don't add any other user/group info
-			if (request.getChild(SearchParameter.GROUP) == null) {
+			if ((request.getChild(SearchParameter.GROUP) == null) ||
+                (!StringUtils.hasLength(request.getChild(SearchParameter.GROUP).getText().trim()))) {
 				for (String group : userGroups) {
 					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }
