@@ -376,12 +376,14 @@
 							<xsl:with-param name="icon">user.png</xsl:with-param>
 						</xsl:call-template>
 
+						<xsl:if test="/root/gui/services/service/@name='group.update'">
 						<xsl:call-template name="addrow">
 						  <xsl:with-param name="service" select="'group.list'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/groupManagement"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/groupManDes"/>
 							<xsl:with-param name="icon">group.png</xsl:with-param>
 						</xsl:call-template>
+						</xsl:if>
 					</xsl:variable>
 
 					<xsl:call-template name="addTitle">
