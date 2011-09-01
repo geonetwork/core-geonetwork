@@ -31,7 +31,7 @@
       Ext.onReady(function(){
         Ext.QuickTips.init();
       
-        GeoNetwork.Util.setLang('<xsl:value-of select="/root/gui/language"/>');
+        GeoNetwork.Util.setLang('<xsl:value-of select="/root/gui/language"/>', '<xsl:value-of select="$widgetPath"/>');
         
         catalogue = new GeoNetwork.Catalogue({
                       statusBarId : 'info',
