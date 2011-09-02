@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="**/*.java" kind="src" path="src/main/javascript"/>
-	<classpathentry kind="src" path="src/main/resources/js/GeoNetwork/lib"/>
-	<classpathentry kind="src" path="src/main/resources/js/OpenLayers/addins"/>
-	<classpathentry kind="src" path="src/main/resources/search/js"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="target/classes"/>
-</classpath>
