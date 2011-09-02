@@ -114,7 +114,9 @@ import java.util.regex.Pattern;
 public class ConfigurationOverrides {
 
 
-    enum Updates {
+    private static final String CONFIG_OVERRIDES_FILENAME = "config-overrides.xml";
+
+	enum Updates {
         REPLACEATT,
         REPLACEXML,
         ADDXML,
@@ -502,7 +504,8 @@ public class ConfigurationOverrides {
     }
 
     private static String lookupOverrideParamFromAppPath(String appPath) throws JDOMException, IOException {
-        File webxmlFile = new File(new File(appPath,"WEB-INF"),"web.xml");
+        File webInf = new File(appPath,"WEB-INF");
+		File webxmlFile = new File(webInf,"web.xml");
         String resource = null;
         if(webxmlFile.exists()) {
             Element webXML = Xml.loadFile(webxmlFile);
@@ -514,26 +517,9 @@ public class ConfigurationOverrides {
             }
             resource = System.getProperty(webappName+"."+OVERRIDES_KEY);
             
-            if (resource == null || resource.trim().isEmpty()) {
-                List<Element> servlets = webXML.getChildren("servlet",namespace);
-                
-                for (Element servlet : servlets) {
-                    if("jeeves.server.sources.http.JeevesServlet".equals(servlet.getChildTextTrim("servlet-class",namespace))) {
-                        List<Element> params= servlet.getChildren("init-param",namespace);
-                        for (Element param : params) {
-                            String name = param.getChildTextTrim("param-name", namespace);
-                            if(OVERRIDES_KEY.equals(name)) {
-                                if(resource!=null) {
-                                    resource += ",";
-                                } else {
-                                    resource = "";
-                                }
-                                resource += param.getChildTextTrim("param-value", namespace);
-                            }
-                        }
-                    }
-                }
-            }
+        }
+        if (resource == null || resource.trim().isEmpty()) {
+        	resource = lookupOverrideParamFromConfigFile(new File(webInf,CONFIG_OVERRIDES_FILENAME).toURI().toURL());
         }
         if (resource == null || resource.trim().isEmpty()) {
             resource = System.getProperty(OVERRIDES_KEY);
@@ -541,11 +527,28 @@ public class ConfigurationOverrides {
         return resource;
     }
 
-    private static String lookupOverrideParamFromServlet(JeevesServlet servlet) {
+    @SuppressWarnings("unchecked")
+	private static String lookupOverrideParamFromConfigFile(URL url) throws IOException, JDOMException {
+    	try {
+			Element config = Xml.loadFile(url);
+			StringBuilder builder = new StringBuilder();
+			for(Element elem : (List<Element>)config.getChildren("override")) {
+				if(builder.length() > 0) {
+					builder.append(',');
+				}
+				builder.append(elem.getTextTrim());
+			}
+			return builder.toString();
+    	} catch (FileNotFoundException e) {
+    		return null;
+    	}
+	}
+
+	private static String lookupOverrideParamFromServlet(JeevesServlet servlet) throws IOException, JDOMException {
         String resource;
         resource = System.getProperty(servlet.getServletContext().getServletContextName()+"."+OVERRIDES_KEY);
         if (resource == null || resource.trim().isEmpty()) {
-            resource = servlet.getInitParameter(OVERRIDES_KEY);
+            resource = lookupOverrideParamFromConfigFile(servlet.getServletContext().getResource("/WEB-INF/"+CONFIG_OVERRIDES_FILENAME));
         }
         if (resource == null || resource.trim().isEmpty()) {
             resource = System.getProperty(OVERRIDES_KEY);
@@ -684,7 +687,8 @@ public class ConfigurationOverrides {
             for (Content c : contentToAdd)
             {
                 if(c instanceof Element) {
-                    Element e = (Element) c;
+                	System.out.println("====");
+                	Element e = (Element) c.detach();
                     if(mergeTarget.getChild(e.getName()) == null) {
                         toAdd.add(e);
                     }

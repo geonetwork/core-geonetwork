@@ -26,14 +26,14 @@ public class ConfigurationOveridesTest {
     
     @Test
     public void updateLoggingConfig() throws JDOMException, IOException {
-        final Element overrides = Xml.loadFile(classLoader.getResource("correct-webapp/WEB-INF/config-overrides.xml"));
+        final Element overrides = Xml.loadFile(classLoader.getResource("correct-webapp/WEB-INF/overrides-config.xml"));
 
         ConfigurationOverrides.doUpdateLogging(overrides, loader);
         assertEquals(Level.DEBUG, org.apache.log4j.Logger.getRootLogger().getLevel());
     }
     @Test
     public void imports() throws JDOMException, IOException {
-        Element config = loader.loadXmlResource("/WEB-INF/config-overrides.xml");
+        Element config = loader.loadXmlResource("/WEB-INF/overrides-config.xml");
         assertEquals(6, Xml.selectElement(config,"properties").getChildren().size());
         assertEquals(10, Xml.selectElement(config,"file[@name = 'config.xml']").getChildren().size());
         assertEquals(1, Xml.selectNodes(config,"file[@name = 'config3.xml']").size());
@@ -83,7 +83,7 @@ public class ConfigurationOveridesTest {
     	BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream.openStream(), "UTF-8"));
     	try {
     	    // note first , is intentional to verify that it will be ignored
-    	    System.setProperty("geonetwork."+ConfigurationOverrides.OVERRIDES_KEY, ",/WEB-INF/config-overrides.xml,/WEB-INF/config-overrides-overlay.xml");
+    	    System.setProperty("geonetwork."+ConfigurationOverrides.OVERRIDES_KEY, ",/WEB-INF/overrides-config.xml,/WEB-INF/overrides-config-overlay.xml");
 			List<String> lines = ConfigurationOverrides.loadFileAndUpdate("test-sql.sql", null, appPath,  reader);
 			
 			assertEquals("CREATE TABLE NewRelations", lines.get(0).trim());
