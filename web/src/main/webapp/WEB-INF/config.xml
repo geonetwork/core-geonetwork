@@ -314,6 +314,9 @@
 	<appHandler class="org.fao.geonet.Geonetwork">
 	  <param name="luceneDir" value="WEB-INF/lucene" />
 	  <param name="dataDir" value="WEB-INF/data" />
+	  <!--  
+	  Thesaurus directory. Default value is WEB-INF/data/codelist.
+	  <param name="codeListDir" value="WEB-INF/data/codelist" />-->
 
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />

@@ -176,6 +176,7 @@ public class Geonetwork implements ApplicationHandler
                 String thesauriDir = (thesaurusSystemDir != null ? thesaurusSystemDir : 
                                         (defaultThesaurusDir != null ? defaultThesaurusDir : dataDir + "/codelist/")
                                         );
+        thesauriDir = new File(thesauriDir).getAbsoluteFile().getPath();
 		handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
 		System.setProperty(webappName + ".codeList.dir", thesauriDir);
                 
