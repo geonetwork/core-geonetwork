@@ -83,6 +83,7 @@ import java.util.concurrent.ExecutorService;
  *
  */
 public class DataManager {
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -108,10 +109,11 @@ public class DataManager {
      * @param baseURL
      * @param htmlCacheDir
      * @param dataDir
+     * @param thesaurusDir TODO
      * @param appPath
      * @throws Exception
      */
-	public DataManager(ServiceContext context, SchemaManager scm, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String appPath) throws Exception {
+	public DataManager(ServiceContext context, SchemaManager scm, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String thesaurusDir, String appPath) throws Exception {
 		searchMan = sm;
 		accessMan = am;
 		settingMan= ss;
@@ -121,6 +123,7 @@ public class DataManager {
 
 		this.baseURL = baseURL;
         this.dataDir = dataDir;
+        this.thesaurusDir = thesaurusDir;
 		this.appPath = appPath;
 
 		stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
@@ -800,7 +803,7 @@ public class DataManager {
 				Map<String,String> params = new HashMap<String,String>();
 				params.put("lang", lang);
 				params.put("rule", rule);
-				params.put("dataDir", this.dataDir);
+				params.put("thesaurusDir", this.thesaurusDir);
 				Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
 				if (xmlReport != null) {
 					report.addContent(xmlReport);
@@ -2796,6 +2799,7 @@ public class DataManager {
 	private SchemaManager  schemaMan;
 	private HarvestManager harvestMan;
     private String dataDir;
+	private String thesaurusDir;
     private ServiceContext servContext;
 	private String appPath;
 	private boolean rebuilding = false;
