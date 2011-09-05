@@ -11,7 +11,7 @@
 <project name="test-services" default="all">
 
     <property name="target_dir" value="target" />
-    <property name="geoserver_version" value="2.0.2" />
+    <property name="geoserver_version" value="2.1.1" />
     <property name="geoserver_dir" value="${target_dir}/geoserver" />
 
     <!-- =============================================================== -->
@@ -34,9 +34,6 @@
 		<delete  dir="${geoserver_dir}/data" includeemptydirs="true"/>
 		
 		<!-- Deploy plugins -->
-		<unzip src="geoserver-${geoserver_version}-restconfig-plugin.zip"
-			dest="${geoserver_dir}/WEB-INF/lib" />
-			
 		<unzip src="geoserver-${geoserver_version}-charts-plugin.zip"
 			dest="${geoserver_dir}/WEB-INF/lib" />	
 			
