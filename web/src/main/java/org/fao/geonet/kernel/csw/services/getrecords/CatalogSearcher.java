@@ -426,7 +426,7 @@ public class CatalogSearcher {
 		int iMax = hits.scoreDocs.length;
 		if (buildSummary) {
 			i = startPosition -1;
-			iMax = Math.min(hits.scoreDocs.length, maxRecords);
+			iMax = Math.min(hits.scoreDocs.length, i + maxRecords); 
 		}
 		
 		for (;i < iMax; i++) {
