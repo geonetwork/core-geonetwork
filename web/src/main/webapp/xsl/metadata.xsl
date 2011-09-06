@@ -1952,6 +1952,7 @@
     <xsl:param name="eValue"/>
     <xsl:param name="descId"/>
     <xsl:param name="id"/>
+    <xsl:param name="places"/>
     
     
     <xsl:variable name="eltRef">
@@ -1996,6 +1997,7 @@
           </xsl:apply-templates>
         </td>
         <td >
+          <xsl:copy-of select="$places"/>
         </td>
       </tr>
       <tr>

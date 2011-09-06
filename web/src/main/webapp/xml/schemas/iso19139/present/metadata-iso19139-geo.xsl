@@ -89,6 +89,32 @@
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         
+        <!-- regions combobox -->
+        <xsl:variable name="places">
+          <xsl:if test="$edit=true() and /root/gui/regions/record">
+            <xsl:variable name="ref" select="geonet:element/@ref"/>
+            <xsl:variable name="keyword" select="string(.)"/>
+            
+            <xsl:variable name="selection" select="concat(gmd:westBoundLongitude/gco:Decimal,';',gmd:eastBoundLongitude/gco:Decimal,';',gmd:southBoundLatitude/gco:Decimal,';',gmd:northBoundLatitude/gco:Decimal)"/>
+            <xsl:variable name="lang" select="/root/gui/language"/>
+            
+            <select name="place" size="1" onChange="javascript:setRegion('{gmd:westBoundLongitude/gco:Decimal/geonet:element/@ref}', '{gmd:eastBoundLongitude/gco:Decimal/geonet:element/@ref}', '{gmd:southBoundLatitude/gco:Decimal/geonet:element/@ref}', '{gmd:northBoundLatitude/gco:Decimal/geonet:element/@ref}', this.options[this.selectedIndex], {geonet:element/@ref}, '{../../gmd:description/gco:CharacterString/geonet:element/@ref}')" class="md">
+              <option value=""/>
+              <xsl:for-each select="/root/gui/regions/record">
+                <xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+                
+                <xsl:variable name="value" select="concat(west,',',east,',',south,',',north)"/>
+                <option value="{$value}">
+                  <xsl:if test="$value=$selection">
+                    <xsl:attribute name="selected"/>
+                  </xsl:if>
+                  <xsl:value-of select="label/child::*[name() = $lang]"/>
+                </option>
+              </xsl:for-each>
+            </select>
+          </xsl:if>
+        </xsl:variable>
+        
         <xsl:variable name="geoBox">
             <xsl:call-template name="geoBoxGUI">
                 <xsl:with-param name="schema" select="$schema"/>
@@ -107,6 +133,7 @@
                 <xsl:with-param name="eId" select="gmd:eastBoundLongitude/gco:Decimal/geonet:element/@ref"/>
                 <xsl:with-param name="wId" select="gmd:westBoundLongitude/gco:Decimal/geonet:element/@ref"/>
                 <xsl:with-param name="descId" select="../../gmd:description/gco:CharacterString/geonet:element/@ref"/>
+                <xsl:with-param name="places" select="$places"/>
             </xsl:call-template>
         </xsl:variable>
                 

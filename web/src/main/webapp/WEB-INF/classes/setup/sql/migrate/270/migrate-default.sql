@@ -1,3 +1,16 @@
+CREATE TABLE Validation
+  (
+    metadataId   int,
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+    
+    primary key(metadataId, valType),
+    foreign key(metadataId) references Metadata(id)
+);
+
 CREATE TABLE Thesaurus (
     id   varchar(250) not null,
     activated    varchar(1),
@@ -17,6 +30,7 @@ INSERT INTO Settings VALUES (912,910,'enableIsoView','true');
 INSERT INTO Settings VALUES (913,910,'enableInspireView','false');
 INSERT INTO Settings VALUES (914,910,'enableXmlView','true');
 INSERT INTO Settings VALUES (915,910,'defaultView','simple');
+
 INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
 INSERT INTO Settings VALUES (921,920,'maxthreads','1');
 

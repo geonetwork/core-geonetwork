@@ -1309,9 +1309,9 @@ public class DataManager {
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
 		
-		// Update fixed info for metadata record only
+		// Update fixed info for metadata record only, not for subtemplates
 		Element xml = Xml.loadString(data, false);
-		if (isTemplate.equals('n')) {
+		if (!isTemplate.equals("s")) {
 		    xml = updateFixedInfo(schema, Integer.toString(serial), uuid, xml, parentUuid, DataManager.UpdateDatestamp.yes, dbms);
 		}
 		
