@@ -110,7 +110,7 @@ public class Set implements Service
 
 			removeOldThumbnail(context, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(dbms, id, true, smallFile);
+			dataMan.setThumbnail(context, id, true, smallFile);
 		}
 
 		//-----------------------------------------------------------------------
@@ -129,7 +129,7 @@ public class Set implements Service
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(dbms, id, type.equals("small"), newFile);
+			dataMan.setThumbnail(context, id, type.equals("small"), newFile);
 		}
 		else
 		{
@@ -144,7 +144,7 @@ public class Set implements Service
 				throw new Exception("unable to move uploaded thumbnail to destination directory");
 			}
 
-			dataMan.setThumbnail(dbms, id, type.equals("small"), file);
+			dataMan.setThumbnail(context, id, type.equals("small"), file);
 		}
 
 		//-----------------------------------------------------------------------
@@ -190,7 +190,7 @@ public class Set implements Service
 			String outFile   = dataDir + smallFile;
 			// FIXME should be done before removeOldThumbnail(context, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(dbms, id, true, smallFile);
+			dataMan.setThumbnail(context, id, true, smallFile);
 		}
 
 		//-----------------------------------------------------------------------
@@ -208,7 +208,7 @@ public class Set implements Service
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(dbms, id, type.equals("small"), newFile);
+			dataMan.setThumbnail(context, id, type.equals("small"), newFile);
 		}
 		else
 		{
@@ -222,7 +222,7 @@ public class Set implements Service
 				throw new Exception("unable to move uploaded thumbnail to destination directory");
 			}
 
-			dataMan.setThumbnail(dbms, id, type.equals("small"), file);
+			dataMan.setThumbnail(context, id, type.equals("small"), file);
 		}
 
 		//-----------------------------------------------------------------------
@@ -263,7 +263,7 @@ public class Set implements Service
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(dbms, id, type.equals("small"));
+		dataMan.unsetThumbnail(context, id, type.equals("small"));
 
 		//--- remove file
 

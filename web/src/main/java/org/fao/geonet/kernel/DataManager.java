@@ -1868,7 +1868,7 @@ public class DataManager {
      * @param file
      * @throws Exception
      */
-	public void setThumbnail(Dbms dbms, String id, boolean small, String file) throws Exception {
+	public void setThumbnail(ServiceContext context, String id, boolean small, String file) throws Exception {
 		int    pos = file.lastIndexOf('.');
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
@@ -1876,7 +1876,7 @@ public class DataManager {
 		env.addContent(new Element("file").setText(file));
 		env.addContent(new Element("ext").setText(ext));
 
-		manageThumbnail(dbms, id, small, env, Geonet.File.SET_THUMBNAIL);
+		manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL);
 	}
 
     /**
@@ -1886,10 +1886,10 @@ public class DataManager {
      * @param small
      * @throws Exception
      */
-	public void unsetThumbnail(Dbms dbms, String id, boolean small) throws Exception {
+	public void unsetThumbnail(ServiceContext context, String id, boolean small) throws Exception {
 		Element env = new Element("env");
 
-		manageThumbnail(dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL);
+		manageThumbnail(context, id, small, env, Geonet.File.UNSET_THUMBNAIL);
 	}
 
     /**
@@ -1901,15 +1901,18 @@ public class DataManager {
      * @param styleSheet
      * @throws Exception
      */
-	private void manageThumbnail(Dbms dbms, String id, boolean small, Element env,
+	private void manageThumbnail(ServiceContext context, String id, boolean small, Element env,
 										  String styleSheet) throws Exception {
-		Element md = XmlSerializer.select(dbms, "Metadata", id);
+		
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
+        Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
 		if (md == null)
 			return;
 
 		md.detach();
-
+		
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String schema = getMetadataSchema(dbms, id);
 
 		//--- remove thumbnail from metadata
