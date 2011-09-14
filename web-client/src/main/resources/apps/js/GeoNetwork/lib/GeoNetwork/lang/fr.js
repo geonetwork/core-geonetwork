@@ -435,7 +435,7 @@ GeoNetwork.Lang.fr = {
     'thesaurusFromURL': 'A partir d\'un fichier distant (URL)',
     'id': 'Identifiant',
     'label': 'Libellé',
-    'definition': 'Définition',
+    'definition': '-',
     'xmin': 'X min',
     'ymin': 'Y min',
     'xmax': 'X max',

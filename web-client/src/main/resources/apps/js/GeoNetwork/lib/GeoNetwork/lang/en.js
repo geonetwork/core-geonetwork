@@ -434,7 +434,7 @@ GeoNetwork.lang.en = {
     'thesaurusFromURL': 'From remote file (URL)',
     'id': 'Identifier',
     'label': 'Label',
-    'definition': 'Definition',
+    'definition': '-',
     'xmin': 'X min',
     'ymin': 'Y min',
     'xmax': 'X max',
