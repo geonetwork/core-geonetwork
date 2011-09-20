@@ -431,7 +431,7 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" id="68.0" context="gmd:MD_Constraints">
-		<label>Käyttökelpoisuus</label>
+		<label>Käyttöehdot</label>
 		<description>Resurssin tai metatiedon käyttökelpoisuuteen vaikuttavat rajoitukset.</description>
 	</element>
 	<!-- ==================================================== -->

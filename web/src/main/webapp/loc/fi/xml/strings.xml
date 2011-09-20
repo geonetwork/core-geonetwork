@@ -237,7 +237,7 @@
 		<p>Kaikki oikeudet pidätetään.</p>
 	</copyright2>
 	<country>Maa</country>
-	<create>Luo</create>
+	<create>Luo kopio</create>
 	<createTip>Luo uusi metatietodokumentti tämän metatietopohjan perusteella.</createTip>
 	<cswTest>CSW ISO testi</cswTest>
 	<cswTestDesc>Testikäyttöliittymä CSW ISO-luettelorajapinnan testaamiseen</cswTestDesc>
@@ -939,7 +939,7 @@ desimaaliasteina vähintään kahden desimaalin tarkkuudella.
 			</help>
 		</geoloc>
 		<temporal>
-			<title>Temporal reference</title>
+			<title>Aikaviite</title>
 			<help>
 				<div>
 					Tällä metatietoelementillä täytetään tiedon ajalliseen ulottuvuuteen liittyvä vaatimus, johon viitataan direktiivin
