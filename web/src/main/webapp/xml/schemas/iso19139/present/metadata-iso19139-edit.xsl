@@ -2364,9 +2364,11 @@
           <xsl:with-param name="text">
             <xsl:variable name="value" select="string(gco:CharacterString)"/>
             <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
+            <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
             <xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
             <input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
             <select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}', '{$value}');" class="md">
+              <xsl:if test="$isXLinked"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
               <xsl:if test="$value=''">
                 <option value=""/>
               </xsl:if>

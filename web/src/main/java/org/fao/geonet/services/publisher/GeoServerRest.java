@@ -56,7 +56,7 @@ public class GeoServerRest {
 	public final static String METHOD_GET = "GET";
 	public final static String METHOD_PUT = "PUT";
 	public final static String METHOD_DELETE = "DELETE";
-	public final static String LOGGER_NAME = "GeoServerRest";
+	public final static String LOGGER_NAME = "geonetwork.GeoServerRest";
 	
 	private String password;
 	private String username;
@@ -270,7 +270,7 @@ public class GeoServerRest {
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/file.shp", null, f,
 				"application/zip", false);
-
+		
 		if (createStyle) {
 			createStyle(ds);
 		}
@@ -461,6 +461,10 @@ public class GeoServerRest {
 				+ "/datastores/" + ds + "/featuretypes", xml, null, "text/xml",
 				true);
 		
+		// Create layer for feature type (require for MapServer REST API)
+		int s = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
+				"text/xml", false);
+
 		if (createStyle) {
 			createStyle(ft);
 		}
