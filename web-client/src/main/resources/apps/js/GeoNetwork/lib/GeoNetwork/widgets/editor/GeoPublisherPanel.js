@@ -68,6 +68,16 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
      */
     metadataId: null,
     
+    /** api: property[metadataUuid] 
+     * ``String`` Metadata UUID
+     */
+    metadataUuid: null,
+    
+    /** api: property[metadataTitle] 
+     * ``String`` Metadata title to be added to mapserver configuration
+     */
+    metadataTitle: null,
+    
     /** api: property[fileName] 
      * ``String`` The resource name to publish (file or db url)
      */
@@ -214,6 +224,8 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
                     url: panel.serviceUrl,
                     params: {
                         metadataId: this.metadataId,
+                        metadataUuid: this.metadataUuid,
+                        metadataTitle: this.metadataTitle,
                         nodeId: this.nodeId,
                         file: this.fileName,
                         access: this.accessStatus,
@@ -535,8 +547,10 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
      *  Set the element reference : metadata
      *  identifier and file name.
      */
-    setRef: function(id, fileName, accessStatus){
+    setRef: function(id, uuid, title, fileName, accessStatus){
         this.metadataId = id;
+        this.metadataUuid = uuid;
+        this.metadataTitle = title;
         this.fileName = fileName;
         this.accessStatus = accessStatus;
         if (this.fileName.indexOf('jdbc') !== -1) {

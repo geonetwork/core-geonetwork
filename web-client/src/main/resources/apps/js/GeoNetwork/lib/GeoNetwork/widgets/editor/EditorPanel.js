@@ -246,7 +246,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *
      * @return
      */
-    showGeoPublisherPanel: function(id, name, accessStatus, nodeName, insertNodeRef, extent){
+    showGeoPublisherPanel: function(id, uuid, title, name, accessStatus, nodeName, insertNodeRef, extent){
         //Ext.QuickTips.init();
         var editorPanel = this;
         
@@ -268,14 +268,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     addOnLineSource: function(panel, node, protocols){
                         var p;
                         var xml = "";
-                        var layerName = node.get('namespacePrefix') + ":" + this.layerName;
+                        // There is no namespace prefix for Mapserver layer
+                        var layerName = 
+                            (node.get('id').indexOf("mapserver") === -1 ? node.get('namespacePrefix') + ":" : "") + this.layerName;
                         var id = '_X' + insertNodeRef + '_' + nodeName.replace(":", "COLON");
                         var wxsOnlineSource = 
                             '<gmd:onLine xmlns:gmd=&quot;http://www.isotc211.org/2005/gmd&quot; xmlns:gco=&quot;http://www.isotc211.org/2005/gco&quot;><gmd:CI_OnlineResource>' + 
                                 '<gmd:linkage><gmd:URL>${url}</gmd:URL></gmd:linkage>' + 
                                 '<gmd:protocol><gco:CharacterString>${protocol}</gco:CharacterString></gmd:protocol>' + 
                                 '<gmd:name><gco:CharacterString>${layerName}</gco:CharacterString></gmd:name>' + 
-                                '<gmd:description><gco:CharacterString>${layerName}</gco:CharacterString></gmd:description>' + 
+                                '<gmd:description><gco:CharacterString>${metadataTitle}</gco:CharacterString></gmd:description>' + 
                             '</gmd:CI_OnlineResource></gmd:onLine>';
                         
                         for (p in protocols) {
@@ -283,7 +285,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                 xml += OpenLayers.String.format(wxsOnlineSource, {
                                     url: node.get(p + 'Url'),
                                     protocol: protocols[p].label,
-                                    layerName: layerName
+                                    layerName: layerName,
+                                    metadataTitle: this.metadataTitle + "(" + protocols[p].label + ")"
                                 }) + "&&&";
                             }
                         }
@@ -307,7 +310,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 iconCls: 'repository'
             });
         }
-        this.geoPublisherWindow.items.get(0).setRef(id, name, accessStatus);
+        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, name, accessStatus);
         this.geoPublisherWindow.setTitle(OpenLayers.i18n('geoPublisherWindowTitle') + " " + name);
         this.geoPublisherWindow.show();
         

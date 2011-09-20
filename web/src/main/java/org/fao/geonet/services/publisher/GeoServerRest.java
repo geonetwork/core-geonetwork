@@ -61,22 +61,19 @@ public class GeoServerRest {
 	private String password;
 	private String username;
 	private String restUrl;
+	private String baseCatalogueUrl;
 	private String defaultWorkspace;
 	private String response;
 	private int status;
 
-	private final HttpClientFactory httpClientFactory;
+	private HttpClientFactory httpClientFactory;
 
 	/**
 	 * Create a GeoServerRest instance to communicate with a GeoServer node.
+	 * @param baseCatalogueUrl TODO
 	 */
-	public GeoServerRest(String url, String username, String password) {
-		this.restUrl = url;
-		this.username = username;
-		this.password = password;
-		this.httpClientFactory = new HttpClientFactory(this.username,
-				this.password);
-		Log.createLogger(LOGGER_NAME);
+	public GeoServerRest(String url, String username, String password, String baseCatalogueUrl) {
+		init(url, username, password, baseCatalogueUrl);
 	}
 
 	/**
@@ -87,17 +84,24 @@ public class GeoServerRest {
 	 * @param username
 	 * @param password
 	 * @param defaultns
+	 * @param baseCatalogueUrl TODO
 	 */
 	public GeoServerRest(String url, String username, String password,
-			String defaultns) {
+			String defaultns, String baseCatalogueUrl) {
+		init(url, username, password, baseCatalogueUrl);
+		this.defaultWorkspace = defaultns;
+	}
+
+	private void init(String url, String username, String password, String baseCatalogueUrl) {
 		this.restUrl = url;
 		this.username = username;
-		this.defaultWorkspace = defaultns;
 		this.password = password;
+		this.baseCatalogueUrl = baseCatalogueUrl;
 		this.httpClientFactory = new HttpClientFactory(this.username,
 				this.password);
 		Log.createLogger(LOGGER_NAME);
 	}
+
 
 	/**
 	 * @return Return last transaction response information if set.
@@ -449,16 +453,33 @@ public class GeoServerRest {
 		return 201 == status;
 	}
 
-	public boolean createFeatureType(String ds, String ft, boolean createStyle) throws IOException {
-		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle);
+	public boolean createFeatureType(String ds, String ft, boolean createStyle, String metadataUuid, String metadataTitle) throws IOException {
+		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle, metadataUuid, metadataTitle);
 	}
 
-	public boolean createFeatureType(String ws, String ds, String ft, boolean createStyle)
+	public boolean createFeatureType(String ws, String ds, String ft, boolean createStyle, String metadataUuid, String metadataTitle)
 			throws IOException {
-		String xml = "<featureType><name>" + ft + "</name><title>" + ft
-				+ "</title></featureType>";
+		String xml = "<featureType><name>" + ft + "</name><title>" + ft + "</title>" +
+			"</featureType>";
+		
 		status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/featuretypes", xml, null, "text/xml",
+				true);
+		
+		xml = "<featureType><title>" + (metadataTitle != null ? metadataTitle : ft) + "</title><enabled>true</enabled>" +
+				"<metadataLinks>" +
+					"<metadataLink>" +
+						"<type>text/xml</type>" +
+						"<metadataType>ISO19115:2003</metadataType>" +
+						"<content>" + this.baseCatalogueUrl + 
+						"csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById" +
+						"&amp;outputSchema=http://www.isotc211.org/2005/gmd" +	// Geopublication only allowed for ISO19139* records. The outputSchema should always return a record.
+						"&amp;ID=" + metadataUuid + "</content>" +
+					"</metadataLink>" +
+				"</metadataLinks>" +
+			"</featureType>";
+		status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+				+ "/datastores/" + ds + "/featuretypes/" + ft, xml, null, "text/xml",
 				true);
 		
 		// Create layer for feature type (require for MapServer REST API)
