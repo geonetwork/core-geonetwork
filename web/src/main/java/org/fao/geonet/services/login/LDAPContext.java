@@ -51,15 +51,20 @@ class LDAPContext
 		host          = sm.getValue      (prefix +"/host");
 		port          = sm.getValueAsInt (prefix +"/port");
 		defProfile    = sm.getValue      (prefix +"/defaultProfile");
+        defGroup      = sm.getValue      (prefix +"/defaultGroup");
 		baseDN        = sm.getValue      (prefix +"/distinguishedNames/base");
 		usersDN       = sm.getValue      (prefix +"/distinguishedNames/users");
 		nameAttr      = sm.getValue      (prefix +"/userAttribs/name");
 		profileAttr   = sm.getValue      (prefix +"/userAttribs/profile");
 		emailAttr     = "mail";  //TODO make it configurable
         uidAttr       = sm.getValue      (prefix +"/uidAttr");
+        groupAttr     = sm.getValue      (prefix +"/userAttribs/group");
 
 		if (profileAttr.trim().length() == 0)
 			profileAttr = null;
+
+        if (groupAttr.trim().length() == 0)
+			groupAttr = null;
 
 		//--- init set of allowed profiles
 
@@ -119,6 +124,11 @@ class LDAPContext
 										? defProfile
 										: get(attr, profileAttr);
 				info.email = get(attr, emailAttr);
+
+                info.group = (groupAttr == null)
+										? defGroup
+										: get(attr, groupAttr);
+
 
 				if (!profiles.contains(info.profile))
 				{
@@ -187,7 +197,10 @@ class LDAPContext
 	private String  nameAttr;
 	private String  profileAttr;
 	private String  emailAttr;
-    private String  uidAttr;    
+    private String  uidAttr;
+    private String  groupAttr;
+    private String  defGroup;
+
 
 	private HashSet<String> profiles = new HashSet<String>();
 }
@@ -201,6 +214,7 @@ class LDAPInfo
 	public String profile;
 	public String name;
 	public String email;
+    public String group;
 }
 
 //=============================================================================

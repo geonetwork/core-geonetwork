@@ -97,6 +97,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			LDAP_DN_USERS     : xml.evalXPath(node, 'ldap/distinguishedNames/users'),
 			LDAP_ATTR_NAME    : xml.evalXPath(node, 'ldap/userAttribs/name'),
 			LDAP_ATTR_PROFILE : xml.evalXPath(node, 'ldap/userAttribs/profile'),
+            LDAP_ATTR_GROUP   : xml.evalXPath(node, 'ldap/userAttribs/group'),
+            LDAP_DEF_GROUP    : xml.evalXPath(node, 'ldap/defaultGroup'),
 
 			SHIB_USE              : xml.evalXPath(node, 'shib/use'),
 			SHIB_PATH             : xml.evalXPath(node, 'shib/path'),
@@ -104,6 +106,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			SHIB_ATTRIB_SURNAME   : xml.evalXPath(node, 'shib/attrib/surname'),
 			SHIB_ATTRIB_FIRSTNAME : xml.evalXPath(node, 'shib/attrib/firstname'),
 			SHIB_ATTRIB_PROFILE   : xml.evalXPath(node, 'shib/attrib/profile'),
+            SHIB_ATTRIB_GROUP     : xml.evalXPath(node, 'shib/attrib/group'),
+            SHIB_DEF_GROUP        : xml.evalXPath(node, 'shib/defaultGroup'),
 
 			USERSELFREGISTRATION_ENABLE : xml.evalXPath(node, 'userSelfRegistration/enable')
 		}
@@ -239,6 +243,7 @@ ConfigModel.updateTemp =
 '		<host>{LDAP_HOST}</host>'+
 '		<port>{LDAP_PORT}</port>'+
 '		<defaultProfile>{LDAP_DEF_PROFILE}</defaultProfile>'+
+'		<defaultGroup>{LDAP_DEF_GROUP}</defaultGroup>'+
 '		<uidAttr>{LDAP_ATTR_UID}</uidAttr>'+        
 '		<distinguishedNames>'+
 '			<base>{LDAP_DN_BASE}</base>'+
@@ -247,16 +252,19 @@ ConfigModel.updateTemp =
 '		<userAttribs>'+
 '			<name>{LDAP_ATTR_NAME}</name>'+
 '			<profile>{LDAP_ATTR_PROFILE}</profile>'+
+'			<group>{LDAP_ATTR_GROUP}</group>'+
 '		</userAttribs>'+
 '	</ldap>'+
 '	<shib>'+
 '		<use>{SHIB_USE}</use>'+
 '		<path>{SHIB_PATH}</path>'+
+'       <defaultGroup>{SHIB_DEF_GROUP}</defaultGroup>'+
 '		<attrib>'+
 '			<username>{SHIB_ATTRIB_USERNAME}</username>'+
 '			<surname>{SHIB_ATTRIB_SURNAME}</surname>'+
 '			<firstname>{SHIB_ATTRIB_FIRSTNAME}</firstname>'+
 '			<profile>{SHIB_ATTRIB_PROFILE}</profile>'+
+'			<group>{SHIB_ATTRIB_GROUP}</group>'+
 '		</attrib>'+
 '	</shib>'+
 ' <userSelfRegistration>'+

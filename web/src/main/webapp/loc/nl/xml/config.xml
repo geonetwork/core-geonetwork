@@ -142,7 +142,9 @@
 	<userAttribs>Gebruikers eigenschappen</userAttribs>
 	<password>Wachtwoord</password>
 	<profile>Profiel</profile>
-		
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
+
 	<shib>Shibboleth Authenticatie</shib>
 	<path>Locatie</path>
 	<attributes>Shibboleth attribuut mapping</attributes>

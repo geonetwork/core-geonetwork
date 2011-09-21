@@ -626,6 +626,11 @@
 				</tr>
 
                 <tr>
+                    <td class="padded"><xsl:value-of select="/root/gui/config/defGroup"/></td>
+                    <td class="padded"><xsl:call-template name="ldapDefGroup"/></td>
+                </tr>
+
+                <tr>
 					<td class="padded"><xsl:value-of select="/root/gui/config/uidAttr"/></td>
 					<td class="padded"><input id="ldap.uidAttr" class="content" type="text" value="" size="20"/></td>
 				</tr>
@@ -655,6 +660,23 @@
 		</div>
 	</xsl:template>
 
+    <!-- ============================================================================================= -->
+
+    <xsl:template name="ldapDefGroup">
+        <select class="content" size="1" name="group" id="ldap.defGroup">
+                <option value=""></option>
+                <xsl:for-each select="/root/gui/groups/record">
+                    <xsl:sort select="name"/>
+                    <option>
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="id"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="name"/>
+                    </option>
+                </xsl:for-each>
+            </select>
+    </xsl:template>
+
 	<!-- ============================================================================================= -->
 	
 	<xsl:template name="ldapDefProfile">
@@ -680,7 +702,7 @@
 			</option>
 		</select>
 	</xsl:template>
-	
+
 	<!-- ============================================================================================= -->
 	
 	<xsl:template name="ldapDistNames">
@@ -710,6 +732,12 @@
 				<td class="padded"><xsl:value-of select="/root/gui/config/profile"/></td>
 				<td class="padded"><input id="ldap.profileAttr" class="content" type="text" value="" size="20"/></td>
 			</tr>
+
+            <tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/group"/></td>
+				<td class="padded"><input id="ldap.groupAttr" class="content" type="text" value="" size="20"/></td>
+			</tr>
+
 		</table>
 	</xsl:template>
 	
@@ -725,7 +753,12 @@
 					<td class="padded"><xsl:value-of select="/root/gui/config/path"/></td>
 					<td class="padded"><input id="shib.path" class="content" type="text" size="256"/></td>
 				</tr>
-					
+
+                <tr>
+                    <td class="padded"><xsl:value-of select="/root/gui/config/defGroup"/></td>
+                    <td class="padded"><xsl:call-template name="shibDefGroup"/></td>
+                </tr>
+
 				<!-- shibboleth attributes -->
 									
 				<tr>
@@ -759,8 +792,31 @@
 				<td class="padded"><xsl:value-of select="/root/gui/config/profile"/></td>
 				<td class="padded"><input id="shib.attrib.profile" class="content" type="text" value="" size="150"/></td>
 			</tr>
+
+            <tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/group"/></td>
+				<td class="padded"><input id="shib.attrib.group" class="content" type="text" value="" size="150"/></td>
+			</tr>
+
 		</table>
 	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
+    <xsl:template name="shibDefGroup">
+        <select class="content" size="1" name="shibgroup" id="shib.defGroup">
+                <option value=""></option>
+                <xsl:for-each select="/root/gui/groups/record">
+                    <xsl:sort select="name"/>
+                    <option>
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="id"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="name"/>
+                    </option>
+                </xsl:for-each>
+            </select>
+    </xsl:template>
 
 	<!-- ============================================================================================= -->
 	<!-- === Buttons -->

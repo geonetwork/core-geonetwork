@@ -141,6 +141,8 @@
 	<userAttribs>Атрибуты пользователя</userAttribs>
 	<password>Пароль</password>
 	<profile>Profile</profile>
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
 
 	<shib>Аутентификация Shibboleth</shib>
 	<path>Path</path>

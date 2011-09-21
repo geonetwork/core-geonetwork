@@ -142,7 +142,9 @@
 	<userAttribs>Atributos dos utilizadores</userAttribs>
 	<password>Palavra-passe</password>
 	<profile>Perfil</profile>
-			
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
+
 	<shib>Autenticação Shibboleth</shib>
 	<path>Caminho</path>
 	<attributes>Shibboleth alocação de atributos</attributes>

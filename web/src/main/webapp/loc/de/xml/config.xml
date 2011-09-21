@@ -142,7 +142,9 @@
 	<userAttribs>Benutzerattribute</userAttribs>
 	<password>Passwort</password>
 	<profile>Profil</profile>
-			
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
+
 	<shib>Shibboleth Authentifizierung</shib>
 	<path>Pfad</path>
 	<attributes>Shibboleth Attributzuordnung</attributes>

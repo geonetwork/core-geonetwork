@@ -254,13 +254,17 @@ ConfigView.prototype.setData = function(data)
 	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
 	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
 	$('ldap.profileAttr') .value = data['LDAP_ATTR_PROFILE'];
-	
+	$('ldap.groupAttr') .value = data['LDAP_ATTR_GROUP'];
+    $('ldap.defGroup')  .value = data['LDAP_DEF_GROUP'];
+
 	$('shib.use')           .checked = data['SHIB_USE'] == 'true';
 	$('shib.path')            .value = data['SHIB_PATH'];
 	$('shib.attrib.username') .value = data['SHIB_ATTRIB_USERNAME'];
 	$('shib.attrib.surname')  .value = data['SHIB_ATTRIB_SURNAME'];
 	$('shib.attrib.firstname').value = data['SHIB_ATTRIB_FIRSTNAME'];
 	$('shib.attrib.profile')  .value = data['SHIB_ATTRIB_PROFILE'];
+    $('shib.attrib.group')    .value = data['SHIB_ATTRIB_GROUP'];
+    $('shib.defGroup')  .value = data['SHIB_DEF_GROUP'];
 
 	$('geonetworkdb.use').checked = data['LDAP_USE'] != 'true';
 
@@ -371,13 +375,17 @@ ConfigView.prototype.getData = function()
 		LDAP_DN_USERS      : $F('ldap.usersDN'),
 		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
 		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr'),
-		
+        LDAP_ATTR_GROUP    : $F('ldap.groupAttr'),
+        LDAP_DEF_GROUP    : $F('ldap.defGroup'),
+
 		SHIB_USE              : $('shib.use').checked,
 		SHIB_PATH             : $('shib.path').value,
 		SHIB_ATTRIB_USERNAME  : $('shib.attrib.username').value,
 		SHIB_ATTRIB_SURNAME   : $('shib.attrib.surname').value,
 		SHIB_ATTRIB_FIRSTNAME : $('shib.attrib.firstname').value,
 		SHIB_ATTRIB_PROFILE   : $('shib.attrib.profile').value,
+        SHIB_ATTRIB_GROUP     : $('shib.attrib.group').value,
+        SHIB_DEF_GROUP    : $F('shib.defGroup'),
 
 		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked && $('geonetworkdb.use').checked
 
