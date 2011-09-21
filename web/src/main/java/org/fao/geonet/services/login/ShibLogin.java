@@ -33,6 +33,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -79,6 +80,8 @@ public class ShibLogin implements Service
 		String surnameKey = sm.getValue(prefix + "/attrib/surname");
 		String firstnameKey = sm.getValue(prefix + "/attrib/firstname");
 		String profileKey = sm.getValue(prefix + "/attrib/profile");
+        String groupKey = sm.getValue(prefix + "/attrib/group");
+        String defGroup =  sm.getValue(prefix +"/defaultGroup");
 
 		// Read in the data from the headers
 		Map<String, String> headers = context.getHeaders();
@@ -86,6 +89,7 @@ public class ShibLogin implements Service
 		String surname = Util.getHeader(headers, surnameKey, "");
 		String firstname = Util.getHeader(headers, firstnameKey, "");
 		String profile = Util.getHeader(headers, profileKey, "");
+        String group    = Util.getHeader(headers, groupKey, "");
 	
 		// Make sure the profile name is an exact match
 		profile = context.getProfileManager().getCorrectCase(profile);
@@ -93,6 +97,10 @@ public class ShibLogin implements Service
 		{
 			profile = ProfileManager.GUEST;
 		}
+
+        if (group.equals("")) {
+            group = defGroup;
+        }
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -104,7 +112,7 @@ public class ShibLogin implements Service
 			{
 				username = username.substring(0, 32);
 			}
-			updateUser(context, dbms, username, surname, firstname, profile);
+			updateUser(context, dbms, username, surname, firstname, profile, group);
 		}
 
 		//--- attempt to load user from db
@@ -145,8 +153,30 @@ public class ShibLogin implements Service
 	 * @throws SQLException If the record cannot be saved.
 	 */
 	private void updateUser(ServiceContext context, Dbms dbms, String username,
-			String surname, String firstname, String profile) throws SQLException
+			String surname, String firstname, String profile, String group) throws SQLException
 	{
+        boolean groupProvided = ((group != null) && (!(group.equals(""))));
+        int groupId = -1;
+        int userId = -1;
+
+        if (groupProvided) {
+            String query = "SELECT id FROM Groups WHERE name=?";
+
+            List list  = dbms.select(query, group).getChildren();
+
+            if (list.isEmpty()) {
+                groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+
+                query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+                dbms.execute(query, groupId, group);
+                Lib.local.insert(dbms, "Groups", groupId, group);
+
+            } else {
+                String gi = ((Element) list.get(0)).getChildText("id");
+
+                groupId = new Integer(gi).intValue();
+            }
+        }
 		//--- update user information into the database
 
 		String query = "UPDATE Users SET name=?, surname=?, profile=?, password=? WHERE username=?";
@@ -157,12 +187,26 @@ public class ShibLogin implements Service
 
 		if (res == 0)
 		{
-			int id = context.getSerialFactory().getSerial(dbms, "Users");
+			userId = context.getSerialFactory().getSerial(dbms, "Users");
 
 			query = 	"INSERT INTO Users(id, username, name, surname, profile, password) "+
 						"VALUES(?,?,?,?,?,?)";
 
-			dbms.execute(query, id, username, firstname, surname, profile, "Via Shibboleth");
+			dbms.execute(query, userId, username, firstname, surname, profile, "Via Shibboleth");
+
+            if (groupProvided) {
+                String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";
+                List list  = dbms.select(query2, groupId, userId).getChildren();
+
+                String count = ((Element) list.get(0)).getChildText("numr");
+
+                 if (count.equals("0")) {
+                     query = "INSERT INTO UserGroups(userId, groupId) "+
+                             "VALUES(?,?)";
+                     dbms.execute(query, userId, groupId);
+
+                 }
+            }
 		}
 
 		dbms.commit();

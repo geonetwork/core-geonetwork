@@ -128,6 +128,8 @@
 	<userAttribs>User's attributes</userAttribs>
 	<password>Password</password>
 	<profile>Profile</profile>
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
 
 	<shib>Shibboleth</shib>
 	<path>Osoite</path>

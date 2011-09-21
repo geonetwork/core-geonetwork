@@ -167,6 +167,7 @@
 				<host><xsl:value-of select="$ldap/host/value"/></host>
 				<port><xsl:value-of select="$ldap/port/value"/></port>
 				<defaultProfile><xsl:value-of select="$ldap/defaultProfile/value"/></defaultProfile>
+                <defaultGroup><xsl:value-of select="$ldap/defaultGroup/value"/></defaultGroup>
                 <uidAttr><xsl:value-of select="$ldap/uidAttr/value"/></uidAttr>                
 				<distinguishedNames>
 					<base><xsl:value-of select="$ldapDisNam/base/value"/></base>
@@ -175,17 +176,20 @@
 				<userAttribs>
 					<name><xsl:value-of select="$ldapUsrAtt/name/value"/></name>
 					<profile><xsl:value-of select="$ldapUsrAtt/profile/value"/></profile>
+                    <group><xsl:value-of select="$ldapUsrAtt/group/value"/></group>
 				</userAttribs>
 			</ldap>
 
 			<shib>
 				<use><xsl:value-of select="$shib/use"/></use>
 				<path><xsl:value-of select="$shib/path"/></path>
+                <defaultGroup><xsl:value-of select="$shib/defaultGroup"/></defaultGroup>
 				<attrib>
 					<username><xsl:value-of select="$shibAttrib/username"/></username>
 					<surname><xsl:value-of select="$shibAttrib/surname"/></surname>
 					<firstname><xsl:value-of select="$shibAttrib/firstname"/></firstname>
 					<profile><xsl:value-of select="$shibAttrib/profile"/></profile>
+                    <group><xsl:value-of select="$shibAttrib/group"/></group>
 				</attrib>
 			</shib>			
 

@@ -722,6 +722,11 @@
 					<param name="db" value="main-db" />
 					<param name="query" value="SELECT * FROM Users ORDER BY name" />
 				</call>
+
+                <call name="groups" class="jeeves.services.db.Select">
+                    <param name="db" value="main-db" />
+                    <param name="query" value="SELECT * FROM Groups WHERE ID > 1 ORDER BY name" />
+                </call>
 			</output>
 		</service>
 

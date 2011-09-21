@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<group>Group</group>
+
+
+
+134
+
+<defGroup>Default group</defGroup>
+<prfi<?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
 	<username>Utilisateur</username>
@@ -15,7 +22,9 @@
 	<userAttribs>User's attributes</userAttribs>
 	<password>Mot de passe</password>
 	<profile>Profil</profile>
-	<site>Site</site>
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
+    <site>Site</site>
 	<name>Nom</name>
 	<organ>Organisme</organ>
 	<csw>Serveur CSW Profil ISO</csw>

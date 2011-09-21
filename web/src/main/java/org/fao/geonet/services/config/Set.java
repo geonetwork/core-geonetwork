@@ -160,6 +160,8 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/name",        "system/ldap/userAttribs/name"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/password",    "system/ldap/userAttribs/password"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/profile",     "system/ldap/userAttribs/profile"),
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/group",       "system/ldap/userAttribs/group"),
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/defaultGroup",            "system/ldap/defaultGroup"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "userSelfRegistration/enable",  "system/userSelfRegistration/enable"),
 
@@ -170,7 +172,9 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/username",         "system/shib/attrib/username"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/surname",          "system/shib/attrib/surname"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/firstname",        "system/shib/attrib/firstname"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/profile",          "system/shib/attrib/profile")
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/profile",          "system/shib/attrib/profile"),
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/attrib/group",            "system/shib/attrib/group"),
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/defaultGroup",            "system/shib/defaultGroup")
 
 	};
 }

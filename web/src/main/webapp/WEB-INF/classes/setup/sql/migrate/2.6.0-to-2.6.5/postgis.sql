@@ -149,5 +149,33 @@ UPDATE Languages SET isInspire = 'n', isDefault = 'n' where id ='tr';
 
 INSERT INTO Settings VALUES (23,20,'protocol','http');
 
+INSERT INTO Settings VALUES (88,80,'defaultGroup', NULL);
+INSERT INTO Settings VALUES (113,87,'group',NULL);
+INSERT INTO Settings VALUES (178,173,'group',NULL);
+INSERT INTO Settings VALUES (179,170,'defaultGroup', NULL);
+
+INSERT INTO Languages VALUES ('fi','Finnish', 'fin', 'y', 'n');
+
+INSERT INTO CswServerCapabilitiesInfo VALUES (41, 'fi', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (42, 'fi', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (43, 'fi', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (44, 'fi', 'accessConstraints', '');
+
+INSERT INTO CategoriesDes VALUES (1,'fi','Kartat & kuvat');
+INSERT INTO CategoriesDes VALUES (2,'fi','Tietoaineistot');
+INSERT INTO CategoriesDes VALUES (3,'fi','Vuorovaikutteiset resurssit');
+INSERT INTO CategoriesDes VALUES (4,'fi','Sovellukset');
+INSERT INTO CategoriesDes VALUES (5,'fi','Esimerkkitapaukset, parhaat käytännöt');
+INSERT INTO CategoriesDes VALUES (6,'fi','Konferenssijulkaisut');
+INSERT INTO CategoriesDes VALUES (7,'fi','Valokuvat');
+INSERT INTO CategoriesDes VALUES (8,'fi','Äänitteet / Videot');
+INSERT INTO CategoriesDes VALUES (9,'fi','Hakemistot');
+INSERT INTO CategoriesDes VALUES (10,'fi','Other information resources');
+
+INSERT INTO GroupsDes VALUES (-1,'fi','Vierailija');
+INSERT INTO GroupsDes VALUES (0,'fi','Intranet');
+INSERT INTO GroupsDes VALUES (1,'fi','Kaikki');
+INSERT INTO GroupsDes VALUES (2,'fi','Ryhmä');
+
 UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

@@ -131,6 +131,8 @@
 	<userAttribs>Kullanıcı özelikleri</userAttribs>
 	<password>Şifre</password>
 	<profile>Profil</profile>
+    <group>Group</group>
+    <defGroup>Default group</defGroup>
 
 	<shib>Shibboleth***</shib>
 	<path>Yol</path>

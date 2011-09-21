@@ -131,6 +131,8 @@
 	<userAttribs>User's attributes</userAttribs>
 	<password>Constrasenya</password>
 	<profile>Perfil</profile>
+    <group>Grup</group>
+    <defGroup>Grup per defecte</defGroup>
 
 	<shib>Autentificació Shibboleth</shib>
 	<path>Path</path>
