@@ -79,13 +79,30 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      * onlineResource - {String} the online resource / base url of the WMS
      */
     loadWMS: function(onlineResource) {
-        var containsVersion = (onlineResource.indexOf('version=') > -1);
 
-        var params = {'service': 'WMS', 'request': 'GetCapabilities',
-            language: GeoNetwork.OGCUtil.getLanguage()};
+        var onlineResourceCheck = onlineResource.toLowerCase();
+
+        var containsVersion = (onlineResourceCheck.indexOf('version=') > -1);
+        var containsService = (onlineResourceCheck.indexOf('service=wms') > -1);
+        var containsRequest = (onlineResourceCheck.indexOf('request=getcapabilities') > -1);
+        var containsLanguage = (onlineResourceCheck.indexOf('language=') > -1);
+
+        var params = {};
 
         if (!containsVersion) {
             params['version'] = GeoNetwork.OGCUtil.getProtocolVersion();
+        }
+
+        if (!containsService) {
+            params['service'] = 'WMS';
+        }
+
+        if (!containsRequest) {
+            params['request'] = 'GetCapabilities';
+        }
+
+        if (!containsLanguage) {
+            params['language'] = GeoNetwork.OGCUtil.getLanguage();
         }
 
         var paramString = OpenLayers.Util.getParameterString(params);

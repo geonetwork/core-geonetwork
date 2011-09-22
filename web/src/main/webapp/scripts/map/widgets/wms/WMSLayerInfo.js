@@ -80,8 +80,32 @@ GeoNetwork.wms.WMSLayerInfo.prototype = {
      */
     loadWMS: function(onlineResource, layer) {
         this.layer = layer;
-        var params = {'service': 'WMS', 'request': 'GetCapabilities',
-            'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
+
+        var onlineResourceCheck = onlineResource.toLowerCase();
+
+        var containsVersion = (onlineResourceCheck.indexOf('version=') > -1);
+        var containsService = (onlineResourceCheck.indexOf('service=wms') > -1);
+        var containsRequest = (onlineResourceCheck.indexOf('request=getcapabilities') > -1);
+        var containsLanguage = (onlineResourceCheck.indexOf('language=') > -1);
+
+        var params = {};
+
+        if (!containsVersion) {
+            params['version'] = GeoNetwork.OGCUtil.getProtocolVersion();
+        }
+
+        if (!containsService) {
+            params['service'] = 'WMS';
+        }
+
+        if (!containsRequest) {
+            params['request'] = 'GetCapabilities';
+        }
+
+        if (!containsLanguage) {
+            params['language'] = GeoNetwork.OGCUtil.getLanguage();
+        }
+
         var paramString = OpenLayers.Util.getParameterString(params);
         var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
         onlineResource += separator + paramString;
