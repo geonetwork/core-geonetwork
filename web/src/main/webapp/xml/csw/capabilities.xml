@@ -58,18 +58,14 @@
             </ows:Parameter>
             <ows:Constraint name="PostEncoding">
                 <ows:Value>XML</ows:Value>
+                <ows:Value>SOAP</ows:Value>
             </ows:Constraint>
         </ows:Operation>
         <ows:Operation name="DescribeRecord">
             <ows:DCP>
                 <ows:HTTP>
                     <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
-                        <ows:Constraint name="PostEncoding">
-                            <ows:Value>XML</ows:Value>
-                            <ows:Value>SOAP</ows:Value>
-                        </ows:Constraint>
-                    </ows:Post>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
                 </ows:HTTP>
             </ows:DCP>
             <ows:Parameter name="typeName">
@@ -84,6 +80,7 @@
             </ows:Parameter>
             <ows:Constraint name="PostEncoding">
                 <ows:Value>XML</ows:Value>
+                <ows:Value>SOAP</ows:Value>
             </ows:Constraint>
         </ows:Operation>
         <ows:Operation name="GetDomain">
@@ -98,12 +95,7 @@
             <ows:DCP>
                 <ows:HTTP>
                     <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
-                        <ows:Constraint name="PostEncoding">
-                            <ows:Value>XML</ows:Value>
-                            <ows:Value>SOAP</ows:Value>
-                        </ows:Constraint>
-                    </ows:Post>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
                 </ows:HTTP>
             </ows:DCP>
             <!-- FIXME : Gets it from enum or conf -->
@@ -129,18 +121,14 @@
             </ows:Parameter>
             <ows:Constraint name="PostEncoding">
                 <ows:Value>XML</ows:Value>
+                <ows:Value>SOAP</ows:Value>
             </ows:Constraint>
         </ows:Operation>
         <ows:Operation name="GetRecordById">
             <ows:DCP>
                 <ows:HTTP>
                     <ows:Get xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
-                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw">
-                        <ows:Constraint name="PostEncoding">
-                            <ows:Value>XML</ows:Value>
-                            <ows:Value>SOAP</ows:Value>
-                        </ows:Constraint>
-                    </ows:Post>
+                    <ows:Post xlink:href="$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw"/>
                 </ows:HTTP>
             </ows:DCP>
             <ows:Parameter name="outputSchema">
@@ -160,8 +148,9 @@
                 <ows:Value>summary</ows:Value>
                 <ows:Value>full</ows:Value>
             </ows:Parameter>
-            <ows:Constraint name="PostEncoding">
+             <ows:Constraint name="PostEncoding">
                 <ows:Value>XML</ows:Value>
+                <ows:Value>SOAP</ows:Value>
             </ows:Constraint>
         </ows:Operation>
         <ows:Operation name="Transaction">
