@@ -2706,7 +2706,7 @@
           		    <xsl:value-of select="/root/gui/strings/wmslayers"/>
           		  </xsl:otherwise>
         		  </xsl:choose>
-      		  </a>
+      		  </a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
     		  </xsl:with-param>
   		  </xsl:apply-templates>
       </xsl:when>
@@ -2747,7 +2747,7 @@
 									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -2783,7 +2783,7 @@
 							  <xsl:otherwise>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a>  <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -2821,7 +2821,7 @@
 									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
