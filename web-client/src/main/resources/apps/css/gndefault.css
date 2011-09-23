@@ -103,7 +103,7 @@ ul.main {
   background-color : rgba(0, 0, 0, 0.85) !important; 
   background-color : #000000;
   border-top : 1px solid rgba(0, 0, 0, 0.85);
-  z-index : 99;
+  z-index : 999;
   color : #FFF;
 }
 #shortcut div {

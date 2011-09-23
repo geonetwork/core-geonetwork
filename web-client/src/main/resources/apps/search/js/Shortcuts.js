@@ -94,23 +94,25 @@ function initShortcut(){
     var map = new Ext.KeyMap(document, searchConfig);
     map.enable();
     
-    var help = '';
-    for (var i = 0; i < searchConfig.length; i++) {
-        var c = searchConfig[i];
-        help += '<tr><td>' +
-        (c.ctrl === true ? '<span class="label">&lt;Ctrl&gt;</span> + ' : '') +
-        (c.shift === true ? '<span class="label">&lt;Shift&gt;</span> + ' : '') +
-        '<span class="label">' +
-        c.key +
-        '</span>' +
-        ':</td><td>' +
-        c.label +
-        '</td></tr>';
+    var helpEl = Ext.getDom('shortcutHelp');
+    if (helpEl) {
+	    var help = '';
+	    for (var i = 0; i < searchConfig.length; i++) {
+	        var c = searchConfig[i];
+	        help += '<tr><td>' +
+	        (c.ctrl === true ? '<span class="label">&lt;Ctrl&gt;</span> + ' : '') +
+	        (c.shift === true ? '<span class="label">&lt;Shift&gt;</span> + ' : '') +
+	        '<span class="label">' +
+	        c.key +
+	        '</span>' +
+	        ':</td><td>' +
+	        c.label +
+	        '</td></tr>';
+	    }
+	    
+	    var html = '<table><tbody><tr><td>' + help + '</td></tr></tbody></table>';
+	    Ext.DomHelper.insertHtml('afterEnd', helpEl, html);
     }
-    
-    var html = '<table><tbody><tr><td>' + help + '</td></tr></tbody></table>';
-    Ext.DomHelper.insertHtml('afterEnd', Ext.getDom('shortcutHelp'), html);
-
     // Launch search when enter key press
     var formMap = new Ext.KeyMap("searchForm", [{
         key: [10, 13],
