@@ -996,7 +996,7 @@
 									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>   (OGC-WMS Service: <xsl:value-of select="$linkage"/>)
+						</a>  <br/>(OGC-WMS Service: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 				<!-- Create a link for a WMS service that will open in Google Earth through the reflector -->
@@ -1034,7 +1034,7 @@
 									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
             </xsl:when>
@@ -1074,7 +1074,7 @@
 									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -1112,7 +1112,7 @@
 									<xsl:value-of select="/root/gui/strings/wmslayers"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -1154,7 +1154,7 @@
 									<xsl:value-of select="$name"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</a>
+						</a> <br/>(OGC-WMS Server: <xsl:value-of select="$linkage"/>)
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
