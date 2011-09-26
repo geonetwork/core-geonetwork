@@ -84,6 +84,10 @@ INSERT INTO CswServerCapabilitiesInfo VALUES (30, 'ru', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (31, 'ru', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (32, 'ru', 'accessConstraints', '');
 
+
+INSERT INTO Settings VALUES (240,1,'autofixing',NULL);
+INSERT INTO Settings VALUES (241,240,'enable','true');
+
 INSERT INTO Settings VALUES (800,1,'indexlanguages',NULL);
 INSERT INTO Settings VALUES (801,800,'indexlanguage',NULL);
 INSERT INTO Settings VALUES (802,801,'name','danish');
