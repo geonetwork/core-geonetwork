@@ -200,8 +200,8 @@
             onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', 'uuidref');" onmouseover="this.style.cursor='pointer';"/>
         </xsl:when>
         <xsl:otherwise>
-          <a href="metadata.show?uuid={@uuidref}">
-                     <xsl:call-template name="getMetadataTitle">
+          <a href="#" onclick="javascript:catalogue.metadataShow('{@uuidref}');">
+            <xsl:call-template name="getMetadataTitle">
               <xsl:with-param name="uuid" select="@uuidref"/>
             </xsl:call-template>
           </a>
@@ -244,7 +244,7 @@
                             <xsl:value-of select="/root/gui/strings/noOperatesOn"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <select onchange="javascript:$('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
+                            <select onchange="javascript:Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value;" class="md">
                                 <option></option>
                                 <xsl:for-each select="//srv:operatesOn[@uuidref!='']">
                                     <option value="{@uuidref}">
@@ -271,10 +271,10 @@
                 <xsl:apply-templates mode="simpleElement" select=".">
                     <xsl:with-param name="schema"  select="$schema"/>
                     <xsl:with-param name="text">
-                      <a href="metadata.show?uuid={gco:CharacterString}">
-                       <xsl:call-template name="getMetadataTitle">
-                <xsl:with-param name="uuid" select="gco:CharacterString"/>
-              </xsl:call-template>
+                      <a href="#" onclick="javascript:catalogue.metadataShow('{gco:CharacterString}');">
+                        <xsl:call-template name="getMetadataTitle">
+                          <xsl:with-param name="uuid" select="gco:CharacterString"/>
+                        </xsl:call-template>
                       </a>
                     </xsl:with-param>
                 </xsl:apply-templates>
@@ -3023,7 +3023,7 @@
             <xsl:if test="not($isXLinked)">
               <xsl:text> </xsl:text>
               <select class="md"
-                onchange="$('_{gco:CharacterString/geonet:element/@ref}').value = this.options[this.selectedIndex].value;"
+                onchange="Ext.getDom('_{gco:CharacterString/geonet:element/@ref}').value = this.options[this.selectedIndex].value;"
                 size="1">
                 <option name="" />
                 <xsl:for-each select="/root/gui/regions/record">
@@ -3088,7 +3088,7 @@
                                 <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
                             </xsl:call-template>
                         </xsl:variable>
-                        <a href="metadata.show?uuid={gco:CharacterString}">
+                        <a href="#" onclick="javascript:catalogue.metadataShow('{gco:CharacterString}');">
                             <xsl:value-of select="$metadataTitle"/>
                         </a>
                     </xsl:with-param>

@@ -1042,15 +1042,15 @@
           <xsl:variable name="relatedElementRef"
             select="../following-sibling::node()[name()=$relatedElementName]/gco:CharacterString/geonet:element/@ref"/>
           <xsl:variable name="relatedElementIsEmpty" select="normalize-space($relatedElement)=''"/>
-          <!--<xsl:value-of select="concat('if ($(&quot;_', $relatedElementRef, '&quot;).value===&quot;&quot;) $(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"/>-->
+          <!--<xsl:value-of select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value===&quot;&quot;) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"/>-->
           <xsl:value-of
-            select="concat('if ($(&quot;_', $relatedElementRef, '&quot;)) $(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+            select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
           />
         </xsl:if>
       </xsl:variable>
       <xsl:text> </xsl:text> (<xsl:value-of select="/root/gui/strings/helperList"/>
       <select
-        onchange="$('_{$refId}').value=this.options[this.selectedIndex].value; if ($('_{$refId}').onkeyup) $('_{$refId}').onkeyup(); {$relatedElementAction}"
+        onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction}"
         class="md">
         <option/>
         <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
@@ -1244,7 +1244,7 @@
             <fieldset class="attributes">
               <legend>
                 <span>
-                  <div onclick="toggleFieldset(this, $('toggled{$id}'));">
+                  <div onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));">
                     <xsl:attribute name="class">
                       <xsl:choose>
                         <xsl:when test="$visibleAttributes">tgDown button</xsl:when>
@@ -1604,7 +1604,7 @@
           <legend id="stip.{$helpLink}|{$id}">
             <span>
               <xsl:if test="/root/gui/config/metadata-view-toggleTab">
-                <div class="button tgDown" onclick="toggleFieldset(this, $('toggled{$id}'));"
+                <div class="button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
                   >&#160;</div>
               </xsl:if>
 
