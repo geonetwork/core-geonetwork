@@ -40,15 +40,14 @@ Ext.namespace('GeoNetwork');
 GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     url: '',
     id: 'loginForm',
-    width: 340,
     border: false,
     layout: 'hbox',
-    
     /** api: config[catalogue] 
      * ``GeoNetwork.Catalogue`` Catalogue to use
      */
     catalogue: undefined,
-    defaults: {
+    defaultConfig: {
+    	width: 340
     },
     defaultType: 'textfield',
     
@@ -62,8 +61,11 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     /** private: method[initComponent] 
      *  Initializes the login form results view.
      */
-    initComponent: function(){
-        var form = this;
+    initComponent: function(config){
+    	Ext.apply(this, config);
+    	Ext.applyIf(this, this.defaultConfig);
+
+    	var form = this;
         this.username = new Ext.form.TextField({
             name: 'username',
             width: 70,
