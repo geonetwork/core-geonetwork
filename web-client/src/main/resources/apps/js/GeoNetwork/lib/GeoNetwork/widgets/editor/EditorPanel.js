@@ -474,7 +474,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 linkedmetadataselected: function(panel, metadata){
                     if (single) {
                         if (this.ref !== null) {
-                            $('_' + this.ref + (name !== '' ? '_' + name : '')).value = metadata[0].data.uuid;
+                            Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = metadata[0].data.uuid;
                         } else {
                             // Create relation between current record and selected one
                             if (this.mode === 'iso19110') {
