@@ -1,5 +1,7 @@
 //=============================================================================
-//===	Copyright (C) Free Software Foundation
+//=== Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//=== United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//=== and United Nations Environment Programme (UNEP)
 //===
 //===	This library is free software; you can redistribute it and/or
 //===	modify it under the terms of the GNU Lesser General Public
@@ -13,7 +15,7 @@
 //===
 //===	You should have received a copy of the GNU Lesser General Public
 //===	License along with this library; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //===
 //===	Contact: Jeroen Ticheler - GeoCat
 //===	email: Jeroen.Ticheler@geocat.org
@@ -21,24 +23,18 @@
 
 package jeeves.resources.dbms;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.resources.ResourceListener;
-import jeeves.server.resources.ResourceProvider;
-import jeeves.utils.Log;
 
-import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+import org.apache.commons.dbcp.BasicDataSource;
+
+import org.geotools.data.DataStore;
+import org.geotools.data.postgis.PostgisDataStoreFactory;
 
 import org.jdom.Element;
 
@@ -50,18 +46,13 @@ import org.jdom.Element;
 //=============================================================================
 
 /**
- * A pool of database connections via Apache Commons DBC Pool (or at least 
- * the tomcat wrapping of these). Checks first using JNDI to see whether the
- * container has defined a context with the details in it - uses those if 
- * they are found under jdbc/geonetwork otherwise reads the Jeeves config
- * from web/geonetwork/WEB-INF/config.xml.
+ * A pool of database connections via Apache Commons DBC Pool.
+ * Reads config params from web/geonetwork/WEB-INF/config.xml.
  */
 
-public class ApacheDBCPool implements ResourceProvider {
+public class ApacheDBCPool extends AbstractDbmsPool {
 
-	private String name;
-	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
-	private BasicDataSource ds;
+	private BasicDataSource basicDataSource;
 	
 	// --------------------------------------------------------------------------
 	// ---
@@ -74,37 +65,29 @@ public class ApacheDBCPool implements ResourceProvider {
 	 */
 	public void init(String name, Element config) throws Exception {
 
-		// check and see whether we have a JNDI context defined
+		parseJeevesDBConfig(config);
 
-		String contextName = config.getChildText(Jeeves.Res.Pool.CONTEXT);
-		if (contextName != null) {
-			String dsName      = config.getChildText(Jeeves.Res.Pool.RESOURCE_NAME);
-			if (dsName == null) throw new IllegalArgumentException("context "+contextName+" specified but resource name parameter "+Jeeves.Res.Pool.RESOURCE_NAME+" has not been found");
-			Context initContext = new InitialContext();
-			Context envContext  = (Context)initContext.lookup(contextName);
-			ds = (BasicDataSource)envContext.lookup(dsName);
-			this.name = contextName + "/" + dsName;
-		} else {
-			parseJeevesDBConfig(config);
-		}
-
-		if (ds.getUrl().toUpperCase().contains("MCKOI")) {
+		if (basicDataSource.getUrl().toUpperCase().contains("MCKOI")) {
 			// McKoi doesn't work unless you use TRANSACTION_SERIALIZABLE
-			ds.setDefaultTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			basicDataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		} else {
 			// Everything else seems safe and faster with TRANSACTION_READ_COMMITTED
-			ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);		 }
+			basicDataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);		 
+		}
 
+		setDataSource((DataSource)basicDataSource);
+		setDataStore(createDataStore());
 		debug(toString());
 	}
 
 	/**
 	 * Builds the pool using init parameters from jeeves config.
 	 */
-	public void parseJeevesDBConfig(Element config) throws Exception {
+	private void parseJeevesDBConfig(Element config) throws Exception {
+		url = config.getChildText(Jeeves.Res.Pool.URL);
+
 		String user = config.getChildText(Jeeves.Res.Pool.USER);
 		String passwd = config.getChildText(Jeeves.Res.Pool.PASSWORD);
-		String url = config.getChildText(Jeeves.Res.Pool.URL);
 		String driver = config.getChildText(Jeeves.Res.Pool.DRIVER);
 		String size = config.getChildText(Jeeves.Res.Pool.POOL_SIZE);
 		String maxw = config.getChildText(Jeeves.Res.Pool.MAX_WAIT);
@@ -145,59 +128,70 @@ public class ApacheDBCPool implements ResourceProvider {
 		}
 
 		// create the datasource 
-		ds = new BasicDataSource();
+		basicDataSource = new BasicDataSource();
 
-		ds.setDriverClassName(driver);
+		basicDataSource.setDriverClassName(driver);
 
-		ds.setRemoveAbandoned(true);
-		ds.setRemoveAbandonedTimeout(60 * 60);
-		ds.setLogAbandoned(true);
+		basicDataSource.setRemoveAbandoned(true);
+		basicDataSource.setRemoveAbandonedTimeout(60 * 60);
+		basicDataSource.setLogAbandoned(true);
 
 		// configure the rest of the pool from params
 		// http://commons.apache.org/dbcp/configuration.html
 		if (maxActive != null) {
-			ds.setMaxActive(Integer.parseInt(maxActive));
+			basicDataSource.setMaxActive(Integer.parseInt(maxActive));
 		} else {
-			ds.setMaxActive(poolSize);
+			basicDataSource.setMaxActive(poolSize);
 		}
 		if (maxIdle != null) {
-			ds.setMaxIdle(Integer.parseInt(maxIdle));
+			basicDataSource.setMaxIdle(Integer.parseInt(maxIdle));
 		} else {
-			ds.setMaxIdle(poolSize);
+			basicDataSource.setMaxIdle(poolSize);
 		}
 		if (minIdle != null) {
-			ds.setMinIdle(Integer.parseInt(minIdle));
+			basicDataSource.setMinIdle(Integer.parseInt(minIdle));
 		} else {
-			ds.setMinIdle(0);
+			basicDataSource.setMinIdle(0);
 		}
-		ds.setMaxWait(maxWait);
+		basicDataSource.setMaxWait(maxWait);
 
 		// always test connections when we get them from the pool    
-		ds.setTestOnBorrow(true);
+		basicDataSource.setTestOnBorrow(true);
 
 		// time between runs of idle evictor thread                  
-		ds.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+		basicDataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
 		// test idle connections                    
-		ds.setTestWhileIdle(testWhileIdle);
+		basicDataSource.setTestWhileIdle(testWhileIdle);
 		// let idle connections sit in there forever
-		ds.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+		basicDataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
 		// test all idle connections each run
-		ds.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+		basicDataSource.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
 
-		ds.setPoolPreparedStatements(true);
-		ds.setMaxOpenPreparedStatements(-1);
+		basicDataSource.setPoolPreparedStatements(true);
+		basicDataSource.setMaxOpenPreparedStatements(-1);
 
 		if (validationQuery != null && validationQuery.trim().length() > 0) {
-			ds.setValidationQuery(validationQuery);
+			basicDataSource.setValidationQuery(validationQuery);
 		}
-		ds.setDefaultReadOnly(false);
-		ds.setDefaultAutoCommit(false);
+		basicDataSource.setDefaultReadOnly(false);
+		basicDataSource.setDefaultAutoCommit(false);
 
-		ds.setUrl(url);
-		ds.setUsername(user);
-		ds.setPassword(passwd);
+		basicDataSource.setUrl(url);
+		basicDataSource.setUsername(user);
+		basicDataSource.setPassword(passwd);
 
-		ds.setInitialSize(poolSize);
+		basicDataSource.setInitialSize(poolSize);
+	}
+
+	// --------------------------------------------------------------------------
+
+	public void end() {
+		try {
+		  basicDataSource.close();
+		} catch (java.sql.SQLException e) {
+			error("Problem "+e);
+			e.printStackTrace();
+		}
 	}
 
 	// --------------------------------------------------------------------------
@@ -205,99 +199,20 @@ public class ApacheDBCPool implements ResourceProvider {
 	public Map<String, String> getProps() {
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("name", name);
-		result.put("user", ds.getUsername());
-		result.put("password", ds.getPassword());
-		result.put("url", ds.getUrl());
+		result.put("user", basicDataSource.getUsername());
+		result.put("password", basicDataSource.getPassword());
+		result.put("url", basicDataSource.getUrl());
 		return result;
 	}
 
 	// --------------------------------------------------------------------------
 
-	public Map<String, String> getStats() throws SQLException {
+	public Map<String, String> getStats() {
 		Map<String, String> result = new HashMap<String, String>();
-		result.put("numactive",ds.getNumActive()+"");
-		result.put("numidle",ds.getNumIdle()+"");
-		result.put("maxactive",ds.getMaxActive()+""); 
+		result.put("numactive",basicDataSource.getNumActive()+"");
+		result.put("numidle",basicDataSource.getNumIdle()+"");
+		result.put("maxactive",basicDataSource.getMaxActive()+""); 
 		return result;
-	}
-
-	// --------------------------------------------------------------------------
-
-	public void end() {
-
-		try {
-			ds.close();
-		} catch (java.sql.SQLException e) {
-      error("Problem "+e);
-			e.printStackTrace();
-    }
-	}
-
-	// --------------------------------------------------------------------------
-
-	public String getName() {
-		return name;
-	}
-
-	// --------------------------------------------------------------------------
-	/**
-	 * Gets an element from the pool
-	 */
-
-	public synchronized Object open() throws Exception {
-		debug("Opening " + ds.getUrl());
-		Dbms dbms = new Dbms((DataSource)ds, ds.getUrl());
-		String nullStr = null;
-		dbms.connect(nullStr, nullStr);
-		return dbms;
-	}
-
-	// --------------------------------------------------------------------------
-	/**
-	 * Releases one element from the pool
-	 */
-
-	public void close(Object resource) throws Exception {
-		Dbms dbms = (Dbms) resource;
-		try {
-			dbms.commit();
-		} finally {
-			dbms.disconnect();
-			synchronized (hsListeners) {
-				for (ResourceListener l : hsListeners)
-					l.close(resource);
-			}
-		}
-	}
-
-	// --------------------------------------------------------------------------
-	/**
-	 * Releases one element from the pool doing an abort
-	 */
-
-	public void abort(Object resource) throws Exception {
-		Dbms dbms = (Dbms) resource;
-		try {
-			dbms.abort();
-		} finally {
-			dbms.disconnect();
-			synchronized (hsListeners) {
-				for (ResourceListener l : hsListeners)
-					l.abort(resource);
-			}
-		}
-	}
-
-	// --------------------------------------------------------------------------
-
-	public void addListener(ResourceListener l) {
-		hsListeners.add(l);
-	}
-
-	// --------------------------------------------------------------------------
-
-	public void removeListener(ResourceListener l) {
-		hsListeners.remove(l);
 	}
 
 	//---------------------------------------------------------------------------
@@ -309,21 +224,21 @@ public class ApacheDBCPool implements ResourceProvider {
 		sb.append('\n');
 		sb.append("Created connection pool (" + this.name + ")");
 		sb.append('\n');
-		sb.append("MaxActive connections                 : " + ds.getMaxActive());
+		sb.append("MaxActive connections                 : " + basicDataSource.getMaxActive());
 		sb.append('\n');
-		sb.append("MaxIdle connections                   : " + ds.getMaxIdle()); 
+		sb.append("MaxIdle connections                   : " + basicDataSource.getMaxIdle()); 
 		sb.append('\n');
-		sb.append("MinIdle connections                   : " + ds.getMinIdle()); 
+		sb.append("MinIdle connections                   : " + basicDataSource.getMinIdle()); 
 		sb.append('\n');
-		sb.append("Maximum wait time connection (maxWait): " + ds.getMaxWait());
+		sb.append("Maximum wait time connection (maxWait): " + basicDataSource.getMaxWait());
 		sb.append('\n');
-		sb.append("Test While Idle        (testWhileIdle): " + ds.getTestWhileIdle());
+		sb.append("Test While Idle        (testWhileIdle): " + basicDataSource.getTestWhileIdle());
 		sb.append('\n');
-		sb.append("Time Between Eviction Runs (timeBetweenEvictionRunsMillis): " + ds.getTimeBetweenEvictionRunsMillis());
+		sb.append("Time Between Eviction Runs (timeBetweenEvictionRunsMillis): " + basicDataSource.getTimeBetweenEvictionRunsMillis());
 		sb.append('\n');
-		sb.append("Minimum Evictable Idle Time (minEvictableIdleTimeMillis)  : " + ds.getMinEvictableIdleTimeMillis());
+		sb.append("Minimum Evictable Idle Time (minEvictableIdleTimeMillis)  : " + basicDataSource.getMinEvictableIdleTimeMillis());
 		sb.append('\n');
-		sb.append("Number Connections Tested Per Eviction Run (numTestsPerEvictionRun) : " + ds.getNumTestsPerEvictionRun());
+		sb.append("Number Connections Tested Per Eviction Run (numTestsPerEvictionRun) : " + basicDataSource.getNumTestsPerEvictionRun());
 		sb.append('\n');
 		sb.append("------------------------------------------------------------------------------");
 		sb.append('\n');
@@ -331,22 +246,81 @@ public class ApacheDBCPool implements ResourceProvider {
 		return sb.toString();
 	}
 
-	//---------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-	private void debug(String message) {
-		Log.debug(Log.DBMSPOOL, message);
+	private DataStore createDataStore() throws Exception {
+		Map<String,String> props = getProps();
+		String url = props.get("url");
+		String user = props.get("user");
+		String passwd = props.get("password");
+		String name = props.get("name");
+
+		DataStore newDataStore = null;
+		try {
+			if (url.contains("postGIS")) {
+				newDataStore = createPostgisDatastore(name, user, passwd, url);
+			}
+		} catch (Exception e) {
+			error("Failed to create datastore for "+url+". Will use shapefile instead.");
+			error(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return newDataStore;
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void info(String message) {
-		Log.info(Log.DBMSPOOL, message);
+	private DataStore createPostgisDatastore(String name, String user, String passwd, String url) throws Exception {
+
+		String[] values = url.split("/");
+
+		DataStore newDataStore = null;
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PostgisDataStoreFactory.DBTYPE.key, PostgisDataStoreFactory.DBTYPE.sample);
+		params.put(PostgisDataStoreFactory.DATABASE.key, getDatabase(url, values));
+		params.put(PostgisDataStoreFactory.USER.key, user);
+		params.put(PostgisDataStoreFactory.PASSWD.key, passwd);
+		params.put(PostgisDataStoreFactory.HOST.key, getHost(url, values));
+		params.put(PostgisDataStoreFactory.PORT.key, getPort(url, values));
+		PostgisDataStoreFactory factory = new PostgisDataStoreFactory();
+		newDataStore = factory.createDataStore(params);
+		if (newDataStore != null) info("NOTE: Using POSTGIS for spatial index");
+
+		return newDataStore;
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void error(String message) {
-		Log.error(Log.DBMSPOOL, message);
+	private String getDatabase(String url, String[] values) throws Exception {
+		if (url.contains("postGIS")) {
+			return values[3];
+		} else {
+			throw new Exception("Unknown database in url "+url);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getHost(String url, String[] values) throws Exception {
+		if (url.contains("postGIS")) {
+			String value = values[2];
+			return value.substring(0,value.indexOf(':'));
+		} else {
+			throw new Exception("Unknown database in url "+url);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+
+	private String getPort(String url, String values[]) throws Exception {
+		if (url.contains("postGIS")) {
+			String value = values[2];
+			return value.substring(value.indexOf(':')+1);
+		} else {
+			throw new Exception("Unknown database in url "+url);
+		}
 	}
 }
 

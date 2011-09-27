@@ -482,6 +482,7 @@ public class JeevesEngine
 		if (!resourceFound) {
 			Map<String,String> errors = new HashMap<String,String>();
 			errors.put("Error", "No database resources found to initialize - check "+file); 
+			error(errors.toString());
 			serviceMan.setStartupErrors(errors);
 		}
 	}

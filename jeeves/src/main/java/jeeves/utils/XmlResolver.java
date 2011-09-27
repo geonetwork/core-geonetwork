@@ -7,6 +7,7 @@ import org.apache.xerces.util.XMLCatalogResolver;
 import org.jdom.Element;
 import org.w3c.dom.ls.LSInput;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -70,8 +71,17 @@ public class XmlResolver extends XMLCatalogResolver {
 		URL externalRef = null;
 		try {
 
-			if (publicId != null && publicId.startsWith("http://")) externalRef = new URL(publicId);
-			if (systemId != null && systemId.startsWith("http://")) externalRef = new URL(systemId);
+			if (publicId != null && publicId.startsWith("http://")) {
+				externalRef = new URL(publicId);
+			} else if (systemId != null && systemId.startsWith("http://")) {
+				externalRef = new URL(systemId);
+			} else if (systemId != null && baseURI != null) {
+				if (baseURI.startsWith("http://")) {
+					URL ref = new URL(baseURI);
+					String thePath = new File(ref.getPath()).getParent();
+					externalRef = new URL(ref.getProtocol(), ref.getHost(), ref.getPort(), thePath + "/" + systemId);
+				}
+			}
 		} catch (MalformedURLException e) { // leave this to someone else?
 			e.printStackTrace();
 			return result; 
@@ -113,7 +123,9 @@ public class XmlResolver extends XMLCatalogResolver {
 			if (result == null) {
 				result = new DOMInputImpl(publicId, systemId, baseURI);
 			}
-			result.setStringData(Xml.getString(elResult));
+			if (elResult != null) {
+				result.setStringData(Xml.getString(elResult));
+			}
    	}
     return result;
 	}

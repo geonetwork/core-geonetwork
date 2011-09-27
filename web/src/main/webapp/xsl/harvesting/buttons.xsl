@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
+	<xsl:variable name="modalArg">
+		<xsl:choose>
+		  <xsl:when test="/root/request/modal">
+				<xsl:text>&amp;modal</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<!-- ============================================================================================= -->
 	<!-- List panel - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -21,6 +32,10 @@
 		<button class="content" onclick="harvesting.remove()">
 			<xsl:value-of select="/root/gui/harvesting/remove"/>
 		</button>
+		&#160;
+		<button class="content" onclick="harvesting.clone()">
+			<xsl:value-of select="/root/gui/harvesting/clone"/>
+		</button>
 
 		<p/>
 
@@ -35,6 +50,11 @@
 		<button class="content" onclick="harvesting.refresh()">
 			<xsl:value-of select="/root/gui/harvesting/refresh"/>
 		</button>
+		&#160;
+		<button class="content" onclick="load('{/root/gui/locService}/harvesting.history.full?{$modalArg}')">
+			<xsl:value-of select="/root/gui/harvesting/history"/>
+		</button>
+
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

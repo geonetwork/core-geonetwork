@@ -150,7 +150,7 @@ public class GeonetHarvester extends AbstractHarvester
 		settingMan.add(dbms, "id:"+siteId, "servlet", params.servlet);
 		settingMan.add(dbms, "id:"+siteId, "createRemoteCategory", params.createRemoteCategory);
 		settingMan.add(dbms, "id:"+siteId, "mefFormatFull", params.mefFormatFull);
-		
+
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
@@ -222,17 +222,30 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
+		Element res  = getResult();
+		info.addContent(res);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- GetResult
+	//---
+	//---------------------------------------------------------------------------
+
+	protected Element getResult() {
 		Element res  = new Element("result");
 
-		add(res, "total",         result.totalMetadata);
-		add(res, "added",         result.addedMetadata);
-		add(res, "updated",       result.updatedMetadata);
-		add(res, "unchanged",     result.unchangedMetadata);
-		add(res, "unknownSchema", result.unknownSchema);
-		add(res, "removed",       result.locallyRemoved);
-		add(res, "unretrievable", result.unretrievable);
+		if (result != null) {
+			add(res, "total",         result.totalMetadata);
+			add(res, "added",         result.addedMetadata);
+			add(res, "updated",       result.updatedMetadata);
+			add(res, "unchanged",     result.unchangedMetadata);
+			add(res, "unknownSchema", result.unknownSchema);
+			add(res, "removed",       result.locallyRemoved);
+			add(res, "unretrievable", result.unretrievable);
+		}
 
-		info.addContent(res);
+		return res;
 	}
 
 	//---------------------------------------------------------------------------

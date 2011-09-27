@@ -40,12 +40,15 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.main.Info;
 import org.fao.geonet.util.ISODate;
+import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //=============================================================================
 
@@ -82,7 +85,9 @@ class Harvester {
 	// ---------------------------------------------------------------------------
 
 	public Z3950ServerResults harvest() throws Exception {
-		int groupSize = 500;
+		Set<String> newUuids = new HashSet<String>();
+
+		int groupSize = 10;
 
 		log.info("Retrieving remote metadata information:" + params.uuid);
 
@@ -140,7 +145,7 @@ class Harvester {
 
 		log.debug("Search returned "+s.getSize()+" hits");
 
-		// -- process the hits in groups of 100
+		// -- process the hits in groups of groupSize
 		int numberOfHits = Math.min(Integer.parseInt(params.maximumHits),s.getSize());
 		// -- add from and to placeholders to request
 
@@ -156,6 +161,7 @@ class Harvester {
 		// -- build a map of collection code versus repository name for 
 		// -- assigning the categories
 		Map <String,String> codes = new HashMap<String,String>();
+		Map <String,String> catCodes = new HashMap<String,String>();
 
 		// -- add new category for each repository
 		boolean addcateg = false;
@@ -165,9 +171,17 @@ class Harvester {
 				Element repoId  = repoElem.getChild("id");
 				String repoName = repoElem.getChildText("name");
 				codes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), repoName);
-				if (Xml.selectElement(categories,"record[name='"+repoName+"']") == null) {
+				// create a result holder for this repository
+				Z3950Result result = serverResults.getServerResult(repoName);
+
+				// sanitize the name of the category
+				String categName = repoName.replaceAll("[^\\w]",""); 
+				categName = categName.toLowerCase();
+				catCodes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), categName);
+
+				if (Xml.selectElement(categories,"record[name='"+categName+"']") == null) {
 					int newId = context.getSerialFactory().getSerial(dbms, "Categories");
-					dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, repoName);
+					dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, categName);
 					Lib.local.insert(dbms, "Categories", newId, repoName);
 					addcateg = true;
 				}
@@ -191,7 +205,7 @@ class Harvester {
 			localCateg = new CategoryMapper(dbms);
 			localGroups = new GroupMapper(dbms);
 
-			log.debug("There are "+list.size()+" children in the results ("+lower+" to "+upper+")");
+			log.debug("There are "+(list.size()-1)+" children in the results ("+lower+" to "+upper+")");
 
 			boolean transformIt = false;
 			String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
@@ -220,38 +234,17 @@ class Harvester {
 					}
 				}
 				md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
-				String serverName = codes.get(colCode);
-				log.debug("Processing record from server "+serverName);
-				Z3950Result result = serverResults.getServerResult(serverName);
+				String repoName = codes.get(colCode);
+				log.debug("Processing record from server "+repoName);
+				Z3950Result result = serverResults.getServerResult(repoName);
 				result.totalMetadata++;
 
 				if (eName.equals("error")) {
+					log.error("JZKit could not retrieve record - returned "+Xml.getString(md));
 					result.unretrievable++;
 					continue;
 				} 
 
-				// validate it here if requested
-				if (params.validate) {
-					try {
-						// detect schema to see if its one we know
-						String schema = dataMan.autodetectSchema(md);
-						if (schema != null) {
-							// -- validate using GeoNetwork known schema unless the document
-							// -- has a doctype in which case we validate using that
-							if (doc.getDocType() != null) Xml.validate(doc);
-							else dataMan.validate(schema, md);
-						} else { 
-							// -- validate using doctype/dtd or schemalocation hints
-							Xml.validate(doc); 
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-						log.error("Cannot validate XML, ignoring. Error was: "+e.getMessage());
-						result.doesNotValidate++;
-						continue; // skip this one
-					}
-				}
-			
 				// transform using importxslt if not none
 				if (transformIt) {
 					try {
@@ -296,13 +289,16 @@ class Harvester {
                 String id$ = Integer.toString(id);
 
 				String docType = "";
-				if (doc.getDocType() != null) {
+				if (!transformIt && (doc.getDocType() != null)) {
 					docType = Xml.getString(doc.getDocType());
 				}
 
-				// check for duplicate uuid because postgres aborts the transaction if a constraint is violated!
-				if (dataMan.getMetadataId(dbms,uuid) != null) {
-					log.error("Uuid "+uuid+" already exists in the Metadata table");
+				//--- check for duplicate uuid - violates constraints on metadata table
+				//--- if we attempt insert
+				boolean alreadyAdded = !newUuids.add(uuid);
+				boolean alreadyInDb  = (dataMan.getMetadataId(dbms,uuid) != null);
+				if (alreadyAdded || alreadyInDb) {
+					log.error("Uuid "+uuid+" already exists in this set/database - cannot insert");
 					result.couldNotInsert++;
 					continue;
 				}
@@ -327,13 +323,27 @@ class Harvester {
 				}
 
 				addPrivileges(id$);
-				addCategories(id$, codes.get(colCode));
+				addCategories(id$, catCodes.get(colCode));
 
 				dataMan.setTemplateExt(dbms, id, "n", null);
 				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
 
-                boolean indexGroup = false;
-                dataMan.indexMetadata(dbms, id$, indexGroup);
+				// validate it here if requested
+				if (params.validate) {
+					Document docVal;
+					if (!transformIt && (doc.getDocType() != null)) {
+						docVal = new Document(md, (DocType)doc.getDocType().detach());
+					} else {
+						docVal = new Document(md);
+					}
+
+					if (!dataMan.doValidate(dbms, schema, id$, docVal, context.getLanguage())) {
+						result.doesNotValidate++;
+					} 
+				}
+			
+				boolean indexGroup = false;
+				dataMan.indexMetadata(dbms, id$, indexGroup);
 
 				result.addedMetadata++;
 			}

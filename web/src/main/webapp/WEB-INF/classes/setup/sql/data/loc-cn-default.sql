@@ -16,6 +16,7 @@ INSERT INTO CategoriesDes VALUES (7,'cn','Photo');
 INSERT INTO CategoriesDes VALUES (8,'cn','Audio/Video');
 INSERT INTO CategoriesDes VALUES (9,'cn','Directories');
 INSERT INTO CategoriesDes VALUES (10,'cn','Other information resources');
+INSERT INTO CategoriesDes VALUES (11,'cn','Z3950 Servers');
 
 INSERT INTO GroupsDes VALUES (-1,'cn','Guest');
 INSERT INTO GroupsDes VALUES (0,'cn','Intranet');

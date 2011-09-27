@@ -399,6 +399,27 @@ CREATE INDEX ParamsNDX2 ON Params(queryType);
 CREATE INDEX ParamsNDX3 ON Params(termField);
 CREATE INDEX ParamsNDX4 ON Params(termText);
 
+-- ======================================================================
+
+CREATE TABLE HarvestHistory
+  (
+    id             int not null,
+    harvestDate    varchar(30),
+		harvesterUuid  varchar(250),
+		harvesterName  varchar(128),
+		harvesterType  varchar(128),
+    deleted        char(1) default 'n' not null,
+    info           text,
+    params         text,
+
+    primary key(id)
+
+  );
+
+CREATE INDEX HarvestHistoryNDX1 ON HarvestHistory(harvestDate);
+
+-- ======================================================================
+
 CREATE TABLE Thesaurus
   (
     id   varchar(250),

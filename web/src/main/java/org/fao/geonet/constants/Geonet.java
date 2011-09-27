@@ -56,6 +56,7 @@ public class Geonet
 		public static final String UPDATE_FIXED_INFO   = "update-fixed-info.xsl";
 		public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
 		public static final String EXTRACT_UUID        = "extract-uuid.xsl";
+		public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
 		public static final String SET_UUID            = "set-uuid.xsl";
 		public static final String EXTRACT_THUMBNAILS  = "extract-thumbnails.xsl";
 		public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
@@ -67,6 +68,7 @@ public class Geonet
 		public static final String SCHEMA_ID           = "schema-ident.xml";
 		public static final String SCHEMA_OASIS        = "oasis-catalog.xml";
 		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
+		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
 		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
@@ -135,6 +137,7 @@ public class Geonet
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
 		public static final String WFS_STYLESHEETS    = "/convert/WFSToFragments";
 		public static final String TDS_STYLESHEETS    = "/convert/ThreddsToFragments";
+		public static final String ISO19119TOJZKIT_STYLESHEET = "/convert/19119ToJZKitRepository.xsl";
 		public static final String OGC_STYLESHEETS    = "/convert/OGCWxSGetCapabilitiesto19119";
 		public static final String CONVERT_STYLESHEETS       = "/convert/";
 		public static final String DIF_STYLESHEET     = "/convert/DIFToISO.xsl";

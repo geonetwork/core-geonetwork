@@ -56,7 +56,7 @@ public class Dbms
 	public static final String DEFAULT_TIME_FORMAT      = "HH:mm:ss";
 	public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-	private DataSource ds;
+	private DataSource dataSource;
 	private String url;
 	private Connection conn;
 	private long       lastConnTime;
@@ -69,9 +69,9 @@ public class Dbms
 
 	/** Constructs a DBMS object that contains a jdbc connection */
 
-	public Dbms(DataSource ds, String url) throws ClassNotFoundException
+	public Dbms(DataSource dataSource, String url) throws ClassNotFoundException
 	{
-		this.ds = ds;
+		this.dataSource = dataSource;
 		this.url = url;
 	}
 	
@@ -87,7 +87,7 @@ public class Dbms
 	{
 
 		// ignore username and password
-		conn = ds.getConnection();
+		conn = dataSource.getConnection();
 
 		lastConnTime = System.currentTimeMillis();
 		

@@ -124,18 +124,27 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
-		Element res  = new Element("result");
-		add(res, "total",          result.total);
-		add(res, "added",          result.added);
-		add(res, "updated",        result.updated);
-		add(res, "unchanged",      result.unchanged);
-		add(res, "unknownSchema",  result.unknownSchema);
-		add(res, "removed",        result.removed);
-		add(res, "unretrievable",  result.unretrievable);
-		add(res, "badFormat",      result.badFormat);
-		add(res, "doesNotValidate",result.doesNotValidate);
-
+		Element res = getResult();
 		info.addContent(res);
+	}
+
+	@Override
+	protected Element getResult() {
+		Element res  = new Element("result");
+
+		if (result != null) {
+			add(res, "total",          result.total);
+			add(res, "added",          result.added);
+			add(res, "updated",        result.updated);
+			add(res, "unchanged",      result.unchanged);
+			add(res, "unknownSchema",  result.unknownSchema);
+			add(res, "removed",        result.removed);
+			add(res, "unretrievable",  result.unretrievable);
+			add(res, "badFormat",      result.badFormat);
+			add(res, "doesNotValidate",result.doesNotValidate);
+		}
+
+		return res;
 	}
 
 	@Override
@@ -231,6 +240,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+		System.out.println("  - Updating metadata with id: "+ id);
         //
         // update metadata
         //

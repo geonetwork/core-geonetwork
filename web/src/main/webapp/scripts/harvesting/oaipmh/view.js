@@ -22,6 +22,23 @@ oaipmh.View = function(xmlLoader)
 	this.setPrefix('oai');
 	this.setPrivilTransf(privilTransf);
 	this.setResultTransf(resultTransf);
+
+	// register event listeners on the Ajax requests to show/hide the busy 
+	// indicator
+	Ajax.Responders.register({
+ 		onCreate: function() {
+   	 if (Ajax.activeRequestCount === 1) {
+   	   var eBusy = $('harvesterBusy');
+   	   if (eBusy) eBusy.show();
+   	 }
+  	},
+  	onComplete: function() {
+   	 if (Ajax.activeRequestCount === 0) {
+   	   var eBusy = $('harvesterBusy');
+   	   if (eBusy) eBusy.hide();
+   	 }
+  	}
+	});
 	
 	//--- public methods
 	
@@ -219,10 +236,13 @@ function setInfo(data)
 		var divElem = searchList[i];
 		var id      = divElem.getAttribute('id');
 		
-		var setName = $F(id+'.oai.set');
-		var mdfName = $F(id+'.oai.prefix');
+		var setName = $F(id+'.oai.set_select');
+		var mdfName = $F(id+'.oai.prefix_select');
 		
 		setupCombo(id, setName, mdfName);
+
+		$(id+'.oai.prefixes.cols').show();
+		$(id+'.oai.sets.cols').show();
 	}
 }
 
@@ -230,8 +250,8 @@ function setInfo(data)
 
 function setupCombo(id, setName, mdfName)
 {
-	var setElem = $(id+'.oai.set');
-	var mdfElem = $(id+'.oai.prefix');
+	var setElem = $(id+'.oai.set_select');
+	var mdfElem = $(id+'.oai.prefix_select');
 	
 	//--- remove old sets and add blank option
 	
@@ -248,9 +268,10 @@ function setupCombo(id, setName, mdfName)
 		addCombo(setElem, name, label, setName);
 	}
 	
-	//--- remove old formats and add the default option
+	//--- remove old formats and add the default oai_dc option
 	
 	clearCombo(mdfElem);
+	addCombo(mdfElem, 'oai_dc', 'oai_dc', setName);
 	
 	//--- add new metadata formats
 	
@@ -323,14 +344,14 @@ function addSearch(search)
 	
 	if (info == null)
 	{
-		gui.addToSelect(id+'.oai.set',    '',       '',       false);
-		gui.addToSelect(id+'.oai.prefix', 'oai_dc', 'oai_dc', false);
+		gui.addToSelect(id+'.oai.set_select',    '',       '',       false);
+		gui.addToSelect(id+'.oai.prefix_select', 'oai_dc', 'oai_dc', false);
 		
 		if (set != null && set != '')
-			gui.addToSelect(id+'.oai.set', set, set, true);
+			gui.addToSelect(id+'.oai.set_select', set, set, true);
 				
 		if (prefix != null && prefix != 'oai_dc')
-			gui.addToSelect(id+'.oai.prefix', prefix, prefix, true);
+			gui.addToSelect(id+'.oai.prefix_select', prefix, prefix, true);
 	}
 	else
 	{

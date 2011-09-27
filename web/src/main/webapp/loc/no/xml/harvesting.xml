@@ -67,9 +67,17 @@
 		<long>Local Filesystem Harvesting</long>
 	</info>	
 
+	<info type="z3950Config">
+		<short>Z3950 Server Config Harvesting</short>
+		<long>Z3950 Server Configuration Harvesting</long>
+	</info>
+
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
+
+	<category>Category</category>
+	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Type of OGC webservice</wxstype>
 	<wxstypes>
@@ -95,6 +103,10 @@
 	<serviceCategory>Kategori for tjeneste</serviceCategory>
 	<datasetCategory>Kategori for datasett</datasetCategory>
 	
+	<returnedSets>OAI provider sets</returnedSets>
+	<returnedPrefixes>OAI provider prefixes</returnedPrefixes>
+	<retrieveSetsPrefixes>Retrieve Sets/Prefixes</retrieveSetsPrefixes>
+    
 	<host>Server</host>
 	<port>Portnummer</port>
 	<servlet>Servlet</servlet>
@@ -171,6 +183,8 @@
 	<run>Kjør</run>
 	<remove>Fjern</remove>
 	<refresh>Oppfrisk</refresh>
+	<history>History</history>
+	<clone>Clone</clone>
 	
 	<days>dager</days>
 	<hours>timer</hours>
@@ -265,6 +279,26 @@
 		<op id="6">Aktuelt</op>
 	</oper>
 	
+	<!-- history messages -->
+  <harvesterHistory>Harvester History</harvesterHistory>
+  <noHistory>No History</noHistory>
+  <dateDesc>Date (most recent first)</dateDesc>
+  <date>Date</date>
+  <detail>Detail</detail>
+  <grandTotal>Grand Total</grandTotal>
+  <counter>of</counter>
+  <totalHistory>Total history records:</totalHistory>
+  <viewAll>View All</viewAll>
+  <deleteHistory>Delete History</deleteHistory>
+  <harvestedNothing>Harvested Nothing</harvestedNothing>
+  <sortBy>Sort by:</sortBy>
+  <ok>Success</ok>
+  <deleted>Deleted</deleted>
+  <historyDeleted>Harvesting History Records Deleted:</historyDeleted>
+  <historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
+	<historyDeleteConfirm>Delete selected harvester history entries?</historyDeleteConfirm>
+  <backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
+	
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<statusTip>
@@ -299,6 +333,8 @@
 		<fragmentsReturned>Fragments Returned</fragmentsReturned>
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>
 		<recordsBuilt>Records Built</recordsBuilt>
+		<incompatible>Incompatible</incompatible>
+		<couldNotInsert>Could not insert</couldNotInsert>
 	</tipHeader>
 	
 	<notRun>Venter på første gjennomkjøring</notRun>

@@ -15,6 +15,7 @@ ker.include('harvesting/ogcwxs/ogcwxs.js');
 ker.include('harvesting/thredds/thredds.js');
 ker.include('harvesting/wfsfeatures/wfsfeatures.js');
 ker.include('harvesting/z3950/z3950.js');
+ker.include('harvesting/z3950Config/z3950Config.js');
 ker.include('harvesting/oaipmh/oaipmh.js');
 ker.include('harvesting/arcsde/arcsde.js');
 ker.include('harvesting/filesystem/filesystem.js');
@@ -55,6 +56,7 @@ function Harvesting()
 	var thredds  = new Thredds(loader);
 	var wfsfeatures = new WfsFeatures(loader);
 	var filesystem   = new Filesystem(loader);
+	var z3950Config   = new Z3950Config(loader);
 	
 	//--- public objects
 
@@ -63,6 +65,7 @@ function Harvesting()
 	this.webdav   = webdav;
 	this.csw      = csw;
 	this.z3950    = z3950;
+	this.z3950Config = z3950Config;
 	this.oaipmh   = oaipmh;
 	this.ogcwxs   = ogcwxs;
 	this.thredds  = thredds;
@@ -82,6 +85,9 @@ function Harvesting()
 	this.update  = update;
 	this.show    = show;
 	this.newNode = newNode;
+	this.history = history;
+	this.clone   = clone;
+	this.cloneCB = cloneCB;
 	
 //=====================================================================================
 //===
@@ -102,6 +108,7 @@ function init()
 	view.register(wfsfeatures);
 	view.register(arcsde);
 	view.register(filesystem);
+	view.register(z3950Config);
 	view.show(SHOW.LIST);
 	
 	refresh();
@@ -247,9 +254,46 @@ function run_OK(idList)
 
 //=====================================================================================
 
+function clone(id)
+{
+	var idList = view.getIdList();
+	
+	if (idList.length == 0) {
+		alert(loader.getText('pleaseSelect'));
+		return;
+	}
+	if (idList.length  > 1) {
+		alert(loader.getText('onlyOnePlease'));
+		return;
+	}
+
+	model.cloneNode(idList, ker.wrap(this, cloneCB));
+}
+
+//=====================================================================================
+
+function cloneCB(node)
+{
+	var id = view.append(node);
+	harvesting.edit(id);
+}
+
+//=====================================================================================
+
 function edit(id)
 {
 	model.getNode(id, ker.wrap(view, view.edit));
+}
+
+//=====================================================================================
+
+function history(url)
+{
+  var loc = window.location.href;
+  if (loc.indexOf("modal") != -1) {
+    url += "&modal";
+  }
+  load(url);
 }
 
 //=====================================================================================

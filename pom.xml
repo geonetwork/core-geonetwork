@@ -297,14 +297,14 @@
         <version>1.6</version>
       </dependency>
 			<dependency>
-				<groupId>org.apache.tomcat</groupId>
-				<artifactId>dbcp</artifactId>
-				<version>6.0.29</version>
-			</dependency>
-			<dependency>
 				<groupId>commons-dbcp</groupId>
 				<artifactId>commons-dbcp</artifactId>
 				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-pool</groupId>
+				<artifactId>commons-pool</artifactId>
+				<version>1.5.5</version>
 			</dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -464,6 +464,36 @@
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-postgis</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-postgis</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-h2</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-sqlserver</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-mysql</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-db2</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-oracle</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -704,7 +734,7 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <geotools.version>2.6.2</geotools.version>
+    <geotools.version>2.6.4</geotools.version>
     <lucene.version>3.0.2</lucene.version>
   </properties>
 </project>

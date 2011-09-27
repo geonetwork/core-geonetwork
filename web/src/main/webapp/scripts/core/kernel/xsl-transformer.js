@@ -13,14 +13,23 @@ function XSLTransformer(stylesheet, xmlLoader)
 	var xslProc = null
 	var xslDoc  = null;
 	var xslSheet= stylesheet;
+	var error = 0;
 	
 	//--- load stylesheet
 
 	ker.loadMan.acquire();
-	ker.loadURL(Env.url +'/xsl/'+ stylesheet, ker.wrap(this, function(t)
-	{
+	ker.loadURL(Env.url +'/xsl/'+ stylesheet, importStyleSheet);
+	// try again if we didn't get it
+	if (xslDoc == null) ker.loadURL(Env.url +'/xsl/'+ stylesheet, importStyleSheet);
+	ker.loadMan.release();
+	
+	
+function importStyleSheet(t)
+{
+	if (t.responseXML != undefined) {
 		try
 		{
+					
 			xslDoc = t.responseXML;
 			
 			if (window.ActiveXObject == null)
@@ -31,10 +40,10 @@ function XSLTransformer(stylesheet, xmlLoader)
 		}
 		catch(e)
 		{
-			alert('error on : '+Env.url +'/xsl/'+ stylesheet+'\n'+t.responseText);
+			alert('error on : '+Env.url +'/xsl/'+ stylesheet+'\n'+t.responseText+" "+t.responseXML+" "+e);
 		}
-		ker.loadMan.release();
-	}));
+	}
+}
 
 //=====================================================================================
 //===

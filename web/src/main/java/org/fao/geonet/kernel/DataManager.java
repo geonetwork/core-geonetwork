@@ -58,6 +58,7 @@ import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
@@ -846,7 +847,7 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	private synchronized Element getXSDXmlReport(String schema, Element md) throws Exception {
+	private synchronized Element getXSDXmlReport(String schema, Element md) {
 		// NOTE: this method assumes that enumerateTree has NOT been run on the metadata
 		ErrorHandler errorHandler = new ErrorHandler();
 		errorHandler.setNs(Edit.NAMESPACE);
@@ -874,7 +875,13 @@ public class DataManager {
 				message = "\\n" + message;
 
 				//-- get the element from the xpath and add the error message to it 
-				Element elem = Xml.selectElement(md, xpath, schemaNamespaces);
+				Element elem = null;
+				try {
+					elem = Xml.selectElement(md, xpath, schemaNamespaces);
+				} catch (JDOMException je) {
+					je.printStackTrace();
+					Log.error(Geonet.DATA_MANAGER,"Attach xsderror message to xpath "+xpath+" failed: "+je.getMessage());
+				}
 				if (elem != null) {
 					String existing = elem.getAttributeValue("xsderror",Edit.NAMESPACE);
 					if (existing != null) message = existing + message;
@@ -918,6 +925,26 @@ public class DataManager {
 		md.detach();
 
 		return uuid;
+	}
+
+
+    /**
+     *
+     * @param schema
+     * @param md
+     * @return
+     * @throws Exception
+     */
+	public String extractDateModified(String schema, Element md) throws Exception {
+		String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_DATE_MODIFIED;
+		String dateMod    = Xml.transform(md, styleSheet).getText().trim();
+
+		Log.debug(Geonet.DATA_MANAGER, "Extracted Date Modified '"+ dateMod +"' for schema '"+ schema +"'");
+
+		//--- needed to detach md from the document
+		md.detach();
+
+		return dateMod;
 	}
 
     /**
@@ -1609,6 +1636,79 @@ public class DataManager {
             return false;
         }
     }
+
+	/**
+	 * Used by harvesters that need to validate metadata.
+	 * 
+	 * @param dbms connection to database
+	 * @param schema name of the schema to validate against
+	 * @param id metadata id - used to record validation status
+	 * @param doc metadata document as JDOM Document not JDOM Element
+	 * @param lang Language from context
+	 * @return
+	 */
+	public boolean doValidate(Dbms dbms, String schema, String id, Document doc, String lang) {
+		HashMap <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+		boolean valid = true;
+
+		if (doc.getDocType() != null) {
+      Log.debug(Geonet.DATA_MANAGER, "Validating against dtd " + doc.getDocType());
+			
+			// if document has a doctype then validate using that (assuming that the
+			// dtd is either mapped locally or will be cached after first validate)
+			try {
+				Xml.validate(doc);
+				Integer[] results = {1, 0, 0};
+				valTypeAndStatus.put("dtd", results);
+      	Log.debug(Geonet.DATA_MANAGER, "Valid.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				Integer[] results = {0, 0, 0};
+				valTypeAndStatus.put("dtd", results);
+      	Log.debug(Geonet.DATA_MANAGER, "Invalid.");
+				valid = false;
+			}
+		} else {                    
+      Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
+			// do XSD validation
+			Element md = doc.getRootElement();
+    	Element xsdErrors = getXSDXmlReport(schema,md);
+    	if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+     		Integer[] results = {0, 0, 0};
+     		valTypeAndStatus.put("xsd", results);
+      	Log.debug(Geonet.DATA_MANAGER, "Invalid.");
+				valid = false;
+    	} else {
+     		Integer[] results = {1, 0, 0};
+     		valTypeAndStatus.put("xsd", results);
+      	Log.debug(Geonet.DATA_MANAGER, "Valid.");
+    	}	
+			// then do schematron validation
+			Element schematronError = null;
+			try {
+				editLib.enumerateTree(md);
+     		schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+     		editLib.removeEditingInfo(md);
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata "+id+": "+e.getMessage());
+				valid = false;
+			}
+			if (schematronError != null && schematronError.getContent().size() > 0) {
+				valid = false;
+			}
+		}
+
+		// now save the validation status
+		try {
+			saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata "+id+": "+e.getMessage());
+		}
+
+		return valid;
+	}
 
 	/**
 	 * Used by the validate embedded service. The validation report is stored in the session.

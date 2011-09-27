@@ -144,39 +144,65 @@ public class Z3950Harvester extends AbstractHarvester {
 		// --- ok, add proper info
 
 		Element info = node.getChild("info");
-		Element res = new Element("result");
-		Z3950Result result = new Z3950Result();
-
-		// --- total stats per server and store in result
-
-		Map<String,Z3950Result> results = serverResults.getAllServerResults();
-		for ( Z3950Result serverRes : results.values()) {
-			result.totalMetadata 			+= serverRes.totalMetadata;
-			result.addedMetadata 			+= serverRes.addedMetadata;
-			result.updatedMetadata 		+= serverRes.updatedMetadata;
-			result.unchangedMetadata 	+= serverRes.unchangedMetadata;
-			result.unknownSchema			+= serverRes.unknownSchema;
-			result.unretrievable			+= serverRes.unretrievable;
-			result.badFormat					+= serverRes.badFormat;
-			result.doesNotValidate		+= serverRes.doesNotValidate;
-			result.couldNotInsert			+= serverRes.couldNotInsert;
-		}
-		result.locallyRemoved = serverResults.locallyRemoved;
-		
-		// --- put here harvesting information after it has been executed
-
-		add(res, "total", result.totalMetadata);
-		add(res, "added", result.addedMetadata);
-		add(res, "updated", result.updatedMetadata);
-		add(res, "unchanged", result.unchangedMetadata);
-		add(res, "unknownSchema", result.unknownSchema);
-		add(res, "removed", result.locallyRemoved);
-		add(res, "unretrievable", result.unretrievable);
-		add(res, "badFormat", result.badFormat);
-		add(res, "doesNotValidate", result.doesNotValidate);
-		add(res, "couldNotInsert", result.couldNotInsert);
-
+		Element res = getResult();
 		info.addContent(res);
+	}
+
+	protected Element getResult() {
+		Element res = new Element("result");
+		if (serverResults.getNumberOfResults() != 0) {
+			Z3950Result result = new Z3950Result();
+
+			// --- total stats per server and record individual stats per server
+			// --- and then store in result
+
+			Map<String,Z3950Result> results = serverResults.getAllServerResults();
+			for ( String key : results.keySet()) {
+				Z3950Result serverRes = results.get(key);
+				result.totalMetadata 			+= serverRes.totalMetadata;
+				result.addedMetadata 			+= serverRes.addedMetadata;
+				result.updatedMetadata 		+= serverRes.updatedMetadata;
+				result.unchangedMetadata 	+= serverRes.unchangedMetadata;
+				result.unknownSchema			+= serverRes.unknownSchema;
+				result.unretrievable			+= serverRes.unretrievable;
+				result.badFormat					+= serverRes.badFormat;
+				result.doesNotValidate		+= serverRes.doesNotValidate;
+				result.couldNotInsert			+= serverRes.couldNotInsert;
+
+				Element stats = null;
+				if (key != null) {
+					stats = new Element("stats").setAttribute("server",key);
+				} else {
+					stats = new Element("stats").setAttribute("server","Unknown Server");
+				}
+					
+				add(stats, "total", 				serverRes.totalMetadata);
+				add(stats, "added",					serverRes.addedMetadata);
+				add(stats, "updated",				serverRes.updatedMetadata);
+				add(stats, "unchanged",			serverRes.unchangedMetadata);
+				add(stats, "unknownSchema", serverRes.unknownSchema);
+				add(stats, "unretrievable", serverRes.unretrievable);
+				add(stats, "badFormat",			serverRes.badFormat);
+				add(stats, "doesNotValidate",	serverRes.doesNotValidate);
+				add(stats, "couldNotInsert",	serverRes.couldNotInsert);
+				res.addContent(stats);
+			}
+			result.locallyRemoved = serverResults.locallyRemoved;
+		
+			// --- put here harvesting information after it has been executed
+
+			add(res, "total", result.totalMetadata);
+			add(res, "added", result.addedMetadata);
+			add(res, "updated", result.updatedMetadata);
+			add(res, "unchanged", result.unchangedMetadata);
+			add(res, "unknownSchema", result.unknownSchema);
+			add(res, "removed", result.locallyRemoved);
+			add(res, "unretrievable", result.unretrievable);
+			add(res, "badFormat", result.badFormat);
+			add(res, "doesNotValidate", result.doesNotValidate);
+			add(res, "couldNotInsert", result.couldNotInsert);
+		}
+		return res;
 	}
 
 	protected void doHarvest(Logger log, ResourceManager rm) throws Exception {

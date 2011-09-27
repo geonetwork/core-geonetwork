@@ -196,27 +196,38 @@ public class ThreddsHarvester extends AbstractHarvester
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
-		Element res  = new Element("result");
-
-		add(res, "total",          		result.total);
-		add(res, "serviceRecords",       					result.serviceRecords);
-		add(res, "subtemplatesRemoved",		result.subtemplatesRemoved);
-		add(res, "fragmentsReturned",		result.fragmentsReturned);
-		add(res, "fragmentsUnknownSchema",	result.fragmentsUnknownSchema);
-		add(res, "subtemplatesAdded",		result.subtemplatesAdded);
-		add(res, "fragmentsMatched",		result.fragmentsMatched);
-		add(res, "collectionDatasetRecords",     	result.collectionDatasetRecords);
-		add(res, "atomicDatasetRecords",      		result.atomicDatasetRecords);
-		add(res, "datasetUuidExist",	result.datasetUuidExist);
-		add(res, "unknownSchema",  		result.unknownSchema);
-		add(res, "removed",        		result.locallyRemoved);
-		add(res, "unretrievable",  		result.unretrievable);
-		add(res, "badFormat",      		result.badFormat);
-		add(res, "doesNotValidate",		result.doesNotValidate);
-		add(res, "thumbnails",        result.thumbnails);
-		add(res, "thumbnailsFailed",  result.thumbnailsFailed);
-		
+		Element res  = getResult();
 		info.addContent(res);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- GetResult
+	//---
+	//---------------------------------------------------------------------------
+
+	protected Element getResult() {
+		Element res  = new Element("result");
+		if (result != null) {
+			add(res, "total",          		result.total);
+			add(res, "serviceRecords",       					result.serviceRecords);
+			add(res, "subtemplatesRemoved",		result.subtemplatesRemoved);
+			add(res, "fragmentsReturned",		result.fragmentsReturned);
+			add(res, "fragmentsUnknownSchema",	result.fragmentsUnknownSchema);
+			add(res, "subtemplatesAdded",		result.subtemplatesAdded);
+			add(res, "fragmentsMatched",		result.fragmentsMatched);
+			add(res, "collectionDatasetRecords",     	result.collectionDatasetRecords);
+			add(res, "atomicDatasetRecords",      		result.atomicDatasetRecords);
+			add(res, "datasetUuidExist",	result.datasetUuidExist);
+			add(res, "unknownSchema",  		result.unknownSchema);
+			add(res, "removed",        		result.locallyRemoved);
+			add(res, "unretrievable",  		result.unretrievable);
+			add(res, "badFormat",      		result.badFormat);
+			add(res, "doesNotValidate",		result.doesNotValidate);
+			add(res, "thumbnails",        result.thumbnails);
+			add(res, "thumbnailsFailed",  result.thumbnailsFailed);
+		}
+		return res;
 	}
 
 	//---------------------------------------------------------------------------

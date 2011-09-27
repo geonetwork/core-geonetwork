@@ -18,6 +18,7 @@ function Model(xmlLoader)
 	this.runNodes    = runNodes;
 	this.addNode     = addNode;
 	this.updateNode  = updateNode;
+	this.cloneNode   = cloneNode;
 	
 //=====================================================================================
 //===
@@ -99,6 +100,26 @@ function startNodes_OK(xmlRes)
 		ker.showError(loader.getText('cannotStart'), xmlRes);
 	else
 		this.startNodesCB(buildIdList(xmlRes));
+}
+
+//=====================================================================================
+
+function cloneNode(idList, callBack)
+{
+	var request= ker.createRequest('id', idList);
+	
+	this.cloneNodeCB = callBack;
+	ker.send('xml.harvesting.clone', request, ker.wrap(this, cloneNode_OK));
+}
+	
+//=====================================================================================
+
+function cloneNode_OK(xmlRes)
+{
+	if (xmlRes.nodeName == 'error')
+		ker.showError(loader.getText('cannotGet'), xmlRes);
+	else
+		this.cloneNodeCB(xmlRes);
 }
 
 //=====================================================================================

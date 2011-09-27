@@ -28,6 +28,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -169,6 +170,7 @@ class Harvester
 		catch(Exception e)
 		{
 			log.warning("Raised exception when searching : "+ e);
+			log.warning(Util.getStackTrace(e));
 			throw new OperationAbortedEx("Raised exception when searching", e);
 		}
 	}
@@ -326,6 +328,7 @@ class Harvester
 		catch(Exception e)
 		{
 			log.warning("Raised exception while getting metadata file : "+ e);
+			log.warning(Util.getStackTrace(e));
 			result.unretrievable++;
 		}
 

@@ -27,6 +27,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.geotools.data.DataStore;
+
 import jeeves.utils.Log;
 
 //=============================================================================
@@ -127,6 +129,14 @@ public class ResourceManager
 	{
 		ResourceProvider provider = provManager.getProvider(name);
 		return provider.getStats();
+	}
+
+	//--------------------------------------------------------------------------
+
+	public DataStore getDataStore(String name) throws Exception
+	{
+		ResourceProvider provider = provManager.getProvider(name);
+		return provider.getDataStore();
 	}
 
 	//--------------------------------------------------------------------------

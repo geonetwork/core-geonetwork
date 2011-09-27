@@ -70,6 +70,11 @@
 		<allow service="xml.harvesting.stop"/>
 		<allow service="xml.harvesting.run"/>
 		<allow service="xml.harvesting.info"/>
+		<allow service="xml.harvesting.clone"/>
+
+		<allow service="harvesting.history.full" />
+		<allow service="harvesting.history" />
+		<allow service="harvesting.history.delete" />
 
 		<!-- Thesaurus facilities -->
 		<allow service="thesaurus.admin"/>

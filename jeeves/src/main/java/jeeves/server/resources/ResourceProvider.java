@@ -25,6 +25,8 @@ package jeeves.server.resources;
 
 import org.jdom.Element;
 
+import org.geotools.data.DataStore;
+
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -48,6 +50,9 @@ public interface ResourceProvider
 
 	/** gets stats from the provider */
 	public Map<String,String> getStats() throws SQLException;
+
+	/** gets datastore from the provider */
+	public DataStore getDataStore();
 
 	/** Stops the provider */
 	public void end();

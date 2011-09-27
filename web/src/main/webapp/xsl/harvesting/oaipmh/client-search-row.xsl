@@ -56,8 +56,13 @@
 			<tr>
 				<td/>
 				<td class="padded"><xsl:value-of select="/root/strings/set"/></td>
-				<td class="padded" colspan="3">
-					<select id="{@id}.oai.set" class="content" size="1"/>
+				<td class="padded">
+					<input id="{@id}.oai.set" class="content" type="text" value="{set}"/>
+				</td>
+				<td class="padded" colspan="2" id="{@id}.oai.sets.cols" style="display:none;">
+					<xsl:value-of select="/root/strings/returnedSets"/>
+					&#160;
+					<select id="{@id}.oai.set_select" class="content" size="1" onchange="$('{@id}.oai.set').value = this.options[this.selectedIndex].value;"/>
 				</td>
 			</tr>
 
@@ -66,11 +71,16 @@
 			<tr>
 				<td/>
 				<td class="padded"><xsl:value-of select="/root/strings/prefix"/></td>
-				<td class="padded" colspan="3">
-					<select id="{@id}.oai.prefix" class="content" size="1"/>
+				<td class="padded">
+					<input id="{@id}.oai.prefix" class="content" type="text" value="{prefix}"/>
+				</td>
+				<td class="padded" colspan="2" id="{@id}.oai.prefixes.cols" style="display:none;">
+					<xsl:value-of select="/root/strings/returnedPrefixes"/>
+					&#160;
+					<select id="{@id}.oai.prefix_select" class="content" size="1" onchange="$('{@id}.oai.prefix').value = this.options[this.selectedIndex].value;"/>
 				</td>
 			</tr>
-			
+
 			<!-- Stylesheet dropdown - - - - - - - - - - - - - - - - - - - - - - - -->
 			
 			<!-- COMMENTED OUT : we need to find a better management of metadata conversion -->
@@ -84,6 +94,7 @@
 					</select>
 				</td>
 			</tr>
+			
 		</table>
 	</xsl:template>
 

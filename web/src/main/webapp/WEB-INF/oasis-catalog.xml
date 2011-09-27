@@ -15,6 +15,18 @@
 	<system systemId="http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd" 
 	        uri="../xml/validation/schemaPlugins/schema-ident.xsd"/>
 
+	<system systemId="http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" 
+	        uri="../xml/validation/oai/OAI-PMH.xsd"/>
+
+	<system systemId="http://www.openarchives.org/OAI/2.0/oai_dc.xsd" 
+	        uri="../xml/validation/oai/dc/oai_dc.xsd"/>
+
+	<system systemId="xml.xsd" 
+	        uri="../xml/validation/oai/dc/xml.xsd"/>
+
+	<system systemId="XMLSchema.dtd" 
+	        uri="../xml/validation/oai/dc/XMLSchema.dtd"/>
+
 	<!-- remap utils-fn.xsl included in schematrons to the correct place
 	     relative to this catalog file -->
 

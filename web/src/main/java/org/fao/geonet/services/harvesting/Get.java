@@ -54,10 +54,11 @@ public class Get implements Service
 		//--- if 'id' is null all entries are returned
 
 		String id = params.getChildText("id");
+		String sortField = jeeves.utils.Util.getParam(params, "sortField", "site[1]/name[1]");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Element result = gc.getHarvestManager().get(id);
+		Element result = gc.getHarvestManager().get(id, sortField);
 
 		if (result != null)
 			return result;

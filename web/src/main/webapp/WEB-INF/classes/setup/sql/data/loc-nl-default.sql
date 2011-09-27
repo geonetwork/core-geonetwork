@@ -16,6 +16,7 @@ INSERT INTO CategoriesDes VALUES (7,'nl','Fotos');
 INSERT INTO CategoriesDes VALUES (8,'nl','Audio/Video');
 INSERT INTO CategoriesDes VALUES (9,'nl','Catalogi');
 INSERT INTO CategoriesDes VALUES (10,'nl','Andere informatie bronnen');
+INSERT INTO CategoriesDes VALUES (11,'nl','Z3950 Servers');
 
 INSERT INTO GroupsDes VALUES (-1,'nl','Gast');
 INSERT INTO GroupsDes VALUES (0,'nl','Intranet');

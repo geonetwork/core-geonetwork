@@ -153,6 +153,8 @@
 			<tr>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/group"/></th>
 				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></th>
+				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></th>
 				<th/>
 			</tr>
 		</table>

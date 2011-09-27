@@ -85,7 +85,7 @@ function show(obj)
 }
 
 //=====================================================================================
-	
+
 function isAdding() { return addingFlag; }
 
 //=====================================================================================
@@ -176,6 +176,7 @@ function refresh(node)
 
 function append(node)
 {
+	var id = node.getAttribute('id');
 	var xslRes  = rowTransf.transform(node);
 	gui.appendTableRow('table', xslRes);
 	
@@ -183,6 +184,7 @@ function append(node)
 	
 	setStatusTip(node);
 	setErrorTip (node);
+	return id;
 }
 
 //=====================================================================================
@@ -271,12 +273,11 @@ function newNode()
 }	
 
 //=====================================================================================
-/* Enters 'edit' mode showing the GN or WAF editing panel and filling it with given data
+/* Enters 'edit' mode showing the editing panel and filling it with given data
  */
 
 function edit(node)
 {
-	//--- turn off adding mode
 	addingFlag = false;
 	
 	var type = node.getAttribute('type');	

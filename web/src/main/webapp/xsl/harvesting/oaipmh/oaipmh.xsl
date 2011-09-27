@@ -7,6 +7,10 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="editPanel-OAI">
+		<div id="harvesterBusy" style="position:absolute;
+		                               left:45%;top:45%;display:none;">
+			<img src="{/root/gui/url}/images/spinner.gif" alt="busy"/>
+		</div>
 		<div id="oai.editPanel">
 			<xsl:call-template name="site-OAI"/>
 			<div class="dots"/>
@@ -75,7 +79,7 @@
 	
 	<xsl:template name="search-OAI">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/search"/></h1>
-		
+
 		<div id="oai.searches"/>
 		
 		<div>
@@ -84,7 +88,7 @@
 			</button>
 			&#xA0;
 			<button id="oai.retrInfo" class="content" onclick="harvesting.oaipmh.retrieveInfo()">
-				<xsl:value-of select="/root/gui/harvesting/retrieveInfo"/>
+				<xsl:value-of select="/root/gui/harvesting/retrieveSetsPrefixes"/>
 			</button>
 		</div>
 	</xsl:template>

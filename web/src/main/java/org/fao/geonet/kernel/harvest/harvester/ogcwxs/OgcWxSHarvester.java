@@ -182,22 +182,33 @@ public class OgcWxSHarvester extends AbstractHarvester
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
-		Element res  = new Element("result");
-
-		add(res, "total",          		result.total);
-		add(res, "added",          		result.added);
-		add(res, "layer",          		result.layer);
-		add(res, "layerUuidExist",		result.layerUuidExist);
-		add(res, "layerUsingMdUrl",		result.layerUsingMdUrl);
-		add(res, "unknownSchema",  		result.unknownSchema);
-		add(res, "removed",        		result.locallyRemoved);
-		add(res, "unretrievable",  		result.unretrievable);
-		add(res, "badFormat",      		result.badFormat);
-		add(res, "doesNotValidate",		result.doesNotValidate);
-		add(res, "thumbnails",     		result.thumbnails);
-		add(res, "thumbnailsFailed",	result.thumbnailsFailed);
-		
+		Element res  = getResult();
 		info.addContent(res);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- GetResult
+	//---
+	//---------------------------------------------------------------------------
+
+	protected Element getResult() {
+		Element res  = new Element("result");
+		if (result != null) {
+			add(res, "total",          		result.total);
+			add(res, "added",          		result.added);
+			add(res, "layer",          		result.layer);
+			add(res, "layerUuidExist",		result.layerUuidExist);
+			add(res, "layerUsingMdUrl",		result.layerUsingMdUrl);
+			add(res, "unknownSchema",  		result.unknownSchema);
+			add(res, "removed",        		result.locallyRemoved);
+			add(res, "unretrievable",  		result.unretrievable);
+			add(res, "badFormat",      		result.badFormat);
+			add(res, "doesNotValidate",		result.doesNotValidate);
+			add(res, "thumbnails",     		result.thumbnails);
+			add(res, "thumbnailsFailed",	result.thumbnailsFailed);
+		}
+		return res;
 	}
 
 	//---------------------------------------------------------------------------

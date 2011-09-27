@@ -12,6 +12,7 @@
 	<xsl:include href="csw/csw.xsl"/>
 	<xsl:include href="ogcwxs/ogcwxs.xsl"/>
 	<xsl:include href="z3950/z3950.xsl"/>
+	<xsl:include href="z3950Config/z3950Config.xsl"/>
 	<xsl:include href="oaipmh/oaipmh.xsl"/>
 	<xsl:include href="arcsde/arcsde.xsl"/>
 	<xsl:include href="thredds/thredds.xsl"/>
@@ -103,7 +104,8 @@
 		<xsl:call-template name="editPanel-OGCWXS"/>
 		<xsl:call-template name="editPanel-thredds"/>
 		<xsl:call-template name="editPanel-wfsfeatures"/>
-        <xsl:call-template name="editPanel-Z3950"/>
+    <xsl:call-template name="editPanel-Z3950"/>
+    <xsl:call-template name="editPanel-Z3950Config"/>
 		<xsl:call-template name="editPanel-OAI"/>
 		<xsl:call-template name="editPanel-Arcsde"/>
 		<xsl:call-template name="editPanel-Filesystem"/>

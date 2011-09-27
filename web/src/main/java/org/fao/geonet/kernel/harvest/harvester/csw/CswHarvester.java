@@ -185,17 +185,28 @@ public class CswHarvester extends AbstractHarvester
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
-		Element res  = new Element("result");
-
-		add(res, "total",        result.totalMetadata);
-		add(res, "added",        result.addedMetadata);
-		add(res, "updated",      result.updatedMetadata);
-		add(res, "unchanged",    result.unchangedMetadata);
-		add(res, "unknownSchema",result.unknownSchema);
-		add(res, "removed",      result.locallyRemoved);
-		add(res, "unretrievable",result.unretrievable);
-
+		Element res  = getResult();
 		info.addContent(res);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- GetResult
+	//---
+	//---------------------------------------------------------------------------
+
+	protected Element getResult() {
+		Element res  = new Element("result");
+		if (result != null) {
+			add(res, "total",        result.totalMetadata);
+			add(res, "added",        result.addedMetadata);
+			add(res, "updated",      result.updatedMetadata);
+			add(res, "unchanged",    result.unchangedMetadata);
+			add(res, "unknownSchema",result.unknownSchema);
+			add(res, "removed",      result.locallyRemoved);
+			add(res, "unretrievable",result.unretrievable);
+		}
+		return res;
 	}
 
 	//---------------------------------------------------------------------------

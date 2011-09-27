@@ -67,9 +67,17 @@
 		<long>Moissonnage de système de fichier local</long>
 	</info>
 	
+	<info type="z3950Config">
+		<short>Z3950 Server Config Harvesting</short>
+		<long>Z3950 Server Configuration Harvesting</long>
+	</info>
+
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
+
+	<category>Category</category>
+	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Type of OGC webservice</wxstype>
     <wxstypes>
@@ -95,6 +103,10 @@
     
     <serviceCategory>Catégorie pour les métadonnées de services</serviceCategory>
     <datasetCategory>Catégorie pour les métadonnées de données</datasetCategory>
+    
+	<returnedSets>OAI provider sets</returnedSets>
+	<returnedPrefixes>OAI provider prefixes</returnedPrefixes>
+	<retrieveSetsPrefixes>Retrieve Sets/Prefixes</retrieveSetsPrefixes>
     
 	<host>Hôte</host>
 	<port>Port</port>
@@ -175,6 +187,8 @@
 	<run>Lancer</run>
 	<remove>Supprimer</remove>
 	<refresh>Rafraîchir</refresh>
+	<history>History</history>
+	<clone>Clone</clone>
 	
 	<days>jours</days>
 	<hours>heures</hours>
@@ -269,6 +283,26 @@
 		<op id="6">Epingler</op>
 	</oper>
 	
+	<!-- history messages -->
+  <harvesterHistory>Harvester History</harvesterHistory>
+  <noHistory>No History</noHistory>
+  <dateDesc>Date (most recent first)</dateDesc>
+  <date>Date</date>
+  <detail>Detail</detail>
+  <grandTotal>Grand Total</grandTotal>
+  <counter>of</counter>
+  <totalHistory>Total history records:</totalHistory>
+  <viewAll>View All</viewAll>
+  <deleteHistory>Delete History</deleteHistory>
+  <harvestedNothing>Harvested Nothing</harvestedNothing>
+  <sortBy>Sort by:</sortBy>
+  <ok>Success</ok>
+  <deleted>Deleted</deleted>
+  <historyDeleted>Harvesting History Records Deleted:</historyDeleted>
+  <historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
+	<historyDeleteConfirm>Delete selected harvester history entries?</historyDeleteConfirm>
+  <backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
+	
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<statusTip>
@@ -303,6 +337,8 @@
 		<fragmentsReturned>Fragments Returned</fragmentsReturned>
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>
 		<recordsBuilt>Records Built</recordsBuilt>
+		<incompatible>Incompatible</incompatible>
+		<couldNotInsert>Could not insert</couldNotInsert>
 	</tipHeader>
 	
 	<notRun>En attente du premier lancement</notRun>

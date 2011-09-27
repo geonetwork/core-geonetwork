@@ -180,10 +180,17 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<resource enabled="false">
       <name>main-db</name>
-      <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+      <provider>jeeves.resources.dbms.JNDIPool</provider>
       <config>
         <context>java:/comp/env</context>
         <resourceName>jdbc/geonetwork</resourceName>
+				<url>jdbc:postgresql_postGIS://localhost:5432/gndb4</url>
+				<!-- if the database has a spatialindex table with fid, id and 
+				     multipolygon geometry fields (eg. see postgis) then specify true 
+						 here and GeoNetwork will use the database for its spatial index
+						 otherwise specify false or leave the parameter out and a 
+						 shapefile will be used for the spatial index -->
+				<provideDataStore>true</provideDataStore>
 				<!-- NOTE any other parameter specified here is ignored as this 
              should be handled in the container -->
       </config>
@@ -201,7 +208,7 @@
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
-                <validationQuery>SELECT 1</validationQuery> 
+        <validationQuery>SELECT 1</validationQuery> 
 			</config>
 
 
@@ -220,8 +227,7 @@
 				<driver>com.mysql.jdbc.Driver</driver>
 			  <url>jdbc:mysql://localhost:3306/geonetwork</url>
 				<poolSize>10</poolSize>
-				<reconnectTime>3600</reconnectTime>
-                <validationQuery>SELECT 1</validationQuery>
+        <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 
@@ -286,7 +292,7 @@
 				-->
 			  <url>jdbc:postgresql_postGIS://localhost:5432/geonetwork</url>
 				<poolSize>10</poolSize>
-                <validationQuery>SELECT 1</validationQuery>
+        <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 
@@ -303,7 +309,7 @@
 				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
                 <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
 				<poolSize>10</poolSize>
-                <validationQuery>SELECT 1</validationQuery>
+        <validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 	    
@@ -321,7 +327,7 @@
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />
 		
-		<param name="schemaPluginsDir" value="../../schemaPlugins" />
+		<param name="schemaPluginsDir" value="schemaPlugins" />
 
 		<param name="licenseDir" value="WEB-INF/licenses" />
 	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
@@ -351,12 +357,24 @@
 		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
 
 		<!-- The maximum number of writes in a transaction on the spatial index 
-		     When using PostGIS on machines with fast/large pipe to disk, set 
-				 this number to 1 which means that the auto_commit transaction is
-				 used. Also if having a long running transaction causes issues eg. 
-				 when database connections are reset by a firewall then set this
-				 number to 1 -->
-		<param name="maxWritesInTransaction" value="1" />
+				
+         For the Apache Commons DBCP provider:
+         When using PostGIS on machines with fast/large pipe to disk, set 
+         this number to 1 which means that the auto_commit transaction is
+         used. Also if having a long running transaction causes issues eg. 
+         when database connections are reset by a firewall then set this
+         number to 1 
+         
+         For the JNDI database provider:
+         Set this number to something large eg. 1000  - setting this number 
+         to 1 (=auto_commit) with a JNDI provider will cause database 
+         connections involving the spatialindexwriter to be left open due 
+         to what appears to be a bug in the GeoTools feature store when 
+         using the auto_commit transaction. Curiously the
+         JNDI provider with maxWritesInTransaction set to 1000 is actually
+         faster to load and index records than ApacheDBCP provider
+         with PostgisDataStoreFactory and maxWritesInTransaction set to 1 -->	
+		<param name="maxWritesInTransaction" value="1000" />
 	</appHandler>
 
 	<!-- ====================================================================== -->

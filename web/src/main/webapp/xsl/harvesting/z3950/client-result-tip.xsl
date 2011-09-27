@@ -28,6 +28,16 @@
 
 	<!-- ============================================================================================= -->
 
+	<xsl:template match="stats">
+			<tr class="tipRow">
+				<td class="tipHeader" colspan="2"><xsl:value-of select="@server"/></td>
+			</tr>
+			<xsl:apply-templates select="*"/>
+			<tr class="tipRow">
+				<td class="dots" colspan="2"/>
+			</tr>
+	</xsl:template>
+
 	<xsl:template match="total">
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/total"/></td>

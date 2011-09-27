@@ -80,6 +80,8 @@ public abstract class AbstractParams
 
 		addPrivileges(node.getChild("privileges"));
 		addCategories(node.getChild("categories"));
+
+		this.node = node;
 	}
 
 	//---------------------------------------------------------------------------
@@ -113,6 +115,8 @@ public abstract class AbstractParams
 
 		if (categ != null)
 			addCategories(categ);
+
+		this.node = node;
 	}
 
 	//---------------------------------------------------------------------------
@@ -146,6 +150,8 @@ public abstract class AbstractParams
 
 		for (String s : alCategories)
 			copy.alCategories.add(s);
+
+		copy.node = node;
 	}
 
 	//---------------------------------------------------------------------------
@@ -284,6 +290,8 @@ public abstract class AbstractParams
 
 	public boolean validate;
 	public String importXslt;
+
+	public Element node;
 
 	//---------------------------------------------------------------------------
 

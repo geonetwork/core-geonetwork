@@ -108,7 +108,7 @@ ker.send = function(service, request, onSuccessFnc, xmlResponse)
 		onSuccess: function(t) 
 		{
 			ker.showAjaxWait(false);
-			
+
 			if (onSuccessFnc)
 				if (xmlResponse)	onSuccessFnc(xml.ieFix(t.responseXML.firstChild));
 					else				onSuccessFnc(t.responseText);
@@ -212,16 +212,16 @@ ker.wrap = function(oldThis, func)
 	{
 		//--- trap function execution just to report errors
 
-		try
-		{
+		//try
+		//{
 			return func.apply(oldThis, arguments);
-		}
+		/*}
 		catch(err)
 		{ 
 			alert(err);
 			alert(func);
 			alert(oldThis);
-		}
+		}*/
 	}
 }
 

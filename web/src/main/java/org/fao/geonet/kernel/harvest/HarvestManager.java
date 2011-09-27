@@ -36,11 +36,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
@@ -79,6 +81,16 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
+	private Element transformSort(Element nodes, String sortField) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("sortField", sortField);
+
+		return Xml.transform(nodes, xslPath + Geonet.File.SORT_HARVESTERS, params);
+	}
+
+	//---------------------------------------------------------------------------
+
 	private Element transform(Element node) throws Exception
 	{
 		String type = node.getChildText("value");
@@ -102,7 +114,7 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	public Element get(String id) throws Exception
+	public Element get(String id, String sort) throws Exception
 	{
 		Element result = (id == null)
 									? settingMan.get("harvesting", -1)
@@ -123,13 +135,18 @@ public class HarvestManager
 
 			result = new Element("nodes");
 
-			if (nodes != null)
-				for (Object o : nodes.getChildren())
-				{
+			if (nodes != null) {
+				for (Object o : nodes.getChildren()) {
 					Element node = transform((Element) o);
 					addInfo(node);
 					result.addContent(node);
 				}
+
+				// sort according to sort field
+				if (sort != null) result = transformSort(result,sort);
+
+			}
+
 		}
 
 		return result;
@@ -151,6 +168,32 @@ public class HarvestManager
 		Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
 
 		return ah.getID();
+	}
+
+	//---------------------------------------------------------------------------
+
+	public synchronized String createClone(Dbms dbms, String id) throws Exception
+	{
+		// get the specified harvester from the settings table
+		Element node = get(id, null);
+		if (node == null) return null;
+
+		// remove info from the harvester we will clone
+		Element info = node.getChild("info");
+		if (info != null) info.removeContent();
+		Element site = node.getChild("site");
+		if (site != null) {
+			Element name = site.getChild("name");
+			if (name != null) {
+				String nameStr = name.getText();
+				name.setText("clone: "+nameStr);
+			}
+		}
+
+		Log.debug(Geonet.HARVEST_MAN, "Cloning harvesting node : \n"+ Xml.getString(node));
+
+		// now add a new harvester based on the settings in the old
+		return add(dbms, node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -189,6 +232,9 @@ public class HarvestManager
 		ah.destroy(dbms);
 		hmHarvesters.remove(id);
 		settingMan.remove(dbms, "harvesting/id:"+id);
+
+		// set deleted status in harvest history table to 'y'
+		HarvesterHistoryDao.setDeleted(dbms, ah.getParams().uuid);
 
 		return OperResult.OK;
 	}

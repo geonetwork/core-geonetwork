@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
 import org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
+import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -74,6 +75,7 @@ public abstract class AbstractHarvester
 		register(context, WebDavHarvester  .class);
 		register(context, CswHarvester     .class);
 		register(context, Z3950Harvester   .class);
+		register(context, Z3950ConfigHarvester   .class);
 		register(context, OaiPmhHarvester  .class);
 		register(context, OgcWxSHarvester  .class);
 		register(context, ThreddsHarvester .class);
@@ -390,13 +392,14 @@ public abstract class AbstractHarvester
 
 		error = null;
 
+		String lastRun = new ISODate(System.currentTimeMillis()).toString();
+
 		try
 		{
 			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 			//--- update lastRun
 
-			String lastRun = new ISODate(System.currentTimeMillis()).toString();
 			settingMan.setValue(dbms, "harvesting/id:"+ id +"/info/lastRun", lastRun);
 
 			//--- proper harvesting
@@ -430,6 +433,28 @@ public abstract class AbstractHarvester
 				logger.warning(" (C) Exc : "+ ex);
 			}
 		}
+
+		// record the results/errors for this harvest in the database 
+		Dbms dbms = null;
+		try {
+			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+			Element result = getResult();
+			if (error != null) result = JeevesException.toElement(error);
+			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
+		} catch (Exception e) {
+			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
+			e.printStackTrace();
+			logger.warning(" (C) Exc   : "+ e);
+		} finally {
+			try {
+				if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
+			} catch (Exception dbe) {
+				dbe.printStackTrace();
+				logger.error("Raised exception while attempting to close dbms connection to harvest history table");
+				logger.error(" (C) Exc   : "+ dbe);
+			}
+		}
+
 	}
 
 	//---------------------------------------------------------------------------
@@ -451,6 +476,8 @@ public abstract class AbstractHarvester
 
 	protected abstract void doUpdate(Dbms dbms, String id, Element node)
 											throws BadInputEx, SQLException;
+
+	protected abstract Element getResult();
 
 	protected abstract void doAddInfo(Element node);
 	protected abstract void doHarvest(Logger l, ResourceManager rm) throws Exception;

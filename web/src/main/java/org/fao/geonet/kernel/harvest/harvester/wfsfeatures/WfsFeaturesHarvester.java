@@ -175,18 +175,30 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		//--- ok, add proper info
 
 		Element info = node.getChild("info");
-		Element res  = new Element("result");
-
-		add(res, "total",          					result.total);
-		add(res, "subtemplatesAdded",       result.subtemplatesAdded);
-		add(res, "subtemplatesRemoved",  		result.subtemplatesRemoved);
-		add(res, "fragmentsUnknownSchema", 	result.fragmentsUnknownSchema);
-		add(res, "fragmentsReturned",				result.fragmentsReturned);
-		add(res, "fragmentsMatched",				result.fragmentsMatched);
-		add(res, "recordsBuilt",						result.recordsBuilt);
-		add(res, "doesNotValidate",					result.doesNotValidate);
-		
+		Element res  = getResult();
 		info.addContent(res);
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- GetResult
+	//---
+	//---------------------------------------------------------------------------
+
+	protected Element getResult()
+	{
+		Element res  = new Element("result");
+		if (result != null) {
+			add(res, "total",          					result.total);
+			add(res, "subtemplatesAdded",       result.subtemplatesAdded);
+			add(res, "subtemplatesRemoved",  		result.subtemplatesRemoved);
+			add(res, "fragmentsUnknownSchema", 	result.fragmentsUnknownSchema);
+			add(res, "fragmentsReturned",				result.fragmentsReturned);
+			add(res, "fragmentsMatched",				result.fragmentsMatched);
+			add(res, "recordsBuilt",						result.recordsBuilt);
+			add(res, "doesNotValidate",					result.doesNotValidate);
+		}	
+		return res;
 	}
 
 	//---------------------------------------------------------------------------

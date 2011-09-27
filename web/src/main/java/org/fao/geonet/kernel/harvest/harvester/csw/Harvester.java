@@ -30,6 +30,8 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.CswOperation;
@@ -40,6 +42,7 @@ import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -222,7 +225,7 @@ class Harvester
 			for (Object e :list)
 			{
 				Element    record = (Element) e;
-				RecordInfo recInfo= getRecordInfo(record);
+				RecordInfo recInfo= getRecordInfo((Element)record.clone());
 
 				if (recInfo != null)
 					records.add(recInfo);
@@ -480,68 +483,35 @@ class Harvester
 	private RecordInfo getRecordInfo(Element record)
 	{
 		String name = record.getName();
-        log.debug("getRecordInfo (name): " +  name);
+    log.debug("getRecordInfo (name): " + name);
 
-        // Summary or Full
-        // Note: Summary is requested, but some servers return full response.
-        // As identifier and modified values are in full response it's ok
-        if ((name.equals("SummaryRecord") || (name.equals("Record"))))
-		{
-            Namespace dc  = Namespace.getNamespace("http://purl.org/dc/elements/1.1/");
-            Namespace dct = Namespace.getNamespace("http://purl.org/dc/terms/");
+		// get schema
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dm = gc.getDataManager();
 
-            String identif  = record.getChildText("identifier", dc);
-            String modified = record.getChildText("modified",   dct);
+		String schema = dm.autodetectSchema(record);
+    log.debug("getRecordInfo (schema): " + schema);
 
-            if (identif == null)
-            {
-                log.warning("Skipped record with no 'dc:identifier' element : "+ name);
-                return null;
-            }
+		// get uuid and date modified
+		try {
+			String identif  = dm.extractUUID(schema, record); 
+			if (identif.length() == 0) {
+      	log.warning("Record doesn't have a uuid : "+ name);
+				return null; // skip this one
+			}
 
-            return new RecordInfo(identif, modified);
+			String modified = dm.extractDateModified(schema, record); 
+			if (modified.length() == 0) modified = null;
+			log.debug("getRecordInfo: adding "+identif+" with modification date "+modified);
+      return new RecordInfo(identif, modified);
+		} catch (Exception e) {
+      log.warning("Skipped record not in supported format : "+ name);
+			e.printStackTrace();
+    }
 
-			//log.warning("Skipped record not in 'SummaryRecord' format : "+ name);
-			//return null;
-
-        // Full record
-		} else if (name.equals("MD_Metadata")) {
-            try {
-                XPath xpath = XPath.newInstance("gmd:fileIdentifier/gco:CharacterString");
-                xpath.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-                xpath.addNamespace("gco", "http://www.isotc211.org/2005/gco");
-                Element identif = (Element) xpath.selectSingleNode(record);
-
-                if (identif == null)
-                {
-                    log.warning("Skipped record with no 'gmd:fileIdentifier' element : "+ name);
-                    return null;
-                }
-                
-                xpath = XPath.newInstance("gmd:dateStamp/gco:DateTime");
-                xpath.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-                xpath.addNamespace("gco", "http://www.isotc211.org/2005/gco");
-                Element modified = (Element) xpath.selectSingleNode(record);
-                if (modified == null) {
-                    xpath = XPath.newInstance("gmd:dateStamp/gco:Date");
-                    xpath.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-                    xpath.addNamespace("gco", "http://www.isotc211.org/2005/gco");
-                    modified = (Element) xpath.selectSingleNode(record);
-                }
-                log.debug("Record info: " +  identif + ", " + ((modified!=null)?modified.getText():null));
-
-                return new RecordInfo(identif.getText(), (modified!=null)?modified.getText():null);
-
-            } catch (Exception e) {
-                log.warning("Error parsing metadata: "+ e);
-			    return null;
-            }
-
-        } else {
-            log.warning("Skipped record not in supported format : "+ name);
-			return null;
-        }
-
+		// we get here if we didn't recognize the schema and/or couldn't get the 
+		// UUID or date modified
+		return null;
 
 	}
 

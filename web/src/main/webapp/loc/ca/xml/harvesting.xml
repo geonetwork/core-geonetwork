@@ -67,9 +67,17 @@
 		<long>Recol·lecció del sistema local de fitxers</long>
 	</info>
     
+	<info type="z3950Config">
+		<short>Z3950 Server Config Harvesting</short>
+		<long>Z3950 Server Configuration Harvesting</long>
+	</info>
+
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Lloc</site>
+
+	<category>Category</category>
+	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Tipus de servei OGC</wxstype>
     <wxstypes>
@@ -94,6 +102,10 @@
     
     <serviceCategory>Categoria per serveis</serviceCategory>
     <datasetCategory>Categoria per conjunts de dades</datasetCategory>
+
+	<returnedSets>OAI provider sets</returnedSets>
+	<returnedPrefixes>OAI provider prefixes</returnedPrefixes>
+	<retrieveSetsPrefixes>Retrieve Sets/Prefixes</retrieveSetsPrefixes>
     
 	<host>Servidor</host>
 	<port>Port</port>
@@ -171,6 +183,8 @@
 	<run>Executar</run>
 	<remove>Esborrar</remove>
 	<refresh>Refrescar</refresh>
+	<history>History</history>
+	<clone>Clone</clone>
 	
 	<days>dies</days>
 	<hours>hores</hours>
@@ -264,6 +278,26 @@
 		<op id="6">Destacat</op>
 	</oper>
 	
+	<!-- history messages -->
+  <harvesterHistory>Harvester History</harvesterHistory>
+  <noHistory>No History</noHistory>
+  <dateDesc>Date (most recent first)</dateDesc>
+  <date>Date</date>
+  <detail>Detail</detail>
+  <grandTotal>Grand Total</grandTotal>
+  <counter>of</counter>
+  <totalHistory>Total history records:</totalHistory>
+  <viewAll>View All</viewAll>
+  <deleteHistory>Delete History</deleteHistory>
+  <harvestedNothing>Harvested Nothing</harvestedNothing>
+  <sortBy>Sort by:</sortBy>
+  <ok>Success</ok>
+  <deleted>Deleted</deleted>
+  <historyDeleted>Harvesting History Records Deleted:</historyDeleted>
+  <historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
+	<historyDeleteConfirm>Delete selected harvester history entries?</historyDeleteConfirm>
+  <backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
+	
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<statusTip>
@@ -298,6 +332,8 @@
 		<fragmentsReturned>Fragments Returned</fragmentsReturned>
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>
 		<recordsBuilt>Records Built</recordsBuilt>
+		<incompatible>Incompatible</incompatible>
+		<couldNotInsert>Could not insert</couldNotInsert>
 	</tipHeader>
 	
 	<notRun>Esperant la primera execució</notRun>

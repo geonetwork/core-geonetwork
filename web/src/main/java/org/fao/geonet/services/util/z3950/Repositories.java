@@ -26,11 +26,16 @@ package org.fao.geonet.services.util.z3950;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Comment;
+import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 //=============================================================================
 
@@ -60,6 +65,98 @@ public class Repositories
 		{
 			context.warning("Cannot initialize Z39.50 repositories : "+ e.getMessage());
 			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	//--------------------------------------------------------------------------
+
+	/** clear the repositories template file - read the file and remove all
+	  * <Repository> entries except the GNSearchable one
+	  */
+	public static boolean clearTemplate(String appPath, ServiceContext context) 
+	{
+		String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" + ".tem"; 
+		String backRepo = tempRepo + ".backup"; 
+
+		boolean copied = false;
+		boolean restore = false;
+
+		try {
+			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
+			Element root  = Xml.loadFile(tempRepo);
+			Element copy  = new Element(root.getName());
+			List<Element> children = root.getChildren();
+			for (Element child : children) {
+				if (child.getName().equals("Repository") && child.getAttributeValue("className").equals("org.jzkit.search.provider.z3950.Z3950Origin")) continue;
+				copy.addContent((Content)child.clone());
+			}
+
+			FileOutputStream os = new FileOutputStream(tempRepo);
+			Xml.writeResponse(new Document(copy), os);
+			os.close();
+		} catch (Exception e) {
+			context.warning("Cannot clear Z39.50 repositories template : "+ e.getMessage());
+			e.printStackTrace();
+			// restore the backup copy
+			if (copied) {
+				try {
+					FileCopyMgr.copyFiles(new File(backRepo), new File(tempRepo));
+				} catch (IOException ioe) {
+					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
+					ioe.printStackTrace();
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	//--------------------------------------------------------------------------
+
+	/** Add a <Repository> element to the template file or replace one that
+	  * is already present
+	  */
+	public static boolean addRepo(String appPath, ServiceContext context, String code, Element repo) 
+	{
+		String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" + ".tem"; 
+		String backRepo = tempRepo + ".backup"; 
+
+		boolean copied = false;
+		boolean restore = false;
+		boolean replaced = false;
+
+		try {
+			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
+			Element root  = Xml.loadFile(tempRepo);
+			Element copy  = new Element(root.getName());
+			List<Element> children = root.getChildren();
+			for (Element child : children) {
+				if (child.getName().equals("Repository") && child.getAttributeValue("code").equals(code)) {
+					copy.addContent(repo);
+					replaced = true;
+				} else {
+					copy.addContent((Content)child.clone());
+				}
+			}
+			if (!replaced) copy.addContent(repo); // just add it
+
+			FileOutputStream os = new FileOutputStream(tempRepo);
+			Xml.writeResponse(new Document(copy), os);
+			os.close();
+		} catch (Exception e) {
+			context.warning("Cannot add Z39.50 repository " + Xml.getString(repo) + " : "+ e.getMessage());
+			e.printStackTrace();
+			// restore the backup copy
+			if (copied) {
+				try {
+					FileCopyMgr.copyFiles(new File(backRepo), new File(tempRepo));
+				} catch (IOException ioe) {
+					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
+					ioe.printStackTrace();
+				}
+			}
 			return false;
 		}
 		return true;

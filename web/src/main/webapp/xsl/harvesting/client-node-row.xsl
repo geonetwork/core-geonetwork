@@ -85,6 +85,10 @@
 				<a href="javascript:harvesting.edit('{@id}')">
 					<xsl:value-of select="/root/strings/edit"/>
 				</a>
+				|
+				<a href="javascript:harvesting.history('{/root/env/url}/srv/{/root/env/language}/harvesting.history?id={@id}&amp;uuid={site/uuid}')">
+					<xsl:value-of select="/root/strings/history"/>
+				</a>
 			</td>
 		</tr>
 
