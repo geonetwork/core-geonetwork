@@ -301,7 +301,6 @@ public class DataManager {
 			this.count = count;
 		}
 
-		@Override
     public void run() {
 			try {
 				Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
