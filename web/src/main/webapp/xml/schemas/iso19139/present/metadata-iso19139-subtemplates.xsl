@@ -5,7 +5,6 @@
   
   <!-- Subtemplate mode TODO : move to another XSL -->
   <xsl:template mode="iso19139-subtemplate" match="gmd:CI_ResponsibleParty">
-    
     <!-- TODO : multilingual subtemplate are not supported. There is
       no gmd:language element or gmd:locales -->
     <xsl:variable name="langId">
@@ -17,10 +16,20 @@
     <title>
       <xsl:apply-templates mode="localised" select="gmd:organisationName">
         <xsl:with-param name="langId" select="$langId"></xsl:with-param>
-      </xsl:apply-templates> - 
-      <xsl:apply-templates mode="localised" select="gmd:individualName">
-        <xsl:with-param name="langId" select="$langId"></xsl:with-param>
       </xsl:apply-templates>
+      -
+      <xsl:choose>
+        <xsl:when test="normalize-space(gmd:individualName/gco:CharacterString)!=''">
+          <xsl:apply-templates mode="localised" select="gmd:individualName">
+            <xsl:with-param name="langId" select="$langId"></xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="localised" select="gmd:positionName">
+            <xsl:with-param name="langId" select="$langId"></xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
     </title>
   </xsl:template>
   <xsl:template mode="iso19139-subtemplate" match="gmd:EX_Extent">
@@ -52,6 +61,11 @@
         </xsl:apply-templates>
         <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
       </xsl:for-each>
+    </title>
+  </xsl:template>
+  <xsl:template mode="iso19139-subtemplate" match="gmd:MD_Distribution">
+    <title>
+      <xsl:value-of select="string-join(gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL, ' ,')"/>
     </title>
   </xsl:template>
   <xsl:template mode="iso19139-subtemplate" match="*"/>
