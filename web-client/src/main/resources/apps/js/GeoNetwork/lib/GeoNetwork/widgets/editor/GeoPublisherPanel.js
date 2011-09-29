@@ -136,7 +136,7 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
     protocols: {
         wms: {
             checked: true,
-            label: 'OGC:WMS',
+            label: 'OGC:WMS'
         },
         wfs: {
             checked: false,
@@ -145,7 +145,7 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
         wcs: {
             checked: false,
             label: 'OGC:WCS'
-        },
+        }
     },
     /** api: property[addOnLineSourceBt] 
      */
