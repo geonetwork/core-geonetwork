@@ -76,7 +76,7 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
         this.treePanel = new Ext.tree.TreePanel({rootVisible: true,
             autoScroll: true});
 
-        var root = new Ext.tree.TreeNode({text: OpenLayers.i18n("featureInfoTitle"), 
+        var root = new Ext.tree.TreeNode({text: OpenLayers.i18n("featureInfoTitle"),
             draggable:false, expanded: true, cls: 'folder'});
         this.treePanel.setRootNode(root);
 
@@ -88,7 +88,7 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
             if (this.features) {
                 this.showFeatures(this.features);
             }
-        }, this);        
+        }, this);
 
         var east = {region: 'east', items: [this.infoPanel], split: true,
             plain: true, cls: 'popup-variant1', width: 400,
@@ -99,7 +99,7 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
 
         this.doLayout();
     },
-    
+
     /**
      * APIMethod: setMap
      * Set a reference to the {<OpenLayers.Map>} object
@@ -116,13 +116,13 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
      * feature - {<OpenLayers.Feature.Vector>}
      */
     featureToHTML: function(feature) {
-        var tplstring = '<table class="olFeatureInfoTable" cellspacing="1" ' + 
+        var tplstring = '<table class="olFeatureInfoTable" cellspacing="1" ' +
             'cellpadding="1"><tbody>';
         for (var attr in feature.attributes) {
             if (attr) {
-                tplstring += '<tr class="olFeatureInfoRow">' + 
-                    '<td width="50%" class="olFeatureInfoColumn">' + attr + 
-                    '</td><td width="50%" class="olFeatureInfoValue">' + 
+                tplstring += '<tr class="olFeatureInfoRow">' +
+                    '<td width="50%" class="olFeatureInfoColumn">' + attr +
+                    '</td><td width="50%" class="olFeatureInfoValue">' +
                     feature.attributes[attr] + '</td></tr>';
             }
         }
@@ -191,10 +191,10 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
             }
         }
     },
-    
+
     /**
      * APIMethod: showFeatures
-     * Show the features in the feature info panel, clears any previous 
+     * Show the features in the feature info panel, clears any previous
      *     features.
      *
      * Parameters:

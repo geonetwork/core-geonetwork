@@ -79,16 +79,40 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
      * onlineResource - {String} the online resource / base url of the WMS
      */
     loadWMS: function(onlineResource) {
-        var params = {'service': 'WMS', 'request': 'GetCapabilities',
-            'version': GeoNetwork.OGCUtil.getProtocolVersion(), language: GeoNetwork.OGCUtil.getLanguage()};
-            
+        var containsVersion = (onlineResource.indexOf('version=') > -1);
+
+       var onlineResourceCheck = onlineResource.toLowerCase();
+
+        var containsVersion = (onlineResourceCheck.indexOf('version=') > -1);
+        var containsService = (onlineResourceCheck.indexOf('service=wms') > -1);
+        var containsRequest = (onlineResourceCheck.indexOf('request=getcapabilities') > -1);
+        var containsLanguage = (onlineResourceCheck.indexOf('language=') > -1);
+
+        var params = {};
+
+        if (!containsVersion) {
+            params['version'] = GeoNetwork.OGCUtil.getProtocolVersion();
+        }
+
+        if (!containsService) {
+            params['service'] = 'WMS';
+        }
+
+        if (!containsRequest) {
+            params['request'] = 'GetCapabilities';
+        }
+
+        if (!containsLanguage) {
+            params['language'] = GeoNetwork.OGCUtil.getLanguage();
+        }
+
         var paramString = OpenLayers.Util.getParameterString(params);
         var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
         onlineResource += separator + paramString;
-        var req = OpenLayers.Request.GET({
-            url: onlineResource, //OpenLayers.Util.removeTail(OpenLayers.ProxyHost),
-            //method: 'GET',
-            //params: {url: onlineResource},
+        var req = Ext.Ajax.request({
+            url: OpenLayers.Util.removeTail(OpenLayers.ProxyHost),
+            method: 'GET',
+            params: {url: onlineResource},
             failure: this.processFailure,
             success: this.processSuccess,
             disableCaching: false,
@@ -113,6 +137,7 @@ GeoNetwork.tree.WMSTreeGenerator.prototype = {
         if (caps.capability) {
             for(var i=0, len = caps.capability.nestedLayers.length; i<len; ++i) {
                 var layer = caps.capability.nestedLayers[i];
+
                 node = this.addLayer(layer, caps.capability.request.getmap.href, null);
                 this.processLayer(layer, caps.capability.request.getmap.href, node);
             }

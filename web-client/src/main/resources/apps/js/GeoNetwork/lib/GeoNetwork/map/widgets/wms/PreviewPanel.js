@@ -139,20 +139,23 @@ Ext.extend(GeoNetwork.wms.PreviewPanel, Ext.Panel, {
      * Returns:
      * {String} the BBOX parameter as a string
      */
-    calculateBBOX: function(layer) {
+     calculateBBOX: function(layer) {
         var bbox;
+        var reverseAxisOrder = (parseFloat(layer.params.VERSION)>=1.3);
+
         if (layer.llbbox) {
             if (this.map.getProjection() !== 'EPSG:4326') {
                 // reproject the latlon boundingbox to the map projection
                 var llbounds = OpenLayers.Bounds.fromArray(layer.llbbox);
                 llbounds = llbounds.transform(new OpenLayers.Projection('EPSG:4326'),
                     this.map.getProjectionObject() );
-                bbox = llbounds.toArray();
+                bbox = llbounds.toArray(reverseAxisOrder);
             } else {
-                bbox = layer.llbbox;
+                var llbounds = OpenLayers.Bounds.fromArray(layer.llbbox);
+                bbox = llbounds.toArray(reverseAxisOrder);
             }
         } else {
-            bbox = this.map.maxExtent.toArray();
+            bbox = this.map.maxExtent.toArray(reverseAxisOrder);
         }
         var center = OpenLayers.Bounds.fromArray(bbox).getCenterLonLat();
         // change the bbox so that the WMS returns an image that is inside
@@ -160,23 +163,27 @@ Ext.extend(GeoNetwork.wms.PreviewPanel, Ext.Panel, {
         if (layer.minScale > 0) {
             var midScale;
             if (layer.maxScale > 0) {
-                midScale = (layer.maxScale + layer.minScale) / 2;
+                midScale = (parseFloat(layer.maxScale) + parseFloat(layer.minScale)) / 2;
             }
             else {
                 // take less than 100%, because of small differences in
                 // calculating WMS scales
-                midScale = 0.9 * layer.minScale;
+                midScale = 0.9 * parseFloat(layer.minScale);
             }
             // determine the new bbox based on the center
             // and scale range of the WMS Layer
-            var res = OpenLayers.Util.getResolutionFromScale(midScale, 
+            var res = OpenLayers.Util.getResolutionFromScale(midScale,
                 this.map.units);
             var dX = Math.round(res * this.width);
             var dY = Math.round(res * this.height);
             var cX = center.lon;
             var cY = center.lat;
             if (dX !== 0 && dY !== 0) {
-                bbox = [cX - 0.5*dX, cY - 0.5*dY, cX + 0.5*dX, cY + 0.5*dY];
+                if (reverseAxisOrder) {
+                    bbox = [cY - 0.5*dY, cX - 0.5*dX, cY + 0.5*dY, cX + 0.5*dX];
+                } else {
+                    bbox = [cX - 0.5*dX, cY - 0.5*dY, cX + 0.5*dX, cY + 0.5*dY];
+                }
             }
         }
         return bbox.join(",");
