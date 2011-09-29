@@ -75,6 +75,7 @@ public class UserQueryInput {
             Geonet.SearchResult.TIMEOUT, 
             Geonet.SearchResult.OUTPUT, 
             Geonet.SearchResult.SUMMARY_ONLY, 
+            Geonet.SearchResult.BUILD_SUMMARY,
             "region_simple", "attrset", "mode", 
             "region", "from", "to", "hitsperpage" 
             );
