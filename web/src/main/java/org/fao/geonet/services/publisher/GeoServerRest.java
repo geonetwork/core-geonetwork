@@ -412,7 +412,7 @@ public class GeoServerRest {
 			body = "<layer><defaultStyle><name>"
 					+ layer
 					+ "_style</name></defaultStyle><enabled>true</enabled></layer>";
-			System.out.println(body);
+			
 			// Add the enable flag due to GeoServer bug
 			// http://jira.codehaus.org/browse/GEOS-3964
 			status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + layer,
