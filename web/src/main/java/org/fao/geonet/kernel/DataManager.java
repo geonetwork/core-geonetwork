@@ -375,20 +375,20 @@ public class DataManager {
             if (XmlSerializer.resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
-                    moreFields.add(makeField("_hasxlinks", "1", true, true, false));
+                    moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
                     StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
-                    moreFields.add(makeField("_xlink", sb.toString(), true, true, false));
+                    moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
                     Processor.detachXLink(md);
                 }
                 else {
-                    moreFields.add(makeField("_hasxlinks", "0", true, true, false));
+                    moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
                 }
             }
             else {
-                moreFields.add(makeField("_hasxlinks", "0", true, true, false));
+                moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
             }
 
             // get metadata table fields
@@ -414,22 +414,22 @@ public class DataManager {
             Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); //DEBUG
             Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
 
-            moreFields.add(makeField("_root",        root,        true, true, false));
-            moreFields.add(makeField("_schema",      schema,      true, true, false));
-            moreFields.add(makeField("_createDate",  createDate,  true, true, false));
-            moreFields.add(makeField("_changeDate",  changeDate,  true, true, false));
-            moreFields.add(makeField("_source",      source,      true, true, false));
-            moreFields.add(makeField("_isTemplate",  isTemplate,  true, true, false));
-            moreFields.add(makeField("_title",       title,       true, true, false));
-            moreFields.add(makeField("_uuid",        uuid,        true, true, true));
-            moreFields.add(makeField("_isHarvested", isHarvested, true, true, false));
-            moreFields.add(makeField("_owner",       owner,       true, true, false));
-            moreFields.add(makeField("_dummy",       "0",        false, true, false));
-            moreFields.add(makeField("_popularity",  popularity,  true, true, false));
-            moreFields.add(makeField("_rating",      rating,      true, true, false));
+            moreFields.add(SearchManager.makeField("_root",        root,        true, true));
+            moreFields.add(SearchManager.makeField("_schema",      schema,      true, true));
+            moreFields.add(SearchManager.makeField("_createDate",  createDate,  true, true));
+            moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
+            moreFields.add(SearchManager.makeField("_source",      source,      true, true));
+            moreFields.add(SearchManager.makeField("_isTemplate",  isTemplate,  true, true));
+            moreFields.add(SearchManager.makeField("_title",       title,       true, true));
+            moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
+            moreFields.add(SearchManager.makeField("_isHarvested", isHarvested, true, true));
+            moreFields.add(SearchManager.makeField("_owner",       owner,       true, true));
+            moreFields.add(SearchManager.makeField("_dummy",       "0",        false, true));
+            moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
+            moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
 
             if (groupOwner != null)
-                moreFields.add(makeField("_groupOwner", groupOwner, true, true, false));
+                moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
 
             // get privileges
             List operations = dbms
@@ -440,7 +440,7 @@ public class DataManager {
                 Element operation = (Element) operation1;
                 String groupId = operation.getChildText("groupid");
                 String operationId = operation.getChildText("operationid");
-                moreFields.add(makeField("_op" + operationId, groupId, true, true, false));
+                moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
             }
             // get categories
             List categories = dbms
@@ -450,7 +450,7 @@ public class DataManager {
             for (Object category1 : categories) {
                 Element category = (Element) category1;
                 String categoryName = category.getChildText("name");
-                moreFields.add(makeField("_cat", categoryName, true, true, false));
+                moreFields.add(SearchManager.makeField("_cat", categoryName, true, true));
             }
 
             // getValidationInfo
@@ -461,7 +461,7 @@ public class DataManager {
                                              .select("SELECT valType, status FROM Validation WHERE metadataId = ?", id$)
                                                  .getChildren();
             if (validationInfo.size() == 0) {
-                moreFields.add(makeField("_valid", "-1", true, true, false));
+                moreFields.add(SearchManager.makeField("_valid", "-1", true, true));
             }
             else {
                 String isValid = "1";
@@ -472,9 +472,9 @@ public class DataManager {
                     if ("0".equals(status)) {
                         isValid = "0";
                     }
-                    moreFields.add(makeField("_valid_" + type, status, true, true, false));
+                    moreFields.add(SearchManager.makeField("_valid_" + type, status, true, true));
                 }
-                moreFields.add(makeField("_valid", isValid, true, true, false));
+                moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
             if (indexGroup) {
                 searchMan.indexGroup(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
@@ -507,27 +507,7 @@ public class DataManager {
 		searchMan.disableOptimizer();
 	}
 
-    /**
-     *
-     * @param name
-     * @param value
-     * @param store
-     * @param index
-     * @param token
-     * @return
-     */
-	private static Element makeField(String name, String value, boolean store,
-												boolean index, boolean token) {
-		Element field = new Element("Field");
 
-		field.setAttribute("name",   name);
-		field.setAttribute("string", value);
-		field.setAttribute("store",  store+"");
-		field.setAttribute("index",  index+"");
-		field.setAttribute("token",  token+"");
-
-		return field;
-	}
 
 	//--------------------------------------------------------------------------
 	//---

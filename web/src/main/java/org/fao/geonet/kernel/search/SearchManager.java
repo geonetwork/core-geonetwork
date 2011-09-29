@@ -692,8 +692,8 @@ public class SearchManager
 
 			StringBuffer sb = new StringBuffer();
 			allText(metadata, sb);
-			addField(xmlDoc, "title", title, true, true, true);
-			addField(xmlDoc, "any", sb.toString(), true, true, true);
+			addField(xmlDoc, "title", title, true, true);
+			addField(xmlDoc, "any", sb.toString(), true, true);
 		} else {
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
 					+ Xml.getString(metadata));
@@ -704,7 +704,7 @@ public class SearchManager
 					+ Xml.getString(xmlDoc));
 		}
 		// add _id field
-		addField(xmlDoc, "_id", id, true, true, false);
+		addField(xmlDoc, "_id", id, true, true);
 
 		// add more fields
         for (Element moreField : moreFields) {
@@ -718,26 +718,39 @@ public class SearchManager
 	}
 
 	/**
-	 * Creates a new field for the Lucene index.
+	 * Creates a new XML field for the Lucene index and add it to the document.
      *
 	 * @param xmlDoc
 	 * @param name
 	 * @param value
 	 * @param store
 	 * @param index
-	 * @param token
 	 */
-	private void addField(Element xmlDoc, String name, String value, boolean store, boolean index, boolean token)
+	private static void addField(Element xmlDoc, String name, String value, boolean store, boolean index)
 	{
+		Element field = makeField(name, value, store, index);
+		xmlDoc.addContent(field);
+	}
+    /**
+    * Creates a new XML field for the Lucene index
+    * 
+    * @param name
+    * @param value
+    * @param store
+    * @param index
+    * @return
+    */
+	public static Element makeField(String name, String value, boolean store,
+												boolean index) {
 		Element field = new Element("Field");
+
 		field.setAttribute("name",   name);
 		field.setAttribute("string", value);
 		field.setAttribute("store",  store+"");
 		field.setAttribute("index",  index+"");
-		field.setAttribute("token",  token+"");
-		xmlDoc.addContent(field);
-	}
 
+		return field;
+	}
 	/**
 	 * Extracts text from metadata record.
 	 *
