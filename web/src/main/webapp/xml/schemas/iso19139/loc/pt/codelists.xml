@@ -67,16 +67,16 @@
 		<entry>
 			<code>imageDigital</code>
 			<label>Imagem digital</label>
-			<description>Visualização dum item principalmente escrito (também possa conter ilustrações)
-				em papel, material fotográfico ou outras mídias</description>
+			<description>Imagem de características, objectos e actividades naturais ou artificiais, adquirido
+				pelo sensoriamento de espectro eletromagnético (tanto o segmento visível como os outros segmentos)
+				por sensores, tais como de infravermelho, e radar de alta resolução e afinal gravado num formato digital</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>documentHardcopy</code>
 			<label>Impressão de documento</label>
-			<description>Imagem de características, objectos e actividades naturais ou artificiais, adquirido
-				pelo sensoriamento de espectro eletromagnético (tanto o segmento visível como os outros segmentos)
-				por sensores, tais como de infravermelho, e radar de alta resolução e afinal gravado num formato digital</description>
+			<description>Visualização dum item principalmente escrito (também possa conter ilustrações)
+				em papel, material fotográfico ou outras mídias</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>

@@ -71,17 +71,17 @@
 		<entry>
 			<code>imageDigital</code>
 			<label>Digital image</label>
-			<description>Representation of a primarily textual item (can contain illustrations also) on
-				paper, photograhic material, or other media</description>
+			<description>Likeness of natural or man-made features, objects, and activities acquired
+				through the sensing of visual or any other segment of the electromagnetic spectrum by
+				sensors, such as thermal infrared, and high resolution radar and stored in digital
+				format</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>documentHardcopy</code>
 			<label>Hardcopy document</label>
-			<description>Likeness of natural or man-made features, objects, and activities acquired
-				through the sensing of visual or any other segment of the electromagnetic spectrum by
-				sensors, such as thermal infrared, and high resolution radar and stored in digital
-				format</description>
+			<description>Representation of a primarily textual item (can contain illustrations also) on
+				paper, photograhic material, or other media</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
