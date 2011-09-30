@@ -113,7 +113,7 @@ public class Importer {
                 for (File file : Files) {
                     if (file != null && !file.isDirectory()) {
                         Element metadata = Xml.loadFile(file);
-                        String metadataSchema = dm.autodetectSchema(metadata);
+                        String metadataSchema = dm.autodetectSchema(metadata, null);
 
                         // If local node doesn't know metadata
                         // schema try to load next xml file.

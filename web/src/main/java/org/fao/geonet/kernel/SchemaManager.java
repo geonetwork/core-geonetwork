@@ -492,7 +492,10 @@ public class SchemaManager
  		* @param md the imported metadata file
  		*/
 
-	public String autodetectSchema(Element md) {			
+	public String autodetectSchema(Element md) {
+		return autodetectSchema(md, defaultSchema);
+	}
+	public String autodetectSchema(Element md, String defaultSchema) {			
 
 		beforeRead();
 		try {
@@ -528,7 +531,9 @@ public class SchemaManager
 			// -- If nothing has matched by this point choose defaultSchema from 
 			// -- config.xml
 			if (schema == null) {
-				Log.debug(Geonet.SCHEMA_MANAGER, "  No schema detected using default schema "+defaultSchema);
+				if (defaultSchema != null) {
+					Log.warning(Geonet.SCHEMA_MANAGER, "  Autodetecting schema failed. Using default schema: " + defaultSchema);
+				}
 				schema = defaultSchema;
 			}
 
@@ -1256,6 +1261,10 @@ public class SchemaManager
 		String appPath = context.getAppPath().replace('\\','/');
 		String relativePath = StringUtils.substringAfter(schemaDir,context.getAppPath()); 
 		return si.getSiteUrl() + context.getBaseUrl() + "/" + relativePath;
+	}
+
+	public String getDefaultSchema() {
+		return defaultSchema;
 	}
 
 	//--------------------------------------------------------------------------

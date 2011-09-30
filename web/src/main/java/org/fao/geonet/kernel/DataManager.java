@@ -1202,11 +1202,14 @@ public class DataManager {
      * @return
      */
 	public String autodetectSchema(Element md) {
+		return autodetectSchema(md, schemaMan.getDefaultSchema());
+	}
+	public String autodetectSchema(Element md, String defaultSchema) {
 		
 		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
 				 + "'\n * with namespace:'" + md.getNamespace()
 				 + "\n * with additional namespaces:" + md.getAdditionalNamespaces().toString());
-		String schema =  schemaMan.autodetectSchema(md);
+		String schema =  schemaMan.autodetectSchema(md, defaultSchema);
 		Log.debug(Geonet.DATA_MANAGER, "Schema detected was "+schema);
 		return schema;
 	}
