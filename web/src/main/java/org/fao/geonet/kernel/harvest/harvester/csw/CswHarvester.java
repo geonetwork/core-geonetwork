@@ -205,6 +205,7 @@ public class CswHarvester extends AbstractHarvester
 			add(res, "unknownSchema",result.unknownSchema);
 			add(res, "removed",      result.locallyRemoved);
 			add(res, "unretrievable",result.unretrievable);
+            add(res, "doesNotValidate",result.doesNotValidate);
 		}
 		return res;
 	}

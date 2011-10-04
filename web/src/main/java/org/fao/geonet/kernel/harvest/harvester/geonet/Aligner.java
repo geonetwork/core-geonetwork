@@ -213,6 +213,8 @@ public class Aligner
 
 				public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
 				{
+                    if (id[index] == null) return;
+
 					log.debug("    - Adding remote public file with name:"+ file);
 					String pubDir = Lib.resource.getDir(context, "public", id[index]);
 
@@ -267,6 +269,15 @@ public class Aligner
 
 		if ("true".equals(isTemplate))	isTemplate = "y";
 			else 									isTemplate = "n";
+
+        // validate it here if requested
+        if (params.validate) {
+            if(!dataMan.validate(md))  {
+                log.info("Ignoring invalid metadata");
+                result.doesNotValidate++;
+                return null;
+            }
+        }
 
 		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
         //
@@ -535,6 +546,15 @@ public class Aligner
 	private void updateMetadata(RecordInfo ri, String id, Element md, Element info, boolean localRating) throws Exception
 	{
 		String date = localUuids.getChangeDate(ri.uuid);
+
+        // validate it here if requested
+        if (params.validate) {
+            if(!dataMan.validate(md))  {
+                log.info("Ignoring invalid metadata");
+                result.doesNotValidate++;
+                return;
+            }
+        }
 
 		if (!ri.isMoreRecentThan(date))
 		{

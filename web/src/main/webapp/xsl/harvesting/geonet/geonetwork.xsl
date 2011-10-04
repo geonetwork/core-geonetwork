@@ -127,11 +127,11 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="content-GN">
-	<div style="display:none;"> <!-- UNUSED -->
+	<div>
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/content"/></h1>
 
 		<table border="0">
-			<tr>
+			<tr style="display:none;"> <!-- UNUSED -->
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/importxslt"/></td>
 				<td class="padded">
 					&#160;
