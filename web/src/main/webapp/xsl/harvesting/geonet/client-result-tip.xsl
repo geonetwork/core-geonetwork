@@ -60,6 +60,11 @@
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unretrievable"/></td>
 				<td class="tipCell"><xsl:value-of select="unretrievable"/></td>					
 			</tr>
+
+            <tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/doesNotValidate"/></td>
+				<td class="tipCell"><xsl:value-of select="doesNotValidate"/></td>
+			</tr>
 		</table>
 	</xsl:template>
 

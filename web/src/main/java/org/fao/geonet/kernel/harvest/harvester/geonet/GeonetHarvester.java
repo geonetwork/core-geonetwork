@@ -229,6 +229,7 @@ public class GeonetHarvester extends AbstractHarvester
 		add(res, "unknownSchema", result.unknownSchema);
 		add(res, "removed",       result.locallyRemoved);
 		add(res, "unretrievable", result.unretrievable);
+        add(res, "doesNotValidate", result.doesNotValidate);
 
 		info.addContent(res);
 	}
@@ -268,6 +269,7 @@ class GeonetResult
 	public int locallyRemoved;
 	public int unknownSchema;
 	public int unretrievable;
+    public int doesNotValidate;
     
 }
 
