@@ -187,8 +187,8 @@
 	<run>Lancer</run>
 	<remove>Supprimer</remove>
 	<refresh>Rafraîchir</refresh>
-	<history>History</history>
-	<clone>Clone</clone>
+	<history>Historique</history>
+	<clone>Dupliquer</clone>
 	
 	<days>jours</days>
 	<hours>heures</hours>
