@@ -47,7 +47,10 @@ import org.jdom.Element;
  * 
  * Similar development have been discovered at the end of that proposal patch:
  * http://code.google.com/p/gsrcj/
- * http://code.google.com/p/toolboxenvironment/source/browse/trunk/ArchivingServer/src/java/it/intecs/pisa/archivingserver/chain/commands/PublishToGeoServer.java
+ * http://code.google.com/p/toolboxenvironment/source
+ * /browse/trunk/ArchivingServer
+ * /src/java/it/intecs/pisa/archivingserver/chain/commands
+ * /PublishToGeoServer.java
  * 
  */
 public class GeoServerRest {
@@ -57,7 +60,7 @@ public class GeoServerRest {
 	public final static String METHOD_PUT = "PUT";
 	public final static String METHOD_DELETE = "DELETE";
 	public final static String LOGGER_NAME = "geonetwork.GeoServerRest";
-	
+
 	private String password;
 	private String username;
 	private String restUrl;
@@ -70,9 +73,12 @@ public class GeoServerRest {
 
 	/**
 	 * Create a GeoServerRest instance to communicate with a GeoServer node.
-	 * @param baseCatalogueUrl TODO
+	 * 
+	 * @param baseCatalogueUrl
+	 *            TODO
 	 */
-	public GeoServerRest(String url, String username, String password, String baseCatalogueUrl) {
+	public GeoServerRest(String url, String username, String password,
+			String baseCatalogueUrl) {
 		init(url, username, password, baseCatalogueUrl);
 	}
 
@@ -84,7 +90,8 @@ public class GeoServerRest {
 	 * @param username
 	 * @param password
 	 * @param defaultns
-	 * @param baseCatalogueUrl TODO
+	 * @param baseCatalogueUrl
+	 *            TODO
 	 */
 	public GeoServerRest(String url, String username, String password,
 			String defaultns, String baseCatalogueUrl) {
@@ -92,7 +99,8 @@ public class GeoServerRest {
 		this.defaultWorkspace = defaultns;
 	}
 
-	private void init(String url, String username, String password, String baseCatalogueUrl) {
+	private void init(String url, String username, String password,
+			String baseCatalogueUrl) {
 		this.restUrl = url;
 		this.username = username;
 		this.password = password;
@@ -101,7 +109,6 @@ public class GeoServerRest {
 				this.password);
 		Log.createLogger(LOGGER_NAME);
 	}
-
 
 	/**
 	 * @return Return last transaction response information if set.
@@ -163,7 +170,7 @@ public class GeoServerRest {
 	}
 
 	/**
-	 * Create a coverage
+	 * Create a coverage from file
 	 * 
 	 * @param ws
 	 *            Name of the workspace to add the coverage in
@@ -174,7 +181,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean createCoverage(String ws, String cs, File f)
+	public boolean createCoverage(String ws, String cs, File f, String metadataUuid, String metadataTitle)
 			throws IOException {
 		String contentType = "image/tiff";
 		if (f.getName().toLowerCase().endsWith(".zip")) {
@@ -183,21 +190,104 @@ public class GeoServerRest {
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/coveragestores/" + cs + "/file.geotiff", null, f,
 				contentType, false);
-
+		
+		createCoverageForStore(ws, cs, null, metadataUuid, metadataTitle);
+		
 		return status == 201;
 	}
 
 	/**
-	 * Create a coverage in default workspace
+	 * Create a coverage from an external file or URL.
+	 * 
+	 * @param ws
+	 * @param cs
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean createCoverage(String ws, String cs, String file, String metadataUuid, String metadataTitle)
+			throws IOException {
+		String contentType = "image/tiff";
+		String extension = "geotiff";
+		
+		if (GeoFile.fileIsECW(file)) {
+			contentType = "image/ecw";
+			extension = "ecw";
+		}
+		
+		String type = "file";
+		if (file.toLowerCase().endsWith(".zip")) {
+			contentType = "application/zip";
+		}
+		// String extension = file.substring(file.lastIndexOf('.'),
+		// file.length());
+		if (file.startsWith("http://")) {
+			type = "url";
+		} else if (file.startsWith("file://")) {
+			type = "external";
+		}
+
+		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+				+ "/coveragestores/" + cs + "/" + type + "." + extension, file,
+				null, contentType, false);
+		
+		createCoverageForStore(ws, cs, file, metadataUuid, metadataTitle);
+		return status == 201;
+	}
+
+	private void createCoverageForStore(String ws, String cs, String file,
+			String metadataUuid, String metadataTitle)
+			throws IOException {
+		String xml = "<coverageStore><name>" + cs + "</name><title>"
+			+ (metadataTitle != null ? metadataTitle : cs)
+			+ "</title><enabled>true</enabled>" 
+			+ (file != null ? "<file>" + file + "</file>" : "")
+			+ "<metadataLinks>"
+				+ "<metadataLink>" 
+					+ "<type>text/xml</type>"
+					+ "<metadataType>ISO19115:2003</metadataType>"
+					+ "<content>"
+						+ this.baseCatalogueUrl
+						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
+						+ // Geopublication only allowed for ISO19139* records. The
+							// outputSchema should always return a record.
+						"&amp;ID=" + metadataUuid 
+					+ "</content>" 
+				+ "</metadataLink>"
+			+ "</metadataLinks>" 
+		+ "</coverageStore>";
+		
+		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+				+ "/coveragestores/" + cs + "/coverages/" + cs + ".xml", xml,
+				null, "text/xml", false);
+	}
+
+	/**
+	 * Create a coverage from file in default workspace
 	 * 
 	 * @param cs
 	 * @param f
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean createCoverage(String cs, File f) throws IOException {
+	public boolean createCoverage(String cs, File f, String metadataUuid, String metadataTitle) throws IOException {
 		// TODO : check default workspace is not null ?
-		return createCoverage(getDefaultWorkspace(), cs, f);
+		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle);
+	}
+
+	/**
+	 * Create a coverage from external file or URL in default workspace
+	 * 
+	 * @param cs
+	 * @param f
+	 * @param metadataUuid TODO
+	 * @param metadataTitle TODO
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean createCoverage(String cs, String f, String metadataUuid, String metadataTitle) throws IOException {
+		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle);
 	}
 
 	/**
@@ -208,9 +298,9 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean updateCoverage(String ws, String ds, File f)
+	public boolean updateCoverage(String ws, String ds, File f, String metadataUuid, String metadataTitle)
 			throws IOException {
-		return createCoverage(ws, ds, f);
+		return createCoverage(ws, ds, f, metadataUuid, metadataTitle);
 	}
 
 	/**
@@ -220,8 +310,8 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean updateCoverage(String ds, File f) throws IOException {
-		return createCoverage(getDefaultWorkspace(), ds, f);
+	public boolean updateCoverage(String ds, File f, String metadataUuid, String metadataTitle) throws IOException {
+		return createCoverage(getDefaultWorkspace(), ds, f, metadataUuid, metadataTitle);
 	}
 
 	/**
@@ -274,33 +364,35 @@ public class GeoServerRest {
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/file.shp", null, f,
 				"application/zip", false);
-		
+
 		if (createStyle) {
 			createStyle(ds);
 		}
 
 		return status == 201;
 	}
+
 	public boolean createDatastore(String ws, String ds, String file,
-            boolean createStyle) throws IOException {
-	    String type = "";
-	    String extension = file.substring(file.lastIndexOf('.'), file.length());
-	    if (file.startsWith("http://")) {
-	        type = "url";
-	    } else if (file.startsWith("file://")) {
-            type = "external";
-        } 
-	    
-        int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-                + "/datastores/" + ds + "/" + type + extension, file, null,
-                "text/plain", false);
+			boolean createStyle) throws IOException {
+		String type = "";
+		String extension = file.substring(file.lastIndexOf('.'), file.length());
+		if (file.startsWith("http://")) {
+			type = "url";
+		} else if (file.startsWith("file://")) {
+			type = "external";
+		}
 
-        if (createStyle) {
-            createStyle(ds);
-        }
+		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+				+ "/datastores/" + ds + "/" + type + extension, file, null,
+				"text/plain", false);
 
-        return status == 201;
-    }
+		if (createStyle) {
+			createStyle(ds);
+		}
+
+		return status == 201;
+	}
+
 	/**
 	 * Create datastore in default workspace
 	 * 
@@ -314,10 +406,12 @@ public class GeoServerRest {
 			throws IOException {
 		return createDatastore(getDefaultWorkspace(), ds, f, createStyle);
 	}
-    public boolean createDatastore(String ds, String file, boolean createStyle)
-            throws IOException {
-        return createDatastore(getDefaultWorkspace(), ds, file, createStyle);
-    }
+
+	public boolean createDatastore(String ds, String file, boolean createStyle)
+			throws IOException {
+		return createDatastore(getDefaultWorkspace(), ds, file, createStyle);
+	}
+
 	/**
 	 * Delete a datastore
 	 * 
@@ -412,7 +506,7 @@ public class GeoServerRest {
 			body = "<layer><defaultStyle><name>"
 					+ layer
 					+ "_style</name></defaultStyle><enabled>true</enabled></layer>";
-			
+
 			// Add the enable flag due to GeoServer bug
 			// http://jira.codehaus.org/browse/GEOS-3964
 			status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + layer,
@@ -435,16 +529,14 @@ public class GeoServerRest {
 	}
 
 	public boolean createDatabaseDatastore(String ws, String ds, String host,
-			String port, String db, String user, String pwd, String dbType, String ns)
-			throws IOException {
+			String port, String db, String user, String pwd, String dbType,
+			String ns) throws IOException {
 
 		String xml = "<dataStore><name>" + ds
 				+ "</name><enabled>true</enabled><connectionParameters><host>"
 				+ host + "</host><port>" + port + "</port><database>" + db
 				+ "</database><user>" + user + "</user><passwd>" + pwd
-				+ "</passwd><dbtype>" + dbType
-				+ "</dbtype><namespace>"
-				+ ns
+				+ "</passwd><dbtype>" + dbType + "</dbtype><namespace>" + ns
 				+ "</namespace></connectionParameters></dataStore>";
 
 		status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
@@ -453,35 +545,43 @@ public class GeoServerRest {
 		return 201 == status;
 	}
 
-	public boolean createFeatureType(String ds, String ft, boolean createStyle, String metadataUuid, String metadataTitle) throws IOException {
-		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle, metadataUuid, metadataTitle);
+	public boolean createFeatureType(String ds, String ft, boolean createStyle,
+			String metadataUuid, String metadataTitle) throws IOException {
+		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle,
+				metadataUuid, metadataTitle);
 	}
 
-	public boolean createFeatureType(String ws, String ds, String ft, boolean createStyle, String metadataUuid, String metadataTitle)
+	public boolean createFeatureType(String ws, String ds, String ft,
+			boolean createStyle, String metadataUuid, String metadataTitle)
 			throws IOException {
-		String xml = "<featureType><name>" + ft + "</name><title>" + ft + "</title>" +
-			"</featureType>";
-		
+		String xml = "<featureType><name>" + ft + "</name><title>" + ft
+				+ "</title>" + "</featureType>";
+
 		status = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/featuretypes", xml, null, "text/xml",
 				true);
-		
-		xml = "<featureType><title>" + (metadataTitle != null ? metadataTitle : ft) + "</title><enabled>true</enabled>" +
-				"<metadataLinks>" +
-					"<metadataLink>" +
-						"<type>text/xml</type>" +
-						"<metadataType>ISO19115:2003</metadataType>" +
-						"<content>" + this.baseCatalogueUrl + 
-						"csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById" +
-						"&amp;outputSchema=http://www.isotc211.org/2005/gmd" +	// Geopublication only allowed for ISO19139* records. The outputSchema should always return a record.
-						"&amp;ID=" + metadataUuid + "</content>" +
-					"</metadataLink>" +
-				"</metadataLinks>" +
-			"</featureType>";
+
+		xml = "<featureType><title>"
+				+ (metadataTitle != null ? metadataTitle : ft)
+				+ "</title><enabled>true</enabled>" 
+				+ "<metadataLinks>"
+					+ "<metadataLink>" 
+						+ "<type>text/xml</type>"
+						+ "<metadataType>ISO19115:2003</metadataType>"
+						+ "<content>"
+							+ this.baseCatalogueUrl
+							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
+							+ // Geopublication only allowed for ISO19139* records. The
+							// outputSchema should always return a record.
+							"&amp;ID=" + metadataUuid + "</content>" 
+					+ "</metadataLink>"
+				+ "</metadataLinks>" 
+			+ "</featureType>";
 		status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-				+ "/datastores/" + ds + "/featuretypes/" + ft, xml, null, "text/xml",
-				true);
-		
+				+ "/datastores/" + ds + "/featuretypes/" + ft, xml, null,
+				"text/xml", true);
+
 		// Create layer for feature type (require for MapServer REST API)
 		int s = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
 				"text/xml", false);
@@ -489,7 +589,7 @@ public class GeoServerRest {
 		if (createStyle) {
 			createStyle(ft);
 		}
-		
+
 		return 201 == status;
 	}
 

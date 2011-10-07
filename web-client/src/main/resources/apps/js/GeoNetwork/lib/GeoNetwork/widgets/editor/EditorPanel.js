@@ -279,9 +279,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                                 '<gmd:name><gco:CharacterString>${layerName}</gco:CharacterString></gmd:name>' + 
                                 '<gmd:description><gco:CharacterString>${metadataTitle}</gco:CharacterString></gmd:description>' + 
                             '</gmd:CI_OnlineResource></gmd:onLine>';
-                        
+
                         for (p in protocols) {
-                            if (protocols.hasOwnProperty(p)) {
+                            if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
                                 xml += OpenLayers.String.format(wxsOnlineSource, {
                                     url: node.get(p + 'Url'),
                                     protocol: protocols[p].label,
