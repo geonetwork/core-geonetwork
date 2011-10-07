@@ -274,7 +274,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         var id = '_X' + insertNodeRef + '_' + nodeName.replace(":", "COLON");
                         var wxsOnlineSource = 
                             '<gmd:onLine xmlns:gmd=&quot;http://www.isotc211.org/2005/gmd&quot; xmlns:gco=&quot;http://www.isotc211.org/2005/gco&quot;><gmd:CI_OnlineResource>' + 
-                                '<gmd:linkage><gmd:URL>${url}</gmd:URL></gmd:linkage>' + 
+                                '<gmd:linkage><gmd:URL>${ogcurl}</gmd:URL></gmd:linkage>' + 
                                 '<gmd:protocol><gco:CharacterString>${protocol}</gco:CharacterString></gmd:protocol>' + 
                                 '<gmd:name><gco:CharacterString>${layerName}</gco:CharacterString></gmd:name>' + 
                                 '<gmd:description><gco:CharacterString>${metadataTitle}</gco:CharacterString></gmd:description>' + 
@@ -283,7 +283,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         for (p in protocols) {
                             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
                                 xml += OpenLayers.String.format(wxsOnlineSource, {
-                                    url: node.get(p + 'Url'),
+                                    ogcurl: node.get(p + 'Url'),
                                     protocol: protocols[p].label,
                                     layerName: layerName,
                                     metadataTitle: this.metadataTitle + "(" + protocols[p].label + ")"
