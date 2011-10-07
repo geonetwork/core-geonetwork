@@ -200,7 +200,7 @@ class Harvester
 		while (true)
 		{
 			request.setStartPosition(start +"");
-			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);			
+			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);
 			log.debug("Number of child elements in response: " + response.getChildren().size());
 
 			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
@@ -489,18 +489,32 @@ class Harvester
 		} else if (name.equals("MD_Metadata")) {
             try {
                 XPath xpath = XPath.newInstance("gmd:fileIdentifier/gco:CharacterString");
+                xpath.addNamespace(Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco"));
+
                 Element identif = (Element) xpath.selectSingleNode(record);
 
                 if (identif == null)
                 {
-                    log.warning("Skipped record with no 'gmd:fileIdentifier' element : "+ name);
-                    return null;
+                    xpath = XPath.newInstance("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
+                    xpath.addNamespace(Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco"));
+
+                    identif = (Element) xpath.selectSingleNode(record);
+
+                    if (identif == null)
+                    {
+                        log.warning("Skipped record with no 'gmd:fileIdentifier' or gmd:identifier' element : "+ name);
+                        return null;
+                    }
                 }
 
                 xpath = XPath.newInstance("gmd:dateStamp/gco:DateTime");
+                xpath.addNamespace(Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco"));
+
                 Element modified = (Element) xpath.selectSingleNode(record);
                 if (modified == null) {
                     xpath = XPath.newInstance("gmd:dateStamp/gco:Date");
+                    xpath.addNamespace(Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco"));
+
                     modified = (Element) xpath.selectSingleNode(record);
                 }
                 log.debug("Record info: " +  identif + ", " + ((modified!=null)?modified.getText():null));
