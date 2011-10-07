@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import jeeves.constants.Jeeves;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
 import jeeves.interfaces.ApplicationHandler;
@@ -679,16 +680,16 @@ public class Geonetwork implements ApplicationHandler
 
 		String webapp = path + "WEB-INF" + FS;
 
-		//--- Set xml.catalog.files property
+		//--- Set jeeves.xml.catalog.files property
 		//--- this is critical to schema support so must be set correctly
-		String catalogProp = System.getProperty("xml.catalog.files");
+		String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
 		if (catalogProp == null) catalogProp = "";
 		if (!catalogProp.equals("")) {
-			logger.info("Overriding xml.catalog.files property (was set to "+catalogProp+")");
+			logger.info("Overriding "+Jeeves.XML_CATALOG_FILES+" property (was set to "+catalogProp+")");
 		} 
 		catalogProp = webapp + "oasis-catalog.xml" + ";" + webapp + "schemaplugin-uri-catalog.xml";
-		System.setProperty("xml.catalog.files", catalogProp);
-		logger.info("xml.catalog.files property set to "+catalogProp);
+		System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
+		logger.info(Jeeves.XML_CATALOG_FILES+" property set to "+catalogProp);
 
 		//--- Set mime-mappings
 		String mimeProp = System.getProperty("mime-mappings");

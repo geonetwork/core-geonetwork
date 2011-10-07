@@ -38,6 +38,8 @@ public final class Jeeves
 
 	public static final String CONFIG_FILE = "config.xml";
 
+	public static final String XML_CATALOG_FILES = "jeeves.xml.catalog.files";
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Url prefixes

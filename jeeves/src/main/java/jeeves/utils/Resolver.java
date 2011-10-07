@@ -23,6 +23,8 @@
 
 package jeeves.utils;
 
+import jeeves.constants.Jeeves;
+
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 
@@ -63,7 +65,20 @@ public final class Resolver implements ProxyInfoObserver
 
 	private void setUpXmlResolver() {
 		CatalogManager catMan = new CatalogManager();
+		catMan.setAllowOasisXMLCatalogPI(false);
+		catMan.setCatalogClassName("org.apache.xml.resolver.Catalog");
+		String catFiles = System.getProperty(Jeeves.XML_CATALOG_FILES);
+		if (catFiles == null) catFiles="";
+		Log.debug(Log.JEEVES,"Using oasis catalog files "+catFiles);
+		catMan.setCatalogFiles(catFiles);
+		catMan.setIgnoreMissingProperties(true);
+		catMan.setPreferPublic(true);
+		catMan.setRelativeCatalogs(false);
+		catMan.setUseStaticCatalog(false);
+		catMan.setVerbosity(4);
+
 		catResolver = new CatalogResolver(catMan);
+
 		Vector catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
 		String[] cats = new String[catalogs.size()];
 		System.arraycopy(catalogs.toArray(), 0, cats, 0, catalogs.size());
