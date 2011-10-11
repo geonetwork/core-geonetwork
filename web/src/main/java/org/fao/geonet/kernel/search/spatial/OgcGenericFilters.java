@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Polygon;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -18,6 +19,7 @@ import org.geotools.filter.spatial.WithinImpl;
 import org.geotools.filter.visitor.DefaultFilterVisitor;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
+import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
@@ -104,7 +106,7 @@ public class OgcGenericFilters
         if (trimmedFilter == null) {
             return null;
         }
-       
+
 			 	// -- rename all PropertyName elements used in Filter to match the
 				// -- geometry type used in the spatial index
         Filter remappedFilter = (Filter) trimmedFilter.accept(new RenameGeometryPropertyNameVisitor(),null);
@@ -191,6 +193,19 @@ public class OgcGenericFilters
 
                 FilterFactory2 factory = getFactory(extraData);
                 return factory.bbox(factory.property(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME), expr2);
+
+            } else if(filter.getExpression2() instanceof Literal && ((Literal) filter.getExpression2()).getValue() instanceof Polygon) {
+                Polygon expr2 = (Polygon) ((Literal) filter.getExpression2()).getValue();
+
+                if (expr2.isRectangle()) {
+                    FilterFactory2 factory = getFactory(extraData);
+                    BBOX bbox = factory.bbox(factory.property(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME), JTS.toEnvelope(expr2));
+
+                    return bbox;
+                } else {
+                     return filter;
+                }
+
             } else {
                 return filter;
             }
