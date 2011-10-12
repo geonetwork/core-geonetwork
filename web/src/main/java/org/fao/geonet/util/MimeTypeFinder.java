@@ -75,9 +75,16 @@ public class MimeTypeFinder
 			registerMimeDetectors(false);
 			try {
 				File theFile = new File(dir, fName);
-				Collection types = mu.getMimeTypes(theFile);
-				MimeType mt = mu.getMostSpecificMimeType(types);
-				return mt.toString();
+				Collection<MimeType> types = mu.getMimeTypes(theFile);
+				boolean specific = false;
+				for (MimeType mt : types) {
+					if (mt.getSpecificity()>1) specific = true;
+				}
+				if (specific) {
+					return mu.getMostSpecificMimeType(types).toString();
+				} else {
+					return types.iterator().next().toString();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
