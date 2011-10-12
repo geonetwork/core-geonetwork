@@ -152,11 +152,6 @@
 							<xsl:with-param name="icon">folder_add.png</xsl:with-param>
 						</xsl:call-template>
 
-						<!-- Disable for now as we may need atomic ops on schema 
-						     resources before we can allow update/delete
-
-								 if we have any plugin schemas then allow update and delete
-						     ops 
 						<xsl:if test="count(/root/gui/schemalist/name[@plugin='true'])>0">
 							<xsl:call-template name="addrow">
 	<xsl:with-param name="service" select="'metadata.schema.update.form'"/>
@@ -170,7 +165,6 @@
 	<xsl:with-param name="desc" select="/root/gui/strings/deleteSchemaDes"/>
 							</xsl:call-template>
 						</xsl:if>
-						-->
 					</xsl:variable>
 
 
