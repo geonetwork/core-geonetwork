@@ -1066,9 +1066,13 @@
         <xsl:param name="name"/>
         <xsl:param name="schema"/>
 
+				<!-- <xsl:message>Running getTitle on <xsl:value-of select="concat($name,' from ',$schema)"/></xsl:message> -->
+
         <xsl:variable name="fullContext">
             <xsl:call-template name="getXPath" />
         </xsl:variable>
+
+				<!-- <xsl:message>XPath <xsl:value-of select="$fullContext"/></xsl:message> -->
 
         <xsl:variable name="context" select="name(parent::node())"/>
         <xsl:variable name="contextIsoType" select="parent::node()/@gco:isoType"/>
@@ -1088,6 +1092,7 @@
                     <!-- Name in current schema -->
                     <xsl:variable name="schematitle" select="string(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/label)"/>
 
+										<!-- <xsl:message>Names <xsl:value-of select="concat($schematitleWithContext,' | ',$schematitleWithContextIso,' | ',$schematitle)"/></xsl:message> -->
                     <xsl:choose>
 
                         <xsl:when test="normalize-space($schematitle)='' and
@@ -1098,6 +1103,10 @@
                         <xsl:when test="normalize-space($schematitleWithContext)='' and
                                         normalize-space($schematitleWithContextIso)=''">
                                 <xsl:value-of select="$schematitle"/>
+                        </xsl:when>
+                        <xsl:when test="normalize-space($schematitleWithContext)='' and
+                                        normalize-space($schematitle)=''">
+                                <xsl:value-of select="$schematitleWithContextIso"/>
                         </xsl:when>
                         <xsl:otherwise>
                                 <xsl:value-of select="$schematitleWithContext"/>
