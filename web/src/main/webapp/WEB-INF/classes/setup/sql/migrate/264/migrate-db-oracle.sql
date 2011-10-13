@@ -1,0 +1,1 @@
+ALTER TABLE CswServerCapabilitiesInfo MODIFY label long;
