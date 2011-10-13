@@ -75,7 +75,17 @@ public final class Resolver implements ProxyInfoObserver
 		catMan.setPreferPublic(true);
 		catMan.setRelativeCatalogs(false);
 		catMan.setUseStaticCatalog(false);
-		catMan.setVerbosity(4);
+		String catVerbosity = System.getProperty(Jeeves.XML_CATALOG_VERBOSITY);
+		if (catVerbosity == null) catVerbosity = "1";
+		int iCatVerb = 1;
+		try {
+			iCatVerb = Integer.parseInt(catVerbosity);
+		} catch (NumberFormatException nfe) {
+			Log.error(Log.JEEVES, "Failed to parse "+Jeeves.XML_CATALOG_VERBOSITY+" "+catVerbosity);
+			nfe.printStackTrace();
+		}
+		Log.debug(Log.JEEVES,"Using catalog resolver verbosity "+iCatVerb);
+		catMan.setVerbosity(iCatVerb);
 
 		catResolver = new CatalogResolver(catMan);
 
