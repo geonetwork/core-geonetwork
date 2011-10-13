@@ -256,6 +256,10 @@ GeoNetwork.util.SearchTools = {
             filters.push(name + "=" + escape(value) + "");
         } else if (type === 'B') { //boolean
             filters.push(name + "=" + (value ? 'on' : 'off') + "");
+        } else if (type === 'O') { //optional boolean
+            if (value) {
+                filters.push(name + "=" + 'on');
+            }
         } else {
             alert("Cannot parse " + type);
         }

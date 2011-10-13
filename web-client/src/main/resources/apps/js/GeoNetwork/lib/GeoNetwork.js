@@ -84,6 +84,7 @@
             "GeoNetwork/Catalogue.js",
             "GeoNetwork/util/Old.js",
             "GeoNetwork/util/SearchTools.js",
+            "GeoNetwork/util/INSPIRESearchFormTools.js",
             "GeoNetwork/util/SearchFormTools.js",
             "GeoNetwork/util/CSWSearchTools.js",
             "GeoNetwork/data/SubTemplateTypeStore.js",

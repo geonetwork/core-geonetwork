@@ -756,6 +756,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     metadataShow: function(uuid, maximized, width, height){
         var url = this.services.mdView + '?uuid=' + uuid;
+        var bd = Ext.getBody();
         
         if (this.resultsView) {
             var win = new GeoNetwork.view.ViewWindow({
@@ -768,7 +769,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 resultsView: this.resultsView
                 });
             win.show(this.resultsView);
-            win.alignTo(Ext.getBody(), 'r-r');
+            win.alignTo(bd, 'tr-tr');
         } else {
             // Not really used - use old service
             window.open(this.services.mdShow + '?uuid=' + uuid,

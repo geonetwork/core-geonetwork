@@ -94,25 +94,12 @@ GeoNetwork.TagCloudView = Ext.extend(Ext.DataView, {
     
     autoWidth: true,
     
-    listeners: {
-        selectionchange: {
-            fn: function(dv, nodes){
-            
-            }
-        },
-        dblclick: {
-            fn: function(dv, idx, node, e){
-            
-            }
-        }
-    },
     /** private: method[initComponent] 
      *  Initializes the metadata results view.
      */
     initComponent: function(){
-    
         GeoNetwork.TagCloudView.superclass.initComponent.call(this);
-        this.tpl = new Ext.XTemplate(
+        this.tpl = this.tpl || new Ext.XTemplate(
             '<ul>', 
                 '<tpl for=".">', 
                     '<li class="tag-cloud tag-cloud-{class}">',

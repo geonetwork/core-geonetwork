@@ -249,7 +249,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                           '<span title="{role} - {applies}"><tpl if="values.logo !== undefined ">',
                               '<img src="{logo}" class="orgLogo"/>',
                           '</tpl>',
-                          '{name}</span>',
+                          '{name}&nbsp;&nbsp;</span>',
                       '</tpl>',
                   '</tpl>',
                   '<tpl if="edit==\'true\' && isharvested!=\'y\'">',

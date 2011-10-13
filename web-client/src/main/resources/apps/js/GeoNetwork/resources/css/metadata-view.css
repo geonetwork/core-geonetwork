@@ -214,6 +214,9 @@ span.md-action-menu {
 .md-mn-zip {
   background-image : url(../images/default/page_white_zip.png) !important;
 }
+.md-mn-download {
+  background-image : url(../images/default/download.png) !important;
+}
 .mn-user-location {
   background-image : url(../images/default/user_location.png) !important;
 }
