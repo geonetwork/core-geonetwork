@@ -54,8 +54,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 			this.dm = dm;
 			this.dbms = dbms;
 		}
-	
-		@Override
+		
 		public Void call() throws Exception {
 			for(int i=beginIndex; i<beginIndex+count; i++) {
 				dm.indexMetadataGroup(dbms, ids[i]+"");
