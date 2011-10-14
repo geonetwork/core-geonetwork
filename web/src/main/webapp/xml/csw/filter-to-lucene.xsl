@@ -183,10 +183,16 @@
 	<!-- ========================================================================== -->
 
 	<xsl:template match="ogc:PropertyIsNull">
-		<error type="Operator not implemented">
-			<xsl:copy-of select="."/>
-		</error>
-	</xsl:template>
+        <BooleanQuery>
+          <BooleanClause required="true" prohibited="false">
+            <MatchAllDocsQuery required="true" prohibited="false"/>
+          </BooleanClause>
+
+          <BooleanClause required="false" prohibited="true">
+            <WildcardQuery fld="{ogc:PropertyName}" txt="*"/>
+          </BooleanClause>
+        </BooleanQuery>
+    </xsl:template>
 
 	<!-- ========================================================================== -->
 	<!-- === Logic operators : AND, OR, NOT === -->
