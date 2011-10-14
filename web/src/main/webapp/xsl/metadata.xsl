@@ -89,7 +89,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded" />
-		
+
 		<!-- draw child element place holder if
 			- child is an OR element or
 			- there is no other element with the name of this placeholder 
@@ -133,10 +133,17 @@
 							<xsl:if test="$isXLinked">
 								<xsl:attribute name="disabled">disabled</xsl:attribute>
 							</xsl:if>
+
+							<xsl:variable name="defaultSelection" select="/root/gui/config/editor-default-substitutions/element[@name=$name]/@default" />
+
 							<xsl:for-each select="geonet:choose">
 								<!-- FIXME : here we should sort by title ? -->
 								<xsl:sort select="@name"/>
 								<option value="{@name}">
+									<xsl:if test="@name = $defaultSelection">
+									<xsl:attribute name="selected">selected</xsl:attribute> 
+									</xsl:if>
+									
 									<xsl:call-template name="getTitle">
 										<xsl:with-param name="name"   select="@name"/>
 										<xsl:with-param name="schema" select="$schema"/>

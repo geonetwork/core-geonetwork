@@ -141,8 +141,13 @@
 
   <xml/>
  </metadata-tab>
- 
- 
+
+ <!-- Define the default selection for metadata element substitutions in the editor -->
+ <editor-default-substitutions>
+    <!-- Default for gmd:language from 2 alternatives: gco:CharacterString, gmd:LanguageCode -->
+    <element name="gmd:language" default="gmd:LanguageCode" />
+ </editor-default-substitutions>
+
  <!-- Add an option to be able to toggle all fieldsets
   in view and edit mode. -->
  <!--metadata-view-toggleTab/-->
