@@ -143,6 +143,7 @@ GeoNetwork.lang.en = {
     'inspiretheme': 'INSPIRE theme',
     'similarity': 'Search accuracy',
     'wkt': 'WKT geometry',
+    'simpleViewMode': 'Simple view',
     'spatialSearch': 'Spatial criteria',
     'mdChangeDate': 'Metadata change date',
     'tempExtent': 'Temporal extent',

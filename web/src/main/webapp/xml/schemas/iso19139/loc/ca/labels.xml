@@ -557,6 +557,11 @@
         <description>Àrea del conjunt de dades enfosquida per núvols, expressat com a percentatge de
 			l'extensió espacial</description>
     </element>
+    <element name="gmd:code" id="207.0" context="gmd:RS_Identifier">
+        <label>Unique resource identifier</label>
+        <description>Alphanumeric value identifying an instance in the namespace</description>
+        <condition>mandatory</condition>
+    </element>
     <element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
         <label>Codi</label>
         <description>Valor alfanumèric que identifica una instància a un espai de noms</description>

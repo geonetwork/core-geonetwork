@@ -4,6 +4,8 @@
   <relatedResources>Related services and linked data</relatedResources>
   <techInfo>Technical information</techInfo>
   <contactInfo>Contact information</contactInfo>
+  <mdContactInfo>Metadata contact</mdContactInfo>
+  <refDate>Reference date</refDate>
   <temporalRef>Temporal information</temporalRef>
   <constraintInfo>Access constraint information</constraintInfo>
 </strings>

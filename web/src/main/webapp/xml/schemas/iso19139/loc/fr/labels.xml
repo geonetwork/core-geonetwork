@@ -922,6 +922,18 @@
     <condition/>
     
   </element>
+  <element name="gmd:code" id="207.0" context="gmd:RS_Identifier">
+    <label>Identificateur de ressource unique</label>
+    <description>Valeur alphanumérique pour l'identification d'une occurrence dans le domaine de valeurs</description>
+    <help>Code alphanumérique de l'identifiant. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+  </element>
+  <element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
+    <label>Code</label>
+    <description>Valeur alphanumérique pour l'identification d'une occurrence dans le domaine de valeurs</description>
+    <help>Code alphanumérique de l'identifiant. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+  </element>
   <element name="gmd:code" id="207.0">
     <label>Code</label>
     <description>Valeur alphanumérique pour l'identification d'une occurrence dans le domaine de valeurs</description>

@@ -354,6 +354,7 @@ GeoNetwork.Lang.fr = {
     'massiveOp': 'Opération sur la sélection',
     'prepareDownload': 'Télécharger les fichiers',
     'mdMenu': 'Actions',
+    'simpleViewMode': 'Vue simplifiée',
     'deleteRecord': 'Supprimer la métadonnée ?',
     'deleteConfirm': 'Confirmez-vous la suppression de la métadonnée ?',
     'deleteRecordSuccess': 'Metadonnée supprimée', 

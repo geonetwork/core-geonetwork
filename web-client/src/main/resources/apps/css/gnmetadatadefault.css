@@ -257,6 +257,9 @@ label + span {
   width : 25%;
 }
 
+.metadata * table.gn p {
+    margin-bottom: 5px;
+}
 
 table.related {
   border-collapse: collapse;

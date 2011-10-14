@@ -117,8 +117,8 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         return viewButton;
     },
     updateViewMenu: function(){
-        var modes = Ext.query('span.mode', this.body.dom), menu = [], i, j, e, cmpId = this.getId();
-
+        var modes = Ext.query('span.mode', this.body.dom), menu = [], i, j, e, cmpId = this.getId(), isSimpleModeActive = true;
+        menu.push([OpenLayers.i18n('simpleViewMode'), 'view-simple', isSimpleModeActive]);
         Ext.ux.Lightbox.register('a[rel^=lightbox-viewset]', true);
 
         for (i = 0; i < modes.length; i++) {
@@ -149,8 +149,15 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
                     }
                 }
                 menu.push([label, id, activeMode]);
+                
+                if (activeMode === true) {
+                    isSimpleModeActive = false;
+                }
             }
         }
+        
+        // If another mode is active turn off simple mode.
+        menu[0][2] = isSimpleModeActive;
         this.updateToolbar(menu);
     },
     updateToolbar: function(modes){

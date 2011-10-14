@@ -3,7 +3,7 @@
   xmlns:gco="http://www.isotc211.org/2005/gco"
   exclude-result-prefixes="gmd gco">
   
-  <!-- Subtemplate mode TODO : move to another XSL -->
+  <!-- Subtemplate mode -->
   <xsl:template mode="iso19139-subtemplate" match="gmd:CI_ResponsibleParty">
     <!-- TODO : multilingual subtemplate are not supported. There is
       no gmd:language element or gmd:locales -->

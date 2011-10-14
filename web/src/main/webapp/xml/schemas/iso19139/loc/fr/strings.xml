@@ -4,6 +4,8 @@
   <relatedResources>Service disponible et données associées</relatedResources>
   <techInfo>Les informations techniques</techInfo>
   <contactInfo>Les contacts</contactInfo>
+  <mdContactInfo>Contacts pour les métadonnées</mdContactInfo>
   <temporalRef>Référence(s) temporelle(s)</temporalRef>
+  <refDate>Date(s) de référence</refDate>
   <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
 </strings>

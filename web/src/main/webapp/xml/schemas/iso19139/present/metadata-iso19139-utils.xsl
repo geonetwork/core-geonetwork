@@ -410,12 +410,13 @@
       <xsl:when test="text()!=''">txt</xsl:when>
       <!-- empty element -->
       <xsl:otherwise>
-        <!-- attributes? -->
-        <xsl:for-each select="@*">
-          <xsl:if test="string-length(.)!=0">att</xsl:if>
-        </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
+  
+    <!-- attributes? -->
+    <xsl:for-each select="@*">
+      <xsl:if test="string-length(.)!=0">att</xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
 	<!-- Create a service URL for a service metadata record. -->
