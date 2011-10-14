@@ -138,11 +138,17 @@
       <xsl:if test="(geonet:choose or name($prevBrother)!=$name or $name='gmd:graphicOverview')">
         <xsl:variable name="text">
           <xsl:if test="geonet:choose">
-            
+
+            <xsl:variable name="defaultSelection" select="/root/gui/config/editor-default-substitutions/element[@name=$name]/@default" />
+
             <xsl:variable name="options">
               <options>
                 <xsl:for-each select="geonet:choose">
                   <option name="{@name}">
+                    <xsl:if test="@name = $defaultSelection">
+                    <xsl:attribute name="selected">selected</xsl:attribute>
+                    </xsl:if>
+
                     <xsl:call-template name="getTitle">
                       <xsl:with-param name="name" select="@name"/>
                       <xsl:with-param name="schema" select="$schema"/>
