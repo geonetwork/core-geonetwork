@@ -24,6 +24,7 @@
 		<xsl:variable name="shib"       select="children/shib/children"/>
 		<xsl:variable name="shibAttrib" select="$shib/attrib/children"/>
         <xsl:variable name="inspire" select="children/inspire/children"/>
+        <xsl:variable name="metadataview" select="children/metadata/children"/>
 
 		<env>
 			<site>
@@ -84,8 +85,17 @@
 			</autofixing>
 
             <inspire>
-				<enable><xsl:value-of select="$inspire/enable/value"/></enable>
-			</inspire>
+                <enable><xsl:value-of select="$inspire/enable/value"/></enable>
+                <enableSearchPanel><xsl:value-of select="$inspire/enableSearchPanel/value"/></enableSearchPanel>
+            </inspire>
+
+            <metadata>
+                <enableSimpleView><xsl:value-of select="$metadataview/enableSimpleView/value"/></enableSimpleView>
+                <enableIsoView><xsl:value-of select="$metadataview/enableIsoView/value"/></enableIsoView>
+                <enableInspireView><xsl:value-of select="$metadataview/enableInspireView/value"/></enableInspireView>
+                <enableXmlView><xsl:value-of select="$metadataview/enableXmlView/value"/></enableXmlView>
+                <defaultView><xsl:value-of select="$metadataview/defaultView/value"/></defaultView>
+            </metadata>
 
 			<proxy>
 				<use><xsl:value-of select="$proxy/use/value"/></use>

@@ -55,6 +55,7 @@
 		<xsl:call-template name="localrating"/>
         <xsl:call-template name="autofixing"/>
         <xsl:call-template name="inspire"/>
+        <xsl:call-template name="metadataviews"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
 		<xsl:call-template name="removedMetadata"/>
@@ -85,9 +86,63 @@
 					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/enable"/></td>
 					<td class="padded"><input id="inspire.enable" class="content" type="checkbox"/></td>
 				</tr>
+
+                <tr>
+                	<td/>
+					<td class="padded">
+                        <div id="inspire.subpanel">
+                            <div align="left">
+                                <input id="inspire.enableSearchPanel" class="content" type="checkbox"/><label for="inpire.enableSearchPanel"><xsl:value-of select="/root/gui/config/metadataEnableInspireSearch"/></label>
+                            </div>
+                        </div>
+					</td>
+				</tr>
 			</table>
 		</div>
 	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
+    <xsl:template name="metadataviews">
+        <h1 align="left"><xsl:value-of select="/root/gui/config/metadataViews"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+
+                <tr>
+                	<td/>
+					<td class="padded">
+                        <div align="left">
+                            <input id="metadata.enableSimpleView" class="content" type="checkbox"/><label for="metadata.enableSimpleView"><xsl:value-of select="/root/gui/config/metadataEnableSimpleView"/></label>
+                        </div>
+                        <div align="left">
+                            <input id="metadata.enableIsoView" class="content" type="checkbox"/><label for="metadata.enableIsoView"><xsl:value-of select="/root/gui/config/metadataEnableIsoView"/></label>
+                        </div>
+                        <div align="left">
+                            <input id="metadata.enableInspireView" class="content" type="checkbox"/><label for="metadata.enableInspireView"><xsl:value-of select="/root/gui/config/metadataEnableInspireView"/></label>
+                        </div>
+                        <div align="left">
+                            <input id="metadata.enableXmlView" class="content" type="checkbox"/><label for="metadata.enableXmlView"><xsl:value-of select="/root/gui/config/metadataEnableXmlView"/></label>
+                        </div>
+					</td>
+				</tr>
+
+                 <tr>
+                	<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/metadataDefaultView"/></td>
+					<td class="padded">
+                        <select id="metadata.defaultView">
+                            <option id="metadata.defaultView.Simple" value="simple"><xsl:value-of select="/root/gui/config/metadataSimpleView"/></option>
+                            <option id="metadata.defaultView.Advanced" value="advanced"><xsl:value-of select="/root/gui/config/metadataAdvancedView"/></option>
+                            <option id="metadata.defaultView.Iso" value="iso"><xsl:value-of select="/root/gui/config/metadataIsoView"/></option>
+                            <option id="metadata.defaultView.Inspire" value="inspire"><xsl:value-of select="/root/gui/config/metadataInspireView"/></option>
+                            <option id="metadata.defaultView.Xml" value="xml"><xsl:value-of select="/root/gui/config/metadataXmlView"/></option>
+                        </select>
+					</td>
+				</tr>
+			</table>
+		</div>
+    </xsl:template>
+
+    <!-- ============================================================================================= -->
 
 
 	<!-- ============================================================================================= -->

@@ -132,13 +132,13 @@
   have access to section tab switcher.
  -->
  <metadata-tab>
-  <simple flat="true"  default="true"/>
+  <simple flat="true" />
   <advanced/><!-- This view should not be removed as this is the only view to be able 
   to edit all elements defined in a schema. -->
   <iso/>
-  <!-- This view display all INSPIRE recommended elements
+  <!-- This view display all INSPIRE recommended elements in a view -->
   <inspire flat="true"/>
-  in a view -->
+
   <xml/>
  </metadata-tab>
  

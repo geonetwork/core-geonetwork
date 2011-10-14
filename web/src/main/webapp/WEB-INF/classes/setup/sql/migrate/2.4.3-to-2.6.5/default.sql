@@ -193,17 +193,26 @@ INSERT INTO CategoriesDes VALUES (1,'fi','Kartat & kuvat');
 INSERT INTO CategoriesDes VALUES (2,'fi','Tietoaineistot');
 INSERT INTO CategoriesDes VALUES (3,'fi','Vuorovaikutteiset resurssit');
 INSERT INTO CategoriesDes VALUES (4,'fi','Sovellukset');
-INSERT INTO CategoriesDes VALUES (5,'fi','Esimerkkitapaukset, parhaat käytännöt');
+INSERT INTO CategoriesDes VALUES (5,'fi','Esimerkkitapaukset, parhaat k√§yt√§nn√∂t');
 INSERT INTO CategoriesDes VALUES (6,'fi','Konferenssijulkaisut');
 INSERT INTO CategoriesDes VALUES (7,'fi','Valokuvat');
-INSERT INTO CategoriesDes VALUES (8,'fi','Äänitteet / Videot');
+INSERT INTO CategoriesDes VALUES (8,'fi','√Ñ√§nitteet / Videot');
 INSERT INTO CategoriesDes VALUES (9,'fi','Hakemistot');
 INSERT INTO CategoriesDes VALUES (10,'fi','Other information resources');
 
 INSERT INTO GroupsDes VALUES (-1,'fi','Vierailija');
 INSERT INTO GroupsDes VALUES (0,'fi','Intranet');
 INSERT INTO GroupsDes VALUES (1,'fi','Kaikki');
-INSERT INTO GroupsDes VALUES (2,'fi','Ryhmä');
+INSERT INTO GroupsDes VALUES (2,'fi','Ryhm√§');
+
+INSERT INTO Settings VALUES (722,720,'enableSearchPanel','false');
+
+INSERT INTO Settings VALUES (910,1,'metadata',NULL);
+INSERT INTO Settings VALUES (911,910,'enableSimpleView','true');
+INSERT INTO Settings VALUES (912,910,'enableIsoView','true');
+INSERT INTO Settings VALUES (913,910,'enableInspireView','false');
+INSERT INTO Settings VALUES (914,910,'enableXmlView','true');
+INSERT INTO Settings VALUES (915,910,'defaultView','simple');
 
 UPDATE Settings SET value='2.6.5' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

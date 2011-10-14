@@ -139,7 +139,21 @@
 	<attributes>Shibboleth alocação de atributos</attributes>
 	<surname>Apelido</surname>
 	<firstname>Nome próprio</firstname>
-		
+
+    <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+
+    <metadataViews>Metadata views</metadataViews>
+    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
+    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
+    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
+    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
+    <metadataDefaultView>Default view</metadataDefaultView>
+    <metadataSimpleView>Simple view</metadataSimpleView>
+    <metadataIsoView>ISO view</metadataIsoView>
+    <metadataInspireView>INSPIRE view</metadataInspireView>
+    <metadataXmlView>XML view</metadataXmlView>
+    <metadataAdvancedView>Advanced view</metadataAdvancedView>
+
 	<!-- Buttons -->
 	
 	<save>Gravar</save>

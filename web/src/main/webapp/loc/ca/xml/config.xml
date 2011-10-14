@@ -140,6 +140,20 @@
 	<surname>Cognom</surname>
 	<firstname>Nom</firstname>
 
+    <metadataEnableInspireSearch>Habilitar panell de cerca</metadataEnableInspireSearch>
+
+    <metadataViews>Vistes de metadades</metadataViews>
+    <metadataEnableSimpleView>Habilitar vista simple</metadataEnableSimpleView>
+    <metadataEnableIsoView>Habilitar vista ISO</metadataEnableIsoView>
+    <metadataEnableInspireView>Habilitar vista INSPIRE</metadataEnableInspireView>
+    <metadataEnableXmlView>Habilitar vista XML</metadataEnableXmlView>
+    <metadataDefaultView>Vista per defecte</metadataDefaultView>
+    <metadataSimpleView>Vista simple</metadataSimpleView>
+    <metadataIsoView>Vista ISO</metadataIsoView>
+    <metadataInspireView>Vista INSPIRE</metadataInspireView>
+    <metadataXmlView>Vista XML</metadataXmlView>
+    <metadataAdvancedView>Vista avan�ada</metadataAdvancedView>
+
 	<!-- Buttons -->
 
 	<save>Guardar</save>

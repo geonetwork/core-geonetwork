@@ -3132,7 +3132,7 @@
             <xsl:param name="schema"/>
 
             <!-- INSPIRE tab -->
-            <xsl:if test="/root/gui/config/metadata-tab/inspire">
+            <xsl:if test="/root/gui/env/inspire/enable = 'true' and /root/gui/env/metadata/enableInspireView = 'true'">
                 <xsl:call-template name="displayTab">
                     <xsl:with-param name="tab"     select="'inspire'"/>
                     <xsl:with-param name="text"    select="/root/gui/strings/inspireTab"/>
@@ -3146,7 +3146,7 @@
                 <xsl:with-param name="schema" select="$schema"/>
             </xsl:apply-templates>
 
-            <xsl:if test="/root/gui/config/metadata-tab/iso">
+            <xsl:if test="/root/gui/env/metadata/enableIsoView = 'true'">
                 <xsl:call-template name="displayTab">
                     <xsl:with-param name="tab"     select="'groups'"/> <!-- just a non-existing tab -->
                     <xsl:with-param name="text"    select="/root/gui/strings/byGroup"/>
