@@ -36,24 +36,32 @@ GeoNetwork.util.INSPIRESearchFormTools = {
      *  :return: Annex I, II, III combo box
      * 
      */
-    getAnnexField : function () {
-        var annexes = [ [ 'i', 'I' ], [ 'ii', 'II' ], [ 'iii', 'III' ] ], inspireannex = new Ext.form.ComboBox({
-            id : 'inspireannex',
-            name : 'E_inspireannex',
-            mode : 'local',
-            triggerAction : 'all',
-            fieldLabel : OpenLayers.i18n('inspireannex'),
-            // value: annexes[1], // Set arbitrarily the second value of the
-            // array as the default one.
-            store : new Ext.data.ArrayStore({
-                id : 0,
-                fields : [ 'id', 'label' ],
-                data : annexes
-            }),
-            valueField : 'id',
-            displayField : 'label'
-        });
-        return inspireannex;
+    getAnnexField : function (multi) {
+        var annexes = [ [ 'i', 'I' ], [ 'ii', 'II' ], [ 'iii', 'III' ] ], 
+            config = {
+                    id : 'inspireannex',
+                    name : 'E_inspireannex',
+                    mode : 'local',
+                    triggerAction : 'all',
+                    fieldLabel : OpenLayers.i18n('inspireannex'),
+                    // value: annexes[1], // Set arbitrarily the second value of the
+                    // array as the default one.
+                    store : new Ext.data.ArrayStore({
+                        id : 0,
+                        fields : [ 'id', 'label' ],
+                        data : annexes
+                    }),
+                    valueField : 'id',
+                    displayField : 'label'
+                };
+        if (multi) {
+            Ext.apply(config, {
+                valueDelimiter: ' or '
+                });
+            return new Ext.ux.form.SuperBoxSelect(config);
+        } else {
+            return new Ext.form.ComboBox(config);
+        }
     },
     /** api:method[getRelatedField] 
      *  :return: Checkbox for dataset related to
@@ -93,7 +101,7 @@ GeoNetwork.util.INSPIRESearchFormTools = {
      * 
      * TODO : Improve support of multilingual search for INSPIRE themes
      */
-    getThemesField : function (services) {
+    getThemesField : function (services, multi) {
         var Keyword, themesStore, inspiretheme;
         
         Keyword = Ext.data.Record.create([ {
@@ -131,28 +139,34 @@ GeoNetwork.util.INSPIRESearchFormTools = {
         });
 
         themesStore.load();
-
-        inspiretheme = new Ext.form.ComboBox({
-            id : 'inspiretheme',
-            name : 'E_inspiretheme',
-            mode : 'local',
-            triggerAction : 'all',
-            fieldLabel : OpenLayers.i18n('inspiretheme'),
-            store : themesStore,
-            valueField : 'value',
-            displayField : 'value'
-        });
-
-        return inspiretheme;
+        var config = {
+                id : 'inspiretheme',
+                name : 'E_inspiretheme',
+                mode : 'local',
+                triggerAction : 'all',
+                fieldLabel : OpenLayers.i18n('inspiretheme'),
+                store : themesStore,
+                valueField : 'value',
+                displayField : 'value'
+            };
+        if (multi) {
+            Ext.apply(config, {
+                valueDelimiter: ' or ',
+                stackItems: true
+                });
+            return new Ext.ux.form.SuperBoxSelect(config);
+        } else {
+             return new Ext.form.ComboBox(config);
+        }
     },
     /** api:method[getINSPIREFields] 
      *  :return: An INSPIRE form
      * 
      * Create an INSPIRE form
      */
-    getINSPIREFields : function (services) {
-        return [this.getAnnexField(), 
-                        this.getThemesField(services), 
+    getINSPIREFields : function (services, multi) {
+        return [this.getAnnexField(multi), 
+                        this.getThemesField(services, multi), 
                         this.getRelatedField()];
     }
 };

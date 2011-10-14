@@ -100,7 +100,7 @@
                 <include>${project.build.directory}/classes/apps/js/ext-ux/MultiselectItemSelector-3.0/DDView.js</include>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js</include>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/LightBox/lightbox.js</include>
-
+                <include>${project.build.directory}/classes/apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js</include>
 
                 <include>${project.build.directory}/classes/apps/js/proj4js-compressed.js</include>
 
@@ -283,6 +283,7 @@
 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/SearchTools.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/Old.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/INSPIRESearchFormTools.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/SearchFormTools.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/CSWSearchTools.js</include>
 

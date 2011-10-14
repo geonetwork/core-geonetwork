@@ -129,7 +129,7 @@ div#tabs ul li ul li.active {
   clear : both;
 }
 .metadata * div.el label {
-  margin-right: 2px;
+  margin-right: 5px;
 }
 .metadata * label {
   color : #767676;
@@ -250,6 +250,7 @@ label + span {
 }
 .metadata * table.gn > tbody > tr > td.col {
   padding : 0px;
+  width: 50%;
 }
 
 .metadata * table.gn > tbody > tr > td.main,
