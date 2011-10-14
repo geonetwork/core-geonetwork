@@ -45,8 +45,11 @@ import org.openrdf.sesame.sail.StatementIterator;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,6 +65,8 @@ public class Thesaurus {
 	private LocalRepository repository;
 
     private String title;
+
+    private String date;
 
 	@SuppressWarnings("unused")
 	private String name;
@@ -92,7 +97,7 @@ public class Thesaurus {
 		this.dname = dname;
 		this.thesaurusFile = thesaurusFile; 
 		
-        this.title = retrieveThesaurusTitle(thesaurusFile, type);
+        retrieveThesaurusTitle(thesaurusFile, type);
 
 	}
 
@@ -123,6 +128,11 @@ public class Thesaurus {
     public String getTitle() {
 		return title;
 	}
+
+    public String getDate() {
+		return date;
+	}
+
 
 	/**
 	 * 
@@ -461,11 +471,10 @@ public class Thesaurus {
     /**
      * Retrieves the thesaurus title from rdf file.
      *
-     * Used to set the thesaurusName for keywords
+     * Used to set the thesaurusName and thesaurusDate for keywords
      *
-     * @return
      */
-    private String retrieveThesaurusTitle(File thesaurusFile, String defaultTitle) {
+    private void retrieveThesaurusTitle(File thesaurusFile, String defaultTitle) {
         try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
@@ -473,17 +482,64 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
             theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
             theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
+            theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title", theNSs);
             if (title != null) {
-                return title.getValue();
+                this.title = title.getValue();
+            } else {
+                this.title = defaultTitle;
+            }
+
+            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
+
+            Date thesaususDate = parseThesaurusDate(dateEl);
+
+            if (thesaususDate == null) {
+                dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
+                thesaususDate = parseThesaurusDate(dateEl);
+            }
+
+            if (thesaususDate != null) {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                this.date = df.format(thesaususDate);
             }
 
         } catch (Exception ex) {
-            Log.info(Geonet.THESAURUS_MAN, "Error getting thesaurus title, using default value: " + ex.getMessage()); 
+            Log.info(Geonet.THESAURUS_MAN, "Error getting thesaurus info: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Method to parse the thesaurus date value
+     *
+     * @param dateEl   thesaurus date element
+     * @return  Date object representing the thesaurus date value
+     */
+    private Date parseThesaurusDate(Element dateEl) {
+        Date thesaurusDate = null;
+
+        if (dateEl == null) return thesaurusDate;
+
+        String dateVal = dateEl.getText();
+
+        // Try several date formats (date format seem not unified)
+        List<DateFormat> dfList = new ArrayList<DateFormat>();
+
+        dfList.add(new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"));
+        dfList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        dfList.add(new SimpleDateFormat("yyyy-MM-dd"));
+
+        for(DateFormat df: dfList) {
+            try {
+                thesaurusDate = df.parse(dateVal);
+            } catch(Exception ex) {
+                // Ignore the exception and try next format
+                ex.printStackTrace();
+            }
         }
 
-        return defaultTitle;
-
+        return thesaurusDate;
     }
+
 }
