@@ -215,7 +215,6 @@ Ext.extend(GeoNetwork.wms.PreviewPanel, Ext.Panel, {
             HEIGHT: this.height
         });
 
-        alert(url);
         if (previousMap === null) {
             layer.map = previousMap;
         }
