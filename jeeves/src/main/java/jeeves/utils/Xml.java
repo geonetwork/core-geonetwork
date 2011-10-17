@@ -42,6 +42,7 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -60,7 +61,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +74,12 @@ import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CharacterCodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -196,17 +206,103 @@ public final class Xml
 	public static Element loadFile(File file) throws IOException, JDOMException
 	{
 		SAXBuilder builder = new SAXBuilder();
-		Document   jdoc    = builder.build(file);
 
-		return (Element) jdoc.getRootElement().detach();
+		String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
+
+		// detect charset and convert if required
+		if (convert != null && convert.equals("enabled")) { 
+			byte[] content = convertFileToUTF8ByteArray(file);
+			return loadStream(new ByteArrayInputStream(content));
+
+		// no charset detection and conversion allowed
+		} else { 
+			Document   jdoc    = builder.build(file);
+			return (Element) jdoc.getRootElement().detach();
+		}
+
 	}
 
 	//--------------------------------------------------------------------------
 
     /**
-     * Loads an xml file and returns its root node (validates the xml with a dtd).
+     * Reads file into byte array, detects charset and converts from this  
+		 * charset to UTF8
      *
-     * @param data
+     * @param file file to decode and convert to UTF8
+     * @return
+     * @throws IOException
+     * @throws CharacterCodingException
+     */
+
+	public synchronized static byte[] convertFileToUTF8ByteArray(File file) throws IOException, CharacterCodingException {
+			DataInputStream inStream = new DataInputStream(new FileInputStream(file));
+			byte[] buf = new byte[(int)file.length()];
+			int nrRead = inStream.read(buf);
+		
+			UniversalDetector detector = new UniversalDetector(null);
+			detector.handleData(buf, 0, nrRead);
+			detector.dataEnd();
+
+			String encoding = detector.getDetectedCharset();
+			detector.reset();
+			if (encoding != null) {
+				if (!encoding.equals("UTF-8")) {
+					Log.error(Log.JEEVES,"Detected character set "+encoding+", converting to UTF-8");
+					return convertByteArrayToUTF8ByteArray(buf, encoding);
+				}
+			} 
+			return buf;
+	}
+
+	//--------------------------------------------------------------------------
+
+    /**
+     * Decode byte array as specified charset, then convert to UTF-8 
+		 * by encoding as UTF8
+     *
+     * @param buf byte array to decode and convert to UTF8
+     * @param charsetName charset to decode byte array into
+     * @return
+     * @throws CharacterCodingException
+     */
+
+	public synchronized static byte[] convertByteArrayToUTF8ByteArray(byte[] buf, String charsetName) throws CharacterCodingException {
+		Charset cset;
+		cset = Charset.forName(charsetName); // detected character set name
+		CharsetDecoder csetDecoder = cset.newDecoder();
+
+		Charset utf8 = Charset.forName("UTF-8");
+		CharsetEncoder utf8Encoder = utf8.newEncoder();
+
+		ByteBuffer inputBuffer = ByteBuffer.wrap(buf);
+
+		// decode as detected character set
+		CharBuffer data = csetDecoder.decode(inputBuffer);
+
+		// encode as UTF-8
+		ByteBuffer outputBuffer = utf8Encoder.encode(data);
+
+		// remove any nulls from the end of the encoded data why? - this is a 
+		// bug in the encoder???? could also be that the file has characters
+		// from more than one charset?
+		byte[] out = outputBuffer.array();
+		int length = out.length;
+		while (out[length-1] == 0) length--;
+
+		byte[] result = new byte[length];
+		System.arraycopy(out,0,result,0,length);
+
+		// now return the converted bytes
+		return result;
+	}
+
+	//--------------------------------------------------------------------------
+
+    /**
+     * Loads xml from a string and returns its root node 
+		 * (validates the xml if required).
+     *
+     * @param data 
      * @param validate
      * @return
      * @throws IOException
@@ -215,7 +311,8 @@ public final class Xml
 	public static Element loadString(String data, boolean validate)
 												throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder(validate);
+		//SAXBuilder builder = new SAXBuilder(validate);
+		SAXBuilder builder = getSAXBuilder(validate); // oasis catalogs are used
 		Document   jdoc    = builder.build(new StringReader(data));
 
 		return (Element) jdoc.getRootElement().detach();
@@ -224,7 +321,7 @@ public final class Xml
 	//--------------------------------------------------------------------------
 
     /**
-     * Loads an xml stream and returns its root node (validates the xml with a dtd).
+     * Loads xml from an input stream and returns its root node.
      *
      * @param input
      * @return

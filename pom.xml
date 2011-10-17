@@ -228,6 +228,13 @@
         <version>9.1.0.8b</version>
       </dependency>
 
+			<!-- universal character set detector -->
+			<dependency>
+				<groupId>com.googlecode.juniversalchardet</groupId>
+				<artifactId>juniversalchardet</artifactId>
+				<version>1.0.3</version>
+			</dependency>
+
       <!-- Thesaurus stuff -->
       <dependency>
         <groupId>org.openrdf</groupId>
@@ -681,6 +688,13 @@
       <name>GeoNetwork local repository</name>
       <url>file://maven_repo</url>
     </repository>
+
+		<repository>
+			<id>mvnrepository.com</id>
+			<name>Repository that has juniversalchardet</name>
+			<url>http://mvnrepository.com/artifact</url>
+		</repository>
+
 
 	<!-- Mapfish repository -->
     <repository>
