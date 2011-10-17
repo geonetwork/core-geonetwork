@@ -947,7 +947,642 @@ this.fireEvent("close",activeImage)
 },getViewSize:function(){return[Ext.lib.Dom.getViewWidth(),Ext.lib.Dom.getViewHeight()]
 }}
 })();
-Ext.onReady(Ext.ux.Lightbox.init,Ext.ux.Lightbox);Proj4js={defaultDatum:"WGS84",transform:function(source,dest,point){if(!source.readyToUse||!dest.readyToUse){this.reportError("Proj4js initialization for "+source.srsCode+" not yet complete");
+Ext.onReady(Ext.ux.Lightbox.init,Ext.ux.Lightbox);Ext.namespace("Ext.ux.form");
+Ext.ux.form.SuperBoxSelect=function(config){Ext.ux.form.SuperBoxSelect.superclass.constructor.call(this,config);
+this.addEvents("beforeadditem","additem","newitem","beforeremoveitem","removeitem","clear")
+};
+Ext.ux.form.SuperBoxSelect=Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.ComboBox,{addNewDataOnBlur:false,allowAddNewData:false,allowQueryAll:true,backspaceDeletesLastItem:true,classField:null,clearBtnCls:"",clearLastQueryOnEscape:false,clearOnEscape:false,displayFieldTpl:null,extraItemCls:"",extraItemStyle:"",expandBtnCls:"",fixFocusOnTabSelect:true,forceFormValue:true,forceSameValueQuery:false,itemDelimiterKey:Ext.EventObject.ENTER,navigateItemsWithTab:true,pinList:true,preventDuplicates:true,queryFilterRe:"",queryValuesDelimiter:"|",queryValuesIndicator:"valuesqry",removeValuesFromStore:true,renderFieldBtns:true,stackItems:false,styleField:null,supressClearValueRemoveEvents:false,validationEvent:"blur",valueDelimiter:",",initComponent:function(){Ext.apply(this,{items:new Ext.util.MixedCollection(false),usedRecords:new Ext.util.MixedCollection(false),addedRecords:[],remoteLookup:[],hideTrigger:true,grow:false,resizable:false,multiSelectMode:false,preRenderValue:null,filteredQueryData:""});
+if(this.queryFilterRe){if(Ext.isString(this.queryFilterRe)){this.queryFilterRe=new RegExp(this.queryFilterRe)
+}}if(this.transform){this.doTransform()
+}if(this.forceFormValue){this.items.on({add:this.manageNameAttribute,remove:this.manageNameAttribute,clear:this.manageNameAttribute,scope:this})
+}Ext.ux.form.SuperBoxSelect.superclass.initComponent.call(this);
+if(this.mode==="remote"&&this.store){this.store.on("load",this.onStoreLoad,this)
+}},onRender:function(ct,position){var h=this.hiddenName;
+this.hiddenName=null;
+Ext.ux.form.SuperBoxSelect.superclass.onRender.call(this,ct,position);
+this.hiddenName=h;
+this.manageNameAttribute();
+var extraClass=(this.stackItems===true)?"x-superboxselect-stacked":"";
+if(this.renderFieldBtns){extraClass+=" x-superboxselect-display-btns"
+}this.el.removeClass("x-form-text").addClass("x-superboxselect-input-field");
+this.wrapEl=this.el.wrap({tag:"ul"});
+this.outerWrapEl=this.wrapEl.wrap({tag:"div",cls:"x-form-text x-superboxselect "+extraClass});
+this.inputEl=this.el.wrap({tag:"li",cls:"x-superboxselect-input"});
+if(this.renderFieldBtns){this.setupFieldButtons().manageClearBtn()
+}this.setupFormInterception()
+},doTransform:function(){var s=Ext.getDom(this.transform),transformValues=[];
+if(!this.store){this.mode="local";
+var d=[],opts=s.options;
+for(var i=0,len=opts.length;
+i<len;
+i++){var o=opts[i],oe=Ext.get(o),value=oe.getAttributeNS(null,"value")||"",cls=oe.getAttributeNS(null,"className")||"",style=oe.getAttributeNS(null,"style")||"";
+if(o.selected){transformValues.push(value)
+}d.push([value,o.text,cls,typeof(style)==="string"?style:style.cssText])
+}this.store=new Ext.data.SimpleStore({id:0,fields:["value","text","cls","style"],data:d});
+Ext.apply(this,{valueField:"value",displayField:"text",classField:"cls",styleField:"style"})
+}if(transformValues.length){this.value=transformValues.join(",")
+}},setupFieldButtons:function(){this.buttonWrap=this.outerWrapEl.createChild({cls:"x-superboxselect-btns"});
+this.buttonClear=this.buttonWrap.createChild({tag:"div",cls:"x-superboxselect-btn-clear "+this.clearBtnCls});
+if(this.allowQueryAll){this.buttonExpand=this.buttonWrap.createChild({tag:"div",cls:"x-superboxselect-btn-expand "+this.expandBtnCls})
+}this.initButtonEvents();
+return this
+},initButtonEvents:function(){this.buttonClear.addClassOnOver("x-superboxselect-btn-over").on("click",function(e){e.stopEvent();
+if(this.disabled){return
+}this.clearValue();
+this.el.focus()
+},this);
+if(this.allowQueryAll){this.buttonExpand.addClassOnOver("x-superboxselect-btn-over").on("click",function(e){e.stopEvent();
+if(this.disabled){return
+}if(this.isExpanded()){this.multiSelectMode=false
+}else{if(this.pinList){this.multiSelectMode=true
+}}this.onTriggerClick()
+},this)
+}},removeButtonEvents:function(){this.buttonClear.removeAllListeners();
+if(this.allowQueryAll){this.buttonExpand.removeAllListeners()
+}return this
+},clearCurrentFocus:function(){if(this.currentFocus){this.currentFocus.onLnkBlur();
+this.currentFocus=null
+}return this
+},initEvents:function(){var el=this.el;
+el.on({click:this.onClick,focus:this.clearCurrentFocus,blur:this.onBlur,keydown:this.onKeyDownHandler,keyup:this.onKeyUpBuffered,scope:this});
+this.on({collapse:this.onCollapse,expand:this.clearCurrentFocus,scope:this});
+this.wrapEl.on("click",this.onWrapClick,this);
+this.outerWrapEl.on("click",this.onWrapClick,this);
+this.inputEl.focus=function(){el.focus()
+};
+Ext.ux.form.SuperBoxSelect.superclass.initEvents.call(this);
+Ext.apply(this.keyNav,{tab:function(e){if(this.fixFocusOnTabSelect&&this.isExpanded()){e.stopEvent();
+el.blur();
+this.onViewClick(false);
+this.focus(false,10);
+return true
+}this.onViewClick(false);
+if(el.dom.value!==""){this.setRawValue("")
+}return true
+},down:function(e){if(!this.isExpanded()&&!this.currentFocus){if(this.allowQueryAll){this.onTriggerClick()
+}}else{this.inKeyMode=true;
+this.selectNext()
+}},enter:function(){}})
+},onClick:function(){this.clearCurrentFocus();
+this.collapse();
+this.autoSize()
+},beforeBlur:function(){if(this.allowAddNewData&&this.addNewDataOnBlur){var v=this.el.dom.value;
+if(v!==""){this.fireNewItemEvent(v)
+}}Ext.form.ComboBox.superclass.beforeBlur.call(this)
+},onFocus:function(){this.outerWrapEl.addClass(this.focusClass);
+Ext.ux.form.SuperBoxSelect.superclass.onFocus.call(this)
+},onBlur:function(){this.outerWrapEl.removeClass(this.focusClass);
+this.clearCurrentFocus();
+if(this.el.dom.value!==""){this.applyEmptyText();
+this.autoSize()
+}Ext.ux.form.SuperBoxSelect.superclass.onBlur.call(this)
+},onCollapse:function(){this.view.clearSelections();
+this.multiSelectMode=false
+},onWrapClick:function(e){e.stopEvent();
+this.collapse();
+this.el.focus();
+this.clearCurrentFocus()
+},markInvalid:function(msg){var elp,t;
+if(!this.rendered||this.preventMark){return
+}this.outerWrapEl.addClass(this.invalidClass);
+msg=msg||this.invalidText;
+switch(this.msgTarget){case"qtip":Ext.apply(this.el.dom,{qtip:msg,qclass:"x-form-invalid-tip"});
+Ext.apply(this.wrapEl.dom,{qtip:msg,qclass:"x-form-invalid-tip"});
+if(Ext.QuickTips){Ext.QuickTips.enable()
+}break;
+case"title":this.el.dom.title=msg;
+this.wrapEl.dom.title=msg;
+this.outerWrapEl.dom.title=msg;
+break;
+case"under":if(!this.errorEl){elp=this.getErrorCt();
+if(!elp){this.el.dom.title=msg;
+break
+}this.errorEl=elp.createChild({cls:"x-form-invalid-msg"});
+this.errorEl.setWidth(elp.getWidth(true)-20)
+}this.errorEl.update(msg);
+Ext.form.Field.msgFx[this.msgFx].show(this.errorEl,this);
+break;
+case"side":if(!this.errorIcon){elp=this.getErrorCt();
+if(!elp){this.el.dom.title=msg;
+break
+}this.errorIcon=elp.createChild({cls:"x-form-invalid-icon"})
+}this.alignErrorIcon();
+Ext.apply(this.errorIcon.dom,{qtip:msg,qclass:"x-form-invalid-tip"});
+this.errorIcon.show();
+this.on("resize",this.alignErrorIcon,this);
+break;
+default:t=Ext.getDom(this.msgTarget);
+t.innerHTML=msg;
+t.style.display=this.msgDisplay;
+break
+}this.fireEvent("invalid",this,msg)
+},clearInvalid:function(){if(!this.rendered||this.preventMark){return
+}this.outerWrapEl.removeClass(this.invalidClass);
+switch(this.msgTarget){case"qtip":this.el.dom.qtip="";
+this.wrapEl.dom.qtip="";
+break;
+case"title":this.el.dom.title="";
+this.wrapEl.dom.title="";
+this.outerWrapEl.dom.title="";
+break;
+case"under":if(this.errorEl){Ext.form.Field.msgFx[this.msgFx].hide(this.errorEl,this)
+}break;
+case"side":if(this.errorIcon){this.errorIcon.dom.qtip="";
+this.errorIcon.hide();
+this.un("resize",this.alignErrorIcon,this)
+}break;
+default:var t=Ext.getDom(this.msgTarget);
+t.innerHTML="";
+t.style.display="none";
+break
+}this.fireEvent("valid",this)
+},alignErrorIcon:function(){if(this.wrap){this.errorIcon.alignTo(this.wrap,"tl-tr",[Ext.isIE?5:2,3])
+}},expand:function(){if(this.isExpanded()||!this.hasFocus){return
+}if(this.bufferSize){this.doResize(this.bufferSize);
+delete this.bufferSize
+}this.list.alignTo(this.outerWrapEl,this.listAlign).show();
+this.innerList.setOverflow("auto");
+this.mon(Ext.getDoc(),{scope:this,mousewheel:this.collapseIf,mousedown:this.collapseIf});
+this.fireEvent("expand",this)
+},restrictHeight:function(){var inner=this.innerList.dom,st=inner.scrollTop,list=this.list;
+inner.style.height="";
+var pad=list.getFrameWidth("tb")+(this.resizable?this.handleHeight:0)+this.assetHeight,h=Math.max(inner.clientHeight,inner.offsetHeight,inner.scrollHeight),ha=this.getPosition()[1]-Ext.getBody().getScroll().top,hb=Ext.lib.Dom.getViewHeight()-ha-this.getSize().height,space=Math.max(ha,hb,this.minHeight||0)-list.shadowOffset-pad-5;
+h=Math.min(h,space,this.maxHeight);
+this.innerList.setHeight(h);
+list.beginUpdate();
+list.setHeight(h+pad);
+list.alignTo(this.outerWrapEl,this.listAlign);
+list.endUpdate();
+if(this.multiSelectMode){inner.scrollTop=st
+}},validateValue:function(val){if(this.items.getCount()===0){if(this.allowBlank){this.clearInvalid();
+return true
+}else{this.markInvalid(this.blankText);
+return false
+}}this.clearInvalid();
+return true
+},manageNameAttribute:function(){if(this.items.getCount()===0&&this.forceFormValue){this.el.dom.setAttribute("name",this.hiddenName||this.name)
+}else{this.el.dom.removeAttribute("name")
+}},setupFormInterception:function(){var form;
+this.findParentBy(function(p){if(p.getForm){form=p.getForm()
+}});
+if(form){var formGet=form.getValues;
+form.getValues=function(asString){this.el.dom.disabled=true;
+var oldVal=this.el.dom.value;
+this.setRawValue("");
+var vals=formGet.call(form);
+this.el.dom.disabled=false;
+this.setRawValue(oldVal);
+if(this.forceFormValue&&this.items.getCount()===0){vals[this.name]=""
+}return asString?Ext.urlEncode(vals):vals
+}.createDelegate(this)
+}},onResize:function(w,h,rw,rh){var reduce=Ext.isIE6?4:Ext.isIE7?1:Ext.isIE8?1:0;
+if(this.wrapEl){this._width=w;
+this.outerWrapEl.setWidth(w-reduce);
+if(this.renderFieldBtns){reduce+=(this.buttonWrap.getWidth()+20);
+this.wrapEl.setWidth(w-reduce)
+}}Ext.ux.form.SuperBoxSelect.superclass.onResize.call(this,w,h,rw,rh);
+this.autoSize()
+},onEnable:function(){Ext.ux.form.SuperBoxSelect.superclass.onEnable.call(this);
+this.items.each(function(item){item.enable()
+});
+if(this.renderFieldBtns){this.initButtonEvents()
+}},onDisable:function(){Ext.ux.form.SuperBoxSelect.superclass.onDisable.call(this);
+this.items.each(function(item){item.disable()
+});
+if(this.renderFieldBtns){this.removeButtonEvents()
+}},clearValue:function(supressRemoveEvent){Ext.ux.form.SuperBoxSelect.superclass.clearValue.call(this);
+this.preventMultipleRemoveEvents=supressRemoveEvent||this.supressClearValueRemoveEvents||false;
+this.removeAllItems();
+this.preventMultipleRemoveEvents=false;
+this.fireEvent("clear",this);
+return this
+},fireNewItemEvent:function(val){this.view.clearSelections();
+this.collapse();
+this.setRawValue("");
+if(this.queryFilterRe){val=val.replace(this.queryFilterRe,"");
+if(!val){return
+}}this.fireEvent("newitem",this,val,this.filteredQueryData)
+},onKeyUp:function(e){if(this.editable!==false&&(!e.isSpecialKey()||e.getKey()===e.BACKSPACE)&&this.itemDelimiterKey.indexOf!==e.getKey()&&(!e.hasModifier()||e.shiftKey)){this.lastKey=e.getKey();
+this.dqTask.delay(this.queryDelay)
+}},onKeyDownHandler:function(e,t){var toDestroy,nextFocus,idx;
+if(e.getKey()===e.ESC){if(!this.isExpanded()){if(this.el.dom.value!=""&&(this.clearOnEscape||this.clearLastQueryOnEscape)){if(this.clearOnEscape){this.el.dom.value=""
+}if(this.clearLastQueryOnEscape){this.lastQuery=""
+}e.stopEvent()
+}}}if((e.getKey()===e.DELETE||e.getKey()===e.SPACE)&&this.currentFocus){e.stopEvent();
+toDestroy=this.currentFocus;
+this.on("expand",function(){this.collapse()
+},this,{single:true});
+idx=this.items.indexOfKey(this.currentFocus.key);
+this.clearCurrentFocus();
+if(idx<(this.items.getCount()-1)){nextFocus=this.items.itemAt(idx+1)
+}toDestroy.preDestroy(true);
+if(nextFocus){(function(){nextFocus.onLnkFocus();
+this.currentFocus=nextFocus
+}).defer(200,this)
+}return true
+}var val=this.el.dom.value,it,ctrl=e.ctrlKey;
+if(this.itemDelimiterKey===e.getKey()){e.stopEvent();
+if(val!==""){if(ctrl||!this.isExpanded()){this.fireNewItemEvent(val)
+}else{this.onViewClick();
+if(this.unsetDelayCheck){this.delayedCheck=true;
+this.unsetDelayCheck.defer(10,this)
+}}}else{if(!this.isExpanded()){return
+}this.onViewClick();
+if(this.unsetDelayCheck){this.delayedCheck=true;
+this.unsetDelayCheck.defer(10,this)
+}}return true
+}if(val!==""){this.autoSize();
+return
+}if(e.getKey()===e.HOME){e.stopEvent();
+if(this.items.getCount()>0){this.collapse();
+it=this.items.get(0);
+it.el.focus()
+}return true
+}if(e.getKey()===e.BACKSPACE){e.stopEvent();
+if(this.currentFocus){toDestroy=this.currentFocus;
+this.on("expand",function(){this.collapse()
+},this,{single:true});
+idx=this.items.indexOfKey(toDestroy.key);
+this.clearCurrentFocus();
+if(idx<(this.items.getCount()-1)){nextFocus=this.items.itemAt(idx+1)
+}toDestroy.preDestroy(true);
+if(nextFocus){(function(){nextFocus.onLnkFocus();
+this.currentFocus=nextFocus
+}).defer(200,this)
+}return
+}else{it=this.items.get(this.items.getCount()-1);
+if(it){if(this.backspaceDeletesLastItem){this.on("expand",function(){this.collapse()
+},this,{single:true});
+it.preDestroy(true)
+}else{if(this.navigateItemsWithTab){it.onElClick()
+}else{this.on("expand",function(){this.collapse();
+this.currentFocus=it;
+this.currentFocus.onLnkFocus.defer(20,this.currentFocus)
+},this,{single:true})
+}}}return true
+}}if(!e.isNavKeyPress()){this.multiSelectMode=false;
+this.clearCurrentFocus();
+return
+}if(e.getKey()===e.LEFT||(e.getKey()===e.UP&&!this.isExpanded())){e.stopEvent();
+this.collapse();
+it=this.items.get(this.items.getCount()-1);
+if(this.navigateItemsWithTab){if(it){it.focus()
+}}else{if(this.currentFocus){idx=this.items.indexOfKey(this.currentFocus.key);
+this.clearCurrentFocus();
+if(idx!==0){this.currentFocus=this.items.itemAt(idx-1);
+this.currentFocus.onLnkFocus()
+}}else{this.currentFocus=it;
+if(it){it.onLnkFocus()
+}}}return true
+}if(e.getKey()===e.DOWN){if(this.currentFocus){this.collapse();
+e.stopEvent();
+idx=this.items.indexOfKey(this.currentFocus.key);
+if(idx==(this.items.getCount()-1)){this.clearCurrentFocus.defer(10,this)
+}else{this.clearCurrentFocus();
+this.currentFocus=this.items.itemAt(idx+1);
+if(this.currentFocus){this.currentFocus.onLnkFocus()
+}}return true
+}}if(e.getKey()===e.RIGHT){this.collapse();
+it=this.items.itemAt(0);
+if(this.navigateItemsWithTab){if(it){it.focus()
+}}else{if(this.currentFocus){idx=this.items.indexOfKey(this.currentFocus.key);
+this.clearCurrentFocus();
+if(idx<(this.items.getCount()-1)){this.currentFocus=this.items.itemAt(idx+1);
+if(this.currentFocus){this.currentFocus.onLnkFocus()
+}}}else{this.currentFocus=it;
+if(it){it.onLnkFocus()
+}}}}},onKeyUpBuffered:function(e){if(!e.isNavKeyPress()){this.autoSize()
+}},reset:function(){this.killItems();
+Ext.ux.form.SuperBoxSelect.superclass.reset.call(this);
+this.addedRecords=[];
+this.autoSize().setRawValue("")
+},applyEmptyText:function(){this.setRawValue("");
+if(this.items.getCount()>0){this.el.removeClass(this.emptyClass);
+this.setRawValue("");
+return this
+}if(this.rendered&&this.emptyText&&this.getRawValue().length<1){this.setRawValue(this.emptyText);
+this.el.addClass(this.emptyClass)
+}return this
+},removeAllItems:function(){this.items.each(function(item){item.preDestroy(true)
+},this);
+this.manageClearBtn();
+return this
+},killItems:function(){this.items.each(function(item){item.kill()
+},this);
+this.resetStore();
+this.items.clear();
+this.manageClearBtn();
+return this
+},resetStore:function(){this.store.clearFilter();
+if(!this.removeValuesFromStore){return this
+}this.usedRecords.each(function(rec){this.store.add(rec)
+},this);
+this.usedRecords.clear();
+if(!this.store.remoteSort){this.store.sort(this.displayField,"ASC")
+}return this
+},sortStore:function(){var ss=this.store.getSortState();
+if(ss&&ss.field){this.store.sort(ss.field,ss.direction)
+}return this
+},getCaption:function(dataObject){if(typeof this.displayFieldTpl==="string"){this.displayFieldTpl=new Ext.XTemplate(this.displayFieldTpl)
+}var caption,recordData=dataObject instanceof Ext.data.Record?dataObject.data:dataObject;
+if(this.displayFieldTpl){caption=this.displayFieldTpl.apply(recordData)
+}else{if(this.displayField){caption=recordData[this.displayField]
+}}return caption
+},addRecord:function(record){var display=record.data[this.displayField],caption=this.getCaption(record),val=record.data[this.valueField],cls=this.classField?record.data[this.classField]:"",style=this.styleField?record.data[this.styleField]:"";
+if(this.removeValuesFromStore){this.usedRecords.add(val,record);
+this.store.remove(record)
+}this.addItemBox(val,display,caption,cls,style);
+this.fireEvent("additem",this,val,record)
+},createRecord:function(recordData){if(!this.recordConstructor){var recordFields=[{name:this.valueField},{name:this.displayField}];
+if(this.classField){recordFields.push({name:this.classField})
+}if(this.styleField){recordFields.push({name:this.styleField})
+}this.recordConstructor=Ext.data.Record.create(recordFields)
+}return new this.recordConstructor(recordData)
+},addItems:function(newItemObjects){if(Ext.isArray(newItemObjects)){Ext.each(newItemObjects,function(item){this.addItem(item)
+},this)
+}else{this.addItem(newItemObjects)
+}},addNewItem:function(newItemObject){this.addItem(newItemObject,true)
+},addItem:function(newItemObject,forcedAdd){var val=newItemObject[this.valueField];
+if(this.disabled){return false
+}if(this.preventDuplicates&&this.hasValue(val)){return
+}var record=this.findRecord(this.valueField,val);
+if(record){this.addRecord(record);
+return
+}else{if(!this.allowAddNewData){return
+}}if(this.mode==="remote"){this.remoteLookup.push(newItemObject);
+this.doQuery(val,false,false,forcedAdd);
+return
+}var rec=this.createRecord(newItemObject);
+this.store.add(rec);
+this.addRecord(rec);
+return true
+},addItemBox:function(itemVal,itemDisplay,itemCaption,itemClass,itemStyle){var hConfig,parseStyle=function(s){var ret="";
+switch(typeof s){case"function":ret=s.call();
+break;
+case"object":for(var p in s){ret+=p+":"+s[p]+";"
+}break;
+case"string":ret=s+";"
+}return ret
+},itemKey=Ext.id(null,"sbx-item"),box=new Ext.ux.form.SuperBoxSelectItem({owner:this,disabled:this.disabled,renderTo:this.wrapEl,cls:this.extraItemCls+" "+itemClass,style:parseStyle(this.extraItemStyle)+" "+itemStyle,caption:itemCaption,display:itemDisplay,value:itemVal,key:itemKey,listeners:{remove:function(item){if(this.fireEvent("beforeremoveitem",this,item.value)===false){return false
+}this.items.removeKey(item.key);
+if(this.removeValuesFromStore){if(this.usedRecords.containsKey(item.value)){this.store.add(this.usedRecords.get(item.value));
+this.usedRecords.removeKey(item.value);
+this.sortStore();
+if(this.view){this.view.render()
+}}}if(!this.preventMultipleRemoveEvents){this.fireEvent.defer(250,this,["removeitem",this,item.value,this.findInStore(item.value)])
+}},destroy:function(){this.collapse();
+this.autoSize().manageClearBtn().validateValue()
+},scope:this}});
+box.render();
+hConfig={tag:"input",type:"hidden",value:itemVal,name:(this.hiddenName||this.name)};
+if(this.disabled){Ext.apply(hConfig,{disabled:"disabled"})
+}box.hidden=this.el.insertSibling(hConfig,"before");
+this.items.add(itemKey,box);
+this.applyEmptyText().autoSize().manageClearBtn().validateValue()
+},manageClearBtn:function(){if(!this.renderFieldBtns||!this.rendered){return this
+}var cls="x-superboxselect-btn-hide";
+if(this.items.getCount()===0){this.buttonClear.addClass(cls)
+}else{this.buttonClear.removeClass(cls)
+}return this
+},findInStore:function(val){var index=this.store.find(this.valueField,val);
+if(index>-1){return this.store.getAt(index)
+}return false
+},getSelectedRecords:function(){var ret=[];
+if(this.removeValuesFromStore){ret=this.usedRecords.getRange()
+}else{var vals=[];
+this.items.each(function(item){vals.push(item.value)
+});
+Ext.each(vals,function(val){ret.push(this.findInStore(val))
+},this)
+}return ret
+},findSelectedItem:function(el){var ret;
+this.items.each(function(item){if(item.el.dom===el){ret=item;
+return false
+}});
+return ret
+},findSelectedRecord:function(el){var ret,item=this.findSelectedItem(el);
+if(item){ret=this.findSelectedRecordByValue(item.value)
+}return ret
+},findSelectedRecordByValue:function(val){var ret;
+if(this.removeValuesFromStore){this.usedRecords.each(function(rec){if(rec.get(this.valueField)==val){ret=rec;
+return false
+}},this)
+}else{ret=this.findInStore(val)
+}return ret
+},getValue:function(){var ret=[];
+this.items.each(function(item){ret.push(item.value)
+});
+return ret.join(this.valueDelimiter)
+},getCount:function(){return this.items.getCount()
+},getValueEx:function(){var ret=[];
+this.items.each(function(item){var newItem={};
+newItem[this.valueField]=item.value;
+newItem[this.displayField]=item.display;
+if(this.classField){newItem[this.classField]=item.cls||""
+}if(this.styleField){newItem[this.styleField]=item.style||""
+}ret.push(newItem)
+},this);
+return ret
+},initValue:function(){if(Ext.isObject(this.value)||Ext.isArray(this.value)){this.setValueEx(this.value);
+this.originalValue=this.getValue()
+}else{Ext.ux.form.SuperBoxSelect.superclass.initValue.call(this)
+}if(this.mode==="remote"){this.setOriginal=true
+}},addValue:function(value){if(Ext.isEmpty(value)){return
+}var values=value;
+if(!Ext.isArray(value)){value=""+value;
+values=value.split(this.valueDelimiter)
+}Ext.each(values,function(val){var record=this.findRecord(this.valueField,val);
+if(record){this.addRecord(record)
+}else{if(this.mode==="remote"){this.remoteLookup.push(val)
+}}},this);
+if(this.mode==="remote"){var q=this.remoteLookup.join(this.queryValuesDelimiter);
+this.doQuery(q,false,true)
+}},setValue:function(value){if(!this.rendered){this.value=value;
+return
+}this.removeAllItems().resetStore();
+this.remoteLookup=[];
+this.addValue(value)
+},setValueEx:function(data){if(!this.rendered){this.value=data;
+return
+}this.removeAllItems().resetStore();
+if(!Ext.isArray(data)){data=[data]
+}this.remoteLookup=[];
+if(this.allowAddNewData&&this.mode==="remote"){Ext.each(data,function(d){var r=this.findRecord(this.valueField,d[this.valueField])||this.createRecord(d);
+this.addRecord(r)
+},this);
+return
+}Ext.each(data,function(item){this.addItem(item)
+},this)
+},hasValue:function(val){var has=false;
+this.items.each(function(item){if(item.value==val){has=true;
+return false
+}},this);
+return has
+},onSelect:function(record,index){if(this.fireEvent("beforeselect",this,record,index)!==false){var val=record.data[this.valueField];
+if(this.preventDuplicates&&this.hasValue(val)){return
+}this.setRawValue("");
+this.lastSelectionText="";
+if(this.fireEvent("beforeadditem",this,val,record,this.filteredQueryData)!==false){this.addRecord(record)
+}if(this.store.getCount()===0||!this.multiSelectMode){this.collapse()
+}else{this.restrictHeight()
+}}},onDestroy:function(){this.items.purgeListeners();
+this.killItems();
+if(this.allowQueryAll){Ext.destroy(this.buttonExpand)
+}if(this.renderFieldBtns){Ext.destroy(this.buttonClear,this.buttonWrap)
+}Ext.destroy(this.inputEl,this.wrapEl,this.outerWrapEl);
+Ext.ux.form.SuperBoxSelect.superclass.onDestroy.call(this)
+},autoSize:function(){if(!this.rendered){return this
+}if(!this.metrics){this.metrics=Ext.util.TextMetrics.createInstance(this.el)
+}var el=this.el,v=el.dom.value,d=document.createElement("div");
+if(v===""&&this.emptyText&&this.items.getCount()<1){v=this.emptyText
+}d.appendChild(document.createTextNode(v));
+v=d.innerHTML;
+d=null;
+v+="&#160;";
+var w=Math.max(this.metrics.getWidth(v)+24,24);
+if(typeof this._width!="undefined"){w=Math.min(this._width,w)
+}this.el.setWidth(w);
+if(Ext.isIE){this.el.dom.style.top="0"
+}this.fireEvent("autosize",this,w);
+return this
+},shouldQuery:function(q){if(this.lastQuery){var m=q.match("^"+this.lastQuery);
+if(!m||this.store.getCount()){return true
+}else{return(m[0]!==this.lastQuery)
+}}return true
+},doQuery:function(q,forceAll,valuesQuery,forcedAdd){q=Ext.isEmpty(q)?"":q;
+if(this.queryFilterRe){this.filteredQueryData="";
+var m=q.match(this.queryFilterRe);
+if(m&&m.length){this.filteredQueryData=m[0]
+}q=q.replace(this.queryFilterRe,"");
+if(!q&&m){return
+}}var qe={query:q,forceAll:forceAll,combo:this,cancel:false};
+if(this.fireEvent("beforequery",qe)===false||qe.cancel){return false
+}q=qe.query;
+forceAll=qe.forceAll;
+if(forceAll===true||(q.length>=this.minChars)||valuesQuery&&!Ext.isEmpty(q)){if(forcedAdd||this.forceSameValueQuery||this.shouldQuery(q)){this.lastQuery=q;
+if(this.mode=="local"){this.selectedIndex=-1;
+if(forceAll){this.store.clearFilter()
+}else{this.store.filter(this.displayField,q)
+}this.onLoad()
+}else{this.store.baseParams[this.queryParam]=q;
+this.store.baseParams[this.queryValuesIndicator]=valuesQuery;
+this.store.load({params:this.getParams(q)});
+if(!forcedAdd){this.expand()
+}}}else{this.selectedIndex=-1;
+this.onLoad()
+}}},onStoreLoad:function(store,records,options){var q=options.params[this.queryParam]||store.baseParams[this.queryParam]||"",isValuesQuery=options.params[this.queryValuesIndicator]||store.baseParams[this.queryValuesIndicator];
+if(this.removeValuesFromStore){this.store.each(function(record){if(this.usedRecords.containsKey(record.get(this.valueField))){this.store.remove(record)
+}},this)
+}if(isValuesQuery){var params=q.split(this.queryValuesDelimiter);
+Ext.each(params,function(p){this.remoteLookup.remove(p);
+var rec=this.findRecord(this.valueField,p);
+if(rec){this.addRecord(rec)
+}},this);
+if(this.setOriginal){this.setOriginal=false;
+this.originalValue=this.getValue()
+}}if(q!==""&&this.allowAddNewData){Ext.each(this.remoteLookup,function(r){if(typeof r==="object"&&r[this.valueField]===q){this.remoteLookup.remove(r);
+if(records.length&&records[0].get(this.valueField)===q){this.addRecord(records[0]);
+return
+}var rec=this.createRecord(r);
+this.store.add(rec);
+this.addRecord(rec);
+this.addedRecords.push(rec);
+(function(){if(this.isExpanded()){this.collapse()
+}}).defer(10,this);
+return
+}},this)
+}var toAdd=[];
+if(q===""){Ext.each(this.addedRecords,function(rec){if(this.preventDuplicates&&this.usedRecords.containsKey(rec.get(this.valueField))){return
+}toAdd.push(rec)
+},this)
+}else{var re=new RegExp(Ext.escapeRe(q)+".*","i");
+Ext.each(this.addedRecords,function(rec){if(this.preventDuplicates&&this.usedRecords.containsKey(rec.get(this.valueField))){return
+}if(re.test(rec.get(this.displayField))){toAdd.push(rec)
+}},this)
+}this.store.add(toAdd);
+this.sortStore();
+if(this.store.getCount()===0&&this.isExpanded()){this.collapse()
+}}});
+Ext.reg("superboxselect",Ext.ux.form.SuperBoxSelect);
+Ext.ux.form.SuperBoxSelectItem=function(config){Ext.apply(this,config);
+Ext.ux.form.SuperBoxSelectItem.superclass.constructor.call(this)
+};
+Ext.ux.form.SuperBoxSelectItem=Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.Component,{initComponent:function(){Ext.ux.form.SuperBoxSelectItem.superclass.initComponent.call(this)
+},onElClick:function(e){var o=this.owner;
+o.clearCurrentFocus().collapse();
+if(o.navigateItemsWithTab){this.focus()
+}else{o.el.dom.focus();
+var that=this;
+(function(){this.onLnkFocus();
+o.currentFocus=this
+}).defer(10,this)
+}},onLnkClick:function(e){if(e){e.stopEvent()
+}this.preDestroy();
+if(!this.owner.navigateItemsWithTab){this.owner.el.focus()
+}},onLnkFocus:function(){this.el.addClass("x-superboxselect-item-focus");
+this.owner.outerWrapEl.addClass("x-form-focus")
+},onLnkBlur:function(){this.el.removeClass("x-superboxselect-item-focus");
+this.owner.outerWrapEl.removeClass("x-form-focus")
+},enableElListeners:function(){this.el.on("click",this.onElClick,this,{stopEvent:true});
+this.el.addClassOnOver("x-superboxselect-item x-superboxselect-item-hover")
+},enableLnkListeners:function(){this.lnk.on({click:this.onLnkClick,focus:this.onLnkFocus,blur:this.onLnkBlur,scope:this})
+},enableAllListeners:function(){this.enableElListeners();
+this.enableLnkListeners()
+},disableAllListeners:function(){this.el.removeAllListeners();
+this.lnk.un("click",this.onLnkClick,this);
+this.lnk.un("focus",this.onLnkFocus,this);
+this.lnk.un("blur",this.onLnkBlur,this)
+},onRender:function(ct,position){Ext.ux.form.SuperBoxSelectItem.superclass.onRender.call(this,ct,position);
+var el=this.el;
+if(el){el.remove()
+}this.el=el=ct.createChild({tag:"li"},ct.last());
+el.addClass("x-superboxselect-item");
+var btnEl=this.owner.navigateItemsWithTab?(Ext.isSafari?"button":"a"):"span";
+var itemKey=this.key;
+Ext.apply(el,{focus:function(){var c=this.down(btnEl+".x-superboxselect-item-close");
+if(c){c.focus()
+}},preDestroy:function(){this.preDestroy()
+}.createDelegate(this)});
+this.enableElListeners();
+el.update(this.caption);
+var cfg={tag:btnEl,"class":"x-superboxselect-item-close",tabIndex:this.owner.navigateItemsWithTab?"0":"-1"};
+if(btnEl==="a"){cfg.href="#"
+}this.lnk=el.createChild(cfg);
+if(!this.disabled){this.enableLnkListeners()
+}else{this.disableAllListeners()
+}this.on({disable:this.disableAllListeners,enable:this.enableAllListeners,scope:this});
+this.setupKeyMap()
+},setupKeyMap:function(){this.keyMap=new Ext.KeyMap(this.lnk,[{key:[Ext.EventObject.BACKSPACE,Ext.EventObject.DELETE,Ext.EventObject.SPACE],fn:this.preDestroy,scope:this},{key:[Ext.EventObject.RIGHT,Ext.EventObject.DOWN],fn:function(){this.moveFocus("right")
+},scope:this},{key:[Ext.EventObject.LEFT,Ext.EventObject.UP],fn:function(){this.moveFocus("left")
+},scope:this},{key:[Ext.EventObject.HOME],fn:function(){var l=this.owner.items.get(0).el.focus();
+if(l){l.el.focus()
+}},scope:this},{key:[Ext.EventObject.END],fn:function(){this.owner.el.focus()
+},scope:this},{key:Ext.EventObject.ENTER,fn:function(){}}]);
+this.keyMap.stopEvent=true
+},moveFocus:function(dir){var el=this.el[dir=="left"?"prev":"next"]()||this.owner.el;
+el.focus.defer(100,el)
+},preDestroy:function(supressEffect){if(this.fireEvent("remove",this)===false){return
+}var actionDestroy=function(){if(this.owner.navigateItemsWithTab){this.moveFocus("right")
+}this.hidden.remove();
+this.hidden=null;
+this.destroy()
+};
+if(supressEffect){actionDestroy.call(this)
+}else{this.el.hide({duration:0.2,callback:actionDestroy,scope:this})
+}return this
+},kill:function(){this.hidden.remove();
+this.hidden=null;
+this.purgeListeners();
+this.destroy()
+},onDisable:function(){if(this.hidden){this.hidden.dom.setAttribute("disabled","disabled")
+}this.keyMap.disable();
+Ext.ux.form.SuperBoxSelectItem.superclass.onDisable.call(this)
+},onEnable:function(){if(this.hidden){this.hidden.dom.removeAttribute("disabled")
+}this.keyMap.enable();
+Ext.ux.form.SuperBoxSelectItem.superclass.onEnable.call(this)
+},onDestroy:function(){Ext.destroy(this.lnk,this.el);
+Ext.ux.form.SuperBoxSelectItem.superclass.onDestroy.call(this)
+}});Proj4js={defaultDatum:"WGS84",transform:function(source,dest,point){if(!source.readyToUse||!dest.readyToUse){this.reportError("Proj4js initialization for "+source.srsCode+" not yet complete");
 return point
 }if((source.srsProjNumber=="900913"&&dest.datumCode!="WGS84")||(dest.srsProjNumber=="900913"&&source.datumCode!="WGS84")){var wgs84=Proj4js.WGS84;
 this.transform(source,wgs84,point);
@@ -13275,19 +13910,30 @@ catalogue.doAction(catalogue.services.fileDownload+"?"+Ext.Ajax.serializeForm(f)
 })
 }function goSubmit(form_name){document.forms[form_name].submit()
 };Ext.namespace("GeoNetwork.util");
+GeoNetwork.util.INSPIRESearchFormTools={getAnnexField:function(multi){var annexes=[["i","I"],["ii","II"],["iii","III"]],config={id:"inspireannex",name:"E_inspireannex",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("inspireannex"),store:new Ext.data.ArrayStore({id:0,fields:["id","label"],data:annexes}),valueField:"id",displayField:"label"};
+if(multi){Ext.apply(config,{valueDelimiter:" or "});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getRelatedField:function(){var inspirerelated=new Ext.form.Checkbox({hideLabel:true,boxLabel:OpenLayers.i18n("inspirerelated"),tabTip:OpenLayers.i18n("inspirerelatedtt"),name:"O_inspirerelated"});
+return inspirerelated
+},getThemesFieldWithSuggestion:function(services){var inspiretheme=new GeoNetwork.form.OpenSearchSuggestionTextField({hideLabel:false,minChars:1,hideTrigger:false,url:services.opensearchSuggest,field:"inspiretheme",name:"E_inspiretheme",fieldLabel:OpenLayers.i18n("inspiretheme")});
+return inspiretheme
+},getThemesField:function(services,multi){var Keyword,themesStore,inspiretheme;
+Keyword=Ext.data.Record.create([{name:"id"},{name:"value"},{name:"definition"},{name:"uri"}]);
+themesStore=new Ext.data.Store({proxy:new Ext.data.HttpProxy({url:services.searchKeyword,method:"GET"}),baseParams:{pNewSearch:true,pTypeSearch:1,pKeyword:"*",pThesauri:"external.theme.inspire-theme",pMode:"searchBox",maxResults:"35"},reader:new Ext.data.XmlReader({record:"keyword",id:"id"},Keyword),fields:["id","value","definition","uri"],sortInfo:{field:"value"}});
+themesStore.load();
+var config={id:"inspiretheme",name:"E_inspiretheme",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("inspiretheme"),store:themesStore,valueField:"value",displayField:"value"};
+if(multi){Ext.apply(config,{valueDelimiter:" or ",stackItems:true});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getINSPIREFields:function(services,multi){return[this.getAnnexField(multi),this.getThemesField(services,multi),this.getRelatedField()]
+}};Ext.namespace("GeoNetwork.util");
 GeoNetwork.util.SearchFormTools={getSimpleFormFields:function(services,layers,mapOptions,withTypes,activeMapControlExtent,typeCodelist){var fields=[];
 if(services){fields.push(new GeoNetwork.form.OpenSearchSuggestionTextField({hideLabel:true,width:285,minChars:2,loadingText:"...",hideTrigger:true,url:services.opensearchSuggest}))
 }else{fields.push(GeoNetwork.util.SearchFormTools.getFullTextField())
-}if(withTypes){fields.push(GeoNetwork.util.SearchFormTools.getTypesField(typeCodelist))
+}if(withTypes){fields.push(GeoNetwork.util.SearchFormTools.getTypesField(typeCodelist,true))
 }if(layers){fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers,mapOptions,activeMapControlExtent))
 }fields.push(GeoNetwork.util.SearchFormTools.getOptions());
-return fields
-},getINSPIREFields:function(services){var fields=[];
-var annexes=[["i","I"],["ii","II"],["iii","III"]];
-var inspireannex=new Ext.form.ComboBox({id:"inspireannex",name:"E_inspireannex",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("inspireannex"),store:new Ext.data.ArrayStore({id:0,fields:["id","label"],data:annexes}),valueField:"id",displayField:"label"});
-var inspiretheme=new GeoNetwork.form.OpenSearchSuggestionTextField({hideLabel:false,minChars:1,hideTrigger:false,url:services.opensearchSuggest,field:"inspiretheme",name:"E_inspiretheme",fieldLabel:OpenLayers.i18n("inspiretheme")});
-var inspirerelated=new Ext.form.Checkbox({hideLabel:true,boxLabel:OpenLayers.i18n("inspirerelated"),tabTip:OpenLayers.i18n("inspirerelatedtt"),name:"O_inspirerelated"});
-fields.push(inspireannex,inspiretheme,inspirerelated);
 return fields
 },getAdvancedFormFields:function(services,layers,mapOptions){var fields=[],fullTextField,themekeyField,orgNameField;
 if(services){fullTextField=new GeoNetwork.form.OpenSearchSuggestionTextField({hideLabel:true,width:285,minChars:2,loadingText:"...",hideTrigger:true,url:services.opensearchSuggest});
@@ -13316,7 +13962,7 @@ var when=new Ext.form.FieldSet({title:OpenLayers.i18n("when"),autoWidth:true,def
 var catalogueField=GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources,services.logoUrl);
 var groupField=GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups);
 var metadataTypeField=GeoNetwork.util.SearchFormTools.getMetadataTypeField();
-var categoryField=GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories);
+var categoryField=GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories,null,true);
 var options=GeoNetwork.util.SearchFormTools.getOptions();
 fields.push(fullTextField,advancedTextField,titleField,abstractField,themekeyField,orgNameField,geoFields,types,mapTypes,denominatorField,when,catalogueField,groupField,metadataTypeField,categoryField,options,accuracySettings);
 return fields
@@ -13347,17 +13993,31 @@ return[sortByField,sortOrderField,combo]
 },getKeywordsField:function(){return GeoNetwork.util.SearchFormTools.getTextField("E_themekey",OpenLayers.i18n("keyword"))
 },getOrgNameField:function(){return GeoNetwork.util.SearchFormTools.getTextField("E_orgName",OpenLayers.i18n("org"))
 },getTextField:function(name,fieldLabel){return new Ext.form.TextField({name:name,fieldLabel:fieldLabel,hideLabel:false})
-},getCatalogueField:function(url,logoUrl){var catStore=GeoNetwork.data.CatalogueSourceStore(url);
+},getCatalogueField:function(url,logoUrl,multi){var catStore=GeoNetwork.data.CatalogueSourceStore(url),tpl='<tpl for="."><div class="x-combo-list-item logo"><img src="'+logoUrl+'{id}.gif"/>{name}</div></tpl>';
 catStore.load();
-return new Ext.form.ComboBox({name:"E_siteId",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("catalogue"),store:catStore,valueField:"id",displayField:"name",tpl:'<tpl for="."><div class="x-combo-list-item logo"><img src="'+logoUrl+'{id}.gif"/>{name}</div></tpl>'})
-},getGroupField:function(url){var groupStore=GeoNetwork.data.GroupStore(url);
+var config={name:"E_siteId",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("catalogue"),store:catStore,valueField:"id",displayField:"name",tpl:tpl};
+if(multi){Ext.apply(config,{valueDelimiter:" or ",stackItems:true,displayFieldTpl:'<img style="max-width:16px;" src="'+logoUrl+'{id}.gif"/>{name}'});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getGroupField:function(url,multi){var groupStore=GeoNetwork.data.GroupStore(url),tpl='<tpl for="."><div class="x-combo-list-item">{[values.label.'+OpenLayers.Lang.getCode()+"]}</div></tpl>";
 groupStore.load();
-return new Ext.form.ComboBox({name:"E_group",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("group"),store:groupStore,valueField:"id",displayField:"name",tpl:'<tpl for="."><div class="x-combo-list-item">{[values.label.'+OpenLayers.Lang.getCode()+"]}</div></tpl>"})
-},getMetadataTypeField:function(){return new Ext.form.ComboBox({name:"E_template",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("kind"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:[["n",OpenLayers.i18n("md")],["y",OpenLayers.i18n("tpl")]]}),valueField:"id",displayField:"name"})
-},getCategoryField:function(url,imgUrl){var store=GeoNetwork.data.CategoryStore(url);
+var config={name:"E_group",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("group"),store:groupStore,valueField:"id",displayField:"name",tpl:tpl};
+if(multi){Ext.apply(config,{valueDelimiter:" or ",stackItems:true,displayFieldTpl:"{[values.label."+OpenLayers.Lang.getCode()+"]}"});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getMetadataTypeField:function(multi){var config={name:"E_template",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("kind"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:[["n",OpenLayers.i18n("md")],["y",OpenLayers.i18n("tpl")]]}),valueField:"id",displayField:"name"};
+if(multi){Ext.apply(config,{valueDelimiter:" or "});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getCategoryField:function(url,imgUrl,multi){var store=GeoNetwork.data.CategoryStore(url);
 store.load();
-return new Ext.form.ComboBox({name:"E_category",mode:"local",fieldLabel:OpenLayers.i18n("category"),triggerAction:"all",store:store,valueField:"name",displayField:"name",tpl:(imgUrl?'<tpl for="."><div class="x-combo-list-item"><img src="'+imgUrl+'{name}.png"/>{[values.label.'+OpenLayers.Lang.getCode()+"]}</div></tpl>":'<tpl for="."><div class="x-combo-list-item">{[values.label.'+OpenLayers.Lang.getCode()+"]}</div></tpl>")})
-},getAdvancedTextFields:function(){return{xtype:"fieldset",title:OpenLayers.i18n("advTextSearch"),autoHeight:true,autoWidth:true,collapsible:true,collapsed:true,defaultType:"textfield",items:[{name:"E_or",fieldLabel:OpenLayers.i18n("eitherWords"),hideLabel:false},{name:"E_phrase",fieldLabel:OpenLayers.i18n("exactPhrase"),hideLabel:false},{name:"E_all",fieldLabel:OpenLayers.i18n("allWords"),hideLabel:false},{name:"E_without",fieldLabel:OpenLayers.i18n("withoutWords"),hideLabel:false}]}
+var tpl=(imgUrl?'<tpl for="."><div class="x-combo-list-item"><img src="'+imgUrl+'{name}.png"/>{[values.label.'+OpenLayers.Lang.getCode()+"]}</div></tpl>":'<tpl for="."><div class="x-combo-list-item">{[values.label.'+OpenLayers.Lang.getCode()+"]}</div></tpl>");
+var config={name:"E_category",mode:"local",fieldLabel:OpenLayers.i18n("category"),triggerAction:"all",store:store,valueField:"name",displayField:"name",tpl:tpl};
+if(multi){var displaytpl=(imgUrl?'<img src="'+imgUrl+'{name}.png"/>{[values.label.'+OpenLayers.Lang.getCode()+"]}":"{[values.label."+OpenLayers.Lang.getCode()+"]}");
+Ext.apply(config,{valueDelimiter:" or ",stackItems:true,displayFieldTpl:displaytpl});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getAdvancedTextFields:function(){return{xtype:"fieldset",title:OpenLayers.i18n("advTextSearch"),autoHeight:true,autoWidth:true,collapsible:true,collapsed:true,defaultType:"textfield",items:[{name:"E_or",fieldLabel:OpenLayers.i18n("eitherWords"),hideLabel:false},{name:"E_phrase",fieldLabel:OpenLayers.i18n("exactPhrase"),hideLabel:false},{name:"E_all",fieldLabel:OpenLayers.i18n("allWords"),hideLabel:false},{name:"E_without",fieldLabel:OpenLayers.i18n("withoutWords"),hideLabel:false}]}
 },getSimilarityField:function(){return{xtype:"radiogroup",items:[{xtype:"label",text:OpenLayers.i18n("precise")},{name:"E_similarity",inputValue:1},{name:"E_similarity",inputValue:0.8,checked:true},{name:"E_similarity",inputValue:0.6},{name:"E_similarity",inputValue:0.4},{name:"E_similarity",inputValue:0.2},{xtype:"label",text:OpenLayers.i18n("imprecise")}]}
 },getRelationField:function(){return new Ext.form.ComboBox({name:"E_relation",mode:"local",width:150,triggerAction:"all",fieldLabel:OpenLayers.i18n("relationType"),store:new Ext.data.ArrayStore({id:0,fields:["relation","label"],data:[["",""],["intersection",OpenLayers.i18n("intersection")],["overlaps",OpenLayers.i18n("overlaps")],["encloses",OpenLayers.i18n("encloses")],["fullyOutsideOf",OpenLayers.i18n("fullyOutsideOf")],["crosses",OpenLayers.i18n("crosses")],["touches",OpenLayers.i18n("touches")],["within",OpenLayers.i18n("within")]]}),valueField:"relation",displayField:"label"})
 },getNearYouButton:function(geomFieldId){return new Ext.Button({text:OpenLayers.i18n("nearYou"),iconCls:"md-mn mn-user-location",iconAlign:"right",listeners:{click:function(){if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(position){Ext.getCmp(geomFieldId).setValue("POINT("+position.coords.latitude+" "+position.coords.longitude+")")
@@ -13407,17 +14067,21 @@ if(!checked){denominatorFrom.setValue("");
 denominatorTo.setValue("")
 }}});
 return[denominatorFrom,denominatorTo,scaleCk,slider]
-},getMapTypesField:function(){var spatialTypes=GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField();
+},getMapTypesField:function(){var spatialTypes=GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField(null,true);
 return[{hideLabel:true,boxLabel:OpenLayers.i18n("digital"),name:"B_digital"},{hideLabel:true,boxLabel:OpenLayers.i18n("hardCopy"),name:"B_paper"},{hideLabel:true,boxLabel:OpenLayers.i18n("downloadable"),name:"B_download"},{hideLabel:true,boxLabel:OpenLayers.i18n("interactive"),name:"B_dynamic"},spatialTypes]
-},getValidField:function(){var metadataType=new Ext.form.ComboBox({name:"E__valid",mode:"local",autoSelect:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("validationStatus"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:[["1",OpenLayers.i18n("valid")],["0",OpenLayers.i18n("notValid")],["-1",OpenLayers.i18n("notDetermined")]]}),valueField:"id",displayField:"name"});
-return metadataType
-},getTypesField:function(codeList){var defaultCodeList=[["dataset",OpenLayers.i18n("dataset")],["series",OpenLayers.i18n("series")],["service",OpenLayers.i18n("service")]];
-var metadataType=new Ext.form.ComboBox({name:"E_type",mode:"local",autoSelect:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("resourceType"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:codeList||defaultCodeList}),valueField:"id",displayField:"name"});
-return metadataType
-},getSpatialRepresentationTypeField:function(codeList){var defaultCodeList=[["grid",OpenLayers.i18n("grid")],["stereoModel",OpenLayers.i18n("stereoModel")],["tin",OpenLayers.i18n("tin")],["textTabled",OpenLayers.i18n("textTable")],["vector",OpenLayers.i18n("vector")],["video",OpenLayers.i18n("video")]];
-var spatialRepresentationType=new Ext.form.ComboBox({name:"E_spatialRepresentationType",mode:"local",autoSelect:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("spatialRepType"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:codeList||defaultCodeList}),valueField:"id",displayField:"name"});
-return spatialRepresentationType
-}};Ext.namespace("GeoNetwork.util");
+},getValidField:function(multi){var config={name:"E__valid",mode:"local",autoSelect:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("validationStatus"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:[["1",OpenLayers.i18n("valid")],["0",OpenLayers.i18n("notValid")],["-1",OpenLayers.i18n("notDetermined")]]}),valueField:"id",displayField:"name"};
+if(multi){Ext.apply(config,{valueDelimiter:" or "});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getTypesField:function(codeList,multi){var defaultCodeList=[["dataset",OpenLayers.i18n("dataset")],["series",OpenLayers.i18n("series")],["service",OpenLayers.i18n("service")]],config={name:"E_type",mode:"local",autoSelect:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("resourceType"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:codeList||defaultCodeList}),valueField:"id",displayField:"name"};
+if(multi){Ext.apply(config,{valueDelimiter:" or "});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}},getSpatialRepresentationTypeField:function(codeList,multi){var defaultCodeList=[["grid",OpenLayers.i18n("grid")],["stereoModel",OpenLayers.i18n("stereoModel")],["tin",OpenLayers.i18n("tin")],["textTabled",OpenLayers.i18n("textTable")],["vector",OpenLayers.i18n("vector")],["video",OpenLayers.i18n("video")]],config={name:"E_spatialRepresentationType",mode:"local",autoSelect:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("spatialRepType"),store:new Ext.data.ArrayStore({id:0,fields:["id","name"],data:codeList||defaultCodeList}),valueField:"id",displayField:"name"};
+if(multi){Ext.apply(config,{valueDelimiter:" or "});
+return new Ext.ux.form.SuperBoxSelect(config)
+}else{return new Ext.form.ComboBox(config)
+}}};Ext.namespace("GeoNetwork.util");
 GeoNetwork.util.CSWSearchTools={cswMethod:"POST",resultsMode:"results_with_summary",sortBy:"",maxRecords:"50",doCSWQueryFromForm:function(formId,cat,recordNum,onSuccess,onFailure,addFilters){var url=cat.services.csw;
 var query=GeoNetwork.util.CSWSearchTools.buildCSWQueryFromForm(GeoNetwork.util.CSWSearchTools.cswMethod,Ext.getCmp(formId),recordNum,GeoNetwork.util.CSWSearchTools.sortBy,addFilters);
 if(GeoNetwork.util.CSWSearchTools.cswMethod==="POST"){var getQuery=GeoNetwork.util.CSWSearchTools.buildCSWQueryFromForm("GET",Ext.getCmp(formId),recordNum,GeoNetwork.util.CSWSearchTools.sortBy,addFilters);
@@ -13892,9 +14556,9 @@ this.focus()
 Ext.reg("gn_searchfield",GeoNetwork.form.SearchField);Ext.namespace("GeoNetwork","GeoNetwork.Lang");
 GeoNetwork.Lang.de={featureInfoTooltipTitle:"Feature info",featureInfoTooltipText:"Click in the map to get feature info from all visible layers.",zoomToMaxExtentTooltipTitle:"Full extent",zoomToMaxExtentTooltipText:"Use this button to go to the full extent of the map.",zoominTooltipTitle:"Zoom in",zoominTooltipText:"Draw a box in the map to zoom in. You can also click in the map and map will zoom in by a factor of 2.",zoomoutTooltipTitle:"Zoom out",zoomoutTooltipText:"Click in the map or draw a box to zoom out.",dragTooltipTitle:"Pan map",dragTooltipText:"Press the left mouse button to drag the map.",previousTooltipTitle:"Previous map extent",previosTooltipText:"Click this button to go back to the previous map extent",nextTooltipTitle:"Next map extent",nextTooltipText:"Click this button to go to the next map extent",featureInfoTitle:"Feature info",layerManagerTabTitle:"Layer management",legendTabTitle:"Legend",scaleTitle:"Scale",xTitle:"X",yTitle:"Y",projectionTitle:"Projection",FeatureInfoNotQueryable:"There is no queryable map layer",WMSBrowserTab1:"Select",WMSBrowserTab3:"External",WMSBrowserPreviewTitle:"Preview layer",WMSBrowserAddButton:"Add",WMSBrowserDuplicateMsg:"Layer is already in the map",WMSBrowserPreviewWaitMsg:"Retrieving preview image",WMSBrowserConnectButton:"Connect",WMSBrowserConnectError:"There was an error connecting to the Web Map Service, please check the URL.",infoTitle:"Information","mf.print.mapTitle":"Title","mf.print.comment":"Comment","mf.print.dpi":"Resolution","mf.print.scale":"Scale","mf.print.rotation":"Angle","mf.print.resetPos":"Reset","mf.print.print":"Print","mf.print.generatingPDF":"Generating PDF","mf.print.unableToPrint":"It was not posible to print, try later","mf.error":"Error",selectExtentTooltipTitle:"Select extent",selectExtentTooltipText:"Select extent for catalog searches",printTooltipTitle:"Print",printTooltipText:"Print the current map",savewmcTooltipTitle:"Save web map context",savewmcTooltipText:"Saves web map context for current map","saveWMCFile.windowTitle":"Save Web Map Context","saveWMCFile.errorSaveWMC":"Could not save Web Map Context",loadwmcTooltipTitle:"Load web map context",loadwmcTooltipText:"Loads web map context in current map","selectWMCFile.windowTitle":"Load Web Map Context",selectWMCFile:"Select Web Map Context file","selectWMCFile.waitLoadingWMC":"Loading Web Map Context","selectWMCFile.loadButtonText":"Load","selectWMCFile.mergeButtonText":"Merge","selectWMCFile.errorLoadingWMC":"Could not load Web Map Context",opacityButtonText:"Opacity",opacityWindowTitle:"Opacity",metadataButtonText:"Metadata",removeButtonText:"Remove",addWMSButtonText:"Add WMS",addWMSWindowTitle:"Add WMS","layerInfoPanel.windowTitle":"Layer metadata","layerInfoPanel.titleField":"Title","layerInfoPanel.descriptionField":"Description","layerInfoPanel.queryableField":"Queryable",layerList:"Layer list",baseLayerList:"Base layers","metadataResults.buttonText":"Metadata results","metadataResults.tooltipTitle":"Metadata results","metadataResults.tooltipText":"Go to metadata results page","metadataResults.alertTitle":"Metadata results","metadataResults.alertText":"No metadata results to show","mf.information":"Print","mf.print.pdfReady":"PDF ready","loadLayer.loadingMessage":"Loading layer","loadLayer.error.title":"Load layer","loadLayer.error.message":"The layer could not be loaded","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Loading...","disclaimer.buttonClose":"Close",gazetteerAddressField1Label:"Postcode",gazetteerAddressField2Label:"Straat",gazetteerAddressField3Label:"Plaats",gazetteerAddressField4Label:"Gemeente",gazetteerAddressField5Label:"Huisnummer",searchOptionButton:"Zoek",GazetteerWindowTitle:"Zoek adres",searchResults:"Zoekresultaten",errorTitle:"Fout",SearchOptionLoadFailureMsg:"Het is niet gelukt resultaten op te halen.\nMogelijk is de service tijdelijk niet beschikbaar. \n",gazetteerTooltipTitle:"Zoek op basis van een adres",gazetteerTooltipText:"Zoek een locatie op basis van een postcode, straatnaam, gemeente en/of plaats.",SearchOptionNoResults:"No results found",zoomlayerTooltipTitle:"Zoom auf Layer",zoomlayerTooltipText:"Verwenden Sie diese Taste, um das ganze Ausma� der ausgew�hlten Layer.","zoomlayer.selectLayerTitle":"Zoom auf Layer","zoomlayer.selectLayerText":"No layer selected",layerStylesWindowTitle:"Layer styles",layerStylesPreviewTitle:"Preview legend",selectStyleButton:"Select style",WMSTimeWindowTitle:"WMS Time",WMSTimePositionTitle:"Time position",WMSTimeMovieTitle:"Animation",wmsTimeUpdateButtonText:"Apply",WMSTimeAnimationCheckbox:"Play a movie loop spanning the last ${steps} time positions"};
 OpenLayers.Util.extend(OpenLayers.Lang.de,GeoNetwork.Lang.de);Ext.namespace("GeoNetwork","GeoNetwork.lang");
-GeoNetwork.lang.en={connectIssue:"Catalogue connection issue",connectIssueMsg:"Error 404. Can't connect to catalogue at url ",featureInfoTooltipTitle:"Feature info",featureInfoTooltipText:"Click in the map to get feature info from all visible layers.",zoomToMaxExtentTooltipTitle:"Full extent",zoomToMaxExtentTooltipText:"Use this button to go to the full extent of the map.",zoominTooltipTitle:"Zoom in",zoominTooltipText:"Draw a box in the map to zoom in. You can also click in the map and map will zoom in by a factor of 2.",zoomoutTooltipTitle:"Zoom out",zoomoutTooltipText:"Click in the map or draw a box to zoom out.",dragTooltipTitle:"Pan map",dragTooltipText:"Press the left mouse button to drag the map.",previousTooltipTitle:"Previous map extent",previosTooltipText:"Click this button to go back to the previous map extent",nextTooltipTitle:"Next map extent",nextTooltipText:"Click this button to go to the next map extent",featureInfoTitle:"Feature info",layerManagerTabTitle:"Layer management",legendTabTitle:"Legend",scaleTitle:"Scale",xTitle:"X",yTitle:"Y",projectionTitle:"Projection",FeatureInfoNotQueryable:"There is no queryable map layer",WMSBrowserTab1:"Select",WMSBrowserTab3:"External",WMSBrowserPreviewTitle:"Preview layer",WMSBrowserAddButton:"Add",WMSBrowserDuplicateMsg:"Layer is already in the map",WMSBrowserPreviewWaitMsg:"Retrieving preview image",WMSBrowserConnectButton:"Connect",WMSBrowserConnectError:"There was an error connecting to the Web Map Service, please check the URL.",infoTitle:"Information","mf.print.mapTitle":"Title","mf.print.comment":"Comment","mf.print.dpi":"Resolution","mf.print.scale":"Scale","mf.print.rotation":"Angle","mf.print.resetPos":"Reset","mf.print.print":"Print","mf.print.generatingPDF":"Generating PDF","mf.print.unableToPrint":"It was not possible to print, try later","mf.error":"Error",selectExtentTooltipTitle:"Select extent",selectExtentTooltipText:"Select extent for catalog searches",clearExtentTooltipTitle:"Remove extent",clearExtentTooltipText:"Remove extent (ie. no spatial criteria)",printTooltipTitle:"Print",printTooltipText:"Print the current map",savewmcTooltipTitle:"Save web map context",savewmcTooltipText:"Saves web map context for current map","saveWMCFile.windowTitle":"Save Web Map Context","saveWMCFile.errorSaveWMC":"Could not save Web Map Context",loadwmcTooltipTitle:"Load web map context",loadwmcTooltipText:"Loads web map context in current map","selectWMCFile.windowTitle":"Load Web Map Context",selectWMCFile:"Select Web Map Context file","selectWMCFile.waitLoadingWMC":"Loading Web Map Context","selectWMCFile.loadButtonText":"Load","selectWMCFile.mergeButtonText":"Merge","selectWMCFile.errorLoadingWMC":"Could not load Web Map Context",opacityButtonText:"Opacity",opacityWindowTitle:"Opacity",metadataButtonText:"Metadata",removeButtonText:"Remove",addWMSButtonText:"Add WMS",addWMSWindowTitle:"Add layer from a WMS service","layerInfoPanel.windowTitle":"Layer metadata","layerInfoPanel.titleField":"Title","layerInfoPanel.descriptionField":"Description","layerInfoPanel.queryableField":"Queryable",layerList:"Layer list",baseLayerList:"Base layers","metadataResults.buttonText":"Metadata results","metadataResults.tooltipTitle":"Metadata results","metadataResults.tooltipText":"Go to metadata results page","metadataResults.alertTitle":"Metadata results","metadataResults.alertText":"No metadata results to show","featureInfoWindow.windowTitle":"Feature info","mf.information":"Print","mf.print.pdfReady":"PDF ready","loadLayer.loadingMessage":"Loading layer","loadLayer.error.title":"Load layer","loadLayer.error.message":"The layer could not be loaded","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Loading...","disclaimer.buttonClose":"Close",gazetteerAddressField1Label:"Postcode",gazetteerAddressField2Label:"Street",gazetteerAddressField3Label:"Place",gazetteerAddressField4Label:"'Gemeente'",gazetteerAddressField5Label:"House number",searchOptionButton:"Search",resetSearchForm:"Reset search form values.",GazetteerWindowTitle:"Search for address",searchResults:"Search results",errorTitle:"Error",SearchOptionLoadFailureMsg:"No results available. \n The service may be unavailable. \n",gazetteerTooltipTitle:"Search based on an address",gazetteerTooltipText:"Search for a location, based on postcode, street name, 'gemeente' or place.",SearchOptionNoResults:"No results found",zoomlayerTooltipTitle:"Zoom to layer",zoomlayerTooltipText:"Use this button to go to the full extent of the selected layer.","zoomlayer.selectLayerTitle":"Zoom to layer","zoomlayer.selectLayerText":"No layer selected",layerStylesWindowTitle:"Layer styles",layerStylesPreviewTitle:"Preview legend",selectStyleButton:"Select style",WMSTimeWindowTitle:"WMS Time",WMSTimePositionTitle:"Pick a time position",WMSTimeMovieTitle:"Play animation",wmsTimeUpdateButtonText:"Apply",WMSTimeAnimationCheckbox:"Play a movie loop spanning the last ${steps} time positions",fullTextSearch:"Full text search",keyword:"Keyword",org:"Organisation",mapTypes:"Map types",inspireSearchOptions:"INSPIRE criteria",inspireannex:"INSPIRE annex",inspirerelated:"Related to INSPIRE",inspirerelatedtt:"INSPIRE dataset with report on the conformity regarding the data specification",inspiretheme:"INSPIRE theme",similarity:"Search accuracy",wkt:"WKT geometry",spatialSearch:"Spatial criteria",mdChangeDate:"Metadata change date",tempExtent:"Temporal extent",hitsPerPage:"Hits per page",sortBy:"Sort by",relevance:"Relevance",title:"Title",changeDate:"Change date",rating:"Rating",popularity:"Popularity",scaleDesc:"Scale (desc)",scaleAsc:"Scale (asc)","abstract":"Abstract",catalogue:"Catalogue",group:"Group",chooseGroup:"Select a group",md:"Metadata",tpl:"Template",category:"Category",advTextSearch:"Advanced text search options",eitherWords:"Either of the words",exactPhrase:"Exact phrase",allWords:"All of the words",withoutWords:"Without the words",precise:"Precise",imprecise:"Imprecise",relationType:"Relation type",within:"within",touches:"touches",crosses:"crosses",fullyOutsideOf:"fullyOutsideOf",encloses:"encloses",overlaps:"overlaps",intersection:"intersection",nearYou:"Near you",from:"From",to:"To",scaleNominator:"1:",scale:"Scale",digital:"Digital",hardCopy:"Hard copy",download:"Download",downloadable:"Download",interactive:"Interactive",resourceType:"Resource type",dataset:"Dataset",series:"Series",service:"Service",spatialRepType:"Spatial representation",video:"Video",vector:"Vector",textTable:"Text, table",tin:"Tin",stereoModel:"Stereo model",grid:"Grid",kind:"Kind",enterGetCapURL:"Enter a GetCapabilities URL to register a new service.",edit:"Edit",duplicate:"Duplicate","delete":"Delete",createChild:"Create child",privileges:"Privileges",categories:"Categories",otherActions:"Other actions",view:"View",zoomTo:"Zoom to",saveXml:"Save as XML",exportCsv:"Export (CSV)",exportZip:"Export (ZIP)",printSel:"Print",newOwner:"New owner",updateCategories:"Update categories",updatePrivileges:"Update privileges",noneSelected:"None selected",none:"none",all:"all",allInPage:"all in page",select:"Select ",username:"User name",password:"password",login:"Login",logout:"Logout",administration:"Administration",validationReport:"Validation report",status:"Status",items:"items",item:"item",thumbnails:"Thumbnails",noimages:"No images to display",add:"Add",small:"Small",large:"Large",selectImage:"Select an image",selectFile:"Select a file",image:"Image",uploading:"Uploading ...",upload:"Upload",success:"Success",failure:"Failure",error:"Error",save:"Save",reset:"Reset",fileProcessedMsg:"Processed file ${res} on the server",suggestion:"Suggestion",logoSelect:"Select a logo",relatedResources:"Related resources",createLink:"Create links ...",featureCat:"Feature catalogue",serviceMd:"Service metadata",datasetMd:"Dataset metadata",parentMd:"Parent metadata",updateChildren:"Update children",records:"records",record:"record",help:"Help",publishError:"Publication failed.",outOfMemoryError:"Out of memory error.",publishErrorCode:"Error code:",saveAndCheck:"Save and check",saveAndClose:"Save and close",cancel:"Cancel",layout:"Layout",collapseAll:"Collapse all",chooseAType:"Choose a type",chooseAView:"Choose a view",viewMode:"View mode",errorAndStatusMsg:"Error. Status: ${status}, text: ${text}. Try again.",mdEditor:"Metadata editor",editing:"Editing ${title} (${uuid})",GetCapabilitiesDocumentError:"Error loading service GetCapabilities document from URL: ",maxResults:"Number of results",mdTitle:"Metadata title",keywords:"Keywords",createRelation:"Create relation",createIfNotExistButton:"Create a new metadata record",getCapabilitiesLayer:"GetCapabilities layer",layerName:"Layer name",searching:"Searching ...",perThesaurus:" per thesaurus",anyThesaurus:"Any thesaurus",selectedKeywords:"Selected keywords",foundKeywords:"Available keywords",clear:"Clear",publish:"Publish",publishTooltip:"Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.",publishSuccess:"Successful publication.",publishLayerAdded:" Layer added to map preview.",unpublish:"Unpublish",unpublishTooltip:"Remove current dataset from remote node.",unpublishSuccess:"Successful unpublication.",unpublishError:"Unpublication failed. ",check:"Check",errorDatasetNotFound:"Dataset not found.",datasetFound:"Dataset found and added to the map preview.",checkFailure:"Failed to check dataset in remote node.",addOnlineSourceTitle:"Link service to metadata",addOnlineSource:"Add links",addOnlineSourceTT:"Add an onlinesource section to the current metadata record pointing to the WMS/WFS/WCS services. If the service is a WMS, the layer could be displayed in the map viewer.",statusInformation:"Status information.",publishing:"Publishing ...",mapPreview:"Map preview",selectANode:"Select a node ...",geoPublisherWindowTitle:"Geo-publication: ",keywordSelectionWindowTitle:"Keywords selection",crsSelectionWindowTitle:"Coordinate reference system selection",linkedMetadataSelectionWindowTitle:"Related metadata selection",NotOwnerError:"You don't have privileges to update this related record.",ServiceUpdateError:"Error during service metadata update",associateService:"Link service metadata",associateDataset:"Link dataset metadata",logoSelectionWindow:"Choose a logo",fileUploadWindow:"Upload data or document",selectedCRS:"Selected coordinate systems",foundCRS:"Available coordinate systems",search:"Search",restrictSearchToMap:"Restrict search to map extent",selected:"selected",selectRegion:"Select a region ...",drawRectangle:"Draw rectangle",drawPolygon:"Draw polygon",drawCircle:"Draw circle",discovery:"Discovery",visualization:"Visualization",when:"When ?",anyTime:"Anytime",onSelection:"On selection",adminAction:"Other",newMetadata:"New metadata",chooseTemplate:"Select a template",process:"Process",suggestions:"Suggestions",applySelected:"Apply selected task",processParametersWindow:"Task parameters",noSuggestion:"No suggestion.",thumbnailUploadWindow:"Upload thumbnail",addThumbnail:"Add",createSmall:"Create small thumbnail",scalingFactor:"Scaling factor",smallScalingFactor:"Small scaling factor",type:"Record type",clickToClose:"Click to close",removeSelected:"Remove selected",ownerName:"Metadata record owner",setPrivileges:"Set privileges",setCategories:"Set categories",massiveOp:"Batch operation ",prepareDownload:"Download files",mdMenu:"Actions",deleteRecord:"Delete metadata record ?",deleteConfirm:"Are you sure to delete this metadata record?",deleteRecordSuccess:"Metadata deleted.",deleteRecordFailure:"Error when deleting metadata record.",advancedSearchOptions:"Advanced criteria",relatedservices:"Related service",relatedchildren:"Children",getMEF:"Export (ZIP)",metadataCategories:"Metadata categories",validityInfo:"Validation status: ",lastUpdate:"Last update: ",importMetadata:"Import metadata",validationStatus:"Validation status",valid:"Valid",notValid:"Not valid",notDetermined:"Not determined",addToMap:"Add to map: ",downloadLink:"Download: ",webLink:"Web link: ",viewKml:"Open in GoogleEarth: ",layerTree:"Layer manager",mdResultsLayer:"Search results",printLayer:"Print page",relatedservices:"Related services",relatedparent:"Parent",relateddatasets:"Related datasets",relatedchildren:"Children",relatedrelated:"Feature catalogue/dataset link",delete19110Relation:"Remove feature catalogue relation",newWindow:"New window",addAsXLink:"Add as linked element",contactSelectionWindowTitle:"Contact selection",selectedContacts:"Selected contacts",foundContacts:"Available",contactRole:"Contact role",mapNearYou:"Center map on your location",errorChangeProtocol:"Remove uploaded file before changing protocol of an online resource.",resultBy:" result(s) / ",subTemplateImport:"Directory entry import",xmlData:"XML",minorEdit:"Minor edit",minorEditTT:"",runASearch:"Run a search.",focusOnAny:"Move focus to the full text search field.",hideSearchForm:"Hide or display search form.",switchMode:"Switch visualization mode.",resetSearchForm:"Reset search form.",focusOnLogin:"Focus on the login form to access catalogue administration.",displayInfoPanel:"Display the information panel.",displayHelpPanel:"Display this help.",SelectionWindowTitle:"Select from directory",found:"Records found",selected:"Selected","add-extent-from-geokeywordsreplace":"Replace existing extent","add-info-from-wmssetExtent":"Set extent","add-info-from-wmssetAndReplaceExtent":"Replace existing extent","add-info-from-wmssetCRS":"Set coordinate reference system","add-info-from-wmssetDynamicGraphicOverview":"Set graphic overview (using GetMap request URL)","add-info-from-wmswmsServiceUrl":"Service URL","linked-data-checkerlinkUrl":"URL to remove","related-metadata-checkeruuidToRemove":"Identifier to remove","add-service-info-from-wxssetAndReplaceOperations":"Replace existing operations","add-service-info-from-wxswxsServiceUrl":"Service URL",manageDirectories:"Manage directories",directory:"Directory",thesaurusManager:"Thesaurus manager",Theme:"Theme",thesaurusFilePath:"Thesaurus file (.rdf)",ThesaurusName:"Thesaurus name",createThesaurusFromURL:"from URL",createThesaurusFromRepository:"from thesaurus repository",creationMode:"Create",thesaurusFromRepository:"Thesaurus",externalThesaurusURL:"URL",thesaurusCreation:"Add a thesaurus",Type:"Type",Activated:"Activated",emptyThesaurus:"New empty thesaurus",thesaurusFromFile:"From local file",thesaurusFromURL:"From remote file (URL)",id:"Identifier",label:"Label",definition:"-",xmin:"X min",ymin:"Y min",xmax:"X max",ymax:"Y max",newLabel:"Label",newDefinition:"Definition",selDirectoryTT:"Select a type of directory. A directory group all elements having the same root element name (eg. gmd:CI_ResponsibleParty is a contact directory)",privTplElTT:"Manage privileges for the current selection.",addTplElTT:"Add an element from an XML fragment to a directory. The destination directory is based on the root element name (eg. gmd:CI_ResponsibleParty).",copyTplElTT:"Create a new entry in the directory from the current selection.",delTplElTT:"Remove selected entry from the directory."};
+GeoNetwork.lang.en={connectIssue:"Catalogue connection issue",connectIssueMsg:"Error 404. Can't connect to catalogue at url ",featureInfoTooltipTitle:"Feature info",featureInfoTooltipText:"Click in the map to get feature info from all visible layers.",zoomToMaxExtentTooltipTitle:"Full extent",zoomToMaxExtentTooltipText:"Use this button to go to the full extent of the map.",zoominTooltipTitle:"Zoom in",zoominTooltipText:"Draw a box in the map to zoom in. You can also click in the map and map will zoom in by a factor of 2.",zoomoutTooltipTitle:"Zoom out",zoomoutTooltipText:"Click in the map or draw a box to zoom out.",dragTooltipTitle:"Pan map",dragTooltipText:"Press the left mouse button to drag the map.",previousTooltipTitle:"Previous map extent",previosTooltipText:"Click this button to go back to the previous map extent",nextTooltipTitle:"Next map extent",nextTooltipText:"Click this button to go to the next map extent",featureInfoTitle:"Feature info",layerManagerTabTitle:"Layer management",legendTabTitle:"Legend",scaleTitle:"Scale",xTitle:"X",yTitle:"Y",projectionTitle:"Projection",FeatureInfoNotQueryable:"There is no queryable map layer",WMSBrowserTab1:"Select",WMSBrowserTab3:"External",WMSBrowserPreviewTitle:"Preview layer",WMSBrowserAddButton:"Add",WMSBrowserDuplicateMsg:"Layer is already in the map",WMSBrowserPreviewWaitMsg:"Retrieving preview image",WMSBrowserConnectButton:"Connect",WMSBrowserConnectError:"There was an error connecting to the Web Map Service, please check the URL.",infoTitle:"Information","mf.print.mapTitle":"Title","mf.print.comment":"Comment","mf.print.dpi":"Resolution","mf.print.scale":"Scale","mf.print.rotation":"Angle","mf.print.resetPos":"Reset","mf.print.print":"Print","mf.print.generatingPDF":"Generating PDF","mf.print.unableToPrint":"It was not possible to print, try later","mf.error":"Error",selectExtentTooltipTitle:"Select extent",selectExtentTooltipText:"Select extent for catalog searches",clearExtentTooltipTitle:"Remove extent",clearExtentTooltipText:"Remove extent (ie. no spatial criteria)",printTooltipTitle:"Print",printTooltipText:"Print the current map",savewmcTooltipTitle:"Save web map context",savewmcTooltipText:"Saves web map context for current map","saveWMCFile.windowTitle":"Save Web Map Context","saveWMCFile.errorSaveWMC":"Could not save Web Map Context",loadwmcTooltipTitle:"Load web map context",loadwmcTooltipText:"Loads web map context in current map","selectWMCFile.windowTitle":"Load Web Map Context",selectWMCFile:"Select Web Map Context file","selectWMCFile.waitLoadingWMC":"Loading Web Map Context","selectWMCFile.loadButtonText":"Load","selectWMCFile.mergeButtonText":"Merge","selectWMCFile.errorLoadingWMC":"Could not load Web Map Context",opacityButtonText:"Opacity",opacityWindowTitle:"Opacity",metadataButtonText:"Metadata",removeButtonText:"Remove",addWMSButtonText:"Add WMS",addWMSWindowTitle:"Add layer from a WMS service","layerInfoPanel.windowTitle":"Layer metadata","layerInfoPanel.titleField":"Title","layerInfoPanel.descriptionField":"Description","layerInfoPanel.queryableField":"Queryable",layerList:"Layer list",baseLayerList:"Base layers","metadataResults.buttonText":"Metadata results","metadataResults.tooltipTitle":"Metadata results","metadataResults.tooltipText":"Go to metadata results page","metadataResults.alertTitle":"Metadata results","metadataResults.alertText":"No metadata results to show","featureInfoWindow.windowTitle":"Feature info","mf.information":"Print","mf.print.pdfReady":"PDF ready","loadLayer.loadingMessage":"Loading layer","loadLayer.error.title":"Load layer","loadLayer.error.message":"The layer could not be loaded","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Loading...","disclaimer.buttonClose":"Close",gazetteerAddressField1Label:"Postcode",gazetteerAddressField2Label:"Street",gazetteerAddressField3Label:"Place",gazetteerAddressField4Label:"'Gemeente'",gazetteerAddressField5Label:"House number",searchOptionButton:"Search",resetSearchForm:"Reset search form values.",GazetteerWindowTitle:"Search for address",searchResults:"Search results",errorTitle:"Error",SearchOptionLoadFailureMsg:"No results available. \n The service may be unavailable. \n",gazetteerTooltipTitle:"Search based on an address",gazetteerTooltipText:"Search for a location, based on postcode, street name, 'gemeente' or place.",SearchOptionNoResults:"No results found",zoomlayerTooltipTitle:"Zoom to layer",zoomlayerTooltipText:"Use this button to go to the full extent of the selected layer.","zoomlayer.selectLayerTitle":"Zoom to layer","zoomlayer.selectLayerText":"No layer selected",layerStylesWindowTitle:"Layer styles",layerStylesPreviewTitle:"Preview legend",selectStyleButton:"Select style",WMSTimeWindowTitle:"WMS Time",WMSTimePositionTitle:"Pick a time position",WMSTimeMovieTitle:"Play animation",wmsTimeUpdateButtonText:"Apply",WMSTimeAnimationCheckbox:"Play a movie loop spanning the last ${steps} time positions",fullTextSearch:"Full text search",keyword:"Keyword",org:"Organisation",mapTypes:"Map types",inspireSearchOptions:"INSPIRE criteria",inspireannex:"INSPIRE annex",inspirerelated:"Related to INSPIRE",inspirerelatedtt:"INSPIRE dataset with report on the conformity regarding the data specification",inspiretheme:"INSPIRE theme",similarity:"Search accuracy",wkt:"WKT geometry",simpleViewMode:"Simple view",spatialSearch:"Spatial criteria",mdChangeDate:"Metadata change date",tempExtent:"Temporal extent",hitsPerPage:"Hits per page",sortBy:"Sort by",relevance:"Relevance",title:"Title",changeDate:"Change date",rating:"Rating",popularity:"Popularity",scaleDesc:"Scale (desc)",scaleAsc:"Scale (asc)","abstract":"Abstract",catalogue:"Catalogue",group:"Group",chooseGroup:"Select a group",md:"Metadata",tpl:"Template",category:"Category",advTextSearch:"Advanced text search options",eitherWords:"Either of the words",exactPhrase:"Exact phrase",allWords:"All of the words",withoutWords:"Without the words",precise:"Precise",imprecise:"Imprecise",relationType:"Relation type",within:"within",touches:"touches",crosses:"crosses",fullyOutsideOf:"fullyOutsideOf",encloses:"encloses",overlaps:"overlaps",intersection:"intersection",nearYou:"Near you",from:"From",to:"To",scaleNominator:"1:",scale:"Scale",digital:"Digital",hardCopy:"Hard copy",download:"Download",downloadable:"Download",interactive:"Interactive",resourceType:"Resource type",dataset:"Dataset",series:"Series",service:"Service",spatialRepType:"Spatial representation",video:"Video",vector:"Vector",textTable:"Text, table",tin:"Tin",stereoModel:"Stereo model",grid:"Grid",kind:"Kind",enterGetCapURL:"Enter a GetCapabilities URL to register a new service.",edit:"Edit",duplicate:"Duplicate","delete":"Delete",createChild:"Create child",privileges:"Privileges",categories:"Categories",otherActions:"Other actions",view:"View",zoomTo:"Zoom to",saveXml:"Save as XML",exportCsv:"Export (CSV)",exportZip:"Export (ZIP)",printSel:"Print",newOwner:"New owner",updateCategories:"Update categories",updatePrivileges:"Update privileges",noneSelected:"None selected",none:"none",all:"all",allInPage:"all in page",select:"Select ",username:"User name",password:"password",login:"Login",logout:"Logout",administration:"Administration",validationReport:"Validation report",status:"Status",items:"items",item:"item",thumbnails:"Thumbnails",noimages:"No images to display",add:"Add",small:"Small",large:"Large",selectImage:"Select an image",selectFile:"Select a file",image:"Image",uploading:"Uploading ...",upload:"Upload",success:"Success",failure:"Failure",error:"Error",save:"Save",reset:"Reset",fileProcessedMsg:"Processed file ${res} on the server",suggestion:"Suggestion",logoSelect:"Select a logo",relatedResources:"Related resources",createLink:"Create links ...",featureCat:"Feature catalogue",serviceMd:"Service metadata",datasetMd:"Dataset metadata",parentMd:"Parent metadata",updateChildren:"Update children",records:"records",record:"record",help:"Help",publishError:"Publication failed.",outOfMemoryError:"Out of memory error.",publishErrorCode:"Error code:",saveAndCheck:"Save and check",saveAndClose:"Save and close",cancel:"Cancel",layout:"Layout",collapseAll:"Collapse all",chooseAType:"Choose a type",chooseAView:"Choose a view",viewMode:"View mode",errorAndStatusMsg:"Error. Status: ${status}, text: ${text}. Try again.",mdEditor:"Metadata editor",editing:"Editing ${title} (${uuid})",GetCapabilitiesDocumentError:"Error loading service GetCapabilities document from URL: ",maxResults:"Number of results",mdTitle:"Metadata title",keywords:"Keywords",createRelation:"Create relation",createIfNotExistButton:"Create a new metadata record",getCapabilitiesLayer:"GetCapabilities layer",layerName:"Layer name",searching:"Searching ...",perThesaurus:" per thesaurus",anyThesaurus:"Any thesaurus",selectedKeywords:"Selected keywords",foundKeywords:"Available keywords",clear:"Clear",publish:"Publish",publishTooltip:"Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.",publishSuccess:"Successful publication.",publishLayerAdded:" Layer added to map preview.",unpublish:"Unpublish",unpublishTooltip:"Remove current dataset from remote node.",unpublishSuccess:"Successful unpublication.",unpublishError:"Unpublication failed. ",check:"Check",errorDatasetNotFound:"Dataset not found.",datasetFound:"Dataset found and added to the map preview.",checkFailure:"Failed to check dataset in remote node.",addOnlineSourceTitle:"Link service to metadata",addOnlineSource:"Add links",addOnlineSourceTT:"Add an onlinesource section to the current metadata record pointing to the WMS/WFS/WCS services. If the service is a WMS, the layer could be displayed in the map viewer.",statusInformation:"Status information.",publishing:"Publishing ...",mapPreview:"Map preview",selectANode:"Select a node ...",geoPublisherWindowTitle:"Geo-publication: ",keywordSelectionWindowTitle:"Keywords selection",crsSelectionWindowTitle:"Coordinate reference system selection",linkedMetadataSelectionWindowTitle:"Related metadata selection",NotOwnerError:"You don't have privileges to update this related record.",ServiceUpdateError:"Error during service metadata update",associateService:"Link service metadata",associateDataset:"Link dataset metadata",logoSelectionWindow:"Choose a logo",fileUploadWindow:"Upload data or document",selectedCRS:"Selected coordinate systems",foundCRS:"Available coordinate systems",search:"Search",restrictSearchToMap:"Restrict search to map extent",selected:"selected",selectRegion:"Select a region ...",drawRectangle:"Draw rectangle",drawPolygon:"Draw polygon",drawCircle:"Draw circle",discovery:"Discovery",visualization:"Visualization",when:"When ?",anyTime:"Anytime",onSelection:"On selection",adminAction:"Other",newMetadata:"New metadata",chooseTemplate:"Select a template",process:"Process",suggestions:"Suggestions",applySelected:"Apply selected task",processParametersWindow:"Task parameters",noSuggestion:"No suggestion.",thumbnailUploadWindow:"Upload thumbnail",addThumbnail:"Add",createSmall:"Create small thumbnail",scalingFactor:"Scaling factor",smallScalingFactor:"Small scaling factor",type:"Record type",clickToClose:"Click to close",removeSelected:"Remove selected",ownerName:"Metadata record owner",setPrivileges:"Set privileges",setCategories:"Set categories",massiveOp:"Batch operation ",prepareDownload:"Download files",mdMenu:"Actions",deleteRecord:"Delete metadata record ?",deleteConfirm:"Are you sure to delete this metadata record?",deleteRecordSuccess:"Metadata deleted.",deleteRecordFailure:"Error when deleting metadata record.",advancedSearchOptions:"Advanced criteria",relatedservices:"Related service",relatedchildren:"Children",getMEF:"Export (ZIP)",metadataCategories:"Metadata categories",validityInfo:"Validation status: ",lastUpdate:"Last update: ",importMetadata:"Import metadata",validationStatus:"Validation status",valid:"Valid",notValid:"Not valid",notDetermined:"Not determined",addToMap:"Add to map: ",downloadLink:"Download: ",webLink:"Web link: ",viewKml:"Open in GoogleEarth: ",layerTree:"Layer manager",mdResultsLayer:"Search results",printLayer:"Print page",relatedservices:"Related services",relatedparent:"Parent",relateddatasets:"Related datasets",relatedchildren:"Children",relatedrelated:"Feature catalogue/dataset link",delete19110Relation:"Remove feature catalogue relation",newWindow:"New window",addAsXLink:"Add as linked element",contactSelectionWindowTitle:"Contact selection",selectedContacts:"Selected contacts",foundContacts:"Available",contactRole:"Contact role",mapNearYou:"Center map on your location",errorChangeProtocol:"Remove uploaded file before changing protocol of an online resource.",resultBy:" result(s) / ",subTemplateImport:"Directory entry import",xmlData:"XML",minorEdit:"Minor edit",minorEditTT:"",runASearch:"Run a search.",focusOnAny:"Move focus to the full text search field.",hideSearchForm:"Hide or display search form.",switchMode:"Switch visualization mode.",resetSearchForm:"Reset search form.",focusOnLogin:"Focus on the login form to access catalogue administration.",displayInfoPanel:"Display the information panel.",displayHelpPanel:"Display this help.",SelectionWindowTitle:"Select from directory",found:"Records found",selected:"Selected","add-extent-from-geokeywordsreplace":"Replace existing extent","add-info-from-wmssetExtent":"Set extent","add-info-from-wmssetAndReplaceExtent":"Replace existing extent","add-info-from-wmssetCRS":"Set coordinate reference system","add-info-from-wmssetDynamicGraphicOverview":"Set graphic overview (using GetMap request URL)","add-info-from-wmswmsServiceUrl":"Service URL","linked-data-checkerlinkUrl":"URL to remove","related-metadata-checkeruuidToRemove":"Identifier to remove","add-service-info-from-wxssetAndReplaceOperations":"Replace existing operations","add-service-info-from-wxswxsServiceUrl":"Service URL",manageDirectories:"Manage directories",directory:"Directory",thesaurusManager:"Thesaurus manager",Theme:"Theme",thesaurusFilePath:"Thesaurus file (.rdf)",ThesaurusName:"Thesaurus name",createThesaurusFromURL:"from URL",createThesaurusFromRepository:"from thesaurus repository",creationMode:"Create",thesaurusFromRepository:"Thesaurus",externalThesaurusURL:"URL",thesaurusCreation:"Add a thesaurus",Type:"Type",Activated:"Activated",emptyThesaurus:"New empty thesaurus",thesaurusFromFile:"From local file",thesaurusFromURL:"From remote file (URL)",id:"Identifier",label:"Label",definition:"-",xmin:"X min",ymin:"Y min",xmax:"X max",ymax:"Y max",newLabel:"Label",newDefinition:"Definition",selDirectoryTT:"Select a type of directory. A directory group all elements having the same root element name (eg. gmd:CI_ResponsibleParty is a contact directory)",privTplElTT:"Manage privileges for the current selection.",addTplElTT:"Add an element from an XML fragment to a directory. The destination directory is based on the root element name (eg. gmd:CI_ResponsibleParty).",copyTplElTT:"Create a new entry in the directory from the current selection.",delTplElTT:"Remove selected entry from the directory."};
 OpenLayers.Util.extend(OpenLayers.Lang.en,GeoNetwork.lang.en);Ext.namespace("GeoNetwork","GeoNetwork.Lang");
-GeoNetwork.Lang.fr={connectIssue:"Échec de connexion au catalogue",connectIssueMsg:"Erreur 404. Impossible de se connecter à l'URL ",featureInfoTooltipTitle:"caractéristique",featureInfoTooltipText:"Cliquer sur la carte pour obtenir des informations sur les données affichees.",zoomToMaxExtentTooltipTitle:"Zoom optimal",zoomToMaxExtentTooltipText:"Utiliser ce bouton pour tout afficher.",zoominTooltipTitle:"Zoomer",zoominTooltipText:"Dessiner un rectangle sur la carte pour zoomer. En cliquant sur la carte, le facteur de zoom est 2.",zoomoutTooltipTitle:"Dézoomer",zoomoutTooltipText:"Cliquer sur la carte ou dessiner un rectangle pour dézoomer.",dragTooltipTitle:"Main",dragTooltipText:"Appuyer sur le bouton gauche de la souris pour déplacer la carte.",previousTooltipTitle:"Revenir au zoom précédant",previosTooltipText:"Cliquer ici pour revenir au zoom précédant",nextTooltipTitle:"Zoom suivant",nextTooltipText:"Cliquer ici pour avancer au zoom suivant",featureInfoTitle:"Caractéristique",layerManagerTabTitle:"Gérer les couches",legendTabTitle:"Légende",scaleTitle:"Echelle",xTitle:"X",yTitle:"Y",projectionTitle:"Projection",FeatureInfoNotQueryable:"Il n'existe pas de carte correspondant à la requête",WMSBrowserTab1:"Sélectionner",WMSBrowserTab3:"Externe",WMSBrowserPreviewTitle:"Aperçu de la couche",WMSBrowserAddButton:"Ajouter",WMSBrowserDuplicateMsg:"La couche est déjà affichée",WMSBrowserPreviewWaitMsg:"Récupérer l'image precedente",WMSBrowserConnectButton:"Connexion",WMSBrowserConnectError:"Erreur de connexion au service Web, merci de vérifier l'URL.",infoTitle:"Information","mf.print.mapTitle":"Titre","mf.print.comment":"Commentaire","mf.print.dpi":"Résolution","mf.print.scale":"Échelle","mf.print.rotation":"Angle","mf.print.resetPos":"Reset","mf.print.print":"Imprimer","mf.print.generatingPDF":"Générer PDF","mf.print.unableToPrint":"Impression impossible, essayer plus tard","mf.error":"Erreur",selectExtentTooltipTitle:"Définir une emprise",selectExtentTooltipText:"Dessiner une emprise à utiliser comme critère géographique",clearExtentTooltipTitle:"Supprimer l'emprise",clearExtentTooltipText:"Supprimer l'emprise (ie. aucun critère géographique)",printTooltipTitle:"Imprimer",printTooltipText:"Imprimer la carte actuelle",savewmcTooltipTitle:"Sauvegarder environnement (vue, paramètres,etc.)",savewmcTooltipText:"Sauvegarder environnement pour la carte actuelle","saveWMCFile.windowTitle":"Sauvegarder l'environnement","saveWMCFile.errorSaveWMC":"Sauvegarde de l'environnement impossible",loadwmcTooltipTitle:"Restaurer l'environnement",loadwmcTooltipText:"Restaurer l'environnement dans la carte actuelle","selectWMCFile.windowTitle":"Restaurer l'environnement",selectWMCFile:"Ouvrir un environnement","selectWMCFile.waitLoadingWMC":"Restauration de l'environnement en cours...","selectWMCFile.loadButtonText":"Charger","selectWMCFile.mergeButtonText":"Fusionner","selectWMCFile.errorLoadingWMC":"Chargement de l'environnement impossible",opacityButtonText:"Transparence",opacityWindowTitle:"Transparence",metadataButtonText:"Metadata",removeButtonText:"Supprimer",addWMSButtonText:"Ajouter WMS",addWMSWindowTitle:"Ajouter WMS","layerInfoPanel.windowTitle":"Couche metadata","layerInfoPanel.titleField":"Titre","layerInfoPanel.descriptionField":"Description","layerInfoPanel.queryableField":"Requête",layerList:"Liste des couches","metadataResults.buttonText":"Résultats Metadata","metadataResults.tooltipTitle":"résultats Metadata","metadataResults.tooltipText":"Aller a la page des résultats Metadata","metadataResults.alertTitle":"Résultats Metadata","metadataResults.alertText":"Pas de résultats Metadata","mf.information":"Imprimer","mf.print.pdfReady":"PDF prêt","loadLayer.loadingMessage":"Chargement de la couche","loadLayer.error.title":"Charger la couche","loadLayer.error.message":"La couche ne peut être chargée","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Chargement...","disclaimer.buttonClose":"Fermer",gazetteerAddressField1Label:"Code postal",gazetteerAddressField2Label:"Street",gazetteerAddressField3Label:"Place",gazetteerAddressField4Label:"Municipalité",gazetteerAddressField5Label:"Numéro",searchOptionButton:"Recherche",GazetteerWindowTitle:"Résultat pour l'adresse",searchResults:"Recherche les résultats",resetSearchForm:"Réinitialiser le formulaire de recherche.",errorTitle:"Erreur",SearchOptionLoadFailureMsg:"Pas de résultats trouvés. \n Le serveur peut être indisponible. \n",gazetteerTooltipTitle:"Recherche basée sur l'adresse",gazetteerTooltipText:"Recherche du lieu, basé sur le code postal, la rue, la municipalité ou place.",SearchOptionNoResults:"Pas de résultats trouvés.",zoomlayerTooltipTitle:"Zoom sur une couche",zoomlayerTooltipText:"Utilisez ce bouton pour accéder à la pleine mesure de le calque sélectionné.","zoomlayer.selectLayerTitle":"Zoom sur une couche","zoomlayer.selectLayerText":"No de calque sélectionné",layerStylesWindowTitle:"Layer styles",layerStylesPreviewTitle:"Preview legend",selectStyleButton:"Select style",WMSTimeWindowTitle:"WMS Time",WMSTimePositionTitle:"Time position",WMSTimeMovieTitle:"Animation",wmsTimeUpdateButtonText:"Apply",WMSTimeAnimationCheckbox:"Play a movie loop spanning the last ${steps} time positions",fullTextSearch:"Rechercher ...",keyword:"Mots-clés",org:"Organisation",mapTypes:"Type de données",similarity:"Précision",wkt:"Geométrie WKT",spatialSearch:"Critères géographiques",mdChangeDate:"Date de mise à jour des métadonnées",tempExtent:"Étendue temporelle",hitsPerPage:"Nombre par page",sortBy:"Trier par",relevance:"Pertinence",title:"Titre",changeDate:"Date de mise à jour",rating:"Note",popularity:"Popularité",scaleDesc:"Échelle (desc)",scaleAsc:"Échelle (asc)","abstract":"Résumé",catalogue:"Catalogue",group:"Groupe",md:"Métadonnée",tpl:"Modèle",category:"Catégorie",advTextSearch:"Options avancées",eitherWords:"Tous - au moins un des mots suivants",exactPhrase:"Cette expression exacte",allWords:"Tous les mots suivants",withoutWords:"Aucun des mots suivants",precise:"Précis",imprecise:"Flou",relationType:"Type de relation",within:"À l'intérieur",touches:"Touche",crosses:"Travers",fullyOutsideOf:"En dehors",encloses:"Contient",overlaps:"Chevauche",intersection:"Intersecte",nearYou:"À proximité",from:"du",to:"au",scaleNominator:"1/",scale:"Échelle",digital:"Numérique",hardCopy:"Copie papier",download:"Télécharger",downloadable:"Téléchargeable",interactive:"Interactive",resourceType:"Type de ressource",dataset:"Série de données",series:"Ensemble de séries de données",service:"Service",spatialRepType:"Représentation spatiale",video:"Vidéo",vector:"Vecteur",textTable:"Tableau, Texte",tin:"Tin",stereoModel:"Vue 3D",grid:"Raster",kind:"Type",enterGetCapURL:"Saisir l'URL d'un GetCapabilities pour enregistrer un nouveau service",edit:"Éditer",duplicate:"Dupliquer","delete":"Supprimer",createChild:"Créer un enfant",privileges:"Privilèges",categories:"Catégories",otherActions:"Autres actions",view:"Consulter",zoomTo:"Zoomer vers",saveXml:"Export (XML)",exportCsv:"Export (CSV)",exportZip:"Export (ZIP)",printSel:"Imprimer",newOwner:"Associer un autre auteur",updateCategories:"Mettre à jour les catégories",updatePrivileges:"Mettre à jour les privilèges",noneSelected:"Sélection vide",none:"aucun",all:"tous",allInPage:"tous dans la page",select:"Selectionner ",username:"Identifiant",password:"Mot de passe",login:"Connexion",logout:"Déconnexion",administration:"Administration",validationReport:"Rapport de validation",status:"Status",items:"éléments",item:"élément",thumbnails:"Aperçus",noimages:"Aucun aperçu disponible",add:"Ajouter",small:"Petit",large:"Grand",selectImage:"Sélectionner une image",selectFile:"Sélectionner un fichier",image:"Image",uploading:"Transfert en cours ...",upload:"Transférer",success:"Succès",failure:"Échec",error:"Erreur",save:"Sauver",reset:"Réinitialiser",fileProcessedMsg:"Traitement du fichier ${res} réalisé sur le serveur",suggestion:"Suggestion",logoSelect:"Sélectionner un logo",relatedResources:"Ressources associées",createLink:"Associer ...",featureCat:"Catalogue d'attributs",serviceMd:"Métadonnées de service",datasetMd:"Métadonnées de données",parentMd:"Parent",updateChildren:"Mettre à jour les enfants",records:"enregistrements",record:"enregistrement",help:"Aide",publishError:"Échec lors de la publication.",outOfMemoryError:"Érreur de dépassement de mémoire.",publishErrorCode:"Code érreur :",saveAndCheck:"Sauver et valider",saveAndClose:"Sauver et fermer",cancel:"Annuler",layout:"Mise en page",Resolution:"Résolution",collapseAll:"Fermet tout",chooseAType:"Choisir un type",chooseAView:"Choisir une vue",viewMode:"Affichage",errorAndStatusMsg:"Érreur. Status : ${status}, description : ${text}. Essayer à nouveau.",mdEditor:"Editeur de métadonnée",editing:"${title} (${uuid}) en cours d'édition",GetCapabilitiesDocumentError:"Erreur lors de la tentative de récupération des informations du service (ie. GetCapabilities) avec l'adresse: ",maxResults:"Nombre de résultats",mdTitle:"Titre de la métadonnée",keywords:"Mots-clés",createRelation:"Créer la relation",createIfNotExistButton:"Créer une nouvelle métadonnée",getCapabilitiesLayer:"Couches du GetCapabilities",layerName:"Nom de la couche",searching:"Recherche en cours ...",perThesaurus:" par thesaurus",anyThesaurus:"Tous les thésaurus",selectedKeywords:"Mots clés selectionnés",foundKeywords:"Mots clés trouvés",clear:"Effacer",publish:"Publier",publishTooltip:"Publier le jeu de données en cours dans le nœud distant. Si le jeu de données est présent, il est mis à jour.",publishSuccess:"Publication effectuée.",publishLayerAdded:" Couche ajoutée à la carte.",unpublish:"Dépublier",unpublishTooltip:"Supprimer le jeu de données en cours dans le nœud distant.",unpublishSuccess:"Dépublication effectuée.",unpublishError:"Echec de la dépublication. ",check:"Vérifier",errorDatasetNotFound:"Jeu de données non trouvé.",datasetFound:"Jeu de données trouvé et ajouté à la carte.",checkFailure:"Echec de la vérification de la présence du jeu de données dans le nœud distant.",addOnlineSourceTitle:"Lier le service à la fiche",addOnlineSource:"Ajouter les liens",addOnlineSourceTT:"Ajouter les informations pour faire la liaison avec la couche dans le service WMS/WFS/WCS.",statusInformation:"Status.",publishing:"Publication en cours ...",mapPreview:"Carte",selectANode:"Choisir un nœud ...",geoPublisherWindowTitle:"Géo-publication : ",keywordSelectionWindowTitle:"Sélection de mots clés",crsSelectionWindowTitle:"Sélection des systèmes de coordonnées",linkedMetadataSelectionWindowTitle:"Sélection des métadonnées associées",NotOwnerError:"Vous n'avez pas les privilèges pour mettre à jour la métadonnée associée.",ServiceUpdateError:"Erreur lors de la mise à jour de la métadonnée.",associateService:"Associer une métadonnée de service",associateDataset:"Associer une métadonnée de données",logoSelectionWindow:"Sélectionner un logo",fileUploadWindow:"Ajouter des données ou des documents",selectedCRS:"Systèmes sélectionnés",foundCRS:"Systèmes disponibles",search:"Rechercher",restrictSearchToMap:"Restreindre la recherche à la carte",selected:"sélectionné(s)",selectRegion:"Choisir une région ...",drawRectangle:"Créer un rectangle",drawPolygon:"Créer un polygone",drawCircle:"Créer un cercle",discovery:"Découverte",visualization:"Visualisation",when:"Critères temporels",anyTime:"N'importe quand",onSelection:"Sur la sélection",adminAction:"Autres",newMetadata:"Nouvelle métadonnée",chooseGroup:"Selectionner un groupe",chooseTemplate:"Sélectionner un modèle",process:"Traiter",suggestions:"Suggestions",applySelected:"Appliquer le traitement sélectionné",processParametersWindow:"Paramètres du traitement",noSuggestion:"Aucune suggestion.",thumbnailUploadWindow:"Ajouter un aperçu",addThumbnail:"Ajouter",createSmall:"Créer un petit aperçu",scalingFactor:"Facteur d'échelle",smallScalingFactor:"Facteur d'échelle",type:"Type de fiche",clickToClose:"Cliquer pour fermer",removeSelected:"Supprimer la sélection","metadata.update.new":"Chargement en cours ...","metadata.update.forget.new":"Ré-initialisation en cours ...",ownerName:"Rédacteur de la métadonnée",setPrivileges:"Définir les privilèges",setCategories:"Choisir les catégories",massiveOp:"Opération sur la sélection",prepareDownload:"Télécharger les fichiers",mdMenu:"Actions",deleteRecord:"Supprimer la métadonnée ?",deleteConfirm:"Confirmez-vous la suppression de la métadonnée ?",deleteRecordSuccess:"Metadonnée supprimée",deleteRecordFailure:"Échec lors de la suppression de la métadonnée",advancedSearchOptions:"Critères avancés",getMEF:"Export (ZIP)",metadataCategories:"Catégories",validityInfo:"Information sur la validation",lastUpdate:"Dernière mise à jour : ",importMetadata:"Import de métadonnées",validationStatus:"Validation ",valid:"Valide",notValid:"Non valide",notDetermined:"Non déterminé",addToMap:"Ajouter à la carte : ",downloadLink:"Télécharger : ",webLink:"Site web : ",viewKml:"Visualiser avec GoogleEarth : ",layerTree:"Gestion des couches",mdResultsLayer:"Résultats de la recherche",printLayer:"Page de l'impression",relatedservices:"Services associés",relatedparent:"Métadonnée parent",relateddatasets:"Métadonnées associées",relatedchildren:"Enfants",relatedrelated:"Relation catalogue d'attributs/données",delete19110Relation:"Supprimer le lien cat. d'attributs",newWindow:"Nouvelle fenêtre",addAsXLink:"Ajout d'un élément lié",contactSelectionWindowTitle:"Sélection des contacts",selectedContacts:"Contacts sélectionnés",foundContacts:"Contacts disponibles",contactRole:"Rôle du contact",mapNearYou:"Centrer la carte sur votre position",create:"Créer",errorChangeProtocol:"Impossible de changer le protocol lorsqu'un fichier est attaché. Supprimer le fichier.",resultBy:" resultat(s) / ",subTemplateImport:"Importer un élément dans un annuaire",xmlData:"XML",minorEdit:"Modif. mineure",minorEditTT:"Lorsque cette option est activée, la date de mise à jour des métadonnées n'est pas changée. Lors de l'utilisation des suggestions, ou de la mise à jour d'une imagette, cette option est sans effet, la date est mise à jour.",runSearch:"Lancer la recherche.",focusOnAny:"Déplacer le curseur sur le critère plein texte.",hideSearchForm:"Afficher ou cacher le formulaire de recherche.",switchMode:"Basculer de mode de visualisation.",resetSearchForm:"Réinitialiser le formulaire de recherche.",focusOnLogin:"Déplacer le curseur sur le formulaire de connexion.",displayInfoPanel:"Afficher la page d'information.",displayHelpPanel:"Afficher cette page d'aide.",SelectionWindowTitle:"Rechercher dans l'annuaire",found:"Enregistrements trouvés","add-extent-from-geokeywordsreplace":"Remplacer les étendues géographiques existantes","add-info-from-wmssetExtent":"Définir l'étendue","add-info-from-wmssetAndReplaceExtent":"Remplacer les étendues existantes","add-info-from-wmssetCRS":"Ajouter les systèmes de coordonnées","add-info-from-wmssetDynamicGraphicOverview":"Définir l'aperçu (en ajoutant une URL vers une requête GetMap)","add-info-from-wmswmsServiceUrl":"URL du service","linked-data-checkerlinkUrl":"Lien à supprimer","related-metadata-checkeruuidToRemove":"Identifiant à supprimer","add-service-info-from-wxssetAndReplaceOperations":"Remplacer les opérations existantes","add-service-info-from-wxswxsServiceUrl":"URL du service",manageDirectories:"Gestion des annuaires",directory:"Annuaire",thesaurusManager:"Gestion des thésaurus",Theme:"Thème",thesaurusFilePath:"Fichier (.rdf)",ThesaurusName:"Nom du thésaurus",createThesaurusFromURL:"A partir d'une URL",createThesaurusFromRepository:"A partir du dépôt partagé",creationMode:"Créer",thesaurusFromRepository:"Thésaurus",externalThesaurusURL:"URL",thesaurusCreation:"Ajout d'un thésaurus",Type:"Type",Activated:"Activé",emptyThesaurus:"Nouveau thésaurus vide",thesaurusFromFile:"A partir d'un fichier local",thesaurusFromURL:"A partir d'un fichier distant (URL)",id:"Identifiant",label:"Libellé",definition:"-",xmin:"X min",ymin:"Y min",xmax:"X max",ymax:"Y max",newLabel:"Libellé",newDefinition:"Définition",selDirectoryTT:"Choisir un type d'annuaire. Un annuaire est constitué d'éléments ayant la même balise racine (eg. les éléments gmd:CI_ResponsibleParty font partie de l'annuaire de contact)",privTplElTT:"Gérer les privilèges sur la sélection.",addTplElTT:"Ajouter un élément à partir d'un fragment d'XML. L'annuaire cible est basé sur le nom de la balise racine (eg. gmd:CI_ResponsibleParty).",copyTplElTT:"Créer un nouvel élément dans l'annuaire à partir de l'élément sélectionné.",delTplElTT:"Supprimer la sélection."};
+GeoNetwork.Lang.fr={connectIssue:"Échec de connexion au catalogue",connectIssueMsg:"Erreur 404. Impossible de se connecter à l'URL ",featureInfoTooltipTitle:"caractéristique",featureInfoTooltipText:"Cliquer sur la carte pour obtenir des informations sur les données affichees.",zoomToMaxExtentTooltipTitle:"Zoom optimal",zoomToMaxExtentTooltipText:"Utiliser ce bouton pour tout afficher.",zoominTooltipTitle:"Zoomer",zoominTooltipText:"Dessiner un rectangle sur la carte pour zoomer. En cliquant sur la carte, le facteur de zoom est 2.",zoomoutTooltipTitle:"Dézoomer",zoomoutTooltipText:"Cliquer sur la carte ou dessiner un rectangle pour dézoomer.",dragTooltipTitle:"Main",dragTooltipText:"Appuyer sur le bouton gauche de la souris pour déplacer la carte.",previousTooltipTitle:"Revenir au zoom précédant",previosTooltipText:"Cliquer ici pour revenir au zoom précédant",nextTooltipTitle:"Zoom suivant",nextTooltipText:"Cliquer ici pour avancer au zoom suivant",featureInfoTitle:"Caractéristique",layerManagerTabTitle:"Gérer les couches",legendTabTitle:"Légende",scaleTitle:"Echelle",xTitle:"X",yTitle:"Y",projectionTitle:"Projection",FeatureInfoNotQueryable:"Il n'existe pas de carte correspondant à la requête",WMSBrowserTab1:"Sélectionner",WMSBrowserTab3:"Externe",WMSBrowserPreviewTitle:"Aperçu de la couche",WMSBrowserAddButton:"Ajouter",WMSBrowserDuplicateMsg:"La couche est déjà affichée",WMSBrowserPreviewWaitMsg:"Récupérer l'image precedente",WMSBrowserConnectButton:"Connexion",WMSBrowserConnectError:"Erreur de connexion au service Web, merci de vérifier l'URL.",infoTitle:"Information","mf.print.mapTitle":"Titre","mf.print.comment":"Commentaire","mf.print.dpi":"Résolution","mf.print.scale":"Échelle","mf.print.rotation":"Angle","mf.print.resetPos":"Reset","mf.print.print":"Imprimer","mf.print.generatingPDF":"Générer PDF","mf.print.unableToPrint":"Impression impossible, essayer plus tard","mf.error":"Erreur",selectExtentTooltipTitle:"Définir une emprise",selectExtentTooltipText:"Dessiner une emprise à utiliser comme critère géographique",clearExtentTooltipTitle:"Supprimer l'emprise",clearExtentTooltipText:"Supprimer l'emprise (ie. aucun critère géographique)",printTooltipTitle:"Imprimer",printTooltipText:"Imprimer la carte actuelle",savewmcTooltipTitle:"Sauvegarder environnement (vue, paramètres,etc.)",savewmcTooltipText:"Sauvegarder environnement pour la carte actuelle","saveWMCFile.windowTitle":"Sauvegarder l'environnement","saveWMCFile.errorSaveWMC":"Sauvegarde de l'environnement impossible",loadwmcTooltipTitle:"Restaurer l'environnement",loadwmcTooltipText:"Restaurer l'environnement dans la carte actuelle","selectWMCFile.windowTitle":"Restaurer l'environnement",selectWMCFile:"Ouvrir un environnement","selectWMCFile.waitLoadingWMC":"Restauration de l'environnement en cours...","selectWMCFile.loadButtonText":"Charger","selectWMCFile.mergeButtonText":"Fusionner","selectWMCFile.errorLoadingWMC":"Chargement de l'environnement impossible",opacityButtonText:"Transparence",opacityWindowTitle:"Transparence",metadataButtonText:"Metadata",removeButtonText:"Supprimer",addWMSButtonText:"Ajouter WMS",addWMSWindowTitle:"Ajouter WMS","layerInfoPanel.windowTitle":"Couche metadata","layerInfoPanel.titleField":"Titre","layerInfoPanel.descriptionField":"Description","layerInfoPanel.queryableField":"Requête",layerList:"Liste des couches","metadataResults.buttonText":"Résultats Metadata","metadataResults.tooltipTitle":"résultats Metadata","metadataResults.tooltipText":"Aller a la page des résultats Metadata","metadataResults.alertTitle":"Résultats Metadata","metadataResults.alertText":"Pas de résultats Metadata","mf.information":"Imprimer","mf.print.pdfReady":"PDF prêt","loadLayer.loadingMessage":"Chargement de la couche","loadLayer.error.title":"Charger la couche","loadLayer.error.message":"La couche ne peut être chargée","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Chargement...","disclaimer.buttonClose":"Fermer",gazetteerAddressField1Label:"Code postal",gazetteerAddressField2Label:"Street",gazetteerAddressField3Label:"Place",gazetteerAddressField4Label:"Municipalité",gazetteerAddressField5Label:"Numéro",searchOptionButton:"Recherche",GazetteerWindowTitle:"Résultat pour l'adresse",searchResults:"Recherche les résultats",resetSearchForm:"Réinitialiser le formulaire de recherche.",errorTitle:"Erreur",SearchOptionLoadFailureMsg:"Pas de résultats trouvés. \n Le serveur peut être indisponible. \n",gazetteerTooltipTitle:"Recherche basée sur l'adresse",gazetteerTooltipText:"Recherche du lieu, basé sur le code postal, la rue, la municipalité ou place.",SearchOptionNoResults:"Pas de résultats trouvés.",zoomlayerTooltipTitle:"Zoom sur une couche",zoomlayerTooltipText:"Utilisez ce bouton pour accéder à la pleine mesure de le calque sélectionné.","zoomlayer.selectLayerTitle":"Zoom sur une couche","zoomlayer.selectLayerText":"No de calque sélectionné",layerStylesWindowTitle:"Layer styles",layerStylesPreviewTitle:"Preview legend",selectStyleButton:"Select style",WMSTimeWindowTitle:"WMS Time",WMSTimePositionTitle:"Time position",WMSTimeMovieTitle:"Animation",wmsTimeUpdateButtonText:"Apply",WMSTimeAnimationCheckbox:"Play a movie loop spanning the last ${steps} time positions",fullTextSearch:"Rechercher ...",keyword:"Mots-clés",org:"Organisation",mapTypes:"Type de données",inspireSearchOptions:"INSPIRE",inspireannex:"Annexe",inspirerelated:"Données soumises à INSPIRE",inspirerelatedtt:"Données décrivant un rapport sur la conformité vis-à-vis des spécifications sur les données INSPIRE.",inspiretheme:"Thème",similarity:"Précision",wkt:"Geométrie WKT",spatialSearch:"Critères géographiques",mdChangeDate:"Date de mise à jour des métadonnées",tempExtent:"Étendue temporelle",hitsPerPage:"Nombre par page",sortBy:"Trier par",relevance:"Pertinence",title:"Titre",changeDate:"Date de mise à jour",rating:"Note",popularity:"Popularité",scaleDesc:"Échelle (desc)",scaleAsc:"Échelle (asc)","abstract":"Résumé",catalogue:"Catalogue",group:"Groupe",md:"Métadonnée",tpl:"Modèle",category:"Catégorie",advTextSearch:"Options avancées",eitherWords:"Tous - au moins un des mots suivants",exactPhrase:"Cette expression exacte",allWords:"Tous les mots suivants",withoutWords:"Aucun des mots suivants",precise:"Précis",imprecise:"Flou",relationType:"Type de relation",within:"À l'intérieur",touches:"Touche",crosses:"Travers",fullyOutsideOf:"En dehors",encloses:"Contient",overlaps:"Chevauche",intersection:"Intersecte",nearYou:"À proximité",from:"du",to:"au",scaleNominator:"1/",scale:"Échelle",digital:"Numérique",hardCopy:"Copie papier",download:"Télécharger",downloadable:"Téléchargeable",interactive:"Interactive",resourceType:"Type de ressource",dataset:"Série de données",series:"Ensemble de séries de données",service:"Service",spatialRepType:"Représentation spatiale",video:"Vidéo",vector:"Vecteur",textTable:"Tableau, Texte",tin:"Tin",stereoModel:"Vue 3D",grid:"Raster",kind:"Type",enterGetCapURL:"Saisir l'URL d'un GetCapabilities pour enregistrer un nouveau service",edit:"Éditer",duplicate:"Dupliquer","delete":"Supprimer",createChild:"Créer un enfant",privileges:"Privilèges",categories:"Catégories",otherActions:"Autres actions",view:"Consulter",zoomTo:"Zoomer vers",saveXml:"Export (XML)",exportCsv:"Export (CSV)",exportZip:"Export (ZIP)",printSel:"Imprimer",newOwner:"Associer un autre auteur",updateCategories:"Mettre à jour les catégories",updatePrivileges:"Mettre à jour les privilèges",noneSelected:"Sélection vide",none:"aucun",all:"tous",allInPage:"tous dans la page",select:"Selectionner ",username:"Identifiant",password:"Mot de passe",login:"Connexion",logout:"Déconnexion",administration:"Administration",validationReport:"Rapport de validation",status:"Status",items:"éléments",item:"élément",thumbnails:"Aperçus",noimages:"Aucun aperçu disponible",add:"Ajouter",small:"Petit",large:"Grand",selectImage:"Sélectionner une image",selectFile:"Sélectionner un fichier",image:"Image",uploading:"Transfert en cours ...",upload:"Transférer",success:"Succès",failure:"Échec",error:"Erreur",save:"Sauver",reset:"Réinitialiser",fileProcessedMsg:"Traitement du fichier ${res} réalisé sur le serveur",suggestion:"Suggestion",logoSelect:"Sélectionner un logo",relatedResources:"Ressources associées",createLink:"Associer ...",featureCat:"Catalogue d'attributs",serviceMd:"Métadonnées de service",datasetMd:"Métadonnées de données",parentMd:"Parent",updateChildren:"Mettre à jour les enfants",records:"enregistrements",record:"enregistrement",help:"Aide",publishError:"Échec lors de la publication.",outOfMemoryError:"Érreur de dépassement de mémoire.",publishErrorCode:"Code érreur :",saveAndCheck:"Sauver et valider",saveAndClose:"Sauver et fermer",cancel:"Annuler",layout:"Mise en page",Resolution:"Résolution",collapseAll:"Fermet tout",chooseAType:"Choisir un type",chooseAView:"Choisir une vue",viewMode:"Affichage",errorAndStatusMsg:"Érreur. Status : ${status}, description : ${text}. Essayer à nouveau.",mdEditor:"Editeur de métadonnée",editing:"${title} (${uuid}) en cours d'édition",GetCapabilitiesDocumentError:"Erreur lors de la tentative de récupération des informations du service (ie. GetCapabilities) avec l'adresse: ",maxResults:"Nombre de résultats",mdTitle:"Titre de la métadonnée",keywords:"Mots-clés",createRelation:"Créer la relation",createIfNotExistButton:"Créer une nouvelle métadonnée",getCapabilitiesLayer:"Couches du GetCapabilities",layerName:"Nom de la couche",searching:"Recherche en cours ...",perThesaurus:" par thesaurus",anyThesaurus:"Tous les thésaurus",selectedKeywords:"Mots clés selectionnés",foundKeywords:"Mots clés trouvés",clear:"Effacer",publish:"Publier",publishTooltip:"Publier le jeu de données en cours dans le nœud distant. Si le jeu de données est présent, il est mis à jour.",publishSuccess:"Publication effectuée.",publishLayerAdded:" Couche ajoutée à la carte.",unpublish:"Dépublier",unpublishTooltip:"Supprimer le jeu de données en cours dans le nœud distant.",unpublishSuccess:"Dépublication effectuée.",unpublishError:"Echec de la dépublication. ",check:"Vérifier",errorDatasetNotFound:"Jeu de données non trouvé.",datasetFound:"Jeu de données trouvé et ajouté à la carte.",checkFailure:"Echec de la vérification de la présence du jeu de données dans le nœud distant.",addOnlineSourceTitle:"Lier le service à la fiche",addOnlineSource:"Ajouter les liens",addOnlineSourceTT:"Ajouter les informations pour faire la liaison avec la couche dans le service WMS/WFS/WCS.",statusInformation:"Status.",publishing:"Publication en cours ...",mapPreview:"Carte",selectANode:"Choisir un nœud ...",geoPublisherWindowTitle:"Géo-publication : ",keywordSelectionWindowTitle:"Sélection de mots clés",crsSelectionWindowTitle:"Sélection des systèmes de coordonnées",linkedMetadataSelectionWindowTitle:"Sélection des métadonnées associées",NotOwnerError:"Vous n'avez pas les privilèges pour mettre à jour la métadonnée associée.",ServiceUpdateError:"Erreur lors de la mise à jour de la métadonnée.",associateService:"Associer une métadonnée de service",associateDataset:"Associer une métadonnée de données",logoSelectionWindow:"Sélectionner un logo",fileUploadWindow:"Ajouter des données ou des documents",selectedCRS:"Systèmes sélectionnés",foundCRS:"Systèmes disponibles",search:"Rechercher",restrictSearchToMap:"Restreindre la recherche à la carte",selected:"sélectionné(s)",selectRegion:"Choisir une région ...",drawRectangle:"Créer un rectangle",drawPolygon:"Créer un polygone",drawCircle:"Créer un cercle",discovery:"Découverte",visualization:"Visualisation",when:"Critères temporels",anyTime:"N'importe quand",onSelection:"Sur la sélection",adminAction:"Autres",newMetadata:"Nouvelle métadonnée",chooseGroup:"Selectionner un groupe",chooseTemplate:"Sélectionner un modèle",process:"Traiter",suggestions:"Suggestions",applySelected:"Appliquer le traitement sélectionné",processParametersWindow:"Paramètres du traitement",noSuggestion:"Aucune suggestion.",thumbnailUploadWindow:"Ajouter un aperçu",addThumbnail:"Ajouter",createSmall:"Créer un petit aperçu",scalingFactor:"Facteur d'échelle",smallScalingFactor:"Facteur d'échelle",type:"Type de fiche",clickToClose:"Cliquer pour fermer",removeSelected:"Supprimer la sélection","metadata.update.new":"Chargement en cours ...","metadata.update.forget.new":"Ré-initialisation en cours ...",ownerName:"Rédacteur de la métadonnée",setPrivileges:"Définir les privilèges",setCategories:"Choisir les catégories",massiveOp:"Opération sur la sélection",prepareDownload:"Télécharger les fichiers",mdMenu:"Actions",simpleViewMode:"Vue simplifiée",deleteRecord:"Supprimer la métadonnée ?",deleteConfirm:"Confirmez-vous la suppression de la métadonnée ?",deleteRecordSuccess:"Metadonnée supprimée",deleteRecordFailure:"Échec lors de la suppression de la métadonnée",advancedSearchOptions:"Critères avancés",getMEF:"Export (ZIP)",metadataCategories:"Catégories",validityInfo:"Information sur la validation",lastUpdate:"Dernière mise à jour : ",importMetadata:"Import de métadonnées",validationStatus:"Validation ",valid:"Valide",notValid:"Non valide",notDetermined:"Non déterminé",addToMap:"Ajouter à la carte : ",downloadLink:"Télécharger : ",webLink:"Site web : ",viewKml:"Visualiser avec GoogleEarth : ",layerTree:"Gestion des couches",mdResultsLayer:"Résultats de la recherche",printLayer:"Page de l'impression",relatedservices:"Services associés",relatedparent:"Métadonnée parent",relateddatasets:"Métadonnées associées",relatedchildren:"Enfants",relatedrelated:"Relation catalogue d'attributs/données",delete19110Relation:"Supprimer le lien cat. d'attributs",newWindow:"Nouvelle fenêtre",addAsXLink:"Ajout d'un élément lié",contactSelectionWindowTitle:"Sélection des contacts",selectedContacts:"Contacts sélectionnés",foundContacts:"Contacts disponibles",contactRole:"Rôle du contact",mapNearYou:"Centrer la carte sur votre position",create:"Créer",errorChangeProtocol:"Impossible de changer le protocol lorsqu'un fichier est attaché. Supprimer le fichier.",resultBy:" resultat(s) / ",subTemplateImport:"Importer un élément dans un annuaire",xmlData:"XML",minorEdit:"Modif. mineure",minorEditTT:"Lorsque cette option est activée, la date de mise à jour des métadonnées n'est pas changée. Lors de l'utilisation des suggestions, ou de la mise à jour d'une imagette, cette option est sans effet, la date est mise à jour.",runSearch:"Lancer la recherche.",focusOnAny:"Déplacer le curseur sur le critère plein texte.",hideSearchForm:"Afficher ou cacher le formulaire de recherche.",switchMode:"Basculer de mode de visualisation.",resetSearchForm:"Réinitialiser le formulaire de recherche.",focusOnLogin:"Déplacer le curseur sur le formulaire de connexion.",displayInfoPanel:"Afficher la page d'information.",displayHelpPanel:"Afficher cette page d'aide.",SelectionWindowTitle:"Rechercher dans l'annuaire",found:"Enregistrements trouvés","add-extent-from-geokeywordsreplace":"Remplacer les étendues géographiques existantes","add-info-from-wmssetExtent":"Définir l'étendue","add-info-from-wmssetAndReplaceExtent":"Remplacer les étendues existantes","add-info-from-wmssetCRS":"Ajouter les systèmes de coordonnées","add-info-from-wmssetDynamicGraphicOverview":"Définir l'aperçu (en ajoutant une URL vers une requête GetMap)","add-info-from-wmswmsServiceUrl":"URL du service","linked-data-checkerlinkUrl":"Lien à supprimer","related-metadata-checkeruuidToRemove":"Identifiant à supprimer","add-service-info-from-wxssetAndReplaceOperations":"Remplacer les opérations existantes","add-service-info-from-wxswxsServiceUrl":"URL du service",manageDirectories:"Gestion des annuaires",directory:"Annuaire",thesaurusManager:"Gestion des thésaurus",Theme:"Thème",thesaurusFilePath:"Fichier (.rdf)",ThesaurusName:"Nom du thésaurus",createThesaurusFromURL:"A partir d'une URL",createThesaurusFromRepository:"A partir du dépôt partagé",creationMode:"Créer",thesaurusFromRepository:"Thésaurus",externalThesaurusURL:"URL",thesaurusCreation:"Ajout d'un thésaurus",Type:"Type",Activated:"Activé",emptyThesaurus:"Nouveau thésaurus vide",thesaurusFromFile:"A partir d'un fichier local",thesaurusFromURL:"A partir d'un fichier distant (URL)",id:"Identifiant",label:"Libellé",definition:"-",xmin:"X min",ymin:"Y min",xmax:"X max",ymax:"Y max",newLabel:"Libellé",newDefinition:"Définition",selDirectoryTT:"Choisir un type d'annuaire. Un annuaire est constitué d'éléments ayant la même balise racine (eg. les éléments gmd:CI_ResponsibleParty font partie de l'annuaire de contact)",privTplElTT:"Gérer les privilèges sur la sélection.",addTplElTT:"Ajouter un élément à partir d'un fragment d'XML. L'annuaire cible est basé sur le nom de la balise racine (eg. gmd:CI_ResponsibleParty).",copyTplElTT:"Créer un nouvel élément dans l'annuaire à partir de l'élément sélectionné.",delTplElTT:"Supprimer la sélection."};
 OpenLayers.Util.extend(OpenLayers.Lang.fr,GeoNetwork.Lang.fr);Ext.namespace("GeoNetwork","GeoNetwork.Lang");
 GeoNetwork.Lang.nl={featureInfoTooltipTitle:"Attribuut-informatie",featureInfoTooltipText:"Klik in de kaart om attribuut-informatie op te vragen van alle zichtbare lagen.",zoomToMaxExtentTooltipTitle:"Volledig kaartbeeld",zoomToMaxExtentTooltipText:"Klik op deze button om naar het volledig kaartbeeld te zoomen.",zoominTooltipTitle:"Zoom in",zoominTooltipText:"Trek een kader in kaart om in te zoomen. Ook kan er geklikt worden in de kaart waarna er met een factor 2 ingezoomd wordt.",zoomoutTooltipTitle:"Zoom uit",zoomoutTooltipText:"Klik in de kaart om gecentreerd op dit punt met een factor 2 uit te zoomen. Ook kan er een kader in de kaart getrokken worden, hoe kleiner dit kader hoe verder er uitgezoomd zal worden.",dragTooltipTitle:"Verschuif kaart",dragTooltipText:"Houd de linker muisknop ingedrukt en versleep de kaart.",previousTooltipTitle:"Vorige kaart extent",previosTooltipText:"Klik op deze button om terug te gaan naar de vorige kaart extent",nextTooltipTitle:"Volgende kaart extent",nextTooltipText:"Klik op deze button om verder te gaan naar de volgende kaart extent",featureInfoTitle:"Attribuut-informatie",layerManagerTabTitle:"Kaartlagenbeheer",legendTabTitle:"Legenda",scaleTitle:"Schaal",xTitle:"X",yTitle:"Y",projectionTitle:"Projectie",FeatureInfoNotQueryable:"Er is geen bevraagbare kaartlaag",WMSBrowserTab1:"Selecteren",WMSBrowserTab3:"Extern",WMSBrowserPreviewTitle:"Preview kaartlaag",WMSBrowserAddButton:"Voeg toe",WMSBrowserDuplicateMsg:"Kaartlaag is reeds aanwezig.",WMSBrowserPreviewWaitMsg:"Preview image ophalen",WMSBrowserConnectButton:"Maak verbinding",WMSBrowserConnectError:"Er is een fout opgetreden bij het maken van de verbinding, controleer de URL.",infoTitle:"Informatie","mf.print.mapTitle":"Titel","mf.print.comment":"Opmerkingen","mf.print.dpi":"Resolutie","mf.print.scale":"Schaal","mf.print.rotation":"Rotatie","mf.print.resetPos":"Terug naar begininstellingen","mf.print.print":"Print","mf.print.generatingPDF":"Aanmaken PDF","mf.print.unableToPrint":"Het was helaas niet mogelijk om te printen, probeert u het svp later nogmaals","mf.error":"Fout",selectExtentTooltipTitle:"Begrens zoekgebied",selectExtentTooltipText:"Begrens het zoekgebied door in de kaart een kader te trekken.",printTooltipTitle:"Print",printTooltipText:"Print de huidige kaart",savewmcTooltipTitle:"Opslaan WMC",savewmcTooltipText:"Sla een Web Map Context document op.","saveWMCFile.windowTitle":"Opslaan Web Map Context","saveWMCFile.errorSaveWMC":"Kon het WMC bestand niet opslaan",loadwmcTooltipTitle:"Open WMC",loadwmcTooltipText:"Opent een bestaand Web Map Context document in de kaart viewer","selectWMCFile.windowTitle":"Openen Web Map Context",selectWMCFile:"Select WMC bestand","selectWMCFile.waitLoadingWMC":"Laden Web Map Context","selectWMCFile.loadButtonText":"Openen","selectWMCFile.mergeButtonText":"Samenvoegen","selectWMCFile.errorLoadingWMC":"Kon het Web Map Context bestand niet openen",opacityButtonText:"Opaciteit",opacityWindowTitle:"Opaciteit",metadataButtonText:"Metadata",removeButtonText:"Verwijderen",addWMSButtonText:"Voeg WMS toe",addWMSWindowTitle:"Voeg WMS toe","layerInfoPanel.windowTitle":"Metadata van de kaartlaag","layerInfoPanel.titleField":"Titel","layerInfoPanel.descriptionField":"Samenvatting","layerInfoPanel.queryableField":"Bevraagbaar",layerList:"Kaartlagen",baseLayerList:"Ondergrond","metadataResults.buttonText":"Metadata resultaten","metadataResults.tooltipTitle":"Metadata resultaten","metadataResults.tooltipText":"Ga naar de metadata resultaatpagina","metadataResults.alertTitle":"Metadata resultaten","metadataResults.alertText":"Geen metadata resultaten om te tonen","featureInfoWindow.windowTitle":"Attribuut-informatie","mf.information":"Print","mf.print.pdfReady":"PDF gereed","loadLayer.loadingMessage":"Ophalen kaartlaag","loadLayer.error.title":"Ophalen kaartlaag","loadLayer.error.message":"De kaartlaag kon niet worden geladen","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Laden...","disclaimer.buttonClose":"Sluiten",gazetteerAddressField1Label:"Postcode",gazetteerAddressField2Label:"Straat",gazetteerAddressField3Label:"Plaats",gazetteerAddressField4Label:"Gemeente",gazetteerAddressField5Label:"Huisnummer",searchOptionButton:"Zoek",GazetteerWindowTitle:"Zoek adres",searchResults:"Zoekresultaten",errorTitle:"Fout",SearchOptionLoadFailureMsg:"Het is niet gelukt resultaten op te halen.\nMogelijk is de service tijdelijk niet beschikbaar. \n",gazetteerTooltipTitle:"Zoek op basis van een adres",gazetteerTooltipText:"Zoek een locatie op basis van een postcode, straatnaam, gemeente en/of plaats.",SearchOptionNoResults:"Geen resultaten gevonden",zoomlayerTooltipTitle:"Zoom naar laag",zoomlayerTooltipText:"Gebruik deze knop om naar de volledige omvang van de geselecteerde laag.","zoomlayer.selectLayerTitle":"Zoom naar laag","zoomlayer.selectLayerText":"Geen laag geselecteerd",layerStylesWindowTitle:"Kaartlaag stijlen",layerStylesPreviewTitle:"Maak een voorvertoning van de legenda",selectStyleButton:"Selecteer kaartstijl",WMSTimeWindowTitle:"WMS Time",WMSTimePositionTitle:"Kies een tijdstip",WMSTimeMovieTitle:"Speel een animatie af",wmsTimeUpdateButtonText:"Doorvoeren",WMSTimeAnimationCheckbox:"Speel laatste ${steps} tijdstippen af"};
 OpenLayers.Util.extend(OpenLayers.Lang.nl,GeoNetwork.Lang.nl);Ext.namespace("GeoNetwork");
@@ -14274,8 +14938,8 @@ Ext.each(actions,function(){this.setVisible(user)
 },onDestroy:function(){GeoNetwork.MetadataResultsToolbar.superclass.onDestroy.apply(this,arguments)
 }});
 Ext.reg("gn_metadataresultstoolbar",GeoNetwork.MetadataResultsToolbar);Ext.namespace("GeoNetwork");
-GeoNetwork.TagCloudView=Ext.extend(Ext.DataView,{catalogue:undefined,multiSelect:true,root:"keywords.keyword",qurey:undefined,searchField:"themekey",onSuccess:null,onFailure:null,overClass:"tag-cloud-hover",itemSelector:"li.tag-cloud",emptyText:"",autoWidth:true,listeners:{selectionchange:{fn:function(dv,nodes){}},dblclick:{fn:function(dv,idx,node,e){}}},initComponent:function(){GeoNetwork.TagCloudView.superclass.initComponent.call(this);
-this.tpl=new Ext.XTemplate("<ul>",'<tpl for=".">','<li class="tag-cloud tag-cloud-{class}">','<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=false&summaryOnly=0&from=1&to=20&hitsPerPage=20&'+this.searchField+"={value}', "+this.onSuccess+","+this.onFailure+', null);" alt="{value}" title="{count} records">{value}</a>',"</li>","</tpl>","</ul>");
+GeoNetwork.TagCloudView=Ext.extend(Ext.DataView,{catalogue:undefined,multiSelect:true,root:"keywords.keyword",qurey:undefined,searchField:"themekey",onSuccess:null,onFailure:null,overClass:"tag-cloud-hover",itemSelector:"li.tag-cloud",emptyText:"",autoWidth:true,initComponent:function(){GeoNetwork.TagCloudView.superclass.initComponent.call(this);
+this.tpl=this.tpl||new Ext.XTemplate("<ul>",'<tpl for=".">','<li class="tag-cloud tag-cloud-{class}">','<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=false&summaryOnly=0&from=1&to=20&hitsPerPage=20&'+this.searchField+"={value}', "+this.onSuccess+","+this.onFailure+', null);" alt="{value}" title="{count} records">{value}</a>',"</li>","</tpl>","</ul>");
 this.store=this.catalogue.summaryStore;
 if(this.query){this.catalogue.kvpSearch(this.query,null,null,null,true)
 }}});
@@ -14283,12 +14947,12 @@ Ext.reg("gn_tagcloudview",GeoNetwork.TagCloudView);Ext.namespace("GeoNetwork");
 GeoNetwork.Templates=Ext.extend(Ext.XTemplate,{compiled:false,disableFormats:false,catalogue:null,sortOrder:0,abstractMaxSize:50,xmlTplMarkup:['<?xml version="1.0" encoding="UTF-8"?>','<node id="{id}" type="{type}">',"<site>","<name>{site_name}</name>",'<tpl if="values.site_ogctype">',"<ogctype>{site_ogctype}</ogctype>","</tpl>",'<tpl if="values.site_url">',"<url>{site_url}</url>","</tpl>",'<tpl if="values.site_icon">',"<icon>{site_icon}</icon>","</tpl>",'<tpl if="values.site_account_use">',"<account>","<use>{site_account_use}</use>","<username>{site_account_username}</username>","<password>{site_account_password}</password>","</account>","</tpl>","</site>","<options>",'<tpl if="values.options_every">',"<every>{options_every}</every>","</tpl>",'<tpl if="values.options_onerunonly">',"<oneRunOnly>{options_onerunonly}</oneRunOnly>","</tpl>",'<tpl if="values.options_lang">',"<lang>{options_lang}</lang>","</tpl>",'<tpl if="values.options_topic">',"<topic>{options_topic}</topic>","</tpl>",'<tpl if="values.options_createthumbnails">',"<createThumbnails>{options_createthumbnails}</createThumbnails>","</tpl>",'<tpl if="values.options_uselayer">',"<useLayer>{options_uselayer}</useLayer>","</tpl>",'<tpl if="values.options_uselayermd">',"<useLayerMd>{options_uselayermd}</useLayerMd>","</tpl>",'<tpl if="values.options_datasetcategory">',"<datasetcategory>{options_datasetcategory}</datasetcategory>","</tpl>","</options>","<content>","</content>","<privileges>","</privileges>",'<group id="1">','<operation name="view" />','<operation name="dynamic" />',"</group>","<categories>","</categories>",'<tpl if="values.info_result_total">',"</tpl>","</node>"],initComponent:function(){GeoNetwork.Templates.superclass.initComponent.call(this)
 },getHarvesterTemplate:function(){return new Ext.XTemplate(this.xmlTplMarkup)
 }});
-GeoNetwork.Templates.TITLE='<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:app.getCatalogue().metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:app.getCatalogue().metadataShow(\'{uuid}\');">{title}</a><span class="md-action-menu"> - <a rel="mdMenu">'+OpenLayers.i18n("mdMenu")+"</a></span></h1>";
+GeoNetwork.Templates.TITLE='<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');">{title}</a><span class="md-action-menu"> - <a rel="mdMenu">'+OpenLayers.i18n("mdMenu")+"</a></span></h1>";
 GeoNetwork.Templates.RATING_TPL='<tpl if="isharvested==\'n\' || harvestertype==\'geonetwork\'"><div class="rating"><input type="radio" name="rating{[xindex]}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/><input type="radio" name="rating{[xindex]}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/><input type="radio" name="rating{[xindex]}" <tpl if="rating==\'3\'">checked="true"</tpl> value="3"/><input type="radio" name="rating{[xindex]}" <tpl if="rating==\'4\'">checked="true"</tpl> value="4"/><input type="radio" name="rating{[xindex]}" <tpl if="rating==\'5\'">checked="true"</tpl> value="5"/></div></tpl>';
-GeoNetwork.Templates.LOGO='<div class="md-logo"><img src="{[app.getCatalogue().URL]}/images/logos/{source}.gif"/></div>';
+GeoNetwork.Templates.LOGO='<div class="md-logo"><img src="{[catalogue.URL]}/images/logos/{source}.gif"/></div>';
 GeoNetwork.Templates.SIMPLE=new Ext.XTemplate("<ul>",'<tpl for=".">','<li class="md md-simple" title="{abstract}">','<table><tr><td style="width:30px;">',GeoNetwork.Templates.LOGO,'</td><td id="{uuid}">',GeoNetwork.Templates.TITLE,'<span class="subject"><tpl for="subject">','{value}{[xindex==xcount?"":", "]}',"</tpl></span>","</td></tr></table>","</li>","</tpl>","</ul>");
 GeoNetwork.Templates.THUMBNAIL=new Ext.XTemplate("<ul>",'<tpl for=".">','<li class="md md-thumbnail">','<div class="md-wrap" id="{uuid}" title="{abstract}">',GeoNetwork.Templates.TITLE,'<div class="thumbnail">','<tpl if="thumbnail">','<a rel="lightbox" href="{thumbnail}"><img src="{thumbnail}" alt="Thumbnail"/></a>',"</tpl>","<tpl if=\"thumbnail==''\"></tpl>","</div>",'<tpl for="links">',"<tpl if=\"values.type == 'application/vnd.ogc.wms_xml'\">","<a href=\"#\" class=\"md-mn addLayer\" title=\"{title}\" alt=\"{title}\" onclick=\"app.switchMode('1', true);app.getIMap().addWMSLayer([['{title}', '{href}', '{name}', '{id}']]);\">&nbsp;</a>","</tpl>","</tpl>","</div>","</li>","</tpl>","</ul>");
-GeoNetwork.Templates.FULL=new Ext.XTemplate("<ul>",'<tpl for=".">','<li class="md md-full">',"<table><tr>",'<td class="left">',GeoNetwork.Templates.LOGO,"</td>",'<td id="{uuid}">',GeoNetwork.Templates.TITLE,'<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>','<p class="subject"><tpl for="subject">','{value}{[xindex==xcount?"":", "]}',"</tpl></p>",'<div class="md-links">','<tpl for="links">',"<tpl if=\"values.type == 'application/vnd.ogc.wms_xml' || values.type == 'OGC:WMS'\">",'<a href="#" class="md-mn addLayer" title="'+OpenLayers.i18n("addToMap")+" {title}\" alt=\"Add layer to map\" onclick=\"app.switchMode('1', true);app.getIMap().addWMSLayer([['{[escape(values.title)]}', '{href}', '{name}', '{id}']]);\">&nbsp;</a>","</tpl>","<tpl if=\"values.type == 'application/vnd.google-earth.kml+xml'\">",'<a href="{href}" class="md-mn md-mn-kml" title="'+OpenLayers.i18n("viewKml")+' {title}" alt="Open kml">&nbsp;</a>',"</tpl>","<tpl if=\"values.type == 'application/zip' || values.type == 'application/x-compressed'\">",'<a href="{href}" class="md-mn md-mn-zip" title="'+OpenLayers.i18n("downloadLink")+' {title}" alt="Download">&nbsp;</a>',"</tpl>","<tpl if=\"values.type == 'text/html'\">",'<a href="{href}" class="md-mn md-mn-www" title="'+OpenLayers.i18n("webLink")+' {title}" alt="Web link" target="_blank">&nbsp;</a>',"</tpl>","</tpl>",'<tpl if="this.hasDownloadLinks(values.links)">','<a href="#" onclick="app.getCatalogue().metadataPrepareDownload({id});" class="md-mn downloadAllIcon" title="'+OpenLayers.i18n("prepareDownload")+'" alt="download">&nbsp;</a>',"</tpl>","</div>",'</td><td class="thumb">',GeoNetwork.Templates.RATING_TPL,'<div class="thumbnail">','<tpl if="thumbnail">','<a rel="lightbox" href="{thumbnail}"><img src="{thumbnail}" alt="Thumbnail"/></a>',"</tpl>","<tpl if=\"thumbnail==''\"></tpl>","</div>",'</td><td class="icon">','<div class="md-mn valid-{valid}" title="'+OpenLayers.i18n("validityInfo"),'<tpl for="valid_details">',"{values.type}: ","<tpl if=\"values.valid == '1'\">"+OpenLayers.i18n("valid")+"</tpl>","<tpl if=\"values.valid == '0'\">"+OpenLayers.i18n("notValid")+"</tpl>","<tpl if=\"values.valid == '-1'\">"+OpenLayers.i18n("notDetermined")+"</tpl>","<tpl if=\"values.ratio != ''\"> ({values.ratio}) </tpl> - ","</tpl>",'">&nbsp;</div>','</td><td class="icon" title="'+OpenLayers.i18n("metadataCategories")+'">','<tpl for="category">','<div class="md-mn cat-{value}" title="{value}">&nbsp;</div>',"</tpl>","</td></tr></table>",'<div class="md-contact">','<tpl for="contact">',"<tpl if=\"applies=='resource'\">",'<span title="{role} - {applies}"><tpl if="values.logo !== undefined ">','<img src="{logo}" class="orgLogo"/>',"</tpl>","{name}&nbsp;&nbsp;</span>","</tpl>","</tpl>","<tpl if=\"edit=='true' && isharvested!='y'\">",'<br/><span class="md-mn md-mn-user" title="'+OpenLayers.i18n("ownerName")+'">{ownername} ('+OpenLayers.i18n("lastUpdate")+"{[values.changedate.split('T')[0]]})</span>","</tpl>","</div>","</li>","</tpl>","</ul>",{hasDownloadLinks:function(values){var i;
+GeoNetwork.Templates.FULL=new Ext.XTemplate("<ul>",'<tpl for=".">','<li class="md md-full">',"<table><tr>",'<td class="left">',GeoNetwork.Templates.LOGO,"</td>",'<td id="{uuid}">',GeoNetwork.Templates.TITLE,'<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>','<p class="subject"><tpl for="subject">','{value}{[xindex==xcount?"":", "]}',"</tpl></p>",'<div class="md-links">','<tpl for="links">',"<tpl if=\"values.type == 'application/vnd.ogc.wms_xml' || values.type == 'OGC:WMS'\">",'<a href="#" class="md-mn addLayer" title="'+OpenLayers.i18n("addToMap")+" {title}\" alt=\"Add layer to map\" onclick=\"app.switchMode('1', true);app.getIMap().addWMSLayer([['{[escape(values.title)]}', '{href}', '{name}', '{id}']]);\">&nbsp;</a>","</tpl>","<tpl if=\"values.type == 'application/vnd.google-earth.kml+xml'\">",'<a href="{href}" class="md-mn md-mn-kml" title="'+OpenLayers.i18n("viewKml")+' {title}" alt="Open kml">&nbsp;</a>',"</tpl>","<tpl if=\"values.type == 'application/zip' || values.type == 'application/x-compressed'\">",'<a href="{href}" class="md-mn md-mn-zip" title="'+OpenLayers.i18n("downloadLink")+' {title}" alt="Download">&nbsp;</a>',"</tpl>","<tpl if=\"values.type == 'text/html'\">",'<a href="{href}" class="md-mn md-mn-www" title="'+OpenLayers.i18n("webLink")+' {title}" alt="Web link" target="_blank">&nbsp;</a>',"</tpl>","</tpl>",'<tpl if="this.hasDownloadLinks(values.links)">','<a href="#" onclick="catalogue.metadataPrepareDownload({id});" class="md-mn downloadAllIcon" title="'+OpenLayers.i18n("prepareDownload")+'" alt="download">&nbsp;</a>',"</tpl>","</div>",'</td><td class="thumb">',GeoNetwork.Templates.RATING_TPL,'<div class="thumbnail">','<tpl if="thumbnail">','<a rel="lightbox" href="{thumbnail}"><img src="{thumbnail}" alt="Thumbnail"/></a>',"</tpl>","<tpl if=\"thumbnail==''\"></tpl>","</div>",'</td><td class="icon">','<div class="md-mn valid-{valid}" title="'+OpenLayers.i18n("validityInfo"),'<tpl for="valid_details">',"{values.type}: ","<tpl if=\"values.valid == '1'\">"+OpenLayers.i18n("valid")+"</tpl>","<tpl if=\"values.valid == '0'\">"+OpenLayers.i18n("notValid")+"</tpl>","<tpl if=\"values.valid == '-1'\">"+OpenLayers.i18n("notDetermined")+"</tpl>","<tpl if=\"values.ratio != ''\"> ({values.ratio}) </tpl> - ","</tpl>",'">&nbsp;</div>','</td><td class="icon" title="'+OpenLayers.i18n("metadataCategories")+'">','<tpl for="category">','<div class="md-mn cat-{value}" title="{value}">&nbsp;</div>',"</tpl>","</td></tr></table>",'<div class="md-contact">','<tpl for="contact">',"<tpl if=\"applies=='resource'\">",'<span title="{role} - {applies}"><tpl if="values.logo !== undefined ">','<img src="{logo}" class="orgLogo"/>',"</tpl>","{name}&nbsp;&nbsp;</span>","</tpl>","</tpl>","<tpl if=\"edit=='true' && isharvested!='y'\">",'<br/><span class="md-mn md-mn-user" title="'+OpenLayers.i18n("ownerName")+'">{ownername} ('+OpenLayers.i18n("lastUpdate")+"{[values.changedate.split('T')[0]]})</span>","</tpl>","</div>","</li>","</tpl>","</ul>",{hasDownloadLinks:function(values){var i;
 for(i=0;
 i<values.length;
 i++){if(values[i].type==="application/x-compressed"){return true
@@ -14311,7 +14975,8 @@ return actionButton
 this.viewMenu=new Ext.menu.Menu({items:items});
 var viewButton={text:OpenLayers.i18n("viewMode"),iconCls:"viewModeIcon",menu:this.viewMenu};
 return viewButton
-},updateViewMenu:function(){var modes=Ext.query("span.mode",this.body.dom),menu=[],i,j,e,cmpId=this.getId();
+},updateViewMenu:function(){var modes=Ext.query("span.mode",this.body.dom),menu=[],i,j,e,cmpId=this.getId(),isSimpleModeActive=true;
+menu.push([OpenLayers.i18n("simpleViewMode"),"view-simple",isSimpleModeActive]);
 Ext.ux.Lightbox.register("a[rel^=lightbox-viewset]",true);
 for(i=0;
 i<modes.length;
@@ -14328,8 +14993,10 @@ j<tabs.length;
 j++){e=Ext.get(tabs[j]);
 e.on("click",function(){Ext.getCmp(cmpId).switchToTab(this)
 },e.getAttribute("id"))
-}}}menu.push([label,id,activeMode])
-}}this.updateToolbar(menu)
+}}}menu.push([label,id,activeMode]);
+if(activeMode===true){isSimpleModeActive=false
+}}}menu[0][2]=isSimpleModeActive;
+this.updateToolbar(menu)
 },updateToolbar:function(modes){var i,m;
 this.viewMenu.removeAll();
 for(i=0;
@@ -16196,7 +16863,75 @@ gmlNode.setAttribute("gml:id",geometry.id);
 gml.appendChild(gmlNode);
 return gml
 }else{return GeoNetwork.map.ExtentMap.prev_geometry.apply(this,arguments)
-}};Ext.namespace("GeoNetwork","GeoNetwork.OGCUtil");
+}};if(!window.GeoNetwork){window.GeoNetwork={}
+}if(!GeoNetwork.Control){GeoNetwork.Control={}
+}GeoNetwork.Control.ZoomWheel=OpenLayers.Class(OpenLayers.Control,{wheelChange:OpenLayers.Control.Navigation.prototype.wheelChange,draw:function(){this.handler=new OpenLayers.Handler.MouseWheel(this,{up:OpenLayers.Control.Navigation.prototype.wheelUp,down:OpenLayers.Control.Navigation.prototype.wheelDown});
+this.activate()
+},CLASS_NAME:"GeoNetwork.Control.ZoomWheel"});if(!window.GeoNetwork){window.GeoNetwork={}
+}if(!GeoNetwork.Control){GeoNetwork.Control={}
+}GeoNetwork.Control.ExtentBox=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_TOOL,wktelement:null,minxelement:null,minyelement:null,maxxelement:null,maxyelement:null,EVENT_TYPES:["finishBox"],initialize:function(options){this.EVENT_TYPES=GeoNetwork.Control.ExtentBox.prototype.EVENT_TYPES.concat(OpenLayers.Control.prototype.EVENT_TYPES);
+OpenLayers.Control.prototype.initialize.apply(this,arguments);
+this.handler=new OpenLayers.Handler.RegularPolygon(this,{create:this.startBox,done:this.endBox},{irregular:true})
+},setMap:function(map){OpenLayers.Control.prototype.setMap.apply(this,arguments)
+},startBox:function(){this.getOrCreateLayer();
+this.vectorLayer.destroyFeatures()
+},endBox:function(){var bounds=this.handler.feature.geometry.getBounds();
+this.updateFields(bounds);
+this.events.triggerEvent("finishBox",null)
+},updateFields:function(bounds){var polFeature=new OpenLayers.Feature.Vector(bounds.toGeometry(),null,this.vectorLayerStyle);
+this.vectorLayer.addFeatures([polFeature]);
+this.vectorLayer.refresh();
+var mapProj=this.map.getProjectionObject();
+var wgs84=new OpenLayers.Projection("WGS84");
+var minxy=new OpenLayers.LonLat(bounds.left,bounds.bottom).transform(mapProj,wgs84);
+var maxxy=new OpenLayers.LonLat(bounds.right,bounds.top).transform(mapProj,wgs84);
+var minx=minxy.lon.toFixed(4),miny=minxy.lat.toFixed(4),maxx=maxxy.lon.toFixed(4),maxy=maxxy.lat.toFixed(4);
+if(this.wktelement){this.wktelement.setValue("POLYGON(("+minx+" "+miny+","+minx+" "+maxy+","+maxx+" "+maxy+","+maxx+" "+miny+","+minx+" "+miny+"))")
+}else{if(this.minxelement){this.minxelement.dom.value=minx
+}if(this.maxxelement){this.maxxelement.dom.value=maxx
+}if(this.minyelement){this.minyelement.dom.value=miny
+}if(this.maxyelement){this.maxyelement.dom.value=maxy
+}}},updateMap:function(){if((!this.minxelement)||(!this.maxxelement)||(!this.minyelement)||(!this.maxyelement)){return
+}this.getOrCreateLayer();
+var mapProj=this.map.getProjectionObject();
+var wgs84=new OpenLayers.Projection("WGS84");
+var minMapxy=new OpenLayers.LonLat(this.map.getExtent().left,this.map.getExtent().bottom).transform(mapProj,wgs84);
+var maxMapxy=new OpenLayers.LonLat(this.map.getExtent().right,this.map.getExtent().top).transform(mapProj,wgs84);
+var aux=parseFloat(this.minxelement.dom.value);
+if(isNaN(aux)){this.minxelement.dom.value=minMapxy.lon
+}aux=parseFloat(this.maxxelement.dom.value);
+if(isNaN(aux)){this.maxxelement.dom.value=maxMapxy.lon
+}aux=parseFloat(this.minyelement.dom.value);
+if(isNaN(aux)){this.minyelement.dom.value=minMapxy.lat
+}aux=parseFloat(this.maxyelement.dom.value);
+if(isNaN(aux)){this.maxyelement.dom.value=maxMapxy.lat
+}this.minxelement.dom.value=parseFloat(this.minxelement.dom.value).toFixed(4);
+this.maxxelement.dom.value=parseFloat(this.maxxelement.dom.value).toFixed(4);
+this.minyelement.dom.value=parseFloat(this.minyelement.dom.value).toFixed(4);
+this.maxyelement.dom.value=parseFloat(this.maxyelement.dom.value).toFixed(4);
+this.vectorLayer.destroyFeatures();
+var minxy=new OpenLayers.LonLat(this.minxelement.dom.value,this.minyelement.dom.value).transform(wgs84,mapProj);
+var maxxy=new OpenLayers.LonLat(this.maxxelement.dom.value,this.maxyelement.dom.value).transform(wgs84,mapProj);
+var bounds=new OpenLayers.Bounds();
+bounds.extend(minxy);
+bounds.extend(maxxy);
+var polFeature=new OpenLayers.Feature.Vector(bounds.toGeometry(),null,this.vectorLayerStyle);
+this.vectorLayer.addFeatures([polFeature]);
+this.vectorLayer.refresh()
+},getOrCreateLayer:function(){if(!this.vectorLayer){this.vectorLayer=this.vectorLayer||new OpenLayers.Layer.Vector("ExtentBox",{style:this.vectorLayerStyle});
+this.map.addLayer(this.vectorLayer)
+}this.map.setLayerIndex(this.vectorLayer,this.map.getNumLayers());
+return this.vectorLayer
+},clear:function(){if(this.vectorLayer){this.vectorLayer.destroyFeatures()
+}},zoomTo:function(){var mapProj=this.map.getProjectionObject();
+var wgs84=new OpenLayers.Projection("WGS84");
+var minxy=new OpenLayers.LonLat(this.minxelement.dom.value,this.minyelement.dom.value).transform(wgs84,mapProj);
+var maxxy=new OpenLayers.LonLat(this.maxxelement.dom.value,this.maxyelement.dom.value).transform(wgs84,mapProj);
+var bounds=new OpenLayers.Bounds();
+bounds.extend(minxy);
+bounds.extend(maxxy);
+this.map.zoomToExtent(bounds)
+},CLASS_NAME:"GeoNetwork.Control.ExtentBox"});Ext.namespace("GeoNetwork","GeoNetwork.OGCUtil");
 GeoNetwork.OGCUtil.getProtocolVersion=function(){return"1.3.0"
 };
 GeoNetwork.OGCUtil.getLanguage=function(){return GeoNetwork.Util.getISO3LangCode(catalogue.lang)
@@ -16327,75 +17062,7 @@ if(o.success){window.location=o.url
 }},onSaveContextFailure:function(form,action){Ext.MessageBox.show({icon:Ext.MessageBox.ERROR,title:OpenLayers.i18n("saveWMCFile.windowTitle"),msg:OpenLayers.i18n("saveWMCFile.errorSaveWMC"),buttons:Ext.MessageBox.OK})
 }}
 };
-GeoNetwork.WMCManager=new GeoNetwork.WMC();if(!window.GeoNetwork){window.GeoNetwork={}
-}if(!GeoNetwork.Control){GeoNetwork.Control={}
-}GeoNetwork.Control.ExtentBox=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_TOOL,wktelement:null,minxelement:null,minyelement:null,maxxelement:null,maxyelement:null,EVENT_TYPES:["finishBox"],initialize:function(options){this.EVENT_TYPES=GeoNetwork.Control.ExtentBox.prototype.EVENT_TYPES.concat(OpenLayers.Control.prototype.EVENT_TYPES);
-OpenLayers.Control.prototype.initialize.apply(this,arguments);
-this.handler=new OpenLayers.Handler.RegularPolygon(this,{create:this.startBox,done:this.endBox},{irregular:true})
-},setMap:function(map){OpenLayers.Control.prototype.setMap.apply(this,arguments)
-},startBox:function(){this.getOrCreateLayer();
-this.vectorLayer.destroyFeatures()
-},endBox:function(){var bounds=this.handler.feature.geometry.getBounds();
-this.updateFields(bounds);
-this.events.triggerEvent("finishBox",null)
-},updateFields:function(bounds){var polFeature=new OpenLayers.Feature.Vector(bounds.toGeometry(),null,this.vectorLayerStyle);
-this.vectorLayer.addFeatures([polFeature]);
-this.vectorLayer.refresh();
-var mapProj=this.map.getProjectionObject();
-var wgs84=new OpenLayers.Projection("WGS84");
-var minxy=new OpenLayers.LonLat(bounds.left,bounds.bottom).transform(mapProj,wgs84);
-var maxxy=new OpenLayers.LonLat(bounds.right,bounds.top).transform(mapProj,wgs84);
-var minx=minxy.lon.toFixed(4),miny=minxy.lat.toFixed(4),maxx=maxxy.lon.toFixed(4),maxy=maxxy.lat.toFixed(4);
-if(this.wktelement){this.wktelement.setValue("POLYGON(("+minx+" "+miny+","+minx+" "+maxy+","+maxx+" "+maxy+","+maxx+" "+miny+","+minx+" "+miny+"))")
-}else{if(this.minxelement){this.minxelement.dom.value=minx
-}if(this.maxxelement){this.maxxelement.dom.value=maxx
-}if(this.minyelement){this.minyelement.dom.value=miny
-}if(this.maxyelement){this.maxyelement.dom.value=maxy
-}}},updateMap:function(){if((!this.minxelement)||(!this.maxxelement)||(!this.minyelement)||(!this.maxyelement)){return
-}this.getOrCreateLayer();
-var mapProj=this.map.getProjectionObject();
-var wgs84=new OpenLayers.Projection("WGS84");
-var minMapxy=new OpenLayers.LonLat(this.map.getExtent().left,this.map.getExtent().bottom).transform(mapProj,wgs84);
-var maxMapxy=new OpenLayers.LonLat(this.map.getExtent().right,this.map.getExtent().top).transform(mapProj,wgs84);
-var aux=parseFloat(this.minxelement.dom.value);
-if(isNaN(aux)){this.minxelement.dom.value=minMapxy.lon
-}aux=parseFloat(this.maxxelement.dom.value);
-if(isNaN(aux)){this.maxxelement.dom.value=maxMapxy.lon
-}aux=parseFloat(this.minyelement.dom.value);
-if(isNaN(aux)){this.minyelement.dom.value=minMapxy.lat
-}aux=parseFloat(this.maxyelement.dom.value);
-if(isNaN(aux)){this.maxyelement.dom.value=maxMapxy.lat
-}this.minxelement.dom.value=parseFloat(this.minxelement.dom.value).toFixed(4);
-this.maxxelement.dom.value=parseFloat(this.maxxelement.dom.value).toFixed(4);
-this.minyelement.dom.value=parseFloat(this.minyelement.dom.value).toFixed(4);
-this.maxyelement.dom.value=parseFloat(this.maxyelement.dom.value).toFixed(4);
-this.vectorLayer.destroyFeatures();
-var minxy=new OpenLayers.LonLat(this.minxelement.dom.value,this.minyelement.dom.value).transform(wgs84,mapProj);
-var maxxy=new OpenLayers.LonLat(this.maxxelement.dom.value,this.maxyelement.dom.value).transform(wgs84,mapProj);
-var bounds=new OpenLayers.Bounds();
-bounds.extend(minxy);
-bounds.extend(maxxy);
-var polFeature=new OpenLayers.Feature.Vector(bounds.toGeometry(),null,this.vectorLayerStyle);
-this.vectorLayer.addFeatures([polFeature]);
-this.vectorLayer.refresh()
-},getOrCreateLayer:function(){if(!this.vectorLayer){this.vectorLayer=this.vectorLayer||new OpenLayers.Layer.Vector("ExtentBox",{style:this.vectorLayerStyle});
-this.map.addLayer(this.vectorLayer)
-}this.map.setLayerIndex(this.vectorLayer,this.map.getNumLayers());
-return this.vectorLayer
-},clear:function(){if(this.vectorLayer){this.vectorLayer.destroyFeatures()
-}},zoomTo:function(){var mapProj=this.map.getProjectionObject();
-var wgs84=new OpenLayers.Projection("WGS84");
-var minxy=new OpenLayers.LonLat(this.minxelement.dom.value,this.minyelement.dom.value).transform(wgs84,mapProj);
-var maxxy=new OpenLayers.LonLat(this.maxxelement.dom.value,this.maxyelement.dom.value).transform(wgs84,mapProj);
-var bounds=new OpenLayers.Bounds();
-bounds.extend(minxy);
-bounds.extend(maxxy);
-this.map.zoomToExtent(bounds)
-},CLASS_NAME:"GeoNetwork.Control.ExtentBox"});if(!window.GeoNetwork){window.GeoNetwork={}
-}if(!GeoNetwork.Control){GeoNetwork.Control={}
-}GeoNetwork.Control.ZoomWheel=OpenLayers.Class(OpenLayers.Control,{wheelChange:OpenLayers.Control.Navigation.prototype.wheelChange,draw:function(){this.handler=new OpenLayers.Handler.MouseWheel(this,{up:OpenLayers.Control.Navigation.prototype.wheelUp,down:OpenLayers.Control.Navigation.prototype.wheelDown});
-this.activate()
-},CLASS_NAME:"GeoNetwork.Control.ZoomWheel"});Ext.namespace("GeoNetwork","GeoNetwork.tree");
+GeoNetwork.WMCManager=new GeoNetwork.WMC();Ext.namespace("GeoNetwork","GeoNetwork.tree");
 GeoNetwork.tree.WMSListGenerator=function(config){Ext.apply(this,config);
 if(this.node&&this.wmsStore){this.createWMSList()
 }};
