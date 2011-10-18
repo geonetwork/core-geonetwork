@@ -54,7 +54,7 @@ function runPdfSearch(onSelection) {
 		}
 
 		location.replace (serviceUrl);
-		metadataselect(0, 'remove-all');
+		//metadataselect(0, 'remove-all');
 	} else {
 	    if (document.cookie.indexOf("search=advanced")!=-1)
 	        runAdvancedSearch("pdf");
