@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
 import java.io.File;
@@ -104,7 +105,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
             Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-            String currentLanguage = context.getLanguage();
+            String currentLanguage = "";
 
           // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
             if (inspireEnabled){
@@ -126,7 +127,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
                 String defaultLanguage = Lib.local.getDefaultLanguage(dbms);
 
+                if (!StringUtils.hasLength(currentLanguage)) {
+                    currentLanguage = defaultLanguage;
+                }
+
                 setInspireLanguages(capabilities, langs, currentLanguage, defaultLanguage);
+
+            } else {
+                currentLanguage = context.getLanguage();
             }
 
             CswCapabilitiesInfo cswCapabilitiesInfo = gc.getDataManager().getCswCapabilitiesInfo(dbms, currentLanguage);
@@ -323,7 +331,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 Element defaultLanguage;
                 Element language;
 
-                System.out.println("key: "+ key);
                 if (key.equalsIgnoreCase(defaultLang)) {
                     defaultLanguage = new Element("DefaultLanguage", Csw.NAMESPACE_INSPIRE_COM);
                     language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
