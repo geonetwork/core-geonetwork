@@ -124,15 +124,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="pdf.selection.search">
-			<class name=".services.main.SelectionSearch"/>
+			<class name=".services.main.SelectionSearch">
+				<param name="restoreLastSearch" value="yes" />
+			</class>	
 			<output forward="pdf.present" />
 		</service>
 		
 		<service name="pdf.present">
-			<class name=".services.main.Result">
-				<param name="range" value="1000" /> <!-- too many causes problems -->
-			</class>
-			
 			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
 				<call name="mdresults" class=".services.main.Result" />
 				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
