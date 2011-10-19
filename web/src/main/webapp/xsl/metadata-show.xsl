@@ -22,8 +22,10 @@
 	<xsl:variable name="serverUrl" select="concat($protocol,'://',$host,':',$port,/root/gui/locService)" />
 
 	<xsl:template mode="css" match="/">
-		<xsl:call-template name="geoCssHeader"/>
-		<xsl:call-template name="ext-ux-css"/>
+		<xsl:if test="$currTab!='xml'">
+			<xsl:call-template name="geoCssHeader"/>
+			<xsl:call-template name="ext-ux-css"/>
+		</xsl:if>
 	</xsl:template>
 
 	<!--
@@ -116,36 +118,12 @@
 											</td>
 											
 											<!-- Export links (XML, PDF, ...) -->
-										  <td align="right" class="padded-content" height="16" nowrap="nowrap">
-										    <xsl:choose>
-  												<xsl:when test="contains(geonet:info/schema,'dublin-core')">
-  														<a href="{/root/gui/locService}/dc.xml?id={geonet:info/id}" target="_blank" title="Download Dublin Core metadata in XML">
-  															<img src="{/root/gui/url}/images/xml.png" alt="Dublin Core XML" title="Save Dublin Core metadata as XML" border="0"/>
-  														</a>
-  												</xsl:when>
-  												<xsl:when test="contains(geonet:info/schema,'fgdc-std')">
-  														<a href="{/root/gui/locService}/fgdc.xml?id={geonet:info/id}" target="_blank" title="Download FGDC metadata in XML">
-  															<img src="{/root/gui/url}/images/xml.png" alt="FGDC XML" title="Save FGDC metadata as XML" border="0"/>
-  														</a>
-  												</xsl:when>
-  												<xsl:when test="contains(geonet:info/schema,'iso19115')">
-  														<a href="{/root/gui/locService}/iso19115to19139.xml?id={geonet:info/id}" target="_blank" title="Save ISO19115/19139 metadata as XML">
-  															<img src="{/root/gui/url}/images/xml.png" alt="IISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
-  														</a>
-  														<a href="{/root/gui/locService}/iso_arccatalog8.xml?id={geonet:info/id}" target="_blank" title="Download ISO19115 metadata in XML for ESRI ArcCatalog">
-  															<img src="{/root/gui/url}/images/ac.png" alt="ISO19115 XML for ArcCatalog" title="Save ISO19115 metadata in XML for ESRI ArcCatalog" border="0"/>
-  														</a>
-  												</xsl:when>
-  												<xsl:when test="contains(geonet:info/schema,'iso19139')">
-  														<a href="{/root/gui/locService}/iso19139.xml?id={geonet:info/id}" target="_blank" title="Download ISO19115/19139 metadata in XML">
-  															<img src="{/root/gui/url}/images/xml.png" alt="ISO19115/19139 XML" title="Save ISO19115/19139 metadata as XML" border="0"/>
-  														</a>
-  												</xsl:when>
-										    </xsl:choose>
-										    <a href="{/root/gui/locService}/pdf?id={geonet:info/id}" title="PDF">
-										      <img src="{/root/gui/url}/images/pdf.gif" alt="PDF" title="PDF" style="border:0px;max-height:16px;"/>
-										    </a>
-										  </td>
+											<xsl:if test="(string(geonet:info/isTemplate)!='s')">
+										  	<td align="right" class="padded-content" height="16" nowrap="nowrap">
+													<xsl:call-template name="showMetadataExportIcons"/>
+										  	</td>
+											</xsl:if>
+
 										</tr>
 									</table>
 								</td>
@@ -187,5 +165,5 @@
 			<tr><td class="blue-content" colspan="3"/></tr>
 		</table>
 	</xsl:template>
-	
+
 </xsl:stylesheet>

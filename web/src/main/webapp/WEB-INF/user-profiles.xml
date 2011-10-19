@@ -399,11 +399,11 @@
 
 		<!-- Metadata export services -->
 		<allow service="pdf.search"/>
-		<allow service="dc.xml"/>
-		<allow service="fgdc.xml"/>
-		<allow service="iso19115to19139.xml"/>
-		<allow service="iso19139.xml"/>
-		<allow service="iso_arccatalog8.xml"/>
+		<allow service="xml_dublin-core"/>
+		<allow service="xml_fgdc-std"/>
+		<allow service="xml_iso19115to19139"/>
+		<allow service="xml_iso19115toarccatalog8"/>
+		<allow service="xml_iso19139"/>
 
 		<!-- RSS services -->
 		<allow service="rss.latest"/>

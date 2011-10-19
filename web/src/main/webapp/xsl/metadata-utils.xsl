@@ -171,4 +171,57 @@
         </div>
     </xsl:template>
 
+	<!-- show metadata export icons eg. in search results or metadata viewer -->
+	<xsl:template name="showMetadataExportIcons">
+		<xsl:param name="forBrief" select="false()"/>
+	
+		<xsl:variable name="schema" select="string(geonet:info/schema)"/>
+		<xsl:variable name="schemaServicePrefix" select="concat('xml_',$schema)"/>
+		<xsl:variable name="mid" select="string(geonet:info/id)"/>
+		<xsl:variable name="url" select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService)"/>
+													
+    <xsl:for-each select="/root/gui/services/service[starts-with(@name,$schemaServicePrefix)]">
+			<xsl:variable name="serviceName" select="@name"/>
+			<xsl:variable name="serviceUrl" select="concat($url,'/',$serviceName,'?id=',$mid)"/>
+			<xsl:variable name="exportLabel" select="/root/gui/schemas/*[name()=$schema]/strings/*[name()=$serviceName]"/>
+			<xsl:choose>
+				<xsl:when test="$forBrief">
+					<xsl:element name="link">
+						<xsl:attribute name="href">
+							<xsl:value-of select="$serviceUrl"/>
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="$exportLabel"/>
+						</xsl:attribute>
+						<xsl:attribute name="type">application/xml</xsl:attribute>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+      		<a href="{$serviceUrl}" target="_blank" title="{$exportLabel}">
+						<img src="{/root/gui/url}/images/xml.png" alt="{$exportLabel}" title="{$exportLabel}" border="0"/>
+					</a>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
+
+		<!-- add pdf link -->
+		<xsl:variable name="pdfUrl" select="concat($url,'/pdf?id=',$mid)"/>
+
+		<xsl:choose>
+			<xsl:when test="$forBrief">
+				<xsl:element name="link">
+					<xsl:attribute name="href">
+						<xsl:value-of select="$pdfUrl"/>
+					</xsl:attribute>
+					<xsl:attribute name="title">PDF</xsl:attribute>
+					<xsl:attribute name="type">application/pdf</xsl:attribute>
+				</xsl:element>
+			</xsl:when>
+			<xsl:otherwise>
+    		<a href="{$pdfUrl}" title="PDF">
+					<img src="{/root/gui/url}/images/pdf.gif" alt="PDF" title="PDF" style="border:0px;max-height:16px;"/>
+    		</a>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 </xsl:stylesheet>

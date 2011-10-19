@@ -6,7 +6,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Metadata export services -->
 		
-		<service name="dc.xml">
+		<service name="xml_dublin-core">
 			<class name=".services.metadata.Show" />
 			<output sheet="conversion/export/xml_dc.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
@@ -16,7 +16,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<service name="fgdc.xml">
+		<service name="xml_fgdc-std">
 			<class name=".services.metadata.Show" />
 			<output sheet="conversion/export/xml_fgdc.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
@@ -26,7 +26,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<service name="iso19115to19139.xml">
+		<service name="xml_iso19115to19139">
 			<class name=".services.metadata.Show" />
 			<output sheet="conversion/export/xml_iso19115_to_19139.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
@@ -36,7 +36,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<service name="iso19139.xml">
+		<service name="xml_iso19139">
 			<class name=".services.metadata.Show" />
 			<output sheet="conversion/export/xml_iso19139.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
@@ -46,7 +46,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<service name="iso_arccatalog8.xml">
+		<service name="xml_iso19115toarccatalog8">
 			<class name=".services.metadata.Show" />
 			<output sheet="conversion/export/xml_iso19115arccatalog.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
