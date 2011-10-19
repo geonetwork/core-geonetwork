@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -104,7 +105,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
             Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-            String currentLanguage = context.getLanguage();
+            String currentLanguage = "";
 
             // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())            
             if (inspireEnabled){
@@ -126,7 +127,13 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
                 String defaultLanguage = Lib.local.getDefaultLanguage(dbms);
 
+                if (StringUtils.isEmpty(currentLanguage)) {
+                    currentLanguage = defaultLanguage;
+                }
+
                 setInspireLanguages(capabilities, langs, currentLanguage, defaultLanguage);
+            } else {
+                currentLanguage = context.getLanguage();
             }
 
             CswCapabilitiesInfo cswCapabilitiesInfo = gc.getDataManager().getCswCapabilitiesInfo(dbms, currentLanguage);
@@ -323,7 +330,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 Element defaultLanguage;
                 Element language;
 
-                System.out.println("key: "+ key);
                 if (key.equalsIgnoreCase(defaultLang)) {
                     defaultLanguage = new Element("DefaultLanguage", Csw.NAMESPACE_INSPIRE_COM);
                     language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
