@@ -652,7 +652,9 @@ public class LuceneSearcher extends MetaSearcher
                 Element xmlTerm = (Element) o;
                 String fld = xmlTerm.getAttributeValue("fld");
                 String txt = analyzeQueryText(fld, xmlTerm.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
-                query.add(new Term(fld, txt));
+				if(txt.length() > 0) { 
+					query.add(new Term(fld, txt));
+				} 				
             }
 			returnValue = query;
 		}
