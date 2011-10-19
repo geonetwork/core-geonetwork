@@ -24,7 +24,7 @@ public enum TypeName {
 
     //------------------------------------------------------------------------
 
-    public static TypeName getTypeName(String typeName) throws InvalidParameterValueEx {
+    public static TypeName getTypeName(String typeName) {
         if (typeName.equals(DATASET.toString()))
             return DATASET;
 

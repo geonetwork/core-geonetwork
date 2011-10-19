@@ -172,8 +172,11 @@ public class CswServer
             for (Element typeName : typeNames) {
                 String typeNameValue = typeName.getValue();
                 log("Adding typeName: " + typeNameValue + " to operation: " + name);
-                if (typeNameValue != null) {
+                TypeName tn = TypeName.getTypeName(typeNameValue);
+                if (tn != null) {
                     op.typeNamesList.add(typeNameValue);
+                } else {
+                    log("  Unsupported typeName found: " + typeNameValue + ".");
                 }
             }
 		}
