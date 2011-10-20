@@ -8,6 +8,7 @@
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
+
   <xsl:template name="view-with-header">
     <xsl:param name="tabs"/>
     
@@ -64,11 +65,14 @@
             <xsl:apply-templates mode="block"
                   select="
                   gmd:identificationInfo/*/gmd:language
+                  |gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:edition
                   |gmd:topicCategory
                   |gmd:identificationInfo/*/gmd:descriptiveKeywords
                   |gmd:identificationInfo/*/gmd:graphicOverview[1]
                   |gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:geographicElement
                   "/>
+            <xsl:apply-templates mode="block"
+              select="gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier"/>
           </xsl:with-param>
         </xsl:call-template>
 
@@ -155,7 +159,7 @@
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple"
           select="
-          descendant::node()[gco:CharacterString]
+          descendant::node()[gco:CharacterString and normalize-space(gco:CharacterString)!='']
           "/>
         <xsl:if test="descendant::gmx:FileName">
           <img src="{descendant::gmx:FileName/@src}" alt="logo" class="orgLogo" style="float:right;"/>
@@ -185,6 +189,23 @@
         <xsl:if test="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           (<xsl:value-of
             select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>)
+        </xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template mode="block" match="gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier">
+    <xsl:call-template name="simpleElementSimpleGUI">
+      <xsl:with-param name="title">
+        <xsl:call-template name="getTitle">
+          <xsl:with-param name="name" select="name(.)"/>
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="content">
+        <xsl:value-of select="gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+        <xsl:if test="gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString != ''">
+          <xsl:value-of select="concat(' (', gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString, ')')"/>
         </xsl:if>
       </xsl:with-param>
     </xsl:call-template>
@@ -473,7 +494,12 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:call-template>
       </xsl:with-param>
-      <xsl:with-param name="help"/>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="name" select="name(.)"/>
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple" select="@*|*">
           <xsl:with-param name="schema" select="$schema"/>
