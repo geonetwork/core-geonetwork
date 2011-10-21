@@ -17,7 +17,7 @@ CREATE TABLE Relations
 CREATE TABLE Categories
   (
     id    int,
-    name  varchar(32)   not null,
+    name  varchar(255)   not null,
 
     primary key(id),
     unique(name)
@@ -210,7 +210,7 @@ CREATE TABLE CategoriesDes
   (
     idDes   int,
     langId  varchar(5),
-    label   varchar(96)   not null,
+    label   varchar(255)   not null,
 
     primary key(idDes,langId),
 
@@ -235,6 +235,7 @@ CREATE TABLE Metadata
     root         varchar(255),
     harvestUuid  varchar(250)   default null,
     owner        int            not null,
+    doctype      varchar(255),
     groupOwner   int            default null,
     harvestUri   varchar(255)   default null,
     rating       int            default 0 not null,
