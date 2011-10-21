@@ -43,13 +43,13 @@ attached it to the metadata for data.
 			<!-- TODO we could check if online resource already exists before adding information -->
 			<gmd:distributionInfo>
 				<gmd:MD_Distribution>
-					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/*"/>
-					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/*"/>
+					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
+					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
 					<gmd:transferOptions>
 						<gmd:MD_DigitalTransferOptions>
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution/*"/>
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:transferSize/*"/>
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/*"/>
+							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
+							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
+							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
 							<gmd:onLine>
 								<gmd:CI_OnlineResource>
 									<gmd:linkage>
@@ -66,9 +66,10 @@ attached it to the metadata for data.
 									</gmd:description> 
 								</gmd:CI_OnlineResource> 
 							</gmd:onLine> 
-							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:offLine/*"/>
+							<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"/>
 						</gmd:MD_DigitalTransferOptions>
 					</gmd:transferOptions>
+					<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"/>
 				</gmd:MD_Distribution>
 				
 			</gmd:distributionInfo>
@@ -86,6 +87,4 @@ attached it to the metadata for data.
 			
 		</xsl:copy>
 	</xsl:template>
-
-
 </xsl:stylesheet>
