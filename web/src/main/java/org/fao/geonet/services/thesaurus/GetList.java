@@ -101,6 +101,10 @@ public class GetList implements Service {
 			String fname = currentTh.getFname();
 			elFname.addContent(fname);
 			
+			Element elTitle = new Element("title");
+			String title = currentTh.getTitle();
+			elTitle.addContent(title);
+			
 			Element elType = new Element("type");
 			String type = currentTh.getType();
 			elType.addContent(type);
@@ -118,6 +122,7 @@ public class GetList implements Service {
 			elLoop.addContent(elKey);
 			elLoop.addContent(elDname);
 			elLoop.addContent(elFname);
+			elLoop.addContent(elTitle);
 			elLoop.addContent(elType);
 			elLoop.addContent(elActivated);
 			

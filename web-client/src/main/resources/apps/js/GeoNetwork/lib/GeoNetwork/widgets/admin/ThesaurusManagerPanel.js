@@ -166,8 +166,13 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 sortable: true // columns are not sortable by default           
             },
             columns: [{
-                id: 'filename',
+                id: 'title',
                 header: OpenLayers.i18n('ThesaurusName'),
+                dataIndex: 'title',
+                editable: false
+            }, {
+                id: 'filename',
+                header: OpenLayers.i18n('id'),
                 dataIndex: 'filename',
                 editable: false
             }, {
@@ -213,7 +218,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             border: false,
             store: this.thesaurusStore,
             cm: thColumnModel,
-            autoExpandColumn: 'filename',
+            autoExpandColumn: 'title',
             clicksToEdit: 1,
             listeners: {
                 scope: this,

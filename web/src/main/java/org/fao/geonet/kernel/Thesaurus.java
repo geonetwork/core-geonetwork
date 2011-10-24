@@ -97,7 +97,7 @@ public class Thesaurus {
 		this.dname = dname;
 		this.thesaurusFile = thesaurusFile; 
 		
-        retrieveThesaurusTitle(thesaurusFile, type);
+        retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
 
 	}
 
