@@ -166,7 +166,7 @@ label + span {
 }
 
 .metadata * select {
-  max-width : 60%
+  max-width : 200px
 }
 
 .metadata * input.error,
