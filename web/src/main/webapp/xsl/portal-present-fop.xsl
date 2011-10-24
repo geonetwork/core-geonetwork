@@ -43,7 +43,7 @@
                 <xsl:variable name="remote" select="/root/response/summary/@type='remote'"/>
 
                 <xsl:call-template name="fo">
-                  <xsl:with-param name="res" select="//mdresults"/>
+				  <xsl:with-param name="res" select="/root/response"/>
                   <xsl:with-param name="gui" select="/root/gui"/>
                   <xsl:with-param name="server" select="//server"/>
                   <xsl:with-param name="remote" select="$remote"/>
