@@ -197,14 +197,17 @@ public class Info implements Service {
             String currContext = currElem.getAttributeValue("context");
 
             currName = findNamespace(currName, scm, schema);
-
+            
             if (currName == null) {
                 throw new OperationAbortedEx("No namespace found for : " + currName);
             }
 
             if (currContext != null && context != null && isoType != null) {
-                currContext = findNamespace(currContext, scm, schema);
-
+                // XPath context are supposed to use same namespace prefix
+                if (!currContext.contains("/")) {
+                    currContext = findNamespace(currContext, scm, schema);
+                }
+                
                 if (name.equals(currName)
                         && (context.equals(currContext) || isoType.equals(currContext))) {
                     return (Element) currElem.clone();
