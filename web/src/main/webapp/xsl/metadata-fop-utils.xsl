@@ -51,7 +51,7 @@
       <xsl:call-template name="getTitle">
         <xsl:with-param name="name">
           <xsl:choose>
-            <xsl:when test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110'))">
+            <xsl:when test="not(contains($schema, 'iso19139')) and not(contains($schema, 'iso19110')) and not(contains($schema, 'iso19135'))">
               <xsl:value-of select="name(.)"/>
             </xsl:when>
             <xsl:when test="@codeList">
