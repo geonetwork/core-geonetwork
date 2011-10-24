@@ -524,21 +524,34 @@ public class Thesaurus {
         String dateVal = dateEl.getText();
 
         // Try several date formats (date format seem not unified)
-        List<DateFormat> dfList = new ArrayList<DateFormat>();
+        List<SimpleDateFormat> dfList = new ArrayList<SimpleDateFormat>();
 
         dfList.add(new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"));
         dfList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         dfList.add(new SimpleDateFormat("yyyy-MM-dd"));
 
-        for(DateFormat df: dfList) {
+        StringBuffer errorMsg = new StringBuffer("Error parsing the thesaurus date value: ");
+        errorMsg.append(dateVal);
+        boolean success = false;
+        
+        for(SimpleDateFormat df: dfList) {
             try {
                 thesaurusDate = df.parse(dateVal);
+                success = true;
             } catch(Exception ex) {
                 // Ignore the exception and try next format
-                ex.printStackTrace();
+                errorMsg.append("\n  * with format: ");
+                errorMsg.append(df.toPattern());
+                errorMsg.append(". Error is: ");
+                errorMsg.append(ex.getMessage());
             }
         }
-
+        // Report error if no success
+        if (!success) {
+            errorMsg.append("\nCheck thesaurus date in ");
+            errorMsg.append(this.fname);
+            Log.error(Geonet.THESAURUS_MAN, errorMsg.toString());
+        }
         return thesaurusDate;
     }
 
