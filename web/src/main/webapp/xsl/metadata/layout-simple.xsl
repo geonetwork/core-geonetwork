@@ -132,6 +132,7 @@
     <xsl:param name="type"/>
     <xsl:param name="title"/>
     <xsl:param name="help"/>
+    <xsl:param name="helpLink"/>
     <xsl:param name="content"/>
 
     <fieldset id="{$id}">
@@ -139,6 +140,11 @@
         <xsl:attribute name="alt">
           <xsl:value-of select="$help"/>
         </xsl:attribute>
+        <xsl:if test="$helpLink">
+          <xsl:attribute name="id">
+            <xsl:value-of select="concat('stip.', $helpLink)"></xsl:value-of>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:value-of select="$title"/>
       </legend>
       <xsl:copy-of select="$content"/>
