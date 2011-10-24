@@ -359,10 +359,12 @@ GeoNetwork.app = function(){
     function search(){
         searching = true;
         catalogue.search('searchForm', app.loadResults, null, catalogue.startRecord, true);
-        
+    }
+    
+    function initPanels(){
         var infoPanel = Ext.getCmp('infoPanel'), 
-            resultsPanel = Ext.getCmp('resultsPanel'),
-            tagCloudPanel = Ext.getCmp('tagCloudPanel');
+        resultsPanel = Ext.getCmp('resultsPanel'),
+        tagCloudPanel = Ext.getCmp('tagCloudPanel');
         if (infoPanel.isVisible()) {
             infoPanel.hide();
         }
@@ -380,7 +382,6 @@ GeoNetwork.app = function(){
             initMap();
         }
     }
-    
     /**
      * Bottom bar
      *
@@ -755,6 +756,9 @@ GeoNetwork.app = function(){
          * @return
          */
         loadResults: function(response){
+            
+            initPanels();
+            
             // FIXME : result panel need to update layout in case of slider
             // Ext.getCmp('resultsPanel').syncSize();
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);

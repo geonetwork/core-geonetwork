@@ -276,11 +276,16 @@
 
                 <include>${project.build.directory}/classes/apps/js/GeoExt-ux/LayerOpacitySliderPlugin/LayerOpacitySliderPlugin.js</include>
 
-
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/SingleFile.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/de.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/en.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/fr.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/nl.js</include>
+                
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Util.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Catalogue.js</include>
 
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/HelpTools.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/SearchTools.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/Old.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/INSPIRESearchFormTools.js</include>
@@ -313,11 +318,6 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/form/GeometryMapField.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/form/OpenSearchSuggestionTextField.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/form/SearchField.js</include>
-
-                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/de.js</include>
-                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/en.js</include>
-                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/fr.js</include>
-                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/nl.js</include>
 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/LoginForm.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/MetadataMenu.js</include>

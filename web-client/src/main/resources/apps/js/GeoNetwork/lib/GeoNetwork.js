@@ -88,6 +88,7 @@
             "GeoNetwork/util/SearchFormTools.js",
             "GeoNetwork/util/CSWSearchTools.js",
             "GeoNetwork/data/SubTemplateTypeStore.js",
+            "GeoNetwork/util/HelpTools.js",
             "GeoNetwork/data/GroupStore.js",
             "GeoNetwork/data/UserStore.js",
             "GeoNetwork/data/CategoryStore.js",

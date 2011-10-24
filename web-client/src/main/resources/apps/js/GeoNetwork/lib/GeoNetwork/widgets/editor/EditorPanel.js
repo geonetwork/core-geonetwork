@@ -459,19 +459,22 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      * @param name        Type of element to update. Based on this information
      *     define if multiple selection is allowed and if hidden parameters need
      *  to be added to CSW query.
+     * @param mode Mode is set to name if not defined. Mode define which type of metadata
+     * to search for. Uuidref means all, iso19110 means feature catalogue only.
      */
-    showLinkedMetadataSelectionPanel: function(ref, name){
+    showLinkedMetadataSelectionPanel: function(ref, name, mode){
         // Add extra parameters according to selection panel
-        var single = ((name === 'uuidref' || name === 'iso19110' || name === '') ? true : false);
+        var mode = mode || name;
+        var single = ((mode === 'uuidref' || mode === 'iso19110' || mode === '') ? true : false);
         var editorPanel = this;
-
         this.linkedMetadataSelectionPanel = new GeoNetwork.editor.LinkedMetadataSelectionPanel({
             ref: ref,
             catalogue: this.catalogue,
             singleSelect: single,
-            mode: name,
+            mode: mode,
             listeners: {
                 linkedmetadataselected: function(panel, metadata){
+                    
                     if (single) {
                         if (this.ref !== null) {
                             Ext.get('_' + this.ref + (name !== '' ? '_' + name : '')).dom.value = metadata[0].data.uuid;

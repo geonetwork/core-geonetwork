@@ -44,56 +44,20 @@ GeoNetwork.editor.HelpPanel = Ext.extend(Ext.Panel, {
         collapsed: false
     },
     editor: undefined,
+    tipTpl: undefined,
     cache: {},
     /**
      * TODO : add depth parameter to display help on up sections until editor body root
      */
     loadHelp: function(id, sectionId, updateMessage, cb){
-        var info = id.split('|');
-        var panel = this;
-        var schema = this.editor.metadataSchema;
-        var requestBody = '<request><element schema="' + schema + 
-                                '" name="' + info[1] + 
-                                '" context="' + info[2] + 
-                                '" fullContext="' + info[3] + 
-                                '" isoType="' + info[4] + '" /></request>';
-        
-        OpenLayers.Request.POST({
-            url: this.editor.catalogue.services.schemaInfo,
-            data: requestBody,
-            success: function(response){
-                var help = response.responseXML.getElementsByTagName('element')[0];
-                var title = help.getElementsByTagName('label')[0];
-                var desc = help.getElementsByTagName('description')[0];
-                var cond = help.getElementsByTagName('conditional')[0];
+        if (!this.cache[id]) {
+            var panel = this;
+            GeoNetwork.util.HelpTools.get(id, this.editor.metadataSchema, this.editor.catalogue.services.schemaInfo, function(r) {
+                panel.cache[id] = panel.tipTpl.apply(r.records[0].data);
                 
-                // TODO : error message when no child
-                var msg = "<div class='help'><span class='title'>" + 
-                            (title ? title.firstChild.nodeValue : "") + 
-                            "</span><br/> " + 
-                            (desc && desc.firstChild ? desc.firstChild.nodeValue : "") + 
-                            (cond && cond.firstChild ? "<br/> " + cond.firstChild.nodeValue : "") + 
-                            "<br/>[" + schema + ":" + info[1] + "]" + 
-                          "</div>";
-                panel.cache[id] = msg;
-                
-                // -- Append section info to the message
-                if (sectionId && panel.cache[sectionId]) {
-                    msg += panel.cache[sectionId];
-                }
-                
-                if (cb) {
-                    panel.cb();
-                }
-                
-                if (updateMessage) {
-                    panel.update(panel.cache[id] + (panel.cache[sectionId] ? panel.cache[sectionId] : ""));
-                }
-            },
-            failure: function(response){
-            }
-        });
-        
+                panel.update(panel.cache[id]);
+            });
+        }
     },
     updateHelp: function(id, section){
         // Don't load help when panel is collapsed to avoid too many useless queries
@@ -127,6 +91,8 @@ GeoNetwork.editor.HelpPanel = Ext.extend(Ext.Panel, {
         Ext.apply(this, config);
         Ext.applyIf(this, this.defaultConfig);
         
+        this.tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.COMPLETE);
+
         this.title = OpenLayers.i18n('help');
         
         GeoNetwork.editor.HelpPanel.superclass.initComponent.call(this);

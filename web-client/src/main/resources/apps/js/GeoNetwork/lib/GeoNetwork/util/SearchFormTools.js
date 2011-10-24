@@ -60,7 +60,18 @@ GeoNetwork.util.SearchFormTools = {
                 minChars: 2,
                 loadingText: '...',
                 hideTrigger: true,
-                url: services.opensearchSuggest
+                url: services.opensearchSuggest,
+                listeners: {
+//                      TODO : Unable field tooltips
+//                    'afterrender': function () {
+//                        new Ext.ToolTip({
+//                            target: "E_any",
+//                            anchor: 'bottom',
+//                            anchorOffset: 15,
+//                            html: OpenLayers.i18n('anyTT')
+//                        });
+//                    }
+                }
             }));
         } else {
             fields.push(GeoNetwork.util.SearchFormTools.getFullTextField());

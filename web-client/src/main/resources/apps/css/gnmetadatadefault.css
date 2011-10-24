@@ -79,13 +79,6 @@ li.thumbnail-selected,
 li.suggestion-selected {
   background-color : #7EADD9;
 }
-
-div.help .title {
-  font-size : 120%;
-  font-weight : bold;
-}
-
-
 /* Tab navigation - start */
 div#tabs ul li ul {
   list-style-type : none;

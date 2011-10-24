@@ -31,7 +31,7 @@ Ext.namespace('GeoNetwork.view');
  *  .. class:: ViewWindow(config)
  *
  *     Create a GeoNetwork metadata view window
- *
+ *     to display a metadata record.
  *
  */
 GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
@@ -42,7 +42,8 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         border: false,
         autoScroll: true,
         closeAction: 'destroy',
-        currTab: 'simple'
+        currTab: 'simple',
+        displayTooltip: true
     },
     maximizable: true,
     maximized: false,
@@ -54,6 +55,10 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     record: undefined,
     resultsView: undefined,
     actionMenu: undefined,
+    tipTpl: undefined,
+    metadataSchema: undefined,
+    cache: {},
+    tooltips: [],
     /** 
      *  Get related metadata records for current metadata using xml.relation service.
      */
@@ -197,15 +202,103 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     },
     // TODO : duplicate from EditorToolBar - end
     afterMetadataLoad: function(){
+        // Clear tooltip cache
+        this.cache = {};
+        this.tooltips = [];
+        
         // Processing after content load
         this.updateViewMenu();
         
         // Create map panel for extent visualization
         this.catalogue.extentMap.initMapDiv();
         
-        // Related metadata are only displayed in simple mode FIXME ?
-        if (this.currTab === 'view-simple') {
+        // Related metadata are only displayed in view mode with no tabs
+        if (this.currTab === 'view-simple' || this.currTab === 'inspire' || this.currTab === 'simple') {
             this.getLinkedData();
+        }
+        
+        this.registerTooltip();
+    },
+    createTooltipMenu: function(){
+        return new Ext.Button({
+            enableToggle: true,
+            pressed: this.displayTooltip,
+            iconCls: 'book',
+            tooltip: OpenLayers.i18n('enableTooltip'),
+            listeners: {
+                toggle: function(c, pressed){
+                    this.displayTooltip = pressed;
+                    this.enableTooltip();
+                },
+                scope: this
+            }
+        });
+    },
+    /**
+     * Look for all th element with an id and register
+     * a tooltip
+     */
+    enableTooltip: function(){
+        Ext.each(this.tooltips, function(item, idx){
+            if (this.displayTooltip) {
+                item.enable();
+            } else {
+                item.disable();
+            }
+        }, this);
+    },
+    /**
+     * Look for all th element with an id and register
+     * a tooltip
+     */
+    registerTooltip: function(){
+        var formElements = Ext.query('th[id]', this.body.dom);
+        formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
+        Ext.each(formElements, function(item, index, allItems){
+            var e = Ext.get(item);
+            var id = e.getAttribute('id');
+            if (e.is('TH')) {
+                var section = e.up('FIELDSET');
+                var f = function(){
+                    if (this.displayTooltip) {
+                        this.loadHelp(id, section);
+                    }
+                };
+                e.parent().on('mouseover', f, this);
+                
+            } else {
+                var f = function(){
+                    if (this.displayTooltip) {
+                        this.loadHelp(id);
+                    }
+                };
+                    e.on('mouseover', f, this);
+                
+            }
+        }, this);
+    },
+    /**
+     * Add a tooltip to an element. If sectionId is defined,
+     * then anchor is on top (usually is a fieldset legend element)
+     */
+    loadHelp: function(id, sectionId){
+        if (!this.cache[id]) {
+            var panel = this;
+            GeoNetwork.util.HelpTools.get(id, this.metadataSchema, this.catalogue.services.schemaInfo, function(r) {
+                panel.cache[id] = panel.tipTpl.apply(r.records[0].data);
+                    
+                var t = new Ext.ToolTip({
+                    target: id,
+                    title: r.records[0].get('label'),
+                    anchor: sectionId ? 'top' : 'bottom',
+                    anchorOffset: 35,
+                    html: panel.cache[id]
+                });
+                // t.show();// This force the tooltip to be displayed once created
+                // it may cause issue when user scroll, so tooltips are all dislayed for hovered element
+                // If not present, the tooltip only appear when user come back to the element. FIXME
+                panel.tooltips.push(t);
+            });
         }
     },
     /** private: method[initComponent] 
@@ -214,6 +307,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     initComponent: function(config){
         Ext.apply(this, config);
         Ext.applyIf(this, this.defaultConfig);
+        
+        this.tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.SIMPLE);
+        
         this.tools = [{
             id: 'newwindow',
             qtip: OpenLayers.i18n('newWindow'),
@@ -223,11 +319,11 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             },
             scope: this
         }];
-        this.tbar = [this.createViewMenu(), this.createActionMenu()];
+        this.tbar = [this.createViewMenu(), this.createActionMenu(), '->', this.createTooltipMenu()];
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
-        
-        this.setTitle(this.record?this.record.get('title'):'');
+        this.metadataSchema = this.record ? this.record.get('schema') : '';
+        this.setTitle(this.record ? this.record.get('title') : '');
         this.add(new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl + '&currTab=' + this.currTab,

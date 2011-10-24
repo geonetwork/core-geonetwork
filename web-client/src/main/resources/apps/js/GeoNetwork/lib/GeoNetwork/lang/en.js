@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
 
 GeoNetwork.lang.en = {
+    'example': "Example:",
+    'helper': "Suggestion:",
+    'tagName': 'Element name:',
+    'enableTooltip': 'Enable tooltips to get more information about each descriptors.',
     'connectIssue': "Catalogue connection issue",
     'connectIssueMsg': "Error 404. Can't connect to catalogue at url ",
     'featureInfoTooltipTitle': "Feature info",

@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'example': "Exemple :",
+    'helper': "Suggestion :",
+    'tagName': "Nom de l'élément :",
+    'enableTooltip': 'Activer les info-bulles pour obtenir une description complète de chaque champs.',
     'connectIssue': "Échec de connexion au catalogue",
     'connectIssueMsg': "Erreur 404. Impossible de se connecter à l'URL ",
     'featureInfoTooltipTitle': "caractéristique",

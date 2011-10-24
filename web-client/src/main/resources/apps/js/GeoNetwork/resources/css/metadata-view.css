@@ -318,3 +318,18 @@ li.tag-cloud-7 {
   height : 20px !important;
   width : 20px !important;
 }
+
+div.help .title {
+  font-size : 120%;
+  font-weight : bold;
+}
+div.help div{
+  margin-top: 3px;
+}
+div.help span{
+  font-style: italic;
+}
+div.help ul li {
+  list-style-type : circle !important;
+  margin-left: 10px !important;
+}
