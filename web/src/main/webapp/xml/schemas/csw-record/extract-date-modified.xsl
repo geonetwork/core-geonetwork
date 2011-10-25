@@ -7,7 +7,7 @@
 	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 	>
 
-	<xsl:template match="csw:Record">
+	<xsl:template match="csw:Record|csw:SummaryRecord">
 		 <dateStamp><xsl:value-of select="dct:modified"/></dateStamp>
 	</xsl:template>
 

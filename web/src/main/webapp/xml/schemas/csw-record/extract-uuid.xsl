@@ -6,7 +6,7 @@
 	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 	>
 
-	<xsl:template match="csw:Record">
+	<xsl:template match="csw:Record|csw:SummaryRecord">
 		 <uuid><xsl:value-of select="dc:identifier"/></uuid>
 	</xsl:template>
 
