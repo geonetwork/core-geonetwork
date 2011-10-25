@@ -90,6 +90,7 @@ function resetWherePars() {
 	setParam('region',null);
 	setParam('region_remote',null);
     
+  setParam('relation_simple','overlaps');	
   setParam('relation','overlaps');	
   setParam('relation_remote','overlaps');	
 
