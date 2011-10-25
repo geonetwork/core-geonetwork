@@ -363,6 +363,8 @@ GeoNetwork.lang.en = {
     'advancedSearchOptions': 'Advanced criteria',
     'relatedservices': 'Related service',
     'relatedchildren': 'Children',
+    'relatedfcats': 'Related feature catalogue',
+    'relatedsources': 'Source datasets',
     'getMEF': 'Export (ZIP)',
     'metadataCategories': 'Metadata categories',
     'validityInfo': 'Validation status: ',

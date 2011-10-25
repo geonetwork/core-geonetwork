@@ -385,6 +385,8 @@ GeoNetwork.Lang.fr = {
     'relateddatasets': 'Métadonnées associées',
     'relatedchildren': 'Enfants',
     'relatedrelated': 'Relation catalogue d\'attributs/données',
+    'relatedfcats': 'Relation catalogue d\'attributs/données',
+    'relatedsources': 'Données sources',
     'delete19110Relation': 'Supprimer le lien cat. d\'attributs',
     'newWindow': 'Nouvelle fenêtre',
     'addAsXLink': 'Ajout d\'un élément lié',

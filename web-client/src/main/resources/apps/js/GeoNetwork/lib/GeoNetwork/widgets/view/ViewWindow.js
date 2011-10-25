@@ -43,7 +43,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         autoScroll: true,
         closeAction: 'destroy',
         currTab: 'simple',
-        displayTooltip: true
+        displayTooltip: true,
+        // Do not display fcats and sources by default. Set to '' to display all.
+        relationTypes: 'service|children|related|parent|dataset'
     },
     maximizable: true,
     maximized: false,
@@ -63,7 +65,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
      *  Get related metadata records for current metadata using xml.relation service.
      */
     getLinkedData : function() {
-        var store = new GeoNetwork.data.MetadataRelationStore(this.catalogue.services.mdRelation + '?fast=false&uuid=' + this.metadataUuid, null, true),
+        var store = new GeoNetwork.data.MetadataRelationStore(this.catalogue.services.mdRelation + '?type=' + this.relationTypes + '&fast=false&uuid=' + this.metadataUuid, null, true),
             view = this;
         store.load();
         store.on('load', function(){
@@ -79,7 +81,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         var el = Ext.get(table[0]);
         var exist = el.child('tr td[class*=' + type + ']');
         var link = '<li><a href="#" onclick="javascript:catalogue.metadataShow(\'' + 
-            record.get('uuid') + '\');" ' + 
+            record.get('uuid') + '\');return false;" ' + 
             'title="' + record.get('abstract') + '">' + 
             record.get('title') + '</a></li>';
         if (exist !== null) {
