@@ -3238,7 +3238,7 @@
 				</keyword>
 			</xsl:for-each>
 
-			<xsl:for-each select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+			<xsl:for-each select="gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
 				<geoBox>
 					<westBL><xsl:value-of select="gmd:westBoundLongitude"/></westBL>
 					<eastBL><xsl:value-of select="gmd:eastBoundLongitude"/></eastBL>
