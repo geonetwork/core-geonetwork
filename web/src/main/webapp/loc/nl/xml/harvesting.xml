@@ -115,6 +115,10 @@
 	<username>Gebruikersnaam</username>
 	<password>Wachtwoord</password>
 	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Zoek criteria</search>
 	<siteName>Sitenaam</siteName>
 	
@@ -351,6 +355,11 @@
 			De externe host waar u contact mee wil opnemen
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Specificeer <i>host</i>, <i>poort</i> en <i>servlet</i> parameters en druk dan op deze knop om 
 			alle bronnen die bekend zijn bij deze externe node op te vragen. 

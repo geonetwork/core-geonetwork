@@ -113,7 +113,9 @@
 	<useAccount>Usar compte</useAccount>
 	<username>Nom d'usuari</username>
 	<password>Contrasenya</password>
-	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Criteri de cerca</search>
 	<siteName>Nom del lloc</siteName>
 	
@@ -349,6 +351,11 @@
 			El servidor remot on desitja connectar-se
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Especifiqueu els paràmetres <i>servidor</i>, <i>port</i> i <i>servlet</i> i premeu aquest botó per 
 			recuperar totes les fonts conegudes en el node remot.

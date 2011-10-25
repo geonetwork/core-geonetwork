@@ -124,6 +124,7 @@ var updateTemp =
 '      <servlet>{SERVLET}</servlet>'+
 '      <createRemoteCategory>{CREATE_REMOTE_CATEGORY}</createRemoteCategory>'+
 '      <mefFormatFull>{MEF_FULL}</mefFormatFull>'+
+'      <xslfilter>{XSLFILTER}</xslfilter>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+

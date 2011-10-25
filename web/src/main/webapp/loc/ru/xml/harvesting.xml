@@ -117,7 +117,11 @@
 	<useAccount>От имени пользователя</useAccount>
 	<username>Логин</username>
 	<password>Пароль</password>
-
+	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Критерий поиска</search>
 	<siteName>Название сайта</siteName>
 
@@ -354,7 +358,12 @@
 		<tip id="gn.host">
 			Удаленный узел для подключения.
 		</tip>
-
+		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Укажите <i>Хост</i>, <i>Порт</i> и <i>Сервлет</i> и нажмите данную кнопку,
 			чтобы получить известные на удаленном узле источники.

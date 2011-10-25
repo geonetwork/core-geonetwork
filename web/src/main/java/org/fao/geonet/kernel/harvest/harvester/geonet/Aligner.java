@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -40,6 +41,7 @@ import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
@@ -124,6 +126,9 @@ public class Aligner
 		localUuids = new UUIDMapper(dbms, params.uuid);
 		dbms.commit();
 
+
+		parseXSLFilter();
+		
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
 
@@ -172,6 +177,29 @@ public class Aligner
 		log.info("End of alignment for : "+ params.name);
 
 		return result;
+	}
+
+	private void parseXSLFilter() {
+		processName = params.xslfilter;
+		
+		// Parse complex xslfilter process_name?process_param1=value&process_param2=value...
+		if (params.xslfilter.contains("?")) {
+			String[] filterInfo = params.xslfilter.split("\\?");
+			processName = filterInfo[0];
+			log.debug("      - XSL Filter name:" + processName);
+			if (filterInfo[1] != null) {
+				String[] filterKVP = filterInfo[1].split("&");
+				for (String kvp : filterKVP) {
+					String[] param = kvp.split("=");
+					if (param.length == 2) {
+						log.debug("        with param:" + param[0] + " = " + param[1]);
+						processParams.put(param[0], param[1]);
+					} else {
+						log.debug("        no value for param: " + param[0]);
+					}
+				}
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -270,6 +298,8 @@ public class Aligner
 		if ("true".equals(isTemplate))	isTemplate = "y";
 			else 									isTemplate = "n";
 
+		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
+
         // validate it here if requested
         if (params.validate) {
             if(!dataMan.validate(md))  {
@@ -279,10 +309,9 @@ public class Aligner
             }
         }
 
-		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
-        //
-        //  insert metadata
-        //
+        md = processMetadata(ri, md);
+        
+        // insert metadata
         int userid = 1;
         String group = null, docType = null, title = null, category = null;
         // If MEF format is full, private file links needs to be updated
@@ -562,10 +591,10 @@ public class Aligner
 			result.unchangedMetadata++;
 		}
 		else {
-            //
+			md = processMetadata(ri, md);
+	        
             // update metadata
-            //
-			log.debug("  - Updating local metadata with id="+ id);
+            log.debug("  - Updating local metadata with id="+ id);
 
             boolean validate = false;
             boolean ufo = params.mefFormatFull;
@@ -604,6 +633,36 @@ public class Aligner
 
 		dbms.commit();
 		dataMan.indexMetadataGroup(dbms, id);
+	}
+
+	/**
+	 * Filter the metadata if process parameter is set and
+	 * corresponding XSL transformation exists.
+	 * @param ri
+	 * @param md
+	 * @return
+	 */
+	private Element processMetadata(RecordInfo ri, Element md) {
+		// process metadata
+		if (!params.xslfilter.equals("")) {
+			MetadataSchema metadataSchema = dataMan.getSchema(ri.schema);
+			
+			String filePath = metadataSchema.getSchemaDir() + "/process/" + processName + ".xsl";
+			File xslProcessing = new File(filePath);
+			if (!xslProcessing.exists()) {
+				log.info("     processing instruction not found for " + ri.schema + " schema. metadata not filtered.");
+			} else {
+				Element processedMetadata = null;
+				try {
+					processedMetadata = Xml.transform(md, filePath, processParams);
+					log.debug("     metadata filtered.");
+					md = processedMetadata;
+				} catch (Exception e) {
+					log.warning("     processing error (" + params.xslfilter + "): " + e.getMessage());
+				}
+			}
+		}
+		return md;
 	}
 
 	//--------------------------------------------------------------------------
@@ -734,7 +793,10 @@ public class Aligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-
+	
+	private String processName;
+	private HashMap<String, String> processParams = new HashMap<String, String>();
+	
 	private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
 }
 

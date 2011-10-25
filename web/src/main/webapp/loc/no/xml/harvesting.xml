@@ -114,6 +114,10 @@
 	<username>Brukernavn</username>
 	<password>Passord</password>
 	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Søkekriterie</search>
 	<siteName>Navn på nettsted</siteName>
 	
@@ -350,6 +354,11 @@
 			Serveren du vil koble deg til
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Oppgi <i>server</i>, <i>portnummer</i> og <i>servlet</i> parametre og klikk denne knappen for å hente alle kilder som er kjent av serveren
 			.

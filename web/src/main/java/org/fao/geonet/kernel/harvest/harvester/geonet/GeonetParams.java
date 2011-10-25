@@ -66,7 +66,8 @@ public class GeonetParams extends AbstractParams
 		servlet = Util.getParam(site, "servlet", "geonetwork");
 		createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
 		mefFormatFull = Util.getParam(site, "mefFormatFull", false);
-		
+		xslfilter = Util.getParam(site, "xslfilter", "");
+
 		checkPort(port);
 		addSearches(searches);
 		addCopyPolicy(policy);
@@ -91,7 +92,8 @@ public class GeonetParams extends AbstractParams
 		servlet = Util.getParam(site, "servlet", servlet);
         createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
-
+        xslfilter = Util.getParam(site, "xslfilter", "");
+        
 		checkPort(port);
 
 		//--- if some search queries are given, we drop the previous ones and
@@ -129,6 +131,7 @@ public class GeonetParams extends AbstractParams
 		copy.servlet = servlet;
 		copy.createRemoteCategory = createRemoteCategory;
 		copy.mefFormatFull = mefFormatFull;
+		copy.xslfilter = xslfilter;
 		
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -188,6 +191,16 @@ public class GeonetParams extends AbstractParams
 	public String  servlet;
 	public boolean createRemoteCategory;
 	public boolean mefFormatFull;
+	
+	/**
+	 * The filter is a process (see schema/process folder) which depends on the schema.
+	 * It could be composed of parameter which will be sent to XSL transformation using
+	 * the following syntax :
+	 * <pre>
+	 * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
+	 * </pre>
+	 */
+	public String  xslfilter;
 	
 	private ArrayList<Search> alSearches   = new ArrayList<Search>();
 	private ArrayList<Group>  alCopyPolicy = new ArrayList<Group>();

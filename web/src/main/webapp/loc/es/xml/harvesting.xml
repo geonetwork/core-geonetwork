@@ -115,6 +115,10 @@
 	<username>Nombre de usuario</username>
 	<password>Contraseña</password>
 	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Criterio de búsqueda</search>
 	<siteName>Nombre del sitio</siteName>
 	
@@ -351,6 +355,11 @@
 			El servidor remoto al que desea conectarse
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Especifique los parámetros <i>servidor</i>, <i>puerto</i> y <i>servlet</i> y luego presione este botón para 
 			recuperar todas las fuentes conocidas a el nodo remoto.

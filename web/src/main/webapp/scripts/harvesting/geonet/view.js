@@ -92,7 +92,8 @@ function setEmpty()
 
     $('gn.createRemoteCategory').checked = false;
     $('gn.mefFormatFull').checked = false;
-    
+	$('gn.xslfilter')   .value = '';
+
 	shower.update();
 }
 
@@ -112,6 +113,7 @@ function setData(node)
 	hvutil.setOption(site, 'servlet', 'gn.servlet');
 	hvutil.setOption(site, 'createRemoteCategory', 'gn.createRemoteCategory');
 	hvutil.setOption(site, 'mefFormatFull', 'gn.mefFormatFull');
+	hvutil.setOption(site, 'xslfilter', 'gn.xslfilter');
 
 	//--- add search entries
 	
@@ -155,6 +157,8 @@ function getData()
 	data.SERVLET = $F('gn.servlet');	
 	data.CREATE_REMOTE_CATEGORY = $('gn.createRemoteCategory').checked;
 	data.MEF_FULL = $('gn.mefFormatFull').checked;
+	data.XSLFILTER = $F('gn.xslfilter');	
+
 	//--- retrieve search information
 	
 	var searchData = [];
@@ -434,7 +438,8 @@ function getHostData()
 		SERVLET    : $F('gn.servlet'),
 		USERNAME   : $F('gn.username'),
 		PASSWORD   : $F('gn.password'),
-		USE_ACCOUNT: $('gn.useAccount').checked
+		USE_ACCOUNT: $('gn.useAccount').checked,
+		XSLFILTER  : $F('gn.xslfilter')
 	};
 	
 	return data;

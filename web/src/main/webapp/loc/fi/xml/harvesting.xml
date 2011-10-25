@@ -101,6 +101,10 @@
 	<username>Käyttäjätunnus</username>
 	<password>Salasana</password>
 	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Hakukriteerit</search>
 	<siteName>Sivuston nimi</siteName>
 	
@@ -297,6 +301,11 @@
 			Etäpalvelin, johon yhteys otetaan.
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Määrittele <i>isäntäpalvelimen</i>, <i>portin</i> ja <i>servletin</i> parametrit ja paina tätä nappulaa hakeaksesi kaikki metatiedot tästä lähteestä.
 		</tip>

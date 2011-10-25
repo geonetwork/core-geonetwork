@@ -114,7 +114,10 @@
 	<useAccount>Benutzerzugang</useAccount>
 	<username>Benutzername</username>
 	<password>Passwort</password>
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
 	
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Suchkriterium</search>
 	<siteName>Seitenname</siteName>
 	
@@ -351,6 +354,11 @@
 			Der entfernte Knoten, mit dem Sie verbinden wollen
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Geben Sie bitte den <i>host</i>, <i>port</i> und <i>servlet</i> Parameter an und drücken
 			dann diesen Button, um alle Quellen von diesem entfernten Knoten zu empfangen.

@@ -114,7 +114,10 @@
 	<useAccount>Use account</useAccount>
 	<username>Username</username>
 	<password>Password</password>
-	
+	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
+	<mefFormatFull>Use full MEF format</mefFormatFull>
+	  
+	<xslfilter>XSL filter name</xslfilter>
 	<search>Search criteria</search>
 	<siteName>Site name</siteName>
 	
@@ -352,7 +355,11 @@
 		<tip id="gn.host">
 			The remote host you want to connect to
 		</tip>
-		
+		<tip id="gn.xslfilter">
+			The name of the XSL filter to be applied to harvested metadata records. The filter must be
+			registered in schema's process folder by catalogue administrator. If filter is not found
+			for metadata schema, not filter is applied.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
 			retrieve all sources known to the remote node.

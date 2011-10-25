@@ -120,7 +120,8 @@
   
   <createRemoteCategory>Attribuer les catégories si elles existent localement</createRemoteCategory>
   <mefFormatFull>Utiliser le format MEF complet</mefFormatFull>
-  
+	
+	<xslfilter>Nom du filtre XSL</xslfilter>
 	<freeText>Texte libre</freeText>
 	<title>Titre</title>
 	<abstract>Résumé</abstract>
@@ -347,13 +348,18 @@
 		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<tip id="gn.name">
-			Generic name to identify the harvesting node
+			Nom générique pour identifier le point de moissonnage
 		</tip>
 		
 		<tip id="gn.host">
-			The remote host you want to connect to
+			Le nom d'hôte (www.monorganisation.org) ou son IP
 		</tip>
 		
+		<tip id="gn.xslfilter">
+			Le nom du filtre XSL à appliquer aux métadonnées moissonnées. Le filtre doit être
+			enregistré dans les processus des schémas par l'administrateur du catalogue. 
+			Si le filtre n'est pas trouvé, aucun filtre n'est appliqué.
+		</tip>
 		<tip id="gn.retrieveSources">
 			Specify <i>host</i>, <i>port</i> and <i>servlet</i> parameters and then press this button to 
 			retrieve all sources known to the remote node.
