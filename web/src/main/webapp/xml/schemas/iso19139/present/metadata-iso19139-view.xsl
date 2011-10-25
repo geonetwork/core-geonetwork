@@ -120,6 +120,12 @@
     priority="100">
     <xsl:call-template name="simpleElementSimpleGUI">
       <xsl:with-param name="title" select="/root/gui/schemas/iso19139/strings/refDate"/>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple" select=".|following-sibling::node()[name(.)='gmd:date']"/>
       </xsl:with-param>
@@ -130,6 +136,12 @@
     priority="100">
     <xsl:call-template name="simpleElementSimpleGUI">
       <xsl:with-param name="title" select="/root/gui/schemas/iso19139/strings/temporalRef"/>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple" select="*/gmd:extent/*/gml:beginPosition
                                                             |*/gmd:extent/*/gml:endPosition
@@ -142,6 +154,12 @@
     priority="100">
     <xsl:call-template name="simpleElementSimpleGUI">
       <xsl:with-param name="title" select="/root/gui/schemas/iso19139/strings/constraintInfo"/>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple"
           select="*|following-sibling::node()[name(.)='gmd:resourceConstraints']/*"/>
@@ -155,6 +173,12 @@
         <xsl:value-of
           select="geonet:getCodeListValue(/root/gui/schemas, 'iso19139', 'gmd:CI_RoleCode', */gmd:role/gmd:CI_RoleCode/@codeListValue)"
         />
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple"
@@ -183,6 +207,12 @@
             select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>)
         </xsl:if>
       </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
           <!-- TODO multilingual -->
           <xsl:value-of select="string-join(gmd:keyword/gco:CharacterString, ', ')"/> 
@@ -202,6 +232,12 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:call-template>
       </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:value-of select="gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
         <xsl:if test="gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString != ''">
@@ -218,6 +254,12 @@
         <xsl:call-template name="getTitle">
           <xsl:with-param name="name" select="name(.)"/>
           <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
@@ -260,6 +302,12 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:call-template>
       </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:call-template name="iso19139GetIsoLanguage">
           <xsl:with-param name="schema" select="$schema"/>
@@ -277,6 +325,12 @@
         <xsl:call-template name="getTitle">
           <xsl:with-param name="name" select="name(.)"/>
           <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
@@ -302,6 +356,12 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:call-template>
       </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <!-- FIXME template name or move to generic layout -->
         <xsl:apply-templates mode="logo"
@@ -317,6 +377,12 @@
         <xsl:call-template name="getTitle">
           <xsl:with-param name="name" select="name(.)"/>
           <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
@@ -337,6 +403,12 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:call-template>
       </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:value-of select="gco:Integer"/>
       </xsl:with-param>
@@ -349,6 +421,12 @@
         <xsl:call-template name="getTitle">
           <xsl:with-param name="name" select="name(.)"/>
           <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
@@ -603,6 +681,7 @@
     
     <xsl:call-template name="simpleElement">
       <xsl:with-param name="id" select="generate-id(.)"/>
+      <xsl:with-param name="type" select="*/@codeListValue"/>
       <xsl:with-param name="title">
         <xsl:call-template name="getTitle">
           <xsl:with-param name="name" select="name(.)"/>

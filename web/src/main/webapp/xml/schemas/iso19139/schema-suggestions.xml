@@ -165,6 +165,14 @@
 		<suggest name="uuidref"/>
 	</field>
 
+	<field name="gmd:source">
+		<suggest name="uuidref"/>
+	</field>
+	
+	<field name="gmd:featureCatalogueCitation">
+		<suggest name="uuidref"/>
+	</field>
+	
 	<field name="gml:Polygon">
 		<suggest name="srsName"/>
 	</field>
@@ -189,6 +197,4 @@
     <suggest name="gmd:classification"/>
     <suggest name="gmd:useLimitation"/>
   </field>
-  
-
 </fields>

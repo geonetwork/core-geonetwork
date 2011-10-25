@@ -317,9 +317,37 @@
 			</xsl:for-each>  
 		</xsl:for-each>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- === Content info === -->
+		<xsl:for-each select="gmd:contentInfo/*/gmd:featureCatalogueCitation[@uuidref]">
+			<Field  name="hasfeaturecat" string="{string(@uuidref)}" store="false" index="true"/>
+		</xsl:for-each>
+		
 		<!-- === Data Quality  === -->
+		<xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage//gmd:source[@uuidref]">
+			<Field  name="hassource" string="{string(@uuidref)}" store="false" index="true"/>
+		</xsl:for-each>
+		
 		<xsl:for-each select="gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
+			<xsl:if test="$inspire='true'">
+				<!-- 
+				INSPIRE related dataset could contains a conformity section with:
+				* COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services
+				* INSPIRE Data Specification on <Theme Name> – <version>
+				* INSPIRE Specification on <Theme Name> – <version> for CRS and GRID
+				
+				Index those types of citation title to found dataset related to INSPIRE (which may be better than keyword
+				which are often used for other types of datasets).
+				
+				"1089/2010" is maybe too fuzzy but could work for translated citation like "Règlement n°1089/2010, Annexe II-6" TODO improved
+				-->
+				<xsl:if test="(
+					contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, '1089/2010') or
+					contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE Data Specification') or
+					contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE Specification'))">
+					<Field name="inspirerelated" string="on" store="false" index="true"/>
+				</xsl:if>
+			</xsl:if>
 			
 			<xsl:for-each select="//gmd:pass/gco:Boolean">
 				<Field name="degree" string="{string(.)}" store="true" index="true"/>

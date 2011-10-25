@@ -815,8 +815,8 @@
     </element>
     <element name="gmd:denominator" id="57.0">
         <label>Denominator</label>
-        <description>The number below the line in a vulgar fraction</description>
-        <condition>add either a denominator or a distance</condition>
+      <description>The number below the line in a vulgar fraction</description>
+      <condition>add either a denominator or a distance</condition>
     <helper>
 		<option value="5000">1:5´000</option>
 		<option value="10000">1:10´000</option>
@@ -911,14 +911,14 @@
         <label>Distance</label>
         <description>Ground sample distance</description>
         <condition>Provide a distance if no equivalent Scale is documented</condition>
-    <helper>
-		<option value="0.10">10</option>
-		<option value="0.25">25</option>
-		<option value="0.50">50</option>
-		<option value="1">1</option>
-		<option value="30">30</option>
-		<option value="100">100</option>
-    </helper>
+        <helper relAtt="uom">
+            <option value="0.10" title="cm">10 cm</option>
+            <option value="0.25" title="cm">25 cm</option>
+            <option value="0.50" title="cm">50 cm</option>
+            <option value="1" title="m">1 m</option>
+            <option value="30" title="m">30 m</option>
+            <option value="100" title="m">100 m</option>
+        </helper>  
     </element>
     <element name="gmd:distributionFormat" id="271.0">
         <label>Distribution format</label>
@@ -1385,6 +1385,17 @@
         <description>Name of the data transfer format(s)</description>
         <help>name of the data transfer format(s)</help>
         <condition>mandatory</condition>
+        <helper rel="gmd:version">
+            <option value="Text">Text</option>
+            <option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
+            <option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
+            <option value="Mapinfo TAB">Mapinfo TAB</option>
+            <option value="KML">KML</option>
+            <option value="GeoTIFF" title="1.0">GeoTIFF</option>
+            <option value="TIFF">TIFF</option>
+            <option value="ECW">ECW</option>
+            <option value="ZIP">ZIP</option>
+        </helper>
     </element>
     <element name="gmd:name" context="gmd:MD_ExtendedElementInformation" id="307.0">
         <label>Name</label>

@@ -87,7 +87,15 @@
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="edit" select="$edit" />
 					</xsl:apply-templates>
-
+				  <xsl:if test="not(../../gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat)">
+				    <xsl:apply-templates mode="elementEP"
+				      select="
+				      ../../gmd:distributionInfo/gmd:MD_Distribution/geonet:child[string(@name)='distributionFormat']">
+				      <xsl:with-param name="schema" select="$schema" />
+				      <xsl:with-param name="edit" select="$edit" />
+				    </xsl:apply-templates>
+				  </xsl:if>
+				  
 					<xsl:apply-templates mode="complexElement"
 						select="
 						../../gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine">

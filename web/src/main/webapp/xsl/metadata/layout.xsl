@@ -70,7 +70,6 @@
     </xsl:param>
     <xsl:param name="edit" select="false()"/>
     <xsl:param name="embedded"/>
-
     <xsl:variable name="schemaTemplate" select="concat('metadata-',$schema)"/>
     <saxon:call-template name="{$schemaTemplate}">
       <xsl:with-param name="schema" select="$schema"/>
@@ -88,7 +87,7 @@
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="false()"/>
     <xsl:param name="embedded"/>
-
+    
     <!-- draw child element place holder if
 			- child is an OR element or
 			- there is no other element with the name of this placeholder 
@@ -133,9 +132,10 @@
 			or contains($elementException, @name)
 			"/>
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
-
+    
     <xsl:if test="(not($flat) or $exception) and not($isXLinked)">
       <xsl:if test="(geonet:choose or name($prevBrother)!=$name or $name='gmd:graphicOverview')">
+        
         <xsl:variable name="text">
           <xsl:if test="geonet:choose">
 
@@ -1016,15 +1016,49 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    
+    <xsl:variable name="context">
+      <xsl:value-of select="name(parent::node()/parent::node())"/>
+    </xsl:variable>
+    
+    <xsl:variable name="xpath">
+      <xsl:for-each select="parent::node()">
+        <xsl:call-template name="getXPath"/>
+      </xsl:for-each>
+    </xsl:variable>
 
     <!-- Look for the helper -->
     <xsl:variable name="helper">
       <xsl:choose>
         <xsl:when
-          test="starts-with($schema,'iso19139') and not(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper)">
-          <!-- Fallback to iso19139 helper for ISO profil if not exist ... -->
-          <xsl:copy-of
-            select="/root/gui/schemas/iso19139/labels/element[@name = $parentName]/helper"/>
+          test="starts-with($schema,'iso19139')">
+              <xsl:choose>
+                <!-- Exact schema, name and full context match --> 
+                <xsl:when test="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and @context=$xpath]/helper">
+                  <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
+                </xsl:when>
+                <!-- ISO19139, name and full context match --> 
+                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $parentName and @context=$xpath]/helper">
+                  <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
+                </xsl:when>
+                <!-- Exact schema, name and parent-only match --> 
+                <xsl:when test="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and @context=$context]/helper">
+                  <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
+                </xsl:when>
+                <!-- ISO19139, name and parent-only match --> 
+                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $parentName and @context=$context]/helper">
+                  <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
+                </xsl:when>
+                <!-- Exact schema, name match --> 
+                <xsl:when test="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and not(@context)]/helper">
+                  <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and not(@context)]/helper"/>
+                </xsl:when>
+                <!-- ISO19139 schema, name match --> 
+                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $parentName and not(@context)]/helper">
+                  <xsl:copy-of
+                    select="/root/gui/schemas/iso19139/labels/element[@name = $parentName and not(@context)]/helper"/>
+                </xsl:when>
+              </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of
@@ -1041,6 +1075,8 @@
       <xsl:variable name="refId"
         select="if ($attribute=true()) then concat(../geonet:element/@ref, '_', name(.)) else geonet:element/@ref"/>
       <xsl:variable name="relatedElementName" select="$list/*/@rel"/>
+      <xsl:variable name="relatedAttributeName" select="$list/*/@relAtt"/>
+      
       <xsl:variable name="relatedElementAction">
         <xsl:if test="$relatedElementName!=''">
           <xsl:variable name="relatedElement"
@@ -1054,9 +1090,20 @@
           />
         </xsl:if>
       </xsl:variable>
+      
+      <xsl:variable name="relatedAttributeAction">
+        <xsl:if test="$relatedAttributeName!=''">
+          <xsl:variable name="relatedAttributeRef"
+            select="concat($refId, '_', $relatedAttributeName)"/>
+          <xsl:value-of
+            select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+          />
+        </xsl:if>
+      </xsl:variable>
+      
       <xsl:text> </xsl:text> (<xsl:value-of select="/root/gui/strings/helperList"/>
       <select
-        onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction}"
+        onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction}"
         class="md">
         <option/>
         <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
@@ -1177,6 +1224,10 @@
       <xsl:if test="not($visible)">
         <xsl:attribute name="style"> display:none; </xsl:attribute>
       </xsl:if>
+      <xsl:attribute name="class">
+        <!-- Add codelist value in CSS class -->
+        <xsl:if test="*/@codeListValue and not($edit)"><xsl:value-of select="*/@codeListValue"/></xsl:if>
+      </xsl:attribute>
       <th id="stip.{$helpLink}">
         <xsl:attribute name="class">
           <xsl:text>main </xsl:text>
@@ -1300,11 +1351,12 @@
   -->
   <xsl:template name="simpleElementSimpleGUI">
     <xsl:param name="title"/>
+    <xsl:param name="helpLink"/>
     <xsl:param name="content"/>
     <tr>
-      <td class="main">
+      <th class="main" id="stip.{$helpLink}|{generate-id()}">
         <xsl:value-of select="$title"/>
-      </td>
+      </th>
       <td>
         <xsl:copy-of select="$content"/>
       </td>
@@ -1358,6 +1410,8 @@
         <xsl:call-template name="getElementText">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit" select="$edit"/>
+          <xsl:with-param name="input_type" select="'number'"/>
+          <xsl:with-param name="input_step" select="'0.00001'"/>
           <xsl:with-param name="validator" select="'validateNumber(this, false)'"/>
           <xsl:with-param name="no_name" select="true()"/>
         </xsl:call-template>
@@ -1368,7 +1422,7 @@
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly"
+        <input class="md" type="number" id="{$eltRef}" value="{text()}" readonly="readonly"
           size="{$size}"/>
         <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{text()}"
           readonly="readonly"/>
@@ -1682,6 +1736,10 @@
     <!-- Use input_type parameter to create an hidden field. 
       Default is a text input. -->
     <xsl:param name="input_type">text</xsl:param>
+    <!-- 
+      See http://www.w3.org/TR/html-markup/input.number.html
+    -->
+    <xsl:param name="input_step"></xsl:param>
     <!-- Set to true no_name parameter in order to create an element 
       which will not be submitted to the form. -->
     <xsl:param name="no_name" select="false()"/>
@@ -1802,6 +1860,9 @@
             <input class="md {$class}" type="{$input_type}" value="{text()}">
               <xsl:if test="$isXLinked">
                 <xsl:attribute name="disabled">disabled</xsl:attribute>
+              </xsl:if>
+              <xsl:if test="$input_step">
+                <xsl:attribute name="step"><xsl:value-of select="$input_step"/></xsl:attribute>
               </xsl:if>
               <xsl:choose>
                 <xsl:when test="$no_name=false()">

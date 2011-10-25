@@ -1305,14 +1305,14 @@
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
-    <helper>
-		<option value="0.10">10</option>
-		<option value="0.25">25</option>
-		<option value="0.50">50</option>
-		<option value="1">1</option>
-		<option value="30">30</option>
-		<option value="100">100</option>
-    </helper>    
+    <helper relAtt="uom">
+	  <option value="0.10" title="cm">10 cm</option>
+      <option value="0.25" title="cm">25 cm</option>
+      <option value="0.50" title="cm">50 cm</option>
+      <option value="1" title="m">1 m</option>
+      <option value="30" title="m">30 m</option>
+      <option value="100" title="m">100 m</option>
+    </helper>
   </element>
   
   <element name="gmd:distributionFormat" id="271.0">
@@ -1958,12 +1958,13 @@
     <description>Nom des formats de transfert des données</description>
     <help>Nom du format de transfert de données, par exemple TIFF, ZIP, etc.</help>
     <condition>Obligatoire</condition>
-    <helper>
+    <helper rel="gmd:version">
       <option value="Texte">Texte</option>
-      <option value="ESRI Shapefile">ESRI Shapefile</option>
-      <option value="Mapinfo MIF/MID">Mapinfo MIF/MID</option>
+      <option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
+      <option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
       <option value="Mapinfo TAB">Mapinfo TAB</option>
       <option value="KML">KML</option>
+      <option value="GeoTIFF" title="1.0">GeoTIFF</option>
       <option value="TIFF">TIFF</option>
       <option value="ECW">ECW</option>
       <option value="ZIP">ZIP</option>
@@ -2652,6 +2653,28 @@
     <condition/>
     
   </element>
+  <element name="gmd:title" id="360.0" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+    <label>Titre de la spécification</label>
+    <description>Nom avec lequel la ressource en question est connue</description>
+    <help>
+      <!-- [2] -->
+      Nom caractéristique et souvent unique sous lequel la ressource est connue.
+      
+      Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+    <helper>
+      <option value="COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services">COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</option>
+      <option value="INSPIRE Data Specification on Administrative Units - Guidelines v3.0.1">INSPIRE Data Specification on Administrative Units - Guidelines v3.0.1</option>
+      <option value="INSPIRE Data Specification on Cadastral Parcels - Guidelines v 3.0.1">INSPIRE Data Specification on Cadastral Parcels - Guidelines v 3.0.1 </option>
+      <option value="INSPIRE Data Specification on Geographical Names - Guidelines v 3.0.1">INSPIRE Data Specification on Geographical Names - Guidelines v 3.0.1</option>
+      <option value="INSPIRE Data Specification on Hydrography - Guidelines v 3.0.1">INSPIRE Data Specification on Hydrography - Guidelines v 3.0.1</option>
+      <option value="INSPIRE Data Specification on Protected Sites - Guidelines v 3.1.0">INSPIRE Data Specification on Protected Sites - Guidelines v 3.1.0</option>
+      <option value="INSPIRE Data Specification on Transport Networks - Guidelines v 3.1.0">INSPIRE Data Specification on Transport Networks - Guidelines v 3.1.0</option>
+      <option value="INSPIRE Data Specification on Addresses - Guidelines v 3.0.1">INSPIRE Data Specification on Addresses - Guidelines v 3.0.1</option>
+      <option value="INSPIRE Specification on Coordinate Reference Systems - Guidelines v 3.1">INSPIRE Specification on Coordinate Reference Systems - Guidelines v 3.1</option>
+      <option value="INSPIRE Specification on Geographical Grid Systems - Guidelines v 3.0.1">INSPIRE Specification on Geographical Grid Systems - Guidelines v 3.0.1</option>
+    </helper>
+  </element>
   <element name="gmd:title" id="360.0">
     <label>Titre</label>
     <description>Nom avec lequel la ressource en question est connue</description>
@@ -2663,7 +2686,6 @@
     <condition>Obligatoire</condition>
     
   </element>
- 
   <element name="gmd:toneGradation" id="265.0">
     <label>Nombre de tons de gris</label>
     <description>Nombre de valeurs numériques discrètes dans les données raster</description>
@@ -2792,14 +2814,16 @@
     <description>Contraintes appliquées pour assurer la protection des sphères privées et intellectuelles, et autres restrictions spéciales ou limitations ou mises en garde pour utiliser les ressources où de métadonnées</description>
     <help>Restrictions d'utilisation à fondement juridique destinées à garantir la sphère privée, la propriété intellectuelle ou d'autres domaines similaires tels que les conditions d'octroi de licence. Elles peuvent être sélectionnées parmi les éléments suivants : droit d'auteur, brevet, brevet en voie de délivrance, marque, licence, propriété intellectuelle, diffusion limitée, autres restrictions.</help>
     <condition/>
-    
   </element>
   <element name="gmd:useLimitation" id="68.0">
     <label>Limitation d'utilisation</label>
     <description>Limitation d'utilisation de la ressource où de métadonnées. Exemple: "ne pas utiliser pour la navigation"</description>
     <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple: "ne pas utiliser pour la navigation"</help>
     <condition/>
-    
+    <helper>
+      <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
+      <option value="Conditions inconnues">Conditions inconnues</option>
+    </helper>
   </element>
   <element name="gmd:userContactInfo" id="66.0">
     <label>Contact concernant la ressource</label>

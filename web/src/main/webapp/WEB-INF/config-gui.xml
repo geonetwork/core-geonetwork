@@ -166,7 +166,7 @@
   -->
   <inspire flat="true">
    	 <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution"/>
-     <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
+     <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,distributionFormat,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
   </inspire>
   <xml/>
  </metadata-tab>
@@ -179,7 +179,7 @@
 
  <!-- Add an option to be able to toggle all fieldsets
   in view and edit mode. -->
- <!-- metadata-view-toggleTab/-->
+ <metadata-view-toggleTab/>
  
  <!-- Actions configuration
  -->

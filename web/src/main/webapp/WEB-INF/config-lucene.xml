@@ -99,6 +99,8 @@
 		<Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 		<Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 		<Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+		<Field name="hassource" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+		<Field name="hasfeaturecat" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 	  <!-- 
 		<Field name="any" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
 		
@@ -121,8 +123,8 @@
 		<Field name="abstract"/>
 		<Field name="title"/>
 		<Field name="altTitle"/>
-	  <!-- FIXME : INSPIRE theme should probably not be tokenized like keywords-->
-		<Field name="inspiretheme"/>
+	  <!-- FIXME : INSPIRE theme should probably not be tokenized like keywords -->
+	  	<Field name="inspiretheme"/>
 		<Field name="keywordType"/>
 		<Field name="orgName"/>
 		<Field name="specificationTitle"/>

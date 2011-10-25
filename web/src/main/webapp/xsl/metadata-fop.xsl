@@ -416,13 +416,13 @@
       <fo:table-cell background-color="{if ($label != '') then $background-color else ''}"
         color="{$title-color}" padding-top="4pt" padding-bottom="4pt" padding-right="4pt"
         padding-left="4pt">
-        <fo:block>
+        <fo:block linefeed-treatment="preserve">
           <xsl:value-of select="$label"/>
         </fo:block>
       </fo:table-cell>
       <fo:table-cell color="{$font-color}" padding-top="4pt" padding-bottom="4pt"
         padding-right="4pt" padding-left="4pt">
-        <fo:block>
+        <fo:block linefeed-treatment="preserve">
           <xsl:value-of select="$value"/>
           <xsl:copy-of select="$content"/>
         </fo:block>

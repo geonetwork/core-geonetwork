@@ -267,7 +267,7 @@
 		and constrain users to use uuidref attribute to link
 		service metadata to datasets. This will avoid to have
 		error on XSD validation. -->
-	<xsl:template match="srv:operatesOn">
+	<xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 		</xsl:copy>
