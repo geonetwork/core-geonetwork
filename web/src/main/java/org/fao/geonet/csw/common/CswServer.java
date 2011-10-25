@@ -145,7 +145,14 @@ public class CswServer
                 log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
             }
 
-            if (parameterName != null && parameterName.equalsIgnoreCase("typeName")) {
+            // CSW 07-045 spec sometime use typenames or typename for the GetRecord type name parameter:
+            // * With 's' in Table 29
+            // * Without 's' p114 in GetCapabiltiies examples and in figure 10 'getRecords service="CSW", typeName="gmd:MD_Metadata"'
+            // Type name is used in both GetRecords (probably with typenames) and DescribeRecord (problaby with typename) operation
+            // so check for both parameters
+            if (parameterName != null &&
+                (parameterName.equalsIgnoreCase("typeNames") || parameterName.equalsIgnoreCase("typeName"))
+                ) {
                 typeNames = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
                 log("Found " + typeNames.size() + " typeNames for operation: " + name);
             }

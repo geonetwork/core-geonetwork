@@ -423,8 +423,14 @@ public abstract class CatalogRequest
 			client.executeMethod(httpMethod);
 			
 			///data = httpMethod.getResponseBody();
-
-			return Xml.loadStream(httpMethod.getResponseBodyAsStream());
+			// If server return HTTP Error 500 Server error 
+			// when retrieving the data return null
+			if (httpMethod.getStatusCode() == 500) {
+				System.out.println("  Status code: " + httpMethod.getStatusCode());
+				return null;
+			} else {
+				return Xml.loadStream(httpMethod.getResponseBodyAsStream());
+			}
 		}
 		finally
 		{
