@@ -189,7 +189,7 @@
         <inspire_ds:ExtendedCapabilities>
 			<inspire_common:ResourceLocator>
 				<inspire_common:URL>$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_common:URL>
-				<inspire_common:MediaType>application/vnd.ogc.wms_xml</inspire_common:MediaType>
+				<inspire_common:MediaType>application/xml</inspire_common:MediaType>
 			</inspire_common:ResourceLocator>
 
 			<inspire_common:ResourceLocator>
