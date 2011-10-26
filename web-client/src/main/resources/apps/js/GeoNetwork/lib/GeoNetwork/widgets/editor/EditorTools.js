@@ -661,7 +661,11 @@ function setAddControls(el, orElement){
             prevDescs[2 + prevIndex].hide();
         else 
             prevDescs[2 + prevIndex].show();
-        prevDescs[3 + prevIndex].show();
+        
+        var el = prevDescs[3 + prevIndex];
+        if (el) {
+        	el.show();
+        }
     }
 }
 

@@ -328,6 +328,7 @@ GeoNetwork.lang.en = {
     'selectRegion': 'Select a region ...',
     'drawRectangle': "Draw rectangle",
     'drawPolygon': "Draw polygon",
+    'drawPolygonTT': "Click the button and draw a polygon by clicking on the map for each points. Double click to create polygon last points.",
     'drawCircle': 'Draw circle',
     'discovery': 'Discovery',
     'visualization': 'Visualization',

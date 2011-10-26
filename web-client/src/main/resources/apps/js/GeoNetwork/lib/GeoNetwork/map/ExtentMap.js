@@ -40,7 +40,6 @@ Ext.namespace('GeoNetwork.map');
  *  TODO :
  *
  *   * Merge with new map module
- *   * Add tooltip to button
  */
 /**
  * @include GeoExt/widgets/MapPanel.js
@@ -91,7 +90,8 @@ GeoNetwork.map.ExtentMap = function(){
      * and polygon also.
      */
     var mainProjCode = GeoNetwork.map.PROJECTION || "EPSG:4326";
-    var wgsProj = new OpenLayers.Projection("EPSG:4326");
+    var wgsProjCode = "EPSG:4326";
+    var wgsProj = new OpenLayers.Projection(wgsProjCode);
     var mainProj = null;
     var units = 'm'; //degrees
     var alternateProj = null;
@@ -169,6 +169,10 @@ GeoNetwork.map.ExtentMap = function(){
     
     /**
      * Change bbox when bounding box input text fields are updated.
+     * Coordinates input are composed of:
+     * * one hidden field with metadata coordinates (id starts with "_")
+     * * one field with the coordinates reprojected according to radio projection selector.
+     * 
      */
     function watchBbox(vectorLayer, watchedBbox, eltRef, map){
         var wsen = watchedBbox.split(','), 
@@ -189,34 +193,40 @@ GeoNetwork.map.ExtentMap = function(){
         }
     }
     
+    /**
+     * mainProj: indicates if coordinate are read from the display coordinate field or from the hidden fields.
+     */
     function updateBbox(map, targetBbox, eltRef, mainProj){
-        var vectorLayer = map.getLayersByName("VectorLayer")[0]; // That supposed that only one vector layer is on the map
-        var bounds, values;
+    	var vectorLayer = map.getLayersByName("VectorLayer")[0]; // That supposed that only one vector layer is on the map
+        var bounds, values, boundsForMap;
         var wsen = targetBbox.split(',');
+        values = [];
         
-        // Update bbox from main projection information
+        // Update bbox from main projection information (from hidden fields which are always in WGS84)
         if (mainProj) {
-            values = [];
             values[0] = Ext.get("_" + wsen[0]).getValue();
             values[1] = Ext.get("_" + wsen[1]).getValue();
             values[2] = Ext.get("_" + wsen[2]).getValue();
             values[3] = Ext.get("_" + wsen[3]).getValue();
             
             bounds = OpenLayers.Bounds.fromArray(values);
+            boundsForMap = bounds.clone();
             
-            // TODO : reproject if another projection is used
-            if (mainProj !== wgsProj) {
-                bounds = bounds.clone().transform(mainProj, wgsProj);
+            // reproject if another projection is used
+            if (mainProjCode !== wgsProj) {
+            	boundsForMap.transform(new OpenLayers.Projection(wgsProjCode), new OpenLayers.Projection(mainProjCode));
             }
-            
         } else {
-            values = [];
+        	// Update bounding box from input fields which
+        	// may be in different projection.
             values[0] = Ext.get(wsen[0]).getValue();
             values[1] = Ext.get(wsen[1]).getValue();
             values[2] = Ext.get(wsen[2]).getValue();
             values[3] = Ext.get(wsen[3]).getValue();
             bounds = OpenLayers.Bounds.fromArray(values);
+            boundsForMap = bounds.clone();
             
+            // Loop for projection selectors value
             var toProj = null;
             var radio = document.getElementsByName("proj_" + eltRef);
             for (i = 0; i < radio.length; i++) {
@@ -225,27 +235,21 @@ GeoNetwork.map.ExtentMap = function(){
                 }
             }
             
+            // Reproject bounds to map projection if needed
             if (toProj !== mainProjCode) {
-                // the bounds read from the input text fields are
-                // equal to main projection, transform them before updating the input
-                // hidden fields
-                bounds.transform(new OpenLayers.Projection(toProj), new OpenLayers.Projection(mainProjCode));
-            } else {
-                // the bounds read from the input text fields are
-                // the default one, transform the values passed to updateBBox
-                var b = bounds.clone();
-                b.transform(mainProj, alternateProj);
-                values[0] = b.left;
-                values[1] = b.bottom;
-                values[2] = b.right;
-                values[3] = b.top;
+            	boundsForMap.transform(new OpenLayers.Projection(toProj), new OpenLayers.Projection(mainProjCode));
             }
             
+            // Reproject coordinates to WGS84 to set lat long in coordinates hidden inputs
+            if (toProj !== wgsProjCode) {
+                bounds.transform(new OpenLayers.Projection(toProj), new OpenLayers.Projection(wgsProjCode));
+            } 
             // Set main projection coordinates
             Ext.get("_" + wsen[0]).dom.value = bounds.left;
             Ext.get("_" + wsen[1]).dom.value = bounds.bottom;
             Ext.get("_" + wsen[2]).dom.value = bounds.right;
             Ext.get("_" + wsen[3]).dom.value = bounds.top;
+           
         }
         
         // Validate fields content
@@ -255,7 +259,7 @@ GeoNetwork.map.ExtentMap = function(){
         Ext.get(wsen[3]).dom.onkeyup();
         
         // Draw new bounds
-        var feature = new OpenLayers.Feature.Vector(bounds.toGeometry());
+        var feature = new OpenLayers.Feature.Vector(boundsForMap.toGeometry());
         vectorLayer.destroyFeatures();
         vectorLayer.addFeatures(feature);
         
@@ -633,6 +637,7 @@ GeoNetwork.map.ExtentMap = function(){
                             map: maps[eltRef],
                             control: control,
                             text: OpenLayers.i18n('drawPolygon'),
+                            tooltip: OpenLayers.i18n('drawPolygonTT'),
                             pressed: false,
                             allowDepress: true,
                             toggleGroup: "tool",
