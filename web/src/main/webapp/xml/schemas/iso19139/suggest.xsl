@@ -14,7 +14,9 @@
   <xsl:include href="process/inspire-add-conformity.xsl"/>
   <xsl:include href="process/linked-data-checker.xsl"/>
   <xsl:include href="process/related-metadata-checker.xsl"/>
-  
+<!--  Disabled by default because related to INSPIRE only
+  <xsl:include href="process/inspire-themes-and-topiccategory.xsl"/>
+-->  
   
   <xsl:variable name="processes">
     <p>keywords-comma-exploder</p>
@@ -25,7 +27,9 @@
     <p>inspire-add-conformity</p>
     <p>linked-data-checker</p>
     <p>related-metadata-checker</p>
-  </xsl:variable>
+<!--  Disabled by default because related to INSPIRE only
+      <p>inspire-themes-and-topiccategory</p>
+-->  </xsl:variable>
   
   <xsl:param name="action" select="'list'"/>
   <xsl:param name="process" select="''"/>
