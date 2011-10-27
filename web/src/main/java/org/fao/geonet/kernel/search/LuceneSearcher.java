@@ -560,7 +560,7 @@ public class LuceneSearcher extends MetaSearcher
 	{
 		String name = xmlQuery.getName();
 		Query returnValue;
-		
+
 		if (name.equals("TermQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
@@ -578,8 +578,8 @@ public class LuceneSearcher extends MetaSearcher
                 returnValue = new TermQuery(new Term(fld, NumericUtils.doubleToPrefixCoded(Double.parseDouble(txt))));
             }
             else {
-            returnValue = textFieldToken(xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
-		}
+                returnValue = textFieldToken(xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
+		    }
 		}
 		else if (name.equals("FuzzyQuery"))
 		{
@@ -608,9 +608,9 @@ public class LuceneSearcher extends MetaSearcher
                 Element xmlTerm = (Element) o;
                 String fld = xmlTerm.getAttributeValue("fld");
                 String txt = analyzeQueryText(fld, xmlTerm.getAttributeValue("txt"), analyzer, tokenizedFieldSet);
-				if(txt.length() > 0) { 
-					query.add(new Term(fld, txt));
-				} 				
+				if(txt.length() > 0) {
+                    query.add(new Term(fld, txt));
+                }
             }
 			returnValue = query;
 		}
@@ -695,7 +695,13 @@ public class LuceneSearcher extends MetaSearcher
                 Element xmlSubQuery;
                 if (subQueries != null && subQueries.size() != 0) {
                     xmlSubQuery = subQueries.get(0);
-                    query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet, integerFieldSet, longFieldSet, floatFieldSet, doubleFieldSet), occur);
+
+                    Query subQuery = makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet, integerFieldSet, longFieldSet, floatFieldSet, doubleFieldSet);
+
+                    // If xmlSubQuery contains only a stopword the query produced is null. Protect against this
+                    if (subQuery != null) {
+                        query.add(subQuery, occur);
+                    }
                 }
             }
 			BooleanQuery.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
@@ -703,8 +709,8 @@ public class LuceneSearcher extends MetaSearcher
 			returnValue = query;
 		}
 		else throw new Exception("unknown lucene query type: " + name);
-		
-		Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + returnValue.toString());
+
+		Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + ((returnValue != null)?returnValue.toString():""));
 		return returnValue;
 	}
 
