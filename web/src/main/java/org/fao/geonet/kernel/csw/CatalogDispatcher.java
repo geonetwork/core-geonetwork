@@ -69,7 +69,7 @@ public class CatalogDispatcher
 		register(new GetRecordById());
 		register(new GetRecords(summaryConfig, luceneConfig));
 		register(new Harvest());
-		register(new Transaction());
+		register(new Transaction(summaryConfig, luceneConfig));
 	}
 
 	//---------------------------------------------------------------------------

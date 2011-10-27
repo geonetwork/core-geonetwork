@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.jdom.Element;
 
+import java.util.HashMap;
 import java.util.Set;
 
 //==============================================================================
@@ -41,6 +42,13 @@ public class FieldMapper
     public static String map(String field)
     {
     	return CatalogConfiguration.getFieldMapping().get(getAbsolute(field));
+    }
+
+    public static String mapXPath(String field, String schema)
+    {
+        HashMap<String, String> xpaths =  CatalogConfiguration.getFieldMappingXPath().get(getAbsolute(field));
+
+        return (xpaths != null)?xpaths.get(schema):null;
     }
 
     //---------------------------------------------------------------------------

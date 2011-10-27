@@ -48,6 +48,7 @@ public class CatalogConfiguration {
 	
 	// GetRecords variables
 	private static final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
+    private static final HashMap<String, HashMap<String, String>> _fieldMappingXPath = new HashMap<String, HashMap<String, String>>();
 	private static final Set<String> _isoQueryables = new HashSet<String>();
 	private static final Set<String> _additionalQueryables = new HashSet<String>();
 	private static final Set<String> _getRecordsConstraintLanguage = new HashSet<String>();
@@ -184,7 +185,7 @@ public class CatalogConfiguration {
 					.getAttributeValue(Csw.ConfigFile.Parameter.Attr.RANGE, "false");
 
 			_fieldMapping.put(name.toLowerCase(), field);
-			
+
 			if (range.equals("true"))
 				_getRecordsRangeFields.add(field);
 
@@ -192,6 +193,26 @@ public class CatalogConfiguration {
 				_isoQueryables.add(name);
 			else
 				_additionalQueryables.add(name);
+
+            // Load XPath mapping for queriables
+            List<Element> xpathList =param.getChildren(Csw.ConfigFile.Parameter.Child.XPATH);
+            Iterator<Element> itXPath = xpathList.iterator();
+            String schema, path;
+            HashMap<String, String> xpathMap = new HashMap<String, String>();
+            while (itXPath.hasNext()) {
+                Element xpath = itXPath.next();
+
+                schema = xpath
+                        .getAttributeValue(Csw.ConfigFile.XPath.Attr.SCHEMA);
+
+                path = xpath
+                        .getAttributeValue(Csw.ConfigFile.XPath.Attr.PATH);
+
+                xpathMap.put(schema, path);
+
+            }
+
+            _fieldMappingXPath.put(name.toLowerCase(), xpathMap);
 		}
 		
 		// OutputFormat parameter
@@ -241,6 +262,11 @@ public class CatalogConfiguration {
 	public static HashMap<String, String> getFieldMapping() {
 		return _fieldMapping;
 	}
+
+    public static HashMap<String, HashMap<String, String>> getFieldMappingXPath() {
+        return _fieldMappingXPath;
+    }
+
 
 	public static Set<String> getTypeMapping(String type) {
 		// FIXME : handle not supported type throwing an exception

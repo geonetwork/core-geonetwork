@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -39,17 +40,20 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogService;
+import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.jaxen.SimpleNamespaceContext;
+import org.jaxen.XPath;
+import org.jaxen.jdom.JDOMXPath;
+import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.io.File;
+import java.util.*;
 
 //=============================================================================
 
@@ -65,7 +69,11 @@ public class Transaction extends AbstractOperation implements CatalogService
 	//---
 	//---------------------------------------------------------------------------
 
-	public Transaction() {}
+	private SearchController _searchController;
+
+	public Transaction(File summaryConfig, File luceneConfig) {
+    	_searchController = new SearchController(summaryConfig, luceneConfig);
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -127,15 +135,18 @@ public class Transaction extends AbstractOperation implements CatalogService
                         Iterator<Element> inIt = mdList.iterator();
                         dataMan.startIndexGroup();
                         try {
-                            while (inIt.hasNext()) {
-                                Element metadata = (Element) inIt.next().clone();
-                                if (!metadata.getName().equals("Constraint") && !metadata.getNamespace().equals(Csw.NAMESPACE_CSW)) {
-                                    boolean updateSuccess = updateTransaction(transRequest, metadata, context);
-                                    if (updateSuccess) {
-                                        totalUpdated++;
-                                    }
+                            Element metadata = null;
+
+                            while (inIt.hasNext()){
+                                Element reqElem = (Element) inIt.next();
+                                if (reqElem.getNamespace() != Csw.NAMESPACE_CSW)
+                                {
+                                    metadata = (Element) reqElem.clone();
                                 }
                             }
+
+                            totalUpdated = updateTransaction( transRequest, metadata, context );
+
                         }
                         finally {
                             dataMan.endIndexGroup();
@@ -269,53 +280,151 @@ public class Transaction extends AbstractOperation implements CatalogService
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean updateTransaction(Element request, Element xml, ServiceContext context ) throws Exception
+	private int updateTransaction(Element request, Element xml, ServiceContext context ) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
-		
+
 		if (context.getUserSession().getUserId() == null)
 			throw new NoApplicableCodeEx("User not authenticated.");
-		
-		boolean	bReturn = false;
-		
-		//first, search the record in the database to get the record id
-		Element constr = (Element) request.getChild("Constraint",Csw.NAMESPACE_CSW ).clone();
-		List<Element> results = getResultsFromConstraints(context, constr);
-		
-		
-		//second, update the metadata in the dbms using the id
-		Iterator<Element> it = results.iterator();
-		if( !it.hasNext() )
-			return	bReturn;
-		
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		// only update first result matched
-		while(true)
-		{
-            if (!(it.hasNext())) {
-                break;
+		int totalUpdated = 0;
+
+        Map mapNs = new HashMap();
+
+        // Update full metadata
+        if (xml != null) {
+
+            // Retrieve schema and the related Namespaces
+            String schemaId = gc.getDataManager().autodetectSchema(xml);
+
+            if (schemaId == null) {
+              throw new NoApplicableCodeEx("Can't identify metadata schema");
             }
-            Element result = it.next();
-			String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
-			String id = dataMan.getMetadataId(dbms, uuid);
-			String changeDate = null;
-			
-			if( id == null )
-				return false;
-			
-			if (!dataMan.getAccessManager().canEdit(context, id))
-				throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
 
-			dataMan.updateMetadataExt(dbms, id, xml, changeDate);
-			dataMan.indexMetadataGroup(dbms, id);
+            mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
 
-			bReturn = true;
-			break;
-		}
-		
-		return bReturn;		
+            // Retrieve the metadata identifier
+            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+            XPath xpath = new JDOMXPath("gmd:fileIdentifier/gco:CharacterString");
+            xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
+
+            Element identifEl = (Element) xpath.selectSingleNode(xml);
+
+            if (identifEl == null) {
+              throw new NoApplicableCodeEx("Metadata identifier not provided");
+            }
+
+            // Update metadata record
+            String uuid = identifEl.getText() ;
+            String id = dataMan.getMetadataId(dbms, uuid);
+
+            if (id == null)
+                return totalUpdated;
+
+            String changeDate = null;
+
+            dataMan.updateMetadataExt(dbms, id, xml, changeDate);
+            dataMan.indexMetadataGroup(dbms, id);
+
+            totalUpdated++;
+
+            return totalUpdated;
+
+        // Update properties
+        } else {
+            //first, search the record in the database to get the record id
+            Element constr = (Element) request.getChild("Constraint",Csw.NAMESPACE_CSW ).clone();
+            List<Element> results = getResultsFromConstraints(context, constr);
+
+
+            List<Element> recordProperties = (List<Element>) request.getChildren("RecordProperty",Csw.NAMESPACE_CSW );
+
+
+            Iterator<Element> it = results.iterator();
+            if( !it.hasNext() )
+                return totalUpdated;
+
+            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+            // Process all records selected
+            while( it.hasNext() )
+            {
+                Element result = it.next();
+                String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
+                String id = dataMan.getMetadataId(dbms, uuid);
+                String changeDate = null;
+
+                if( id == null )
+                    continue;
+
+                if (!dataMan.getAccessManager().canEdit(context, id))
+                    throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
+
+                Element metadata = dataMan.getMetadata(context, id, false);
+                metadata.removeChild("info", Edit.NAMESPACE);
+
+                // Retrieve the schema and Namespaces of metadata to update
+                String schemaId = gc.getDataManager().autodetectSchema(metadata);
+
+                if (schemaId == null) {
+                  throw new NoApplicableCodeEx("Can't identify metadata schema");
+                }
+
+                mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
+
+
+                boolean metadataChanged = false;
+
+                // Process properties to update
+                for(Element recordProperty : recordProperties) {
+                    Element propertyNameEl = recordProperty.getChild("Name" ,Csw.NAMESPACE_CSW );
+                    Element propertyValueEl = recordProperty.getChild("Value" ,Csw.NAMESPACE_CSW );
+
+                    String propertyName = propertyNameEl.getText();
+
+                    String propertyValue = propertyValueEl.getText();
+
+                    // Get XPath for queriable name, i provided in propertyName.
+                    // Otherwise assume propertyName contains full XPath to property to update
+                    String xpathProperty = FieldMapper.mapXPath(propertyName, schemaId);
+                    if (xpathProperty == null) {
+                        xpathProperty = propertyName;
+                    }
+
+                    Log.info(Geonet.CSW, "Xpath of property: " + xpathProperty);
+                    XPath xpath = new JDOMXPath(xpathProperty);
+                    xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
+
+                    Object propEl = xpath.selectSingleNode(metadata);
+                    Log.info(Geonet.CSW, "XPath found in metadata: " + (propEl != null));
+                    // If a property is not found in metadata, just ignore it.
+                    if (propEl != null) {
+                        if (propEl instanceof Element) {
+                            ((Element) propEl).setText(propertyValue);
+                            metadataChanged = true;
+
+                        } else if (propEl instanceof Attribute) {
+                            ((Attribute) propEl).setValue(propertyValue);
+                            metadataChanged = true;
+                        }
+                    }
+                } // for(Element recordProperty : recordProperties)
+
+                // Update the metadata with changes
+                if (metadataChanged) {
+                    dataMan.updateMetadataExt(dbms, id, metadata, changeDate);
+                    dataMan.indexMetadataGroup(dbms, id);
+
+                    totalUpdated++;
+                }
+
+
+            }
+        }
+
+        return totalUpdated;
 	}
 	
 	/**
@@ -373,14 +482,12 @@ public class Transaction extends AbstractOperation implements CatalogService
 	 * @throws CatalogException
 	 */
 	private List<Element> getResultsFromConstraints(ServiceContext context, Element constr) throws CatalogException {
-		SearchController sc = new SearchController(null, null);
-
         Element filterExpr  = getFilterExpression(constr);
 		String filterVersion = getFilterVersion(constr);
 		
 		ElementSetName  setName = ElementSetName.BRIEF;
 		
-		Pair<Element, Element> results= sc.search(context, 1, 100, ResultType.RESULTS,
+		Pair<Element, Element> results= _searchController.search(context, 1, 100, ResultType.RESULTS,
 				OutputSchema.OGC_CORE, setName, filterExpr, filterVersion, null, null, 0);
 		
 		return results.two().getChildren();
@@ -457,7 +564,27 @@ public class Transaction extends AbstractOperation implements CatalogService
 		
 		return transactionSummary;
 	}
-	
+
+    /**
+     * Retrieves namespaces based on metadata schema
+     *
+     * @param mdSchema
+     *
+     * @return
+     * @throws NoApplicableCodeEx
+     */
+    private Map<String, String> retrieveNamepacesForSchema(MetadataSchema mdSchema) throws NoApplicableCodeEx {
+        Map<String, String> mapNs = new HashMap<String, String>();
+
+        List<Namespace> schemaNsList = mdSchema.getSchemaNS();
+
+        for(Namespace ns : schemaNsList) {
+          mapNs.put(ns.getPrefix(), ns.getURI());
+        }
+
+        return mapNs;
+    }
+
 }
 
 //=============================================================================

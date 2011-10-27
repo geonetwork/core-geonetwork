@@ -142,7 +142,20 @@ public class Csw {
 				public static final String TYPE  = "type";
 				public static final String RANGE = "range";
 			}
+
+            public class Child {
+                public static final String XPATH = "xpath";
+		    }
 		}
+
+		// --------------------------------------------------------------------------
+
+        public class XPath {
+            public class Attr {
+				public static final String SCHEMA  = "schema";
+				public static final String PATH = "path";
+			}
+        }
 
 		// --------------------------------------------------------------------------
 		public class Typenames {
