@@ -17,6 +17,7 @@ INSERT INTO CategoriesDes VALUES (8,'ru','Аудио/Видео');
 INSERT INTO CategoriesDes VALUES (9,'ru','Каталоги/справочники');
 INSERT INTO CategoriesDes VALUES (10,'ru','Другие ресурсы');
 INSERT INTO CategoriesDes VALUES (11,'ru','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES (12,'ru','Registers');
 
 INSERT INTO GroupsDes VALUES (-1,'ru','Guest');
 INSERT INTO GroupsDes VALUES (0,'ru','Пример группы');

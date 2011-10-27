@@ -17,6 +17,7 @@ INSERT INTO CategoriesDes VALUES (4,'fr','Applications');
 INSERT INTO CategoriesDes VALUES (3,'fr','Ressources interactives');
 INSERT INTO CategoriesDes VALUES (6,'fr','Conférences');
 INSERT INTO CategoriesDes VALUES (11,'fr','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES (12,'fr','Registers');
 
 INSERT INTO GroupsDes VALUES (-1,'fr','Invité');
 INSERT INTO GroupsDes VALUES (0,'fr','Intranet');

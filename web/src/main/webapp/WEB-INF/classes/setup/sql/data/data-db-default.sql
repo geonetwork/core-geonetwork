@@ -38,6 +38,7 @@ INSERT INTO Categories VALUES (8,'audioVideo');
 INSERT INTO Categories VALUES (9,'directories');
 INSERT INTO Categories VALUES (10,'otherResources');
 INSERT INTO Categories VALUES (11,'z3950Servers');
+INSERT INTO Categories VALUES (12,'registers');
 
 -- ======================================================================
 -- === Table: Groups

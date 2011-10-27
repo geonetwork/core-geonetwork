@@ -18,6 +18,7 @@ INSERT INTO CategoriesDes VALUES (8,'no','Audio/Video');
 INSERT INTO CategoriesDes VALUES (9,'no','Kataloger');
 INSERT INTO CategoriesDes VALUES (10,'no','Andre ressurser');
 INSERT INTO CategoriesDes VALUES (11,'no','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES (12,'no','Registers');
 
 INSERT INTO GroupsDes VALUES (-1,'no','Gjest');
 INSERT INTO GroupsDes VALUES (0,'no','Intranett');
