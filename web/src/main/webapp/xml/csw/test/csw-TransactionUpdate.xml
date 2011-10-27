@@ -313,14 +313,6 @@
             </dataQualityInfo>
     <!-- END OF DATA QUALITY & LINEAGE -->
         </MD_Metadata>
-        <csw:Constraint version="1.0.0">
-            <Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
-                <PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
-                    <PropertyName>apiso:identifier</PropertyName>
-                    <Literal>bf7ab961-a69f-48e9-a6da-61c207de86d6</Literal>
-                </PropertyIsLike>
-            </Filter>
-        </csw:Constraint>
     </csw:Update>
 </csw:Transaction>
 

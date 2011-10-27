@@ -74,7 +74,8 @@ operations[i++] = [ 'csw-GetDomainPropertyName', 'csw-GetDomain | PropertyName',
 // GetDomain ------------- END -- //
 // TRANSACTION ------------- START -- //
 operations[i++] = [ 'csw-TransactionInsert', 'csw-Transaction | Insert', '' ];
-operations[i++] = [ 'csw-TransactionUpdate', 'csw-Transaction | Update', '' ];
+operations[i++] = [ 'csw-TransactionUpdate', 'csw-Transaction | Update full record', '' ];
+operations[i++] = [ 'csw-TransactionUpdateProperties', 'csw-Transaction | Update properties', '' ];
 operations[i++] = [ 'csw-TransactionDelete', 'csw-Transaction | Delete', '' ];
 // TRANSACTION ------------- END -- //
 

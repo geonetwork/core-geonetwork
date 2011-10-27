@@ -141,9 +141,23 @@ public class Csw {
 				public static final String FIELD = "field";
 				public static final String TYPE  = "type";
 				public static final String RANGE = "range";
+                public static final String XPATH = "xpath";
+
+			}
+
+            public class Child {
+                public static final String XPATH = "xpath";
 			}
 		}
 
+		// --------------------------------------------------------------------------
+
+        public class XPath {
+            public class Attr {
+				public static final String SCHEMA  = "schema";
+				public static final String PATH = "path";
+			}
+        }
 		// --------------------------------------------------------------------------
 		public class Typenames {
 			public class Child {
