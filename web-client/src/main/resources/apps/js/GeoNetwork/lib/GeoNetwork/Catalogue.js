@@ -761,7 +761,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (this.resultsView) {
             var win = new GeoNetwork.view.ViewWindow({
                 serviceUrl: url,
+                lang: this.lang,
                 currTab: GeoNetwork.defaultViewMode || 'simple',
+                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
                 catalogue: this,
                 maximized: maximized || false,
                 metadataUuid: uuid,

@@ -40,10 +40,17 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         width: 700,
         height: 740,
         border: false,
+        lang: 'en',
         autoScroll: true,
         closeAction: 'destroy',
         currTab: 'simple',
         displayTooltip: true,
+        /**
+         * 	Define if default mode should be used for HTML print output instead of tabs
+         * (eg. metadata will be replaced by default view)
+         */
+        printDefaultForTabs: false,
+        printMode: undefined,
         // Do not display fcats and sources by default. Set to '' to display all.
         relationTypes: 'service|children|related|parent|dataset'
     },
@@ -127,7 +134,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         var modes = Ext.query('span.mode', this.body.dom), menu = [], i, j, e, cmpId = this.getId(), isSimpleModeActive = true;
         menu.push([OpenLayers.i18n('simpleViewMode'), 'view-simple', isSimpleModeActive]);
         Ext.ux.Lightbox.register('a[rel^=lightbox-viewset]', true);
-
+        
+        this.printMode = this.currTab;
+        
         for (i = 0; i < modes.length; i++) {
             if (modes[i].firstChild) {
                 var id = modes[i].getAttribute('id');
@@ -148,7 +157,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
                         // Register events when multiple tabs
                         for (j = 0; j < tabs.length; j++) {
                             e = Ext.get(tabs[j]);
-                            
+                            if (this.printDefaultForTabs) {
+                            	this.printMode = 'default';
+                            }
                             e.on('click', function(){
                                 Ext.getCmp(cmpId).switchToTab(this);
                             }, e.getAttribute('id'));
@@ -220,6 +231,18 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         }
         
         this.registerTooltip();
+    },
+    createPrintMenu: function(){
+        return new Ext.Button({
+            iconCls: 'print',
+            tooltip: OpenLayers.i18n('printTT'),
+            listeners: {
+                click: function(c, pressed){
+                	window.open('print.html?uuid=' + this.metadataUuid + '&currTab=' + this.printMode + "&hl=" + this.lang);
+                },
+                scope: this
+            }
+        });
     },
     createTooltipMenu: function(){
         return new Ext.Button({
@@ -321,7 +344,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             },
             scope: this
         }];
-        this.tbar = [this.createViewMenu(), this.createActionMenu(), '->', this.createTooltipMenu()];
+        this.tbar = [this.createViewMenu(), this.createActionMenu(), '->', this.createPrintMenu(), this.createTooltipMenu()];
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
         this.metadataSchema = this.record ? this.record.get('schema') : '';
