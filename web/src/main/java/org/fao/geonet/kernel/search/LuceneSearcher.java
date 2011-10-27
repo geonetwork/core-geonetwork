@@ -698,7 +698,13 @@ public class LuceneSearcher extends MetaSearcher
                 Element xmlSubQuery;
                 if (subQueries != null && subQueries.size() != 0) {
                     xmlSubQuery = subQueries.get(0);
-                    query.add(makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet, numericFieldSet), occur);
+
+                     Query subQuery = makeQuery(xmlSubQuery, analyzer, tokenizedFieldSet, numericFieldSet);
+
+                    // If xmlSubQuery contains only a stopword the query produced is null. Protect against this
+                    if (subQuery != null) {
+                        query.add(subQuery, occur);
+                    }
                 }
             }
 			BooleanQuery.setMaxClauseCount(16384); // FIXME: quick fix; using Filters should be better
@@ -707,7 +713,7 @@ public class LuceneSearcher extends MetaSearcher
 		}
 		else throw new Exception("unknown lucene query type: " + name);
 
-        Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + returnValue.toString());
+        Log.debug(Geonet.SEARCH_ENGINE, "Lucene Query: " + ((returnValue != null)?returnValue.toString():""));
 		return returnValue;
 	}
 
