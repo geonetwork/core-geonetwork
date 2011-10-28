@@ -79,8 +79,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent] 
      *  Initializes the validation report panel.
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
         this.title = OpenLayers.i18n('validationReport');

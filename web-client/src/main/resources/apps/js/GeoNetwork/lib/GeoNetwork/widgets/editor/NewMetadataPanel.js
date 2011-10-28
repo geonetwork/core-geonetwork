@@ -62,8 +62,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent] 
      *  Initializes the help panel.
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         var checkboxSM, colModel;
         

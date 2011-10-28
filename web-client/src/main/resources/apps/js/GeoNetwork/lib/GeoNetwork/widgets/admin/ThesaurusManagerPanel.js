@@ -67,9 +67,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
      *  TODO : Add a refresh action (after import)
      *  TODO : init type of directory by URL parameter
      */
-    initComponent: function(config){
-    
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
         // Thesaurus store

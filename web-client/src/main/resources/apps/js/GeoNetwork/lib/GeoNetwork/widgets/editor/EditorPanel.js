@@ -1097,10 +1097,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent] 
      *  Initializes the harvester panel.
      */
-    initComponent: function(config){
+    initComponent: function(){
         var optionsPanel;
         
-        Ext.apply(this, config);
         Ext.applyIf(this, this.defaultConfig);
         
         this.disabled = (this.metadataId ? false : true);

@@ -259,8 +259,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     /** private: method[initComponent] 
      *  Initializes the metadata results view.
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
         GeoNetwork.MetadataMenu.superclass.initComponent.call(this);

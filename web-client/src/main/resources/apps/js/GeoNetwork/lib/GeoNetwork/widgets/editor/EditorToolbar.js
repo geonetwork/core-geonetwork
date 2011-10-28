@@ -67,8 +67,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
     /** private: method[initComponent] 
      *  Initializes the toolbar for the metadata editor.
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
     
         var cmp = [];

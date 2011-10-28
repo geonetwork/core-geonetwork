@@ -250,7 +250,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     /** private: method[initComponent] 
      *  Initializes the metadata results view.
      */
-    initComponent: function(config){
+    initComponent: function(){
         var i;
         // TODO : add utility to add/remove templates
         this.templates = this.templates || {

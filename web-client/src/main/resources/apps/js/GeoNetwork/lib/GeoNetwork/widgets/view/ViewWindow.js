@@ -329,8 +329,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     /** private: method[initComponent] 
      *  Initializes the metadata view window.
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
         this.tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.SIMPLE);

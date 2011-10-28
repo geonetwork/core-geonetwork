@@ -136,8 +136,10 @@ GeoNetwork.app = function(){
      */
     function createLoginForm(){
         var loginForm = new GeoNetwork.LoginForm({
-            renderTo: 'login-form',
-            catalogue: catalogue
+        	renderTo: 'login-form',
+            catalogue: catalogue,
+            layout: 'hbox',
+            hideLoginLabels: GeoNetwork.hideLoginLabels
         });
         
         catalogue.on('afterBadLogin', loginAlert, this);

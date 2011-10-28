@@ -117,8 +117,7 @@ GeoNetwork.admin.MetadataInsertPanel = Ext.extend(Ext.Panel, {
     /**
      *
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
         this.items = [this.getForm()];

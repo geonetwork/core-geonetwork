@@ -146,8 +146,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent] 
      *  Initializes the thumbnail panel.
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
 
         this.title = OpenLayers.i18n('thumbnails');

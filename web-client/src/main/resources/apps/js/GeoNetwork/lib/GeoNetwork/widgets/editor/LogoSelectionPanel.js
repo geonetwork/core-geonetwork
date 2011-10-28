@@ -86,8 +86,7 @@ GeoNetwork.editor.LogoSelectionPanel = Ext.extend(Ext.Panel, {
      * APIProperty:
      * {Object} Hash table of selected contacts with their XML raw data
      */
-    initComponent: function(config){
-        Ext.apply(this, config);
+    initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
         // TODO : move to lib. Could be use elsewhere
