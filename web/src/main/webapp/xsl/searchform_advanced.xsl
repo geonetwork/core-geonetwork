@@ -1106,8 +1106,8 @@
 	<xsl:if test="$mcp">
 		<!-- Credit (MCP only) -->	
 		<div class="row">
-			<span class="labelField"><xsl:value-of select="/root/gui/strings/credit"/></span>
-			<span title="/root/gui/strings/searchhelp/credit">
+			<span class="labelField"><xsl:value-of select="/root/gui/schemas/iso19139.mcp/strings/credit"/></span>
+			<span title="{/root/gui/schemas/iso19139.mcp/strings/creditHelp}">
 				<input name="credit" id="credit" class="content"  size="31" value="{/root/gui/searchDefaults/credit}" onclick="popSelector(this,'creditSelectorFrame','creditSelector','portal.search.credits?mode=selector&amp;credit','credit');" />
 			</span>
 			<div id="creditSelectorFrame" class="keywordSelectorFrame" style="display:none;z-index:1000;">
@@ -1117,8 +1117,8 @@
 			
 		<!-- Data Parameter (MCP only) -->
 		<div class="row">
-			<span class="labelField"><xsl:value-of select="/root/gui/strings/dataparam"/></span>
-			<span title="/root/gui/strings/searchhelp/dataparam">
+			<span class="labelField"><xsl:value-of select="/root/gui/schemas/iso19139.mcp/strings/dataparam"/></span>
+			<span title="{/root/gui/schemas/iso19139.mcp/strings/dataparamHelp}">
 				<input name="dataparam" id="dataparam" class="content"  size="31" value="{/root/gui/searchDefaults/dataparam}" onclick="popSelector(this,'dataparamSelectorFrame','dataparamSelector','portal.search.dataparams?mode=selector&amp;dataparam','dataparam');"/>
 			</span>
 
@@ -1129,8 +1129,8 @@
 
 		<!-- Taxonomic info (MCP only) -->
 		<div class="row">
-			<span class="labelField"><xsl:value-of select="/root/gui/strings/taxon"/></span>
-			<span title="/root/gui/strings/searchhelp/taxon">
+			<span class="labelField"><xsl:value-of select="/root/gui/schemas/iso19139.mcp/strings/taxon"/></span>
+			<span title="{/root/gui/schemas/iso19139.mcp/strings/taxonHelp}">
 				<input name="taxon" id="taxon" class="content"  size="31" value="{/root/gui/searchDefaults/taxon}" onclick="popSelector(this,'taxonSelectorFrame','taxonSelector','portal.search.taxonNames?mode=selector&amp;taxon','taxon');"/>
 			</span>
 
