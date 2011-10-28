@@ -145,7 +145,7 @@
                 <xsl:variable name="sc" select="@singleChar" />
 
                 <BooleanQuery>
-                    <xsl:for-each select="tokenize(ogc:Literal, ' ')">
+                    <xsl:for-each select="tokenize(ogc:Literal, ' |/|,')">
                         <xsl:variable name="token" select="." />
                         <xsl:variable name="ol" select="translate(translate($token, $wc, '*'), $sc, '?')" />
                         <BooleanClause required="true" prohibited="false">

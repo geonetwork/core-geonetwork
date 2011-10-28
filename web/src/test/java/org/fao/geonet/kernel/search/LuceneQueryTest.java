@@ -117,8 +117,43 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(lQI);
 		// verify query
-        System.out.println( query.toString());
 		assertEquals("+(+any:hoeper +any:*) +_isTemplate:n", query.toString());
+	}
+
+    /**
+	 * 'any' parameter with a multiple token value that has a / char.
+	 */
+	public void testMultipleTokenSlash() {
+		// create request object
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("any");
+		any.addContent("Hameenlinnan kaupunki / palvelutuotanto/maankaytto");
+		request.addContent(any);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        // build lucene query
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(lQI);
+		// verify query
+		assertEquals("+(+any:hameenlinnan +any:kaupunki +any:palvelutuotanto +any:maankaytto) +_isTemplate:n", query.toString());
+	}
+
+     /**
+	 * 'any' parameter with a multiple token value that has a , char.
+	 */
+	public void testMultipleTokenComma() {
+		// create request object
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("any");
+		any.addContent("multiple items , with, comma ");
+		request.addContent(any);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        // build lucene query
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _analyzer).build(lQI);
+		// verify query
+		assertEquals("+(+any:multiple +any:items +any:with +any:comma) +_isTemplate:n", query.toString());
 	}
 
 	/**

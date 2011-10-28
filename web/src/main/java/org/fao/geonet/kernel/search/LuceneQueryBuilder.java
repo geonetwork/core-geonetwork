@@ -56,7 +56,9 @@ public class LuceneQueryBuilder {
 
 	private Set<String> _tokenizedFieldSet;
 	private PerFieldAnalyzerWrapper _analyzer;
-	
+
+    private static final String STRING_TOKENIZER_DELIMITER = " \n\r\t/,";
+
 	// Bounding box constants
 	private static final String minBoundingLatitudeValue  = "270";  //  -90 + 360
 	private static final String maxBoundingLatitudeValue  = "450";  //   90 + 360
@@ -166,7 +168,7 @@ public class LuceneQueryBuilder {
 				BooleanClause matchAllDocsClause = new BooleanClause(matchAllDocsQuery, occur);
 				booleanQuery.add(matchAllDocsClause);
 				// tokenize searchParam
-			    StringTokenizer st = new StringTokenizer(searchParam);
+			    StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
 			    while (st.hasMoreTokens()) {
 			        String token = st.nextToken();
 			        // ignore fuzziness in without-queries
@@ -200,7 +202,7 @@ public class LuceneQueryBuilder {
 			searchParam = searchParam.trim();
 			if(searchParam.length() > 0) {
 				// tokenize searchParam
-			    StringTokenizer st = new StringTokenizer(searchParam);
+			    StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
 				BooleanQuery booleanQuery = new BooleanQuery();
 			    while (st.hasMoreTokens()) {
 			        String token = st.nextToken();
@@ -234,7 +236,7 @@ public class LuceneQueryBuilder {
 			searchParam = searchParam.trim();
 			if(searchParam.length() > 0) {
 				// tokenize searchParam
-			    StringTokenizer st = new StringTokenizer(searchParam);
+			    StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
 			    if(st.countTokens() == 1) {
 			        String token = st.nextToken();
 			        Query subQuery = textFieldToken(token, luceneIndexField, similarity);
@@ -315,7 +317,7 @@ public class LuceneQueryBuilder {
 			any = any.trim();
 			if(any.length() > 0) {
 				// tokenize searchParam
-			    StringTokenizer st = new StringTokenizer(any);
+			    StringTokenizer st = new StringTokenizer(any, STRING_TOKENIZER_DELIMITER);
 			    if(st.countTokens() == 1) {
 			        String token = st.nextToken();
 			        Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
@@ -377,7 +379,7 @@ public class LuceneQueryBuilder {
 				PhraseQuery phraseQuery = new PhraseQuery();
 				BooleanClause.Occur phraseOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 				// tokenize phrase
-			    StringTokenizer st = new StringTokenizer(phrase);
+			    StringTokenizer st = new StringTokenizer(phrase, STRING_TOKENIZER_DELIMITER);
 			    while (st.hasMoreTokens()) {
 			        String phraseElement = st.nextToken();
 			        phraseElement = phraseElement.trim().toLowerCase();
