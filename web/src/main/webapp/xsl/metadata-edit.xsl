@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	exclude-result-prefixes="geonet">
+	xmlns:saxon="http://saxon.sf.net/"
+	extension-element-prefixes="saxon"
+	exclude-result-prefixes="geonet saxon">
 
 	<!--
 	edit metadata form 
@@ -65,8 +67,13 @@
 				google.load("language", "1");
 			</script>
 		</xsl:if>
-		
-		
+	
+		<!-- for each editable plugin schema, add the javascript needed to
+		     run any editor functions -->
+		<xsl:for-each select="/root/gui/schemalist/name[@plugin='true' and @edit='true']">
+			<xsl:variable name="schemaName" select="string(.)"/>
+			<saxon:call-template name="{concat($schemaName,'-javascript')}"/>
+		</xsl:for-each>
 	</xsl:template>
 	
 	<!--
