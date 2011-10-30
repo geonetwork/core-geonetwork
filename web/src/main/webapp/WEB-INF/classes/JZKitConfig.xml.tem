@@ -1,273 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ServiceDirectory>
-
-   <ApplicationProfiles>
-    <ClasspathProfile resource="profiles/geo.xml"/>
+  <ApplicationProfiles>
+    <ClasspathProfile resource="profiles/geo.xml" />
   </ApplicationProfiles>
-
-   <Crosswalks>
-    <ClasspathCrosswalk resource="crosswalks/QueryModel/gils.xml"/>
-    <ClasspathCrosswalk resource="crosswalks/QueryModel/dc.xml"/>
-    <ClasspathCrosswalk resource="crosswalks/QueryModel/rec.xml"/>
-    <ClasspathCrosswalk resource="crosswalks/QueryModel/geo.xml"/>
-    <ClasspathCrosswalk resource="crosswalks/QueryModel/cql.xml"/>
+  <Crosswalks>
+    <ClasspathCrosswalk resource="crosswalks/QueryModel/gils.xml" />
+    <ClasspathCrosswalk resource="crosswalks/QueryModel/dc.xml" />
+    <ClasspathCrosswalk resource="crosswalks/QueryModel/rec.xml" />
+    <ClasspathCrosswalk resource="crosswalks/QueryModel/geo.xml" />
+    <ClasspathCrosswalk resource="crosswalks/QueryModel/cql.xml" />
   </Crosswalks>
-
-   <RecordConversion>
-		<converter type="xslt" classname="org.fao.geonet.services.util.z3950.transformers.GNTransformer"/>
-		
-       <mapping fromSpec="xml::f" toSpec="html::f" type="xslt" resource="crosswalks/RecordModel/xml_to_html.xsl"/>
-   </RecordConversion>
-
-    <!-- IR provider for Geonetwork-->
+  <RecordConversion>
+    <converter type="xslt" classname="org.fao.geonet.services.util.z3950.transformers.GNTransformer" />
+    <mapping fromSpec="xml::f" toSpec="html::f" type="xslt" resource="crosswalks/RecordModel/xml_to_html.xsl" />
+  </RecordConversion>
   <Repository className="org.fao.geonet.services.util.z3950.provider.GN.GNSearchable" code="GN" serviceName="Local GeoNetwork">
     <Preferences>
       <Preference name="timeout">10000</Preference>
     </Preferences>
-
     <RecordArchetypes>
       <Archetype name="F">xml::f</Archetype>
     </RecordArchetypes>
-
-       
     <Collections>
-      <Collection code="geonetwork" name="Local GeoNetwork" localId="geonetwork" profile="geo" /> <!-- collection that searches across all categories -->
-			<Collection code="applications" name="Local GeoNetwork - applications category" localId="applications" profile="geo" /> <!-- collection that searches across category applications -->
+      <Collection code="geonetwork" name="Local GeoNetwork" localId="geonetwork" profile="geo" />
+      <!-- collection that searches across all categories -->
+      <Collection code="applications" name="Local GeoNetwork - applications category" localId="applications" profile="geo" />
+      <!-- collection that searches across category applications -->
     </Collections>
   </Repository>
-<!--
-**** Entry for Australia - CSIRO Marine and Atmospheric Research
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="CSIROMAR" serviceName="Australia - CSIRO Marine and Atmospheric Research">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">150.229.226.17</Preference>
-      <Preference name="port">6668</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="150.229.226.17:6668/marlin" name="Australia - CSIRO Marine and Atmospheric Research" localId="marlin" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - NSW Natural Resources Data Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="NSWRDD" serviceName="Australia - NSW Natural Resources Data Directory">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">203.3.195.251</Preference>
-      <Preference name="port">6668</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="203.3.195.251:6668/nrdd" name="Australia - NSW Natural Resources Data Directory" localId="nrdd" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for TSDD - Tasmanian Spatial Data Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="TSDD" serviceName="Australia - Tasmanian Spatial Data Directory">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">147.109.254.5</Preference>
-      <Preference name="port">5550</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="147.109.254.5:5550/tas" name="Australia - Tasmanian Spatial Data Directory" localId="tas" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for AIMS - Australian Institute of Marine Science
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="AIMS" serviceName="Australia - Australian Institute of Marine Science">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">data.aims.gov.au</Preference>
-      <Preference name="port">5525</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="data.aims.gov.au:5525/geonetwork" name="Australia - Australian Institute of Marine Science" localId="geonetwork" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - ACT Geographic Data Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="ACT" serviceName="Australia - ACT Geographic Data Directory">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">66.160.183.131</Preference>
-      <Preference name="port">5511</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="66.160.183.131:5511/act" name="Australia - ACT Geographic Data Directory" localId="act" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - Australian Hydrographic Service - Product Metadata Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="AHS" serviceName="Australia - Australian Hydrographic Service - Product Metadata Directory">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">203.49.66.2</Preference>
-      <Preference name="port">5550</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="203.49.66.2:5550/product" name="Australia - Australian Hydrographic Service - Product Metadata Directory" localId="product" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - BRS - Incorporating Other Commonwealth Data
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="BRS" serviceName="Australia - BRS - Incorporating Other Commonwealth Data">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">152.91.17.20</Preference>
-      <Preference name="port">210</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="152.91.17.20:210/anrdl" name="Australia - BRS - Incorporating Other Commonwealth Data" localId="anrdl" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - Bureau of Meteorology
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="BOM" serviceName="Australia - Bureau of Meteorology">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">extapps.bom.gov.au</Preference>
-      <Preference name="port">6668</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="134.178.63.133:6668/bom_meta" name="Australia - Bureau of Meteorology" localId="bom_meta" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - DEW Discover Information Geographically (DIG)
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="DIG" serviceName="Australia - DEW Discover Information Geographically (DIG)">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">kaos.erin.gov.au</Preference>
-      <Preference name="port">6668</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="155.187.2.2:6668/edd" name="Australia - DEW Discover Information Geographically (DIG)" localId="edd" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - Geoscience Australia
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="GA" serviceName="Australia - Geoscience Australia">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">www.ga.gov.au</Preference>
-      <Preference name="port">6668</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="192.104.44.110:6668/ga" name="Australia - Geoscience Australia" localId="ga" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - IndexGeo Pty Ltd - Eco Companion Catalogue
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="IndexGeo" serviceName="Australia - IndexGeo Pty Ltd - Eco Companion Catalogue">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cfa89068-36ea-11df-9735-ebfc367b61a6" serviceName="IndexGeo Pty Ltd - Eco Companion catalogue">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
@@ -281,43 +42,15 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="66.160.183.131:6668/dataset" name="Australia - IndexGeo Pty Ltd - Eco Companion Catalogue" localId="dataset" profile="geo" />
+      <Collection code="dataset" name="IndexGeo Pty Ltd - Eco Companion catalogue" localId="dataset" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for Australia - Murray-Darling Basin Commission
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="MDBC" serviceName="Australia - Murray-Darling Basin Commission">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d18cf09a-36ea-11df-9735-ebfc367b61a6" serviceName="Qld Spatial Data (QSIC)">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">db.mdbc.isa.net.au</Preference>
-      <Preference name="port">5548</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="202.55.146.171:5548/mdbcprod" name="Australia - Murray-Darling Basin Commission" localId="mdbcprod" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - National Oceans Office
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="NOO" serviceName="Australia - National Oceans Office">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">z3950.marine.csiro.au</Preference>
+      <Preference name="host">qsiismet.oesr.qld.gov.au</Preference>
       <Preference name="port">6668</Preference>
       <Preference name="smallSetElementSetName">F</Preference>
       <Preference name="charsetEncoding">UTF-8</Preference>
@@ -327,89 +60,15 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="150.229.226.17:6668/neptune" name="Australia - National Oceans Office" localId="neptune" profile="geo" />
+      <Collection code="qsiis_prod" name="Qld Spatial Data (QSIC)" localId="qsiis_prod" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for Australia - NT Spatial Data Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="NTSDD" serviceName="Australia - NT Spatial Data Directory">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="ccba3276-36ea-11df-9735-ebfc367b61a6" serviceName="Australian Hydrographic Service - Publication Metadata">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">www.ntlis.nt.gov.au</Preference>
-      <Preference name="port">210</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="150.191.80.24:210/NTSDD" name="Australia - NT Spatial Data Directory" localId="NTSDD" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - PSMA Australia Limited
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="PSMA" serviceName="Australia - PSMA Australia Limited">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">psma-asdd.geometryit.com</Preference>
-      <Preference name="port">210</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="202.161.118.130:210/PSMA" name="Australia - PSMA Australia Limited" localId="PSMA" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - Qld Spatial Data (QSIIS)
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="QSIIS" serviceName="Australia - Qld Spatial Data (QSIIS)">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">www.gso.qld.gov.au</Preference>
-      <Preference name="port">6668</Preference>
-      <Preference name="smallSetElementSetName">F</Preference>
-      <Preference name="charsetEncoding">UTF-8</Preference>
-      <Preference name="useReferenceId">negotiate</Preference>
-    </Preferences>
-    <RecordArchetypes>
-      <Archetype name="F">xml::f</Archetype>
-      <Archetype name="H">html::f</Archetype>
-    </RecordArchetypes>
-   
-    <Collections>
-      <Collection code="203.56.118.1:6668/qsiis_prod" name="Australia - Qld Spatial Data (QSIIS)" localId="qsiis_prod" profile="geo" />
-    </Collections>
-   
-  </Repository>
-<!--
-**** Entry for Australia - Queensland Department of Natural Resources and Mines Spatial Data
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="QSII2" serviceName="Australia - Queensland Department of Natural Resources and Mines Spatial Data">
-    <Preferences>
-      <Preference name="defaultRecordSyntax">xml</Preference>
-      <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">www.nrm.qld.gov.au</Preference>
+      <Preference name="host">www.hydro.gov.au</Preference>
       <Preference name="port">5550</Preference>
       <Preference name="smallSetElementSetName">F</Preference>
       <Preference name="charsetEncoding">UTF-8</Preference>
@@ -419,16 +78,11 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="203.46.162.95:5550/qsii2" name="Australia - Queensland Department of Natural Resources and Mines Spatial Data" localId="qsii2" profile="geo" />
+      <Collection code="publication" name="Australian Hydrographic Service - Publication Metadata" localId="publication" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for Australia - RAN Directorate of Oceanography and Meteorology
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="RANDOM" serviceName="Australia - RAN Directorate of Oceanography and Meteorology">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d23971ee-36ea-11df-9735-ebfc367b61a6" serviceName="RAN Directorate of Oceanography and Meteorology">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
@@ -442,16 +96,65 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="59.154.117.67:5550/pages_xml" name="Australia - RAN Directorate of Oceanography and Meteorology" localId="pages_xml" profile="geo" />
+      <Collection code="pages_xml" name="RAN Directorate of Oceanography and Meteorology" localId="pages_xml" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for Australia - South Australia Spatial Information Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="SASID" serviceName="Australia - South Australia Spatial Information Directory">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cbb945ec-36ea-11df-9735-ebfc367b61a6" serviceName="ACT Geographic Data Directory">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">indexgeo.net</Preference>
+      <Preference name="port">5511</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="act" name="ACT Geographic Data Directory" localId="act" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cffb73a0-36ea-11df-9735-ebfc367b61a6" serviceName="Murray-Darling Basin Authority">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">203.13.43.212</Preference>
+      <Preference name="port">5548</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="mdbcprod" name="Murray-Darling Basin Authority" localId="mdbcprod" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="ce58a0b8-36ea-11df-9735-ebfc367b61a6" serviceName="CSIRO Marine and Atmospheric Research">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">z3950.marine.csiro.au</Preference>
+      <Preference name="port">6668</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="marlin" name="CSIRO Marine and Atmospheric Research" localId="marlin" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d2dbd402-36ea-11df-9735-ebfc367b61a6" serviceName="South Australian Spatial Information Directory">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
@@ -465,16 +168,101 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="143.216.198.138:6668/sa" name="Australia - South Australia Spatial Information Directory" localId="sa" profile="geo" />
+      <Collection code="sa" name="South Australian Spatial Information Directory" localId="sa" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for Australia - Victorian Spatial Data Directory
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="VSDD" serviceName="Australia - Victorian Spatial Data Directory">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d0eb47fe-36ea-11df-9735-ebfc367b61a6" serviceName="Other Commonwealth Agencies (hosted by BRS)">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">adl.brs.gov.au</Preference>
+      <Preference name="port">210</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="comm" name="Other Commonwealth Agencies (hosted by BRS)" localId="comm" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d1e7bade-36ea-11df-9735-ebfc367b61a6" serviceName="Queensland Environment and Resource Management">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">www.nrm.qld.gov.au</Preference>
+      <Preference name="port">5550</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="qsii2" name="Queensland Environment and Resource Management" localId="qsii2" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cd0aaf30-36ea-11df-9735-ebfc367b61a6" serviceName="Australian Hydrographic Service - Source Metadata">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">www.hydro.gov.au</Preference>
+      <Preference name="port">5550</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="source" name="Australian Hydrographic Service - Source Metadata" localId="source" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d13c3060-36ea-11df-9735-ebfc367b61a6" serviceName="PSMA Australia Limited">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">psma-asdd.geometryit.com</Preference>
+      <Preference name="port">210</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="PSMA" name="PSMA Australia Limited" localId="PSMA" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d331021a-36ea-11df-9735-ebfc367b61a6" serviceName="Tasmanian Spatial Data Directory">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">www.thelist.tas.gov.au</Preference>
+      <Preference name="port">5550</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="tas" name="Tasmanian Spatial Data Directory" localId="tas" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d382d40a-36ea-11df-9735-ebfc367b61a6" serviceName="Victorian Spatial Data Directory">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
@@ -488,20 +276,33 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="203.11.140.26:6668/vicsdd" name="Australia - Victorian Spatial Data Directory" localId="vicsdd" profile="geo" />
+      <Collection code="vicsdd" name="Victorian Spatial Data Directory" localId="vicsdd" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for Australia - WALIS Interrogator - Aerial Photography, Agricultural Bibliography, Natural Resource Monitoring, Environmental Impact Statements, Spatial Data
--->
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="WI" serviceName="Australia - WALIS Interrogator">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d09abc30-36ea-11df-9735-ebfc367b61a6" serviceName="NT Spatial Data Directory">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">www.walis.wa.gov.au</Preference>
+      <Preference name="host">www.ntlis.nt.gov.au</Preference>
+      <Preference name="port">210</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="NTSDD" name="NT Spatial Data Directory" localId="NTSDD" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="d04a7a22-36ea-11df-9735-ebfc367b61a6" serviceName="NSW Natural Resources Data Directory">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">canri.nsw.gov.au</Preference>
       <Preference name="port">6668</Preference>
       <Preference name="smallSetElementSetName">F</Preference>
       <Preference name="charsetEncoding">UTF-8</Preference>
@@ -511,25 +312,69 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="203.11.121.51:6668/airphoto" name="Australia - WALIS Interrogator - Aerial Photography"               localId="airphoto" profile="geo" />
-      <Collection code="203.11.121.51:6668/biblio"   name="Australia - WALIS Interrogator - Agricultural Bibliography"        localId="biblio" profile="geo" />
-      <Collection code="203.11.121.51:6668/nrm"      name="Australia - WALIS Interrogator - Natural Resource Monitoring"      localId="nrm" profile="geo" />
-      <Collection code="203.11.121.51:6668/eis"      name="Australia - WALIS Interrogator - Environmental Impact Statements"  localId="eis" profile="geo" />
-      <Collection code="203.11.121.51:6668/agency"   name="Australia - WALIS Interrogator - Spatial Data"                     localId="agency" profile="geo" />
+      <Collection code="nrdd" name="NSW Natural Resources Data Directory" localId="nrdd" profile="geo" />
     </Collections>
-   
   </Repository>
-<!--
-**** Entry for TEST ISITE2
--->
-<!--
-  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="TEST" serviceName="TEST ISITE2">
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="ce02a9e2-36ea-11df-9735-ebfc367b61a6" serviceName="Bureau of Meteorology">
     <Preferences>
       <Preference name="defaultRecordSyntax">xml</Preference>
       <Preference name="defaultElementSetName">s</Preference>
-      <Preference name="host">localhost</Preference>
+      <Preference name="host">hoapp.bom.gov.au</Preference>
+      <Preference name="port">6668</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="bom_meta" name="Bureau of Meteorology" localId="bom_meta" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cc168482-36ea-11df-9735-ebfc367b61a6" serviceName="AuScope Portal Feature Services Catalog">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">auscope-portal.arrc.csiro.au</Preference>
+      <Preference name="port">6668</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="geonetwork" name="AuScope Portal Feature Services Catalog" localId="geonetwork" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="771f6e6cfa174d548da04a3a4dc38ef5" serviceName="New Zealand Geospatial Office">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">nzgo.silverstripe.com</Preference>
+      <Preference name="port">2101</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="geonetwork" name="New Zealand Geospatial Office" localId="geonetwork" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cc68c094-36ea-11df-9735-ebfc367b61a6" serviceName="Australian Hydrographic Service - Product Metadata">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">www.hydro.gov.au</Preference>
       <Preference name="port">5550</Preference>
       <Preference name="smallSetElementSetName">F</Preference>
       <Preference name="charsetEncoding">UTF-8</Preference>
@@ -539,13 +384,81 @@
       <Archetype name="F">xml::f</Archetype>
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
-   
     <Collections>
-      <Collection code="localhost:5550/test1" name="TEST ISITE2 - test1 db" localId="test1" profile="geo" />
-      <Collection code="localhost:5550/test2" name="TEST ISITE2 - test2 db" localId="test1" profile="geo" />
+      <Collection code="product" name="Australian Hydrographic Service - Product Metadata" localId="product" profile="geo" />
     </Collections>
-   
   </Repository>
--->
-
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cd5fc48e-36ea-11df-9735-ebfc367b61a6" serviceName="Australian Institute of Marine Science">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">data.aims.gov.au</Preference>
+      <Preference name="port">5525</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="geonetwork" name="Australian Institute of Marine Science" localId="geonetwork" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="ceb28b96-36ea-11df-9735-ebfc367b61a6" serviceName="DEWHA Discover Information Geographically (DIG)">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">zhora.ris.environment.gov.au</Preference>
+      <Preference name="port">6668</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="dig" name="DEWHA Discover Information Geographically (DIG)" localId="dig" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cf09ee22-36ea-11df-9735-ebfc367b61a6" serviceName="Geoscience Australia">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">www.ga.gov.au</Preference>
+      <Preference name="port">6668</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="ga" name="Geoscience Australia" localId="ga" profile="geo" />
+    </Collections>
+  </Repository>
+  <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cdb1feb6-36ea-11df-9735-ebfc367b61a6" serviceName="BRS and Australian Natural Resources Data Library (ANRDL)">
+    <Preferences>
+      <Preference name="defaultRecordSyntax">xml</Preference>
+      <Preference name="defaultElementSetName">s</Preference>
+      <Preference name="host">adl.brs.gov.au</Preference>
+      <Preference name="port">210</Preference>
+      <Preference name="smallSetElementSetName">F</Preference>
+      <Preference name="charsetEncoding">UTF-8</Preference>
+      <Preference name="useReferenceId">negotiate</Preference>
+    </Preferences>
+    <RecordArchetypes>
+      <Archetype name="F">xml::f</Archetype>
+      <Archetype name="H">html::f</Archetype>
+    </RecordArchetypes>
+    <Collections>
+      <Collection code="anrdl" name="BRS and Australian Natural Resources Data Library (ANRDL)" localId="anrdl" profile="geo" />
+    </Collections>
+  </Repository>
 </ServiceDirectory>
+
