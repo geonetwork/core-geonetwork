@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.search;
 
+import jeeves.server.ConfigurationOverrides;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.TopFieldCollector;
@@ -134,19 +136,24 @@ public class LuceneConfig {
 	 * Creates a new Lucene configuration from an XML configuration file.
 	 * 
 	 * @param appPath
-     * @param luceneConfigXmlFile
+	 * @param servlet
+   * @param luceneConfigXmlFile
 	 */
-	public LuceneConfig(String appPath, String luceneConfigXmlFile) {
+	public LuceneConfig(String appPath, JeevesServlet servlet, String luceneConfigXmlFile) {
 		Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
-		this.load();
+		this.load(servlet, luceneConfigXmlFile);
 	}
 
-	private void load() {
+	private void load(JeevesServlet servlet, String luceneConfigXmlFile) {
 		try {
 			luceneConfig = Xml.loadStream(new FileInputStream(
 					this.configurationFile));
+			if (servlet != null) {
+				ConfigurationOverrides.updateWithOverrides(luceneConfigXmlFile, servlet, appPath, luceneConfig);
+			}
+
 
 			// Main Lucene index configuration option
 			Element elem = luceneConfig.getChild("index");

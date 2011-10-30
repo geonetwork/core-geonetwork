@@ -50,7 +50,7 @@ public class Reload implements Service {
 				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 		String path = context.getAppPath();
 
-		LuceneConfig lc = new LuceneConfig(path, luceneConfigXmlFile);
+		LuceneConfig lc = new LuceneConfig(path, context.getServlet(), luceneConfigXmlFile);
 
 		// Update related services to Lucene config
 		// SearchManager
