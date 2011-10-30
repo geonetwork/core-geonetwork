@@ -26,7 +26,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ConfigurationOverrides;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -324,16 +326,21 @@ public class SearchManager
    * @param luceneTermsToExclude
 	 * @param dataStore
 	 * @param si
+	 * @param scm
+	 * @param servlet
 	 * @throws Exception
 	 */
 	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, 
 			String summaryConfigXmlFile, LuceneConfig lc, 
 			boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude, 
-			DataStore dataStore, int maxWritesInTransaction, SettingInfo si, SchemaManager scm) throws Exception
+			DataStore dataStore, int maxWritesInTransaction, SettingInfo si, SchemaManager scm, JeevesServlet servlet) throws Exception
 	{
 		_scm = scm;
 		_dataDir = dataDir;
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
+		if (servlet != null) {
+			ConfigurationOverrides.updateWithOverrides(summaryConfigXmlFile, servlet, appPath, _summaryConfig);
+		}
 
 		_luceneConfig = lc;
         _settingInfo = si;

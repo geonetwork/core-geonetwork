@@ -324,7 +324,7 @@ public class Geonetwork implements ApplicationHandler
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, lc, 
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
 				dataStore, maxWritesInTransaction, 
-				new SettingInfo(settingMan), schemaMan);
+				new SettingInfo(settingMan), schemaMan, context.getServlet());
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
