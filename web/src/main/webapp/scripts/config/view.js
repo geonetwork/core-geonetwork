@@ -22,7 +22,7 @@ function ConfigView(strLoader)
 		{ id:'intranet.network', type:'ipaddress' },
 		{ id:'intranet.netmask', type:'ipaddress' },
 
-		{ id:'selection.maxrecords',   type:'integer',  minValue:1000, maxValue:10000, empty:false },
+		{ id:'selection.maxrecords',   type:'integer',  minValue:1000, maxValue:100000, empty:false },
 
 		{ id:'threadedindexing.maxthreads',   type:'integer',  minValue:1, maxValue:10, empty:false },
 
