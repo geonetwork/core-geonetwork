@@ -836,7 +836,7 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
         // verify query
-        assertEquals("+inspiretheme:addresses +_isTemplate:n", query.toString());
+        assertEquals("+inspiretheme:Addresses +_isTemplate:n", query.toString());
     }
 
     /**
@@ -855,9 +855,7 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
         // verify query
-        // FIXME : Should probably be : assertEquals("+inspiretheme:\"Administrative units\" +_isTemplate:n", query.toString());
-        assertEquals("+(+inspiretheme:administrative +inspiretheme:units) +_isTemplate:n", query.toString());
-        
+        assertEquals("+inspiretheme:\"Administrative units\" +_isTemplate:n", query.toString());
     }
     /**
      * 'inspiretheme' parameter with multiple values.
@@ -877,9 +875,7 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer).build(lQI);
         // verify query
-        // FIXME : assertEquals("+(+inspiretheme:Hydrography* +inspiretheme:\"Cadastral parcels\") +_isTemplate:n", query.toString());
-        assertEquals("+(+(inspiretheme:hydrography*) +(inspiretheme:cadastral inspiretheme:parcels)) +_isTemplate:n", query.toString());
-        
+        assertEquals("+(+inspiretheme:Hydrography* +inspiretheme:\"Cadastral parcels\") +_isTemplate:n", query.toString());
     }
 
     /**

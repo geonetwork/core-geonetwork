@@ -123,10 +123,8 @@
 		<Field name="abstract"/>
 		<Field name="title"/>
 		<Field name="altTitle"/>
-	  <!-- FIXME : INSPIRE theme should probably not be tokenized like keywords -->
-	  	<Field name="inspiretheme"/>
 		<Field name="keywordType"/>
-		<Field name="orgName"/>
+		<!--<Field name="orgName"/>-->
 		<Field name="specificationTitle"/>
 		<Field name="levelName"/>
 		<Field name="subject"/>
