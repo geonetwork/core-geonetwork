@@ -7,7 +7,7 @@ CREATE TABLE HarvestHistory
         harvesterName  varchar(128),
         harvesterType  varchar(128),
     deleted        char(1) default 'n' not null,
-    info           long,
+    info           varchar(2000),
     params         long,
 
     primary key(id)
