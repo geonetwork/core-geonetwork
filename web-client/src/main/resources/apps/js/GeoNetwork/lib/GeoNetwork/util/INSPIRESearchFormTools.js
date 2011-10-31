@@ -33,6 +33,7 @@ Ext.namespace("GeoNetwork.util");
  */
 GeoNetwork.util.INSPIRESearchFormTools = {
     /** api:method[getAnnexField] 
+     *  :param multi: Create fields with multiselection combobox.
      *  
      *  :return: Annex I, II, III combo box
      * 
@@ -80,7 +81,9 @@ GeoNetwork.util.INSPIRESearchFormTools = {
     },
     /** api:method[getThemesFieldWithSuggestion] 
      * 
-     * 
+     *  :param services: Catalogue service URLs (eg. catalogue.services).
+     *  
+     *  :return: An INSPIRE themes text field with autocompletion (based on Lucene field content - not a thesaurus)
      */
     getThemesFieldWithSuggestion : function (services) {
         var inspiretheme = new GeoNetwork.form.OpenSearchSuggestionTextField({
@@ -95,7 +98,10 @@ GeoNetwork.util.INSPIRESearchFormTools = {
         return inspiretheme;
     },
     /** api:method[getThemesFieldWithSuggestion] 
-     *  :return:
+     *  :param services: Catalogue service URLs (eg. catalogue.services).
+     *  :param multi: Create fields with multiselection combobox.
+     *  
+     *  :return: An INSPIRE themes combo box
      * 
      *  Use xml.search.keywords service to retrieve the list of all INSPIRE themes
      *  in current GUI language.
@@ -160,7 +166,9 @@ GeoNetwork.util.INSPIRESearchFormTools = {
              return new Ext.form.ComboBox(config);
         }
     },
-    /** api:method[getINSPIREFields] 
+    /** api:method[getINSPIREFields]
+     *  :param services: Catalogue service URLs (eg. catalogue.services).
+     *  :param multi: Create fields with multiselection combobox.
      *  :return: An INSPIRE form
      * 
      *  Create an INSPIRE form with annexes, themes and related checkbox fields.
