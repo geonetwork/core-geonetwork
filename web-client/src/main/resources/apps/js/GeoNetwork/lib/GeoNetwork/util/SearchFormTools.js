@@ -37,9 +37,6 @@ Ext.namespace("GeoNetwork.util");
  *                items : GeoNetwork.SearchFormTools.getAdvancedFormFields(catalogue.services),
  *               ...
  *
- *
- *
- *  TODO : Add INSPIRE fields
  *  TODO : Add distributed search
  *
  */
@@ -512,7 +509,6 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  Create category combo
      *
-     *  TODO : retrieve from server
      */
     getCategoryField: function(url, imgUrl, multi){
         var store = GeoNetwork.data.CategoryStore(url);
