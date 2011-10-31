@@ -101,22 +101,30 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
 				}
 				
 				var s, w, e, n;
-				for(var child=node.firstChild; child; child=child.nextSibling) {
-	                switch(child.nodeName) {
-	                    case "southBL": 
-	                    	s = this.getChildValue(child);
-	                    	break;
-	                    case "westBL": 
-	                    	w = this.getChildValue(child);
-	                    	break;
-	                    case "eastBL":
-	                    	e = this.getChildValue(child);
-	                    	break;
-	                    case "northBL":
-	                    	n = this.getChildValue(child);
-	                    	break;
-	                }
-	            }
+				if(node.firstChild.nodeValue.indexOf("|")) {
+					var coords = node.firstChild.nodeValue.split("|");
+					w = coords[0];
+					s = coords[1];
+					e = coords[2];
+					n = coords[3];
+				} else {
+					for(var child=node.firstChild; child; child=child.nextSibling) {
+		                switch(child.nodeName) {
+		                    case "southBL": 
+		                    	s = this.getChildValue(child);
+		                    	break;
+		                    case "westBL": 
+		                    	w = this.getChildValue(child);
+		                    	break;
+		                    case "eastBL":
+		                    	e = this.getChildValue(child);
+		                    	break;
+		                    case "northBL":
+		                    	n = this.getChildValue(child);
+		                    	break;
+		                }
+		            }
+				}
 				
 				var boundingBox = {
 					value : [ parseFloat(w), parseFloat(s),
