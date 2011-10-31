@@ -42,24 +42,22 @@ GeoNetwork.editor.Filter = {
     }]
 };
 
-/**
- * Class: GeoNetwork.editor.LinkedMetadataSelectionPanel
+
+/** api: (define)
+ *  module = GeoNetwork.editor
+ *  class = LinkedMetadataSelectionPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
+/** api: constructor 
+ *  .. class:: LinkedMetadataSelectionPanel()
+ *
+ *     Create a GeoNetwork selection panel
+ *     for related metadata. It helps creating links
+ *     to feature catalogues, datasets and services, parent and child.
+ *
  *
  */
 GeoNetwork.editor.linkedMetadata = {};
-
-/**
- * Datastore used to return CSW response content.
- * When defining a mapping, if the element is not available
- * in the response, (eg. title) error will be triggered in the grid completion.
- *
- * This datastore assume that a title and an identifier will be available in the
- * response.
- *
- * Subject and URI are checked and converted.
- *
- * TODO : Only the first URI is used.
- */
 
 GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
     catalogue: undefined,

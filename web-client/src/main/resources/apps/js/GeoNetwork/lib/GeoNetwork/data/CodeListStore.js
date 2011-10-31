@@ -27,8 +27,8 @@ Ext.namespace('GeoNetwork.data');
  *  class = CodeListStore
  */
 /** api: method[CodeListStore]
- *   A pre-configured `Ext.data.Store <http://extjs.com/deploy/dev/docs/?class=Ext.data.Store>`_
- *   for GeoNetwork codeList.
+ *  A pre-configured `Ext.data.Store <http://extjs.com/deploy/dev/docs/?class=Ext.data.Store>`_
+ *  for GeoNetwork codeList. Codelist are defined by a code, a label and a description
  *
  *  :param url: ``String`` Usually the xml.schema.info service URL.
  */

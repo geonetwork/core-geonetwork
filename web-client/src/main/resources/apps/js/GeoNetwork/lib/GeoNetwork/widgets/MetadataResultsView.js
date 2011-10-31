@@ -346,7 +346,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     },
     /** api: method[removeTemplate] 
      *  :param name: ``String`` template key
-     *  Remove templates
+     *  
+     *  Remove a template
      */
     removeTemplate: function(name){
         delete this.templates[name];
@@ -362,6 +363,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     },
     /** api: method[applyTemplate]
      *  :param name: ``String`` template key
+     *  
      *  Apply one templates
      */
     applyTemplate: function(name){

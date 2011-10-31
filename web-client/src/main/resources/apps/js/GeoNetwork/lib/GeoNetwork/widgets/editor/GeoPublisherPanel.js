@@ -43,58 +43,58 @@ Ext.namespace('GeoNetwork.editor');
  */
 GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
     /** api: property[border] 
-     * ``Boolean`` Border
+     *  ``Boolean`` Border
      */
     border: false,
     serviceUrl: undefined,
     
     /** api: property[itemSelector] 
-     * ``String``
+     *  ``String``
      */
     itemSelector: null,
     
     /** api: property[geoserverStore] 
-     * ``XMLStore`` Store GeoServer registered node
+     *  ``XMLStore`` Store GeoServer registered node
      */
     geoserverStore: undefined,
     
     /** api: property[loadingMask] 
-     * ``LoadingMask``
+     *  ``LoadingMask``
      */
     loadingMask: null,
     
     /** api: property[metadataId] 
-     * ``Number`` Metadata identifier
+     *  ``Number`` Metadata identifier
      */
     metadataId: null,
     
     /** api: property[metadataUuid] 
-     * ``String`` Metadata UUID
+     *  ``String`` Metadata UUID
      */
     metadataUuid: null,
     
     /** api: property[metadataTitle] 
-     * ``String`` Metadata title to be added to mapserver configuration
+     *  ``String`` Metadata title to be added to mapserver configuration
      */
     metadataTitle: null,
     
     /** api: property[fileName] 
-     * ``String`` The resource name to publish (file or db url)
+     *  ``String`` The resource name to publish (file or db url)
      */
     fileName: null,
     
     /** api: property[layerName] 
-     * ``String`` Name of the layer. File without extension or table name
+     *  ``String`` Name of the layer. File without extension or table name
      */
     layerName: null,
     
     /** api: property[accessStatus] 
-     * ``String`` private/publid
+     *  ``String`` private/publid
      */
     accessStatus: null,
     
     /** api: property[nodeId] 
-     * ``String`` Identifier of GeoServer selected node
+     *  ``String`` Identifier of GeoServer selected node
      */
     nodeId: null,
     
@@ -104,7 +104,7 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
     geoPublicationMap: null,
     
     /** api: property[geoPublicationMapPanel] 
-     * ``GeoExt.MapPanel`` Map Panel
+     *  ``GeoExt.MapPanel`` Map Panel
      */
     geoPublicationMapPanel: null,
     
@@ -112,7 +112,7 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
      */
     geoPublicationTb: null,
     /** api: config[layers] 
-     * ``Array`` List of layers to add to the map for background
+     *  ``Array`` List of layers to add to the map for background
      */
     layers: null,
     /** api: config[extent] 
@@ -131,7 +131,9 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
     /** api: property[checkBt] 
      */
     checkBt: null,
-    /** api: property[protocols] List of protocols to be added to the online source section 
+    /** api: property[protocols] 
+     * 
+     *  List of protocols to be added to the online source section 
      */
     protocols: {
         wms: {

@@ -184,7 +184,7 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
             items: [this.addButton, this.delButton]
         });
         
-        this.store = new GeoNetwork.data.MetadataThumbnailStore(this.getThumbnail, {id: this.metadataId}, true);
+        this.store = new GeoNetwork.data.MetadataThumbnailStore(this.getThumbnail, {id: this.metadataId});
         this.store.on('load', function(){
             this.dataView.fireEvent('selectionchange', this);
             Ext.ux.Lightbox.register('a[rel^=lightbox-set]', true);

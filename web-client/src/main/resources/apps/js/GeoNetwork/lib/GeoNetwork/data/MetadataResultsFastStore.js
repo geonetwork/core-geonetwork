@@ -33,6 +33,8 @@ Ext.namespace('GeoNetwork.data');
  *   for GeoNetwork results.
  *   
  *   To be used with the "q" search service which use only index content.
+ *   
+ *   
  *   TODO : Merge by extension with MetadataResultsStore
  *
  */

@@ -22,8 +22,18 @@
  */
 Ext.namespace('GeoNetwork.editor');
 
-/**
- * Class: GeoNetwork.editor.CRSSelectionPanel
+/** api: (define)
+ *  module = GeoNetwork.editor
+ *  class = CRSSelectionPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
+/** api: constructor 
+ *  .. class:: CRSSelectionPanel()
+ *
+ *     Create a GeoNetwork coordinate reference 
+ *     system selection panel
+ *
+ *
  */
 GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
     CRS: Ext.data.Record.create([{

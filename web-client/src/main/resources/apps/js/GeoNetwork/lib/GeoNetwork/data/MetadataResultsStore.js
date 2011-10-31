@@ -36,12 +36,15 @@ Ext.namespace('GeoNetwork.data');
  *
  *   Fields available are:
  *
- *   * uuid
+ *   * id : The metadata internal identifier
+ *   * uuid : The metadata unique identifier
+ *   * schema : The schema (eg. dublin-code, iso19139)
  *   * title
  *   * abstract
  *   * subject  ``Array()``
  *   * thumbnail
  *   * links    ``Array()``
+ *   * contacts ``Array()``
  *   * uri  Not used
  *   * isharvested
  *   * source
@@ -49,6 +52,8 @@ Ext.namespace('GeoNetwork.data');
  *   * popularity
  *   * download
  *   * ownername
+ *   * valid : The validation status
+ *   * valid_details : The validation information for each level of validation
  *   * edit
  *   * bbox ``Array()``
  *
@@ -87,7 +92,6 @@ GeoNetwork.data.MetadataResultsStore = function(){
         var currentUri;
         
         if (record.image) {
-        
             for (i = 0; i < record.image.length; i++) {
                 currentUri = record.image[i].value;
                 // Return the first URL even if not http (FIXME ?)
@@ -234,7 +238,6 @@ GeoNetwork.data.MetadataResultsStore = function(){
             return 0;
         }
     }
-    
     
     return new Ext.data.JsonStore({
         totalProperty: 'summary.count',

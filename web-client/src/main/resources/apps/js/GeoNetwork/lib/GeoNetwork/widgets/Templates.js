@@ -27,6 +27,11 @@ Ext.namespace('GeoNetwork');
  *  class = Templates
  *  base_link = `Ext.XTemplate <http://extjs.com/deploy/dev/docs/?class=Ext.XTemplate>`_
  */
+/** api: constructor 
+ *  .. class:: GeoNetwork.Templates()
+ * 
+ *   A template for harvester (experimental)
+ */
 GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
     compiled: false,
     disableFormats: false,
@@ -176,8 +181,6 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
 
 /** api: constructor 
  *  .. class:: GeoNetwork.Templates.FULL()
- * 
- *  FIXME : catalogue.URL suppose that a global var named catalogue is available.
  * 
  *   An instance of a pre-configured GeoNetwork.Templates with full view
  */

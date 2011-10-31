@@ -28,12 +28,34 @@ Ext.namespace('GeoNetwork.data');
  */
 /** api: method[MetadataSummaryStore] 
  *
- *   return a pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *   return a pre-configured `Ext.data.JsonStore *      <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
  *   for GeoNetwork summary.
  *
- *   Depends on ``OpenLayers.Format.GeoNetworkRecords``.
- *
- *   TODO : summary on any possible type
+ *   TODO : summary on any possible type only keywords.keyword are supported.
+ *   
+ *   .. code-block:: xml
+ *   
+ *    <summary count="9" type="local" hitsusedforsummary="9">
+ *       <spatialRepresentations/>
+ *       <keywords>
+ *         <keyword count="2" name="Global"/>
+ *         <keyword count="2" name="watersheds"/>
+ *         <keyword count="1" name="Biology"/>
+ *         <keyword count="1" name="water resources"/>
+ *         <keyword count="1" name="LAND-Ownership"/>
+ *         <keyword count="1" name="endangered plant species"/>
+ *         <keyword count="1" name="Africa"/>
+ *         <keyword count="1" name="Eurasia"/>
+ *         <keyword count="1" name="endangered animal species"/>
+ *         <keyword count="1" name="boundaries"/>
+ *       </keywords>
+ *       <denominators>
+ *         <denominator count="2" name="5000000"/>
+ *       </denominators>
+ *       <organizationNames>
+ *         <organizationName count="1" name="Department of Sustainability and Environment (DSE)"/>
+ *         <organizationName 
+ *   
  */
 GeoNetwork.data.MetadataSummaryStore = function(){
 

@@ -73,14 +73,21 @@ Ext.namespace('GeoNetwork');
  *     To be improved & discussed :
  *
  *      * i18n : generate from GeoNetwork file ?
+ *      
  *      * memory usage (eg. destroy calls)
+ *      
  *      * massive action : hack made embedded existing HTML page in a panel
+ *      
  *      and overriding JS in Old.js
- *      * search form : remote & Z39.50, INSPIRE fields
+ *      
+ *      * search form : remote & Z39.50
+ *      
  *      * global var named catalogue required (eg. Templates) should be improved, How ?
+ *      
  *      * add more events to component in order to reduce dependencies
+ *      
  *      * session state ? using localStorage or cookie ?
- *      * ...
+ *      
  */
 GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: property[SERVERURL] 
@@ -131,34 +138,34 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     hostUrl: null,
     
     /** api: config[servlet] 
-     * ``String`` Optional GeoNetwork servlet name.
-     * Default value is ``geonetwork``.
+     *  ``String`` Optional GeoNetwork servlet name.
+     *  Default value is ``geonetwork``.
      */
     servlet: null,
     
     extentMap: null,
     
     /** api: property[services] 
-     * ``Object`` The list of GeoNetwork services
+     *  ``Object`` The list of GeoNetwork services
      */
     services: {},
     
     /** api: property[windowOption] 
-     * ``String`` Configuration of popup windows
+     *  ``String`` Configuration of popup windows
      */
     windowOption: "menubar=no,location=no,toolbar=no,directories=no",
     
     /** api: property[windowName] 
-     * ``String`` Name of popup windows
+     *  ``String`` Name of popup windows
      *
-     * FIXME : this is always the same, assumming the main app will
-     * always popup in the same window. Maybe that's not a good idea
-     * in order to allow multi editors for example.
+     *  FIXME : this is always the same, assumming the main app will
+     *  always popup in the same window. Maybe that's not a good idea
+     *  in order to allow multi editors for example.
      */
     windowName: "",
     
     /** api: property[startRecord] 
-     * ``Number`` Index of the first record for current search
+     *  ``Number`` Index of the first record for current search
      */
     startRecord: 1,
     
@@ -175,21 +182,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     summaryStore: null,
     
     /** api: config[statusBarId] 
-     * ``String`` Optional identifier of an ``Ext.Element`` or a DOM element
-     * to be use to display status information.
+     *  ``String`` Optional identifier of an ``Ext.Element`` or a DOM element
+     *  to be use to display status information.
      */
     statusBarId: null,
     
     /** api: config[mdDisplayPanelId] 
-     * ``String`` Optional identifier of a panel to use to display metadata
+     *  ``String`` Optional identifier of a panel to use to display metadata
      */
     mdDisplayPanelId: undefined,
     /** api: config[resultsView] 
-     * ``String`` Optional metadata results view panel
+     *  ``String`` Optional metadata results view panel
      */
     resultsView: undefined,
     /** api: config[mdOverlayedCmpId] 
-     * ``String`` Not used for now
+     *  ``String`` Not used for now
      */
     mdOverlayedCmpId: undefined,
     
@@ -208,12 +215,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataEditFn: undefined,
     /** api: config[adminAppUrl]
      *  ``String`` URL to the administration interface
-     * TODO : should we go to admin service by default ?
+     *  TODO : should we go to admin service by default ?
      *
      */
     adminAppUrl: '',
     /** private: property[selectedRecords]
-     * ``Number``	Number of selected records
+     *  ``Number``	Number of selected records
      */
     selectedRecords: 0,
     
@@ -386,12 +393,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterLogin]
      *  :param e: ``Object``
      *
-     * The "onAfterLogin" listener.
+     *  The "onAfterLogin" listener.
      *
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
+     *    
      *    * ``user`` : Current user   FIXME
+     *    
      */
     onAfterLogin: function(){
         this.fireEvent('afterLogin', this, this.isIdentified());
@@ -399,7 +408,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterBadLogin]
      *  :param e: ``Object``
      *
-     * The "onAfterBadLogin" listener.
+     *  The "onAfterBadLogin" listener.
      *
      */
     onAfterBadLogin: function(){
@@ -408,7 +417,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterLogout]
      *  :param e: ``Object``
      *
-     * The "onAfterLogout" listener.
+     *  The "onAfterLogout" listener.
      */
     onAfterLogout: function(){
         this.fireEvent('afterLogout', this, this.isIdentified());
@@ -416,7 +425,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterBadLogout]
      *  :param e: ``Object``
      *
-     * The "onAfterBadLogout" listener.
+     *  The "onAfterBadLogout" listener.
      */
     onAfterBadLogout: function(){
         this.fireEvent('afterBadLogout', this, this.isIdentified());
@@ -424,11 +433,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterDelete]
      *  :param e: ``Object``
      *
-     * The "onAfterDelete" listener.
+     *  The "onAfterDelete" listener.
      *
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
+     *    
      */
     onAfterDelete: function(){
         this.fireEvent('afterDelete', this);
@@ -436,11 +446,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterRating]
      *  :param e: ``Object``
      *
-     * The "onAfterDelete" listener.
+     *  The "onAfterDelete" listener.
      *
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
+     *    
      */
     onAfterRating: function(){
         this.fireEvent('afterRating', this);
@@ -459,7 +470,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     onSelectionChange: function(){
         this.fireEvent('selectionchange', this, this.getSelectedRecords());
-    },/** api: method[getInfo]
+    },
+    /** api: method[getInfo]
      *  
      *  Return catalogue information (site name, organization, id).
      */
@@ -506,15 +518,15 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[search]
      *  :param formId: ``String`` An Ext.Form identifier.
      *  :param onSuccess: ``Function or null`` A function to trigger in
-     *   case of success (Ext.emptyFn by default).
+     *    case of success (Ext.emptyFn by default).
      *  :param onFailure: ``Function or null`` A function to trigger in
-     *   case of failure (Ext.emptyFn by default).
+     *    case of failure (Ext.emptyFn by default).
      *  :param startRecord: ``Number or null`` The start record for the
-     *   search (Default is 1). The number of records returned by a search
-     *   is defined by an E_hits_per_page field defined in the form. If
-     *   not default value is used.
+     *    search (Default is 1). The number of records returned by a search
+     *    is defined by an E_hits_per_page field defined in the form. If
+     *    not default value is used.
      *  :param updateStore: ``Boolean`` false to not update catalogue stores.
-     *  Default to true.
+     *    Default to true.
      *
      *  Run a search operation using GeoNetwork xml.search service.
      *  Initialize results and summary stores.
@@ -840,11 +852,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         location.replace(url);
     },
     /** api: method[metadataEdit]
-     * :param uuid: ``String`` Uuid of the metadata record to edit
+     *  :param uuid: ``String`` Uuid of the metadata record to edit
      *
-     * Open a metadata editor.
+     *  Open a metadata editor.
      *
-     * FIXME : metadata.edit service does not support uuid param
+     *  FIXME : metadata.edit service does not support uuid param
      */
     metadataEdit: function(id, create, group, child, isTemplate){
         
@@ -858,7 +870,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             window.open(this.services.mdEdit + '?id=' + id, this.windowName, this.windowOption);
         }
     },
-    /**	api: method[metadataDuplicate]
+    /** api: method[metadataDuplicate]
      *  :param uuid: ``String`` Uuid of the metadata to duplicate
      *
      *  Create a metadata by duplication of an existing one
@@ -866,7 +878,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataDuplicate: function(uuid){
         window.open(this.services.mdDuplicate + '?uuid=' + uuid, this.windowName, this.windowOption);
     },
-    /**    api: method[metadataCreateChild]
+    /** api: method[metadataCreateChild]
      *  :param uuid: ``String`` Uuid of the metadata to duplicate
      *
      *  Create a child metadata record from an existing one
@@ -874,20 +886,20 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataCreateChild: function(uuid){
         window.open(this.services.mdDuplicate + '?child=y&uuid=' + uuid, this.windowName, this.windowOption);
     },
-    /**	api: method[metadataDuplicateWithSchema]
-     *  *param schema:	``String`` Schema
+    /** api: method[metadataDuplicateWithSchema]
+     *  :param schema: ``String`` Schema
      *
-     *	Create a metadata record in one of the schema
+     *  Create a metadata record in one of the schema
      */
     metadataDuplicateWithSchema: function(uuid, schema){
         window.open(this.services.mdDuplicate + '?uuid=' + uuid +
         "&schema=" +
         schema, this.windowName, this.windowOption);
     },
-    /**	api: method[metadataDelete]
-     *	:param uuid: ``String`` Uuid of the metadata
+    /** api: method[metadataDelete]
+     *  :param uuid: ``String`` Uuid of the metadata
      *
-     *	Delete metadata record.
+     *  Delete metadata record.
      */
     metadataDelete: function(uuid){
         Ext.Msg.confirm(OpenLayers.i18n('deleteRecord'), OpenLayers.i18n('deleteConfirm'), this.metadataDeleteDo, uuid);
@@ -1112,7 +1124,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     /**	api: method[massiveOp]
      *  :param type: Type of massive operation. One of ``NewOwner``,
-     *  ``Categories``, ``Delete``, ``Privileges``
+     *    ``Categories``, ``Delete``, ``Privileges``
      *
      *  Load massive operation in a window
      *  align to top and centered.

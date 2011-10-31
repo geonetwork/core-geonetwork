@@ -27,10 +27,10 @@ Ext.namespace('GeoNetwork.data');
  *  class = ThesaurusFeedStore
  */
 /** api: method[ThesaurusFeedStore]
- *   A pre-configured `Ext.data.XmlStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.XmlStore>`_
- *   for GeoNetwork regions.
+ *  A pre-configured `Ext.data.XmlStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.XmlStore>`_
+ *  for GeoNetwork thesaurus available in a repository.
  *
- *  :param url: ``String`` Atom document
+ *  :param url: ``String`` Atom document. Default values is `GeoNetwork thesaurus repository <http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml>`_
  * 
  */
 GeoNetwork.data.ThesaurusFeedStore = function(feed){

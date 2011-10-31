@@ -26,9 +26,8 @@ Ext.namespace("GeoNetwork.util");
  *  module = GeoNetwork.util 
  *  class = HelpTools
  */
-/**
- * api: HelpTools help to interact with xml.schema.info services
- * which retrieves help for schema elements.
+/** api: HelpTools help to interact with xml.schema.info services
+ *  which retrieves help for schema elements.
  */
 GeoNetwork.util.HelpTools = {
     fields: [{
@@ -83,11 +82,20 @@ GeoNetwork.util.HelpTools = {
                 return helpers;
             }
         }],
+    /** api: property[Templates] 
+     *  Default templates to display help information
+     */
     Templates: {
+        /** api: property[Templates.SIMPLE] 
+         *  Display field description and example
+         */
         SIMPLE: ['<div class="help">{description}', 
             '<tpl if="values.example != \'\'">',
               '<div><span>' + OpenLayers.i18n('example') + '</span> {example}</div>',
             '</tpl></div>'],
+        /** api: property[Templates.COMPLETE] 
+         *  Display all field information (label, description, help, example, tag name and helper).
+         */
         COMPLETE: ['<div class="help"><span class="title">{label}</span>',
                      '<div>{description}</div>',
                      '<tpl for="help">',
@@ -106,11 +114,15 @@ GeoNetwork.util.HelpTools = {
                    '<div>' + OpenLayers.i18n('tagName') + ' {name}</div>', 
                    '</div>']
     },
-    /**
+    /** api:method[get]
+    *
+    *  :param helpId: ``String``  help identifier (eg. stip.iso19139|gmd:identificationInfo|gmd:MD_Metadata|gmd:MD_Metadata/gmd:identificationInfo||d91874e39351)
+    *  :param schema: ``String``    Metadata schema (eg. iso19139)
+    *  :param url: ``String``  Usually schema.info service
+    *  :param cb: ``Function``  Optional function to trigger in case of success
+    *  
      * Load help information for the element and pass the record to the callback provided
      * 
-     * Id example:
-     * stip.iso19139|gmd:identificationInfo|gmd:MD_Metadata|gmd:MD_Metadata/gmd:identificationInfo||d91874e39351
      */
     get: function (helpId, schema, url, cb) {
         var info = helpId.split('|'), 

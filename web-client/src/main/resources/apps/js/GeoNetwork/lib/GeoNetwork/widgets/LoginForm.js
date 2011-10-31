@@ -34,8 +34,20 @@ Ext.namespace('GeoNetwork');
  *  .. class:: LoginForm(config)
  *
  *     Create a GeoNetwork login form.
+ */
+/** api: example
  *
  *
+ *  .. code-block:: javascript
+ *  
+ *     var loginForm2 = new GeoNetwork.LoginForm({
+ *        renderTo: 'login-form',
+ *        id: 'loginForm',
+ *        catalogue: catalogue,
+ *        layout: 'hbox'
+ *      });
+ *      
+ *      ...
  */
 GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     url: '',

@@ -33,6 +33,7 @@ Ext.namespace("GeoNetwork.util");
  */
 GeoNetwork.util.INSPIRESearchFormTools = {
     /** api:method[getAnnexField] 
+     *  
      *  :return: Annex I, II, III combo box
      * 
      */
@@ -65,7 +66,7 @@ GeoNetwork.util.INSPIRESearchFormTools = {
     },
     /** api:method[getRelatedField] 
      *  :return: Checkbox for dataset related to
-     * INSPIRE
+     *    INSPIRE
      * 
      */
     getRelatedField : function () {
@@ -78,7 +79,7 @@ GeoNetwork.util.INSPIRESearchFormTools = {
         return inspirerelated;
     },
     /** api:method[getThemesFieldWithSuggestion] 
-     * :return:
+     * 
      * 
      */
     getThemesFieldWithSuggestion : function (services) {
@@ -96,10 +97,10 @@ GeoNetwork.util.INSPIRESearchFormTools = {
     /** api:method[getThemesFieldWithSuggestion] 
      *  :return:
      * 
-     * Use xml.search.keywords service to retrieve the list of all INSPIRE themes
-     * in current GUI language.
+     *  Use xml.search.keywords service to retrieve the list of all INSPIRE themes
+     *  in current GUI language.
      * 
-     * TODO : Improve support of multilingual search for INSPIRE themes
+     *  TODO : Improve support of multilingual search for INSPIRE themes
      */
     getThemesField : function (services, multi) {
         var Keyword, themesStore, inspiretheme;
@@ -162,7 +163,7 @@ GeoNetwork.util.INSPIRESearchFormTools = {
     /** api:method[getINSPIREFields] 
      *  :return: An INSPIRE form
      * 
-     * Create an INSPIRE form
+     *  Create an INSPIRE form with annexes, themes and related checkbox fields.
      */
     getINSPIREFields : function (services, multi) {
         return [this.getAnnexField(multi), 

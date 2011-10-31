@@ -31,7 +31,14 @@ Ext.namespace('GeoNetwork.view');
  *  .. class:: ViewWindow(config)
  *
  *     Create a GeoNetwork metadata view window
- *     to display a metadata record.
+ *     to display a metadata record. The metadata view use the view service.
+ *     
+ *     A toolbar is provided with:
+ *      
+ *      * a view mode selector 
+ *      * a metadata menu (:class:`GeoNetwork.MetadataMenu`)
+ *      * a print mode menu (for pretty HTML printing)
+ *      * a menu to turn off tooltips (on metadata descriptors)
  *
  */
 GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
@@ -40,24 +47,37 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         width: 700,
         height: 740,
         border: false,
+        /** api: config[lang] 
+         *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
+         */
         lang: 'en',
         autoScroll: true,
         closeAction: 'destroy',
+        /** api: config[currTab] 
+         *  The default view mode to use. Default is 'simple'.
+         */
         currTab: 'simple',
+        /** api: config[displayTooltip] 
+         *  Display tooltips or not. Default is true.
+         */
         displayTooltip: true,
-        /**
-         * 	Define if default mode should be used for HTML print output instead of tabs
-         * (eg. metadata will be replaced by default view)
+        /** api: config[printDefaultForTabs]
+         *  Define if default mode should be used for HTML print output instead of tabs
+         *  (eg. metadata tag in advanced view will be replaced by default view)
          */
         printDefaultForTabs: false,
         printMode: undefined,
-        // Do not display fcats and sources by default. Set to '' to display all.
-        relationTypes: 'service|children|related|parent|dataset'
+        /** api: config[relationTypes] 
+         *  List of types of relation to be displayed in header. 
+         *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
+         *  Set to '' to display all.
+         */
+        relationTypes: 'service|children|related|parent|dataset',
+        maximizable: true,
+        maximized: false,
+        collapsible: true,
+        collapsed: false
     },
-    maximizable: true,
-    maximized: false,
-    collapsible: true,
-    collapsed: false,
     serviceUrl: undefined,
     catalogue: undefined,
     metadataUuid: undefined,
@@ -68,7 +88,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     metadataSchema: undefined,
     cache: {},
     tooltips: [],
-    /** 
+    /** api: method[getLinkedData]
      *  Get related metadata records for current metadata using xml.relation service.
      */
     getLinkedData : function() {
@@ -79,8 +99,8 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             this.each(view.displayLinkedData, view);
         });
     },
-    /**
-     * Display the record in the metadata related table (only available in simple view mode).
+    /** private: method[displayLinkedData]
+     *  Display the record in the metadata related table (only available in simple view mode).
      */
     displayLinkedData: function(record){
         var table = Ext.query('table.related', this.body.dom),

@@ -31,7 +31,7 @@ Ext.namespace('GeoNetwork.editor');
 /** api: constructor 
  *  .. class:: LinkedMetadataPanel(config)
  *
- *     Create a GeoNetwork help panel
+ *     Create a GeoNetwork panel use to link metadata records
  *
  *
  */

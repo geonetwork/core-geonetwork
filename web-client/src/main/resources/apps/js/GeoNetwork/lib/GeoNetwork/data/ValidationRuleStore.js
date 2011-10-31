@@ -27,10 +27,11 @@ Ext.namespace('GeoNetwork.data');
  *  class = ValidationRuleStore
  */
 /** api: method[ValidationRuleStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork validation report rules.
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork validation report rules.
  *
  *  :param url: ``String`` Usually the xml.metadata.validate service URL.
+ *  
  *  :param grouping: ``boolean`` Set to true to return a Ext.data.GroupingStore
  */
 GeoNetwork.data.ValidationRuleStore = function(url, params, grouping){

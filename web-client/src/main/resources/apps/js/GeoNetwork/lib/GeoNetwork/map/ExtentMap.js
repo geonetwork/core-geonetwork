@@ -29,17 +29,13 @@ Ext.namespace('GeoNetwork.map');
 /** api: constructor 
  *  .. class:: ExtentMap()
  *
- *  Extent map editor/viewer in metadata view and edit mode.
+ *  ExtentMap is a utility class used for map initialization in metadata view and edit mode.
  *
- *  Search for all maps defined and create a map with
- *  bounding box and extent (bounding polygon)
- *  from an ISO 19139 record.
+ *  Search for all maps defined in the current page and create a map 
+ *  with bounding box in view mode and add editing tools when needed.
+ *  
+ *  Editing tools could be draw rectangle, draw polygon and draw circle.
  *
- *  One map per extent is created.
- *
- *  TODO :
- *
- *   * Merge with new map module
  */
 /**
  * @include GeoExt/widgets/MapPanel.js
@@ -493,9 +489,8 @@ GeoNetwork.map.ExtentMap = function(){
     return {
         init: function(){
         },
-        
-        /**
-         * APIFunction: initMapDiv
+        /** api: method[initMapDiv]
+         *
          * Take all the DIVs of class extentViewer and places a map within. If it
          * contains a single div, look in it content for a geometry in WKT format
          * and add it in the map.

@@ -27,12 +27,13 @@ Ext.namespace('GeoNetwork.data');
  *  class = CategoryStore
  */
 /** api: method[CategoryStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork categories including labels in different language.
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork categories including labels in different language.
  *
  *  :param url: ``String`` Usually the xml.info service URL. 
- *   See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_ 
- *   for mode information.
+ *              See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_ 
+ *              for mode information.
+ *  
  */
 GeoNetwork.data.CategoryStore = function(url){
 

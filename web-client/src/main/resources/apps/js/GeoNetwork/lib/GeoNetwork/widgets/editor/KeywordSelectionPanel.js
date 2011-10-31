@@ -22,13 +22,22 @@
  */
 Ext.namespace('GeoNetwork.editor');
 
-/**
- * Class: GeoNetwork.editor.KeywordSelectionPanel
- */
 GeoNetwork.editor.keyword = {};
 
 
-
+/** api: (define)
+ *  module = GeoNetwork.editor
+ *  class = KeywordSelectionPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
+/** api: constructor 
+ *  .. class:: KeywordSelectionPanel()
+ *
+ *     Create a GeoNetwork keyword selection panel
+ *     using thesaurus loaded in GeoNetwork.
+ *
+ *
+ */
 GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
     catalogue: undefined,
     

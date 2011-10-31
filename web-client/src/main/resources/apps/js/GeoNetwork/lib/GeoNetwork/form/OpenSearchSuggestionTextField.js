@@ -64,10 +64,10 @@ Ext.namespace('GeoNetwork.form');
  *
  *
  *  Comments:
- *  * Lucene analyzer should be applied on the server side (TODO).
- *  * When using suggestion, we should be allowed to turn off
- *  FuzzyQuery as the suggested term come from the index. Trigger
- *  change similarity to 1 (queries should then be a bit faster).
+ *   * Lucene analyzer should be applied on the server side (TODO).
+ *   * When using suggestion, we should be allowed to turn off
+ *     FuzzyQuery as the suggested term come from the index. Trigger
+ *     change similarity to 1 (queries should then be a bit faster).
  */
 GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
 

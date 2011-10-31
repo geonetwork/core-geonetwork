@@ -27,12 +27,12 @@ Ext.namespace('GeoNetwork.data');
  *  class = Z3950RepositoryStore
  */
 /** api: method[Z3950RepositoryStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork Z39.50 Repository.
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork Z39.50 Repository.
  *
  *  :param url: ``String`` Usually the xml.info service URL. 
- *  See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_ 
- *  for mode information.
+ *   See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_ 
+ *   for mode information.
  */
 GeoNetwork.data.Z3950RepositoryStore = function(url){
 

@@ -27,8 +27,11 @@ Ext.namespace('GeoNetwork.data');
  *  class = SuggestionStore
  */
 /** api: method[SuggestionStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork validation report rules.
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.GroupingStore>`_
+ *  or `Ext.data.XmlStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.XmlStore>`_
+ *  for metadata suggestion.
+ *
+ *  See :class:`GeoNetwork.editor.SuggestionsPanel`
  *
  *  :param url: ``String`` Usually the xml.metadata.validate service URL.
  *  :param grouping: ``boolean`` Set to true to return a Ext.data.GroupingStore

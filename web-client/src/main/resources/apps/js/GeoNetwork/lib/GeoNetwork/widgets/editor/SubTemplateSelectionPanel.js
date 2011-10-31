@@ -22,8 +22,21 @@
  */
 Ext.namespace('GeoNetwork.editor');
 
-/**
- * Class: GeoNetwork.editor.SubTemplateSelectionPanel
+
+/** api: (define)
+ *  module = GeoNetwork.editor
+ *  class = SubTemplateSelectionPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
+/** api: constructor 
+ *  .. class:: SubTemplateSelectionPanel()
+ *
+ *     Create a GeoNetwork subtemplate selector for a type
+ *     of directory.
+ *     
+ *     See subtemplate manager (TODO add hyperlink) panel for configuration of subtemplates.
+ *     
+ *	More information available `here <http://trac.osgeo.org/geonetwork/wiki/proposals/SubTemplates>`_
  */
 GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     border: false,

@@ -24,16 +24,24 @@ Ext.namespace('GeoNetwork.data');
 
 /** api: (define) 
  *  module = GeoNetwork.data
- *  class = ValidationRuleStore
+ *  class = MetadataThumbnailStore
  */
-/** api: method[ValidationRuleStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork metadata thumbnails.
+/** api: method[MetadataThumbnailStore]
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork metadata thumbnails.
  *
  *  :param url: ``String`` Usually the metadata.thumbnail service URL.
+ *  
+ *  
+ *  .. code-block:: javascript
+ *  
+ *     this.store = new GeoNetwork.data.MetadataThumbnailStore(
+ *                         catalogue.services.getThumbnail, 
+ *                         {id: this.metadataId}
+ *                  );
+ *  
  */
 GeoNetwork.data.MetadataThumbnailStore = function(url, params){
-
 
     var fields = [{
         name: 'href'

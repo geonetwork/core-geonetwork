@@ -89,7 +89,9 @@ GeoNetwork.util.SearchFormTools = {
         return fields;
     },
     /** api:method[getAdvancedFormFields]
+     *  
      *  :param services: Optional GeoNetwork services URL used for OpenSearch suggestion URL. If not defined, no suggestion fields.
+     *  
      *  :return: A GeoNetwork advanced form
      *
      *  Create a advanced form
@@ -227,8 +229,9 @@ GeoNetwork.util.SearchFormTools = {
         return fields;
     },
     /** api:method[getSimpleMap]
+     *  
      *  :return: An array of component with a hidden geometry field
-     *  and a simple map.
+     *    and a simple map.
      *
      *  Create simple map search field.
      *
@@ -262,7 +265,9 @@ GeoNetwork.util.SearchFormTools = {
         return fields;
     },
     /** api:method[getOptions]
+     *  
      *  :param hitsPerPageOptions: ``Array(String)``    List of options for hits per page field
+     *  
      *  :return: An options fieldset
      *
      *  Create option fields
@@ -303,6 +308,10 @@ GeoNetwork.util.SearchFormTools = {
         
         return options;
     },
+    /** api:method[getSortByCombo]
+     *  
+     *  Return a combo box with sort options
+     */
     getSortByCombo: function(){
         var sortByField = new Ext.form.TextField({
             name: 'E_sortBy',
@@ -334,6 +343,10 @@ GeoNetwork.util.SearchFormTools = {
         });
         return [sortByField, sortOrderField, combo];
     },
+    /** api:method[getSortByStore]
+     *  
+     *  Return an ArrayStore of sort options
+     */
     getSortByStore: function(){
         return new Ext.data.ArrayStore({
             id: 0,
@@ -903,7 +916,7 @@ GeoNetwork.util.SearchFormTools = {
     },
     /** api:method[getTypesField]
      *  :return: Type selection using combo box based
-     *  on hierarchy level values.
+     *   on hierarchy level values.
      */
     getTypesField: function(codeList, multi){
         var defaultCodeList = [['dataset', OpenLayers.i18n('dataset')], 

@@ -34,7 +34,7 @@ Ext.namespace('GeoNetwork.admin');
  *  .. class:: ThesaurusManagerPanel(config)
  *
  *     Create a GeoNetwork thesaurus manager panel (alpha)
- *  to add, delete, update and select available thesauri.
+ *     to add, delete, update and select available thesauri.
  *
  */
 GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {

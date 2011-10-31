@@ -22,6 +22,20 @@
  */
 Ext.namespace('GeoNetwork.editor');
 
+
+/** api: (define)
+ *  module = GeoNetwork.editor
+ *  class = LogoSelectionPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
+/** api: constructor 
+ *  .. class:: LogoSelectionPanel()
+ *
+ *     Create a GeoNetwork logo selection panel.
+ *     Logos could be added to metadata contact for ISO19139 records.
+ *
+ *     More information available `here <http://trac.osgeo.org/geonetwork/wiki/proposals/OrganisationLogo>`_
+ */
 GeoNetwork.editor.LogoSelectionPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
         autoScroll: true,

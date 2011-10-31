@@ -22,9 +22,18 @@
  */
 Ext.namespace('GeoNetwork.admin');
 
-/**
- * Simple metadata insert panel used for subtemplates.
- * TODO : improve to cover all metadata insert options in the existing admin panel.
+/** api: (define)
+ *  module = GeoNetwork.editor
+ *  class = MetadataInsertPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
+/** api: constructor 
+ *  .. class:: MetadataInsertPanel()
+ *
+ *   Simple metadata insert panel used for subtemplates.
+ *  
+ *   TODO : improve to cover all metadata insert options in the existing admin panel.
+ *
  */
 GeoNetwork.admin.MetadataInsertPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {

@@ -41,33 +41,61 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     frame: false,
     editorToolBar: undefined,
     tbarConfig: undefined,
-    layout: 'border',
     id: 'editorPanel', // Only one Editor panel allowed by Document
-    height: 800,
     defaultConfig: {
-        defaultViewMode: 'simple',
+    	/** api: config[defaultViewMode] 
+         *  Default view mode to open the editor. Default to 'simple'.
+         *  View mode is keep in user session (on the server).
+         */
+    	defaultViewMode: 'simple',
+        layout: 'border',
+        height: 800,
+        /** api: config[xlinkOptions] 
+         *  Set properties for CONTACT, CRS, KEYWORD to enable XLink option 
+         *  to the related selection panel.
+         */
+        xlinkOptions: {},
         // TODO : Add option to remove utilityPanel
+        /** api: config[utilityPanelCollapsed] 
+         *  Collapsed utility panel on startup. Default to false.
+         */
         utilityPanelCollapsed: false,
+        /** api: config[utilityPanelConfig] 
+         *  Utility panel properties
+         */
         utilityPanelConfig: {
+            /** api: config[utilityPanelConfig.thumbnailPanel] 
+             *  Collapsed thumbnail panel on startup. Default is false.
+             */
             thumbnailPanel: {
                 collapsed: false
             },
+            /** api: config[utilityPanelConfig.relationPanel] 
+             *  Collapsed relation panel on startup. Default is true.
+             */
             relationPanel: {
                 collapsed: true
             },
+            /** api: config[utilityPanelConfig.validationPanel] 
+             *  Collapsed validation panel on startup. Default is true.
+             */
             validationPanel: {
                 collapsed: true
             },
+            /** api: config[utilityPanelConfig.suggestionPanel] 
+             *  Collapsed suggestion panel on startup. Default is true.
+             */
             suggestionPanel: {
                 collapsed: true
             },
+            /** api: config[utilityPanelConfig.helpPanel] 
+             *  Collapsed thumbnail panel on startup. Default is false.
+             */
             helpPanel: {
                 collapsed: false
             }
         }
     },
-    //    minHeight : 600,
-    //autoHeight: true,
     catalogue: undefined,
     toolbar: undefined,
     validationPanel: undefined,
@@ -93,11 +121,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     lang: undefined,
     fileUploadWindow: undefined,
     mask: undefined,
-    /**
-     * Set properties for CONTACT, CRS, KEYWORD to enable XLink option 
-     * to the related selection panel.
-     */
-    xlinkOptions: {},
     managerInitialized: false,
     container : undefined,
     setContainer : function (el) {
@@ -105,6 +128,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             this.container = el;
         }
     },
+    /** api: method[showLogoSelectionPanel]
+     * 
+     * :param ref: ``String``  Form element identifier (eg. _235).
+     * 
+     *  Get related metadata records for current metadata using xml.relation service.
+     */
     showLogoSelectionPanel : function(ref){
         if (!this.logoSelectionWindow) {
             var logoSelectionPanel = new GeoNetwork.editor.LogoSelectionPanel({
@@ -135,6 +164,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.logoSelectionWindow.items.get(0).setRef(ref);
         this.logoSelectionWindow.show();
     },
+    /** api: method[showFileUploadPanel]
+     * 
+     *  :param id: ``String``  Metadata internal identifier.
+     *  :param ref: ``String``  Form element identifier (eg. 235).
+     *  
+     *  Show panel to upload a file.
+     */
     showFileUploadPanel: function(id, ref){
         var panel = this;
         
@@ -235,16 +271,19 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.fileUploadWindow.show();
     },
     
-    /**
-     * Display geo publisher panel
+    /** api: method[showGeoPublisherPanel]
+     * 
+     *  Display geo publisher panel
      *
-     * @param id                metadata identifier
-     * @param name              file name (usually a zip file which contains ESRI Shapefile)
-     * @param accessStatus      public/private according to privileges
-     * @param nodeName          node name to insert (ie. gmd:online)
-     * @param insertNodeRef     reference where XML fragement should be inserted.
+     *  :param  id: ``String`` Metadata internal identifier
+     *  :param  uuid: ``String`` Metadata UUID
+     *  :param  title: ``String`` Metadata title
+     *  :param  name: ``String`` file name (usually a zip file which contains ESRI Shapefile)
+     *  :param  accessStatus: ``String`` public/private according to privileges
+     *  :param  nodeName: ``String`` Node name to insert (ie. gmd:online)
+     *  :param  insertNodeRef: ``String`` Reference where XML fragement should be inserted.
+     *  :param  extent: ``String`` Initial map extent.
      *
-     * @return
      */
     showGeoPublisherPanel: function(id, uuid, title, name, accessStatus, nodeName, insertNodeRef, extent){
         //Ext.QuickTips.init();
@@ -315,15 +354,14 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.geoPublisherWindow.show();
         
     },
-    
-    /**
-     * Display contact selection panel
-     * Not available in trunk.
+    /** api: method[showSubTemplateSelectionPanel]
      * 
-     * @param ref
-     * @param name sub template type name
-     * @param elementName element to add name
-     * @return
+     *  :param ref: ``String``  Form element identifier (eg. 235).
+     *  :param name: ``String``  Sub template type name (eg. CI_ResponsibleParty).
+     *  :param elementName: ``String``  Element tag name (eg. gmd:pointOfContact).
+     *  
+     *  Display contact selection panel
+     *  Not available in trunk.
      */
     showSubTemplateSelectionPanel: function(ref, name, elementName){
         var editorPanel = this;
@@ -338,9 +376,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             var selectionPanel = new GeoNetwork.editor.SubTemplateSelectionPanel({
                         width : 620,
                         height : 300,
-//                        ref: ref,
-//                        name: name,
-//                        elementName: elementName,
                         catalogue: this.catalogue,
                         listeners : {
                             subTemplateSelected : function(panel, subtemplates) {
@@ -366,14 +401,15 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.subTemplateSelectionWindow.items.get(0).setAddAsXLink(this.xlinkOptions.CONTACT);
         this.subTemplateSelectionWindow.show();
     },
-    /**
-     * Display keyword selection panel
+    /** api: method[showKeywordSelectionPanel]
+     * 
+     *  :param ref: ``String``  Form element identifier (eg. 235).
      *
-     * @param ref
-     * @param name
-     * @return
+     *  Display keyword selection panel. Xlink mode is activated if
+     *  EditorPanel.xlinkOptions.KEYWORD is set to true.
+     *
      */
-    showKeywordSelectionPanel: function(ref, name){
+    showKeywordSelectionPanel: function(ref){
         var editorPanel = this;
         
         // Destroy all previously created windows which may
@@ -410,13 +446,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.keywordSelectionWindow.items.get(0).setAddAsXLink(this.xlinkOptions.KEYWORD);
         this.keywordSelectionWindow.show();
     },
-    
-    /**
-     * Display CRS selection panel
+    /** api: method[showCRSSelectionPanel]
+     * 
+     *  :param ref: ``String``  Form element identifier (eg. 235).
+     *  :param name: ``String``  Element name.
      *
-     * @param ref
-     * @param name
-     * @return
+     * Display CRS selection panel.
      */
     showCRSSelectionPanel: function(ref, name){
         var editorPanel = this;
@@ -451,16 +486,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.crsSelectionWindow.items.get(0).setRef(ref);
         this.crsSelectionWindow.show();
     },
-    /**
-     * Property: linkedMetadataSelectionWindow
-     * The window in which we can select linked metadata
-     *
-     * @param ref        Reference of the element to update. If null, trigger action.
-     * @param name        Type of element to update. Based on this information
+    /** api: method[linkedMetadataSelectionWindow]
+     * 
+     *  :param ref: ``String``  Reference of the element to update. If null, trigger action.
+     *  :param name: ``String``  Type of element to update. Based on this information
      *     define if multiple selection is allowed and if hidden parameters need
-     *  to be added to CSW query.
-     * @param mode Mode is set to name if not defined. Mode define which type of metadata
-     * to search for. Uuidref means all, iso19110 means feature catalogue only.
+     *     to be added to CSW query.
+     *  :param mode: ``String`` Mode is set to name if not defined. Mode define which type of metadata
+     *     to search for. Uuidref means all, iso19110 means feature catalogue only.
+     * 
+     *  The window in which we can select linked metadata
+     *
      */
     showLinkedMetadataSelectionPanel: function(ref, name, mode){
         // Add extra parameters according to selection panel
@@ -546,9 +582,20 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.linkedMetadataSelectionWindow.show();
     },
-    /**
-     * Property: linkedMetadataSelectionWindow
-     * The window in which we can select linked metadata
+    /** api: method[showLinkedServiceMetadataSelectionPanel]
+     * 
+     *  :param name: ``String``  Type of element to update (eg. 'attachService' if current dataset is a dataset metadata record, null if not). 
+     *  :param serviceUrl: ``String`` Service GetCapabilities URL.
+     *  :param uuid: ``String``  Metadata UUID.
+     *  
+     *  The window in which we can select service or dataset metadata to link.
+     *  
+     *  If the metadata is a dataset, then the following action are triggered on selection:
+     *  
+     *  * Update service (if current user has privileges), using XHR request to attache the dataset (in srv:operatesOn and srv:coupledResource)
+     *  
+     *  * Update current metadata (in online resource section).
+     *  
      */
     showLinkedServiceMetadataSelectionPanel: function(name, serviceUrl, uuid){
         var editorPanel = this;
@@ -677,41 +724,78 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.linkedMetadataSelectionWindow.show();
     },
-    
-    
-    
+    /** api: method[switchToTab]
+     * 
+     *  :param tab: ``String``  The tab to open.
+     *  
+     *  Set the new tab value and trigger a save action.
+     */
     switchToTab: function(tab){
         Ext.getDom('currTab').value = tab;
         this.save();
     },
+    /** api: method[finish]
+     * 
+     *  Save current editing session and close the editor.
+     */
     finish: function(){
         this.loadUrl('metadata.update.finish', undefined, this.closeCallback);
     },
+    /** api: method[save]
+     * 
+     *  Save current editing session.
+     */
     save: function(){
         this.loadUrl('metadata.update.new', undefined, this.loadCallback);
     },
     callAction: function(action){
         this.loadUrl(action, undefined, this.loadCallback);
     },
-    validate: function(cb){
+    /** api: method[validate]
+     * 
+     *  Validate metadata and open validation panel.
+     *  
+     */
+    validate: function(){
         this.loadUrl('metadata.update.new', 'validate', this.loadCallback);
         this.validationPanel.expand(true);
     },
+    /** api: method[reset]
+     * 
+     *  Reset current editing session calling 'metadata.update.forget.new' service.
+     */
     reset: function(){
         this.loadUrl('metadata.update.forget.new', undefined, this.loadCallback);
     },
+    /** api: method[cancel]
+     * 
+     *  Cancel current editing session and close the editor calling 'metadata.update.forgetandfinish' service.
+     */
     cancel: function(){
         // TODO : check lost changes 
         this.loadUrl('metadata.update.forgetandfinish', undefined, this.closeCallback);
     },
-    /**
-     *  Use for XslProcessing task
-     *  Use GET method only (add parameters to the action URL).
+    /** api: method[process]
+     * 
+     *  :param action: ``String``  The action URL of the process to run with parameters.
      *  
+     *  Use for XslProcessing task
      */
     process: function(action) {
         this.loadUrl(action, undefined,  this.loadCallback, true);
     },
+    /** api: method[init]
+     * 
+     *  :param metadataId: ``String``  Metadata internal id or template id on creation.
+     *  :param create: ``Boolean``  Initialization create a new record. Default to false.
+     *  :param group: ``String``  The metadata group (on creation).
+     *  :param child: ``Boolean``  Initialization create a new record from a parent. Default to false.
+     *  :param isTemplate: ``Boolean``  Metadata is a template. Default to false.
+     *  
+     *  
+     *  Initialized the metadata editor. The method could be used to create a metadata record
+     *  from a template or from a parent metadata record.
+     */
     init: function(metadataId, create, group, child, isTemplate){
         var url;
         
@@ -738,12 +822,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.container.show();
         this.ownerCt.show();
     },
-    /**
-     * Call URL and replace editor content with the response
+    /** api: method[loadUrl]
+     * 
+     *  :param action: ``String``  Action URL.
+     *  :param validate: ``Boolean``  If we are doing a validation then enable display of errors in editor. Default to false.
+     *  :param cb: ``Function``  Callback after panel update.
+     *  :param noPostParams: ``Boolean``  Do not POST params.
+     *  
+     *  Call URL and replace editor content with the response
      */
     loadUrl: function(action, validate, cb, noPostParams){
-        // if we are doing a validation then enable display of errors in editor
-        // - by default false
         
         if (document.mainForm) {
             if (typeof validate !== 'undefined') {
@@ -821,12 +909,19 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
 //            // Do something else
 //        }
     },
-    /**
-     * Update editor content
+    /** api: method[updateEditor]
+     * 
+     *  :param html: ``String``  HTML to use for panel update
+     *  
+     *  Update editor content
      */
     updateEditor: function(html){
         this.editorMainPanel.update(html, false, this.metadataLoaded.bind(this));
     },
+    /** private: method[metadataLoaded]
+     * 
+     *  Init editor after metadata loaded.
+     */
     metadataLoaded: function(){
         this.metadataSchema = document.mainForm.schema.value;
         this.metadataType = Ext.getDom('template');
@@ -875,10 +970,10 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.updateViewMenu();
     },
-    /**
+    /** private: method[validateMetadataField]
+     * 
      * Trigger validating event of an element.
      *
-     * @return
      */
     validateMetadataField: function(input){
         // Process only onchange and onkeyup event having validate in event
@@ -910,13 +1005,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             input.onchange();
         }
     },
-    /**
-     * Retrieve all page's input and textarea element and check the onkeyup and
-     * onchange event (Usually used to check user entry.
+    /** private: method[validateMetadataFields]
+     * 
+     *  Retrieve all page's input and textarea element and check the onkeyup and
+     *  onchange event (Usually used to check user entry.
      *
-     * @see validateNonEmpty and validateNumber).
+     *  @see validateNonEmpty and validateNumber).
      *
-     * @return
      */
     validateMetadataFields: function(){
         // --- display lang selector when appropriate
@@ -941,17 +1036,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }, this);
         
     },
-    
-    /**
-     * Initialize all calendar divs identified by class "cal".
+    /** private: method[initCalendar]
+     * 
+     *  Initialize all calendar divs identified by class "cal".
      *
-     * All calendars are composed of one div and 2 inputs;
-     * one for the format, one for the value. According
-     * to the format, A DateTime or a DateField component
-     * are initialized.
+     *  All calendars are composed of one div and 2 inputs;
+     *  one for the format, one for the value. According
+     *  to the format, A DateTime or a DateField component
+     *  are initialized.
      *
-     * TODO : Add vtype control for extent (start < end)
-     *
+     *  TODO : Add vtype control for extent (start < end)
      */
     initCalendar: function(){
     
@@ -1003,10 +1097,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
         }
     },
-    /**
-     * Populate the toolbar view menu with the list of available views according
-     * to the metadata tabs defined in the returned HTML page and register the
-     * switchTab action.
+    /** private: method[updateViewMenu]
+     * 
+     *  Populate the toolbar view menu with the list of available views according
+     *  to the metadata tabs defined in the returned HTML page and register the
+     *  switchTab action.
      */
     updateViewMenu: function(){
         var modes = Ext.query('span.mode', this.body.dom),
@@ -1044,12 +1139,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }
         this.toolbar.updateViewMenu(menu);
     },
-    
-    
+    /** private: method[onMetadataUpdated]
+     * 
+     */
     onMetadataUpdated: function(){
         this.fireEvent('metadataUpdated', this, this.metadataId, this.metadataSchema, this.versionId);
     },
-     /** api: method[onEditorClosed]
+    /** api: method[onEditorClosed]
      *  :param e: ``Object``
      *
      *  The "onEditorClosed" listener.
@@ -1061,6 +1157,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     onEditorClosed: function(){
         this.fireEvent('editorClosed', this);
     },
+    /** private: method[initManager]
+     * 
+     */
     initManager: function(){
         var mgr = this.editorMainPanel.getUpdater();
         
@@ -1074,6 +1173,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.managerInitialized = true;
     },
+    /** private: method[initPanelLayout]
+     * 
+     */
     initPanelLayout : function () {
         if (this.container) {
             if (this.container.setIconClass) {
@@ -1095,7 +1197,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }
     },
     /** private: method[initComponent] 
-     *  Initializes the harvester panel.
+     *  Initializes the Editor panel.
      */
     initComponent: function(){
         var optionsPanel;

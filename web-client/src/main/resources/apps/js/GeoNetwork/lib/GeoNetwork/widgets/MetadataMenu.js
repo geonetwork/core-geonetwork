@@ -27,20 +27,26 @@ Ext.namespace('GeoNetwork');
  */
 /** api: (define) 
  *  module = GeoNetwork
- *  class = MetadataMenu.js
+ *  class = MetadataMenu
  *  base_link = `Ext.menu.Menu <http://extjs.com/deploy/dev/docs/?class=Ext.DataView>`_
  */
-/** api: example
- *
- *
- */
-/** api: constructor .. class:: MetadataMenu(config)
- *
- *
+/** api: constructor 
+ *  .. class:: MetadataMenu(config)
+ *  
+ *    Metadata menu allows users to access all metadata managment operations according to their privileges.
+ *  
+ *    Rating widget is available by default if Ext.ux.RatingItem is defined.
  *
  */
 GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
+    /** private: property[record]
+     * Record used for the current menu.
+     */
     record: undefined,
+    /** private: method[setRecord] 
+     *  Set current menu record
+     *  
+     */
     setRecord: function(record) {
         this.record = record;
     },
@@ -61,6 +67,10 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     getMEFAction: undefined,
     ratingWidget: undefined,
     defaultConfig: {},
+    /** private: method[setRecord] 
+     *  Create the menu.
+     *  
+     */
     create: function(){
         /* Edit menu */
         /* TODO : only displayer for logged in users */
@@ -218,6 +228,10 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         /* TODO : add categories / privileges / create child */
         this.updateMenu();
     },
+    /** private: method[updateMenu] 
+     *  Update menu privileges according to information defined in current record.
+     *  
+     */
     updateMenu: function(){
         if (!this.record) {
             return; // TODO : improve. It happens when ViewWindow is opened without searching first.
@@ -257,7 +271,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
     },
     /** private: method[initComponent] 
-     *  Initializes the metadata results view.
+     *  Initializes the metadata menu.
      */
     initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);

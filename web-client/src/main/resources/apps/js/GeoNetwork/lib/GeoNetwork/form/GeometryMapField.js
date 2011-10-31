@@ -68,10 +68,10 @@ Ext.namespace('GeoNetwork.form');
  *  A Checkbox is available to turn off the field update.
  * 
  * 
- *  TODO : Support other projection
- *  TODO : Add draw buttons (like current minimap)
- *  TODO : Add list of well know region to quickly zoom to an AOI
- *  or a Gazetter service like GeoNames.org ?
+ *  TODO :
+ *   * Support other projection
+ *   * Add draw buttons (like current minimap)
+ *   * Add list of well know region to quickly zoom to an AOI or a Gazetter service like GeoNames.org ?
  */
 GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
     layer_style: OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']),
@@ -250,14 +250,17 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         return items;
     },
 
-    /** api: property[defaultConfig] 
-     *  ``Object`` The default configuration
+    /** api: property[mapOptions] 
+     *  ``Object`` The default mapOptions. By default WGS84 world based map.
      */
     /** api: property[width] 
      *  ``Number`` Width default to 210 // TODO Remove ?
      */
     /** api: property[height] 
      *  ``Number`` Height default to 210 // TODO Remove ?
+     */
+    /** api: property[restrictToMapExtent] 
+     *  ``Boolean`` Define if extent should be restricted to map extent
      */
     /** api: property[border] 
      *  ``Boolean`` No border by default
@@ -284,7 +287,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
 
         var options = this.mapOptions || {
             projection: "EPSG:4326",
-            units: "m",
+            units: "degrees",
             maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
             restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90),
             controls: []

@@ -38,7 +38,7 @@ Ext.namespace('GeoNetwork.data');
  *        catStore.load();
  *
  *        var cbCat = new Ext.form.ComboBox( {
- *            name : 'E_siteId',	// siteId Lucene criteria
+ *            name : 'E_siteId',	// siteId is Lucene field name
  *            mode : 'local',
  *            triggerAction: 'all',
  *            fieldLabel : 'Catalogue',

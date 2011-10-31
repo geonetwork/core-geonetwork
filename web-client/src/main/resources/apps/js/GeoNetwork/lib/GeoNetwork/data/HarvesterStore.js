@@ -27,22 +27,23 @@ Ext.namespace('GeoNetwork.data');
  *  class = HarvesterStore
  */
 /** api: method[HarvesterStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork harvesters.
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork harvesters.
+ *
+ *  See :class:`GeoNetwork.admin.HarvesterPanel`
  *
  *  :param url: ``String`` Usually the xml.harvester.get service URL.
- *  See `service description <../../../developers/xml_services/services_harvesting.html#xml-harvesting-get>`_
- *  for mode information.
- *
+ *    See `service description <../../../developers/xml_services/services_harvesting.html#xml-harvesting-get>`_
+ *    for mode information.
  */
 GeoNetwork.data.HarvesterStore = function(url){
     /**
      * Return an array of categories
      */
     function getCategories(v, record){
-        var categories = [];
-        var i;
-        var catNode = record.getElementsByTagName('categories');
+        var categories = [], 
+            i, 
+            catNode = record.getElementsByTagName('categories');
         if (catNode.length === 1) {
             var cats = catNode[0].getElementsByTagName('category');
             for (i = 0; i < cats.length; i++) {
@@ -56,9 +57,9 @@ GeoNetwork.data.HarvesterStore = function(url){
      * Return an array of operation
      */
     function getOperation(v, record){
-        var operation = [];
-        var i;
-        var ops = record.getElementsByTagName('operation');
+        var operation = [],
+            i,
+            ops = record.getElementsByTagName('operation');
         for (i = 0; i < ops.length; i++) {
             var op = ops[i];
             operation.push(op.getAttribute('name'));

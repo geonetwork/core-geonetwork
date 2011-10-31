@@ -31,8 +31,8 @@ Ext.namespace('GeoNetwork.data');
  *
  *    A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
  *    for CSW results. A CSW store does not contains
- *    any information about metadata (geonet:info:* elements). This store
- *    could only be used to do search and display results (no metadata
+ *    any catalogue information about metadata (ie. geonet:info:* elements). This store
+ *    could only be used to do search and display results (not metadata
  *    management).
  *
  *    Records will be similar to :class:`GeoNetwork.data.MetadataResultsStore` records.

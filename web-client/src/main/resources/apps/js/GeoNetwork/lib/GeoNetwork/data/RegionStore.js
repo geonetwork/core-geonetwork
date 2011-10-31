@@ -27,12 +27,12 @@ Ext.namespace('GeoNetwork.data');
  *  class = RegionStore
  */
 /** api: method[RegionStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork regions.
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork regions.
  *
  *  :param url: ``String`` Usually the xml.info service URL.
- *  See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_
- *  for mode information.
+ *   See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_
+ *   for mode information.
  */
 GeoNetwork.data.RegionStore = function(url){
     /**

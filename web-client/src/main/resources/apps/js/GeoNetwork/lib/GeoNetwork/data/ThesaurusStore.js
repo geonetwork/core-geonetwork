@@ -27,8 +27,8 @@ Ext.namespace('GeoNetwork.data');
  *  class = ThesaurusStore
  */
 /** api: method[ThesaurusStore]
- *   A pre-configured `Ext.data.Store <http://extjs.com/deploy/dev/docs/?class=Ext.data.Store>`_
- *   for GeoNetwork thesaurus.
+ *  A pre-configured `Ext.data.Store <http://extjs.com/deploy/dev/docs/?class=Ext.data.Store>`_
+ *  for GeoNetwork SKOS thesaurus.
  *
  *  :param url: ``String`` Usually the xml.thesaurus.getList service URL.
  */

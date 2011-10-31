@@ -26,11 +26,13 @@ Ext.namespace('GeoNetwork.data');
  *  module = GeoNetwork.data
  *  class = MetadataRelationStore
  */
-/** api: method[ValidationRuleStore]
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork metadata relation (relation to services, datasets, feature catalogues and parent records).
+/** api: method[MetadataRelationStore]
+ *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
+ *  for GeoNetwork metadata relation (relation to services, datasets, feature catalogues
+ *  sources, relations and parent records).
  *
  *  :param url: ``String`` Usually the xml.relation service URL.
+ *  
  *  :param grouping: ``boolean`` Set to true to return a Ext.data.GroupingStore
  */
 GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
