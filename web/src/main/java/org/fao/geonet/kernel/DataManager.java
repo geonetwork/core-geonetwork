@@ -739,7 +739,9 @@ public class DataManager {
 
             Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report/svrl:schematron-output/svrl:failed-assert", theNSs);
 
-            if (failedAssert != null) {
+            Element failedSchematronVerification = Xml.selectElement(schemaTronReport, "geonet:report/geonet:schematronVerificationError", theNSs);
+
+            if ((failedAssert != null) || (failedSchematronVerification != null)) {
 			    throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - "
 					    + Xml.getString(schemaTronReport) + " for more details",schemaTronReport);
             }
@@ -807,6 +809,12 @@ public class DataManager {
 				}
 			} catch (Exception e) {
 				Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
+
+                // If an error occurs that prevents to verify schematron rules, add to show in report
+                Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+                errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+                report.addContent(errorReport);
+
 				e.printStackTrace();
 			}
 

@@ -96,6 +96,19 @@
 
 		</fieldset>
 		</xsl:if>
+
+        <xsl:if test="string(geonet:schematronVerificationError)">
+
+		<fieldset class="validation-report">
+			<legend class="block-legend">
+				<xsl:value-of select="/root/gui/strings/rules[@name=$rule]"/><xsl:text> </xsl:text>
+				<img src="../../images/schematron.gif" alt="failed" title="failed"/>
+			</legend>
+
+            <xsl:apply-templates mode="validation-report" select="geonet:schematronVerificationError"/>
+
+		</fieldset>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="geonet:schematronerrors" mode="validation-report">
@@ -105,6 +118,12 @@
 			</legend>
 			<xsl:apply-templates select="*" mode="validation-report"/>
 		</fieldset>
+	</xsl:template>
+
+     <xsl:template match="geonet:schematronVerificationError" mode="validation-report">
+       <span class="arrow">
+            <xsl:value-of select="."/>
+        </span>
 	</xsl:template>
 
 </xsl:stylesheet>

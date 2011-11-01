@@ -159,12 +159,22 @@
 						<xsl:value-of select="/root/gui/strings/errors"/>) 
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="../../images/button_ok.png" alt="pass" title="pass"/>
+                        <xsl:choose>
+                            <xsl:when test= "geonet:schematronVerificationError">
+                                <img src="../../images/schematron.gif" alt="failed" title="failed"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <img src="../../images/button_ok.png" alt="pass" title="pass"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
 					</xsl:otherwise>
 				</xsl:choose>
 			</legend>
 			
 			<xsl:apply-templates mode="validation-report" select="svrl:schematron-output/svrl:active-pattern"/>
+
+            <xsl:apply-templates mode="validation-report" select="geonet:schematronVerificationError"/>
 					
 		</fieldset>
 	</xsl:template>
@@ -176,6 +186,12 @@
 			</legend>
 			<xsl:apply-templates select="*" mode="validation-report"/>
 		</fieldset>
+	</xsl:template>
+
+    <xsl:template match="geonet:schematronVerificationError" mode="validation-report">
+       <span class="arrow">
+            <xsl:value-of select="."/>
+        </span>
 	</xsl:template>
 
 </xsl:stylesheet>
