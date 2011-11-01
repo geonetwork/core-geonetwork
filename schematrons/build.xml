@@ -203,18 +203,24 @@
 	</target>
 
 
-	<!-- Copy loc file. If not exist, copy default language localization file
-	and echo an alert. -->
+	<!-- Publish loc file. If not exist, uses default language localization file -->
 	<target name="publish-loc-file">
 		<property name="lang" value="" />
 		<property name="schema" value="" />
 		<property name="rules" value="" />
 
+		<echo level="info" message=" - language ${lang}" />
 		<mkdir dir="${schematronDir}/rules/loc/${lang}"/>
-		<copy description="Copy localization file to ${schema} schema." todir="${schemaDir}/${schema}/loc/${lang}" verbose="true">
-			<fileset dir="${schematronDir}/rules/loc/${lang}" includes="schematron-rules-${rules}.xml" />
+
+		<!-- Copy default language -->
+		<copy description="Copy default localization file to ${schema} schema." todir="${schemaDir}/${schema}/loc/${lang}" verbose="true"  overwrite="true">
+			<fileset dir="${schematronDir}/rules/loc/${defaultLang}" includes="schematron-rules-${rules}.xml" />
 		</copy>
+		            		
+        <!-- Replace with current language, if the locale file available -->
+        <copy description="Copy localization file to ${schema} schema." todir="${schemaDir}/${schema}/loc/${lang}" verbose="true" overwrite="true"	>
+			<fileset dir="${schematronDir}/rules/loc/${lang}" includes="schematron-rules-${rules}.xml" />
+		</copy>  
 	</target>
-
-
+	
 </project>
