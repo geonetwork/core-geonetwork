@@ -160,7 +160,7 @@ USA.
 			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]">
 			<!-- resource language is only conditional for 'dataset' and 'series'.
 			-->
-			<sch:let name="resourceLanguage" value="normalize-space(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue)"/>
+			<sch:let name="resourceLanguage" value="string-join(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue, ', ')"/>
 			<sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and
 				geonet:contains-any-of($resourceLanguage,
