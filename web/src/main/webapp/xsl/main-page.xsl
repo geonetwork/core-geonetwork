@@ -140,7 +140,7 @@
 
 			function init() {};
 
-						
+
 			var getIMServiceURL = function(service)
 			{
 				// FIXME: the "/intermap/" context should be parametrized
@@ -154,16 +154,16 @@
 			}
 
 			Ext.onReady(function(){
-        $("loading").hide();
+                $("loading").hide();
 
 				var GNCookie = new Ext.state.CookieProvider({
 				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365))
 											//1 year from now
 								});
 
-        Ext.state.Manager.setProvider(GNCookie);
+                Ext.state.Manager.setProvider(GNCookie);
 
-        GeoNetwork.MapStateManager.loadMapState();
+                GeoNetwork.MapStateManager.loadMapState();
                 
 				initMapViewer();
 				var mapViewport =  GeoNetwork.mapViewer.getViewport();
@@ -303,15 +303,15 @@
 						}]});
 						
 						
-						mainViewport = new Ext.Viewport({
+				mainViewport = new Ext.Viewport({
 							layout:'border',
 							border:false,
 							autoScroll: true,
 							items:[viewport]
-						});
+				});
 
-            // Initialize small maps for search
-            initMapsSearch();
+                // Initialize small maps for search
+                initMapsSearch();
 
 				var requestTab="<xsl:value-of select="$tab"/>";
 				var search="<xsl:value-of select="$search"/>";
@@ -320,25 +320,40 @@
 				var cookie = GNCookie.get('search');
 				if (cookie) currentSearch = cookie.searchTab;
 				<!-- show tab requested otherwise show last tab selected -->
-        if (requestTab == 'simple') {
+                if (requestTab == 'simple') {
 					searchTabs.setActiveTab(requestTab);
 					showSimpleSearch(search);
-        } else if (requestTab == 'advanced') {
+
+                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+                    initAdvancedSearch();
+
+                } else if (requestTab == 'advanced') {
 					searchTabs.setActiveTab(requestTab);
-          showAdvancedSearch(search);
-        } else if (requestTab == 'remote') {
+                    showAdvancedSearch(search);
+                } else if (requestTab == 'remote') {
 					searchTabs.setActiveTab(requestTab);
-          showRemoteSearch(search);
-        } else if (currentSearch == 'advanced') {
+                    showRemoteSearch(search);
+
+                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+                    initAdvancedSearch();
+
+                } else if (currentSearch == 'advanced') {
 					searchTabs.setActiveTab(currentSearch);
-          showAdvancedSearch(search);
-        } else if (currentSearch == 'remote') {
-					searchTabs.setActiveTab(currentSearch);
-          showRemoteSearch(search);
-        } else {
-					searchTabs.setActiveTab('default');
-          showSimpleSearch(search);
-        }
+                    showAdvancedSearch(search);
+                } else if (currentSearch == 'remote') {
+                    searchTabs.setActiveTab(currentSearch);
+                    showRemoteSearch(search);
+
+                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+                    initAdvancedSearch();
+
+                } else {
+                    searchTabs.setActiveTab('default');
+                    showSimpleSearch(search);
+
+                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+                    initAdvancedSearch();
+                }
 				<!-- If a UUID is passed, it will be opened within the AJAX page -->
 				var uuid="<xsl:value-of select="$uuid"/>";
 				if (uuid!='') {
