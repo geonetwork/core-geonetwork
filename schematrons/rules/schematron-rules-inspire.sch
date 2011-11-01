@@ -160,7 +160,7 @@ USA.
 			or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue/normalize-space(.) = '')]">
 			<!-- resource language is only conditional for 'dataset' and 'series'. 
 			-->			
-			<sch:let name="resourceLanguage" value="normalize-space(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue)"/>
+			<sch:let name="resourceLanguage" value="string-join(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue, ', ')"/>
 			<sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and 
 				geonet:contains-any-of($resourceLanguage, 
@@ -292,7 +292,7 @@ USA.
 			<!-- Check that INSPIRE service taxonomy is available.
 				Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
 			-->
-			<sch:let name="inspire-thesaurus" value="document(concat($thesaurusDir, '/external/thesauri/theme/inspire-service-taxonomy.rdf'))"/>
+			<sch:let name="inspire-thesaurus" value="document(concat('file:///', $thesaurusDir, '/external/thesauri/theme/inspire-service-taxonomy.rdf'))"/>
 			<sch:let name="inspire-st" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE thesaurus is not available. -->
