@@ -99,7 +99,7 @@ public class ImportFromDir implements Service
 	//--------------------------------------------------------------------------
 
 	private String stylePath;
-    private ArrayList<String> exceptions = new ArrayList<String>();
+    private ArrayList<Exception> exceptions = new ArrayList<Exception>();
     private boolean failOnError;
 	private static final String CONFIG_FILE = "import-config.xml";
 
@@ -160,12 +160,22 @@ public class ImportFromDir implements Service
 		
 		if (exceptions.size() > 0) {
 			Element ex = new Element("exceptions").setAttribute("count", ""+exceptions.size());
-			for (String e : exceptions)
-				ex.addContent(new Element("exception").setText(e));
-			
+			for (Exception e : exceptions)
+                if (e instanceof SchematronValidationErrorEx) {
+                    ex.addContent(new Element("exception").addContent((Element) ((SchematronValidationErrorEx) e).getObject()));
+
+                } else if (e instanceof XSDValidationErrorEx) {
+                        ex.addContent(new Element("exception").addContent((Element) ((XSDValidationErrorEx) e).getObject()));
+
+                } else {
+                    ex.addContent(new Element("exception").setText(e.getMessage()));
+
+                }
+
+
 			response.addContent(ex);
 		}
-		
+
 		return response;
 	}
 
@@ -175,7 +185,7 @@ public class ImportFromDir implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public class ImportCallable implements Callable<List<String>> {
+	public class ImportCallable implements Callable<List<Exception>> {
 		private final File files[];
 		private final int beginIndex, count;
 		private final Element params;
@@ -194,8 +204,8 @@ public class ImportFromDir implements Service
 		}
 
 
-		public List<String> call() throws Exception {
-			List<String> exceptions = new ArrayList<String>();
+		public List<Exception> call() throws Exception {
+			List<Exception> exceptions = new ArrayList<Exception>();
 
 			for(int i=beginIndex; i<beginIndex+count; i++) {
 				try {
@@ -204,7 +214,7 @@ public class ImportFromDir implements Service
 					if (failOnError)
 						throw e;
 					
-					exceptions.add(e.getMessage());
+					exceptions.add(e);
 				}
 			}
 			return exceptions;
@@ -216,7 +226,7 @@ public class ImportFromDir implements Service
 		File files[];
 		String stylePath;
 		ServiceContext context;
-		ArrayList<String> exceptions = new ArrayList<String>();
+		ArrayList<Exception> exceptions = new ArrayList<Exception>();
 
 
 		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath, boolean failOnError) {
@@ -237,18 +247,18 @@ public class ImportFromDir implements Service
 			else perThread = files.length / threadCount;
 			int index = 0;
 
-			List<Future<List<String>>> submitList = new ArrayList<Future<List<String>>>();
+			List<Future<List<Exception>>> submitList = new ArrayList<Future<List<Exception>>>();
 			while(index < files.length) {
 				int start = index;
 				int count = Math.min(perThread,files.length-start);
 				// create threads to process this chunk of files
-				Callable<List<String>> worker = new ImportCallable(files, start, count, params, context, stylePath, failOnError);
-				Future<List<String>> submit = executor.submit(worker);
+				Callable<List<Exception>> worker = new ImportCallable(files, start, count, params, context, stylePath, failOnError);
+				Future<List<Exception>> submit = executor.submit(worker);
 				submitList.add(submit);
 				index += count;
 			}
 
-			for (Future<List<String>> future : submitList) {
+			for (Future<List<Exception>> future : submitList) {
 				try {
 					exceptions.addAll(future.get());
 				} catch (InterruptedException e) {
@@ -260,7 +270,7 @@ public class ImportFromDir implements Service
 			executor.shutdown();
 		}
 
-		public ArrayList<String> getExceptions() {
+		public ArrayList<Exception> getExceptions() {
 			return exceptions;
 		}
 	}
