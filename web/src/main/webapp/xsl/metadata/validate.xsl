@@ -91,13 +91,24 @@
     </rule>
   </xsl:template>
 
+  <xsl:template match="geonet:schematronVerificationError" mode="validation-report">
+    <xsl:param name="title"/>
+    
+    <rule group="{ancestor::*[name(.)='geonet:report']/@geonet:rule}" type="error" id="{generate-id(.)}" ref="">
+      <title><xsl:value-of select="../@geonet:rule"/></title>
+      <details><xsl:value-of select="../@geonet:rule"/></details>
+      <msg>
+        <xsl:value-of select="."/>
+      </msg>
+    </rule>
+  </xsl:template>
 
   <xsl:template match="geonet:report" mode="validation-report">
     <xsl:variable name="rule" select="@geonet:rule"/>
     <xsl:variable name="count" select="count(svrl:schematron-output/svrl:failed-assert)"/>
 
     <xsl:apply-templates mode="validation-report"
-      select="svrl:schematron-output/svrl:active-pattern"/>
+      select="svrl:schematron-output/svrl:active-pattern|geonet:schematronVerificationError"/>
 
   </xsl:template>
 
