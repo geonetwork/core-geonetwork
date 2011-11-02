@@ -101,7 +101,7 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
 				}
 				
 				var s, w, e, n;
-				if(node.firstChild.nodeValue.indexOf("|")) {
+				if(node.firstChild.nodeValue && node.firstChild.nodeValue.indexOf("|")) {
 					var coords = node.firstChild.nodeValue.split("|");
 					w = coords[0];
 					s = coords[1];
