@@ -3103,7 +3103,7 @@
 				</xsl:if>
 
 				<!-- Generate a KML output link for a WMS service -->
-				<xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
+				<xsl:if test="string($linkage)!='' and starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($name)!=''">
 					
 					<xsl:element name="link">
 						<xsl:attribute name="title"><xsl:value-of select="$desc"/></xsl:attribute>
