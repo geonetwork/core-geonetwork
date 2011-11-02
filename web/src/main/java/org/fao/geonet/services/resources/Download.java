@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
@@ -68,7 +69,7 @@ public class Download implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String id     = Util.getParam(params, Params.ID);
+		String id = Utils.getIdentifierFromParameters(params, context);
 		String fname  = Util.getParam(params, Params.FNAME);
 		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
 

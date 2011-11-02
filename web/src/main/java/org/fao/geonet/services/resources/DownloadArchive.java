@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
@@ -101,24 +102,7 @@ public class DownloadArchive implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
-		String id;
-		// does the request contain a UUID ?
-		try {
-			String uuid = Util.getParam(params, Params.UUID);
-			// lookup ID by UUID
-			id = dm.getMetadataId(dbms, uuid.toLowerCase());
-			if (id == null) {
-                throw new IllegalArgumentException("Metadata not found --> " + uuid);
-            }
-		}
-        catch (MissingParameterEx x) {
-			try {
-				id = Util.getParam(params, Params.ID);
-			}
-            catch (MissingParameterEx xx) {
-				throw new Exception("Request must contain a UUID or an ID");
-			}
-		}
+		String id = Utils.getIdentifierFromParameters(params, context);
 		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
 
 		//--- resource required is public (thumbnails)

@@ -32,6 +32,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class Upload implements Service
 	{
 		String uploadDir = context.getUploadDir();
 
-		String id     		= Util.getParam(params, Params.ID);
+		String id = Utils.getIdentifierFromParameters(params, context);
 		String ref    		= Util.getParam(params, Params.REF);
 		String access 		= Util.getParam(params, Params.ACCESS);
 		String overwrite	= Util.getParam(params, Params.OVERWRITE, "no");

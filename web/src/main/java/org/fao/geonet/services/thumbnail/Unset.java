@@ -95,10 +95,16 @@ public class Unset implements Service
 		//--- remove thumbnail
 
 		dataMan.unsetThumbnail(context, id, type.equals("small"));
-
-		if (!new File(file).delete())
-			context.error("Error while deleting thumbnail : "+file);
-
+		
+		File thumbnail = new File(file);
+		if (thumbnail.exists()) {
+			if (!thumbnail.delete()) {
+				context.error("Error while deleting thumbnail: " + file);
+			}
+		} else {
+			context.debug("Thumbnail does not exist: " + file);
+		}
+		
 		//-----------------------------------------------------------------------
 
 		Element response = new Element("a");

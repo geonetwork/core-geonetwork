@@ -2,6 +2,7 @@
 
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 
 						xmlns:gco="http://www.isotc211.org/2005/gco"
+						xmlns:geonet="http://www.fao.org/geonetwork" 
 						xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
 	<!-- ================================================================= -->
@@ -22,6 +23,5 @@
 		 </xsl:copy>
 	</xsl:template>
 	
-	<!-- ================================================================= -->
-	
+	<xsl:template match="geonet:info" priority="2"/>
 </xsl:stylesheet>

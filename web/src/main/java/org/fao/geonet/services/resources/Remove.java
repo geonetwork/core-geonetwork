@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Update;
 import org.jdom.Element;
 
@@ -72,7 +73,7 @@ public class Remove implements Service
 
 		DataManager   dataMan   = gc.getDataManager();
 
-		String id     = Util.getParam(params, Params.ID);
+		String id = Utils.getIdentifierFromParameters(params, context);
 		String ref    = Util.getParam(params, Params.REF);
 		String access = Util.getParam(params, Params.ACCESS);
 
