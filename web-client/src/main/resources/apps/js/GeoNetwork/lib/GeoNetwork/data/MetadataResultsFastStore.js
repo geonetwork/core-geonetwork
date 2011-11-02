@@ -49,17 +49,24 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
     }
     function getValidationInfo(v, record){
-        var i, validity = [], validInfo;
-        if (record.geonet_info && record.geonet_info.valid_details) {
-            validInfo = record.geonet_info.valid_details;
-            for (i = 0; i < validInfo.length; i++) {
-                validity.push({
-                            valid: validInfo.status[i].value,
-                            type: validInfo.type[i].value,
-                            ratio: validInfo.ratio[i].value
-                        });
-            }
+        if (record.valid) {
+            return record.valid[0].value;
+        } else {
+            return '-1';
         }
+    }
+    function getValidationDetails(v, record){
+        var i, validity = [], validInfo;
+        for (var key in record) {
+    	   if (record.hasOwnProperty(key) && key.indexOf('valid_') !== -1) {
+    	     var obj = record[key];
+    	     validity.push({
+                 valid: obj[0].value,
+                 type: key.split('_')[1],
+                 ratio: '' // TODO
+             });
+    	   }
+    	}
         return validity;
     }
     
@@ -105,11 +112,11 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         	for (i = 0; i < record.link.length; i++) {
             	var tokens = record.link[i].value.split(separator);
             	links.push({
-            		title: tokens[0],
-            		desc: tokens[1],
-            		linkage: tokens[2],
+            		name: tokens[0],
+            		title: tokens[1],
+            		href: tokens[2],
             		protocol: tokens[3],
-            		mime: tokens[4]
+            		type: tokens[4]
             	});
             }
         }
@@ -312,11 +319,10 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             sortType: 'asInt'
         }, {
             name: 'valid',
-            //mapping: 'geonet_info.valid[0].value',
-            defaultValue: '-1'
+            convert: getValidationInfo
         }, {
-            name: 'valid_details'
-            //convert: getValidationInfo
+            name: 'valid_details',
+            convert: getValidationDetails
         }
         ]
     });

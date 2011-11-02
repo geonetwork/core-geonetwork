@@ -31,7 +31,8 @@ GeoNetwork.searchDefault = {
 GeoNetwork.advancedFormButton = true;
 
 GeoNetwork.Settings.editor = {
-    defaultViewMode : 'simple'
+    defaultViewMode : 'simple',
+    editHarvested: false
 //    defaultViewMode : 'inspire'
 };
 

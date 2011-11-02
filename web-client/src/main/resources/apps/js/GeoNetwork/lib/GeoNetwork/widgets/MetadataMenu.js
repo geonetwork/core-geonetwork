@@ -37,6 +37,8 @@ Ext.namespace('GeoNetwork');
  *  
  *    Rating widget is available by default if Ext.ux.RatingItem is defined.
  *
+ *	  Define a  GeoNetwork.Settings.editor.editHarvested to allow editing of harvested records 
+ *    (TODO : retrieve from catalogue configuration).
  */
 GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     /** private: property[record]
@@ -49,6 +51,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
      */
     setRecord: function(record) {
         this.record = record;
+        this.updateMenu();
     },
     resultsView: undefined,
     catalogue: undefined,
@@ -237,11 +240,15 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             return; // TODO : improve. It happens when ViewWindow is opened without searching first.
         }
         
-        var isEditable = this.record.get('edit') === 'true' ? true : false, // FIXME : do not allow edit on harvested records ? 
+        var isEditable = this.record.get('edit') === 'true' ? 
+        					// do not allow edit on harvested records by default
+        					(this.record.get('isharvested') === 'y' ? GeoNetwork.Settings.editor.editHarvested || false : true) 
+        					: 
+        					false, 
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified();
-        
+
         /* Actions and menu visibility for logged in user */
         if (!identified) {
             this.editAction.hide();
@@ -255,9 +262,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         /* Actions status depend on records */
         this.editAction.setDisabled(!isEditable);
-        this.adminAction.setDisabled(!isEditable);
-        this.categoryAction.setDisabled(!isEditable);
-        this.deleteAction.setDisabled(!isEditable);
+        this.adminAction.setDisabled(!isEditable && !isHarvested);
+        this.categoryAction.setDisabled(!isEditable && !isHarvested);
+        this.deleteAction.setDisabled(!isEditable && !isHarvested);
         
         if (this.ratingWidget) {
             this.ratingWidget.reset();
