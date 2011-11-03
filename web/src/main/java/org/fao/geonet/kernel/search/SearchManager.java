@@ -1005,8 +1005,6 @@ public class SearchManager
 			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
       Map<String,String> params = new HashMap<String, String>();
       params.put("inspire", Boolean.toString(_inspireEnabled));
-
-      System.out.println("_thesauriDir: "+ _thesauriDir);
       params.put("thesauriDir", _thesauriDir);
 			return Xml.transform(xml, styleSheet, params);
 		} catch (Exception e) {
