@@ -141,7 +141,7 @@ public class SearchManager
 	private Calendar _optimizerBeginAt;
 	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private boolean _inspireEnabled = false;
-    private String _dataDir;
+    private String _thesauriDir;
 	private boolean _logAsynch;
 
     public void setInspireEnabled(boolean inspireEnabled) {
@@ -319,7 +319,7 @@ public class SearchManager
 	 * @param appPath
 	 * @param luceneDir
    * @param htmlCacheDir
-   * @param dataDir
+   * @param thesauriDir
 	 * @param summaryConfigXmlFile
    * @param luceneConfigXmlFile
    * @param logSpatialObject
@@ -330,13 +330,13 @@ public class SearchManager
 	 * @param servlet
 	 * @throws Exception
 	 */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String dataDir, 
+	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String thesauriDir,
 			String summaryConfigXmlFile, LuceneConfig lc, 
 			boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude, 
 			DataStore dataStore, int maxWritesInTransaction, SettingInfo si, SchemaManager scm, JeevesServlet servlet) throws Exception
 	{
 		_scm = scm;
-		_dataDir = dataDir;
+		_thesauriDir = thesauriDir;
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
 		if (servlet != null) {
 			ConfigurationOverrides.updateWithOverrides(summaryConfigXmlFile, servlet, appPath, _summaryConfig);
@@ -1005,7 +1005,9 @@ public class SearchManager
 			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
       Map<String,String> params = new HashMap<String, String>();
       params.put("inspire", Boolean.toString(_inspireEnabled));
-      params.put("dataDir", _dataDir);
+
+      System.out.println("_thesauriDir: "+ _thesauriDir);
+      params.put("thesauriDir", _thesauriDir);
 			return Xml.transform(xml, styleSheet, params);
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage());

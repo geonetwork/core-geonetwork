@@ -23,10 +23,10 @@
 
 	<!-- ========================================================================================= -->
 
-  <xsl:param name="dataDir"/>
+  <xsl:param name="thesauriDir"/>
   <xsl:param name="inspire">false</xsl:param>
   
-  <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat($dataDir, '/codelist/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
+  <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
   <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
   
   <!-- If identification creation, publication and revision date

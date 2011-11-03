@@ -321,7 +321,7 @@ public class Geonetwork implements ApplicationHandler
 			nfe.printStackTrace();
 		}
 	
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, dataDir, summaryConfigXmlFile, lc, 
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
 				dataStore, maxWritesInTransaction, 
 				new SettingInfo(settingMan), schemaMan, context.getServlet());
