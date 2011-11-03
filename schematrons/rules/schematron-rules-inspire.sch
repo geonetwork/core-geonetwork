@@ -253,7 +253,7 @@ USA.
 			<!-- Check that INSPIRE theme are available.
 				Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
 			-->
-		  <sch:let name="inspire-thesaurus" value="document(concat('file:///', $thesaurusDir, '/external/thesauri/theme/inspire-theme.rdf'))"/>
+		  <sch:let name="inspire-thesaurus" value="document(concat($thesaurusDir, '/external/thesauri/theme/inspire-theme.rdf'))"/>
 			<sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE Theme thesaurus is not available. -->
@@ -292,7 +292,7 @@ USA.
 			<!-- Check that INSPIRE service taxonomy is available.
 				Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
 			-->
-			<sch:let name="inspire-thesaurus" value="document(concat('file:///', $thesaurusDir, '/external/thesauri/theme/inspire-service-taxonomy.rdf'))"/>
+			<sch:let name="inspire-thesaurus" value="document(concat($thesaurusDir, '/external/thesauri/theme/inspire-service-taxonomy.rdf'))"/>
 			<sch:let name="inspire-st" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE thesaurus is not available. -->
