@@ -19,7 +19,11 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
 
 GeoNetwork.lang.en = {
-    'example': "Example:",
+	'previousPage': 'Move to previous page',
+	'nextPage': 'Move to next page',
+	'upInPage': 'Scroll up in the results',
+	'downInPage': 'Scroll down in the results',
+	'example': "Example:",
     'helper': "Suggestion:",
     'tagName': 'Element name:',
     'enableTooltip': 'Enable tooltips to get more information about each descriptors.',

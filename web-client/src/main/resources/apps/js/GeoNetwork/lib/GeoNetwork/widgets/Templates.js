@@ -256,7 +256,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                       '</tpl>',
                   '</tpl>',
                   '<tpl if="edit==\'true\' && isharvested!=\'y\'">',
-                      '<br/><span class="md-mn md-mn-user" title="' + OpenLayers.i18n('ownerName') + '">{ownername} (' + OpenLayers.i18n('lastUpdate') + '{[values.changedate.split(\'T\')[0]]})</span>',
+                      '<br/><span class="md-mn md-mn-user" title="' + OpenLayers.i18n('ownerName') + '">{ownername} - ' + OpenLayers.i18n('lastUpdate') + '{[values.changedate.split(\'T\')[0]]}</span>',
                   '</tpl>',
                 '</div>',
             '</li>',

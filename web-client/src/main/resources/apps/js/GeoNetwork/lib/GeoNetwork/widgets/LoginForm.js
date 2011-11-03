@@ -121,7 +121,8 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	            }
 	        });
     	this.username = new Ext.form.TextField({
-            name: 'username',
+    		id: 'username',
+    		name: 'username',
             width: 70,
             hideLabel: false,
             allowBlank: false,

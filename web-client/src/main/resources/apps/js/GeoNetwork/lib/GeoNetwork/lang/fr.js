@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+	'previousPage': 'Page précédente',
+	'nextPage': 'Page suivante',
+	'upInPage': 'Se déplacer vers le haut des résultats',
+	'downInPage': 'Se déplacer vers le bas des résultats',
     'example': "Exemple :",
     'helper': "Suggestion :",
     'tagName': "Nom de l'élément :",

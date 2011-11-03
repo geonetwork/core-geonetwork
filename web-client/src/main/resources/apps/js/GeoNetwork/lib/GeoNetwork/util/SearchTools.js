@@ -81,15 +81,24 @@ GeoNetwork.util.SearchTools = {
                     var getRecordsFormat = new OpenLayers.Format.GeoNetworkRecords();
                     var currentRecords = getRecordsFormat.read(result.responseText);
                     var values = currentRecords.records;
+                    
+                    // Only update status if the target metadata store is the catalogue store
+                    // Improve, move the status update on the data change event TODO
+                    var isCatalogueMdStore = cat.metadataStore === metadataStore, 
+                    	isCatalogueSStore = cat.summaryStore === summaryStore;
+
                     if (values.length > 0) {
                         metadataStore.loadData(currentRecords);
                     }
                     
-                    var summary = currentRecords.summary;
-                    if (summary && summary.count > 0 && summaryStore) {
-                        summaryStore.loadData(summary);
+                    if (isCatalogueSStore) {
+	                    var summary = currentRecords.summary;
+	                    if (summary && summary.count > 0 && summaryStore) {
+	                        summaryStore.loadData(summary);
+	                    }
                     }
-                    if (cat) {
+                    
+                    if (cat && isCatalogueMdStore) {
                         cat.updateStatus(currentRecords.from + '-' + currentRecords.to +
                                             OpenLayers.i18n('resultBy') +
                                             summary.count);
@@ -294,7 +303,7 @@ GeoNetwork.util.SearchTools = {
      *  Build a GET query based on an OGC filter.
      */
     buildQueryGET: function(filter, startRecord, sortBy, fast){
-        var query = "fast=" + (fast ? fast : GeoNetwork.util.SearchTools.fast) + "&";
+    	var query = "fast=" + (fast ? fast : GeoNetwork.util.SearchTools.fast) + "&";
         
 //        if (sortBy) {
 //            // TODOvar searchInfo = GeoNetwork.util.SearchTools.sortByMappings[sortBy];

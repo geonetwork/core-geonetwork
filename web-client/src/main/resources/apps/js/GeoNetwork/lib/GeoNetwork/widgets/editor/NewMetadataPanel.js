@@ -34,6 +34,9 @@ Ext.namespace('GeoNetwork.editor');
  *     Create a GeoNetwork form for metadata creation
  *
  *
+ *     Default metadata store to use could be overriden when setting
+ *     GeoNetwork.Settings.mdStore variables. Default is :class:`GeoNetwork.data.MetadataResultsStore`.
+ *
  */
 GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
@@ -96,8 +99,8 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         
         // Only add template if not already defined (ie. duplicate action)
         if (!this.selectedTpl) {
-            this.tplStore = GeoNetwork.data.MetadataResultsStore();
-            this.tplStore.setDefaultSort('displayOrder');
+        	this.tplStore = GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore() : GeoNetwork.data.MetadataResultsStore();
+        	this.tplStore.setDefaultSort('displayOrder');
             
             // Create grid with template list
             checkboxSM = new Ext.grid.CheckboxSelectionModel({

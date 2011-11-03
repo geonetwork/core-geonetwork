@@ -160,9 +160,13 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
     }
     
     function getOwnerName(v, record){
-    	// FIXME
-        if (record.owner) {
-            return record.owner[0].value;
+        if (record.userinfo && record.userinfo[0].value) {
+            var userinfo = record.userinfo[0].value.split(separator);
+            try {
+                return userinfo[2] + " " + userinfo[1]; // User profile + ' (' + OpenLayers.i18n(userinfo[3]) + ')';
+			} catch (e) {
+				return '';
+			}
         } else {
             return '';
         }

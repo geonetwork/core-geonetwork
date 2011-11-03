@@ -395,8 +395,11 @@ GeoNetwork.app = function(){
             id: 'previousBt',
             text: '&lt;&lt;',
             handler: function(){
-                catalogue.startRecord -= parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                search();
+            	var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                if (from > 0) {
+                	catalogue.startRecord = from;
+	            	search();
+                }
             },
             scope: this
         });
@@ -616,7 +619,7 @@ GeoNetwork.app = function(){
                 mdOverlayedCmpId: 'resultsPanel',
                 adminAppUrl: geonetworkUrl + '/srv/' + lang + '/admin',
                 // Declare default store to be used for records and summary
-                metadataStore: GeoNetwork.Settings.mdStore,
+                metadataStore: GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore() : GeoNetwork.data.MetadataResultsStore(),
                 metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
                 summaryStore: GeoNetwork.data.MetadataSummaryStore(),
                 editMode: 2, // TODO : create constant

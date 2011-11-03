@@ -527,13 +527,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *    not default value is used.
      *  :param updateStore: ``Boolean`` false to not update catalogue stores.
      *    Default to true.
+     *  :param metadataStore: ``GeoNetwork.data.MetadataResultsStore or GeoNetwork.data.MetadataResultsFastStore`` the metadata store to use. If undefined, catalogue metadata store
+     *  :param summaryStore: ``GeoNetwork.data.MetadataSummaryStore`` the summary store to use. If undefined, the catalogue summary store.
      *
      *  Run a search operation using GeoNetwork xml.search service.
      *  Initialize results and summary stores.
      */
     search: function(formOrParams, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore){
-        this.updateStatus(OpenLayers.i18n('searching'));
-        
+    	
+    	var isCatalogueMdStore = this.metadataStore === metadataStore;
+    	if (isCatalogueMdStore) {
+    		this.updateStatus(OpenLayers.i18n('searching'));
+    	}
+    	
         if (updateStore !== false) {
             updateStore = true;
         }
@@ -546,10 +552,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (!onFailure) {
             onFailure = Ext.emptyFn;
         }
-        if (!metadataStore) {
+        if (metadataStore === undefined) {
             metadataStore = this.metadataStore;
         }
-        if (!summaryStore) {
+        if (summaryStore === undefined) {
             summaryStore = this.summaryStore;
         }
         if (updateStore) {
@@ -558,7 +564,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (typeof formOrParams === 'object') {
             GeoNetwork.util.SearchTools.doQueryFromParams(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
         } else {
-            GeoNetwork.util.SearchTools.doQueryFromForm(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
+        	GeoNetwork.util.SearchTools.doQueryFromForm(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
         }
     },
     /** api: method[kvpSearch]

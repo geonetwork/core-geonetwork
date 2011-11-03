@@ -7,22 +7,66 @@ function initShortcut(){
     
     // Define editor shortcut here.
     var searchConfig = [{
-        key: "s",
-        ctrl: true,
-        shift: true,
-        stopEvent: true,
-        label: OpenLayers.i18n('runSearch'),
-        fn: function(){
-            Ext.getCmp('searchBt').fireEvent('click');
-        }
-    }, {
         key: "f",
         ctrl: true,
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('focusOnAny'),
         fn: function(){
-            Ext.getCmp('E_any').focus(true);
+        	var e = Ext.get('E_any');
+            e.highlight();
+            e.dom.focus(true);
+        }
+    }, {
+        key: "s",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('runSearch'),
+        fn: function(){
+            var e = Ext.getCmp('searchBt');
+            e.getEl().fadeIn();
+            e.fireEvent('click');
+        }
+    }, {
+        key: Ext.EventObject.LEFT,
+        keyLabel: "LEFT",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('previousPage'),
+        fn: function(){
+        	Ext.getCmp('previousBt').handler();
+        }
+    }, {
+        key: Ext.EventObject.RIGHT,
+        keyLabel: "RIGHT",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('nextPage'),
+        fn: function(){
+        	Ext.getCmp('nextBt').handler();
+        }
+    }, {
+        key: Ext.EventObject.UP,
+        keyLabel: "UP",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('upInPage'),
+        fn: function(){
+        	catalogue.resultsView.getEl().scroll('t', 170, true);
+        }
+    }, {
+        key: Ext.EventObject.DOWN,
+        keyLabel: "DOWN",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('downInPage'),
+        fn: function(){
+        	catalogue.resultsView.getEl().scroll('b', 170, true);
         }
     }, {
         key: "d",
@@ -35,6 +79,16 @@ function initShortcut(){
             r.toggleCollapse();
         }
     }, {
+        key: "r",
+        ctrl: true,
+        shift: true,
+        label: OpenLayers.i18n('resetSearchForm'),
+        fn: function(){
+            var e = Ext.getCmp('resetBt');
+            e.getEl().fadeIn();
+            e.fireEvent('click');
+        }
+    }, {
         key: "v",
         ctrl: true,
         shift: true,
@@ -44,21 +98,15 @@ function initShortcut(){
             app.switchMode(null, true);
         }
     }, {
-        key: "r",
-        ctrl: true,
-        shift: true,
-        label: OpenLayers.i18n('resetSearchForm'),
-        fn: function(){
-            Ext.getCmp('resetBt').fireEvent('click');
-        }
-    }, {
         key: "l",
         ctrl: true,
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('focusOnLogin'),
         fn: function(){
-            Ext.getCmp('username').focus(true);
+        	var e = Ext.get('username');
+        	e.highlight();
+            e.dom.focus(true);
         }
     }, {
         key: "i",
@@ -103,7 +151,7 @@ function initShortcut(){
 	        (c.ctrl === true ? '<span class="label">&lt;Ctrl&gt;</span> + ' : '') +
 	        (c.shift === true ? '<span class="label">&lt;Shift&gt;</span> + ' : '') +
 	        '<span class="label">' +
-	        c.key +
+	        (c.keyLabel ? c.keyLabel : c.key) +
 	        '</span>' +
 	        ':</td><td>' +
 	        c.label +
