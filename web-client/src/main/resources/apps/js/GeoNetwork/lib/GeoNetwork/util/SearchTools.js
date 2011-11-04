@@ -262,7 +262,7 @@ GeoNetwork.util.SearchTools = {
      */
     addFilterImpl: function(filters, type, name, value){
         if (type.charAt(0) === 'E') { // equals
-            filters.push(name + "=" + escape(value) + "");
+            filters.push(name + "=" + encodeURIComponent(value) + "");
         } else if (type === 'B') { //boolean
             filters.push(name + "=" + (value ? 'on' : 'off') + "");
         } else if (type === 'O') { //optional boolean
