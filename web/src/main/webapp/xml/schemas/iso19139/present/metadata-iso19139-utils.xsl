@@ -237,7 +237,7 @@
 		        				<xsl:variable name="profile"  select="/root/gui/session/profile"/>
 		        				<xsl:variable name="childCount"  select="/root/gui/relation/children/response/summary/@count"/>
 		        				<xsl:variable name="childrenIds">
-		        					<xsl:for-each select="/root/gui/relation/children/response/MD_Metadata">
+		        					<xsl:for-each select="/root/gui/relation/children/response/metadata">
 		        						<xsl:value-of select="concat(geonet:info/id,',')"/>
 		        					</xsl:for-each>
 		        				</xsl:variable>
