@@ -270,8 +270,12 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         vars.put("$PROTOCOL", sm.getValue("system/server/protocol"));
 		vars.put("$HOST",    sm.getValue("system/server/host"));
 		vars.put("$PORT",    sm.getValue("system/server/port"));
-		vars.put("$SERVLET", context.getBaseUrl());
-		
+
+        String providerName = sm.getValue("system/site/organization");
+        vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName)?providerName:"GeoNetwork opensource");
+
+        vars.put("$SERVLET", context.getBaseUrl());
+
 		// Set CSW contact information
         if (contact != null) {
             vars.put("$IND_NAME", contact.getChild("name").getValue());
