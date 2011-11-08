@@ -224,7 +224,7 @@
 
 
             <inspire_common:MetadataPointOfContact>
-                <inspire_common:OrganisationName>$IND_NAME</inspire_common:OrganisationName>
+                <inspire_common:OrganisationName>$ORG_NAME</inspire_common:OrganisationName>
                 <inspire_common:EmailAddress>$EMAIL</inspire_common:EmailAddress>
             </inspire_common:MetadataPointOfContact>
 
