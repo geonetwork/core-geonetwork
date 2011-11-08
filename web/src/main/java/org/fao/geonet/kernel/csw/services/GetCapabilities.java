@@ -278,7 +278,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		// Set CSW contact information
         if (contact != null) {
-            vars.put("$IND_NAME", contact.getChild("name").getValue());
+            vars.put("$IND_NAME", contact.getChild("name").getValue() + " " + contact.getChild("surname").getValue());
             vars.put("$POS_NAME", contact.getChild("profile").getValue());
             vars.put("$VOICE", "");
             vars.put("$FACSCIMILE", "");
