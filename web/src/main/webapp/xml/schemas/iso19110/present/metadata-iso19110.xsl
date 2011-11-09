@@ -635,5 +635,15 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+	<!-- CompleteTab template - iso19110 just calls completeTab from 
+	     metadata-utils.xsl -->
+	<xsl:template name="iso19110CompleteTab">
+		<xsl:param name="tabLink"/>
+
+		<xsl:call-template name="completeTab">
+			<xsl:with-param name="tabLink" select="$tabLink"/>
+		</xsl:call-template>
+	</xsl:template>
     
 </xsl:stylesheet>
