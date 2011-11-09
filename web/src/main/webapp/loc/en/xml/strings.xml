@@ -715,13 +715,16 @@
   <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>
   <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
   <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-  <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
   <protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
   <protocolChoice show="y" value="WWW:LINK-1.0-http--link">Web address (URL)</protocolChoice>
   <protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
   <protocolChoice show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
   <protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
   <protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
+  <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
+	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
   <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
 	<pubdate>Publication Date</pubdate>
 	<publicationDate>Publication date</publicationDate>
