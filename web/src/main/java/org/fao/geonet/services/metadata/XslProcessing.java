@@ -38,7 +38,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
-import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -160,6 +160,7 @@ public class XslProcessing implements Service {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		UserSession session = context.getUserSession();
 		DataManager dataMan = gc.getDataManager();
+		SchemaManager schemaMan = gc.getSchemamanager();
 		AccessManager accessMan = gc.getAccessManager();
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
@@ -175,9 +176,8 @@ public class XslProcessing implements Service {
 			// -----------------------------------------------------------------------
 			// --- check processing exist for current schema
 			String schema = info.schemaId;
-			MetadataSchema metadataSchema = dataMan.getSchema(schema);
             
-			String filePath = metadataSchema.getSchemaDir() + "/process/" + process + ".xsl";
+			String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
 				context.info("  Processing instruction not found for " + schema + " schema.");
