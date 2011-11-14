@@ -15,13 +15,13 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geoserver</artifactId>
   <name>GeoServer module</name>
-  <description>Execute an ant task to deploy geoserver in target folder. All included files are official versions downloaded from http://geoserver.org/:
-1) geoserver-2.0.2.war: GeoServer application
-2) geoserver-2.0.2-charts-plugin.zip: Charts plugin
-3) geoserver-2.0.2-restconfig-plugin-zip: REST API plugin
-4) styler.zip: Styler application. Accessible in http://localhost:8080/geoserver/styler/
-5) web.xml: Same web.xml included in war file, modified to customize the data folder
+  <description>GeoServer for GeoNetwork. All included files are official versions downloaded from http://geoserver.org/ and stored in local ../maven_repo:
+1) geoserver war: GeoServer application
+2) geoserver charts-plugin.zip: Charts plugin
+3) geoserver styler: Styler application. Accessible in http://localhost:8080/geoserver/www/styler/
+Data directory is now included to allow simpler deployment - see web/src/main/webapp/data
   </description>
+	<packaging>war</packaging>
   
   <licenses>
     <license>
@@ -31,30 +31,69 @@
     </license>
   </licenses>
 
+	<dependencies>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>geoserver</artifactId>
+      <version>2.1.1</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>geoserver</artifactId>
+      <version>2.1.1</version>
+      <type>pom</type>
+    </dependency>
+		<dependency>
+			<groupId>org.geoserver</groupId>
+			<artifactId>styler</artifactId>
+      <version>2.1.1</version>
+      <type>zip</type>
+    </dependency>
+		<dependency>
+			<groupId>org.geoserver</groupId>
+			<artifactId>charts-plugin</artifactId>
+      <version>2.1.1</version>
+      <type>zip</type>
+    </dependency>
+	</dependencies>
+	
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <id>ant-geoserver-clean</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              <commandlineArgs>all</commandlineArgs>
-              <environmentVariables>
-                <ANT_OPTS>-client</ANT_OPTS>
-              </environmentVariables>
-              <workingDirectory>${basedir}</workingDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+			<plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+					<overlays>
+						<!-- first win strategy - if its already there it won't get
+						     overwritten -->
+						<overlay></overlay> <!-- files from this project -->
+            <overlay>
+              <groupId>org.geoserver</groupId>
+              <artifactId>styler</artifactId>
+							<type>zip</type>
+							<targetPath>data/www</targetPath>
+            </overlay>
+            <overlay>
+              <groupId>org.geoserver</groupId>
+              <artifactId>charts-plugin</artifactId>
+							<type>zip</type>
+							<targetPath>WEB-INF/lib</targetPath>
+            </overlay>
+            <overlay>
+              <groupId>org.geoserver</groupId>
+              <artifactId>geoserver</artifactId>
+							<type>war</type>
+							<!-- leave out geoserver data directory as we have our own -->
+							<excludes>
+								<exclude>data/**</exclude>
+							</excludes>
+            </overlay>
+          </overlays>
+          <warName>geoserver</warName>
+          <webappDirectory>${project.build.directory}/geoserver</webappDirectory>
+        </configuration>
+      </plugin>	
    </plugins>
   </build>
+
 </project>

@@ -1,0 +1,79 @@
+<coverage format = "BlueMarble_world" >
+  <name>world</name>
+  <label>Blue Marble world image</label>
+  <description>Blue Marble world image</description>
+  <wmspath>/</wmspath>
+  <metadataLink about = "http://earthobservatory.nasa.gov/Features/BlueMarble/" metadataType = "other" >
+    null
+  </metadataLink>
+  <keywords>Blue,Marble,world,topography,bathymetry,200407</keywords>
+  <!--
+    the default style this CoverageInfoDTO can be represented by.
+    at least must contain the "default" attribute
+  -->
+  <styles default = "raster" />
+  <!--
+    crs: native CRS definition, srsName: user defined CRS identifier
+  -->
+  <envelope crs = "GEOGCS[&apos;WGS 84&apos;, 
+  DATUM[&apos;World Geodetic System 1984&apos;, 
+    SPHEROID[&apos;WGS 84&apos;, 6378137.0, 298.257223563, AUTHORITY[&apos;EPSG&apos;,&apos;7030&apos;]], 
+    AUTHORITY[&apos;EPSG&apos;,&apos;6326&apos;]], 
+  PRIMEM[&apos;Greenwich&apos;, 0.0, AUTHORITY[&apos;EPSG&apos;,&apos;8901&apos;]], 
+  UNIT[&apos;degree&apos;, 0.017453292519943295], 
+  AXIS[&apos;Geodetic longitude&apos;, EAST], 
+  AXIS[&apos;Geodetic latitude&apos;, NORTH], 
+  AUTHORITY[&apos;EPSG&apos;,&apos;4326&apos;]]" srsName = "EPSG:4326" >
+    <pos>-180.0 -90.0</pos>
+    <pos>180.0 90.0</pos>
+  </envelope>
+  <grid dimension = "2" >
+    <low>0 0 </low>
+    <high>8640 4320 </high>
+    <axisName>RED_BAND</axisName>
+    <axisName>GREEN_BAND</axisName>
+    <axisName>BLUE_BAND</axisName>
+    <geoTransform >
+      <scaleX>0.041666666666666</scaleX>
+      <scaleY>-0.041666666666666</scaleY>
+      <shearX>0.0</shearX>
+      <shearY>0.0</shearY>
+      <translateX>-180.0</translateX>
+      <translateY>90.0</translateY>
+    </geoTransform>
+  </grid>
+  <CoverageDimension >
+    <name>Red band</name>
+    <description>GridSampleDimension[0.0,255.0]</description>
+    <interval >
+      <min>0.0</min>
+      <max>255.0</max>
+    </interval>
+  </CoverageDimension>
+  <CoverageDimension >
+    <name>Green band</name>
+    <description>GridSampleDimension[0.0,255.0]</description>
+    <interval >
+      <min>0.0</min>
+      <max>255.0</max>
+    </interval>
+  </CoverageDimension>
+  <CoverageDimension >
+    <name>Blue band</name>
+    <description>GridSampleDimension[0.0,255.0]</description>
+    <interval >
+      <min>0.0</min>
+      <max>255.0</max>
+    </interval>
+  </CoverageDimension>
+  <supportedCRSs >
+    <requestCRSs>EPSG:4326</requestCRSs>
+    <responseCRSs>EPSG:4326</responseCRSs>
+  </supportedCRSs>
+  <supportedFormats nativeFormat = "GeoTIFF" >
+    <formats>IMAGEMOSAIC,ARCGRID,GTOPO30,GEOTIFF,GIF,PNG,JPEG,TIFF</formats>
+  </supportedFormats>
+  <supportedInterpolations default = "nearest neighbor" >
+    <interpolationMethods>nearest neighbor,bilinear,bicubic</interpolationMethods>
+  </supportedInterpolations>
+</coverage>

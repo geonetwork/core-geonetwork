@@ -26,7 +26,7 @@
 		<wmsUrl>http://localhost:8080/geoserver/wms</wmsUrl>
 		<wfsUrl>http://localhost:8080/geoserver/wfs</wfsUrl>
 	  <wcsUrl>http://localhost:8080/geoserver/wcs</wcsUrl>
-	  <stylerUrl>http://localhost:8080/geoserver/styler/index.html</stylerUrl>
+	  <stylerUrl>http://localhost:8080/geoserver/www/styler/index.html</stylerUrl>
 		<user>admin</user>
 		<password>geoserver</password>
 	</node>

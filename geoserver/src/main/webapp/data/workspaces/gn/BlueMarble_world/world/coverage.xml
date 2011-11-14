@@ -1,0 +1,113 @@
+<coverage>
+  <id>CoverageInfoImpl--38822e1:1283976c287:-7fe0</id>
+  <name>world</name>
+  <nativeName>world</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--38822e1:1283976c287:-7ffe</id>
+  </namespace>
+  <title>Blue Marble world image</title>
+  <description>Blue Marble world image</description>
+  <keywords>
+    <string>Blue</string>
+    <string>Marble</string>
+    <string>world</string>
+    <string>topography</string>
+    <string>bathymetry</string>
+    <string>200407</string>
+  </keywords>
+  <nativeCRS>GEOGCS[&quot;WGS 84&quot;, &#xd;
+  DATUM[&quot;World Geodetic System 1984&quot;, &#xd;
+    SPHEROID[&quot;WGS 84&quot;, 6378137.0, 298.257223563, AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]], &#xd;
+    AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]], &#xd;
+  PRIMEM[&quot;Greenwich&quot;, 0.0, AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]], &#xd;
+  UNIT[&quot;degree&quot;, 0.017453292519943295], &#xd;
+  AXIS[&quot;Geodetic longitude&quot;, EAST], &#xd;
+  AXIS[&quot;Geodetic latitude&quot;, NORTH], &#xd;
+  AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</nativeCRS>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-90.0</miny>
+    <maxy>90.0</maxy>
+    <crs>EPSG:4326</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-90.0</miny>
+    <maxy>90.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="dirName">BlueMarble_world</entry>
+  </metadata>
+  <store class="coverageStore">
+    <id>CoverageStoreInfoImpl--38822e1:1283976c287:-7fe3</id>
+  </store>
+  <nativeFormat>GeoTIFF</nativeFormat>
+  <grid dimension="2">
+    <range>
+      <low>0 0</low>
+      <high>8640 4320</high>
+    </range>
+    <transform>
+      <scaleX>0.041666666666666</scaleX>
+      <scaleY>-0.041666666666666</scaleY>
+      <shearX>0.0</shearX>
+      <shearX>0.0</shearX>
+      <translateX>-180.0</translateX>
+      <translateY>90.0</translateY>
+    </transform>
+    <crs>EPSG:4326</crs>
+  </grid>
+  <supportedFormats>
+    <string>IMAGEMOSAIC</string>
+    <string>ARCGRID</string>
+    <string>GTOPO30</string>
+    <string>GEOTIFF</string>
+    <string>GIF</string>
+    <string>PNG</string>
+    <string>JPEG</string>
+    <string>TIFF</string>
+  </supportedFormats>
+  <interpolationMethods>
+    <string>nearest neighbor</string>
+    <string>bilinear</string>
+    <string>bicubic</string>
+  </interpolationMethods>
+  <defaultInterpolationMethod>nearest neighbor</defaultInterpolationMethod>
+  <dimensions>
+    <coverageDimension>
+      <name>Red band</name>
+      <description>GridSampleDimension[0.0,255.0]</description>
+      <range>
+        <min>0.0</min>
+        <max>255.0</max>
+      </range>
+    </coverageDimension>
+    <coverageDimension>
+      <name>Green band</name>
+      <description>GridSampleDimension[0.0,255.0]</description>
+      <range>
+        <min>0.0</min>
+        <max>255.0</max>
+      </range>
+    </coverageDimension>
+    <coverageDimension>
+      <name>Blue band</name>
+      <description>GridSampleDimension[0.0,255.0]</description>
+      <range>
+        <min>0.0</min>
+        <max>255.0</max>
+      </range>
+    </coverageDimension>
+  </dimensions>
+  <requestSRS>
+    <string>EPSG:4326</string>
+  </requestSRS>
+  <responseSRS>
+    <string>EPSG:4326</string>
+  </responseSRS>
+</coverage>
