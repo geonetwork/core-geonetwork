@@ -291,7 +291,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             vars.put("$EMAIL", contact.getChild("email").getValue());
             vars.put("$HOUROFSERVICE", "");
             vars.put("$CONTACT_INSTRUCTION","");
-            vars.put("$ROLE", contact.getChild("kind").getValue());
         } else {
             vars.put("$IND_NAME", "");
             vars.put("$ORG_NAME", "");
@@ -306,7 +305,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             vars.put("$EMAIL", "");
             vars.put("$HOUROFSERVICE", "");
             vars.put("$CONTACT_INSTRUCTION","");
-            vars.put("$ROLE", "");    
         }
 
         vars.put("$TITLE", cswCapabilitiesInfo.getTitle());

@@ -41,7 +41,7 @@
                 <ows:HoursOfService>$HOUROFSERVICE</ows:HoursOfService>
                 <ows:ContactInstructions>$CONTACT_INSTRUCTION</ows:ContactInstructions>
             </ows:ContactInfo>
-            <ows:Role>$ROLE</ows:Role>
+            <ows:Role>pointOfContact</ows:Role>
         </ows:ServiceContact>
     </ows:ServiceProvider>
     <ows:OperationsMetadata>
