@@ -2527,12 +2527,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
     <element name="gml:BaseUnit">
 		<label>Basis eenheid</label>
 		<description></description>
-	</element>      
-	<!-- ==================================================== -->
-    <element name="codeSpace">
-		<label>Code space</label>
-		<description></description>
-	</element>  
+	</element>
 	<!-- ==================================================== -->
     <element name="gml:remarks">
 		<label>Opmerkingen</label>
