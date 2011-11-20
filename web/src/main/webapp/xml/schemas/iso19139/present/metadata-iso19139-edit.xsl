@@ -1213,7 +1213,23 @@
           <xsl:with-param name="edit"   select="$edit"/>
           <xsl:with-param name="text">
             <xsl:variable name="ref" select="geonet:element/@ref"/>
-            <xsl:variable name="format"><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:variable>
+            <!-- 
+              TODO : Add the capability to edit those elements as:
+               * xs:time
+               * xs:dateTime
+               * xs:anyURI
+               * xs:decimal
+               * gml:CalDate
+              See http://trac.osgeo.org/geonetwork/ticket/661
+              
+            -->
+            <xsl:variable name="format">
+              <xsl:choose>
+                <!-- Add basic support of %Y-%m-%d format in edit mode -->
+                <xsl:when test="string-length(text()) = 10"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
             
             <xsl:call-template name="calendar">
               <xsl:with-param name="ref" select="$ref"/>
