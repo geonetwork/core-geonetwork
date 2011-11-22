@@ -164,7 +164,15 @@
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="text">
-						<xsl:value-of select="gco:Distance"/>&#160;<xsl:value-of select="gco:Distance/@uom"/>
+						<xsl:value-of select="gco:Distance"/>
+					  <xsl:if test="gco:Distance/@uom"><xsl:text>&#160;</xsl:text>
+					    <xsl:choose>
+					      <xsl:when test="contains(gco:Distance/@uom, '#')">
+					        <a href="{gco:Distance/@uom}"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
+					      </xsl:when>
+					      <xsl:otherwise><xsl:value-of select="gco:Distance/@uom"/></xsl:otherwise>
+					    </xsl:choose>
+					  </xsl:if>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:otherwise>

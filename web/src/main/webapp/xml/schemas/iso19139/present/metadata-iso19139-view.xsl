@@ -8,7 +8,6 @@
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
-
   <xsl:template name="view-with-header">
     <xsl:param name="tabs"/>
     
@@ -98,7 +97,7 @@
           <xsl:with-param name="content">
             <xsl:apply-templates mode="block"
               select="
-              gmd:identificationInfo/*/gmd:spatialResolution/gmd:MD_Resolution
+              gmd:identificationInfo/*/gmd:spatialResolution[1]
               |gmd:identificationInfo/*/gmd:spatialRepresentationType
               |gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage
               |gmd:identificationInfo/*/gmd:resourceConstraints[1]
@@ -435,7 +434,54 @@
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
-
+  
+  
+  <xsl:template mode="block" match="gmd:spatialResolution" priority="100">
+    <xsl:call-template name="simpleElementSimpleGUI">
+      <xsl:with-param name="title">
+        <xsl:call-template name="getTitle">
+          <xsl:with-param name="name" select="'gmd:spatialResolution'"/>
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="content">
+        <xsl:apply-templates mode="iso19139-simple"
+          select="
+          gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator
+          |gmd:MD_Resolution/gmd:distance
+          |following-sibling::node()[name(.)='gmd:spatialResolution']/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator
+          |following-sibling::node()[name(.)='gmd:spatialResolution']/gmd:MD_Resolution/gmd:distance
+          "/>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+  <!--
+  <xsl:template mode="block" match="*[gco:Distance]
+    " priority="98">
+    <xsl:call-template name="simpleElementSimpleGUI">
+      <xsl:with-param name="title">
+        <xsl:call-template name="getTitle">
+          <xsl:with-param name="name" select="name(.)"/>
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="name" select="name(.)"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="content">
+        <xsl:value-of select="gco:Distance"/>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>-->
   
   <xsl:template mode="block" match="*|@*">
     <xsl:apply-templates mode="block" select="*"/>
@@ -607,6 +653,14 @@
           select="gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure
           |gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType"
         />
+        <xsl:if test="gco:Distance/@uom"><xsl:text>&#160;</xsl:text>
+          <xsl:choose>
+            <xsl:when test="contains(gco:Distance/@uom, '#')">
+              <a href="{gco:Distance/@uom}"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
+            </xsl:when>
+            <xsl:otherwise><xsl:value-of select="gco:Distance/@uom"/></xsl:otherwise>
+          </xsl:choose>
+        </xsl:if>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

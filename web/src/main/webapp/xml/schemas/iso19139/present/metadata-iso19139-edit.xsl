@@ -101,7 +101,7 @@
   <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:thesaurusName|
               *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
-              gmd:referenceSystemInfo|gmd:equivalentScale|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
+              gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
               gmd:metadataConstraints">
@@ -173,7 +173,15 @@
         <xsl:apply-templates mode="simpleElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="text">
-            <xsl:value-of select="gco:Distance"/>&#160;<xsl:value-of select="gco:Distance/@uom"/>
+            <xsl:value-of select="gco:Distance"/>
+            <xsl:if test="gco:Distance/@uom"><xsl:text>&#160;</xsl:text>
+              <xsl:choose>
+                <xsl:when test="contains(gco:Distance/@uom, '#')">
+                  <a href="{gco:Distance/@uom}"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
+                </xsl:when>
+                <xsl:otherwise><xsl:value-of select="gco:Distance/@uom"/></xsl:otherwise>
+              </xsl:choose>
+            </xsl:if>
           </xsl:with-param>
         </xsl:apply-templates>
       </xsl:otherwise>
@@ -886,6 +894,7 @@
                     <xsl:attribute name="selected"/>
                   </xsl:if>
                   <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+                  <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
                   <xsl:value-of select="label"/>
                 </option>
               </xsl:for-each>
