@@ -408,9 +408,9 @@ function doFileRemoveAction(action, ref, access, id){
  * Protocol could not be changed if file is already uploaded.
  */
 function checkForFileUpload(fref, pref, protocolBeforeEdit){
-    var fileName = $('_' + fref); // the file name input field
-    var protoSelect = $('s_' + pref); // the protocol <select>
-    var protoIn = $('_' + pref); // the protocol input field to be submitted
+    var fileName = Ext.getDom('_' + fref); // the file name input field
+    var protoSelect = Ext.getDom('s_' + pref); // the protocol <select>
+    var protoIn = Ext.getDom('_' + pref); // the protocol input field to be submitted
     var fileUploaded = protocolBeforeEdit.startsWith('WWW:DOWNLOAD'); // File name not displayed in editor if downloaded
     var protocol = protoSelect.value;
     var protocolDownload = (protocol.startsWith('WWW:DOWNLOAD') && protocol.indexOf('http') > 0);
