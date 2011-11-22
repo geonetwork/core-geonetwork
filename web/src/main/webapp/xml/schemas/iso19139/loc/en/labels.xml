@@ -1545,7 +1545,7 @@
     </element>
     <element name="gmd:offLine" id="278.0">
         <label>Offline</label>
-        <description>Information about offline media on whichthe resource can be
+        <description>Information about offline media on which the resource can be
             obtained</description>
     </element>
     <element name="gmd:offset" id="267.0">
