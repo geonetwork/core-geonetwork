@@ -96,7 +96,8 @@
           <xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
           <xsl:text> </xsl:text>
           <xsl:choose>
-            <xsl:when test="normalize-space($linkTokens[2])">
+            <xsl:when test="normalize-space($linkTokens[2]) and 
+                    not(starts-with(name(.), 'dc:')) and not(starts-with(name(.), 'dct:'))">
               <a id="remove_{$id}" class="small del" onclick="if (noDoubleClick()) {$linkTokens[1]}"
                 target="_blank" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"
                 style="display:none;">

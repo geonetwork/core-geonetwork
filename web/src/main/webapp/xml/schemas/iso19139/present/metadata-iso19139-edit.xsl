@@ -389,6 +389,35 @@
 
     <!-- ==================================================================== -->
 
+  <xsl:template name="translatedString">
+      <xsl:param name="schema"/>
+      <xsl:param name="langId" />
+      <xsl:param name="widget" />
+      <xsl:param name="validator" />
+          <xsl:choose>
+              <xsl:when test="not(gco:*)">
+                  <xsl:for-each select="gmd:PT_FreeText">
+                      <xsl:call-template name="getElementText">
+                          <xsl:with-param name="edit" select="false()" />
+                          <xsl:with-param name="schema" select="$schema" />
+                          <xsl:with-param name="langId" select="$langId" />
+                          <xsl:with-param name="validator" select="$validator" />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:when>
+              <xsl:otherwise>
+                  <xsl:for-each select="gco:*">
+                      <xsl:call-template name="getElementText">
+                            <xsl:with-param name="edit" select="false()" />
+                            <xsl:with-param name="schema" select="$schema" />
+                            <xsl:with-param name="langId" select="$langId" />
+                            <xsl:with-param name="validator" select="$validator" />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
+    </xsl:template>
+
   <xsl:template name="iso19139String">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
@@ -415,30 +444,11 @@
           <!-- Having only gmd:PT_FreeText is allowed by schema.
             So using a PT_FreeText to set a translation even
             in main metadata language could be valid.-->
-          <xsl:choose>
-            <xsl:when test="not(gco:*)">
-              <xsl:for-each select="gmd:PT_FreeText">
-                <xsl:call-template name="getElementText">
-                  <xsl:with-param name="edit" select="$edit" />
-                  <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="class" select="$class" />
-                  <xsl:with-param name="langId" select="$langId" />
-                  <xsl:with-param name="validator" select="$validator" />
-                </xsl:call-template>
-              </xsl:for-each>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:for-each select="gco:*">
-                <xsl:call-template name="getElementText">
-                  <xsl:with-param name="edit" select="$edit" />
-                  <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="class" select="$class" />
-                  <xsl:with-param name="langId" select="$langId" />
-                  <xsl:with-param name="validator" select="$validator" />
-                </xsl:call-template>
-              </xsl:for-each>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:call-template name="translatedString">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="langId" select="$langId" />
+            <xsl:with-param name="validator" select="$validator"/>
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="$widget" />
@@ -1062,7 +1072,15 @@
             <xsl:variable name="value">
               <xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
                 <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
-                <xsl:value-of select="."/><!-- FIXME multilingual ? -->
+                <xsl:call-template name="translatedString">
+                  <xsl:with-param name="schema" select="$schema"/>
+                  <xsl:with-param name="langId">
+                        <xsl:call-template name="getLangId">
+                              <xsl:with-param name="langGui" select="/root/gui/language"/>
+                              <xsl:with-param name="md" select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
+                          </xsl:call-template>
+                    </xsl:with-param>
+                  </xsl:call-template>
               </xsl:for-each>
               <xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
                 <xsl:text> (</xsl:text>

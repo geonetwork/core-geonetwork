@@ -8,6 +8,7 @@
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
+
   <xsl:template name="view-with-header">
     <xsl:param name="tabs"/>
     
@@ -213,8 +214,18 @@
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
-          <!-- TODO multilingual -->
-          <xsl:value-of select="string-join(gmd:keyword/gco:CharacterString, ', ')"/> 
+        <xsl:for-each select="gmd:keyword">
+          <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
+          <xsl:call-template name="translatedString">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="langId">
+              <xsl:call-template name="getLangId">
+                <xsl:with-param name="langGui" select="/root/gui/language"/>
+                <xsl:with-param name="md" select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
+              </xsl:call-template>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:for-each>
         <xsl:if test="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           (<xsl:value-of
             select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>)
@@ -461,28 +472,7 @@
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
-  <!--
-  <xsl:template mode="block" match="*[gco:Distance]
-    " priority="98">
-    <xsl:call-template name="simpleElementSimpleGUI">
-      <xsl:with-param name="title">
-        <xsl:call-template name="getTitle">
-          <xsl:with-param name="name" select="name(.)"/>
-          <xsl:with-param name="schema" select="$schema"/>
-        </xsl:call-template>
-      </xsl:with-param>
-      <xsl:with-param name="helpLink">
-        <xsl:call-template name="getHelpLink">
-          <xsl:with-param name="schema" select="$schema"/>
-          <xsl:with-param name="name" select="name(.)"/>
-        </xsl:call-template>
-      </xsl:with-param>
-      <xsl:with-param name="content">
-        <xsl:value-of select="gco:Distance"/>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>-->
-  
+
   <xsl:template mode="block" match="*|@*">
     <xsl:apply-templates mode="block" select="*"/>
   </xsl:template>

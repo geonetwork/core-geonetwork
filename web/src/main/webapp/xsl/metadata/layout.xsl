@@ -1374,6 +1374,7 @@
     <xsl:param name="edit"/>
     <xsl:param name="name"/>
     <xsl:param name="eltRef"/>
+    <xsl:param name="tabIndex"/>
 
     <xsl:variable name="title">
       <xsl:call-template name="getTitle">
@@ -1414,6 +1415,7 @@
           <xsl:with-param name="input_step" select="'0.00001'"/>
           <xsl:with-param name="validator" select="'validateNumber(this, false)'"/>
           <xsl:with-param name="no_name" select="true()"/>
+          <xsl:with-param name="tabindex" select="$tabIndex"/>
         </xsl:call-template>
         <xsl:call-template name="getElementText">
           <xsl:with-param name="schema" select="$schema"/>
@@ -1506,6 +1508,7 @@
                 <xsl:with-param name="edit" select="$edit"/>
                 <xsl:with-param name="name" select="'gmd:northBoundLatitude'"/>
                 <xsl:with-param name="eltRef" select="concat('n', $eltRef)"/>
+                <xsl:with-param name="tabIndex" select="100"/>
               </xsl:apply-templates>
             </td>
           </tr>
@@ -1518,6 +1521,7 @@
                 <xsl:with-param name="edit" select="$edit"/>
                 <xsl:with-param name="name" select="'gmd:westBoundLongitude'"/>
                 <xsl:with-param name="eltRef" select="concat('w', $eltRef)"/>
+                <xsl:with-param name="tabIndex" select="101"/>
               </xsl:apply-templates>
             </td>
           </xsl:if>
@@ -1581,6 +1585,7 @@
                 <xsl:with-param name="edit" select="$edit"/>
                 <xsl:with-param name="name" select="'gmd:eastBoundLongitude'"/>
                 <xsl:with-param name="eltRef" select="concat('e', $eltRef)"/>
+                <xsl:with-param name="tabIndex" select="103"/>
               </xsl:apply-templates>
             </td>
           </xsl:if>
@@ -1593,6 +1598,7 @@
                 <xsl:with-param name="edit" select="$edit"/>
                 <xsl:with-param name="name" select="'gmd:southBoundLatitude'"/>
                 <xsl:with-param name="eltRef" select="concat('s', $eltRef)"/>
+                <xsl:with-param name="tabIndex" select="102"/>
               </xsl:apply-templates>
             </td>
           </tr>
@@ -1743,7 +1749,9 @@
     <!-- Set to true no_name parameter in order to create an element 
       which will not be submitted to the form. -->
     <xsl:param name="no_name" select="false()"/>
-
+    <xsl:param name="tabindex"/>
+    
+    
     <xsl:variable name="edit" select="xs:boolean($edit)"/>
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
@@ -1863,6 +1871,9 @@
               </xsl:if>
               <xsl:if test="$input_step">
                 <xsl:attribute name="step"><xsl:value-of select="$input_step"/></xsl:attribute>
+              </xsl:if>
+              <xsl:if test="$tabindex">
+                <xsl:attribute name="tabindex" select="$tabindex"/>
               </xsl:if>
               <xsl:choose>
                 <xsl:when test="$no_name=false()">
