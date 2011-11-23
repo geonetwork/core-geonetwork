@@ -142,6 +142,7 @@ GeoNetwork.Lang.fr = {
     'keyword': "Mots-clés",
     'org': "Organisation",
     'mapTypes': "Type de données",
+    'rsIdentifier': "Identifiant de la ressource",
     'inspireSearchOptions': 'INSPIRE',
     'inspireannex': 'Annexe',
     'inspirerelated': 'Données soumises à INSPIRE',

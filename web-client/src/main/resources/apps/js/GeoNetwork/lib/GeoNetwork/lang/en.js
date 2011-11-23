@@ -144,6 +144,7 @@ GeoNetwork.lang.en = {
     'keyword': "Keyword",
     'org': "Organisation",
     'mapTypes': "Map types",
+    'rsIdentifier': "Resource identifier",
     'inspireSearchOptions': 'INSPIRE criteria',
     'inspireannex': 'INSPIRE annex',
     'inspirerelated': 'Related to INSPIRE',
