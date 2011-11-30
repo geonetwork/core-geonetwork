@@ -85,7 +85,7 @@
 		
 		<xsl:variable name="first" select="substring-before($expr,$pattern)"/>
 		<xsl:choose>
-			<xsl:when test="$first">
+			<xsl:when test="$first or starts-with($expr, $pattern)">
 				<xsl:value-of select="$first"/>
 				<xsl:value-of select="$replacement"/>
 				<xsl:call-template name="replaceString">
