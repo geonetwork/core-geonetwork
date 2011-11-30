@@ -123,8 +123,8 @@ public class OgcGenericFilters
                 DefaultGeographicCRS.WGS84);
 				Log.debug(Geonet.SEARCH_ENGINE,"Filter Envelope is "+bounds);
         
-		final Filter finalFilter = (Filter) remappedFilter.accept(new WithinUpdater(), null);
-        Log.debug(Geonet.SEARCH_ENGINE,"Adjusted within Filter is "+reprojectedFilter);
+		final Filter finalFilter = (Filter) reprojectedFilter.accept(new WithinUpdater(), null);
+        Log.debug(Geonet.SEARCH_ENGINE,"Adjusted within Filter is "+finalFilter);
 
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
