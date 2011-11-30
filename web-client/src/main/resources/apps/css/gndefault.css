@@ -390,7 +390,7 @@ xmltagvalue {
 }
 .xmlns {
   color : #959532;
-  font-weight : bold;
+  font-style : italic;
 }
 dl.xml {
   color : #444;

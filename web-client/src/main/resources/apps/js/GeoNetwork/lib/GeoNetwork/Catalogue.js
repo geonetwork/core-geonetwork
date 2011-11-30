@@ -773,7 +773,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  If not set, simple mode is used.
      */
     metadataShow: function(uuid, maximized, width, height){
-        var url = this.services.mdView + '?uuid=' + uuid;
+    	// UUID may contains special character like #
+    	var url = this.services.mdView + '?uuid=' + escape(uuid);
         var bd = Ext.getBody();
         
         if (this.resultsView) {

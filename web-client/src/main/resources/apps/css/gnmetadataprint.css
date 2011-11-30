@@ -33,6 +33,8 @@ a:visited {
 .metadata * img.logo {
     max-height:none !important;
     max-width : 650px !important;
+    float: left;
+    clear: both;
 }
 
 /* Badly supported by browser - a small line strike through the legend element */

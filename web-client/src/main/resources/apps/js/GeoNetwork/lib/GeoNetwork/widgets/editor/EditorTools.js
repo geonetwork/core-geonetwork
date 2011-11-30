@@ -306,6 +306,29 @@ function doRemoveElementAction(action, ref, parentref, id, min){
     });
 }
 
+function doRemoveAttributeAction(action, ref, parentref)
+{
+	var metadataId = document.mainForm.id.value;
+	var thisElement = Ext.get(ref + '_block');
+	Ext.Ajax.request({
+		url: catalogue.services.rootUrl + action,
+		method: 'GET',
+		params: {id:metadataId, ref:ref},
+		success: function(result, request) {
+			var html = result.responseText;
+			//TODO replace element by result. Need #122 to be fixed thisElement.remove();
+			var editor = Ext.getCmp('editorPanel');
+			editor.save();
+			setBunload(true); // reset warning for window destroy
+		},
+		failure:function (result, request) { 
+			Ext.MessageBox.alert(translate("errorDeleteAttribute") + name + " " + translate("errorFromDoc") 
+						+ " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
+			setBunload(true); // reset warning for window destroy
+		}
+	});
+}
+
 function updateEditorContent(result, request){
     var editor = Ext.getCmp('editorPanel');
     editor.updateEditor(result.responseText);

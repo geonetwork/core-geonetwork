@@ -110,9 +110,8 @@ GeoNetwork.wms.WMSLayerInfo.prototype = {
         var separator = (onlineResource.indexOf('?') > -1) ? '&' : '?';
         onlineResource += separator + paramString;
         var req = Ext.Ajax.request({
-            url: OpenLayers.Util.removeTail(OpenLayers.ProxyHost),
+            url: onlineResource,
             method: 'GET',
-            params: {url: onlineResource},
             failure: this.processFailure,
             success: this.processSuccess,
             timeout: 10000,
