@@ -80,10 +80,10 @@ public class KeywordsSearcher {
 		_query = "SELECT prefLab, note, id, lowc, uppc "
 			+ " FROM {id} rdf:type {skos:Concept}; "
 			+ " skos:prefLabel {prefLab};"
-			+ " [skos:scopeNote {note} WHERE lang(note) LIKE \""+lang+"\"]; "
+			+ " [skos:scopeNote {note} WHERE lang(note) LIKE \""+lang+"*\"]; "
 			+ " [gml:BoundedBy {} gml:lowerCorner {lowc}]; "
 			+ " [gml:BoundedBy {} gml:upperCorner {uppc}] "
-			+ " WHERE lang(prefLab) LIKE \""+lang+"\" "
+			+ " WHERE lang(prefLab) LIKE \""+lang+"*\" "
 			+ " AND id LIKE \""+id+"\" "
 			+ " IGNORE CASE "
 			+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";
@@ -325,10 +325,10 @@ public class KeywordsSearcher {
         _query = "SELECT prefLab, note, id, lowc, uppc "
             + " FROM {id} rdf:type {skos:Concept}; "
             + " skos:prefLabel {prefLab};"
-            + " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"\"]; "
+            + " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"*\"]; "
             + " [gml:BoundedBy {} gml:lowerCorner {lowc}]; "
             + " [gml:BoundedBy {} gml:upperCorner {uppc}] "
-            + " WHERE lang(prefLab) LIKE \""+_lang+"\""
+            + " WHERE lang(prefLab) LIKE \""+_lang+"*\""
             + " AND prefLab LIKE ";
 
         switch (pTypeSearch) {
@@ -386,8 +386,8 @@ public class KeywordsSearcher {
 			+ " from {id} rdf:type {skos:Concept};"
 			+ " skos:prefLabel {prefLab};"
 			+ " [skos:"+request+" {b}];"
-			+ " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"\"] "
-			+ " WHERE lang(prefLab) LIKE \""+_lang+"\""
+			+ " [skos:scopeNote {note} WHERE lang(note) LIKE \""+_lang+"*\"] "
+			+ " WHERE lang(prefLab) LIKE \""+_lang+"*\""
 			+ " AND b LIKE \"*"+id+"\""
 			+ " IGNORE CASE "
 			+ " USING NAMESPACE skos=<http://www.w3.org/2004/02/skos/core#>, gml=<http://www.opengis.net/gml#> ";

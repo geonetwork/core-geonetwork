@@ -133,6 +133,11 @@ public class Upload implements Service {
 				httpReq.executeLarge(rdfFile);
 
 				fname = url.substring(url.lastIndexOf("/") + 1, url.length());
+				
+				// File with no extension in URL
+				if (fname.lastIndexOf('.') == -1) {
+					fname += ".rdf"; 
+				}
 			} else {
 				Log.debug("Thesaurus",
 						"No URL or file name provided for thesaurus upload.");
@@ -175,12 +180,15 @@ public class Upload implements Service {
 
 		Element eTSResult;
 
-		String extension = fname.substring(fname.lastIndexOf('.'))
+		int extensionIdx = fname.lastIndexOf('.');
+		String extension = fname.substring(extensionIdx)
 				.toLowerCase();
-
 		if (extension.equals(".rdf") || extension.equals(".xml")) {
 
 			Log.debug("Thesaurus", "Uploading thesaurus: " + fname);
+			
+			// Rename .xml to .rdf for all thesaurus
+			fname = fname.substring(0, extensionIdx) + ".rdf";
 			eTSResult = UploadThesaurus(rdfFile, style, context, fname, type,
 					dir);
 		} else {
