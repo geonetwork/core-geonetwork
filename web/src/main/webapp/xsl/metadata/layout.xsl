@@ -208,7 +208,6 @@
           </xsl:call-template>
         </xsl:variable>
 
-
         <xsl:call-template name="simpleElementGui">
           <xsl:with-param name="title">
             <xsl:call-template name="getTitle">
@@ -242,7 +241,6 @@
       <!-- has children or attributes, existing or potential -->
       <xsl:when
         test="*[namespace-uri(.)!=$geonetUri]|@*|geonet:child|geonet:element/geonet:attribute">
-
         <xsl:choose>
 
           <!-- display as a list -->
@@ -308,6 +306,7 @@
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:call-template>
     </xsl:param>
+    
     <xsl:choose>
       <xsl:when test="$edit=true()">
         <xsl:call-template name="editSimpleElement">
@@ -450,7 +449,7 @@
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:call-template>
     </xsl:param>
-
+    
     <xsl:choose>
       <xsl:when test="$edit=true()">
         <xsl:call-template name="editComplexElement">
@@ -963,7 +962,7 @@
   <xsl:template name="getContent">
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="false()"/>
-
+    
     <xsl:choose>
       <xsl:when test="$edit=true()">
         <xsl:apply-templates mode="elementEP" select="@*">
@@ -1735,7 +1734,7 @@
     to create a textarea -->
     <xsl:param name="class"/>
     <xsl:param name="langId"/>
-    <xsl:param name="visible" select="true"/>
+    <xsl:param name="visible" select="true()"/>
     <!-- Add javascript validator function. By default, if element 
       is mandatory a non empty validator is defined. -->
     <xsl:param name="validator"/>
@@ -1750,13 +1749,11 @@
       which will not be submitted to the form. -->
     <xsl:param name="no_name" select="false()"/>
     <xsl:param name="tabindex"/>
-    
-    
+        
     <xsl:variable name="edit" select="xs:boolean($edit)"/>
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
-
     <xsl:choose>
       <!-- list of values -->
       <xsl:when test="geonet:element/geonet:text">
@@ -1797,7 +1794,7 @@
           </items>
         </xsl:variable>
         <select class="md" name="_{geonet:element/@ref}" size="1">
-          <xsl:if test="$visible = 'false'">
+          <xsl:if test="$visible = false()">
             <xsl:attribute name="style">display:none;</xsl:attribute>
           </xsl:if>
           <xsl:if test="$isXLinked">
@@ -1889,7 +1886,7 @@
                 </xsl:otherwise>
               </xsl:choose>
 
-              <xsl:if test="$visible = 'false'">
+              <xsl:if test="$visible = false()">
                 <xsl:attribute name="style">display:none;</xsl:attribute>
               </xsl:if>
 
@@ -1940,7 +1937,7 @@
           <xsl:if test="$isXLinked">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
           </xsl:if>
-          <xsl:if test="$visible = 'false'">
+          <xsl:if test="$visible = false()">
             <xsl:attribute name="style">display:none;</xsl:attribute>
           </xsl:if>
           <xsl:if

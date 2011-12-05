@@ -392,13 +392,13 @@
   <xsl:template name="translatedString">
       <xsl:param name="schema"/>
       <xsl:param name="langId" />
-      <xsl:param name="widget" />
+      <xsl:param name="edit" select="false()"/>
       <xsl:param name="validator" />
           <xsl:choose>
               <xsl:when test="not(gco:*)">
                   <xsl:for-each select="gmd:PT_FreeText">
                       <xsl:call-template name="getElementText">
-                          <xsl:with-param name="edit" select="false()" />
+                          <xsl:with-param name="edit" select="$edit" />
                           <xsl:with-param name="schema" select="$schema" />
                           <xsl:with-param name="langId" select="$langId" />
                           <xsl:with-param name="validator" select="$validator" />
@@ -408,7 +408,7 @@
               <xsl:otherwise>
                   <xsl:for-each select="gco:*">
                       <xsl:call-template name="getElementText">
-                            <xsl:with-param name="edit" select="false()" />
+                            <xsl:with-param name="edit" select="$edit" />
                             <xsl:with-param name="schema" select="$schema" />
                             <xsl:with-param name="langId" select="$langId" />
                             <xsl:with-param name="validator" select="$validator" />
@@ -425,7 +425,7 @@
     <xsl:param name="langId" />
     <xsl:param name="widget" />
     <xsl:param name="validator" />
-    
+
     <xsl:variable name="title">
       <xsl:call-template name="getTitle">
         <xsl:with-param name="name"   select="name(.)"/>
@@ -446,6 +446,7 @@
             in main metadata language could be valid.-->
           <xsl:call-template name="translatedString">
             <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit" select="$edit"/>
             <xsl:with-param name="langId" select="$langId" />
             <xsl:with-param name="validator" select="$validator"/>
           </xsl:call-template>
@@ -3174,7 +3175,7 @@
   <xsl:template mode="iso19139" match="gmd:graphicOverview" priority="2">
     <xsl:param name="schema" />
     <xsl:param name="edit" />
-    
+
     <!-- do not show empty elements in view mode -->
     <xsl:choose>
       <xsl:when test="$edit=true()">
@@ -3498,7 +3499,7 @@
               <xsl:for-each select="gco:*">
                 <xsl:call-template name="getElementText">
                   <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="edit" select="'true'" />
+                  <xsl:with-param name="edit" select="true()" />
                   <xsl:with-param name="class" select="$class" />
                 </xsl:call-template>
               </xsl:for-each>                        
@@ -3507,7 +3508,7 @@
               <xsl:for-each select="gco:*">
                 <xsl:call-template name="getElementText">
                   <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="edit" select="'true'" />
+                  <xsl:with-param name="edit" select="true()" />
                   <xsl:with-param name="class" select="$class" />
                 </xsl:call-template>
               </xsl:for-each>                        
@@ -3516,7 +3517,7 @@
               <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]">
                 <xsl:call-template name="getElementText">
                   <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="edit" select="'true'" />
+                  <xsl:with-param name="edit" select="true()" />
                   <xsl:with-param name="class" select="$class" />
                 </xsl:call-template>
               </xsl:for-each>         
@@ -3525,7 +3526,7 @@
               <xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale=$mainLangId]">
                 <xsl:call-template name="getElementText">
                   <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="edit" select="'true'" />
+                  <xsl:with-param name="edit" select="true()" />
                   <xsl:with-param name="class" select="$class" />
                 </xsl:call-template>
               </xsl:for-each>         
@@ -3535,8 +3536,8 @@
           <xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale!=$mainLangId]">
             <xsl:call-template name="getElementText">
               <xsl:with-param name="schema" select="$schema" />
-              <xsl:with-param name="edit" select="'true'" />
-              <xsl:with-param name="visible" select="'false'" />
+              <xsl:with-param name="edit" select="true()" />
+              <xsl:with-param name="visible" select="false()" />
               <xsl:with-param name="class" select="$class" />
             </xsl:call-template>
           </xsl:for-each>

@@ -717,6 +717,16 @@
       <xsl:with-param name="help"></xsl:with-param>
       <xsl:with-param name="content">
         <xsl:value-of select="."/>
+        
+        <xsl:for-each select="@*">
+          <xsl:variable name="label">
+            <xsl:call-template name="getTitle">
+              <xsl:with-param name="name" select="name(.)"/>
+              <xsl:with-param name="schema" select="$schema"/>
+            </xsl:call-template>
+          </xsl:variable>
+          | <xsl:value-of select="concat($label, ': ', .)"/>
+        </xsl:for-each>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
