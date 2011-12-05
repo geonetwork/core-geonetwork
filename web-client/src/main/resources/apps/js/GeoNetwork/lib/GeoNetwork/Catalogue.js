@@ -991,9 +991,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         
         if (response.status === 200 && !exception) {
             this.identifiedUser = {
-                firstName: 'TODO',
-                surName: 'TODO',
-                role: 'admin'
+                firstName: '',
+                surName: '',
+                role: ''
             };
             this.onAfterLogin();
             return true;
