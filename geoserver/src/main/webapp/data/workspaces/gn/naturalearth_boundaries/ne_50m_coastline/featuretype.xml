@@ -1,0 +1,52 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--4fef2d7a:1333b2a9640:-7ff1</id>
+  <name>ne_50m_coastline</name>
+  <nativeName>50m_coastline</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--38822e1:1283976c287:-7ffe</id>
+  </namespace>
+  <title>Coastline</title>
+  <abstract>The 50 million coastline is a generalized version of the 10 million coastline achieved by automated and manual techniques. Ocean coastline, including major islands. Coastline is matched to land and water polygons. The Caspian Sea, which is technically a lake, is included. The ocean coastline, the foundation for building all of NEV, primarily derives from World Data Bank 2 with modest generalization applied via line simplification in Adobe Illustrator. The Antarctica coast derives from NASA Mosaic of Antarctica.</abstract>
+  <keywords>
+    <string>NATURALEARTH</string>
+  </keywords>
+  <metadataLinks>
+    <metadataLink>
+      <type>text/html</type>
+      <metadataType>other</metadataType>
+      <content>http://www.naturalearthdata.com/downloads/50m-physical-vectors/50m-coastline/</content>
+    </metadataLink>
+  </metadataLinks>
+  <nativeCRS>GEOGCS[&quot;GCS_WGS_1984&quot;, 
+  DATUM[&quot;D_WGS_1984&quot;, 
+    SPHEROID[&quot;WGS_1984&quot;, 6378137.0, 298.257223563]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Longitude&quot;, EAST], 
+  AXIS[&quot;Latitude&quot;, NORTH]]</nativeCRS>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-85.192</miny>
+    <maxy>83.6</maxy>
+    <crs>EPSG:4326</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-85.192</miny>
+    <maxy>83.6</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="cachingEnabled">false</entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl--4fef2d7a:1333b2a9640:-7ff2</id>
+  </store>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+</featureType>

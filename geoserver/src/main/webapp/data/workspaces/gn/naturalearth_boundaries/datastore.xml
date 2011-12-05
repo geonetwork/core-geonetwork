@@ -1,0 +1,14 @@
+<dataStore>
+  <id>DataStoreInfoImpl--4fef2d7a:1333b2a9640:-7ff2</id>
+  <name>naturalearth_boundaries</name>
+  <description>1:50m Cultural and Physical Vectors</description>
+  <type>Directory of spatial files</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl--38822e1:1283976c287:-7ffd</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="url">file:data/naturalearth</entry>
+    <entry key="namespace">http://geonetwork-opensource.org</entry>
+  </connectionParameters>
+</dataStore>

@@ -1,0 +1,52 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--4fef2d7a:1333b2a9640:-7fed</id>
+  <name>ne_50m_boundary_lines_land</name>
+  <nativeName>ne_50m_admin_0_boundary_lines_land</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--38822e1:1283976c287:-7ffe</id>
+  </namespace>
+  <title>Admin 0 – Boundary Lines</title>
+  <abstract>Country boundaries on land and offshore.</abstract>
+  <keywords>
+    <string>NATURALEARTH</string>
+  </keywords>
+  <metadataLinks>
+    <metadataLink>
+      <type>text/html</type>
+      <metadataType>other</metadataType>
+      <content>http://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-boundary-lines-2/</content>
+    </metadataLink>
+  </metadataLinks>
+  <nativeCRS>GEOGCS[&quot;GCS_WGS_1984&quot;, 
+  DATUM[&quot;D_WGS_1984&quot;, 
+    SPHEROID[&quot;WGS_1984&quot;, 6378137.0, 298.257223563]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Longitude&quot;, EAST], 
+  AXIS[&quot;Latitude&quot;, NORTH]]</nativeCRS>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-141.002</minx>
+    <maxx>145.94</maxx>
+    <miny>-55.114</miny>
+    <maxy>70.065</maxy>
+    <crs>EPSG:4326</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-141.002</minx>
+    <maxx>145.94</maxx>
+    <miny>-55.114</miny>
+    <maxy>70.065</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="cachingEnabled">false</entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl--4fef2d7a:1333b2a9640:-7ff2</id>
+  </store>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+</featureType>
