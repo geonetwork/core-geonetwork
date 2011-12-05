@@ -21,16 +21,18 @@
 			<!-- === Title === -->	
 			<xsl:apply-templates select="/Metadata/dataIdInfo/idCitation/resTitle">
 				<xsl:with-param name="name"  select="'title'"/>
+				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
       
         	<!-- not tokenized title for sorting -->
             <Field name="_title" string="{string(/Metadata/dataIdInfo/idCitation/resTitle)}" 
-                    store="true" index="true"/>
+                    store="false" index="true"/>
       			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === Abstract === -->	
 			<xsl:apply-templates select="/Metadata/dataIdInfo/idAbs">
 				<xsl:with-param name="name"  select="'abstract'"/>
+				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -89,6 +91,7 @@
 			<!-- === Responsible organization === -->		
 			<xsl:for-each select="/Metadata/mdContact/rpOrgName">
 				<Field name="orgName" string="{string(.)}" store="true" index="true"/>
+				<Field name="responsibleParty" string="{concat('pointOfContact|metadata|', ., '|')}" store="true" index="false"/>							
 			</xsl:for-each>
 	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -108,7 +111,13 @@
 			<xsl:apply-templates select="/Metadata/dataIdInfo/geoBox/eastBL" mode="latLon"/>
 			<xsl:apply-templates select="/Metadata/dataIdInfo/geoBox/southBL" mode="latLon"/>
 			<xsl:apply-templates select="/Metadata/dataIdInfo/geoBox/northBL" mode="latLon"/>
-			
+			<xsl:for-each select="/Metadata/dataIdInfo/geoBox">
+				<Field name="geoBox" string="{concat(westBL, '|', 
+					southBL, '|', 
+					eastBL, '|', 
+					northBL
+					)}" store="true" index="false"/>
+			</xsl:for-each>
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === keywords === -->
 			<xsl:apply-templates select="/Metadata/dataIdInfo/descKeys/keyword">
@@ -121,7 +130,7 @@
 			<xsl:for-each select="/Metadata/distInfo/distTranOps">
 				<xsl:for-each select="onLineSrc/protocol">
 					<!-- this field MUST NOT be tokenized, otherwise search fails -->
-					<Field name="protocol" string="{string(.)}" store="true" index="true"/>
+					<Field name="protocol" string="{string(.)}" store="false" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
 	
@@ -129,7 +138,7 @@
 			<!-- === Topic category === -->	
 			
 			<xsl:for-each select="/Metadata/dataIdInfo/tpCat/TopicCatCd/@value">
-				<Field name="topicCat" string="{string(.)}" store="true" index="true"/>
+				<Field name="topicCat" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

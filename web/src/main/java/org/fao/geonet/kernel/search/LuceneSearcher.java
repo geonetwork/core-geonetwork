@@ -53,6 +53,7 @@ import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.document.Fieldable;
@@ -94,10 +95,10 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
+import org.springframework.util.StringUtils;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
-import org.springframework.util.StringUtils;
 
 //==============================================================================
 // search metadata locally using lucene
@@ -239,9 +240,13 @@ public class LuceneSearcher extends MetaSearcher
 					Element md = null;
 	
 					if (fast) {
-						md = getMetadataFromIndex(doc, id, false);
+						md = getMetadataFromIndex(doc, id, false, null);
 					} else if ("index".equals(sFast)) {
-					    md = getMetadataFromIndex(doc, id, true);
+					    // Retrieve information from the index for the record
+						md = getMetadataFromIndex(doc, id, true, _luceneConfig.getDumpFields());
+					    
+						// Retrieve dynamic properties according to context (eg. editable)
+					    gc.getDataManager().buildExtraMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
                     } else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
                         md = gc.getDataManager().getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
@@ -321,7 +326,7 @@ public class LuceneSearcher extends MetaSearcher
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
                     ! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
-                if(!CollectionUtils.isEmpty(requestedGroups)) {
+            	if(!CollectionUtils.isEmpty(requestedGroups)) {
                     for(Element group : requestedGroups) {
                         if(! "".equals(group.getText()) 
                         		&& ! userGroups.contains(group.getText())) {
@@ -1008,8 +1013,16 @@ public class LuceneSearcher extends MetaSearcher
 	}
 
 	//--------------------------------------------------------------------------------
-
-	public static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField){
+	/**
+	 * Retrieve metadata from the index
+	 * 
+	 * @param doc
+	 * @param id
+	 * @param dumpAllField	If dumpFields is null and dumpAllField set to true, dump all index content.
+	 * @param dumpFields	If not null, dump only the fields define in {@link LuceneConfig#getDumpFields()}.
+	 * @return
+	 */
+	public static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, HashMap<String, String> dumpFields){
         // Retrieve the info element
         String root       = doc.get("_root");
         String schema     = doc.get("_schema");
@@ -1034,19 +1047,32 @@ public class LuceneSearcher extends MetaSearcher
         addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
         addElement(info, Edit.Info.Elem.SOURCE,      source);
         
-        List<Fieldable> fields = doc.getFields();
-        for (Iterator<Fieldable> i = fields.iterator(); i.hasNext(); ) {
-          Fieldable field = i.next();
-          String name  = field.name();
-          String value = field.stringValue();
-          
-          // Dump the categories to the info element
-          if (name.equals("_cat")) {
-              addElement(info, Edit.Info.Elem.CATEGORY, value);
-          } else if (dumpAllField) {
-              // And all other field to the root element in dump all mode
-              md.addContent(new Element(name).setText(value));
-          }
+        if (dumpFields != null) {
+  		  	for (Iterator iterator = dumpFields.keySet().iterator(); iterator.hasNext();) {
+				String fieldName = (String) iterator.next();
+				Field[] values = doc.getFields(fieldName);
+				for (Field f : values) {
+					if (f != null) {
+						md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
+					}
+				}
+  		  	}
+        } else {
+        
+	        List<Fieldable> fields = doc.getFields();
+	        for (Iterator<Fieldable> i = fields.iterator(); i.hasNext(); ) {
+	          Fieldable field = i.next();
+	          String name  = field.name();
+	          String value = field.stringValue();
+	          
+	          // Dump the categories to the info element
+	          if (name.equals("_cat")) {
+	              addElement(info, Edit.Info.Elem.CATEGORY, value);
+	          } else if (dumpAllField) {
+	              // And all other field to the root element in dump all mode
+	        	  md.addContent(new Element(name).setText(value));
+	          }
+	       }
         }	
         md.addContent(info);
         return md;

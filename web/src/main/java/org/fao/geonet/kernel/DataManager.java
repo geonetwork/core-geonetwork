@@ -428,6 +428,16 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
 
+            if (owner != null) {
+            	 String userQuery = "SELECT username, surname, name, profile FROM Users WHERE id = ?";
+
+                 Element user = dbms.select(userQuery,  new Integer(owner)).getChild("record");
+
+                 moreFields.add(SearchManager.makeField("_userinfo", 
+                		 user.getChildText("username") + "|" + user.getChildText("surname") + "|" +
+                		 user.getChildText("name") + "|" + user.getChildText("profile")
+                		 , true, false));
+            }
             if (groupOwner != null)
                 moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
 
@@ -2600,12 +2610,7 @@ public class DataManager {
 			addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, gDownload+"");
 		}
 
-		if (accessMan.canEdit(context, id))
-			addElement(info, Edit.Info.Elem.EDIT, "true");
-
-		if (accessMan.isOwner(context, id)) {
-			addElement(info, Edit.Info.Elem.OWNER, "true");
-		}
+		buildExtraMetadataInfo(context, id, info);
 
         if(accessMan.isVisibleToAll(dbms, id)) {
             addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
@@ -2613,7 +2618,7 @@ public class DataManager {
         else {
             addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
         }
-
+        
 		// add owner name
 		query = "SELECT username FROM Users WHERE id = " + owner;
 		Element record = dbms.select(query).getChild("record");
@@ -2674,6 +2679,26 @@ public class DataManager {
 		addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + (port == "80" ? "" : ":" + port) + baseURL);
 		addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en" );
 		return info;
+	}
+
+	/**
+	 * Add extra information about the metadata record
+	 * which depends on context and could not be stored in db or Lucene index.
+	 * 
+	 * @param context
+	 * @param id
+	 * @param dbms
+	 * @param info
+	 * @throws Exception
+	 */
+	public void buildExtraMetadataInfo(ServiceContext context, String id,
+			Element info) throws Exception {
+		if (accessMan.canEdit(context, id))
+			addElement(info, Edit.Info.Elem.EDIT, "true");
+
+		if (accessMan.isOwner(context, id)) {
+			addElement(info, Edit.Info.Elem.OWNER, "true");
+		}
 	}
 
     /**

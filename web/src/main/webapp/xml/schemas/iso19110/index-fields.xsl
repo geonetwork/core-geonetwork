@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" 
+	xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmd="http://www.isotc211.org/2005/gmd" 
+	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco">
 
 	<!-- This file defines what parts of the metadata are indexed by Lucene
 		Searches can be conducted on indexes defined here. 
@@ -21,10 +23,11 @@
 			<!-- === Title === -->
 			<xsl:apply-templates select="/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString">
 				<xsl:with-param name="name" select="'title'"/>
+				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
 
 			<!-- not tokenized title for sorting -->
-			<Field name="_title" string="{string(/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString)}" store="true" index="true"/>
+			<Field name="_title" string="{string(/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString)}" store="false" index="true"/>
 
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -53,11 +56,15 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Responsible organization === -->
-			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer/gmd:CI_ResponsibleParty">
+			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">				
+				<xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
+				<xsl:variable name="logo" select="descendant::*/gmx:FileName/@src"/>
+				
 				<!-- TODO : Add complete xPath -->
-				<Field name="orgName" string="{string(.)}" store="true" index="true"/>
+				<Field name="orgName" string="{string(.)}" store="false" index="true"/>
+				<Field name="responsibleParty" string="{concat($role, '|metadata|', ., '|', $logo)}" store="true" index="false"/>							
 			</xsl:for-each>
-
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === all text === -->
 			<Field name="any" store="false" index="true">

@@ -36,7 +36,7 @@
 			<xsl:variable name="place" select="substring-before($p,')')"/>
 			
 			<xsl:for-each select="/simpledc/dc:identifier">
-				<Field name="identifier" string="{string(.)}" store="true" index="true"/>
+				<Field name="identifier" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
 			<xsl:for-each select="/simpledc/dct:abstract|/simpledc/dc:description">
@@ -61,35 +61,34 @@
 			</xsl:for-each>
 	
 			<xsl:for-each select="/simpledc/dc:relation">
-				<Field name="relation" string="{string(.)}" store="true" index="true"/>
+				<Field name="relation" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
 			<xsl:for-each select="/simpledc/dct:spatial">
-				<Field name="spatial" string="{string(.)}" store="true" index="true"/>
+				<Field name="spatial" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
 			<!-- This is needed by the CITE test script to look for strings like 'a b*'
 				  strings that contain spaces -->
 	
 			<xsl:for-each select="/simpledc/dc:title">
-				<Field name="title" string="{string(.)}" store="false" index="true"/>
+				<Field name="title" string="{string(.)}" store="true" index="true"/>
                 <!-- not tokenized title for sorting -->
-                <Field name="_title" string="{string(.)}" store="true" index="true"/>
+                <Field name="_title" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
-			<xsl:apply-templates select="/simpledc/dc:title">
-				<xsl:with-param name="name" select="'title'"/>
-			</xsl:apply-templates>
-	
-			<xsl:apply-templates select="/simpledc/dc:description">
-				<xsl:with-param name="name" select="'description'"/>
-			</xsl:apply-templates>
 			
-			<Field name="westBL"  string="{$west}" store="true" index="true"/>
-			<Field name="eastBL"  string="{$east}" store="true" index="true"/>
-			<Field name="southBL" string="{$south}" store="true" index="true"/>
-			<Field name="northBL" string="{$north}" store="true" index="true"/>
 			
+			<Field name="westBL"  string="{$west}" store="false" index="true"/>
+			<Field name="eastBL"  string="{$east}" store="false" index="true"/>
+			<Field name="southBL" string="{$south}" store="false" index="true"/>
+			<Field name="northBL" string="{$north}" store="false" index="true"/>
+			<Field name="geoBox" string="{concat($west, '|', 
+				$south, '|', 
+				$east, '|', 
+				$north
+				)}" store="true" index="false"/>
+				
 			<Field name="keyword" string="{$place}" store="true" index="true"/>
 	
 			
@@ -112,7 +111,9 @@
 			
 			<!-- defaults to true -->
 			<Field name="digital" string="true" store="false" index="true"/>
-				
+			
+			<Field name="responsibleParty" string="{concat('creator', '|metadata|', /simpledc/dc:creator, '|')}" store="true" index="false"/>			
+			
 		</Document>
 	</xsl:template>
 	

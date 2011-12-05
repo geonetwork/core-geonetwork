@@ -48,6 +48,51 @@
 		
 		<!-- TODO : add boosting factor per field ? fuzzy factor per field ? -->
 		
+		
+		<!-- 
+			List of fields to dump when using q service. Fields must be stored in the index.
+		-->
+		<dumpFields>
+			<field name="_isTemplate" tagName="isTemplate"/>
+			<field name="_isHarvested" tagName="isHarvested"/>
+			<field name="_popularity" tagName="popularity"/>
+			<field name="_rating" tagName="rating"/>
+			<field name="_displayOrder" tagName="displayOrder"/>
+			<field name="_view" tagName="view"/>
+			<field name="_notify" tagName="notify"/>
+			<field name="_download" tagName="download"/>
+			<field name="_dynamic" tagName="dynamic"/>
+			<field name="_featured" tagName="featured"/>
+			<field name="_owner" tagName="owner"/>
+			<field name="_userinfo" tagName="userinfo"/>			
+			<field name="_isPublishedToAll" tagName="isPublishedToAll"/>
+			<field name="_ownername" tagName="ownername"/>
+			<field name="_cat" tagName="category"/>
+			<field name="_valid" tagName="valid"/>
+			<field name="_valid_schematron-rules-geonetwork" tagName="valid_schematron-rules-geonetwork"/>
+			<field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
+			<field name="_valid_schematron-rules-inspire" tagName="valid_schematron-rules-inspire"/>
+			<field name="_valid_xsd" tagName="valid_xsd"/>
+			<field name="_selected" tagName="selected"/>
+			<field name="_source" tagName="source"/>
+			<field name="_edit" tagName="edit"/>
+			<field name="title" tagName="title"/>
+			<field name="abstract" tagName="abstract"/>
+			<field name="keyword" tagName="keyword"/>
+			<field name="parentUuid" tagName="parentId"/>
+			<field name="image" tagName="image"/>
+			<field name="link" tagName="link"/>
+			<field name="responsibleParty" tagName="responsibleParty"/>
+			<field name="accessConstr" tagName="Constraints"/>
+			<field name="otherConstr" tagName="Constraints"/>
+			<field name="classif" tagName="SecurityConstraints"/>
+			<field name="conditionApplyingToAccessAndUse" tagName="Constraints"/>
+			<field name="datasetLang" tagName="datasetLang"/>
+			<field name="language" tagName="language"/>
+			<field name="spatialRepresentationType" tagName="spatialRepresentationType"/>
+			<field name="serviceType" tagName="serviceType"/>
+			<field name="geoBox" tagName="geoBox"/>
+		</dumpFields>
 	</search>
 
 

@@ -17,9 +17,13 @@
 	<xsl:template match="/">
 		<Document>
 	
-			<xsl:apply-templates select="/metadata/idinfo/citation/citeinfo/title"/>
+			<xsl:apply-templates select="/metadata/idinfo/citation/citeinfo/title">
+				<xsl:with-param name="store" select="'true'"/>
+			</xsl:apply-templates>
 			
-			<xsl:apply-templates select="/metadata/idinfo/descript/abstract"/>
+			<xsl:apply-templates select="/metadata/idinfo/descript/abstract">
+				<xsl:with-param name="store" select="'true'"/>
+			</xsl:apply-templates>
 			
 			<xsl:apply-templates select="/metadata/idinfo/spdom/bounding/westbc" mode="latLon">
 				<xsl:with-param name="name" select="'westBL'"/>
@@ -33,6 +37,14 @@
 			<xsl:apply-templates select="/metadata/idinfo/spdom/bounding/northbc" mode="latLon">
 				<xsl:with-param name="name" select="'northBL'"/>
 			</xsl:apply-templates>
+			
+			<xsl:for-each select="/metadata/idinfo/spdom/bounding">
+				<Field name="geoBox" string="{concat(westbc, '|', 
+					southbc, '|', 
+					eastbc, '|', 
+					northbc
+					)}" store="true" index="false"/>
+			</xsl:for-each>
 			
 			<xsl:apply-templates select="/metadata/idinfo/keywords/theme/themekey">
 				<xsl:with-param name="name" select="'keyword'"/>
@@ -64,7 +76,7 @@
 			<!-- locally searchable fields -->
 			
 			<!-- digital data format defaults to true. Even if that doesn't make a lot of sense -->
-			<Field name="digital" string="true" store="false" index="true" token="false"/>
+			<Field name="digital" string="true" store="false" index="true"/>
 				
             <!-- not tokenized title for sorting -->
             <Field name="_title" string="{string(/metadata/idinfo/citation/citeinfo/title)}" 
@@ -88,7 +100,7 @@
 	<!-- latlon coordinates indexed as numeric -->
 	<xsl:template match="*" mode="latLon">
 		<xsl:param name="name" select="name(.)"/>
-		<Field name="{$name}" string="{string(.)}" store="true" index="true" token="false"/>
+		<Field name="{$name}" string="{string(.)}" store="false" index="true"/>
 	</xsl:template>
 	
 </xsl:stylesheet>

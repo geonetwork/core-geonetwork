@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -105,6 +106,7 @@ public class LuceneConfig {
 
 	private HashSet<String> tokenizedFields = new HashSet<String>();
 	private HashMap<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
+	private HashMap<String, String> dumpFields = new HashMap<String, String>();
 
 	private String defaultAnalyzerClass;
 
@@ -153,8 +155,7 @@ public class LuceneConfig {
 			if (servlet != null) {
 				ConfigurationOverrides.updateWithOverrides(luceneConfigXmlFile, servlet, appPath, luceneConfig);
 			}
-
-
+			
 			// Main Lucene index configuration option
 			Element elem = luceneConfig.getChild("index");
 			String version = elem.getChildText("luceneVersion");
@@ -279,6 +280,26 @@ public class LuceneConfig {
 						elem.getChildren("Param"));
 			}
 
+			// Dumpfields
+			elem = searchConfig.getChild("dumpFields");
+			if (elem != null) {
+				for (Object o : elem.getChildren()) {
+					if (o instanceof Element) {
+						Element e = (Element) o;
+						String name = e.getAttributeValue("name");
+						String tagName = e.getAttributeValue("tagName");
+						if (name == null || tagName == null) {
+							Log.warning(
+									Geonet.SEARCH_ENGINE,
+									"Field must have a name and an tagName attribute, check Lucene configuration file.");
+						} else {
+							dumpFields.put(name, tagName);
+						}
+					}
+				}				
+			}
+
+			
 			// Score
 			elem = searchConfig.getChild("trackDocScores");
 			if (elem != null && elem.getText().equals("true")) {
@@ -419,6 +440,13 @@ public class LuceneConfig {
 	}
 
 	/**
+	 * @return The list of fields to dump from the index on fast search.
+	 */
+	public HashMap<String, String> getDumpFields() {
+		return this.dumpFields;
+	}
+	
+	/**
 	 * 
 	 * @return The list of numeric fields which could not determined using
 	 *         Lucene API.
@@ -536,6 +564,8 @@ public class LuceneConfig {
 				+ "\n");
 		sb.append(" * Numeric fields: "
 				+ getNumericFields().keySet().toString() + "\n");
+		sb.append(" * Dump fields: " + getDumpFields().toString()
+				+ "\n");
 		sb.append(" * Search boost query: " + getBoostQueryClass() + "\n");
 		sb.append(" * Score: \n");
 		sb.append("  * trackDocScores: " + isTrackDocScores() + " \n");

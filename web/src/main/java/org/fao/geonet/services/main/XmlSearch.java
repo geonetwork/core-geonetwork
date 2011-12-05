@@ -77,46 +77,52 @@ public class XmlSearch implements Service
 
 		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		
- 		if (oldSearcher != null)
- 			if (oldSearcher instanceof LuceneSearcher)
- 				((LuceneSearcher)oldSearcher).close();
-		
+//		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+//		
+// 		if (oldSearcher != null)
+// 			if (oldSearcher instanceof LuceneSearcher)
+// 				((LuceneSearcher)oldSearcher).close();
+//		
 		// perform the search and save search result into session
 		MetaSearcher searcher;
-
 		context.info("Creating searchers");
-
-		if (remote)	 searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-			else      searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
-
-		// Check is user asked for summary only without building summary
-		String summaryOnly = Util.getParam(params, Geonet.SearchResult.SUMMARY_ONLY, "0");
-		String sBuildSummary = params.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
-		if (sBuildSummary != null && sBuildSummary.equals("false") && !"0".equals(summaryOnly))
-			elData.getChild(Geonet.SearchResult.BUILD_SUMMARY).setText("true");
 		
-		searcher.search(context, elData, _config);
-		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-
-		if (!"0".equals(summaryOnly)) {
-			return searcher.getSummary();
-		} else {
+		if (remote)	 
+			searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
+		else      
+			searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+		
+		try {
 			
-			elData.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
-			elData.addContent(new Element("from").setText("1"));
-			// FIXME ? from and to parameter could be used but if not
-			// set, the service return the whole range of results
-			// which could be huge in non fast mode ? 
-			elData.addContent(new Element("to").setText(searcher.getSize() +""));
-	
-			Element result = searcher.present(context, elData, _config);
+			// Check is user asked for summary only without building summary
+			String summaryOnly = Util.getParam(params, Geonet.SearchResult.SUMMARY_ONLY, "0");
+			String sBuildSummary = params.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
+			if (sBuildSummary != null && sBuildSummary.equals("false") && !"0".equals(summaryOnly))
+				elData.getChild(Geonet.SearchResult.BUILD_SUMMARY).setText("true");
 			
-			// Update result elements to present
-			SelectionManager.updateMDResult(context.getUserSession(), result);
+			searcher.search(context, elData, _config);
+			session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 	
-			return result;
+			if (!"0".equals(summaryOnly)) {
+				return searcher.getSummary();
+			} else {
+				
+				elData.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
+				elData.addContent(new Element("from").setText("1"));
+				// FIXME ? from and to parameter could be used but if not
+				// set, the service return the whole range of results
+				// which could be huge in non fast mode ? 
+				elData.addContent(new Element("to").setText(searcher.getSize() +""));
+		
+				Element result = searcher.present(context, elData, _config);
+				
+				// Update result elements to present
+				SelectionManager.updateMDResult(context.getUserSession(), result);
+		
+				return result;
+			}
+		} finally {
+			searcher.close();
 		}
 	}
 }

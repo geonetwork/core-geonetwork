@@ -33,7 +33,7 @@
 			<xsl:variable name="west" select="substring-after($coverage/ows:LowerCorner,' ')"/>
 			
 			<xsl:for-each select="/csw:Record/dc:identifier">
-				<Field name="identifier" string="{string(.)}" store="true" index="true"/>
+				<Field name="identifier" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
 			<xsl:for-each select="/csw:Record/dct:abstract">
@@ -58,32 +58,34 @@
 			</xsl:for-each>
 	
 			<xsl:for-each select="/csw:Record/dc:relation">
-				<Field name="relation" string="{string(.)}" store="true" index="true"/>
+				<Field name="relation" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
 			<xsl:for-each select="/csw:Record/dct:spatial">
-				<Field name="spatial" string="{string(.)}" store="true" index="true"/>
+				<Field name="spatial" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 	
 			<!-- This is needed by the CITE test script to look for strings like 'a b*'
 				  strings that contain spaces -->
 	
 			<xsl:for-each select="/csw:Record/dc:title">
-				<Field name="title" string="{string(.)}" store="false" index="true"/>
+				<Field name="title" string="{string(.)}" store="true" index="true"/>
+				<Field name="_title" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
-	
-			<xsl:apply-templates select="/csw:Record/dc:title">
-				<xsl:with-param name="name" select="'title'"/>
-			</xsl:apply-templates>
 	
 			<xsl:apply-templates select="/csw:Record/dc:description">
 				<xsl:with-param name="name" select="'description'"/>
 			</xsl:apply-templates>
 			
-			<Field name="westBL"  string="{$west}" store="true" index="true"/>
-			<Field name="eastBL"  string="{$east}" store="true" index="true"/>
-			<Field name="southBL" string="{$south}" store="true" index="true"/>
-			<Field name="northBL" string="{$north}" store="true" index="true"/>
+			<Field name="westBL"  string="{$west}" store="false" index="true"/>
+			<Field name="eastBL"  string="{$east}" store="false" index="true"/>
+			<Field name="southBL" string="{$south}" store="false" index="true"/>
+			<Field name="northBL" string="{$north}" store="false" index="true"/>
+			<Field name="geoBox" string="{concat($west, '|', 
+				$south, '|', 
+				$east, '|', 
+				$north
+				)}" store="true" index="false"/>
 			
 			<xsl:for-each select="/csw:Record/dc:subject">
 				<xsl:apply-templates select=".">
@@ -111,7 +113,9 @@
 			
 			<!-- defaults to true -->
 			<Field name="digital" string="true" store="false" index="true"/>
-				
+			
+			<Field name="responsibleParty" string="{concat('creator', '|metadata|', /csw:Record/dc:creator, '|')}" store="true" index="false"/>			
+			
 		</Document>
 	</xsl:template>
 	
