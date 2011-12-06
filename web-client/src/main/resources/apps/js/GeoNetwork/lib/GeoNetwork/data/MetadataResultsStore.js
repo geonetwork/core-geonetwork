@@ -243,6 +243,7 @@ GeoNetwork.data.MetadataResultsStore = function(){
         totalProperty: 'summary.count',
         root: 'records',
         fast: 'false',
+        service: 'xml.search',
         fields: [{
             name: 'title',
             convert: getTitle

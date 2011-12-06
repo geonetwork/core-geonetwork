@@ -46,10 +46,8 @@ GeoNetwork.hideLoginLabels = true;
 // Define which type of search to use
 // Old mode (xml.search with lucene, db access and XSL formatting)
 //GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsStore;
-//GeoNetwork.Settings.searchService='xml.search';
 // IndexOnly mode (xml.search with lucene only) - recommended
 GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
-GeoNetwork.Settings.searchService='q';
 
 
 GeoNetwork.MapModule = true;

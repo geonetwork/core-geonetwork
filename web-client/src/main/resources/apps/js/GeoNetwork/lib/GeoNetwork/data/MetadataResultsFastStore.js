@@ -242,6 +242,7 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         totalProperty: 'summary.count',
         root: 'records',
         fast: 'index',
+        service: 'q',
         fields: [{
             name: 'title',
             convert: getTitle

@@ -73,7 +73,7 @@ GeoNetwork.util.SearchTools = {
      */
     doQuery: function(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore){
         OpenLayers.Request.GET({
-            url: cat.services.xmlSearch + "?" + query,
+            url: cat.services.rootUrl + metadataStore.service + "?" + query,
             success: function(result){
             
                 if (updateStore) {

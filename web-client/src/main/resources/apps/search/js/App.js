@@ -654,9 +654,6 @@ GeoNetwork.app = function(){
             
             createHeader();
             
-            // Override xml search service value
-            catalogue.setServiceUrl('xmlSearch', GeoNetwork.Settings.searchService);
-
             // Search form
             searchForm = createSearchForm();
             
