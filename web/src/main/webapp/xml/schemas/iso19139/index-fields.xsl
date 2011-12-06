@@ -538,11 +538,11 @@
 			and number(gmd:eastBoundLongitude/gco:Decimal)
 			and number(gmd:northBoundLatitude/gco:Decimal)
 			">
-			<Field name="westBL" string="{format-number(gco:Decimal, $format)}" store="false" index="true"/>
-			<Field name="southBL" string="{format-number(gco:Decimal, $format)}" store="false" index="true"/>
+			<Field name="westBL" string="{format-number(gmd:westBoundLongitude/gco:Decimal, $format)}" store="false" index="true"/>
+			<Field name="southBL" string="{format-number(gmd:southBoundLatitude/gco:Decimal, $format)}" store="false" index="true"/>
 			
-			<Field name="eastBL" string="{format-number(gco:Decimal, $format)}" store="false" index="true"/>
-			<Field name="northBL" string="{format-number(gco:Decimal, $format)}" store="false" index="true"/>
+			<Field name="eastBL" string="{format-number(gmd:eastBoundLongitude/gco:Decimal, $format)}" store="false" index="true"/>
+			<Field name="northBL" string="{format-number(gmd:northBoundLatitude/gco:Decimal, $format)}" store="false" index="true"/>
 			
 			<Field name="geoBox" string="{concat(gmd:westBoundLongitude/gco:Decimal, '|', 
 				gmd:southBoundLatitude/gco:Decimal, '|', 
