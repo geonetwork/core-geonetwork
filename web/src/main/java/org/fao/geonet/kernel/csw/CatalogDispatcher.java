@@ -67,7 +67,7 @@ public class CatalogDispatcher
 		register(new DescribeRecord());
 		register(new GetCapabilities());
 		register(new GetDomain());
-		register(new GetRecordById());
+		register(new GetRecordById(summaryConfig, luceneConfig));
 		register(new GetRecords(summaryConfig, luceneConfig));
 		register(new Harvest());
 		register(new Transaction(summaryConfig, luceneConfig));
@@ -86,7 +86,7 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public Element dispatch(Element request, ServiceContext context)
+	public Element dispatch(Element request, ServiceContext context, String cswServiceSpecificContraint)
 	{
 		context.info("Received:\n"+Xml.getString(request));
 
@@ -103,7 +103,7 @@ public class CatalogDispatcher
 			if (inSOAP)
 				request = SOAPUtil.unembed(request);
 
-			Element response = dispatchI(request, context);
+			Element response = dispatchI(request, context, cswServiceSpecificContraint);
 
 			if (outSOAP)
 				response = SOAPUtil.embed(response);
@@ -140,7 +140,7 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	private Element dispatchI(Element request, ServiceContext context) throws CatalogException
+	private Element dispatchI(Element request, ServiceContext context, String cswServiceSpecificContraint) throws CatalogException
 	{
 		InputMethod im = context.getInputMethod();
 
@@ -154,6 +154,10 @@ public class CatalogDispatcher
 				throw new OperationNotSupportedEx(operation);
 
 			Log.info(Geonet.CSW, "Dispatching operation : "+ operation);
+
+            if (cswServiceSpecificContraint != null){
+				request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
+			}
 
 			return cs.execute(request, context);
 		}
@@ -173,6 +177,10 @@ public class CatalogDispatcher
 				throw new OperationNotSupportedEx(operation);
 
 			request = cs.adaptGetRequest(params);
+
+            if (cswServiceSpecificContraint != null){
+				request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
+			}
 
 			context.debug("Adapted GET request is:\n"+Xml.getString(request));
 			context.info("Dispatching operation : "+ operation);

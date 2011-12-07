@@ -44,8 +44,25 @@ public class CswDispatcher implements Service
 	//--------------------------------------------------------------------------
 	
 	private Logger logger;
-	
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+
+    /**
+     * The "filter" parameter value is the filter to apply to Lucene query using Lucene query syntax
+     * ( http://lucene.apache.org/java/2_4_0/queryparsersyntax.html).
+     *
+     * Service configuration example with filter" parameter:
+     *
+     * <service name="csw-custom">
+     *      <class name=".services.main.CswDispatcher" >
+     *         <param name="filter" value="+inspirerelated:on"/>
+     *      </class>
+     *  </service>
+     *
+     */
+	private String cswServiceSpecificContraint;
+
+	public void init(String appPath, ServiceConfig config) throws Exception {
+		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -70,9 +87,11 @@ public class CswDispatcher implements Service
 			logger.info("CSW is disabled");
 			Element info  = new Element("info").setText("CSW is disabled");
 			response.addContent(info);
-		} else
-			response = gc.getCatalogDispatcher().dispatch(params, context);
-		
+		} else {
+            logger.info("CSW filter: " + cswServiceSpecificContraint);
+            response = gc.getCatalogDispatcher().dispatch(params, context, cswServiceSpecificContraint);
+        }
+
 		return response;
 	}
 }

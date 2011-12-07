@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+	<services package="org.fao.geonet">
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Catalogue Services for the Web services -->
+
+        <service name="csw">
+            <class name=".services.main.CswDispatcher" />
+        </service>
+
+
+        <!-- Additional CSW entry points can be defined with a filter condition which applies extra criteria
+            to the CSW request. The filter condition should be defined using Lucene query syntax
+            ( http://lucene.apache.org/java/2_4_0/queryparsersyntax.html).
+
+            Defining a new CSW entry point requires:
+
+                1) Update the file WEB-INF/user-profiles.xml to give permissions for the new service.
+                   For example, for csw-custom entry point:
+
+                    <allow service="csw-custom"/>
+
+                2) Restart GeoNetwork
+
+            Some examples:
+
+            <service name="csw-custom">
+                <class name=".services.main.CswDispatcher" >
+                   <param name="filter" value="+inspirerelated:on"/>
+                </class>
+            </service>
+
+            <service name="csw-custom2">
+                <class name=".services.main.CswDispatcher" >
+                   <param name="filter" value="+inspirerelated:on +keyword:Elevation"/>
+                </class>
+            </service>
+
+        -->
+    </services>
+</geonet>

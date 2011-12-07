@@ -25,11 +25,14 @@ package org.fao.geonet.kernel.csw.services;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
@@ -43,6 +46,7 @@ import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
@@ -92,11 +96,14 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		String[] propertyNames = getParameters(request, "PropertyName");
 		String[] parameterNames = getParameters(request, "ParameterName");
 
+
+        String cswServiceSpecificConstraint = request.getChildText(Geonet.Elem.FILTER);
+
 		// PropertyName handled first. 
 		if (propertyNames != null) {
 			List<Element> domainValues;
 			try {
-				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames());
+				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames(), cswServiceSpecificConstraint);
 			} catch (Exception e) {
 	            Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 	            throw new NoApplicableCodeEx(
@@ -150,7 +157,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	public static List<Element> handlePropertyName(String[] propertyNames,
-			ServiceContext context, boolean freq, int maxRecords) throws Exception {
+			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint) throws Exception {
 		 
 		List<Element> domainValuesList = null;
 
@@ -180,7 +187,25 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			
 			IndexReader reader = sm.getIndexReader();
 			try {
-				Query query = CatalogSearcher.getGroupsQuery(context);
+				BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);
+                BooleanQuery query = null;
+
+                // Apply CSW service specific constraint
+                if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
+                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint);
+
+                    query = new BooleanQuery();
+
+                    BooleanClause.Occur occur = LuceneUtils
+                            .convertRequiredAndProhibitedToOccur(true, false);
+
+                    query.add(groupsQuery, occur);
+                    query.add(constraintQuery, occur);
+
+                } else {
+                    query = groupsQuery;
+                }
+
 				Sort   sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true)));
 				CachingWrapperFilter filter = null;
 

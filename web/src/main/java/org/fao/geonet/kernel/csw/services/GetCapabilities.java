@@ -100,7 +100,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		try
 		{
 			Element capabilities = Xml.loadFile(file);
-			setKeywords(capabilities, context);
+
+            String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
+			setKeywords(capabilities, context, cswServiceSpecificContraint);
 			setOperationsParameters(capabilities);
 
             Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
@@ -270,6 +272,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         vars.put("$PROTOCOL", sm.getValue("system/server/protocol"));
 		vars.put("$HOST",    sm.getValue("system/server/host"));
 		vars.put("$PORT",    sm.getValue("system/server/port"));
+        vars.put("$END-POINT", context.getService());
 
         String providerName = sm.getValue("system/site/organization");
         vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName)?providerName:"GeoNetwork opensource");
@@ -390,13 +393,13 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 	 * Lucene index, most popular keywords are added 
 	 * to the document.
 	 */
-	private void setKeywords (Element capabilities, ServiceContext context) {
+	private void setKeywords (Element capabilities, ServiceContext context, String cswServiceSpecificContraint) {
 		List<Element> keywords = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).getChildren("Keywords", Csw.NAMESPACE_OWS);
 
 		List<Element> values;
 		String[] properties = {"keyword"};
 		try {
-			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords());
+			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(), cswServiceSpecificContraint);
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 			// If GetDomain operation failed, just add nothing to the capabilities document template.            

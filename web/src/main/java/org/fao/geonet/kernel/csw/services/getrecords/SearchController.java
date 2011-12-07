@@ -81,11 +81,12 @@ public class SearchController
     public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, OutputSchema outSchema, ElementSetName setName,
                                          Element filterExpr, String filterVersion, Sort sort,
-                                         Set<String> elemNames, int maxHitsFromSummary) throws CatalogException
+                                         Set<String> elemNames, int maxHitsFromSummary,String cswServiceSpecificContraint) throws CatalogException
     {
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, sort, resultType, startPos, maxRecords, maxHitsFromSummary);
+	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, sort,
+            resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 	
 	UserSession session = context.getUserSession();
 	session.setProperty(Geonet.Session.SEARCH_RESULT, _searcher);

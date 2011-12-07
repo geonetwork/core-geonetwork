@@ -1253,12 +1253,7 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Catalogue Services for the Web -->
-
-		<service name="csw">
-			<class name=".services.main.CswDispatcher" />
-		</service>
-
+		<!-- Catalogue Services for the Web configuration -->
 
         <service name="csw.config.get">
             <class name=".guiservices.csw.Get" />
@@ -1432,10 +1427,10 @@
 	<!-- ====================================================================== -->
 
 	<include>config-metadata.xml</include>
-  <include>config-metadata-experimental.xml</include>
-  <include>config-subtemplate.xml</include>
-  <include>config-thesaurus.xml</include>
-  <include>config-harvesting.xml</include>
+    <include>config-metadata-experimental.xml</include>
+    <include>config-subtemplate.xml</include>
+    <include>config-thesaurus.xml</include>
+    <include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
 	<include>config-statistics.xml</include>
@@ -1443,6 +1438,7 @@
 	<include>config-test.xml</include>
 	<include>config-csw.xml</include>
 	<include>config-sru.xml</include>
+    <include>config-csw-servers.xml</include>
 
 	<!-- ====================================================================== -->
 

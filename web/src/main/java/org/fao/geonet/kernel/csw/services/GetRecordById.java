@@ -23,13 +23,17 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 
+import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -43,6 +47,8 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -56,7 +62,12 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 	//---
 	//---------------------------------------------------------------------------
 
-	public GetRecordById() {}
+    private SearchController _searchController;
+
+    public GetRecordById(File summaryConfig, LuceneConfig luceneConfig) {
+        _searchController = new SearchController(summaryConfig, luceneConfig);
+    }
+
 
 	//---------------------------------------------------------------------------
 	//---
@@ -97,7 +108,31 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				if (id == null)
 					continue;
 					//throw new InvalidParameterValueEx("uuid", "Can't find metadata with uuid "+uuid);
-				
+
+
+                // Apply CSW service specific constraint
+                String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
+
+                if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
+                    Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint): " + cswServiceSpecificContraint);
+
+                    cswServiceSpecificContraint = cswServiceSpecificContraint + " +_uuid: " + uuid;
+                    Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
+
+                    Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
+
+                    Pair<Element, Element> results= _searchController.search(context, 0, 1, ResultType.HITS, OutputSchema.OGC_CORE,
+                            ElementSetName.BRIEF,  filterExpr, Csw.FILTER_VERSION_1_1, null, null, 0, cswServiceSpecificContraint);
+
+
+                   Log.debug(Geonet.CSW_SEARCH, "GetRecordById cswServiceSpecificContraint result: " + Xml.getString(results.two()));
+
+                    int numOfResults = Integer.parseInt(results.two().getAttributeValue("numberOfRecordsMatched"));
+
+                    if (numOfResults == 0)
+                        continue;
+                }
+
 				// Check if the current user has access 
 			    // to the requested MD 
 			    Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW); 

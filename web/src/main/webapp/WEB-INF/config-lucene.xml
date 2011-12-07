@@ -155,6 +155,10 @@
 		</Field>
 		-->
 		<Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+
+
+        <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+        <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
 	</fieldSpecificAnalyzer>
 
 	<!-- All Lucene fields that are tokenized must be kept here because it

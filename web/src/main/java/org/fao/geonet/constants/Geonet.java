@@ -115,6 +115,7 @@ public class Geonet
 		public static final String APP_PATH   = "path";
 		public static final String SCHEMA     = "schema";
         public static final String JUSTCREATED = "JUSTCREATED";
+        public static final String FILTER     = "filter";
 	}
 
 	//--------------------------------------------------------------------------
