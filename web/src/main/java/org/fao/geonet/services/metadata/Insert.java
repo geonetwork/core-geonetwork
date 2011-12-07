@@ -153,11 +153,11 @@ public class Insert implements Service
 		// Index
         boolean indexGroup = false;
         dm.indexMetadata(dbms, id.get(0), indexGroup);
-		
+        
 		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
-	        response.addContent(new Element(Params.UUID).setText(String.valueOf(uuid)));
+	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, id.get(0)))));
 
 		return response;
 	};
