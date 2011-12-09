@@ -42,11 +42,11 @@ var GeoNetworkApp = function(){
                 url: url,
                 success: function(response, opts){
                     eval(response.responseText);
-                    var url = String.format("../lib/GeoNetwork/locale/geonetwork-lang-{0}.js", lang);
+                    var url = String.format("../lib/GeoNetwork/lang/{0}.js", lang);
                     
                     Ext.Ajax.request({
                         url: url,
-                        success: this.onSucess,
+                        success: function(response,opts) {this.onSuccess(response,opts,lang)},
                         failure: this.onFailure,
                         scope: app
                     });
@@ -56,12 +56,15 @@ var GeoNetworkApp = function(){
                 scope: app
             });
         },
-        onSuccess: function(response, opts){
+        onSuccess: function(response, opts, lang){
             console.log('loaded');
             eval(response.responseText);
+            OpenLayers.Lang.setCode(lang)
+
             console.log('loaded');
             var viewers = Ext.DomQuery.select('.i18n');
             console.log(viewers);
+            Ext.get("searchForm").remove();
             this.setup();
         },
         onFailure: function(){
@@ -69,7 +72,7 @@ var GeoNetworkApp = function(){
             this.setup();
         },
         setup: function(){
-            Ext.getDom('TITLE').innerHTML = GeoNetwork.Text.TITLE;
+            Ext.getDom('TITLE').innerHTML = OpenLayers.i18n('title');
             
             
             catalogue = new GeoNetwork.Catalogue({
