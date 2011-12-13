@@ -15,7 +15,7 @@
 	<userAttribs>User's attributes</userAttribs>
 	<password>Mot de passe</password>
 	<profile>Profil</profile>
-    <group>Group</group>
+    <group>Groupe</group>
     <defGroup>Default group</defGroup>
 	<site>Site</site>
 	<name>Nom</name>
@@ -31,7 +31,7 @@
 	<userSelfRegistration>Enregistrement libre des internautes</userSelfRegistration>
 	<shib>Authentification via Shibboleth </shib>
 	<path>Chemin</path>
-	<attributes>Shibboleth attribute mapping</attributes>
+	<attributes>Attributs de configuration Shibboleth</attributes>
 	<surname>Nom</surname>
 	<firstname>Prénom</firstname>
 	
@@ -56,7 +56,7 @@
 	<geonetworkdb>Authentification via GeoNetwork</geonetworkdb>
 		
 	<intranet>Intranet</intranet>
-	<network>Network</network>
+	<network>Réseau</network>
 	<netmask>Masque de sous-réseau</netmask>
 
 	<selectionmanager>Résultat de recherches</selectionmanager>
@@ -112,15 +112,15 @@
 	<z3950>Z39.50 Serveur</z3950>
 	<enable>Activé</enable>
 
-	<oai>OAI Provider</oai>
-		<datesearch>Datesearch</datesearch>
-		<datesearchopt>
-			<dsopt label="temporal extent">1</dsopt>
-			<dsopt label="modification date">2</dsopt>
-		</datesearchopt>
+	<oai>Point d'accès OAI</oai>
+	<datesearch>Recherche par date</datesearch>
+	<datesearchopt>
+		<dsopt label="Étendue temporelle">1</dsopt>
+		<dsopt label="Date de modification">2</dsopt>
+	</datesearchopt>
 	
-		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Taille du cache</cachesize>
+	<tokentimeout>Délai d'expiration du jeton de reprise (ResumptionToken)</tokentimeout>
+	<cachesize>Taille du cache</cachesize>
 
 	<xlinkResolver>Résolution des XLink</xlinkResolver>
 
