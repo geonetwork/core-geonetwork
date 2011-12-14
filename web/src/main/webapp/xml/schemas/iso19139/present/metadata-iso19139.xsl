@@ -88,7 +88,7 @@
    -->
   <!-- <xsl:template mode="iso19139" priority="199" match="*[@gco:nilReason='missing' and geonet:element and count(*)=1]"/> -->
 
-  <xsl:template mode="iso19139" priority="199" match="*[geonet:element and count(*)=1]"/>
+  <xsl:template mode="iso19139" priority="199" match="*[geonet:element and count(*)=1 and text()='']"/>
   
   
 	<!-- ===================================================================== -->
