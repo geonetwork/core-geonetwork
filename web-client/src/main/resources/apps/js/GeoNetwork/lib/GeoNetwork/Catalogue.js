@@ -1002,7 +1002,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 OpenLayers.i18n('connectIssueMsg') + this.services.rootUrl + '.');
         } else if (exception) {
             this.checkError();
+            return false;
         } else {
+            // Reset user cookie information
+            var cookie = Ext.state.Manager.getProvider();
+            if (cookie) {
+                cookie.set('user', undefined);
+            }
             return false;
         }
     },
