@@ -394,7 +394,9 @@
 	<create>Dupliquer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
-  <crs code="EPSG:2154">RGF93 / Lambert-93</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
 	<cswTest>Test CSW</cswTest>
 	<cswTestDesc>Interface de tests pour le point d'accès CSW</cswTestDesc>
@@ -580,7 +582,7 @@
 	<max>Maximum</max>
 	<mdRating>Note de la métadonnée</mdRating>
 	<mdUpdateError>Erreur de mise à jour</mdUpdateError>
-	<mefFile>Fichier MEF</mefFile>
+	<mefFile>Fichier MEF ou ZIP</mefFile>
 	<message>Le nom ou mot de passe est incorrect.<br/>Appuyer sur le bouton 'retour'.</message>
 	<messageChanged>La fiche de métadonnées a été modifié par un autre utilisateur. Essayez à nouveau.</messageChanged>
 	<messageDownload>Merci pour votre intérêt. Cliquer sur le bouton pour lancer le téléchargement.</messageDownload>

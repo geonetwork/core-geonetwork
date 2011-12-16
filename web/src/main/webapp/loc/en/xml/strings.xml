@@ -388,6 +388,9 @@
 	<createTip>Create a new metadata from this template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Data quality</dataQualityTab>
