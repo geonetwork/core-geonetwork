@@ -28,18 +28,17 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 
 public class MetadataNotifierTask implements Runnable {
-    private ServiceContext srvContext;
+    private Dbms dbms;
     private GeonetContext gc;
 
-    public MetadataNotifierTask(ServiceContext srvContext, GeonetContext gc) {
-		this.srvContext = srvContext;
-        this.gc = gc;
+  public MetadataNotifierTask(Dbms dbms, GeonetContext gc) {
+			this.dbms = dbms;
+       this.gc = gc;
 	}
 
 
 	public void run() {
 		try {
-            Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 			gc.getMetadataNotifier().updateMetadataBatch(dbms, gc);
 		}
 		catch(Exception x) {

@@ -740,7 +740,14 @@ public class Geonetwork implements ApplicationHandler
 		threadPool.shutDown();
 		
 		logger.info("  - MetadataNotifier ...");
-		metadataNotifierControl.shutDown();
+		try {
+			metadataNotifierControl.shutDown();
+		} catch (Exception e) {
+			logger.error("Raised exception while stopping metadatanotifier");
+			logger.error("  Exception : " +e);
+			logger.error("  Message   : " +e.getMessage());
+			logger.error("  Stack     : " +Util.getStackTrace(e));
+		}
 
 		Server.end();
 	}

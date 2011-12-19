@@ -406,6 +406,7 @@ public class SearchManager
 	public void end() throws Exception
 	{
 		endZ3950();
+		_spatial.end();
 		_optimizerTimer.cancel();
 	}
 
@@ -1324,7 +1325,6 @@ public class SearchManager
                 // generated
                 _writer.getIndex();
             }
-            addShutdownHook();
         }
 
         /**
@@ -1356,27 +1356,19 @@ public class SearchManager
         }
 
         /**
-         * TODO javadoc.
+         * Close spatial index.
          */
-        private void addShutdownHook()
-        {
-            Runtime.getRuntime().addShutdownHook(new Thread()
-            {
-                @Override
-                public void run()
-                {
+				public void end() {
                     _lock.lock();
                     try {
                         _writer.close();
                     } catch (IOException e) {
-                        Log.error(Geonet.SPATIAL,"error writing spatial index: "+e.getMessage());
+                        Log.error(Geonet.SPATIAL,"error closing spatial index: "+e.getMessage());
 												e.printStackTrace();
                     } finally {
                         _lock.unlock();
                     }
-                }
-            });
-        }
+				}
 
         /**
          * TODO javadoc.

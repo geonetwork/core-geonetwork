@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import org.fao.geonet.GeonetContext;
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class MetadataNotifierControl {
     private ServiceContext srvContext;
     private GeonetContext gc;
+		private Dbms dbms;
     private static final ScheduledExecutorService scheduler = Executors
             .newScheduledThreadPool(1);
 
@@ -43,12 +45,13 @@ public class MetadataNotifierControl {
         this.gc = gc;
     }
 
-    public void runOnce() {
+    public void runOnce() throws Exception {
         Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce start");
 
+        dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
         Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
         final MetadataNotifierTask updateTask = new MetadataNotifierTask(
-                srvContext, gc);
+                dbms, gc);
 
         @SuppressWarnings("unused")
         final ScheduledFuture<?> updateTaskHandle = scheduler.schedule(
@@ -56,7 +59,8 @@ public class MetadataNotifierControl {
         Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce finish");
     }
 
-    public void shutDown() {
+    public void shutDown() throws Exception {
+				srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
         scheduler.shutdown();
     }
 
