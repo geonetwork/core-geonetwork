@@ -1139,7 +1139,11 @@
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence (jj.mm.aaaa)</help>
     <condition/>
-    
+  </element>
+  <element name="gmd:date" id="362.0">
+    <label>Date</label>
+    <description/>
+    <condition/>
   </element>
   <element name="gmd:dateOfNextUpdate" id="144.0">
     <label>Date de la prochaine mise à jour</label>
