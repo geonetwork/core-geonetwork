@@ -1249,7 +1249,12 @@
           </xsl:choose>
         </label>
         <xsl:text>&#160;</xsl:text>
-        <xsl:if test="$edit and not($isXLinked)">
+        <!-- srv:operatesOn is an element which contains xlink:href attribute 
+          (due to INSPIRE usage added in r7710) and must be editable in any cases (#705). 
+          The xLink for this element is used for linking to a full
+          XML metadata records and is part of the Jeeves XLink resolver exception (jeeves.xlink.Processor#doXLink).
+        -->
+        <xsl:if test="$edit and (not($isXLinked) or name(.)='srv:operatesOn')">
           <xsl:call-template name="getButtons">
             <xsl:with-param name="addLink" select="$addLink"/>
             <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
