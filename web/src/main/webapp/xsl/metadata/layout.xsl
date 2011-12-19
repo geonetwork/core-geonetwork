@@ -1498,7 +1498,6 @@
                   </xsl:if>
                 </input>
               </label>
-              <xsl:text>&#160;&#160;</xsl:text>
             </xsl:for-each>
 
           </td>

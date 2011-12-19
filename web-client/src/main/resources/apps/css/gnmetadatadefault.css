@@ -165,6 +165,10 @@ label + span {
   padding : 1px 3px;
 }
 
+.metadata * input[type='radio'] {
+  border-width: 0px;
+}
+
 .metadata * select {
   max-width : 200px
 }
