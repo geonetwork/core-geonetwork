@@ -463,11 +463,14 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
      *  Create a map panel to have a quick preview of the published datasets
      */
     getGeoPublicationMapPanel: function(){
-    
-        var map = new OpenLayers.Map(), i;
+        var options = {
+                projection: GeoNetwork.map.PROJECTION,
+                theme: null,
+                maxExtent: GeoNetwork.map.EXTENT
+            };
+        var map = new OpenLayers.Map(options), i;
         this.geoPublicationMapPanel = new GeoExt.MapPanel({
             id: 'mapPanel',
-            extent: this.extent,
             layers: GeoNetwork.map.BACKGROUND_LAYERS || [],
             //title : OpenLayers.i18n('mapPreview'),
             map: map,
@@ -485,12 +488,23 @@ GeoNetwork.editor.GeoPublisherPanel = Ext.extend(Ext.form.FormPanel, {
      */
     addLayer: function(title, name){
         // Try to display layer on map preview
+        // FIXME : Remove getCmp call
         var map = Ext.getCmp('mapPanel').map;
+
+        // reproject if needed extent according to map projection
+        var extent = new OpenLayers.Bounds.fromArray(this.extent);
+        if (GeoNetwork.map.PROJECTION !== 'EPSG:4326') {
+            extent.transform(new OpenLayers.Projection('EPSG:4326'), 
+                             new OpenLayers.Projection(GeoNetwork.map.PROJECTION));
+        }
+        
+        // Set extent if defined, if not default to global catalogue extent
+        map.zoomToExtent(extent || GeoNetwork.map.EXTENT);
         this.cleanLayerPreview();
         var layer = new OpenLayers.Layer.WMS(title, this.geoserverStore.getById(this.nodeId).get('wmsUrl'), {
             transparent: 'true',
             layers: name
-        });
+        }, {singleTile: true});
         
         map.addLayer(layer);
     },

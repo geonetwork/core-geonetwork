@@ -617,6 +617,7 @@ GeoNetwork.app = function(){
     function createHeader(){
         var info = catalogue.getInfo();
         Ext.getDom('title').innerHTML = '<img class="catLogo" src="../../images/logos/' + info.siteId + '.gif"/>&nbsp;' + info.name;
+        document.title = info.name;
     }
     
     // public space:
