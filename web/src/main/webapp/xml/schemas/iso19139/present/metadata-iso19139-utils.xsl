@@ -115,7 +115,7 @@
         If failed, return uuid. -->
     <xsl:template name="getMetadataTitle">
         <xsl:param name="uuid"/>
-    	<xsl:variable name="metadataTitle" select="java:getIndexField(string(substring(/root/gui/url, 2)), string($uuid), '_title', string(/root/gui/language))"/>
+    	<xsl:variable name="metadataTitle" select="java:getIndexField(string(substring(/root/gui/url, 2)), string($uuid), 'title', string(/root/gui/language))"/>
             
         <xsl:choose>
             <xsl:when test="$metadataTitle=''">
