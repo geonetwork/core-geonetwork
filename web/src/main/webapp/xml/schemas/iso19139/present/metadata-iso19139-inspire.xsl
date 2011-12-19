@@ -306,7 +306,7 @@
 					</xsl:apply-templates>
 					<!-- temporal extent -->
 					
-					<xsl:for-each select="gmd:extent/gmd:EX_Extent">
+					<xsl:for-each select="*:extent/gmd:EX_Extent">
 						<xsl:apply-templates mode="complexElement"
 							select="
 							gmd:temporalElement
