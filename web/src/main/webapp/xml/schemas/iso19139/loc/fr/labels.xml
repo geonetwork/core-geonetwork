@@ -766,7 +766,7 @@
     <description>Classe destinée à la description d'un élément de métadonnées URL libre multilingue</description>
     <help>Le type de données PT_FreeText permet de gérer des informations textuelles en plusieurs langues.</help>
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    Cet élément de métadonnée fournit un lien vers la ressource décrite elle-même, et/ou vers des informations complémentaires la concernant.
+    Le localisateur de la ressource fournit un lien vers la ressource décrite elle-même, et/ou vers des informations complémentaires la concernant.
     <ul>
     <li>Le domaine de valeur de cet élément est une chaîne de caractères couramment exprimée sous forme d’un localisateur uniforme de la ressource (URL).</li>
     <li>Cet élément répétable est obligatoire s’il existe une URL permettant d’obtenir davantage d’informations sur la ressource et/ou un accès à des services connexes.</li>
@@ -1577,13 +1577,13 @@
     Description du ou des concepts en langage machine spécifiant la représentation des objets de données dans un enregistrement, un fichier, un message, un dispositif de stockage ou un canal de transmission.
     Cet élément est obligatoire (pour les données de l’Annexe 1) et répétable.
     <p>
-    Les formats d’encodage par défaut d’INSPIRE sont ISO 19136 (GML 3.2.1) et ISO/TS 19139les formats associés. Les formats d’encodage courants sont Shape, MIF-MID, etc.
+    Les formats d’encodage par défaut d’INSPIRE sont ISO 19136 (GML 3.2.1) et les formats associés. Les formats d’encodage courants sont Shape, MIF-MID, etc.
     Cet élément de métadonnée fait écho des spécifications de données INSPIRE, qui peuvent définir un encodage particulier selon les thèmes.
     </p>
     ]]></help>
     <help for="france"><![CDATA[<b>Recommandations nationales :</b>
     <ul>
-    <li>Préciser en priorité le format d’échange (= format de distribution).</li>
+    <li>Préciser en priorité le format d’échange (= format de distribution dans l'ISO).</li>
     <li>Il est obligatoire de fournir au moins le nom du format d’encodage, et facultativement la version du format. Par exemple : nom : GML, version : 3.2.1.</li>
     <li>Des données produites selon les spécifications de données INSPIRE seront par défaut encodées selon ISO 19136 (GML) ou ISO/TS 19139. Les spécifications de données spécifieront si d’autres formats d’encodage sont acceptables selon les thèmes.</li>
     <li>Dans le cadre de la mise en place des métadonnées, il est reconnu que les données décrites ne sont pas nécessairement déjà encodées selon les règles des spécifications de données INSPIRE. Dans ce cas, le format utilisé doit être décrit selon la recommandation 2.</help>
@@ -2150,7 +2150,7 @@
   <element name="gmd:language" id="3.0" context="gmd:MD_Metadata">
     <label>Langue</label>
     <description>Langue utilisée pour documenter les métadonnées</description>
-    <help>Langue utilisée pour la documentation des métadonnées. La sélection s'opère dans la liste des langues ISO. Exemple : "fr" pour le français, "de" pour l'allemand, "en" pour l'anglais, "it" pour l'italien, "rm" pour le romanche, ...</help>
+    <help>La sélection s'opère dans la liste des langues ISO. Exemple : "fr" pour le français, "de" pour l'allemand, "en" pour l'anglais, "it" pour l'italien, "rm" pour le romanche, ...</help>
     
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>C’est la langue utilisée dans les métadonnées.
     <ul>
