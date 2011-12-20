@@ -1272,11 +1272,7 @@
     <help>Jeu de données auquel les informations se rapportent.</help>
     <condition/>
   </element>
-  <element name="gmd:date" id="362.0">
-    <label>Date</label>
-    <description/>
-    <condition/>
-  </element>
+  
   <!--<element name="gmd:date" id="570.0">
     <label>Date de la dernière actualisation</label>
     <description>Date de la dernière actualisation</description>
@@ -1298,7 +1294,7 @@
     <condition/>
     
   </element>
-  <element name="gmd:date" id="362.0" context="gmd:CI_Citation">
+  <element name="gmd:date" id="362.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date</label>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création, publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe du même nom.</help>
@@ -1346,12 +1342,10 @@
     <condition/>
     
   </element>
-  <element name="gmd:date" id="394.0" context="gmd:CI_Date">
+  <element name="gmd:date" id="362.0">
     <label>Date</label>
-    <description>Date de référence pour la ressource en question</description>
-    <help>Date de référence (jj.mm.aaaa)</help>
+    <description/>
     <condition/>
-    
   </element>
   <element name="gmd:dateOfNextUpdate" id="144.0">
     <label>Date de la prochaine mise à jour</label>
