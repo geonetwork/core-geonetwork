@@ -221,6 +221,10 @@
 													<xsl:value-of
 														select="//GetMap/DCPType/HTTP/Get/OnlineResource/@xlink:href" />
 												</xsl:when>
+                                                <xsl:when test="name(.)='WMS_Capabilities'">
+													<xsl:value-of
+														select="//wms:GetMap/wms:DCPType/wms:HTTP/wms:Get/wms:OnlineResource/@xlink:href" />
+												</xsl:when>
 												<xsl:otherwise>
 													<xsl:value-of
 														select="//wcs:GetCoverage/wcs:DCPType/wcs:HTTP/wcs:Get/wcs:OnlineResource/@xlink:href" />
@@ -232,6 +236,10 @@
 										<xsl:choose>
 											<xsl:when test="name(.)='WMT_MS_Capabilities'">
 												<gco:CharacterString>OGC:WMS-1.1.1-http-get-map
+												</gco:CharacterString>
+											</xsl:when>
+                                            <xsl:when test="name(.)='WMS_Capabilities'">
+												<gco:CharacterString>OGC:WMS-1.3.0-http-get-map
 												</gco:CharacterString>
 											</xsl:when>
 											<xsl:when test="$ows='true'">
@@ -261,6 +269,9 @@
 												</xsl:when>
 												<xsl:when test="name(.)='WMT_MS_Capabilities'">
 													<xsl:value-of select="//Layer[Name=$Name]/Title" />
+												</xsl:when>
+                                                <xsl:when test="name(.)='WMS_Capabilities'">
+													<xsl:value-of select="//wms:Layer[wms:Name=$Name]/wms:Title" />
 												</xsl:when>
 												<xsl:otherwise>
 													<xsl:value-of
