@@ -327,6 +327,28 @@
 				</xsl:with-param>
 			</xsl:call-template>
 
+
+			<!-- Reference system info -->
+			<xsl:call-template name="complexElementGuiWrapper">
+				<xsl:with-param name="title" select="/root/gui/schemas/iso19139/labels/element[@name='gmd:referenceSystemInfo']/label"/>
+				<xsl:with-param name="id" select="generate-id(/root/gui/schemas/iso19139/labels/element[@name='gmd:referenceSystemInfo']/label)"/>
+				<xsl:with-param name="content">
+					
+					<xsl:for-each select="../../gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
+						<xsl:apply-templates mode="elementEP" select="gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code
+							|gmd:referenceSystemIdentifier/gmd:RS_Identifier/geonet:child[string(@name)='code']
+							">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>
+					</xsl:for-each>
+					
+				</xsl:with-param>
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="edit" select="$edit"/>
+			</xsl:call-template>
+			
+
 			<!-- Quality and validity  -->
 			<xsl:call-template name="complexElementGuiWrapper">
 				<xsl:with-param name="title"
