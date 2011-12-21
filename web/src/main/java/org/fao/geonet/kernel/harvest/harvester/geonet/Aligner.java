@@ -467,8 +467,8 @@ public class Aligner
 		{
 			int opId = dataMan.getAccessManager().getPrivilegeId(opName);
 
-			//--- allow only: view, dynamic, featured
-			if (opId == 0 || opId == 5 || opId == 6)
+			//--- allow only: view, download, dynamic, featured
+			if (opId == 0 || opId == 1 || opId == 5 || opId == 6)
 			{
 				log.debug("       --> "+ opName);
 				dataMan.setOperation(dbms, id, groupId, opId +"");
