@@ -254,10 +254,10 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
      *  ``Object`` The default mapOptions. By default WGS84 world based map.
      */
     /** api: property[width] 
-     *  ``Number`` Width default to 210 // TODO Remove ?
+     *  ``Number`` Width default to 290 // TODO Remove ?
      */
     /** api: property[height] 
-     *  ``Number`` Height default to 210 // TODO Remove ?
+     *  ``Number`` Height default to 180 // TODO Remove ?
      */
     /** api: property[restrictToMapExtent] 
      *  ``Boolean`` Define if extent should be restricted to map extent
@@ -271,8 +271,8 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
      */
     defaultConfig : {
         id : 'geometryMap', // FIXME : This is hardcoded 
-        width : 270,
-        height : 270,
+        width: 290,
+        height: 180,
         border : false,
         activated : false,
         restrictToMapExtent : false,
@@ -281,10 +281,9 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
     /** private: method[initComponent] 
      *  Initializes the component
      */
-    initComponent : function(config) {
-        Ext.apply(this, config);
+    initComponent : function() {
         Ext.applyIf(this, this.defaultConfig);
-
+        
         var options = this.mapOptions || {
             projection: "EPSG:4326",
             units: "degrees",

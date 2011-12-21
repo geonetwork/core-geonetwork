@@ -412,7 +412,7 @@ GeoNetwork.Lang.fr = {
     'runSearch': 'Lancer la recherche.',
     'focusOnAny': 'Déplacer le curseur sur le critère plein texte.',
     'hideSearchForm': 'Afficher ou cacher le formulaire de recherche.',
-    'switchMode': 'Basculer de mode de visualisation.',
+    'switchMode': 'Changer de mode de visualisation.',
     'resetSearchForm': 'Réinitialiser le formulaire de recherche.',
     'focusOnLogin': 'Déplacer le curseur sur le formulaire de connexion.',
     'displayInfoPanel': 'Afficher la page d\'information.',

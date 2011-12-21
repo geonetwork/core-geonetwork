@@ -49,6 +49,9 @@ GeoNetwork.hideLoginLabels = true;
 // IndexOnly mode (xml.search with lucene only) - recommended
 GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 
+// Latest update info query
+GeoNetwork.Settings.latestQuery = "from=1&to=6&sortBy=changeDate&fast=index";
+GeoNetwork.Settings.latestTpl = GeoNetwork.Templates.THUMBNAIL;
 
 GeoNetwork.MapModule = true;
 GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];

@@ -305,7 +305,7 @@ GeoNetwork.app = function(){
         var formItems = [];
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
                     GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true, 
-                    GeoNetwork.searchDefault.activeMapControlExtent), adv);
+                    GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}), adv);
         // Add advanced mode criteria to simple form - end
         
         
@@ -485,6 +485,7 @@ GeoNetwork.app = function(){
         
         if (success) {
             createMainTagCloud();
+            createLatestUpdate();
         } else {
             Ext.get('infoPanel').getUpdater().update({url:'home_en.html'});
             Ext.get('helpPanel').getUpdater().update({url:'help_en.html'});
@@ -547,7 +548,24 @@ GeoNetwork.app = function(){
         
         return tagCloudView;
     }
-    
+    /**
+     * Create latest metadata panel.
+     */
+    function createLatestUpdate(){
+        var latestView = new GeoNetwork.MetadataResultsView({
+            catalogue: catalogue,
+            autoScroll: true,
+            tpl: GeoNetwork.Settings.latestTpl
+        });
+        latestView.setStore(GeoNetwork.Settings.mdStore());
+        new Ext.Panel({
+            border: false,
+            bodyCssClass: 'md-view',
+            items: latestView,
+            renderTo: 'latest'
+        });
+        catalogue.kvpSearch(GeoNetwork.Settings.latestQuery, null, null, null, true, latestView.getStore());
+    }
     /**
      * Extra tag cloud to displayed current search summary TODO : not really a
      * narrow your search component.

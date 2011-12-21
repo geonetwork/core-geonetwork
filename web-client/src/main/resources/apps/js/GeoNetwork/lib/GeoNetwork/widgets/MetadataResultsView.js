@@ -38,7 +38,10 @@ Ext.namespace('GeoNetwork');
  *      * with :class:`GeoNetwork.Catalogue`
  *      * with :class:`GeoNetwork.MetadataResultsToolBar` if provided
  *
- *
+ *  TODO:
+ *  
+ *      * Add links to the contextual menu of a record
+ *  
  */
 GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     /** api: config[catalogue] 
@@ -134,7 +137,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
          */
         dblclick: {
             fn: function(dv, idx, node, e){
-                if (this.maps) {
+                if (this.maps.length !== 0) {
                     var record = this.getStore().getAt(idx);
                     var uuid = record.get('uuid');
                     this.zoomTo(uuid);
@@ -148,7 +151,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             fn: function(dv, idx, node, e){
                 var i, j;
                 
-                if (this.maps) {
+                if (this.maps.length !== 0) {
                     var record = this.getStore().getAt(idx);
                     var uuid = record.get('uuid');
                     
@@ -157,8 +160,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         if (l.features) {
                             for (i = 0; i < l.features.length; i++) {
                                 if (uuid === l.features[i].attributes.id) {
-                                    l.drawFeature(l.features[i], this.layer_style_hover);
-                                    this.hover_feature[j] = l.features[i];
+                                    if (!this.hover_feature[j]) {
+                                        l.drawFeature(l.features[i], this.layer_style_hover);
+                                        this.hover_feature[j] = l.features[i];
+                                    }
                                     continue;
                                 }
                             }
@@ -176,14 +181,12 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 }
                 this.acMenu = undefined;
                 
-                if (this.maps) {
-                    for (i = 0; i < this.maps.length; i++) {
-                        if (this.hover_feature[i]) {
-                            var l = this.maps[i].layer;
-                            l.drawFeature(this.hover_feature[i], this.layer_style);
-                            this.hover_feature[i] = null;
-                            continue;
-                        }
+                for (i = 0; i < this.maps.length; i++) {
+                    if (this.hover_feature[i]) {
+                        var l = this.maps[i].layer;
+                        l.drawFeature(this.hover_feature[i], this.layer_style);
+                        this.hover_feature[i] = null;
+                        continue;
                     }
                 }
             }
@@ -202,16 +205,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         this.acMenu.on('click', function(){
             this.createMenu(idx, this);
             this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
-        }
-.bind(this));
+        }.bind(this));
         this.acMenu.show();
     },
     createMenu: function(id, dv){
-        // var record = this.getStore().getAt(id);
-        // TODO var isEditable = record.get('edit') === 'true' ? true : false; // FIXME : do not allow edit on harvested records ? 
-        // var isHarvested = record.get('isharvested') === 'y' ? true : false;
-        // var harvesterType = record.get('harvestertype');
-        // is login ?
         var record = this.getStore().getAt(id);
         
         if (!this.contextMenu) {
@@ -261,7 +258,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         
         GeoNetwork.MetadataResultsView.superclass.initComponent.call(this);
         
-        this.store = this.catalogue.metadataStore;
+        this.setStore(this.catalogue.metadataStore);
         this.initStyle();
         
         if (this.maps) {
@@ -280,13 +277,23 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             this.maps = [];
         }
         // TODO : only register if one map available ?
+       
+        this.on('selectionchange', this.selectionChange);
+    },
+    /** api: method[setStore] 
+     *  :param store: ``GeoNetwork.data.MetadataResultsStore`` A metadata store
+     *
+     *  Set metadata view store.
+     */
+    setStore: function(store){
+        this.store = store;
+        
         // Register events on metadata results store
         this.getStore().on({
             "load": this.resultsLoaded,
             "clear": this.destroyMetadataBbox,
             scope: this
         });
-        this.on('selectionchange', this.selectionChange);
     },
     /** api: method[addMap] 
      *  :param map: ``OpenLayers.Map`` An OpenLayers map
@@ -406,9 +413,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         this.drawMetadataBbox(view, records, options);
         this.contextMenu = undefined;
         this.initRatingWidget();
-        this.initSelector();
         //this.initMenu();
-        //this.initSelection(records);
     },
     /** private: method[drawMetadataBbox]
      *
@@ -476,15 +481,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             }
         }
     },
-    /** private: method[initSelector]
-     *  After a search, retrieve link div and init menu also available via context menu.
-     */
-    initSelector: function(){
-        //        var checkboxes = Ext.DomQuery.select('input.selector');
-        //        for (var idx = 0; idx < checkboxes.length; ++idx) {
-        //            checkboxes[i].setAttribute('onclick', '');
-        //        }
-    },
     selectAll: function(){
         var checkboxes = Ext.DomQuery.select('input.selector'), idx;
         for (idx = 0; idx < checkboxes.length; ++idx) {
@@ -508,22 +504,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         for (idx = 0; idx < checkboxes.length; ++idx) {
             checkboxes[idx].checked = false;
         }
-    },
-    /** private: method[initSelection]
-     *  After a search, initialize selected records
-     *
-     *  TODO : removed as dataview selection model is not used
-     */
-    initSelection: function(records){
-        var selection = [];
-        Ext.each(records, function(r){
-            var isSelected = r.get('selected');
-            if (isSelected === 'true') {
-                selection.push(r);
-            }
-        });
-        this.select(selection);
-        this.on('selectionchange', this.selectionChange);
     },
     selectionChange: function(dv, nodes){
         /* Paging should not be considered as a selectionchange */

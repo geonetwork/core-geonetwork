@@ -48,7 +48,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  Create a simple form
      */
-    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist){
+    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist, mapPanelOptions){
         var fields = [];
         if (services) {
             fields.push(new GeoNetwork.form.OpenSearchSuggestionTextField({
@@ -79,7 +79,7 @@ GeoNetwork.util.SearchFormTools = {
         }
         
         if (layers) {
-            fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent));
+            fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent, mapPanelOptions));
         }
         
         fields.push(GeoNetwork.util.SearchFormTools.getOptions());
@@ -227,6 +227,11 @@ GeoNetwork.util.SearchFormTools = {
     },
     /** api:method[getSimpleMap]
      *  
+     *  :param layers: An array of layers to be added to the map.
+     *  :param mapOptions: OpenLayers map options.
+     *  :param activeMapControlExtent: Turn on map extent criteria. Default is false.
+     *  :param panelConfig: MapPanel configuration options.
+     *  
      *  :return: An array of component with a hidden geometry field
      *    and a simple map.
      *
@@ -234,7 +239,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  TODO : Add more options ? See GeometryMapField
      */
-    getSimpleMap: function(layers, mapOptions, activeMapControlExtent){
+    getSimpleMap: function(layers, mapOptions, activeMapControlExtent, panelConfig){
         var fields = [], mapLayers = [], i;
         
         var geomField = new Ext.form.TextField({
@@ -251,12 +256,16 @@ GeoNetwork.util.SearchFormTools = {
             xtype: 'gn_geometrymapfield',
             geometryFieldId: 'geometry',
             id: 'geometryMap',
-            width : 290,
             layers: mapLayers,
             mapOptions: mapOptions,
             activated: activeMapControlExtent
             // restrictToMapExtent: true
         };
+        
+        if (panelConfig) {
+            Ext.applyIf(geomWithMapField, panelConfig);
+        }
+        
         fields.push(geomField, geomWithMapField);
         
         return fields;
