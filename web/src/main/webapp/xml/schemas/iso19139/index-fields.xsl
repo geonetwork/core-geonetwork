@@ -272,7 +272,7 @@
 				</xsl:for-each>
 			</xsl:for-each>
 			
-			<xsl:for-each select="//srv:SV_CouplingType/srv:code/@codeListValue">
+			<xsl:for-each select="//srv:SV_CouplingType/@codeListValue">
 				<Field  name="couplingType" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 			
