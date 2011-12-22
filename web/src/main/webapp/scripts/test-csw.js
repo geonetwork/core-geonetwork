@@ -147,6 +147,9 @@ function loginAndRun() {
 	OpenLayers.Util.applyDefaults(opts, {
 		success : function(response) {
 			document.getElementById('response').value = response.responseText;
+        },
+		failure : function(response) {
+			document.getElementById('response').value = "ERROR PROCESSING REQUEST: \n\n" + response.responseText;
 		}
 	});
 	var request = OpenLayers.Request.GET(opts);
