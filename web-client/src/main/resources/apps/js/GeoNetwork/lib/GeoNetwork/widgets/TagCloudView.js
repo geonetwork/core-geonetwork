@@ -100,15 +100,12 @@ GeoNetwork.TagCloudView = Ext.extend(Ext.DataView, {
     initComponent: function(){
         GeoNetwork.TagCloudView.superclass.initComponent.call(this);
         
-        var mds = this.catalogue.metadataStore, 
-        	fast = "fast=" + (mds.fast ? mds.fast : GeoNetwork.util.SearchTools.fast);
-        
         this.tpl = this.tpl || new Ext.XTemplate(
             '<ul>', 
                 '<tpl for=".">', 
                     '<li class="tag-cloud tag-cloud-{class}">',
                         // TODO : hitsPerPage should take in account the current search form
-                        '<a href="#" onclick="javascript:catalogue.kvpSearch(\'' + fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
+                        '<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=' + this.catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
                              this.searchField + 
                             '={value}\', ' + this.onSuccess + ',' + this.onFailure + 
                             ', null);" alt="{value}" title="{count} records">{value}</a>', 
@@ -121,7 +118,6 @@ GeoNetwork.TagCloudView = Ext.extend(Ext.DataView, {
             // run a query in fast mode to retrieve a summary
             this.catalogue.kvpSearch(this.query, null, null, null, true);
         }
-        // this.store.root = this.root;
     }
 });
 
