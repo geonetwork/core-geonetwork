@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xalan="http://xml.apache.org/xalan" exclude-result-prefixes="xalan"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
 
@@ -13,6 +13,12 @@
     <xsl:param name="schema"/>
     
     <xsl:choose>
+    <!-- Is a localized element -->
+      <xsl:when test="contains($schema, 'iso19139') and gmd:PT_FreeText">
+        <xsl:apply-templates mode="localizedElemFop" select=".">
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:apply-templates>
+      </xsl:when>
       <!-- has children or attributes, existing or potential -->
       <xsl:when
         test="*[namespace-uri(.)!=$geonetUri]|*/@*|geonet:child|geonet:element/geonet:attribute">
@@ -42,6 +48,28 @@
       </xsl:otherwise>
 
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template mode="localizedElemFop" match="*">
+    <xsl:param name="schema"/>
+	<xsl:variable name="title">
+		<xsl:call-template name="getTitle">
+			<xsl:with-param name="name" select="name(.)" />
+			<xsl:with-param name="schema" select="$schema" />
+		</xsl:call-template>
+	</xsl:variable>
+	<xsl:variable name="UPPER">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
+	<xsl:variable name="LOWER">abcdefghijklmnopqrstuvwxyz</xsl:variable>
+	<xsl:variable name="text">
+		<xsl:call-template name="translatedString">
+			<xsl:with-param name="schema" select="$schema" />
+			<xsl:with-param name="langId" select="concat('#',translate(substring(/root/gui/language,1,2),$LOWER,$UPPER))" />
+		</xsl:call-template>
+	</xsl:variable>
+	<xsl:call-template name="info-rows">
+		<xsl:with-param name="label" select="$title" />
+		<xsl:with-param name="value" select="$text" />
+	</xsl:call-template>
   </xsl:template>
 
   <xsl:template mode="simpleElementFop" match="*">
