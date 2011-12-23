@@ -89,4 +89,9 @@ public class LuceneIndexReaderFactory {
 														// and call releaseReader
     currentReader = newReader;
   }
+
+  public synchronized boolean isUpToDateReader(IndexReader reader) throws IOException, InterruptedException {
+    maybeReopen();
+    return reader == currentReader;
+  }
 }

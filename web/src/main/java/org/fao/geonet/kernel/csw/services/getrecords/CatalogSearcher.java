@@ -366,7 +366,7 @@ public class CatalogSearcher {
 		// and get a (reopened) indexreader
 		String requestId = Util.scramble(Xml.getString(filterExpr));
 		String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
-		if ((sessionRequestId != null && !sessionRequestId.equals(requestId)) || sessionRequestId == null) {
+		if ((sessionRequestId != null && !sessionRequestId.equals(requestId)) || sessionRequestId == null || !sm.isUpToDateReader(_reader)) {
 			Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
 			synchronized(this) {
 				if (_reader != null) sm.releaseIndexReader(_reader);
