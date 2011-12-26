@@ -363,9 +363,16 @@ public class ConfigurationOverrides {
     }
 
     private static List<Content> xpathLookup(Element configRoot, String xpath) throws JDOMException {
-        List<?> objects = Xml.selectNodes(configRoot, xpath);
+        // Register all namespaces which may be required to solve xpath
+        ArrayList<Namespace> namespaces = new ArrayList<Namespace>();
+        for (Iterator iterator = configRoot.getAdditionalNamespaces().iterator(); iterator.hasNext();) {
+            Namespace ns = (Namespace) iterator.next();
+            namespaces.add(ns);
+        }
+        
+        List<?> objects = Xml.selectNodes(configRoot, xpath, namespaces);
         List<Content> elements = new ArrayList<Content>();
-
+        
         for (Object object : objects) {
             if (object instanceof Content) {
                 elements.add((Element) object);
