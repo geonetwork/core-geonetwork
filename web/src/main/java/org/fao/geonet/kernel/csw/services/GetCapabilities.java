@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw.services;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ConfigurationOverrides;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -100,6 +101,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		try
 		{
 			Element capabilities = Xml.loadFile(file);
+			ConfigurationOverrides.updateWithOverrides(file, context.getServlet(), context.getAppPath(), capabilities);
 
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 			setKeywords(capabilities, context, cswServiceSpecificContraint);
