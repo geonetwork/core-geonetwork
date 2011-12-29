@@ -12,6 +12,8 @@
 	<xsl:include href="metadata-utils.xsl"/>
 	<xsl:include href="metadata-controls.xsl"/>
 	
+	<xsl:variable name="flat" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat"/>
+	 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- main schema switch -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -121,7 +123,8 @@
 		
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
 		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
-		<xsl:if test="$currTab!='simple' and (geonet:choose or name($prevBrother)!=$name) or $subtemplates"> 
+		<xsl:if test="not($flat)">
+		  <xsl:if test="(geonet:choose or name($prevBrother)!=$name) or $subtemplates"> 
 			<xsl:if test="(geonet:choose 
 							or name($prevBrother)!=$name 
 							or $exception) 
@@ -195,6 +198,7 @@
 					<xsl:with-param name="id"     	select="$id"/>
 				</xsl:call-template>
 			</xsl:if>
+		  </xsl:if>
 		</xsl:if>
 	</xsl:template>
 	
