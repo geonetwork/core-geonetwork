@@ -3,9 +3,10 @@
     xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
     
-    <!-- Usage: 
+    <!-- 
+      Usage: 
         anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS  
-        * will remove MYLOCALNETWORK:FILEPATH gmd:onLine element
+        * will remove gmd:onLine element with a protocol which starts with MYLOCALNETWORK:FILEPATH.
         * will replace all email ending with @organisation.org by gis@organisation.org
         * will remove all gmd:descriptiveKeywords having MYORGONLYTHEASURUS in their thesaurus name.
     -->
@@ -36,7 +37,7 @@
     
     <!-- Remove all online resource with custom protocol -->
     <xsl:template
-        match="gmd:onLine[$protocol != '' and gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString=$protocol]"
+        match="gmd:onLine[$protocol != '' and starts-with(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString, $protocol)]"
         priority="2"/>
     
     <!-- Remove all descriptive keyword with a thesaurus from $thesaurus -->
