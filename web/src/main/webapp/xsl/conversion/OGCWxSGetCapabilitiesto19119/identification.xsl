@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns    ="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet version="2.0" xmlns    ="http://www.isotc211.org/2005/gmd"
 										xmlns:gco="http://www.isotc211.org/2005/gco"
 										xmlns:gts="http://www.isotc211.org/2005/gts"
 										xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -522,24 +522,32 @@
 		</xsl:choose>
 		
 		<!-- TODO WCS -->
-		<xsl:if test="//Layer[Name=$Name]/MinScaleDenominator|//wms:Layer[wms:Name=$Name]/wms:MinScaleDenominator">
+		<xsl:variable name="minScale" select="//Layer[Name=$Name]/MinScaleDenominator
+		  |//wms:Layer[wms:Name=$Name]/wms:MinScaleDenominator"/>
+	  <xsl:variable name="minScaleHint" select="//Layer[Name=$Name]/ScaleHint/@min"/>
+		<xsl:if test="$minScale or $minScaleHint">
 			<spatialResolution>
 				<MD_Resolution>
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-								<gco:Integer><xsl:value-of select="MinScaleDenominator|wms:MinScaleDenominator"/></gco:Integer>
+							  <gco:Integer><xsl:value-of select="if ($minScale) then $minScale else format-number(round($minScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>
 				</MD_Resolution>
 			</spatialResolution>
+		</xsl:if>
+		<xsl:variable name="maxScale" select="//Layer[Name=$Name]/MaxScaleDenominator
+		  |//wms:Layer[wms:Name=$Name]/wms:MaxScaleDenominator"/>
+	  <xsl:variable name="maxScaleHint" select="//Layer[Name=$Name]/ScaleHint/@max"/>
+		<xsl:if test="$maxScale or $maxScaleHint">
 			<spatialResolution>
 				<MD_Resolution>
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-								<gco:Integer><xsl:value-of select="MaxScaleDenominator|wms:MaxScaleDenominator"/></gco:Integer>
+							  <gco:Integer><xsl:value-of select="if ($maxScale) then $maxScale else format-number(round($maxScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>
@@ -673,195 +681,5 @@
 		</type>
 
 	</xsl:template>
-
-	<!-- ============================================================================= -->
-	<!-- === Usage === -->
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="Usage">
-
-		<specificUsage>
-			<gco:CharacterString><xsl:value-of select="specUsage"/></gco:CharacterString>
-		</specificUsage>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="usageDate">
-			<usageDateTime>
-				<gco:DateTime><xsl:value-of select="."/></gco:DateTime>
-			</usageDateTime>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="usrDetLim">
-			<userDeterminedLimitations>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</userDeterminedLimitations>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="usrCntInfo">
-			<userContactInfo>
-				<CI_ResponsibleParty>
-					<xsl:apply-templates select="." mode="RespParty"/>
-				</CI_ResponsibleParty>
-			</userContactInfo>
-		</xsl:for-each>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-	<!-- === ConstsTypes === -->
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="ConstsTypes">
-
-		<xsl:for-each select="Consts">
-			<MD_Constraints>
-				<xsl:apply-templates select="." mode="Consts"/>
-			</MD_Constraints>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="LegConsts">
-			<MD_LegalConstraints>
-				<xsl:apply-templates select="." mode="LegConsts"/>
-			</MD_LegalConstraints>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="SecConsts">
-			<MD_SecurityConstraints>
-				<xsl:apply-templates select="." mode="SecConsts"/>
-			</MD_SecurityConstraints>
-		</xsl:for-each>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="Consts">
-
-		<xsl:for-each select="useLimit">
-			<useLimitation>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</useLimitation>
-		</xsl:for-each>
-		
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="LegConsts">
-
-		<xsl:apply-templates select="." mode="Consts"/>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="accessConsts">
-			<accessConstraints>
-			     <!-- TODO AccessConstraint mapping -->
-				<MD_RestrictionCode codeList="./resources/codeList.xml#MD_RestrictionCode" codeListValue="{RestrictCd/@value}" />
-			</accessConstraints>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="useConsts">
-			<useConstraints>
-				<MD_RestrictionCode codeList="./resources/codeList.xml#MD_RestrictionCode" codeListValue="{RestrictCd/@value}" />
-			</useConstraints>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="othConsts">
-			<otherConstraints>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</otherConstraints>
-		</xsl:for-each>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="SecConsts">
-
-		<xsl:apply-templates select="." mode="Consts"/>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<classification>
-			<MD_ClassificationCode codeList="./resources/codeList.xml#MD_ClassificationCode">
-				<xsl:attribute name="codeListValue">
-					<xsl:choose>
-						<xsl:when test="class/ClasscationCd/@value = 'topsecret'">topSecret</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="class/ClasscationCd/@value"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-			</MD_ClassificationCode>
-		</classification>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="userNote">
-			<userNote>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</userNote>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="classSys">
-			<classificationSystem>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</classificationSystem>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="handDesc">
-			<handlingDescription>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</handlingDescription>
-		</xsl:for-each>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-	<!-- === Resol === -->
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="Resol">
-
-		<xsl:for-each select="equScale">
-			<equivalentScale>
-				<MD_RepresentativeFraction>
-					<denominator>
-						<gco:Integer><xsl:value-of select="rfDenom"/></gco:Integer>
-					</denominator>
-				</MD_RepresentativeFraction>
-			</equivalentScale>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="scaleDist">
-			<distance>
-				<gco:Distance>
-					<xsl:apply-templates select="." mode="Measure"/>
-				</gco:Distance>
-			</distance>
-		</xsl:for-each>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
 
 </xsl:stylesheet>

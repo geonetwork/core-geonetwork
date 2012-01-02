@@ -59,7 +59,8 @@ Mapping between :
 		<xsl:variable name="ows">
 			<xsl:choose>
 				<xsl:when test="(local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0') 
-					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')">true</xsl:when>
+					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')
+					or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/1.0.0')">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -140,17 +141,7 @@ Mapping between :
 			<metadataStandardVersion>
 				<gco:CharacterString>1.0</gco:CharacterString>
 			</metadataStandardVersion>
-
-			<!-- spatRepInfo-->
-			<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-			<xsl:for-each select="refSysInfo">
-				<referenceSystemInfo>
-					<MD_ReferenceSystem>
-						<xsl:apply-templates select="." mode="RefSystemTypes"/>
-					</MD_ReferenceSystem>
-				</referenceSystemInfo>
-			</xsl:for-each>
+			
 
 			<!--mdExtInfo-->
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
