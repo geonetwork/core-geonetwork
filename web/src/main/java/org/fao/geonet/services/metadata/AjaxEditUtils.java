@@ -11,6 +11,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -130,21 +131,11 @@ public class AjaxEditUtils extends EditUtils {
             
             // Process attribute
             if (attribute != null) {
-                Integer indexColon = attribute.indexOf(COLON_SEPARATOR);
-                
-                // ... with qualified name
-                if (indexColon != -1) {
-                    String prefix = attribute.substring(0, indexColon);
-                    String localname = attribute.substring(indexColon + COLON_SEPARATOR_SIZE);
-                    String namespace = editLib.getNamespace(prefix + ":" + localname, md, dataManager.getSchema(schema));
-                    Namespace attrNS = Namespace.getNamespace(prefix, namespace);
-                    if (el.getAttribute(localname, attrNS) != null) {
-                        el.setAttribute(new Attribute(localname, value, attrNS));
-                    }
-                } else {
-                    if (el.getAttribute(attribute) != null) {
-                        el.setAttribute(new Attribute(attribute, value));
-                    }
+                Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, dbms, editLib);
+                String localname = attInfo.two();
+                Namespace attrNS = attInfo.one();
+                if (el.getAttribute(localname, attrNS) != null) {
+                    el.setAttribute(new Attribute(localname, value, attrNS));
                 }
             } else {
                 // Process element value
@@ -299,20 +290,23 @@ public class AjaxEditUtils extends EditUtils {
 		MetadataSchema mds = dataManager.getSchema(schema);
 		if (childName != null) {
 			if (childName.equals("geonet:attribute")) {
-				 String defaultValue = "";
-				 List attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
-				 for (Object a : attributeDefs) {
-					 Element attributeDef = (Element) a;
-					 if (attributeDef != null && attributeDef.getAttributeValue(Edit.Attribute.Attr.NAME).equals(name)) {
-						 Element defaultChild = attributeDef.getChild(Edit.Attribute.Child.DEFAULT, Edit.NAMESPACE);
-						 if (defaultChild != null) {
+				String defaultValue = "";
+				List attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
+				for (Object a : attributeDefs) {
+					Element attributeDef = (Element) a;
+					if (attributeDef != null && attributeDef.getAttributeValue(Edit.Attribute.Attr.NAME).equals(name)) {
+						Element defaultChild = attributeDef.getChild(Edit.Attribute.Child.DEFAULT, Edit.NAMESPACE);
+						if (defaultChild != null) {
 							defaultValue = defaultChild.getAttributeValue(Edit.Attribute.Attr.VALUE);
-						 }
-					 }
-				 }
-				 //--- Add new attribute with default value
-				 el.setAttribute(new Attribute(name, defaultValue));
-				 // TODO : add attribute should be false and del true after adding an attribute
+						}
+					}
+				}
+				
+				Pair<Namespace, String> attInfo = parseAttributeName(name, ":", id, md, dbms, editLib);
+			    //--- Add new attribute with default value
+                el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
+                
+				// TODO : add attribute should be false and del true after adding an attribute
 				child = el;
 			} else {
 				//--- normal element
@@ -479,7 +473,8 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, elementId);
 
 		if (el != null) {
-			el.removeAttribute(attributeName);
+		    Pair<Namespace, String> attInfo = parseAttributeName(attributeName, ":", id, md, dbms, editLib);
+		    el.removeAttribute(attInfo.two(), attInfo.one());
 		}
 
 		//--- store the metadata in the session again
@@ -488,6 +483,22 @@ public class AjaxEditUtils extends EditUtils {
 		return result;
 	}
 
+    private Pair<Namespace, String> parseAttributeName(String attributeName, String separator,
+            String id, Element md, Dbms dbms, EditLib editLib) throws Exception {
+        
+        Integer indexColon = attributeName.indexOf(separator);
+        String localname = attributeName;
+        Namespace attrNS = Namespace.NO_NAMESPACE;
+        // ... with qualified name
+        if (indexColon != -1) {
+            String prefix = attributeName.substring(0, indexColon);
+            localname = attributeName.substring(indexColon + separator.length());
+            String  schema = dataManager.getMetadataSchema(dbms, id);
+            String namespace = editLib.getNamespace(prefix + ":" + localname, md, dataManager.getSchema(schema));
+            attrNS = Namespace.getNamespace(prefix, namespace);
+        }
+        return Pair.write(attrNS, localname);
+    }
     /**
      * For Ajax Editing : swap element with sibling ([up] and [down] links).
      *
