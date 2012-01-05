@@ -181,7 +181,7 @@ public class SearchController
 		}
 		
 		//--- skip metadata with wrong schemas
-		if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19110"))
+		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if(outSchema != OutputSchema.OGC_CORE)
 		    	return null;
 
