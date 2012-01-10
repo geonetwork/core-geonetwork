@@ -183,10 +183,11 @@ Ext.ux.Lightbox = (function(){
         },
         
         setViewSize: function(){
-            var viewSize = this.getViewSize();
+            var viewSize = this.getViewSize(),
+                documentSize = this.getDocumentSize();
             els.overlay.setStyle({
-                width: viewSize[0] + 'px',
-                height: viewSize[1] + 'px'
+                width: documentSize[0] + 'px',
+                height: documentSize[1] + 'px'
             });
             els.shim.setStyle({
                 width: viewSize[0] + 'px',
@@ -281,8 +282,8 @@ Ext.ux.Lightbox = (function(){
                 duration: this.resizeDuration/2,
                 scope: this,
                 callback: function() {
-                    var viewSize = this.getViewSize();
-                    els.overlay.setHeight(viewSize[1] + 'px');
+                    var documentSize = this.getDocumentSize();
+                    els.overlay.setHeight(documentSize[1] + 'px');
                     this.updateNav();
                 }
             });
@@ -356,6 +357,9 @@ Ext.ux.Lightbox = (function(){
 
         getViewSize: function() {
             return [Ext.lib.Dom.getViewWidth(), Ext.lib.Dom.getViewHeight()];
+        },
+        getDocumentSize: function() {
+            return [Ext.lib.Dom.getDocumentWidth(), Ext.lib.Dom.getDocumentHeight()];
         }
     }
 })();
