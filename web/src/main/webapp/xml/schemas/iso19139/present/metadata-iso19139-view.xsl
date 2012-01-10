@@ -183,8 +183,28 @@
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple"
           select="
-          descendant::node()[gco:CharacterString and normalize-space(gco:CharacterString)!='']
+          gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
           "/>
+        
+        <xsl:for-each select="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource">
+          
+          <xsl:call-template name="simpleElement">
+            <xsl:with-param name="id" select="generate-id(.)"/>
+            <xsl:with-param name="title">
+              <xsl:call-template name="getTitle">
+                <xsl:with-param name="name" select="'gmd:onlineResource'"/>
+                <xsl:with-param name="schema" select="$schema"/>
+              </xsl:call-template>
+            </xsl:with-param>
+            <xsl:with-param name="help"></xsl:with-param>
+            <xsl:with-param name="content">
+              <a href="{gmd:linkage/gmd:URL}" target="_blank">
+                <xsl:value-of select="gmd:name/gco:CharacterString"/>
+              </a>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:for-each>
+        
         <xsl:if test="descendant::gmx:FileName">
           <img src="{descendant::gmx:FileName/@src}" alt="logo" class="orgLogo" style="float:right;"/>
           <!-- FIXME : css -->
