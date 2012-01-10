@@ -33,7 +33,8 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Abstract === -->
 			<xsl:apply-templates select="/gfc:FC_FeatureCatalogue/gfc:scope/gco:CharacterString">
-				<xsl:with-param name="name" select="'abstract'"/>
+			  <xsl:with-param name="name" select="'abstract'"/>
+			  <xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
