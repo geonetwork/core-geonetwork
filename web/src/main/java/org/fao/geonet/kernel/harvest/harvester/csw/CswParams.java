@@ -29,6 +29,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,6 +65,15 @@ public class CswParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
+
+        try {
+            capabUrl = URLDecoder.decode(capabUrl, "UTF-8");
+        }
+        catch (UnsupportedEncodingException x) {
+            System.out.println(x.getMessage());
+            x.printStackTrace();
+            // TODO should not swallow
+        }
 		icon     = Util.getParam(site, "icon",            "default.gif");
 
 		addSearches(searches);
@@ -82,6 +93,16 @@ public class CswParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
+
+        try {
+            capabUrl = URLDecoder.decode(capabUrl, "UTF-8");
+        }
+        catch (UnsupportedEncodingException x) {
+            System.out.println(x.getMessage());
+            x.printStackTrace();
+            // TODO should not swallow
+        }
+
 		icon     = Util.getParam(site, "icon",            icon);
 
 		//--- if some search queries are given, we drop the previous ones and
