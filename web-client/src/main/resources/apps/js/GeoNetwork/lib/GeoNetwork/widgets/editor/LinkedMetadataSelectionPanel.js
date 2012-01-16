@@ -76,7 +76,7 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
      * An array of hidden parameter for the form.
      * Default value is set to dataset.
      */
-    hiddenParameters: GeoNetwork.editor.Filter.DATASET,
+    hiddenParameters: undefined,
     
     /**
      * Define if multiple selection is allowed or not
@@ -268,14 +268,16 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
      */
     addHiddenFormInput: function(items){
         var i;
-        for (i = 0; i < this.hiddenParameters.length; i++) {
-            items.push({
-                xtype: 'textfield',
-                fieldLabel: this.hiddenParameters[i].name,
-                name: this.hiddenParameters[i].name,
-                value: this.hiddenParameters[i].value,
-                hidden: true
-            });
+        if (this.hiddenParameters) {
+            for (i = 0; i < this.hiddenParameters.length; i++) {
+                items.push({
+                    xtype: 'textfield',
+                    fieldLabel: this.hiddenParameters[i].name,
+                    name: this.hiddenParameters[i].name,
+                    value: this.hiddenParameters[i].value,
+                    hidden: true
+                });
+            }
         }
         return items;
     },

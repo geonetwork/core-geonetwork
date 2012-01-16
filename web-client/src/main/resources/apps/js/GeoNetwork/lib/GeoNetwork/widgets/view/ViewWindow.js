@@ -88,6 +88,10 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     metadataSchema: undefined,
     cache: {},
     tooltips: [],
+    /** api: property[relatedTpl] 
+     *  Template use for related metadata links.
+     */
+    relatedTpl: undefined,
     /** api: method[getLinkedData]
      *  Get related metadata records for current metadata using xml.relation service.
      */
@@ -101,16 +105,15 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     },
     /** private: method[displayLinkedData]
      *  Display the record in the metadata related table (only available in simple view mode).
+     *  Elements are grouped by type.
      */
     displayLinkedData: function(record){
         var table = Ext.query('table.related', this.body.dom),
             type = record.get('type');
         var el = Ext.get(table[0]);
         var exist = el.child('tr td[class*=' + type + ']');
-        var link = '<li><a href="#" onclick="javascript:catalogue.metadataShow(\'' + 
-            record.get('uuid') + '\');return false;" ' + 
-            'title="' + record.get('abstract') + '">' + 
-            record.get('title') + '</a></li>';
+        var link = this.relatedTpl.apply(record.data)
+            
         if (exist !== null) {
             exist.next().child('li').insertHtml('afterEnd', link);
         } else {
@@ -353,6 +356,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         Ext.applyIf(this, this.defaultConfig);
         
         this.tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.SIMPLE);
+        this.relatedTpl = new Ext.XTemplate(this.relatedTpl || GeoNetwork.Templates.Relation.SHORT);
         
         this.tools = [{
             id: 'newwindow',

@@ -224,6 +224,13 @@ GeoNetwork.data.MetadataResultsStore = function(){
             return '';
         }
     }
+    function getType(v, record){
+        if (record['type']) {
+            return record['type'][0].value;
+        } else {
+            return '';
+        }
+    }
     function getEdit(v, record){
         if (record.geonet_info && record.geonet_info.edit) {
             return record.geonet_info.edit[0].value;
@@ -250,6 +257,9 @@ GeoNetwork.data.MetadataResultsStore = function(){
         }, {
             name: 'abstract',
             convert: getAbstract
+        }, {
+            name: 'type',
+            convert: getType
         }, {
             name: 'subject',
             mapping: 'keyword',

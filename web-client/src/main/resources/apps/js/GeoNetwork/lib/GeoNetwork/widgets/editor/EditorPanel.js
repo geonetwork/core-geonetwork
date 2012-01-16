@@ -33,6 +33,8 @@ Ext.namespace('GeoNetwork.editor');
  *     Create a GeoNetwork editor panel
  *
  *
+ *  Known limitation: only one editor panel could be created in one application
+ *
  */
 GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     border: false,

@@ -79,6 +79,11 @@ li.thumbnail-selected,
 li.suggestion-selected {
   background-color : #7EADD9;
 }
+
+div.attr {
+  clear: both;
+}
+
 /* Tab navigation - start */
 div#tabs ul li ul {
   list-style-type : none;
@@ -182,6 +187,11 @@ label + span {
 .metadata * input,
 .metadata * textarea {
   width : 60%;
+  float: left;
+}
+
+.metadata * table.map * input {
+  float: none !important;
 }
 
 .metadata * input.small {
@@ -276,9 +286,8 @@ table.related > tbody > tr > td.main {
   background-color : #F7EEE1;
 }
 table.related * ul {
-  list-style-type: circle;
-  padding: 5px;
-  padding-left: 15px;
+  padding-top: 5px;
+  padding-left: 10px;
 }
 
 
@@ -366,8 +375,8 @@ span.buttons a.small span {
 div.button {
   float : left;
   background-repeat : no-repeat;
-  width : 15px;
-  height : 15px;
+  min-width: 15px;
+  min-height: 15px;
 }
 
 .tgRight {
@@ -397,6 +406,9 @@ div.button {
 .cancel {
   background-image : url(../images/default/cancel.png) !important;
 }
+.configIcon {
+  background-image : url(../images/default/cog.png) !important;
+}
 .groupKey {
   background-image : url(../images/default/group_key.png) !important;
 }
@@ -416,6 +428,9 @@ div.button {
   background-image : url(../images/default/flag_red.png) !important;
 }
 .valid--1 {
+}
+.cat-children, .cat-parent {
+  background-image : url(../images/default/chart_organisation.png) !important;
 }
 .book {
   background-image : url(../images/default/book.png) !important;
@@ -505,7 +520,6 @@ div.button {
   background-image : url(../images/default/category/proceedings.png) !important;
 }
 /* Icon and button - end */
-
 
 
 

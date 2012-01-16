@@ -65,6 +65,11 @@ pre.code {
 #mode-form {
   width : 260px;
 }
+#search-form, #searchForm {
+  height: 100%;
+  position:relative;  /* Required for IE */
+}
+
 #infoContent {
   /*padding: 5px;*/
 }

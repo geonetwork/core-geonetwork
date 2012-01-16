@@ -86,7 +86,7 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
      * ``String`` OpenSearch suggestion service URL.
      */
     url: undefined,
-    
+
     /** api: config[field] 
      *  ``String`` Optional, GeoNetwork Lucene field to query.
      *  Default any (ie. full text search).
@@ -117,6 +117,7 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
     mode: 'remote',
     store: undefined,
     queryParam: 'q',
+    autoSelect: false,
     itemSelector: 'div.search-item',
     /** private: method[initComponent] 
      *  Initializes the metadata results view.

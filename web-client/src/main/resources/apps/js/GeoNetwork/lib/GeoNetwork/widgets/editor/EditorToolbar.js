@@ -48,13 +48,15 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
          * Use this property to add the metadata type selector. Usually, not displayed 
          * for sub-template editing or when interface only allows to edit one kind of records.
          */
-        hideTypeMenu: false
+        hideTypeMenu: false,
+        editAttributes: false
     },
     mapOptions: undefined,
     layers: undefined,
     
     // Menus and actions
     typeMenu: undefined,
+    configMenu: undefined,
     viewMenu: undefined,
     saveAction: undefined,
     saveAndCloseAction: undefined,
@@ -145,7 +147,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         });
         
         cmp.push(this.createViewMenu(), ['-'], this.saveAction, this.checkAction, this.saveAndCloseAction, this.minorCheckbox, 
-                ['->'], this.resetAction, this.cancelAction);
+                ['->'], this.resetAction, this.cancelAction, this.configMenu());
 
         GeoNetwork.editor.EditorToolbar.superclass.initComponent.call(this);
         
@@ -164,24 +166,6 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             state = false;
         }
         this.minorCheckbox.toggle(state);
-    },
-    /**
-     * Unused menu
-     */
-    createLayoutMenu: function(){
-    
-        var menu = {
-            text: OpenLayers.i18n('layout'),
-            menu: {
-                items: [{
-                    text: OpenLayers.i18n('collapseAll'),
-                    checked: false,
-                    checkHandler: this.collapseAll
-                }]
-            }
-        };
-        
-        return menu;
     },
     createTypeMenu: function(){
     
@@ -209,6 +193,47 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         };
         
         return this.typeMenu;
+    },
+    configMenu: function(){
+        
+        this.configMenu = {
+            iconCls: 'configIcon',
+            menu: {
+                items: [{
+                        text: OpenLayers.i18n('collapseAll'),
+                        checked: false,
+                        checkHandler: function(){
+                            Ext.each(Ext.DomQuery.select('div.toggle'), function(i) {
+                                if (i.onclick) {
+                                    i.onclick();
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text: OpenLayers.i18n('editAttributes'),
+                        checked: this.editAttributes,
+                        checkHandler: function(item, checked) {
+                            this.editAttributes = checked;
+                            this.editAttributesVisibility();
+                        },
+                        scope: this
+                    }
+                ]
+            }
+        };
+        
+        this.editor.on('metadataUpdated', function() {
+            this.editAttributesVisibility();
+        }, this);
+        
+        return this.configMenu;
+    },
+    editAttributesVisibility: function(){
+        Ext.each(Ext.select('div.toggle-attr'), function(i) {
+            i.setVisibilityMode(Ext.Element.DISPLAY);
+            i.setVisible(this.editAttributes);
+        }, this);
     },
     createViewMenu: function(modes){
         var items = ['<b class="menu-title">' + OpenLayers.i18n('chooseAView') + '</b>'];
@@ -254,16 +279,6 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
     onTypeCheck: function(item, checked){
         if (checked) {
             Ext.get('template').dom.value = item.value;
-        }
-    },
-    collapseAll: function(item, checked){
-        var mainTitles = Ext.DomQuery.select('div.toggle'), idx;
-        for (idx = 0; idx < mainTitles.length; ++idx) {
-            var elem = mainTitles[idx];
-            elem.checked = checked;
-            if (elem.onclick) {
-                elem.onclick();
-            }
         }
     },
     /** private: method[onDestroy] 

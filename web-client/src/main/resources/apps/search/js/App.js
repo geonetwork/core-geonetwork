@@ -305,7 +305,8 @@ GeoNetwork.app = function(){
         var formItems = [];
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
                     GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true, 
-                    GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}), adv);
+                    GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
+                    adv);
         // Add advanced mode criteria to simple form - end
         
         
@@ -452,6 +453,7 @@ GeoNetwork.app = function(){
     function createResultsPanel(){
         metadataResultsView = new GeoNetwork.MetadataResultsView({
             catalogue: catalogue,
+            displaySerieMembers: true,
             autoScroll: true,
             tpl: GeoNetwork.Templates.FULL
         });

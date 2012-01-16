@@ -48,7 +48,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  Create a simple form
      */
-    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist, mapPanelOptions){
+    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist, mapPanelOptions, withRelation){
         var fields = [];
         if (services) {
             fields.push(new GeoNetwork.form.OpenSearchSuggestionTextField({
@@ -79,7 +79,7 @@ GeoNetwork.util.SearchFormTools = {
         }
         
         if (layers) {
-            fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent, mapPanelOptions));
+            fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent, mapPanelOptions, withRelation));
         }
         
         fields.push(GeoNetwork.util.SearchFormTools.getOptions());
@@ -231,6 +231,7 @@ GeoNetwork.util.SearchFormTools = {
      *  :param mapOptions: OpenLayers map options.
      *  :param activeMapControlExtent: Turn on map extent criteria. Default is false.
      *  :param panelConfig: MapPanel configuration options.
+     *  :param withRelation: Add spatial relation combobox. Default is false.
      *  
      *  :return: An array of component with a hidden geometry field
      *    and a simple map.
@@ -239,7 +240,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  TODO : Add more options ? See GeometryMapField
      */
-    getSimpleMap: function(layers, mapOptions, activeMapControlExtent, panelConfig){
+    getSimpleMap: function(layers, mapOptions, activeMapControlExtent, panelConfig, withRelation){
         var fields = [], mapLayers = [], i;
         
         var geomField = new Ext.form.TextField({
@@ -266,7 +267,10 @@ GeoNetwork.util.SearchFormTools = {
             Ext.applyIf(geomWithMapField, panelConfig);
         }
         
-        fields.push(geomField, geomWithMapField, GeoNetwork.util.SearchFormTools.getRelationField());
+        fields.push(geomField, geomWithMapField);
+        if (withRelation) {
+            fields.push(GeoNetwork.util.SearchFormTools.getRelationField());
+        }
         
         return fields;
     },

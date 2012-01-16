@@ -108,7 +108,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  Current hover feature for each maps
      */
     hover_feature: [],
-    
+
+    /** api: config[displayContextualMenu] 
+     *  Display contextual menu for metadata record displayed on right click event
+     */
+    displayContextualMenu: true,
     /** api: property[contextMenu] 
      *  Context menu for metadata record displayed on right click event
      */
@@ -124,6 +128,22 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  Current action menu for onmouseover node
      */
     acMenu: undefined,
+    
+    /** api: property[displaySerieMembers] 
+     *  Display metadata series member embedded in search results view
+     *  as a list of items.
+     */
+    displaySerieMembers: false,
+
+    /** api: property[maxOfMembers] 
+     *  (TODO : UNUSED) Maximum numbers of members to display.
+     */
+    maxOfMembers: 50,
+    
+    /** api: property[relatedTpl] 
+     *  Template use for related metadata if displaySerieMembers is true.
+     */
+    relatedTpl: undefined,
     
     /** api: property[ratingWidget] 
      *  Rating widget
@@ -193,10 +213,12 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         },
         contextmenu: {
             fn: function(dv, idx, node, e){
-                this.contextMenuNodeId = idx;
-                this.createMenu(idx, dv);
-                this.contextMenu.showAt(e.getXY());
-                e.stopEvent(); // Do not trigger browser event
+                if (this.displayContextualMenu) {
+                    this.contextMenuNodeId = idx;
+                    this.createMenu(idx, dv);
+                    this.contextMenu.showAt(e.getXY());
+                    e.stopEvent(); // Do not trigger browser event
+                }
             }
         }
     },
@@ -260,6 +282,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         
         this.setStore(this.catalogue.metadataStore);
         this.initStyle();
+        this.relatedTpl = new Ext.XTemplate(this.relatedTpl || GeoNetwork.Templates.Relation.SHORT);
         
         if (this.maps) {
             if (this.maps instanceof OpenLayers.Map) {
@@ -413,13 +436,65 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         this.drawMetadataBbox(view, records, options);
         this.contextMenu = undefined;
         this.initRatingWidget();
+        this.dislayLinks(records);
         //this.initMenu();
+    },
+    /** private: method[dislayLinks]
+     *  Search for children for all records which are series.
+     *  All members are displayed in a UL element identified by "md-relation-{metadata_id}".
+     *  
+     *  If the div has a max-height attribute and scrolling is required,
+     *  a "more" class is added to the element. This class
+     *  could be used to do custom styling of the div (eg. expand to display
+     *  all members).
+     *  
+     *  TODO : Improve search performance of relation service
+     */
+    dislayLinks: function(records){
+        var relationTypes = 'children', view = this;
+        
+        if (this.displaySerieMembers) {
+            Ext.each(records, function(r) {
+                var isSerie = r.get('type') === 'series',
+                    id = r.get('id');
+                if (isSerie) {
+                    //TODO : use this.maxOfMembers
+                    //var store = new GeoNetwork.data.MetadataResultsFastStore();
+                    var store = new GeoNetwork.data.MetadataRelationStore(
+                            this.catalogue.services.mdRelation + '?type=' + relationTypes + '&fast=false&uuid=' + escape(r.get('uuid')) , null, true);
+                    store.load();
+                    store.on('load', function(store, records){
+                        Ext.each(records, function(md) {
+                            var div = Ext.query('#md-relation-' + id, view.el.dom.body),
+                                el = Ext.get(div[0]),
+                                container = el.parent();
+                            // Add custom class to identify when large number of members
+                            // has to be displayed. Use CSS to control layout.
+                            if (container && container.isScrollable()) {
+                                container.addClass('more');
+                            }
+                            if (el) {
+                                el.insertHtml('beforeEnd', view.relatedTpl.apply(md.data));
+                                container.setVisible(true);
+                            }
+                        }, this);
+                    });
+                }
+            }, this);
+        }
     },
     /** private: method[drawMetadataBbox]
      *
      */
     drawMetadataBbox: function(view, records, options){
         var i, j;
+
+        // No maps registered for this results view.
+        if (this.maps.length === 0) {
+            return;
+        }
+        
+        this.features = [];
         Ext.each(records, function(r){
             var bboxes = r.get('bbox');
             if (bboxes) {

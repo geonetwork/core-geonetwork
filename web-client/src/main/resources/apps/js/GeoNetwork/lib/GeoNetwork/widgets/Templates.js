@@ -138,9 +138,11 @@ GeoNetwork.Templates.SIMPLE = new Ext.XTemplate(
                 GeoNetwork.Templates.LOGO,
                 '</td><td id="{uuid}">',
                 GeoNetwork.Templates.TITLE,
-                '<span class="subject"><tpl for="subject">',
-                    '{value}{[xindex==xcount?"":", "]}',
-                '</tpl></span>',
+                '<tpl if="subject">',
+                    '<span class="subject"><tpl for="subject">',
+                        '{value}{[xindex==xcount?"":", "]}',
+                    '</tpl></span>',
+                '</tpl>',
                 '</td></tr></table>',
             '</li>',
         '</tpl>',
@@ -195,9 +197,11 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                 '<td id="{uuid}">',
                     GeoNetwork.Templates.TITLE,
                     '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters
-                    '<p class="subject"><tpl for="subject">',
-                        '{value}{[xindex==xcount?"":", "]}',
-                    '</tpl></p>',
+                    '<tpl if="subject">',
+                        '<p class="subject"><tpl for="subject">',
+                            '{value}{[xindex==xcount?"":", "]}',
+                        '</tpl></p>',
+                    '</tpl>',
                     '<div class="md-links">',
                     // FIXME : this call require the catalogue to be named catalogue, static call ?
                     // FIXME : ref to app
@@ -245,6 +249,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                   '<div class="md-mn cat-{value}" title="{value}">&nbsp;</div>',
                 '</tpl>',
                 '</td></tr></table>',
+                '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '"><span></span><ul id="md-relation-{id}"></ul></div>',
                 '<div class="md-contact">',
                   '<tpl for="contact">',
                       // metadata contact are not displayed.
@@ -274,3 +279,9 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
         }
     }
 );
+
+GeoNetwork.Templates.Relation = {
+        SHORT: ['<li class="{type}">',
+                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
+                 '</li>']
+};

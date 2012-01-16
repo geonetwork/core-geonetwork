@@ -20,6 +20,42 @@
   margin-bottom : 5px;
 }
 
+.md-view div.relation {
+  margin-left : 30px !important;
+  max-height : 50px !important;
+  overflow : hidden;
+  display: none;
+  position:relative;  /* Required for IE */
+}
+.md-view div.relation ul {
+  margin-left: 15px !important;
+}
+.md-view div.relation span {
+  background-image : url(../../../../images/default/chart_organisation.png) !important;
+  background-repeat : no-repeat;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+}
+.md-view div.more {
+  background-image : url(../images/default/three_dots.png) !important;
+  background-repeat : no-repeat;
+  background-position : 95% 80%;
+}
+
+.md-view div.relation.more:hover {
+  overflow : auto;
+  background-image : none !important;
+  max-height : 500px !important;
+}
+
+.md-view div.relation ul li,
+table.related * li {
+  float : left;
+  width : 200px;
+  line-height : initial !important;
+}
+
 .md-view * a {
   text-decoration : none;
   color : #0076A1
@@ -29,15 +65,15 @@
   color : #959532
 }
 .md-view td.left {
-  width:30px;
+  width : 30px;
 }
 .md-view td.thumb {
-  width:180px;
+  width : 180px;
 }
 .md-view td.icon {
-  width:16px;
-  border-left: 1px dashed #e1e1e1;
-  text-align: center;
+  width : 16px;
+  border-left : 1px dashed #e1e1e1;
+  text-align : center;
 }
 .md-view ul li * .md-logo img {
   max-width : 30px;
@@ -104,6 +140,7 @@
   max-width : 180px;
   max-height : 140px;
   min-height : 40px;
+  height: auto;
 }
 
 .md-view * div.rating {
@@ -165,6 +202,14 @@ span.md-action-menu {
 
 .md-view * .md-links {
 }
+
+/*
+Display hyperlink as text next to element
+.md-links a:hover:after {
+    content : " " attr(href) " ";
+    font-size : 80%;
+}*/
+
 .md-view * p.abstract {
 }
 .md-view * p.subject {
@@ -213,6 +258,12 @@ span.md-action-menu {
 }
 .md-mn-zip {
   background-image : url(../images/default/page_white_zip.png) !important;
+}
+.md-mn-ftp {
+  background-image : url(../images/default/folder.png) !important;
+}
+.md-mn-ftps {
+  background-image : url(../images/default/folder_key.png) !important;
 }
 .md-mn-download {
   background-image : url(../images/default/download.png) !important;
@@ -323,13 +374,13 @@ div.help .title {
   font-size : 120%;
   font-weight : bold;
 }
-div.help div{
-  margin-top: 3px;
+div.help div {
+  margin-top : 3px;
 }
-div.help span{
-  font-style: italic;
+div.help span {
+  font-style : italic;
 }
 div.help ul li {
   list-style-type : circle !important;
-  margin-left: 10px !important;
+  margin-left : 10px !important;
 }
