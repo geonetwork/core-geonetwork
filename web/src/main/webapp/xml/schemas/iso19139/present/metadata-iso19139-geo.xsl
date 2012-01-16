@@ -10,12 +10,18 @@
     <xsl:template mode="iso19139" match="gmd:EX_BoundingPolygon" priority="20">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-        
-        <xsl:apply-templates mode="iso19139" select="gmd:polygon">
-            <xsl:with-param name="schema" select="$schema"/>
-            <xsl:with-param name="edit" select="$edit"/>
+      
+        <xsl:apply-templates mode="iso19139" select="gmd:extentTypeCode">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="edit" select="$edit"/>
         </xsl:apply-templates>
+      
         <xsl:apply-templates mode="elementEP" select="geonet:child">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="edit" select="$edit"/>
+        </xsl:apply-templates>
+      
+        <xsl:apply-templates mode="iso19139" select="gmd:polygon">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit" select="$edit"/>
         </xsl:apply-templates>
@@ -114,6 +120,16 @@
             </select>
           </xsl:if>
         </xsl:variable>
+        
+        <xsl:apply-templates mode="iso19139" select="gmd:extentTypeCode">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="edit" select="$edit"/>
+        </xsl:apply-templates>
+      
+        <xsl:apply-templates mode="elementEP" select="geonet:child">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="edit" select="$edit"/>
+        </xsl:apply-templates>
         
         <xsl:variable name="geoBox">
             <xsl:call-template name="geoBoxGUI">
