@@ -37,6 +37,7 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.Name;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
@@ -127,11 +128,12 @@ public class FullScanFilter extends SpatialFilter
 
             HashSet<String> matches = new HashSet<String>();
             try {
+                final Name idColumn = SpatialIndexWriter.findIdColumn(_featureSource);
                 while (iterator.hasNext()) {
                     SimpleFeature feature = iterator.next();
                     matches
                             .add((String) feature
-                                    .getAttribute(SpatialIndexWriter.IDS_ATTRIBUTE_NAME));
+                                    .getAttribute(idColumn));
                 }
             } finally {
                 iterator.close();

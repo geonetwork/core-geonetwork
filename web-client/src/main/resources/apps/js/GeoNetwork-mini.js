@@ -879,8 +879,8 @@ els.lightbox.setStyle({top:lightboxTop+"px",left:lightboxLeft+"px"}).show();
 this.setImage(index);
 this.fireEvent("open",images[index])
 },scope:this})
-},setViewSize:function(){var viewSize=this.getViewSize();
-els.overlay.setStyle({width:viewSize[0]+"px",height:viewSize[1]+"px"});
+},setViewSize:function(){var viewSize=this.getViewSize(),documentSize=this.getDocumentSize();
+els.overlay.setStyle({width:documentSize[0]+"px",height:documentSize[1]+"px"});
 els.shim.setStyle({width:viewSize[0]+"px",height:viewSize[1]+"px"}).show()
 },setImage:function(index){activeImage=index;
 this.disableKeyNav();
@@ -920,8 +920,8 @@ els.caption.update(images[activeImage][1]);
 els.caption.show();
 if(images.length>1){els.imageNumber.update(this.labelImage+" "+(activeImage+1)+" "+this.labelOf+"  "+images.length);
 els.imageNumber.show()
-}els.dataContainer.fadeIn({duration:this.resizeDuration/2,scope:this,callback:function(){var viewSize=this.getViewSize();
-els.overlay.setHeight(viewSize[1]+"px");
+}els.dataContainer.fadeIn({duration:this.resizeDuration/2,scope:this,callback:function(){var documentSize=this.getDocumentSize();
+els.overlay.setHeight(documentSize[1]+"px");
 this.updateNav()
 }})
 },updateNav:function(){this.enableKeyNav();
@@ -945,6 +945,7 @@ els.overlay.fadeOut({duration:this.overlayDuration});
 els.shim.hide();
 this.fireEvent("close",activeImage)
 },getViewSize:function(){return[Ext.lib.Dom.getViewWidth(),Ext.lib.Dom.getViewHeight()]
+},getDocumentSize:function(){return[Ext.lib.Dom.getDocumentWidth(),Ext.lib.Dom.getDocumentHeight()]
 }}
 })();
 Ext.onReady(Ext.ux.Lightbox.init,Ext.ux.Lightbox);Ext.namespace("Ext.ux.form");

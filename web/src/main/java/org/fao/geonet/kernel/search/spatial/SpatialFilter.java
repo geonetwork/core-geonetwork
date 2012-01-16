@@ -81,9 +81,9 @@ public abstract class SpatialFilter extends Filter
     private static final SimpleFeatureType FEATURE_TYPE;
     static {
         SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
-        builder.add(GEOM_ATTRIBUTE_NAME, Geometry.class, DefaultGeographicCRS.WGS84);
-        builder.setDefaultGeometry(GEOM_ATTRIBUTE_NAME);
-        builder.setName(SPATIAL_INDEX_TYPENAME);
+        builder.add("the_geom", Geometry.class, DefaultGeographicCRS.WGS84);
+        builder.setDefaultGeometry("the_geom");
+        builder.setName(_SPATIAL_INDEX_TYPENAME);
         FEATURE_TYPE = builder.buildFeatureType();
     }
 

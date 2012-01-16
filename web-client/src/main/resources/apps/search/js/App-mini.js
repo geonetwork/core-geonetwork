@@ -879,8 +879,8 @@ els.lightbox.setStyle({top:lightboxTop+"px",left:lightboxLeft+"px"}).show();
 this.setImage(index);
 this.fireEvent("open",images[index])
 },scope:this})
-},setViewSize:function(){var viewSize=this.getViewSize();
-els.overlay.setStyle({width:viewSize[0]+"px",height:viewSize[1]+"px"});
+},setViewSize:function(){var viewSize=this.getViewSize(),documentSize=this.getDocumentSize();
+els.overlay.setStyle({width:documentSize[0]+"px",height:documentSize[1]+"px"});
 els.shim.setStyle({width:viewSize[0]+"px",height:viewSize[1]+"px"}).show()
 },setImage:function(index){activeImage=index;
 this.disableKeyNav();
@@ -920,8 +920,8 @@ els.caption.update(images[activeImage][1]);
 els.caption.show();
 if(images.length>1){els.imageNumber.update(this.labelImage+" "+(activeImage+1)+" "+this.labelOf+"  "+images.length);
 els.imageNumber.show()
-}els.dataContainer.fadeIn({duration:this.resizeDuration/2,scope:this,callback:function(){var viewSize=this.getViewSize();
-els.overlay.setHeight(viewSize[1]+"px");
+}els.dataContainer.fadeIn({duration:this.resizeDuration/2,scope:this,callback:function(){var documentSize=this.getDocumentSize();
+els.overlay.setHeight(documentSize[1]+"px");
 this.updateNav()
 }})
 },updateNav:function(){this.enableKeyNav();
@@ -945,6 +945,7 @@ els.overlay.fadeOut({duration:this.overlayDuration});
 els.shim.hide();
 this.fireEvent("close",activeImage)
 },getViewSize:function(){return[Ext.lib.Dom.getViewWidth(),Ext.lib.Dom.getViewHeight()]
+},getDocumentSize:function(){return[Ext.lib.Dom.getDocumentWidth(),Ext.lib.Dom.getDocumentHeight()]
 }}
 })();
 Ext.onReady(Ext.ux.Lightbox.init,Ext.ux.Lightbox);Ext.namespace("Ext.ux.form");
@@ -18188,13 +18189,16 @@ Ext.get("helpPanel").getUpdater().update({url:"help_en.html"})
 }function createMainTagCloud(){var tagCloudView=new GeoNetwork.TagCloudView({catalogue:catalogue,query:"fast=true&summaryOnly=true",renderTo:"tag",onSuccess:"app.loadResults"});
 return tagCloudView
 }function createLatestUpdate(){var latestView=new GeoNetwork.MetadataResultsView({catalogue:catalogue,autoScroll:true,tpl:GeoNetwork.Settings.latestTpl});
-latestView.setStore(GeoNetwork.Settings.mdStore());
+var latestStore=GeoNetwork.Settings.mdStore();
+latestView.setStore(latestStore);
+latestStore.on("load",function(){Ext.ux.Lightbox.register("a[rel^=lightbox]")
+});
 new Ext.Panel({border:false,bodyCssClass:"md-view",items:latestView,renderTo:"latest"});
 catalogue.kvpSearch(GeoNetwork.Settings.latestQuery,null,null,null,true,latestView.getStore())
 }function createTagCloud(){var tagCloudView=new GeoNetwork.TagCloudView({catalogue:catalogue});
 return new Ext.Panel({id:"tagCloudPanel",border:true,hidden:true,baseCls:"md-view",items:tagCloudView})
 }function edit(metadataId,create,group,child){if(!this.editorWindow){this.editorPanel=new GeoNetwork.editor.EditorPanel({defaultViewMode:GeoNetwork.Settings.editor.defaultViewMode,catalogue:catalogue,xlinkOptions:{CONTACT:true}});
-this.editorWindow=new Ext.Window({tools:[{id:"newwindow",qtip:OpenLayers.i18n("newWindow"),handler:function(e,toolEl,panel,tc){window.open(GeoNetwork.Util.getBaseUrl(location.href)+"#edit="+metadataId);
+this.editorWindow=new Ext.Window({tools:[{id:"newwindow",qtip:OpenLayers.i18n("newWindow"),handler:function(e,toolEl,panel,tc){window.open(GeoNetwork.Util.getBaseUrl(location.href)+"#edit="+panel.getComponent("editorPanel").metadataId);
 panel.hide()
 },scope:this}],title:OpenLayers.i18n("mdEditor"),id:"editorWindow",layout:"fit",modal:false,items:this.editorPanel,closeAction:"hide",collapsible:true,collapsed:false,maximizable:true,maximized:true,resizable:true,width:980,height:800});
 this.editorPanel.setContainer(this.editorWindow);

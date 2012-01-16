@@ -26,6 +26,7 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.feature.type.Name;
 import org.opengis.filter.And;
 import org.opengis.filter.BinaryLogicOperator;
 import org.opengis.filter.Filter;
@@ -54,31 +55,26 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.index.SpatialIndex;
 
-// -- define the featureType that will be used in the reprojectFilter
-class Reproject {
-		public static SimpleFeatureType fType = initialize();
-
-		private static SimpleFeatureType initialize() {
-			SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
- 			AttributeTypeBuilder attBuilder  = new AttributeTypeBuilder();
-			attBuilder.crs(DefaultGeographicCRS.WGS84);
-			attBuilder.binding(MultiPolygon.class);
-			GeometryDescriptor geomDescriptor = attBuilder.buildDescriptor(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME, attBuilder.buildGeometryType());
-			builder.setName("dummy");
-			builder.setCRS( DefaultGeographicCRS.WGS84 );
- 			builder.add(geomDescriptor);
-			return builder.buildFeatureType();
-		}
-} 
-
 public class OgcGenericFilters
 {
+    private static SimpleFeatureType reprojectGeometryType(Name geometryAttName) {
+        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+        AttributeTypeBuilder attBuilder  = new AttributeTypeBuilder();
+        attBuilder.crs(DefaultGeographicCRS.WGS84);
+        attBuilder.binding(MultiPolygon.class);
+        GeometryDescriptor geomDescriptor = attBuilder.buildDescriptor(geometryAttName, attBuilder.buildGeometryType());
+        builder.setName("dummy");
+        builder.setCRS( DefaultGeographicCRS.WGS84 );
+        builder.add(geomDescriptor);
+        return builder.buildFeatureType();
+    }
 
     @SuppressWarnings("serial")
     public static SpatialFilter create(Query query,
             Element filterExpr, FeatureSource<SimpleFeatureType, SimpleFeature> featureSource,
             SpatialIndex index, Parser parser) throws Exception
     {
+        Name geometryColumn = featureSource.getSchema().getGeometryDescriptor().getName();
 				// -- parse Filter and report any validation issues
         String string = Xml.getString(filterExpr);
 				Log.debug(Geonet.SEARCH_ENGINE,"Filter string is :\n"+string);
@@ -109,11 +105,11 @@ public class OgcGenericFilters
 
 			 	// -- rename all PropertyName elements used in Filter to match the
 				// -- geometry type used in the spatial index
-        Filter remappedFilter = (Filter) trimmedFilter.accept(new RenameGeometryPropertyNameVisitor(),null);
+        Filter remappedFilter = (Filter) trimmedFilter.accept(new RenameGeometryPropertyNameVisitor(geometryColumn),null);
 
 				// -- finally reproject all geometry in the Filter to match GeoNetwork
 				// -- default of WGS84 (long/lat ordering)
-		visitor = new ReprojectingFilterVisitor(filterFactory2, Reproject.fType);
+		visitor = new ReprojectingFilterVisitor(filterFactory2, reprojectGeometryType(geometryColumn));
 		final Filter reprojectedFilter = (Filter) remappedFilter.accept(visitor, null);
         Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+reprojectedFilter);
 
@@ -179,10 +175,16 @@ public class OgcGenericFilters
     private static final class RenameGeometryPropertyNameVisitor extends
             DuplicatingFilterVisitor
     {
+        Name geomName;
+
+        private RenameGeometryPropertyNameVisitor(Name geomName) {
+            this.geomName = geomName;
+        }
+
         @Override
         public Object visit(PropertyName expression, Object data)
         {
-            return getFactory(data).property(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME);
+            return getFactory(data).property(geomName);
         }
 
         @Override
@@ -192,14 +194,14 @@ public class OgcGenericFilters
                 BoundingBox expr2 = (BoundingBox) ((Literal) filter.getExpression2()).getValue();
 
                 FilterFactory2 factory = getFactory(extraData);
-                return factory.bbox(factory.property(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME), expr2);
+                return factory.bbox(factory.property(geomName), expr2);
 
             } else if(filter.getExpression2() instanceof Literal && ((Literal) filter.getExpression2()).getValue() instanceof Polygon) {
                 Polygon expr2 = (Polygon) ((Literal) filter.getExpression2()).getValue();
 
                 if (expr2.isRectangle()) {
                     FilterFactory2 factory = getFactory(extraData);
-                    BBOX bbox = factory.bbox(factory.property(SpatialIndexWriter.GEOM_ATTRIBUTE_NAME), JTS.toEnvelope(expr2));
+                    BBOX bbox = factory.bbox(factory.property(geomName), JTS.toEnvelope(expr2));
 
                     return bbox;
                 } else {
