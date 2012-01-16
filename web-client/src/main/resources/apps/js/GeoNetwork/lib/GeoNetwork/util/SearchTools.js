@@ -67,13 +67,15 @@ GeoNetwork.util.SearchTools = {
      *  :param updateStore: ``Boolean``    true to update catalogue attached stores. false
      *    to not update them. If false, usually a onSuccess function is used to retrieve
      *    search results.
-     *
+     *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
+     *  
      *  Send a GET query to server url. A query is a KVP string.
      *
      */
-    doQuery: function(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore){
+    doQuery: function(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
         OpenLayers.Request.GET({
             url: cat.services.rootUrl + metadataStore.service + "?" + query,
+            async: async === false ? false : true,
             success: function(result){
             
                 if (updateStore) {
@@ -131,19 +133,19 @@ GeoNetwork.util.SearchTools = {
      *  or more fields which are processed by buildQueryFromForm.
      *
      */
-    doQueryFromForm: function(formId, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore){
+    doQueryFromForm: function(formId, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
     
         var query = GeoNetwork.util.SearchTools.buildQueryFromForm(Ext.getCmp(formId), startRecord, GeoNetwork.util.SearchTools.sortBy, metadataStore.fast);
-        GeoNetwork.util.SearchTools.doQuery(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
+        GeoNetwork.util.SearchTools.doQuery(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
     },
-    doQueryFromParams: function(params, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore){
+    doQueryFromParams: function(params, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
         var filters = [], query;
         GeoNetwork.util.SearchTools.addFiltersFromPropertyMap(params, filters, startRecord);
         
         query = GeoNetwork.util.SearchTools.buildQueryGET(filters, startRecord, 
                     GeoNetwork.util.SearchTools.sortBy, metadataStore.fast);
         
-        GeoNetwork.util.SearchTools.doQuery(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
+        GeoNetwork.util.SearchTools.doQuery(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
     },
     /** api:method[buildQueryFromForm]
      *
@@ -242,15 +244,10 @@ GeoNetwork.util.SearchTools = {
         var field = key.match("^(\\[?)([^_]+)_(.*)$"), 
             i, 
             or = [];
-        // console.log("field:" + field + " value:" + value);
         if (field) {
-            if (field[1] === '[') { // Not used
-                var values = value.split(",");
-                for (i = 0; i < values.length; ++i) {
-                    GeoNetwork.util.SearchTools.addFilterImpl(values.length > 1 ? or : filters, field[2], field[3], values[i]);
-                }
-            } else {
-                GeoNetwork.util.SearchTools.addFilterImpl(filters, field[2], field[3], value);
+            var list = field[3].split('|');
+            for (i = 0; i < list.length; ++i) {
+                GeoNetwork.util.SearchTools.addFilterImpl(filters, field[2], list[i], value);
             }
         }
     },

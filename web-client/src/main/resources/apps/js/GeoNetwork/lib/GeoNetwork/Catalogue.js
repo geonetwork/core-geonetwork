@@ -529,11 +529,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *    Default to true.
      *  :param metadataStore: ``GeoNetwork.data.MetadataResultsStore or GeoNetwork.data.MetadataResultsFastStore`` the metadata store to use. If undefined, catalogue metadata store
      *  :param summaryStore: ``GeoNetwork.data.MetadataSummaryStore`` the summary store to use. If undefined, the catalogue summary store.
-     *
+     *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
+     *  
      *  Run a search operation using GeoNetwork xml.search service.
      *  Initialize results and summary stores.
      */
-    search: function(formOrParams, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore){
+    search: function(formOrParams, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async){
     	
     	var isCatalogueMdStore = this.metadataStore === metadataStore;
     	if (isCatalogueMdStore) {
@@ -562,9 +563,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             metadataStore.removeAll();
         }
         if (typeof formOrParams === 'object') {
-            GeoNetwork.util.SearchTools.doQueryFromParams(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
+            GeoNetwork.util.SearchTools.doQueryFromParams(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
         } else {
-        	GeoNetwork.util.SearchTools.doQueryFromForm(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
+        	GeoNetwork.util.SearchTools.doQueryFromForm(formOrParams, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
         }
     },
     /** api: method[kvpSearch]
@@ -580,13 +581,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *   is defined by an E_hits_per_page field defined in the form. If
      *   not default value is used.
      *  :param updateStore: ``Boolean``	true to update catalogue attached stores.
-     *
+     *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
+     *  
      *  Run a search operation based on KVP query using GeoNetwork
      *  xml.search service. Initialize results and summary stores.
      *  KVP search could be used in fast mode in order to quickly
      *  populate a summary store (for a TagCloud for example).
      */
-    kvpSearch: function(query, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore){
+    kvpSearch: function(query, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async){
     
         if (updateStore !== false) {
             updateStore = true;
@@ -609,7 +611,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (updateStore) {
             metadataStore.removeAll();
         }
-        GeoNetwork.util.SearchTools.doQuery(query, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore);
+        GeoNetwork.util.SearchTools.doQuery(query, this, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
     },
     /** api: method[cswSearch]
      *  :param formId: ``String`` An Ext.Form identifier
@@ -778,6 +780,16 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var bd = Ext.getBody();
         
         if (this.resultsView) {
+            var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid));
+            
+            // No current search available with this record information
+            if (!record) {
+                // Retrieve information in synchrone mode
+                var store = GeoNetwork.data.MetadataResultsFastStore();
+                this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                record = store.getAt(store.find('uuid', uuid));
+            }
+            
             var win = new GeoNetwork.view.ViewWindow({
                 serviceUrl: url,
                 lang: this.lang,
@@ -786,7 +798,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 catalogue: this,
                 maximized: maximized || false,
                 metadataUuid: uuid,
-                record: this.metadataStore.getAt(this.metadataStore.find('uuid', uuid)),
+                record: record,
                 resultsView: this.resultsView
                 });
             win.show(this.resultsView);
@@ -798,16 +810,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         }
     },
      metadataShowById: function(id, maximized, width, height){
-        var url = this.services.mdView + '?id=' + id;
+        var url = this.services.mdView + '?id=' + id, record;
         
         if (this.resultsView) {
+            // No current search available with this record information
+            if (!record) {
+                // Retrieve information in synchrone mode
+                var store = GeoNetwork.data.MetadataResultsFastStore();
+                this.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
+                record = store.getAt(store.find('id', id));
+            }
+            
             var win = new GeoNetwork.view.ViewWindow({
                 serviceUrl: url,
                 currTab: GeoNetwork.defaultViewMode || 'simple',
                 catalogue: this,
                 maximized: maximized || false,
-//                metadataUuid: unde,
-//                record: this.metadataStore.getAt(this.metadataStore.find('uuid', uuid)),
+                record: record,
+                metadataUuid: record.get('uuid'),
                 resultsView: this.resultsView
                 });
             win.show(this.resultsView);
