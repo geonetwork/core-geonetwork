@@ -266,7 +266,7 @@ GeoNetwork.util.SearchFormTools = {
             Ext.applyIf(geomWithMapField, panelConfig);
         }
         
-        fields.push(geomField, geomWithMapField);
+        fields.push(geomField, geomWithMapField, GeoNetwork.util.SearchFormTools.getRelationField());
         
         return fields;
     },
