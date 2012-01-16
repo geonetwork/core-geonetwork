@@ -18,7 +18,7 @@ Ext.onReady(function(){
         renderTo: 'metadata-view-full',
         catalogue: catalogue
     });
-    
+    Ext.QuickTips.init();
     
     searchForm = new Ext.FormPanel({
         border: false,
@@ -50,6 +50,8 @@ Ext.onReady(function(){
             Ext.getCmp('searchBt').fireEvent('click');
         }
     }]);
+    
+    
     
     // Focus on full text search field
     Ext.getDom('E_any').focus(true);
