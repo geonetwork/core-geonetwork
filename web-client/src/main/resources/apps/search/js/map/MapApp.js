@@ -1118,8 +1118,7 @@ GeoNetwork.mapApp = function() {
                         map: map,
                         tbar: toolbar,
                         border: false,
-                        center: [155000, 463000],
-                        zoom: 2,
+                        extent: GeoNetwork.map.EXTENT,
                         items: [mapOverlay]
                     }]
                 }
