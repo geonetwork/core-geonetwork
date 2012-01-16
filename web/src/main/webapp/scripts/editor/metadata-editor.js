@@ -1131,7 +1131,8 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     				} else {
     					// Create relation between current record and selected one
     					if (this.mode=='iso19110') {
-    						var url = 'xml.relation.insert?parentId=' + document.mainForm.id.value + 
+                            // For backwards compatibility the Feature Catalogue relations are stored in database also
+    						var url = 'xml.relation.insert?parentId=' + document.mainForm.id.value +
     								'&childUuid=' + metadata[0].data.uuid;
     						
 
@@ -1142,7 +1143,11 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     								var html = result.responseText;
     								// TODO : check if error.
     								// Refresh current edits
-    								doAction('metadata.update');
+
+                                    // Stores the he Feature Catalogue relation in the metadata, updating the editor view
+    								window.location.replace("metadata.processing?uuidref=" + metadata[0].data.uuid +
+                                        "&id=" + document.mainForm.id.value +
+                                        "&process=update-attachFeatureCatalogue");
     							},
     							failure:function (result, request) { 
     								Ext.MessageBox.alert(translate("error") 
@@ -1183,6 +1188,37 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     linkedMetadataSelectionWindow.show();
 }
 
+/**
+ * Detaches a Feature Catalogue relation
+ *
+ * For backwards compatibility the Feature Catalogue relations are stored in database also
+ *
+ * @param parentUuid
+ * @param childUuid
+ * @param id
+ */
+function detachFeatureCatalogueMd(parentUuid, childUuid, id) {
+     	var url = 'xml.relation.delete?parentUuid=' + parentUuid +
+    								'&childUuid=' + childUuid;
+
+        var myExtAJaxRequest = Ext.Ajax.request({
+            url: url,
+            method: 'GET',
+            success: function(result, request) {
+                var html = result.responseText;
+                // TODO : check if error.
+                // Refresh current edits
+                window.location.replace("metadata.processing?uuidref=" + childUuid +
+                    "&id=" + id +
+                    "&process=update-detachFeatureCatalogue");
+            },
+            failure:function (result, request) {
+                Ext.MessageBox.alert(translate("error")
+                            + " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
+                setBunload(true); // reset warning for window destroy
+            }
+        });
+}
 
 /**
  * Property: geoPublisherWindow

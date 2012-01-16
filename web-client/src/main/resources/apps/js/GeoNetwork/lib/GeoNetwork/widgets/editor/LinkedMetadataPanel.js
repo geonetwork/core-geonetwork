@@ -205,6 +205,15 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 this.editor.catalogue.doAction(this.editor.catalogue.services.mdRelationDelete, 
                     {childUuid: this.selectedUuid, parentId: this.metadataId},
                     null, null, this.reload.bind(this), null);
+
+                var urlProcessing = this.editor.catalogue.services.mdProcessing +
+                                            '?uuidref=' +
+                                            this.selectedUuid +
+                                            '&id=' +
+                                            this.metadataId +
+                                            "&process=update-detachFeatureCatalogue";
+
+                this.editor.process(urlProcessing);
             },
             scope: this,
             disabled: true

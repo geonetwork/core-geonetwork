@@ -164,7 +164,8 @@
 			<xsl:variable name="parent" select="$metadata/gmd:parentIdentifier/gco:CharacterString"/>
 			<xsl:variable name="services" select="/root/gui/relation/services/response/*[geonet:info]"/>
 			<xsl:variable name="children" select="/root/gui/relation/children/response/*[geonet:info]"/>
-			<xsl:variable name="relatedRecords" select="/root/gui/relation/related/response/*[geonet:info]"/><!-- Usually feature catalogues -->
+			<xsl:variable name="relatedRecords" select="/root/gui/relation/related/response/*[geonet:info]"/> <!-- Usually feature catalogues -->
+            <!-- <xsl:variable name="relatedRecords" select="/root/gui/relation/fcats/response/*[geonet:info]"/> -->
 
 			<!-- The GetCapabilities URL -->
 			<xsl:variable name="capabilitiesUrl">
@@ -366,12 +367,13 @@
 		        						<xsl:if test="$edit">
 		        							<!-- Allow deletion of coupledResource and operatesOn element -->
 		        							<xsl:text> </xsl:text>
-		        							<a href="xml.relation.delete?parentUuid={$metadata/geonet:info/uuid}&amp;childUuid={geonet:info/uuid}">
-		        								<img alt="{/root/gui/strings/delete}" title="{/root/gui/strings/delete}"
+
+                                            <a href="#" onclick="detachFeatureCatalogueMd('{$metadata/geonet:info/uuid}', '{geonet:info/uuid}', '{$metadata/geonet:info/id}')">
+                                                <img alt="{/root/gui/strings/delete}" title="{/root/gui/strings/delete}"
 		        									src="{/root/gui/url}/images/del.gif"
 		        									align="absmiddle"
 		        								/>
-		        							</a>
+                                            </a>
 		        						</xsl:if>
 			        					</li>
 			        				</xsl:for-each>
