@@ -193,9 +193,12 @@ public class GetRelated implements Service {
         }
 
         if (type.equals("") || type.contains("related")) {
-            Element relation = Get.getRelation(id, "full", context);
-            relatedRecords.addContent(new Element("related")
-                    .addContent(relation));
+            // Related records could be feature catalogue defined in relation table
+            relatedRecords.addContent(new Element("related").addContent(Get.getRelation(id, "full", context)));
+            // Or feature catalogue define in feature catalogue citation
+            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
+                    to, fast));
+            
         }
 
         return relatedRecords;
@@ -237,6 +240,8 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("parentUuid").setText(uuid));
             else if ("services".equals(type))
                 parameters.addContent(new Element("operatesOn").setText(uuid));
+            else if ("hasfeaturecat".equals(type))
+                parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
             parameters.addContent(new Element("fast").addContent(fast));

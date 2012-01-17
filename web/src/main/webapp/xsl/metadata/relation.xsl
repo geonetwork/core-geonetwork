@@ -18,7 +18,7 @@
     </relations>
   </xsl:template>
 
-  <xsl:template mode="relation" match="related|services|datasets|children|parent|sources|fcats">
+  <xsl:template mode="relation" match="related|services|datasets|children|parent|sources|fcats|hasfeaturecat">
     <xsl:apply-templates mode="relation" select="response/*">
       <xsl:with-param name="type" select="name(.)"/>
     </xsl:apply-templates>
@@ -42,4 +42,18 @@
     </relation>
   </xsl:template>
 
+  <xsl:template mode="relation" match="*">
+    <xsl:param name="type"/>
+    
+    <!-- Fast output doesn't produce a full metadata record -->
+    <xsl:variable name="md">
+    <xsl:apply-templates mode="superBrief" select="."/>
+    </xsl:variable>
+    <xsl:variable name="metadata" select="exslt:node-set($md)"/>
+   
+    
+    <relation type="{$type}">
+      <xsl:copy-of select="$metadata"/>
+    </relation>
+  </xsl:template>
 </xsl:stylesheet>

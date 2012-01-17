@@ -501,7 +501,7 @@ div.button {
 .cat-directories {
   background-image : url(../images/default/category/directories.png) !important;
 }
-.cat-related, .cat-featureCatalogue {
+.cat-related, .cat-featureCatalogue, .cat-fcats {
   background-image : url(../images/default/category/featureCatalogue.png) !important;
 }
 .cat-interactiveResources {

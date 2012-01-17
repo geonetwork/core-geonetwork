@@ -72,7 +72,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
          *  Set to '' to display all.
          */
-        relationTypes: 'service|children|related|parent|dataset',
+        relationTypes: 'service|children|related|parent|dataset|fcat',
         maximizable: true,
         maximized: false,
         collapsible: true,

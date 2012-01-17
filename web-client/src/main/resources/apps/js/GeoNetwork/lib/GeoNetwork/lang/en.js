@@ -373,6 +373,7 @@ GeoNetwork.lang.en = {
     'relatedservices': 'Related service',
     'relatedchildren': 'Children',
     'relatedfcats': 'Related feature catalogue',
+    'relatedhasfeaturecat': 'Datasets',
     'relatedsources': 'Source datasets',
     'getMEF': 'Export (ZIP)',
     'metadataCategories': 'Metadata categories',

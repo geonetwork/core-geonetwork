@@ -393,6 +393,7 @@ GeoNetwork.Lang.fr = {
     'relatedchildren': 'Enfants',
     'relatedrelated': 'Relation catalogue d\'attributs/données',
     'relatedfcats': 'Relation catalogue d\'attributs/données',
+    'relatedhasfeaturecat': 'Donnée',
     'relatedsources': 'Données sources',
     'delete19110Relation': 'Supprimer le lien cat. d\'attributs',
     'newWindow': 'Nouvelle fenêtre',
