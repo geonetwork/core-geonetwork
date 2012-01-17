@@ -2615,7 +2615,7 @@
   <!-- ===================================================================== -->
   <!-- === iso19139 brief formatting === -->
   <!-- ===================================================================== -->
-  <xsl:template mode="superBrief" match="gmd:MD_Metadata" priority="2">
+  <xsl:template mode="superBrief" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="2">
     <xsl:variable name="langId">
       <xsl:call-template name="getLangId">
         <xsl:with-param name="langGui" select="/root/gui/language"/>
