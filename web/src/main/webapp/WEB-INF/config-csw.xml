@@ -25,7 +25,7 @@
                 </parameter>
 
                 <parameter name="Abstract" field="abstract" type="SupportedISOQueryables">
-                    <xpath schema="iso19139" path="gmd:abstract/gco:CharacterString"/>
+                    <xpath schema="iso19139" path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
                 </parameter>
 
                 <parameter name="AnyText" field="any" type="SupportedISOQueryables" />
@@ -55,7 +55,7 @@
                 </parameter>
 
 				<parameter name="AlternateTitle" field="altTitle" type="SupportedISOQueryables">
-                    <xpath schema="iso19139" path="gmd:alternateTitle/gco:CharacterString"/>
+                    <xpath schema="iso19139" path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:alternateTitle/gco:CharacterString"/>
                 </parameter>
 
                  <parameter name="CreationDate" field="createDate" type="SupportedISOQueryables" range="true">
