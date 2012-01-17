@@ -9,7 +9,7 @@
   exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
 
-  <xsl:template name="view-with-header">
+  <xsl:template name="view-with-header-iso19139">
     <xsl:param name="tabs"/>
     
     <xsl:call-template name="md-content">
@@ -51,7 +51,7 @@
   <xsl:template name="metadata-iso19139view-simple" match="metadata-iso19139view-simple">
     <!--<xsl:apply-templates mode="iso19139-simple" select="*"/>-->
 
-    <xsl:call-template name="view-with-header">
+    <xsl:call-template name="view-with-header-iso19139">
       <xsl:with-param name="tabs">
         <xsl:call-template name="complexElementSimpleGui">
           <xsl:with-param name="title"

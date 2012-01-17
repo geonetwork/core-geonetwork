@@ -44,14 +44,14 @@
               <xsl:apply-templates mode="xmlDocument" select="."/>
             </xsl:when>
             <xsl:when test="$currTab='simple' or $currTab='inspire'">
-              
-              <xsl:call-template name="view-with-header">
+                <xsl:variable name="schemaTemplate" select="concat('view-with-header-',$schema)"/>
+                <saxon:call-template name="{$schemaTemplate}">
                 <xsl:with-param name="tabs">
                   <xsl:apply-templates mode="elementEP" select=".">
                     <xsl:with-param name="edit" select="false()"/>
                   </xsl:apply-templates>
                 </xsl:with-param>
-              </xsl:call-template>
+                </saxon:call-template>
             </xsl:when>
             <xsl:otherwise>
               <table class="gn">
