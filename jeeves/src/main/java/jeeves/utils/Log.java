@@ -55,7 +55,7 @@ public final class Log
 	public static final String TRANSFORMER_FACTORY = JEEVES
 			+ ".transformerFactory";
 
-	public final class Dbms
+    public final class Dbms
 	{
 		/**
        * Default constructor.
@@ -77,6 +77,11 @@ public final class Log
 	{
 		Logger.getLogger(module).debug(message);
 	}
+
+
+    public static boolean isDebug(String module) {
+        return Logger.getLogger(module).isDebugEnabled();
+    }
 
 	//---------------------------------------------------------------------------
 

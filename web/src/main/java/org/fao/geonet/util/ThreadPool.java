@@ -63,7 +63,8 @@ public class ThreadPool {
 	public void runTask(Runnable task) {
 		this.task = task;
 		threadPool.execute(task);
-		Log.debug(Geonet.THREADPOOL, toString());
+        if(Log.isDebug(Geonet.THREADPOOL))
+		    Log.debug(Geonet.THREADPOOL, toString());
 	}
 
 	

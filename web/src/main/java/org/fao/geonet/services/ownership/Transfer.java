@@ -34,10 +34,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  *
@@ -104,10 +101,12 @@ public class Transfer implements Service {
 		dbms.commit();
 
 		//--- reindex metadata
+        List<String> list = new ArrayList<String>();
 		for (int mdId : metadata) {
-            boolean indexGroup = false;
-            dm.indexMetadata(dbms, Integer.toString(mdId), indexGroup);
+            list.add(Integer.toString(mdId));
         }
+        
+        dm.indexInThreadPool(context,list);
 
 		//--- return summary
 		return new Element("response")

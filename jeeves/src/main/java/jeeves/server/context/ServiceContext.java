@@ -43,7 +43,28 @@ import java.util.Map;
 
 public class ServiceContext extends BasicContext
 {
-	private UserSession    userSession;
+
+    private final static InheritableThreadLocal<ServiceContext> threadLocalInstance = new InheritableThreadLocal<ServiceContext>();
+
+    /**
+     * ServiceManager sets the service context thread local when dispatch is called.  this method will
+     * return null or the service context
+     *
+     * @return the service context set by service context or null if no in an inherited thread
+     */
+    public static ServiceContext get() {
+        return threadLocalInstance.get();
+    }
+
+    /**
+     * Called to set the Service context for this thread and inherited threads
+     */
+    public void setAsThreadLocal() {
+        threadLocalInstance.set(this);
+    }
+
+
+    private UserSession    userSession;
 	private ProfileManager profilMan;
 	private InputMethod    input;
 	private OutputMethod   output;

@@ -29,14 +29,12 @@ package org.fao.geonet.kernel;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
@@ -63,29 +61,18 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.concurrent.BlockingQueue; 
-import java.util.concurrent.Executors; 
+import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
  */
 public class DataManager {
+    
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -134,13 +121,6 @@ public class DataManager {
 		init(context, dbms, false);
 	}
 
-    /**
-     *
-     */
-    private synchronized void finishRebuilding() {
-        rebuilding = false;
-    }
-
 	/**
 	 * Init Data manager and refresh index if needed. 
 	 * Can also be called after GeoNetwork startup in order to rebuild the lucene 
@@ -153,8 +133,6 @@ public class DataManager {
 	 **/
 	public synchronized void init(ServiceContext context, Dbms dbms, Boolean force) throws Exception {
 
-		if (rebuilding) throw new OperationNotAllowedEx("Index rebuilding already in progress");
-
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
 		
@@ -164,7 +142,7 @@ public class DataManager {
 		HashMap<String,String> docs = searchMan.getDocsChangeDate();
 
 		// set up results HashMap for post processing of records to be indexed
-		ArrayList<Integer> toIndex = new ArrayList<Integer>();
+		ArrayList<String> toIndex = new ArrayList<String>();
 
 		Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
 
@@ -182,7 +160,7 @@ public class DataManager {
 			// if metadata is not indexed index it
 			if (idxLastChange == null) {
 				Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
-				toIndex.add(iId);
+				toIndex.add(id);
 	
 			// else, if indexed version is not the latest index it
 			} else {
@@ -196,7 +174,7 @@ public class DataManager {
 				// date in index contains 't', date in DBMS contains 'T'
 				if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
 					Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
-					toIndex.add(iId);
+					toIndex.add(id);
 				}
 			}
 		}
@@ -204,7 +182,7 @@ public class DataManager {
 		// if anything to index then schedule it to be done after servlet is
 		// up so that any links to local fragments are resolvable
 		if ( toIndex.size() > 0 ) {
-			startThreadsToReindex(context,toIndex);
+            batchRebuild(context,toIndex);
 		}
 
 		if (docs.size() > 0) { // anything left?
@@ -227,109 +205,138 @@ public class DataManager {
      */
 	public synchronized void rebuildIndexXLinkedMetadata(ServiceContext context) throws Exception {
 		
-		if (rebuilding) throw new OperationNotAllowedEx("Index rebuilding already in progress");
-
 		// get all metadata with XLinks
 		ArrayList<Integer> toIndex = searchMan.getDocsWithXLinks();
 
 		Log.debug(Geonet.DATA_MANAGER, "Will index "+toIndex.size()+" records with XLinks");
 		if ( toIndex.size() > 0 ) {
 			// clean XLink Cache so that cache and index remain in sync
-			Processor.clearCache();	
+			Processor.clearCache();
 
-			// execute indexing operation
-			startThreadsToReindex(context,toIndex);
+            ArrayList<String> stringIds = new ArrayList<String>();
+            for (Integer id : toIndex) {
+                stringIds.add(id.toString());
+            }
+            // execute indexing operation
+            batchRebuild(context,stringIds);
 		}
 	}
+    
+    private void batchRebuild(ServiceContext context, List<String> ids) {
+
+        // split reindexing task according to number of processors we can assign
+        int threadCount = ThreadUtils.getNumberOfThreads();
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+        int perThread;
+        if (ids.size() < threadCount) perThread = ids.size();
+        else perThread = ids.size() / threadCount;
+        int index = 0;
+
+        while(index < ids.size()) {
+            int start = index;
+            int count = Math.min(perThread,ids.size()-start);
+            // create threads to process this chunk of ids
+            Runnable worker = new IndexMetadataTask(context, ids, start, count);
+            executor.execute(worker);
+            index += count;
+        }
+
+        executor.shutdown();
+    }
+
+    public void indexInThreadPoolIfPossible(Dbms dbms, String id) throws Exception {
+        if(ServiceContext.get() == null ) {
+            boolean indexGroup = false;
+            indexMetadata(dbms, id, indexGroup);
+        } else {
+            indexInThreadPool(ServiceContext.get(), id);
+        }
+    }
 
     /**
-     * Splits a list of metadata ids into groups and assigned them to threads
-		 * for reindexing.
-		 *
+     * Add metadata ids to the thread pool for indexing.
+     *
+     * @param context
+     * @param id
+     */
+	public void indexInThreadPool(ServiceContext context, String id) {
+        indexInThreadPool(context, Collections.singletonList(id));
+    }
+    /**
+     * Add metadata ids to the thread pool for indexing.
+     *
      * @param context
      * @param ids
      */
-	public void startThreadsToReindex(ServiceContext context, ArrayList<Integer> ids) {
+	public void indexInThreadPool(ServiceContext context, List<String> ids) {
 
 			try {
+                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-				// split reindexing task according to number of processors we can
-				// assign
-				int threadCount = ThreadUtils.getNumberOfThreads();
-    		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-
-				int perThread;
-    		if (ids.size() < threadCount) perThread = ids.size();
-    		else perThread = ids.size() / threadCount;
-    		int index = 0;
-
-    		while(index < ids.size()) {
-      		int start = index;
-      		int count = Math.min(perThread,ids.size()-start);
-      		// create threads to process this chunk of ids
-      		Runnable worker = new IndexMetadataTask(context, ids, start, count);
-      		executor.execute(worker);
-      		index += count;
-    		}
-
-    		executor.shutdown();
-
-
+                if(ids.size()>0) {
+                    Runnable worker = new IndexMetadataTask(context, ids);
+                    gc.getThreadPool().runTask(worker);
+                }
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-
-				finishRebuilding();
 			}
 		}
 
-  /**
-    * Task to reindex the entire catalog at startup or from the 
-	  * Administration menu. Creates number of threads according to 
-		* number allocated to JVM.
-    */
-	class IndexMetadataTask implements Runnable {
+    final class IndexMetadataTask implements Runnable {
 
-		private final ServiceContext context;
-		private final ArrayList<Integer> ids;
-		private final int beginIndex, count;
+        private final ServiceContext context;
+        private final List<String> ids;
+        private int beginIndex;
+        private int count;
 
-		IndexMetadataTask(ServiceContext context, ArrayList<Integer> ids, int beginIndex, int count) {
-			this.context = context;
-			this.ids = ids;
-			this.beginIndex = beginIndex;
-			this.count = count;
-		}
+        IndexMetadataTask(ServiceContext context, List<String> ids) {
+            this.context = context;
+            this.ids = ids;
+            this.beginIndex = 0;
+            this.count = ids.size();
+        }
+        IndexMetadataTask(ServiceContext context, List<String> ids, int beginIndex, int count) {
+            this.context = context;
+            this.ids = ids;
+            this.beginIndex = beginIndex;
+            this.count = count;
+        }
 
-    public void run() {
-			try {
-				Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-				// poll context to see whether servlet is up yet
-				while (!context.isServletInitialized()) {
-					Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing.."); 
-					Thread.sleep(10000); // sleep 10 seconds
-				}
-	
-				// servlet up so safe to index all metadata that needs indexing
-				startIndexGroup();
-				try {
-     			for(int i=beginIndex; i<beginIndex+count; i++) {
-						indexMetadataGroup(dbms, ids.get(i).toString());
-					}
-				} finally {
-					endIndexGroup();
-				}
+        public void run() {
+            try {
+                // poll context to see whether servlet is up yet
+                while (!context.isServletInitialized()) {
+                    Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing..");
+                    Thread.sleep(10000); // sleep 10 seconds
+                }
+                Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+                try {
 
-				//-- commit Dbms resource (which makes it available to pool again) 
-				//-- to avoid exhausting Dbms pool
-				context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-			} catch (Exception e) {
-				Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
-				e.printStackTrace();
-			}
+                    if (ids.size() > 1) {
+                        // servlet up so safe to index all metadata that needs indexing
+                        startIndexGroup();
+                        try {
+                            for(int i=beginIndex; i<beginIndex+count; i++) {
+                                indexMetadataGroup(dbms, ids.get(i).toString());
+                            }
+                        } finally {
+                            endIndexGroup();
+                        }
+                    } else {
+                        indexMetadata(dbms, ids.get(0), false);
+                    }
+                } finally {
+                    //-- commit Dbms resource (which makes it available to pool again)
+                    //-- to avoid exhausting Dbms pool
+                    context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+                }
+            } catch (Exception e) {
+                Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
+                e.printStackTrace();
+            }
+        }
     }
-
-  }
 
     /**
      *
@@ -695,7 +702,7 @@ public class DataManager {
      */
 	public static void validateMetadata(String schema, Element xml, ServiceContext context) throws Exception
 	{
-		validateMetadata(schema,xml,context," ");
+		validateMetadata(schema, xml, context, " ");
 	}
 
     /**
@@ -1139,9 +1146,7 @@ public class DataManager {
      */
 	public void setTemplate(Dbms dbms, int id, String isTemplate, String title) throws Exception {
 		setTemplateExt(dbms, id, isTemplate, title);
-        boolean indexGroup = false;
-        indexMetadata(dbms, Integer.toString(id), indexGroup);
-
+        indexInThreadPoolIfPossible(dbms,Integer.toString(id));
 	}
 
     /**
@@ -1292,8 +1297,8 @@ public class DataManager {
         //
 		query = "UPDATE Metadata SET rating=? WHERE id=?";
 		dbms.execute(query, rating, id);
-        boolean indexGroup = false;
-        indexMetadata(dbms, Integer.toString(id), indexGroup);
+
+        indexInThreadPoolIfPossible(dbms,Integer.toString(id));
 
 		return rating;
 	}
@@ -1356,8 +1361,7 @@ public class DataManager {
         }
 
 		//--- index metadata
-        boolean indexGroup = false;
-        indexMetadata(dbms, id, indexGroup);
+        indexInThreadPoolIfPossible(dbms,id);
 		return id;
 	}
 
@@ -1415,8 +1419,7 @@ public class DataManager {
         }
 
         if(index) {
-            boolean indexGroup = false;
-            indexMetadata(dbms, id$, indexGroup);
+            indexInThreadPoolIfPossible(dbms,id$);
         }
 
         // Notifies the metadata change to metatada notifier service
@@ -1610,8 +1613,7 @@ public class DataManager {
         finally {
             if(index) {
                 //--- update search criteria
-                boolean indexGroup = false;
-                indexMetadata(dbms, id, indexGroup);
+                indexInThreadPoolIfPossible(dbms,id);
             }
 		}
 		return true;
@@ -1896,7 +1898,7 @@ public class DataManager {
 		XmlSerializer.delete(dbms, "Metadata", id);
 
 		//--- update search criteria
-		searchMan.deleteGroup("_id", id+"");
+		searchMan.deleteGroup("_id", id + "");
 	}
 
     /**
@@ -1962,7 +1964,6 @@ public class DataManager {
 
     /**
      *
-     * @param dbms
      * @param id
      * @param small
      * @param file
@@ -1981,7 +1982,6 @@ public class DataManager {
 
     /**
      *
-     * @param dbms
      * @param id
      * @param small
      * @throws Exception
@@ -1994,7 +1994,6 @@ public class DataManager {
 
     /**
      *
-     * @param dbms
      * @param id
      * @param small
      * @param env
@@ -2020,7 +2019,7 @@ public class DataManager {
 		//--- setup environment
 		String type = small ? "thumbnail" : "large_thumbnail";
 		env.addContent(new Element("type").setText(type));
-		transformMd(dbms,id,md,env,schema,styleSheet);
+		transformMd(dbms, id, md, env, schema, styleSheet);
 	}
 
     /**
@@ -2050,9 +2049,7 @@ public class DataManager {
         notifyMetadataChange(dbms, md, id);
 
 		//--- update search criteria
-        boolean indexGroup = false;
-        indexMetadata(dbms, id, indexGroup);
-
+        indexInThreadPoolIfPossible(dbms,id);
 	}
 
     /**
@@ -2074,7 +2071,7 @@ public class DataManager {
 		env.addContent(new Element("licensename").setText(licensename));
 		env.addContent(new Element("type").setText(type));
 
-		manageCommons(dbms,id,env,Geonet.File.SET_DATACOMMONS);
+		manageCommons(dbms, id, env, Geonet.File.SET_DATACOMMONS);
 	}
 
     /**
@@ -2096,7 +2093,7 @@ public class DataManager {
 		env.addContent(new Element("licensename").setText(licensename));
 		env.addContent(new Element("type").setText(type));
 
-		manageCommons(dbms,id,env,Geonet.File.SET_CREATIVECOMMONS);
+		manageCommons(dbms, id, env, Geonet.File.SET_CREATIVECOMMONS);
 	}
 
     /**
@@ -2117,7 +2114,7 @@ public class DataManager {
 		md.detach();
 
 		String schema = getMetadataSchema(dbms, id);
-		transformMd(dbms,id,md,env,schema,styleSheet);
+		transformMd(dbms, id, md, env, schema, styleSheet);
 	}
 
 	//--------------------------------------------------------------------------
@@ -2687,7 +2684,6 @@ public class DataManager {
 	 * 
 	 * @param context
 	 * @param id
-	 * @param dbms
 	 * @param info
 	 * @throws Exception
 	 */
@@ -2920,7 +2916,6 @@ public class DataManager {
 	private String thesaurusDir;
     private ServiceContext servContext;
 	private String appPath;
-	private boolean rebuilding = false;
 	private String stylePath;
 	private static String FS = File.separator;
 

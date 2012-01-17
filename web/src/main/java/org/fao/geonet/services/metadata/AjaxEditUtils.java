@@ -626,8 +626,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(dbms, md, id);
 
 		//--- update search criteria
-        boolean indexGroup = false;
-        dataManager.indexMetadata(dbms, id, indexGroup);
+        dataManager.indexInThreadPoolIfPossible(dbms,id);
 
 		return true;
 	}
@@ -682,8 +681,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(dbms, md, id);
 
 		//--- update search criteria
-        boolean indexGroup = false;
-        dataManager.indexMetadata(dbms, id, indexGroup);
+        dataManager.indexInThreadPoolIfPossible(dbms, id);
 
 		return true;
 	}

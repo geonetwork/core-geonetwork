@@ -356,6 +356,8 @@ public class ServiceManager
 		context.setServlet(servlet);
 		if (startupError) context.setStartupErrors(startupErrors);
 
+        context.setAsThreadLocal();
+
 		//--- invoke service and build result
 
 		Element     response = null;
