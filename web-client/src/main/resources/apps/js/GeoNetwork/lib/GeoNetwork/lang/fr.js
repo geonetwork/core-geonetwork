@@ -416,7 +416,8 @@ GeoNetwork.Lang.fr = {
     'hideSearchForm': 'Afficher ou cacher le formulaire de recherche.',
     'switchMode': 'Changer de mode de visualisation.',
     'resetSearchForm': 'Réinitialiser le formulaire de recherche.',
-    'focusOnLogin': 'Déplacer le curseur sur le formulaire de connexion.',
+    'focusOnLogin': 'Déplacer le curseur sur le formulaire de connexion ou déconnexion si vous êtes connecté.',
+    'openAdmin': 'Administrer le catalogue',
     'displayInfoPanel': 'Afficher la page d\'information.',
     'displayHelpPanel': 'Afficher cette page d\'aide.',
     

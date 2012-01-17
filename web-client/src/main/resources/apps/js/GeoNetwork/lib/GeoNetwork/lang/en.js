@@ -416,7 +416,8 @@ GeoNetwork.lang.en = {
     'hideSearchForm': 'Hide or display search form.',
     'switchMode': 'Switch visualization mode.',
     'resetSearchForm': 'Reset search form.',
-    'focusOnLogin': 'Focus on the login form to access catalogue administration.',
+    'focusOnLogin': 'Focus on the login form to access catalogue administration or logout if already logged in.',
+    'openAdmin': 'Go to administration',
     'displayInfoPanel': 'Display the information panel.',
     'displayHelpPanel': 'Display this help.',
     

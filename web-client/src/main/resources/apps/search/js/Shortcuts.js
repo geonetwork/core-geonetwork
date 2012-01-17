@@ -13,7 +13,7 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('focusOnAny'),
         fn: function(){
-        	var e = Ext.get('E_any');
+            var e = Ext.get('E_any');
             e.highlight();
             e.dom.focus(true);
         }
@@ -36,7 +36,7 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('previousPage'),
         fn: function(){
-        	Ext.getCmp('previousBt').handler();
+            Ext.getCmp('previousBt').handler();
         }
     }, {
         key: Ext.EventObject.RIGHT,
@@ -46,7 +46,7 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('nextPage'),
         fn: function(){
-        	Ext.getCmp('nextBt').handler();
+            Ext.getCmp('nextBt').handler();
         }
     }, {
         key: Ext.EventObject.UP,
@@ -56,7 +56,7 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('upInPage'),
         fn: function(){
-        	catalogue.resultsView.getEl().scroll('t', 170, true);
+            catalogue.resultsView.getEl().scroll('t', 170, true);
         }
     }, {
         key: Ext.EventObject.DOWN,
@@ -66,7 +66,7 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('downInPage'),
         fn: function(){
-        	catalogue.resultsView.getEl().scroll('b', 170, true);
+            catalogue.resultsView.getEl().scroll('b', 170, true);
         }
     }, {
         key: "d",
@@ -104,9 +104,23 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('focusOnLogin'),
         fn: function(){
-        	var e = Ext.get('username');
-        	e.highlight();
-            e.dom.focus(true);
+            var e = Ext.get('username');
+            if (e.isVisible()) {
+                e.highlight();
+                e.dom.focus(true);
+            } else {
+                catalogue.logout();
+            }
+            
+        }
+    }, {
+        key: "a",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('openAdmin'),
+        fn: function(){
+            catalogue.admin();
         }
     }, {
         key: "i",
@@ -144,22 +158,22 @@ function initShortcut(){
     
     var helpEl = Ext.getDom('shortcutHelp');
     if (helpEl) {
-	    var help = '';
-	    for (var i = 0; i < searchConfig.length; i++) {
-	        var c = searchConfig[i];
-	        help += '<tr><td>' +
-	        (c.ctrl === true ? '<span class="label">&lt;Ctrl&gt;</span> + ' : '') +
-	        (c.shift === true ? '<span class="label">&lt;Shift&gt;</span> + ' : '') +
-	        '<span class="label">' +
-	        (c.keyLabel ? c.keyLabel : c.key) +
-	        '</span>' +
-	        ':</td><td>' +
-	        c.label +
-	        '</td></tr>';
-	    }
-	    
-	    var html = '<table><tbody><tr><td>' + help + '</td></tr></tbody></table>';
-	    Ext.DomHelper.insertHtml('afterEnd', helpEl, html);
+        var help = '';
+        for (var i = 0; i < searchConfig.length; i++) {
+            var c = searchConfig[i];
+            help += '<tr><td>' +
+            (c.ctrl === true ? '<span class="label">&lt;Ctrl&gt;</span> + ' : '') +
+            (c.shift === true ? '<span class="label">&lt;Shift&gt;</span> + ' : '') +
+            '<span class="label">' +
+            (c.keyLabel ? c.keyLabel : c.key) +
+            '</span>' +
+            ':</td><td>' +
+            c.label +
+            '</td></tr>';
+        }
+        
+        var html = '<table><tbody><tr><td>' + help + '</td></tr></tbody></table>';
+        Ext.DomHelper.insertHtml('afterEnd', helpEl, html);
     }
     // Launch search when enter key press
     var formMap = new Ext.KeyMap("searchForm", [{
