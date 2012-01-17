@@ -406,8 +406,7 @@
 
     <!-- Display non existing child only -->
     <xsl:if test="$edit=true() and count(../@*[name(.)=$name])=0">
-      <xsl:variable name="id" select="concat('_', ../geonet:element/@ref, '_', @name)"/>
-
+      <xsl:variable name="id" select="concat('_', ../geonet:element/@ref, '_', replace(@name, ':', 'COLON'))"/>
       <xsl:call-template name="editAttribute">
         <xsl:with-param name="schema" select="$schema"/>
         <xsl:with-param name="title" select="$title"/>
@@ -475,11 +474,11 @@
 	prevent drawing of geonet:* elements
 	-->
   <xsl:template mode="element"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
   <xsl:template mode="simpleElement"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
   <xsl:template mode="complexElement"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
   <xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
   <!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
@@ -1288,33 +1287,26 @@
         </xsl:choose>
         <!-- Display attributes for :
           * non codelist element
-          * empty field with nilReason attributes 
+          * empty field with nilReason attributes
         -->
         <xsl:choose>
           <xsl:when
             test="$edit and $editAttributes
             and count(geonet:attribute)&gt;0 
             and count(*/geonet:attribute[@name='codeList'])=0 
-            and count(*/geonet:attribute[@name='gco:nilReason'])=0
-            and	count(geonet:attribute[@name!='gco:nilReason'])!=0
-            and not(gco:CharacterString)
             ">
-            <!-- Display attributes if used -->
-            <xsl:variable name="visibleAttributes" select="count(@*)!=0"/>
-
-            <fieldset class="attributes">
-              <legend>
-                <span>
-                  <div onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));">
-                    <xsl:attribute name="class">
-                      <xsl:choose>
-                        <xsl:when test="$visibleAttributes">tgDown button</xsl:when>
-                        <xsl:otherwise>tgRight button</xsl:otherwise>
-                      </xsl:choose>
-                    </xsl:attribute>
-                  </div>
-                </span> ... </legend>
-              <table class="gn" id="toggled{$id}">
+            <!-- Display attributes if used and not only contains a gco:nilReason = missing. -->
+            <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and  normalize-space()!='missing']) > 0"/>
+            <div class="attr">
+              <div title="{/root/gui/strings/editAttributes}" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));" style="display: none;">
+                <xsl:attribute name="class">
+                  <xsl:choose>
+                    <xsl:when test="$visibleAttributes">toggle-attr tgDown button</xsl:when>
+                    <xsl:otherwise>toggle-attr tgRight button</xsl:otherwise>
+                  </xsl:choose>
+                </xsl:attribute>
+              </div>
+              <table id="toggled{$id}">
                 <xsl:attribute name="style">
                   <xsl:if test="not($visibleAttributes)">display:none;</xsl:if>
                 </xsl:attribute>
@@ -1325,19 +1317,7 @@
                   </xsl:apply-templates>
                 </tbody>
               </table>
-            </fieldset>
-          </xsl:when>
-          <xsl:when
-            test="$edit
-            and /root/gui/config/metadata-editor-nilReason
-            and	count(geonet:attribute[@name='gco:nilReason'])!=0
-            and normalize-space(gco:CharacterString)=''">
-            <xsl:for-each select="@gco:nilReason">
-              <xsl:call-template name="getAttributeText">
-                <xsl:with-param name="schema" select="$schema"/>
-                <xsl:with-param name="edit" select="$edit"/>
-              </xsl:call-template>
-            </xsl:for-each>
+            </div>
           </xsl:when>
           <xsl:when test="not($edit) and @*">
             <xsl:apply-templates mode="simpleAttribute" select="@*">
@@ -1673,7 +1653,7 @@
           <legend id="stip.{$helpLink}|{$id}">
             <span>
               <xsl:if test="/root/gui/config/metadata-view-toggleTab">
-                <div class="button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
+                <div class="toggle button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
                   >&#160;</div>
               </xsl:if>
 
