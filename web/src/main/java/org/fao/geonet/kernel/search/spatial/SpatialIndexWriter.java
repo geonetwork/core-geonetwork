@@ -85,7 +85,7 @@ public class SpatialIndexWriter implements FeatureListener
     static final String _IDS_ATTRIBUTE_NAME = "id";
     static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
     static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
-    public static final int                                      MAX_WRITES_IN_TRANSACTION = 5000;
+    public static final int                                      MAX_WRITES_IN_TRANSACTION = 1000;
 
     private final Parser                              _parser;
     private final Transaction                         _transaction;
@@ -97,6 +97,7 @@ public class SpatialIndexWriter implements FeatureListener
 
     private Name _idColumn;
     private Name _geomColumn;
+    private boolean _autocommit;
 
 
     /**
@@ -123,7 +124,10 @@ public class SpatialIndexWriter implements FeatureListener
 		_maxWrites = maxWrites;
 
         _featureStore = createFeatureStore(datastore);
-        _featureStore.setTransaction(_transaction);
+        _autocommit = maxWrites < 2;
+        if(!_autocommit) {
+            _featureStore.setTransaction(_transaction);
+        }
         _featureStore.addFeatureListener(this);
 
     }
@@ -167,7 +171,7 @@ public class SpatialIndexWriter implements FeatureListener
 
                 _writes++;
 
-                if (_writes > _maxWrites) {
+                if (!_autocommit && _writes > _maxWrites) {
                     _transaction.commit();
                     _writes = 0;
                 }
