@@ -34,7 +34,7 @@
                     <xpath schema="iso19139" path="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
                 </parameter>
 
-                <parameter name="Identifier" field="fileId" type="SupportedISOQueryables">
+                <parameter name="Identifier" field="_uuid" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="gmd:fileIdentifier/gco:CharacterString"/>
                 </parameter>
 
