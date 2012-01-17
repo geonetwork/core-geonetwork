@@ -22,21 +22,21 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+
 public class MetadataNotifierControl {
     private ServiceContext srvContext;
     private GeonetContext gc;
-		private Dbms dbms;
     private static final ScheduledExecutorService scheduler = Executors
             .newScheduledThreadPool(1);
 
@@ -47,11 +47,11 @@ public class MetadataNotifierControl {
 
     public void runOnce() throws Exception {
         Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce start");
-
-        dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+        
+        ResourceManager rm = srvContext.getResourceManager();
         Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
         final MetadataNotifierTask updateTask = new MetadataNotifierTask(
-                dbms, gc);
+                rm, gc);
 
         @SuppressWarnings("unused")
         final ScheduledFuture<?> updateTaskHandle = scheduler.schedule(
@@ -60,7 +60,6 @@ public class MetadataNotifierControl {
     }
 
     public void shutDown() throws Exception {
-				srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
         scheduler.shutdown();
     }
 
