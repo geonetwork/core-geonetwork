@@ -477,7 +477,7 @@ function doSaveAction(action,validateAction)
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
- 					$('editorBusy').hide();
+                    Element.remove($("editorOverlay"));
 					setBunload(true); // reset warning for window destroy
 				}
 			}
