@@ -47,7 +47,11 @@ public class MetadataNotifierTask implements Runnable {
             x.printStackTrace();
         } finally {
             if (dbms != null) {
-                dbms.disconnect();
+                try {
+                    rm.close(Geonet.Res.MAIN_DB, dbms);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
