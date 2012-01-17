@@ -12,7 +12,8 @@
 	<ca>Català</ca> <!-- Do not translate! -->	
     <no>Norsk</no>  <!-- Do not translate! -->
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
-
+  
+  <editAttributes>Add more details</editAttributes>
     <useStopwords>مؤشر يستخدم stopwords وسين لهذه اللغات :</useStopwords>    
     <rebuildIndexMessage>إذا قمت بتغيير هذه القيم ، من المستحسن إعادة إنشاء الفهرس وسين.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->

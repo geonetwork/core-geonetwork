@@ -13,6 +13,7 @@
     <no>Norsk</no>  <!-- Do not translate! -->
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
 
+  <editAttributes>Add more details</editAttributes>
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
 	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
@@ -388,6 +389,7 @@
 	<createTip>Create a new metadata from this template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
 	<crs code="EPSG:4258">ETRS 89</crs>
 	<crs code="EPSG:900913">Google Mercator</crs>
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>

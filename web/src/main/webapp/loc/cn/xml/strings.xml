@@ -13,7 +13,7 @@
 	<no>Norsk</no>  <!-- Do not translate! -->
     <fi>Finnish</fi>  <!-- Do not translate! -->
 
-
+  <editAttributes>Add more details</editAttributes>
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
   <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>

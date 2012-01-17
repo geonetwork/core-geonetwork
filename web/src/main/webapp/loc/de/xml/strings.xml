@@ -13,7 +13,8 @@
 	<no>Norsk</no>  <!-- Do not translate! -->
     <fi>Finnish</fi>  <!-- Do not translate! -->
 
-	<!-- new strings - 2.7 -->
+  <!-- new strings - 2.7 -->
+  <editAttributes>Add more details</editAttributes>
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
   <surnameMandatory>Last name/surname is Mandatory</surnameMandatory>

@@ -14,6 +14,7 @@
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+  <editAttributes>Compléter la description</editAttributes>
   <subtemplate.admin>Gestion des annuaires</subtemplate.admin>
   <subtemplate.admin.desc>Ajouter/modifier/supprimer les annuaires (eg. annuaire de contact)</subtemplate.admin.desc>
 	<surnameMandatory>Le nom est obligatoire</surnameMandatory>

@@ -13,6 +13,7 @@
 	<ca>Català</ca> <!-- Do not translate! -->
 	<no>Norsk</no>  <!-- Do not translate! -->
 
+  <editAttributes>Add more details</editAttributes>
     <useStopwords>The Lucene indeksointi käyttää pysäytyssanoja näille kielille:</useStopwords>    
     <rebuildIndexMessage>Jos muutat arvoja, on suositeltava tehdä Lucene-indeksointi uudelleen.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
