@@ -414,11 +414,11 @@
 		<xsl:choose>
 			<xsl:when test="gmd:hierarchyLevel">
 				<xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
-					<Field name="type" string="{string(.)}" store="false" index="true"/>
+					<Field name="type" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<Field name="type" string="dataset" store="false" index="true"/>
+				<Field name="type" string="dataset" store="true" index="true"/>
 			</xsl:otherwise>
 		</xsl:choose>
 

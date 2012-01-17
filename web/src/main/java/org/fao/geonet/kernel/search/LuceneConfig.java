@@ -53,6 +53,7 @@ public class LuceneConfig {
 
 	private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
+    private static final int DOC_BOOST_CLASS = 3;
 
 	private File configurationFile;
 	private String appPath;
@@ -111,12 +112,17 @@ public class LuceneConfig {
 	private String defaultAnalyzerClass;
 
 	private HashMap<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
-	private HashMap<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
+	private HashMap<String, Float> fieldBoost = new HashMap<String, Float>();
+    private HashMap<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
 	private HashMap<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
 
 	private String boostQueryClass;
 	private HashMap<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
 	private HashMap<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
+
+	private String documentBoostClass;
+    private HashMap<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
+    private HashMap<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
 
 	private Element luceneConfig;
 
@@ -267,6 +273,42 @@ public class LuceneConfig {
 				}
 			}
 
+			// Fields boosting
+            elem = luceneConfig.getChild("fieldBoosting");
+            fieldBoost = new HashMap<String, Float>();
+            if (elem != null) {
+                for (Object o : elem.getChildren()) {
+                    if (o instanceof Element) {
+                        Element e = (Element) o;
+                        String name = e.getAttributeValue("name");
+                        String boost = e.getAttributeValue("boost");
+                        if (name == null || boost == null) {
+                            Log.warning(
+                                    Geonet.SEARCH_ENGINE,
+                                    "Field must have a name and a boost attribute, check Lucene configuration file.");
+                        } else {
+                            try {
+                                fieldBoost.put(name, Float.parseFloat(boost));
+                            } catch (Exception exc) {
+                                // TODO: handle exception
+                                exc.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Document boosting
+            elem = luceneConfig.getChild("boostDocument");
+            if (elem != null) {
+                // TODO : maybe try to create a boost query instance to
+                // check class is in classpath.
+                documentBoostClass = elem.getAttribute("name").getValue();
+                loadClassParameters(DOC_BOOST_CLASS, "", documentBoostClass,
+                        elem.getChildren("Param"));
+            }
+
+			
 			// Search
 			Element searchConfig = luceneConfig.getChild("search");
 
@@ -337,7 +379,7 @@ public class LuceneConfig {
 			return; // No params
 
 		Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field
-				+ ", loading analyzer " + clazz + " ...");
+				+ ", loading class " + clazz + " ...");
 
 		Object[] params = new Object[children.size()];
 		Class[] paramsClass = new Class[children.size()];
@@ -407,7 +449,11 @@ public class LuceneConfig {
 			boostQueryParametersClass.put(id, paramsClass);
 			boostQueryParameters.put(id, params);
 			break;
-		default:
+		case DOC_BOOST_CLASS:
+            documentBoostParametersClass.put(id, paramsClass);
+            documentBoostParameters.put(id, params);
+            break;
+        default:
 			break;
 		}
 	}
@@ -513,6 +559,32 @@ public class LuceneConfig {
 	}
 
 	/**
+     * 
+     * @return The list of values for document boost parameters.
+     */
+    public Object[] getDocumentBoostParameter() {
+        return this.documentBoostParameters.get(documentBoostClass);
+    }
+
+    /**
+     * 
+     * @return The list of classes for document boost parameters.
+     */
+    public Class[] getDocumentBoostParameterClass() {
+        return this.documentBoostParametersClass.get(documentBoostClass);
+    }
+
+    /**
+     * 
+     * @return Class name of the boosting document or null if not defined.
+     */
+    public String getDocumentBoostClass() {
+        return documentBoostClass;
+    }
+
+	
+	
+	/**
 	 * 
 	 * @return Class name of the default analyzer (default is StandardAnalyzer).
 	 */
@@ -528,6 +600,18 @@ public class LuceneConfig {
 		return this.fieldSpecificAnalyzers;
 	}
 
+	/**
+     * 
+     * @return Each fields boost factor.
+     */
+    public HashMap<String, Float> getFieldBoost() {
+        return this.fieldBoost;
+    }
+    public Float getFieldBoost(String field) {
+        return this.fieldBoost.get(field);
+    }
+    
+    
 	/**
 	 * 
 	 * @return The merge factor.
@@ -560,7 +644,10 @@ public class LuceneConfig {
 		sb.append(" * Default analyzer: " + getDefaultAnalyzerClass() + "\n");
 		sb.append(" * Field analyzers: "
 				+ getFieldSpecificAnalyzers().toString() + "\n");
-		sb.append(" * Tokenized fields: " + getTokenizedField().toString()
+        sb.append(" * Field boost factor: "
+                + getFieldBoost().toString() + "\n");
+        sb.append(" * Boost document class: " + getDocumentBoostClass() + "\n");
+        sb.append(" * Tokenized fields: " + getTokenizedField().toString()
 				+ "\n");
 		sb.append(" * Numeric fields: "
 				+ getNumericFields().keySet().toString() + "\n");
