@@ -354,7 +354,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
       <li>L’emprise doit englober l’étendue du territoire pour lequel le producteur garantit la saisie de l’information fournie, une partie du territoire pouvant être vide du type d’objet saisi (par exemple, dans le cas de la localisation des sites SEVESO en Bretagne, l’emprise sera le rectangle englobant de la Bretagne, même si le rectangle englobant les sites SEVESO est plus petit ; en effet, l’absence de site SEVESO est une information en soi sur le reste du territoire breton).</li>
       <li>Le rectangle de délimitation doit être le plus ajusté possible, afin de délimiter le plus fidèlement possible la ressource décrite (ne pas donner un rectangle couvrant la France entière pour des données limitées à une commune).</li>
@@ -657,7 +657,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>L’identifiant du système de référence doit être fourni. Cet identifiant est composé d’un code et d’un espace de nommage.</li>
     <li>Les codes à utiliser en France sont soit les codes IGN-F, soit les codes EPSG.</li>
@@ -683,7 +683,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <li>Il est recommandé d’utiliser le calendrier grégorien.</li>
     <li>Dans le cas où le calendrier grégorien n’est pas utilisé (par exemple, dans certains domaines comme la géologie), ce champ doit impérativement être renseigné.</li>
     ]]></help>
@@ -773,7 +773,7 @@
     </ul>
     ]]></help>
     <help>Commentaire : Il ne faut pas se laisser leurrer par le caractère conditionnel de cet élément qui est à renseigner dans le cas général. Un lien vers le site institutionnel de l’organisme responsable reste un moyen de permettre d’accéder à plus d’informations sur la ressource si elle n’est pas accessible en ligne ou s’il n’existe pas d’informations complémentaires spécifiques à la ressource accessibles en ligne.</help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
       <li>Au moins un des liens doit être public (et non pointer vers un intranet).</li>
       <li>Il est recommandé de renseigner cet élément avec un lien sur un enregistrement de métadonnées décrivant plus complètement la ressource ou à défaut avec un lien sur le site institutionnel d’un organisme responsable de la ressource. Les deux types de lien peuvent être fournis en profitant du caractère répétable de l’élément.</li>
@@ -797,7 +797,7 @@
       <li>Cet élément est une chaîne de caractères obligatoire (texte libre) et ne doit pas être répété.</li>
     </ul>
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
       <li>Il est attendu un texte significatif décrivant la ressource. Tout texte vide (ensemble de caractères d’espacement) ou de type « Non renseigné », … ne permet pas de satisfaire l’obligation INSPIRE.</li>
       <li>Le résumé devrait contenir une définition officielle quant quand elle existe, ou une définition commune, afin de rendre le contenu de la ressource compréhensible par l’utilisateur. La référence d’un texte législatif ou réglementaire n’est pas suffisante.  Pour un producteur, il s’agit en particulier de définir au mieux l’information ou le phénomène représenté dans la donnée. On va donc y trouver des éléments de définition de la ressource, mais aussi éventuellement une indication sommaire de la zone couverte ou le cas échéant, des informations sur les particularités de la version de la ressource.</li>
@@ -974,7 +974,7 @@
     Le jeu de caractères utilisé dans les données peut dépendre notamment du poste de travail du producteur (logiciel, système d’exploitation et du gestionnaire de la base de données). </help>
     </p>
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     Même si le jeu de caractère de la donnée est UTF-8, le préciser. 
     Cette information, purement technique, est disponible auprès de votre administrateur de données.
     ]]></help>
@@ -1149,7 +1149,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>Il est déconseillé de fournir une adresse électronique nominative, ceci afin de pouvoir plus facilement gérer les changements de fonctions des personnes impliquées.</li>
     <li>Les adresses trop générique (de type « accueil@macomcom.fr » ou « contact@macomcom.fr »  sont également à éviter.</li>
@@ -1318,7 +1318,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>Il est recommandé de fournir au moins une date de référence (date de création, de dernière révision, ou de publication). (cf. Dates de référence)</li>
     <li>L’étendue temporelle est un élément optionnel.</li>
@@ -1513,7 +1513,7 @@
     </ul>
     </p>
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
     <li>Il est recommandé de ne rattacher une ressource qu’à un seul thème INSPIRE.</li>
     <li>INSPIRE n’identifie pas explicitement d’élément de métadonnées « Thème INSPIRE » mais induit son existence de part les exigences formulées de manière générale sur la présence de mots-clés. La recommandation est donc de considérer le thème INSPIRE comme un élément à part entière.</li>
@@ -1581,7 +1581,7 @@
     Cet élément de métadonnée fait écho des spécifications de données INSPIRE, qui peuvent définir un encodage particulier selon les thèmes.
     </p>
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
     <li>Préciser en priorité le format d’échange (= format de distribution dans l'ISO).</li>
     <li>Il est obligatoire de fournir au moins le nom du format d’encodage, et facultativement la version du format. Par exemple : nom : GML, version : 3.2.1.</li>
@@ -2040,7 +2040,7 @@
     </ul>
     </p>
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <p>
       <b>Une adresse Internet : </b>
       
@@ -2162,7 +2162,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     Cet élément doit être fixé à fre pour les métadonnées du GéoCatalogue utilisée pour le rapportage INSPIRE.
     ]]></help>
     
@@ -2181,7 +2181,7 @@
     </ul>
     Cet élément décrit factuellement la ou les langues utilisées dans la ressource. Le code à trois lettres provient de <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">la liste normalisée</a>.
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
     <li>Cet élément est fourni sous la forme d’un code à trois lettres.</li>
     <li>La valeur de cet élément est fre pour le français.</li>
@@ -2731,7 +2731,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>Il est déconseillé de fournir une adresse de messagerie électronique 
     nominative, ceci afin de pouvoir plus facilement gérer les changements 
@@ -3135,7 +3135,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>La résolution spatiale doit être fournie pour toutes les données géographiques (séries et ensemble de séries). Une exception est faite pour les données statistiques.</li>
     <li>Dans le cas d’une distance, l’unité de mesure doit être indiquée en français et en toutes lettres, au singulier .</li>
@@ -3245,7 +3245,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>Les règlements Interopérabilité INSPIRE (voir en annexe A) doivent obligatoirement faire partie des spécifications visées.</li>
     <li>Il est recommandé d’exprimer la conformité vis-à-vis du guide technique du thème considéré (voir Annexe B). La spécification référencée ici doit correspondre au thème INSPIRE indiqué dans les mots-clés.</li>
@@ -3304,7 +3304,7 @@
       intitulée Cartes utiles. Ce titre n’est ni caractéristique ni unique 
       et ne permet pas à l’utilisateur de comprendre ce dont traite la donnée.
     ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations nationales :</b>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     Il est recommandé de faire figurer une indication de la zone géographique couverte, notamment si le même type de ressource est proposé sur plusieurs territoires.
     <ul>
     <li>Le recours à une indication de version ou millésime est justifié lorsqu’il existe (ou existera) plusieurs versions qui cohabitent (ou cohabiteront) dans le catalogue.</li>
@@ -3481,7 +3481,7 @@
     </help>
     <help for="france">
     <![CDATA[
-    <b>Recommandations nationales :</b>
+    <b>Recommandations :</b>
     <ul>
     <li>Lorsqu’elles existent, il est obligatoire de diffuser les conditions applicables à l’accès et à l’utilisation de la ressource.</li>
     <li>Pour les services de l’État, dans le cas général, le décret n° 201-577 du 26 mai 2011 relatif à la réutilisation des informations publiques détenues par l’État et ses établissements publics administratifs conduira à retenir la valeur “aucune condition ne s’applique”.</li>
