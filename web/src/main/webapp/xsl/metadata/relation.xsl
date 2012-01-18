@@ -27,18 +27,26 @@
   <!-- Bypass summary elements -->
   <xsl:template mode="relation" match="summary" priority="99"/>
 
-  <xsl:template mode="relation" match="metadata">
+  <!-- In Lucene only mode, metadata are retrieved from 
+  the index and pass as a simple XML with one level element.
+  Make a simple copy here. -->
+  <xsl:template mode="superBrief" match="metadata">
+    <xsl:copy>
+      <xsl:copy-of select="*|@*"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template mode="relation" match="*">
     <xsl:param name="type"/>
 
-		<!-- Fast output doesn't produce a full metadata record
+    <!-- Fast output doesn't produce a full metadata record -->
     <xsl:variable name="md">
       <xsl:apply-templates mode="superBrief" select="."/>
     </xsl:variable>
     <xsl:variable name="metadata" select="exslt:node-set($md)"/>
-		-->
 
     <relation type="{$type}">
-			<xsl:copy-of select="geonet:info/*"/>
+      <xsl:copy-of select="$metadata"/>
     </relation>
   </xsl:template>
 

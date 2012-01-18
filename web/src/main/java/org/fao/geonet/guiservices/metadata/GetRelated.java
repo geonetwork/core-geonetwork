@@ -244,7 +244,7 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
-            parameters.addContent(new Element("fast").addContent(fast));
+            parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("from").addContent(from));
             parameters.addContent(new Element("to").addContent(to));
 
