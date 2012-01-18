@@ -35,6 +35,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
@@ -275,7 +276,7 @@ public class DataManager {
      */
     public void indexInThreadPool(ServiceContext context, List<String> ids, Dbms dbms) throws SQLException {
 
-        dbms.commit();
+        if(dbms != null) dbms.commit();
         try {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -323,7 +324,11 @@ public class DataManager {
                         startIndexGroup();
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
-                                indexMetadataGroup(dbms, ids.get(i).toString());
+                                try {
+                                    indexMetadataGroup(dbms, ids.get(i).toString());
+                                } catch (Exception e) {
+                                    Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
+                                }
                             }
                         } finally {
                             endIndexGroup();

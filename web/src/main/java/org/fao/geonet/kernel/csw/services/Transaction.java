@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.*;
 
 //=============================================================================
@@ -104,7 +105,12 @@ public class Transaction extends AbstractOperation implements CatalogService
 		
 		//process the transaction from the first to the last
 		List<Element> childList = request.getChildren();
-				
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getDataManager();
+
+        Set<String> toIndex = new HashSet<String>();
+
 		try
 		{			
 			//process the childlist
@@ -112,31 +118,21 @@ public class Transaction extends AbstractOperation implements CatalogService
                 String transactionType = transRequest.getName().toLowerCase();
                 if (transactionType.equals("insert") || transactionType.equals("update") || transactionType.equals("delete")) {
                     List<Element> mdList = transRequest.getChildren();
-                    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                    DataManager dataMan = gc.getDataManager();
 
                     // insert to database, and get the number of inserted successful
                     if (transactionType.equals("insert")) {
                         Iterator<Element> inIt = mdList.iterator();
-                        dataMan.startIndexGroup();
-                        try {
                             while (inIt.hasNext()) {
                                 Element metadata = (Element) inIt.next().clone();
-                                boolean insertSuccess = insertTransaction(metadata, strFileIds, context);
+                                boolean insertSuccess = insertTransaction(metadata, strFileIds, context, toIndex);
                                 if (insertSuccess) {
                                     totalInserted++;
                                 }
                             }
-                        }
-                        finally {
-                            dataMan.endIndexGroup();
-                        }
                     }
                     // Update
                     else if (transactionType.equals("update")) {
                         Iterator<Element> inIt = mdList.iterator();
-                        dataMan.startIndexGroup();
-                        try {
                             Element metadata = null;
 
                             while (inIt.hasNext()){
@@ -147,12 +143,7 @@ public class Transaction extends AbstractOperation implements CatalogService
                                 }
                             }
 
-                            totalUpdated = updateTransaction( transRequest, metadata, context );
-
-                        }
-                        finally {
-                            dataMan.endIndexGroup();
-                        }
+                            totalUpdated = updateTransaction( transRequest, metadata, context, toIndex );
                     }
                     // Delete
                     else {
@@ -170,9 +161,14 @@ public class Transaction extends AbstractOperation implements CatalogService
 		}
 		finally
 		{
-			getResponseResult( request, response, strFileIds,totalInserted, totalUpdated, totalDeleted  );
-			
-		}	
+            try {
+                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null);
+            } catch (SQLException e) {
+                Log.error(Geonet.CSW, "cannot index");
+                Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
+            }
+            getResponseResult(request, response, strFileIds, totalInserted, totalUpdated, totalDeleted);
+		}
 		
 		return response;
 	}
@@ -198,13 +194,15 @@ public class Transaction extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	/**
-	 * @param xml
-	 * @param fileIds
-	 * @param context
-	 * @return
+	 *
+     * @param xml
+     * @param fileIds
+     * @param context
+     * @param toIndex
+     * @return
 	 * @throws Exception
 	 */
-	private boolean insertTransaction( Element xml, List<String> fileIds, ServiceContext context ) throws Exception
+	private boolean insertTransaction(Element xml, List<String> fileIds, ServiceContext context, Set<String> toIndex) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -262,24 +260,27 @@ public class Transaction extends AbstractOperation implements CatalogService
             dataMan.setOperation(us, dbms, id, "1", AccessManager.OPER_VIEW);
         }
 
+
 		dataMan.indexMetadataGroup(dbms, id);
 		
 		fileIds.add( uuid );
 		
 		dbms.commit();
-				
+        toIndex.add(id);
 		return true;
 	}
 	
 	
 	/**
-	 * @param request
-	 * @param xml
-	 * @param context
-	 * @return
+	 *
+     * @param request
+     * @param xml
+     * @param context
+     * @param toIndex
+     * @return
 	 * @throws Exception
 	 */
-	private int updateTransaction(Element request, Element xml, ServiceContext context ) throws Exception
+	private int updateTransaction(Element request, Element xml, ServiceContext context, Set<String> toIndex) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -326,7 +327,8 @@ public class Transaction extends AbstractOperation implements CatalogService
             UserSession session = context.getUserSession();
             dataMan.updateMetadata(session, dbms, id, xml, validate, ufo, index, language, changeDate, false);
 
-            dataMan.indexMetadataGroup(dbms, id);
+            dbms.commit();
+            toIndex.add(id);
 
            totalUpdated++;
 
@@ -348,6 +350,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
+            Set updatedMd = new HashSet<String>();
             // Process all records selected
             while( it.hasNext() )
             {
@@ -423,13 +426,14 @@ public class Transaction extends AbstractOperation implements CatalogService
                     UserSession session = context.getUserSession();
                     dataMan.updateMetadata(session, dbms, id, metadata, validate, ufo, index, language, changeDate, false);
 
-                    dataMan.indexMetadataGroup(dbms, id);
+                    updatedMd.add(id);
 
                     totalUpdated++;
                 }
 
-
             }
+            dbms.commit();
+            toIndex.addAll(updatedMd);
 
            return totalUpdated;
 
@@ -437,12 +441,13 @@ public class Transaction extends AbstractOperation implements CatalogService
 	}
 	
 	/**
-	 * @param request
-	 * @param context
-	 * @return
+	 *
+     * @param request
+     * @param context
+     * @return
 	 * @throws Exception
 	 */
-	private int deleteTransaction(Element request, ServiceContext context ) throws Exception	
+	private int deleteTransaction(Element request, ServiceContext context) throws Exception
 	{
 		int deleted = 0;
 		
