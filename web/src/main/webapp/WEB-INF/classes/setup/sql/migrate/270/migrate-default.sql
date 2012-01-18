@@ -17,6 +17,8 @@ CREATE TABLE Thesaurus (
     primary key(id)
   );
 
+ALTER TABLE Users ALTER COLUMN username TYPE varchar(256);
+
 ALTER TABLE Metadata ALTER COLUMN createDate TYPE varchar(30);
 ALTER TABLE Metadata ALTER COLUMN changeDate TYPE varchar(30);
 ALTER TABLE Metadata ADD doctype varchar(255);
