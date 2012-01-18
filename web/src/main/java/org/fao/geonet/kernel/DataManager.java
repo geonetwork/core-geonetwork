@@ -61,6 +61,7 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -253,7 +254,7 @@ public class DataManager {
             boolean indexGroup = false;
             indexMetadata(dbms, id, indexGroup);
         } else {
-            indexInThreadPool(ServiceContext.get(), id);
+            indexInThreadPool(ServiceContext.get(), id, dbms);
         }
     }
 
@@ -263,8 +264,8 @@ public class DataManager {
      * @param context
      * @param id
      */
-	public void indexInThreadPool(ServiceContext context, String id) {
-        indexInThreadPool(context, Collections.singletonList(id));
+	public void indexInThreadPool(ServiceContext context, String id, Dbms dbms) throws SQLException {
+        indexInThreadPool(context, Collections.singletonList(id), dbms);
     }
     /**
      * Add metadata ids to the thread pool for indexing.
@@ -272,19 +273,20 @@ public class DataManager {
      * @param context
      * @param ids
      */
-	public void indexInThreadPool(ServiceContext context, List<String> ids) {
+    public void indexInThreadPool(ServiceContext context, List<String> ids, Dbms dbms) throws SQLException {
 
-			try {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        dbms.commit();
+        try {
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-                if(ids.size()>0) {
-                    Runnable worker = new IndexMetadataTask(context, ids);
-                    gc.getThreadPool().runTask(worker);
-                }
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+            if (ids.size() > 0) {
+                Runnable worker = new IndexMetadataTask(context, ids);
+                gc.getThreadPool().runTask(worker);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     final class IndexMetadataTask implements Runnable {
 
@@ -697,7 +699,6 @@ public class DataManager {
     /**
      *
      * @param session
-     * @param dbms
      * @param id
      * @throws Exception
      */

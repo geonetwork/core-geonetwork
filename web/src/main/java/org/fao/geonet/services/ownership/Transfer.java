@@ -106,7 +106,7 @@ public class Transfer implements Service {
             list.add(Integer.toString(mdId));
         }
         
-        dm.indexInThreadPool(context,list);
+        dm.indexInThreadPool(context,list, dbms);
 
 		//--- return summary
 		return new Element("response")

@@ -325,7 +325,6 @@ public class SearchManager
    * @param htmlCacheDir
    * @param thesauriDir
 	 * @param summaryConfigXmlFile
-   * @param luceneConfigXmlFile
    * @param logSpatialObject
    * @param luceneTermsToExclude
 	 * @param dataStore
@@ -729,7 +728,7 @@ public class SearchManager
 			// create empty document with only title and "any" fields
 			xmlDoc = new Element("Document");
 
-			StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 			allText(metadata, sb);
 			addField(xmlDoc, "title", title, true, true);
 			addField(xmlDoc, "any", sb.toString(), true, true);
@@ -793,11 +792,12 @@ public class SearchManager
 	/**
 	 * Extracts text from metadata record.
 	 *
-	 * @param metadata
-	 * @param sb
-	 * @return all text in the metadata elements for indexing
+	 *
+     * @param metadata
+     * @param sb
+     * @return all text in the metadata elements for indexing
 	 */
-	private void allText(Element metadata, StringBuffer sb) {
+	private void allText(Element metadata, StringBuilder sb) {
 		String text = metadata.getText().trim();
 		if (text.length() > 0) {
 			if (sb.length() > 0)
@@ -1032,21 +1032,28 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-	Element getIndexFields(String schemaDir, Element xml) throws Exception {
+    Element getIndexFields(String schemaDir, Element xml) throws Exception {
 
-		try {
-			String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
-      Map<String,String> params = new HashMap<String, String>();
-      params.put("inspire", Boolean.toString(_inspireEnabled));
-      params.put("thesauriDir", _thesauriDir);
-			return Xml.transform(xml, styleSheet, params);
-		} catch (Exception e) {
-			Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage());
-			throw e;
-		}
-	}
+        try {
+            String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("inspire", Boolean.toString(_inspireEnabled));
+            params.put("thesauriDir", _thesauriDir);
+            final Element fields = Xml.transform(xml, styleSheet, params);
+            return fields;
+        } catch (Exception e) {
+            Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage() + "\n\t Marking the metadata as _nonIndexed=true in index");
+            Element xmlDoc = new Element("Document");
+            addField(xmlDoc, "_indexingError", "1", true, true);
+            addField(xmlDoc, "_indexingErrorMsg", e.getMessage(), true, false);
+            StringBuilder sb = new StringBuilder();
+            allText(xml, sb);
+            addField(xmlDoc, "any", sb.toString(), false, true);
+            return xmlDoc;
+        }
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 	// utilities
 
     /**

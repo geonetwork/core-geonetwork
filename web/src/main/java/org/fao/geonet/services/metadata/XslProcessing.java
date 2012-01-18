@@ -214,7 +214,7 @@ public class XslProcessing implements Service {
     				dataMan.indexMetadataGroup(dbms, id);
     			}
                 else {
-                    dataMan.indexInThreadPool(context, id);
+                    dataMan.indexInThreadPool(context, id, dbms);
     			}
             }
 

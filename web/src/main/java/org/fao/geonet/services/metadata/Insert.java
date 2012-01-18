@@ -151,7 +151,7 @@ public class Insert implements Service
 		} 
 
 		// Index
-        dm.indexInThreadPool(context, id.get(0));
+        dm.indexInThreadPool(context, id.get(0), dbms);
         
 		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);

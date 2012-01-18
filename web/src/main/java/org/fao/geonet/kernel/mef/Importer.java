@@ -343,7 +343,7 @@ public class Importer {
 					dm.indexMetadataGroup(dbms, id.get(index));
 				}
                 else {
-                    dm.indexInThreadPool(context,id.get(index));
+                    dm.indexInThreadPool(context,id.get(index),dbms);
 				}
 			}
 
