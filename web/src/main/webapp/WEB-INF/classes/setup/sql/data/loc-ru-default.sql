@@ -517,6 +517,13 @@ INSERT INTO OperationsDes VALUES (3,'ru','Уведомление');
 INSERT INTO OperationsDes VALUES (5,'ru','Интерактивная карта');
 INSERT INTO OperationsDes VALUES (6,'ru','Предлагаемая карта');
 
+INSERT INTO StatusValuesDes VALUES (0,'ru','Unknown');
+INSERT INTO StatusValuesDes VALUES (1,'ru','Draft');
+INSERT INTO StatusValuesDes VALUES (2,'ru','Approved');
+INSERT INTO StatusValuesDes VALUES (3,'ru','Retired');
+INSERT INTO StatusValuesDes VALUES (4,'ru','Submitted');
+INSERT INTO StatusValuesDes VALUES (5,'ru','Rejected');
+						
 INSERT INTO RegionsDes VALUES (1,'ru','Armenia');
 INSERT INTO RegionsDes VALUES (2,'ru','Afghanistan');
 INSERT INTO RegionsDes VALUES (3,'ru','Albania');

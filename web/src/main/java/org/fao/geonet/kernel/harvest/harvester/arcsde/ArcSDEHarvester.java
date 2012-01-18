@@ -233,7 +233,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		for(Element existingId : existingMetadata) {
 			String ex$ = existingId.getChildText("id");
 			if(!idsForHarvestingResult.contains(ex$)) {
-				dataMan.deleteMetadata(dbms, ex$);
+				dataMan.deleteMetadataGroup(context.getUserSession(), dbms, ex$);
 				result.removed++;
 			}
 		}			
@@ -281,7 +281,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         int userId = 1;
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
                          isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
 
 
@@ -311,7 +311,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			}
 			else {
 				System.out.println("    - Setting category : "+ name);
-				dataMan.setCategory(dbms, id, catId);
+				dataMan.setCategory(context.getUserSession(), dbms, id, catId);
 			}
 		}
 	}	
@@ -332,7 +332,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6) {
 						System.out.println("       --> "+ name);
-						dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+						dataMan.setOperation(context.getUserSession(), dbms, id, priv.getGroupId(), opId +"");
 					}
 					else {
 						System.out.println("       --> "+ name +" (skipped)");

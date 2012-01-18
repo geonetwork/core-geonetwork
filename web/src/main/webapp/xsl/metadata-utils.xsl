@@ -130,16 +130,28 @@
 				
 				<!-- privileges button -->
 				<xsl:if test="/root/gui/services/service/@name='metadata.admin.form'">
-					<xsl:variable name="privileges" select="concat(/root/gui/strings/setshowprivileges,' ',$ltitle)"/>
+					<xsl:variable name="privileges" select="concat(/root/gui/strings/privileges,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}','{$privileges}',600)"><xsl:value-of select="/root/gui/strings/privileges"/></button>
 				</xsl:if>
 				
 				<!-- categories button -->
 				<xsl:if test="/root/gui/services/service/@name='metadata.category.form' and /root/gui/config/category/admin">
-					<xsl:variable name="categories" select="concat(/root/gui/strings/setshowcategories,' ',$ltitle)"/>
+					<xsl:variable name="categories" select="concat(/root/gui/strings/categories,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}','{$categories}',300)"><xsl:value-of select="/root/gui/strings/categories"/></button>
 				</xsl:if>
-				
+			
+				<!-- status button -->
+				<xsl:if test="/root/gui/services/service/@name='metadata.status.form'">
+					<xsl:variable name="statusTitle" select="concat(/root/gui/strings/status,': ',$ltitle)"/>
+					<button onclick="doOtherButton('{/root/gui/locService}/metadata.status.form?id={$metadata/geonet:info/id}','{$statusTitle}',300)"><xsl:value-of select="/root/gui/strings/status"/></button>
+				</xsl:if>
+
+				<!-- versioning button -->
+				<xsl:if test="/root/gui/services/service/@name='metadata.version' and /root/gui/svnmanager/enabled='true'">
+					<xsl:variable name="versionTitle" select="concat(/root/gui/strings/versionTitle,': ',$ltitle)"/>
+					<button onclick="doOtherButton('{/root/gui/locService}/metadata.version?id={$metadata/geonet:info/id}','{$versionTitle}',300)"><xsl:value-of select="/root/gui/strings/startVersion"/></button>
+				</xsl:if>
+
 				<!-- Create child option only for iso19139 schema based metadata -->
 				<xsl:variable name="duplicateChild" select="concat(/root/gui/strings/createChild,': ',$ltitle)"/>
 				<xsl:if test="contains(geonet:info/schema, 'iso19139')">

@@ -98,13 +98,14 @@ public class Login implements Service
 		}
 		Element user = (Element) list.get(0);
 
-		String sId       = user.getChildText(Geonet.Elem.ID);
-		String sName     = user.getChildText(Geonet.Elem.NAME);
-		String sSurname  = user.getChildText(Geonet.Elem.SURNAME);
-		String sProfile  = user.getChildText(Geonet.Elem.PROFILE);
+		String sId        = user.getChildText(Geonet.Elem.ID);
+		String sName      = user.getChildText(Geonet.Elem.NAME);
+		String sSurname   = user.getChildText(Geonet.Elem.SURNAME);
+		String sProfile   = user.getChildText(Geonet.Elem.PROFILE);
+		String sEmailAddr = user.getChildText(Geonet.Elem.EMAIL);
 
 		context.info("User '"+ username +"' logged in as '"+ sProfile +"'");
-		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile);
+		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile, sEmailAddr);
 		
 		if ("false".equals(userinfo)) {
 		    return new Element("ok");

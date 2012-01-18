@@ -103,9 +103,24 @@ public class Utils {
 	 * @throws IOException
 	 */
 	public static void sendLogin(HttpClient c) throws IOException {
+		sendLogin(c, null, null);
+	}
+
+	/**
+	 * Login to current node as username and password
+	 * 
+	 * @param c
+	 * @param username
+	 * @param password
+	 * @throws IOException
+	 */
+	public static void sendLogin(HttpClient c, String username, String password) throws IOException {
+		if (username == null) { 
+			username = Utils.usernameAdmin;
+			password = Utils.passwordAdmin;
+		}
 		final GetMethod login = new GetMethod(Utils.geonetworkUri
-				+ "xml.user.login?username=" + Utils.usernameAdmin + "&password="
-				+ Utils.passwordAdmin);
+				+ "xml.user.login?username=" + username + "&password=" + password);
 		int status = c.executeMethod(login);
 		if (status != 200) {
 			throw new IOException("Log in failed, got status code " + status);
@@ -230,6 +245,22 @@ public class Utils {
 	}
 
 	/**
+	 * Select all.
+	 * 
+	 */
+	public static void transferOwner(String userid) {
+		try {
+			final HttpClient c = new HttpClient();
+			Utils.sendRequest("xml.search", true, c);
+			Utils.sendRequest("metadata.select?selected=add-all", false, c);
+			Utils.sendRequest("metadata.batch.newowner?user="+userid+"&group=2", false, c);
+		} catch (Exception e) {
+		  // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Clean all catalogue content base on a default search.
 	 * This will not remove templates.
 	 * 
@@ -253,6 +284,26 @@ public class Utils {
 	public static void addSamples() {
 		try {
 			Utils.sendRequest("metadata.samples.add?uuidAction=nothing&file_type=mef&schema=csw-record,dublin-core,fgdc-std,iso19110,iso19115,iso19139", true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Add a user called userone with password userone at 'Editor' level 
+	 */
+	public static void addUser(String username, String password) {
+		try {
+			final HttpClient c = new HttpClient();
+
+			sendLogin(c);
+
+			String response = Utils.sendRequest("xml.user.list", false, c);
+			if (!response.contains(username)) {
+				Utils.sendRequest("user.update?zip=92373&state=CA&surname=Mouse&org=DRQH&password="+password+"&kind=gov&city=Bluelands&country=USA&id=&operation=newuser&username="+username+"&password2="+password+"&address390BlueHillsSt&email=userone@userone.com&name=User&groups=2&profile=Editor", false, c);
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

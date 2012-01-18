@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -53,6 +54,17 @@ public class AccessManager
 	public static final String OPER_NOTIFY   				= "3";
 	public static final String OPER_DYNAMIC  				= "5";
 	public static final String OPER_FEATURED 				= "6";
+
+	public static final Map<String,String> ops = new HashMap<String,String>();
+
+	static {
+		ops.put("0","VIEW");
+		ops.put("1","DOWNLOAD");
+		ops.put("2","EDITING");
+		ops.put("3","NOTIFY");
+		ops.put("5","DYNAMIC");
+		ops.put("6","FEATURED");
+	};
 
 	//--------------------------------------------------------------------------
 	//---
@@ -341,6 +353,57 @@ public class AccessManager
 
 		return false;
 	}
+
+		private String join(Set<Integer> set, String delim) {
+    	StringBuilder sb = new StringBuilder();
+    	String loopDelim = "";
+
+    	for(Integer s : set) {
+        sb.append(loopDelim);
+        sb.append(s+"");            
+        loopDelim = delim;
+    	}
+
+    	return sb.toString();
+		}
+
+    /**
+     * Returns owners ofr metadata records.
+     * @param dbms
+     * @param metadataId
+     * @return
+     * @throws Exception
+     */
+    public Element getOwners(Dbms dbms, Set<Integer> metadataIds) throws Exception {
+
+				String query=
+				"SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
+				"JOIN Users u on u.id = m.owner "+
+				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
+				"ORDER BY u.id";
+
+        return dbms.select(query);
+    }
+
+    /**
+     * Returns content reviewers for metadata records.
+     * @param dbms
+     * @param metadataId
+     * @return
+     * @throws Exception
+     */
+    public Element getContentReviewers(Dbms dbms, Set<Integer> metadataIds) throws Exception {
+
+				String query=
+				"SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
+				"JOIN UserGroups ug on m.groupOwner = ug.groupId "+
+				"JOIN Users u on u.id = ug.userId "+
+				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
+				"AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
+				"ORDER BY u.id";
+
+        return dbms.select(query);
+    }
 
     /**
      * Returns whether a particular metadata is visible to group 'all'.

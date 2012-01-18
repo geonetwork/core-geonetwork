@@ -49,7 +49,7 @@
       <xs:element name="version"        type="xs:string" minOccurs="1"/>
       <xs:element name="schemaLocation" type="xs:string" minOccurs="1"/>
       <xs:element name="autodetect"     type="gns:autodetectType" 
-																				minOccurs="1" maxOccurs="1"/>
+																				minOccurs="1" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -64,9 +64,25 @@
 			metadata record is defined using this schema.
       </xs:documentation>
     </xs:annotation>
-		<xs:sequence>
-			<xs:element name="elements"       type="gns:elementsType" minOccurs="1"/>
-    </xs:sequence>
+		<xs:choice minOccurs="1" maxOccurs="1">
+			<xs:element name="elements"       type="gns:elementsType"/>
+			<xs:element name="attributes"     type="gns:attributesType"/>
+    </xs:choice>
+  </xs:complexType>
+
+<!-- ====================================================================== -->
+<!-- attributesType complex type -->
+<!-- ====================================================================== -->
+
+  <xs:complexType name="attributesType">
+    <xs:annotation>
+      <xs:documentation>
+			Describes the attribute that must exist in a metadata record for it
+			to be identified as belonging to this schema.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="searchAttributeName" type="xs:string" use="required"/>
+    <xs:attribute name="searchAttributeValue" type="xs:string" use="required"/>
   </xs:complexType>
 
 <!-- ====================================================================== -->

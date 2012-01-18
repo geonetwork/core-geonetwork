@@ -517,6 +517,13 @@ INSERT INTO OperationsDes VALUES (3,'nl','Informeren');
 INSERT INTO OperationsDes VALUES (5,'nl','Interactieve Kaart');
 INSERT INTO OperationsDes VALUES (6,'nl','In het spotlicht');
 
+INSERT INTO StatusValuesDes VALUES (0,'nl','Unknown');
+INSERT INTO StatusValuesDes VALUES (1,'nl','Draft');
+INSERT INTO StatusValuesDes VALUES (2,'nl','Approved');
+INSERT INTO StatusValuesDes VALUES (3,'nl','Retired');
+INSERT INTO StatusValuesDes VALUES (4,'nl','Submitted');
+INSERT INTO StatusValuesDes VALUES (5,'nl','Rejected');
+
 INSERT INTO RegionsDes VALUES (1,'nl','Armenië');
 INSERT INTO RegionsDes VALUES (2,'nl','Afghanistan');
 INSERT INTO RegionsDes VALUES (3,'nl','Albanië');

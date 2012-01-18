@@ -129,7 +129,7 @@ public class LocalJeeves
 
 			// Make session with all permissions
 			session = new UserSession();
-			session.authenticate("0", "local", "Local", "User", ProfileManager.ADMIN);
+			session.authenticate("0", "local", "Local", "User", ProfileManager.ADMIN, "local@localhost");
 
 			// Add shutdown hook to destroy Jeeves on System.exit()
 			Runtime.getRuntime().addShutdownHook(new Thread()

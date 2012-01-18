@@ -587,7 +587,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized boolean addAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
-		Element md = XmlSerializer.select(dbms, "Metadata", id);
+		Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
@@ -620,7 +620,7 @@ public class AjaxEditUtils extends EditUtils {
         String parentUuid = null;
 		md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         String changeDate = null;
-		XmlSerializer.update(dbms, id, md, changeDate, false);
+				xmlSerializer.update(dbms, id, md, changeDate, false, session);
 
         // Notifies the metadata change to metatada notifier service
         dataManager.notifyMetadataChange(dbms, md, id);
@@ -644,7 +644,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized boolean deleteAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
-		Element md = XmlSerializer.select(dbms, "Metadata", id);
+		Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
@@ -675,7 +675,7 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms);
 
         String changeDate = null;
-		XmlSerializer.update(dbms, id, md, changeDate, false);
+				xmlSerializer.update(dbms, id, md, changeDate, false, session);
 
         // Notifies the metadata change to metatada notifier service
         dataManager.notifyMetadataChange(dbms, md, id);

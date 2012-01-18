@@ -121,7 +121,7 @@ public class BatchUpdatePrivileges implements Service
 						String groupId = st.nextToken();
 						String operId  = st.nextToken();
 
-						dm.setOperation(dbms, id, groupId, operId);
+						dm.setOperation(us, dbms, id, groupId, operId);
 					}
 				}
 				metadata.add(new Integer(id));

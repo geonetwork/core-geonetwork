@@ -151,6 +151,18 @@
 										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 									</button>
 								</xsl:if>
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.status'">
+								<!--xsl:text>&#160;</xsl:text-->
+									<button onclick="batchOperation('metadata.batch.status.form','{/root/gui/strings/batchUpdateStatusTitle}',800)">
+										<xsl:value-of select="/root/gui/strings/updateStatus"/>
+									</button>
+								</xsl:if>
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.version' and /root/gui/svnmanager/enabled='true'">
+								<!--xsl:text>&#160;</xsl:text-->
+									<button onclick="batchOperation('metadata.batch.version','{/root/gui/strings/batchStartVersionTitle}',600)">
+										<xsl:value-of select="/root/gui/strings/startVersion"/>
+									</button>
+								</xsl:if>
 							</xsl:if>
 							<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
 							<button onclick="runPdfSearch(true);" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"><xsl:value-of select="/root/gui/strings/printSelection"/></button>

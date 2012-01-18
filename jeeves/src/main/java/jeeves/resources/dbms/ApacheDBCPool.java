@@ -67,11 +67,13 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 
 		parseJeevesDBConfig(config);
 
-		if (basicDataSource.getUrl().toUpperCase().contains("MCKOI")) {
-			// McKoi doesn't work unless you use TRANSACTION_SERIALIZABLE
+		if (!basicDataSource.getUrl().toUpperCase().contains("ORACLE")) {
+			// Use TRANSACTION_SERIALIZABLE for everything as we don't want 
+			// commits coming in whilst doing reads esp during audit trail changes
+			// collected for subversion
 			basicDataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		} else {
-			// Everything else seems safe and faster with TRANSACTION_READ_COMMITTED
+			// except for ORACLE because it returns unable to serialize a lot
 			basicDataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);		 
 		}
 

@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================
@@ -86,8 +87,16 @@ public class Update implements Service
 		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
 
+
 		if (!forget) {
-			dataMan.setTemplateExt(dbms, Integer.parseInt(id), isTemplate, title);
+			int iLocalId = Integer.parseInt(id);
+			dataMan.setTemplateExt(dbms, iLocalId, isTemplate, title);
+
+			//--- use StatusActionsFactory and StatusActions class to possibly
+			//--- change status as a result of this edit (use onEdit method)
+			StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
+			StatusActions sa = saf.createStatusActions(context, dbms);
+			saf.onEdit(sa, iLocalId, minor.equals("true"));
 
 			if (data != null) {
 				Element md = Xml.loadString(data, false);
@@ -100,11 +109,9 @@ public class Update implements Service
 				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
 					throw new ConcurrentUpdateEx(id);
 				}
-			}
-            else {
+			} else {
 				ajaxEditUtils.updateContent(params, false, true);
 			}
-
 		}
 
 		//-----------------------------------------------------------------------

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -40,39 +41,18 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,
- * lastChangeDate).
+ * This class is responsible of reading and writing xml on the database. 
+ * It works on tables like (id, data, lastChangeDate).
  */
-public class XmlSerializer {
+public abstract class XmlSerializer {
 
-	private static SettingManager sm;
-
-    /**
-     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
-     *
-     * @param dbms
-     * @param table
-     * @param id
-     * @return
-     * @throws Exception
-     */
-	private static Element internalSelect(Dbms dbms, String table, String id) throws Exception {
-		String query = "SELECT * FROM " + table + " WHERE id = ?";
-		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
-
-		if (rec == null)
-			return null;
-
-		String xmlData = rec.getChildText("data");
-		rec = Xml.loadString(xmlData, false);
-		return (Element) rec.detach();
-	}
+	protected SettingManager sm;
 
     /**
      *
      * @param sMan
      */
-	public static void setSettingManager(SettingManager sMan) {
+	public XmlSerializer(SettingManager sMan) {
 		sm = sMan;
 	}
 
@@ -80,7 +60,7 @@ public class XmlSerializer {
      *
      * @return
      */
-	public static boolean resolveXLinks() {
+	public boolean resolveXLinks() {
 		if (sm == null) { // no initialization, no XLinks
 			Log.error(Geonet.DATA_MANAGER,"No settingManager in XmlSerializer, XLink Resolver disabled.");
 			return false; 
@@ -99,8 +79,7 @@ public class XmlSerializer {
 	}
 
     /**
-     *  Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read
-     *  is converted into xml, XLinks are resolved when config'd on.
+     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
      *
      * @param dbms
      * @param table
@@ -108,25 +87,16 @@ public class XmlSerializer {
      * @return
      * @throws Exception
      */
-	public static Element select(Dbms dbms, String table, String id) throws Exception {
-		Element rec = internalSelect(dbms, table, id);
-		if (resolveXLinks()) Processor.detachXLink(rec);
-		return rec;
-	}
+	protected Element internalSelect(Dbms dbms, String table, String id) throws Exception {
+		String query = "SELECT * FROM " + table + " WHERE id = ?";
+		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
 
-    /**
-     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is
-     * converted into xml, XLinks are NOT resolved even if they are config'd on - this is used when you want to do XLink
-     * processing yourself.
-     *
-     * @param dbms
-     * @param table
-     * @param id
-     * @return
-     * @throws Exception
-     */
-	public static Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception {
-		return internalSelect(dbms, table, id);
+		if (rec == null)
+			return null;
+
+		String xmlData = rec.getChildText("data");
+		rec = Xml.loadString(xmlData, false);
+		return (Element) rec.detach();
 	}
 
     /**
@@ -141,6 +111,7 @@ public class XmlSerializer {
      * @param createDate
      * @param changeDate
      * @param isTemplate
+     * @param root
      * @param title
      * @param owner
      * @param groupOwner
@@ -148,10 +119,10 @@ public class XmlSerializer {
      * @return
      * @throws SQLException
      */
-	public static String insert(Dbms dbms, String schema, Element xml, int serial,
-										 String source, String uuid, String createDate,
-										 String changeDate, String isTemplate, String title,
-										 int owner, String groupOwner, String docType) throws SQLException {
+	protected String insertDb(Dbms dbms, String schema, Element xml, int serial,
+					 String source, String uuid, String createDate,
+					 String changeDate, String isTemplate, String root, String title,
+					 int owner, String groupOwner, String docType) throws SQLException {
 	
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
@@ -179,7 +150,7 @@ public class XmlSerializer {
 		args.add(uuid);
 		args.add(isTemplate);
 		args.add("n");
-		args.add(xml.getQualifiedName());
+		args.add(root);
 		args.add(owner);
 		args.add(docType);
 
@@ -213,7 +184,7 @@ public class XmlSerializer {
      *
      * @throws SQLException
      */
-	public static void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp) throws SQLException {
+	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
@@ -232,7 +203,7 @@ public class XmlSerializer {
             }
         }
 
- 		args.add(xml.getQualifiedName());
+ 		args.add(root);
 		args.add(new Integer(id));
 
         if (updateDateStamp)  {
@@ -250,7 +221,7 @@ public class XmlSerializer {
      * @param id
      * @throws SQLException
      */
-	public static void delete(Dbms dbms, String table, String id) throws SQLException {
+	protected void deleteDb(Dbms dbms, String table, String id) throws SQLException {
 		// TODO: Ultimately we want to remove any xlinks in this document
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
@@ -262,7 +233,7 @@ public class XmlSerializer {
      *
      * @param xml
      */
-	private static void fixCR(Element xml) {
+	private void fixCR(Element xml) {
 		List list = xml.getChildren();
 		if (list.size() == 0) {
 			String text = xml.getText();
@@ -274,4 +245,26 @@ public class XmlSerializer {
             }
         }
 	}
-}
+
+	/* API to be overridden by extensions */
+
+	public abstract void delete(Dbms dbms, String table, String id, UserSession session) 
+	   throws Exception;
+
+	public abstract void update(Dbms dbms, String id, Element xml, 
+		 String changeDate, boolean updateDateStamp, UserSession session) 
+		 throws Exception;
+
+	public abstract String insert(Dbms dbms, String schema, Element xml, 
+					 int serial, String source, String uuid, String createDate,
+					 String changeDate, String isTemplate, String title,
+			 int owner, String groupOwner, String docType, UserSession session) 
+			 throws Exception;
+
+	public abstract Element select(Dbms dbms, String table, String id) 
+			 throws Exception;
+
+	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, 
+				String id) 
+				throws Exception;
+} 

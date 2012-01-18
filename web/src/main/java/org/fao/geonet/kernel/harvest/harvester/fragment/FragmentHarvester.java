@@ -302,7 +302,7 @@ public class FragmentHarvester {
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -424,14 +424,14 @@ public class FragmentHarvester {
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, templateSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, templateSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 		
 		log.debug("	- Set privileges, category, template and harvested");
 		addPrivileges(id);
-		dataMan.setCategory (dbms, id, params.isoCategory);
+		dataMan.setCategory (context.getUserSession(), dbms, id, params.isoCategory);
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
@@ -456,7 +456,7 @@ public class FragmentHarvester {
 			if (name == null) {
 				log.debug ("    - Skipping removed category with id:"+ catId);
 			} else {
-				dataMan.setCategory (dbms, id, catId);
+				dataMan.setCategory (context.getUserSession(), dbms, id, catId);
 			}
 		}
 	}
@@ -480,7 +480,7 @@ public class FragmentHarvester {
 
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+						dataMan.setOperation(context.getUserSession(), dbms, id, priv.getGroupId(), opId +"");
 					} else {
 						log.debug("       --> "+ name +" (skipped)");
 					}

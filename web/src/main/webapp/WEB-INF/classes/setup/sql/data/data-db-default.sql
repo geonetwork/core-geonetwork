@@ -4,6 +4,7 @@
 
 DELETE FROM MetadataCateg;
 DELETE FROM MetadataRating;
+DELETE FROM MetadataStatus;
 DELETE FROM OperationAllowed;
 DELETE FROM Metadata;
 DELETE FROM CategoriesDes;
@@ -542,6 +543,21 @@ INSERT INTO IsoLanguages VALUES  (484,'zza');
 -- === Table: IsoLanguages
 -- ======================================================================
 
+
+-- ======================================================================
+-- === Table: StatusValues
+-- ======================================================================
+
+INSERT INTO StatusValues VALUES  (0,'unknown','y');
+INSERT INTO StatusValues VALUES  (1,'draft','y');
+INSERT INTO StatusValues VALUES  (2,'approved','y');
+INSERT INTO StatusValues VALUES  (3,'retired','y');
+INSERT INTO StatusValues VALUES  (4,'submitted','y');
+INSERT INTO StatusValues VALUES  (5,'rejected','y');
+
+-- ======================================================================
+-- === Table: StatusValuesDes
+-- ======================================================================
 
 -- ======================================================================
 -- === Table: Operations

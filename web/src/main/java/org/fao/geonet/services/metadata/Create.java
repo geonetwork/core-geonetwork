@@ -84,7 +84,7 @@ public class Create implements Service
 
 		//--- query the data manager
 
-		String newId = dm.createMetadata(dbms, id, groupOwner, context.getSerialFactory(),
+		String newId = dm.createMetadata(context.getUserSession(), dbms, id, groupOwner, context.getSerialFactory(),
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
 												  (child.equals("n")?null:uuid), isTemplate);
 

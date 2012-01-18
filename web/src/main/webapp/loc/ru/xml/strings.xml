@@ -14,6 +14,11 @@
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
   <editAttributes>Add more details</editAttributes>
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  

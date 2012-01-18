@@ -28,6 +28,9 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import java.util.ArrayList;
+import java.util.List;
+import javax.mail.internet.InternetAddress;
 
 public class MailSender extends Thread
 {
@@ -55,6 +58,31 @@ public class MailSender extends Thread
 			start();
 		}
 		catch(EmailException e)
+		{
+			logEx(e);
+		}
+	}
+
+	public void sendWithReplyTo(String server, int port, String from, String fromDescr, String to, String toDescr, String replyTo, String replyToDesc, String subject, String message)
+	{
+		_mail = new SimpleEmail();
+
+		try
+		{
+			_mail.setDebug(true);
+			_mail.setHostName(server);
+			_mail.setSmtpPort(port);
+			_mail.setFrom(from, fromDescr);
+			_mail.addTo(to);
+			_mail.setSubject(subject);
+			_mail.setMsg(message);
+			List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
+			addressColl.add(new InternetAddress(replyTo, replyToDesc));
+			_mail.setReplyTo(addressColl);
+
+			start();
+		}
+		catch(Exception e)
 		{
 			logEx(e);
 		}

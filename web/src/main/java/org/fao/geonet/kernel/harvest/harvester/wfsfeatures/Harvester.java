@@ -312,7 +312,7 @@ class Harvester
 		
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
-			dataMan.deleteMetadata(dbms, id);
+			dataMan.deleteMetadata(context.getUserSession(), dbms, id);
 			String isTemplate = localUuids.getTemplate(uuid);
 			
 			if (isTemplate.equals("s")) {

@@ -107,10 +107,9 @@ public class ShibLogin implements Service
 		// Create or update the user 
 		if (username != null && username.length() > 0)
 		{
-			//TODO: Shibboleth user names can easily be longer than 32. Request expansion to 128 or 256
-			if (username.length() > 32)
+			if (username.length() > 256) // only accept the first 256 chars
 			{
-				username = username.substring(0, 32);
+				username = username.substring(0, 256);
 			}
 			updateUser(context, dbms, username, surname, firstname, profile, group);
 		}
@@ -130,9 +129,10 @@ public class ShibLogin implements Service
 		String sName     = user.getChildText(Geonet.Elem.NAME);
 		String sSurname  = user.getChildText(Geonet.Elem.SURNAME);
 		String sProfile  = user.getChildText(Geonet.Elem.PROFILE);
+		String sEmailAdd = user.getChildText(Geonet.Elem.EMAIL);
 
 		context.info("User '"+ username +"' logged in as '"+ sProfile +"'");
-		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile);
+		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile, sEmailAdd);
 
 		return new Element("ok");
 	}

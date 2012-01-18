@@ -399,6 +399,14 @@
         <artifactId>jcommon</artifactId>
         <version>1.0.15</version>
       </dependency>
+			<!-- May be required to register connection unwrappers with 
+			     geotools
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>2.5.3</version>
+      </dependency>
+			-->
  
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
@@ -550,6 +558,13 @@
         <groupId>globus</groupId>
         <artifactId>cog-jglobus</artifactId>
         <version>1.2-060802</version>
+      </dependency>
+
+      <!-- svnkit stuff -->
+      <dependency>
+        <groupId>org.tmatesoft.svnkit</groupId>
+        <artifactId>svnkit</artifactId>
+        <version>1.3.6-v1</version>
       </dependency>
 
       <!-- Databased stuff -->
@@ -706,6 +721,13 @@
         <id>thus.ch</id>
         <name>Patrick Valsecchi's repository</name>
         <url>http://www.thus.ch/~patrick/maven</url>
+    </repository>
+
+		<!-- tmatesoft repo for svnkit -->
+     <repository>
+        <id>org.tmatesoft.svnkit</id>
+        <name>svnkit repository</name>
+        <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
     </repository>
   </repositories>
 

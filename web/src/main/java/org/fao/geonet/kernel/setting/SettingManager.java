@@ -671,6 +671,7 @@ public class SettingManager
      */
 	private ResourceListener resList = new ResourceListener()
 	{
+		public void beforeClose(Object resource) {} // do nothing 
 		public void close(Object resource) { flush(resource, true);  }
 		public void abort(Object resource) { flush(resource, false); }
 	};

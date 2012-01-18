@@ -102,7 +102,7 @@ CREATE TABLE RegionsDes
 CREATE TABLE Users
   (
     id            int not null,
-    username      varchar(32)    not null,
+    username      varchar(256)    not null,
     password      varchar(40)    not null,
     surname       varchar(32),
     name          varchar(32),
@@ -273,6 +273,8 @@ CREATE TABLE Metadata
     unique(uuid)
   );
 
+-- ======================================================================
+
 CREATE TABLE Validation 
   (
     metadataId   int not null,
@@ -293,6 +295,38 @@ CREATE TABLE MetadataCateg
     metadataId  int not null,
     categoryId  int not null,
     primary key(metadataId,categoryId)
+  );
+
+-- ======================================================================
+
+CREATE TABLE MetadataStatus
+  (
+    metadataId  int not null,
+    statusId    int default 0 not null,
+    userId      int not null,
+    changeDate   varchar(30)    not null,
+    changeMessage   varchar(2048) not null,
+    primary key(metadataId,statusId,userId,changeDate)
+  );
+
+-- ======================================================================
+
+CREATE TABLE StatusValues
+  (
+    id        int not null,
+    name      varchar(32)   not null,
+    reserved  char(1)       default 'n' not null,
+    primary key(id)
+  );
+
+-- ======================================================================
+
+CREATE TABLE StatusValuesDes
+  (
+    idDes   int not null,
+    langId  varchar(5) not null,
+    label   varchar(96)   not null,
+    primary key(idDes,langId)
   );
 
 -- ======================================================================
@@ -382,6 +416,12 @@ ALTER TABLE Validation ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
 ALTER TABLE MetadataCateg ADD FOREIGN KEY (categoryId) REFERENCES Categories (id);
 ALTER TABLE MetadataCateg ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
 ALTER TABLE MetadataRating ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
+CREATE INDEX MetadataNDX3 ON Metadata(owner);
+ALTER TABLE MetadataStatus ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
+ALTER TABLE MetadataStatus ADD FOREIGN KEY (statusId) REFERENCES StatusValues (id);
+ALTER TABLE MetadataStatus ADD FOREIGN KEY (userId) REFERENCES Users (id);
+ALTER TABLE StatusValuesDes ADD FOREIGN KEY (idDes) REFERENCES StatusValues (id);
+ALTER TABLE StatusValuesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE OperationAllowed ADD FOREIGN KEY (operationId) REFERENCES Operations (id);
 ALTER TABLE OperationAllowed ADD FOREIGN KEY (groupId) REFERENCES Groups (id);
 ALTER TABLE OperationAllowed ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);

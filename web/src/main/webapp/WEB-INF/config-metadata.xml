@@ -245,6 +245,26 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.version">
+			<class name=".services.metadata.Version"/>
+
+			<output sheet="infomodal.xsl">
+				<xml name="info" file="xml/metadata-version.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.batch.version">
+			<class name=".services.metadata.BatchVersion"/>
+
+			<output sheet="metadata-batch-results.xsl">
+				<xml name="info" file="xml/metadata-batchVersion.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.delete">
 			<class name=".services.metadata.Delete"/>
 
@@ -296,6 +316,24 @@
 
 			<output sheet="metadata-batchownership.xsl">
 				<xml name="info" file="xml/metadata-batchNewOwner.xml" />
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.batch.status.form">
+			<class name=".services.metadata.PrepareBatchUpdateStatus"/>
+
+			<output sheet="metadata-status.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.batch.update.status">
+			<class name=".services.metadata.BatchUpdateStatus"/>
+
+			<output sheet="metadata-batch-results.xsl">
+				<xml name="info" file="xml/metadata-batchUpdateStatus.xml" />
 			</output>
 		</service>
 
@@ -449,6 +487,21 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.status.form">
+			<class name=".services.metadata.GetStatus"/>
+
+			<output sheet="metadata-status.xsl"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="metadata.status">
+			<class name=".services.metadata.UpdateStatus"/>
+
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.category.form">
 			<class name=".services.metadata.GetCategories"/>
 
@@ -585,6 +638,22 @@
 			<class name=".services.ownership.Transfer"/>
 		</service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Status                                                        -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.status.values.list">
+			<class name=".services.status.List"/>
+		</service>
+		
+		<service name="xml.metadata.status.set">
+			<class name=".services.metadata.UpdateStatus"/>
+		</service>
+		
+		<service name="xml.metadata.status.get">
+			<class name=".services.status.Get"/>
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Rating                                                        -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

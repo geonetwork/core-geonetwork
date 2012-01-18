@@ -40,6 +40,7 @@ public class UserSession
 	private String  sName;
 	private String  sSurname;
 	private String  sProfile;
+	private String  sEmailAddr;
 	private HttpSession sHttpSession;
 
 	//--------------------------------------------------------------------------
@@ -100,7 +101,7 @@ public class UserSession
      * Clears user session properties and authentication
      */
     public void clear() {
-        authenticate(null, null, null, null, null);
+        authenticate(null, null, null, null, null, null);
 
         htProperties = new Hashtable(10, .75f);
     }
@@ -109,13 +110,14 @@ public class UserSession
 	/** Says that the user is authenticated and this id and profile must be used
 	  */
 
-	public void authenticate(String userId, String username, String name, String surname, String profile)
+	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr)
 	{
-		sUserId   = userId;
-		sUsername = username;
-		sName     = name;
-		sSurname  = surname;
-		sProfile  = profile;
+		sUserId    = userId;
+		sUsername  = username;
+		sName      = name;
+		sSurname   = surname;
+		sProfile   = profile;
+		sEmailAddr = emailAddr;
 	}
 
 	//--------------------------------------------------------------------------
@@ -132,6 +134,7 @@ public class UserSession
 	public String getName()      { return sName;     }
 	public String getSurname()   { return sSurname;  }
 	public String getProfile()   { return sProfile;  }
+	public String getEmailAddr() { return sEmailAddr;  }
 
 	public int getUserIdAsInt()  { return Integer.parseInt(sUserId); }
 }

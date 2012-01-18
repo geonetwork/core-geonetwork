@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.harvest.harvester.z3950;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -100,7 +101,7 @@ class Harvester {
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
 			log.debug("  - Removing old metadata before update with id: " + id);
-			dataMan.deleteMetadataGroup(dbms, id);
+			dataMan.deleteMetadataGroup(context.getUserSession(), dbms, id);
 			serverResults.locallyRemoved++;
 		}
 
@@ -311,7 +312,7 @@ class Harvester {
                     int owner = 1;
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
-					dataMan.insertMetadata(dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
+					dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 				}
@@ -362,13 +363,14 @@ class Harvester {
 	 *
 	 */
 	private void addCategories(String id, String serverCategory) throws Exception {
+		UserSession session = context.getUserSession();
 		for (String catId : params.getCategories()) {
 			String name = localCateg.getName(catId);
 
 			if (name == null) {
 				log.debug("    - Skipping removed category with id:" + catId);
 			} else {
-				dataMan.setCategory(dbms, id, catId);
+				dataMan.setCategory(session, dbms, id, catId);
 			}
 		}
 
@@ -377,7 +379,7 @@ class Harvester {
 			if (catId == null) {
 				log.debug("    - Skipping removed category :" + serverCategory);
 			} else {
-				dataMan.setCategory(dbms, id, catId);
+				dataMan.setCategory(session, dbms, id, catId);
 			}
 		}
 	}
@@ -390,6 +392,7 @@ class Harvester {
 	 *
 	 */
 	private void addPrivileges(String id) throws Exception {
+		UserSession session = context.getUserSession();
 		for (Privileges priv : params.getPrivileges()) {
 			String name = localGroups.getName(priv.getGroupId());
 
@@ -402,8 +405,7 @@ class Harvester {
 
 					// --- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(dbms, id, priv.getGroupId(), opId
-								+ "");
+						dataMan.setOperation(session, dbms, id, priv.getGroupId(), opId + "");
 					} else
 						log.debug("       --> " + name + " (skipped)");
 				}

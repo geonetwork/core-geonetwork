@@ -518,6 +518,12 @@ INSERT INTO OperationsDes VALUES (3,'no','Varsle');
 INSERT INTO OperationsDes VALUES (5,'no','Interaktivt kart');
 INSERT INTO OperationsDes VALUES (6,'no','Aktuelt');
 
+INSERT INTO StatusValuesDes VALUES (0,'no','Unknown');
+INSERT INTO StatusValuesDes VALUES (1,'no','Draft');
+INSERT INTO StatusValuesDes VALUES (2,'no','Approved');
+INSERT INTO StatusValuesDes VALUES (3,'no','Retired');
+INSERT INTO StatusValuesDes VALUES (4,'no','Submitted');
+INSERT INTO StatusValuesDes VALUES (5,'no','Rejected');
 
 INSERT INTO RegionsDes VALUES (1,'no','Armenia');
 INSERT INTO RegionsDes VALUES (2,'no','Afghanistan');

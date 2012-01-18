@@ -15,6 +15,11 @@
 
   <!-- new strings - 2.7 -->
   <editAttributes>Add more details</editAttributes>
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
   <surnameMandatory>Last name/surname is Mandatory</surnameMandatory>

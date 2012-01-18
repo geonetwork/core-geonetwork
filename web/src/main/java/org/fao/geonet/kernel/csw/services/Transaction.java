@@ -248,7 +248,7 @@ public class Transaction extends AbstractOperation implements CatalogService
         //
         String docType = null, title = null, isTemplate = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
+        String id = dataMan.insertMetadata(us, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 		if( id == null )
@@ -259,7 +259,7 @@ public class Transaction extends AbstractOperation implements CatalogService
         boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
 
         if (metadataPublic) {
-            dataMan.setOperation(dbms, id, "1", AccessManager.OPER_VIEW);
+            dataMan.setOperation(us, dbms, id, "1", AccessManager.OPER_VIEW);
         }
 
 		dataMan.indexMetadataGroup(dbms, id);
@@ -476,7 +476,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 			if (!dataMan.getAccessManager().canEdit(context, id))
 				throw new NoApplicableCodeEx("User not allowed to delete metadata : "+id);
 	
-			dataMan.deleteMetadata(dbms, id);
+			dataMan.deleteMetadata(context.getUserSession(), dbms, id);
 			deleted++;
 		}
 		

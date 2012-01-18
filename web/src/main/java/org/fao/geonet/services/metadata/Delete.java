@@ -98,7 +98,7 @@ public class Delete implements Service
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
 
-		dataMan.deleteMetadata(dbms, id);
+		dataMan.deleteMetadata(session, dbms, id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

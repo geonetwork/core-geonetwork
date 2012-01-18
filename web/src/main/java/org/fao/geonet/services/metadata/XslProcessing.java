@@ -180,7 +180,7 @@ public class XslProcessing implements Service {
 			String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
-				context.info("  Processing instruction not found for " + schema + " schema.");
+				context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
 				notProcessFound.add(new Integer(id));
 				return null;
 			}

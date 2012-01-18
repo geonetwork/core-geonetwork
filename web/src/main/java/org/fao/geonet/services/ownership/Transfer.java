@@ -86,7 +86,7 @@ public class Transfer implements Service {
 			int opId = Integer.parseInt(st.nextToken());
 			int mdId = Integer.parseInt(st.nextToken());
 
-			dm.unsetOperation(dbms, mdId, sourceGrp, opId);
+			dm.unsetOperation(context.getUserSession(), dbms, mdId, sourceGrp, opId);
 
 			if (!targetPriv.contains(priv))
 				dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +

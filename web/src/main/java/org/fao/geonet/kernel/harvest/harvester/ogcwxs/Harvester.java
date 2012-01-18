@@ -217,7 +217,7 @@ class Harvester
 			unsetThumbnail (id);
 			
 			// Remove metadata
-			dataMan.deleteMetadata (dbms, id);
+			dataMan.deleteMetadata (context.getUserSession(), dbms, id);
 			
 			result.locallyRemoved ++;
 		}
@@ -331,7 +331,7 @@ class Harvester
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -611,7 +611,7 @@ class Harvester
             
 			schema = dataMan.autodetectSchema (xml);
 			
-            reg.id = dataMan.insertMetadata(dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
+            reg.id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
 			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms);
@@ -622,7 +622,7 @@ class Harvester
 			log.debug("    - Set Privileges and category.");
 			addPrivileges(reg.id);
 			if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
-				dataMan.setCategory (dbms, reg.id, params.datasetCategory);
+				dataMan.setCategory (context.getUserSession(), dbms, reg.id, params.datasetCategory);
 			
 			log.debug("    - Set Harvested.");
 			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
@@ -828,7 +828,7 @@ class Harvester
 			if (name == null)
 				log.debug ("    - Skipping removed category with id:"+ catId);
 			else {
-				dataMan.setCategory (dbms, id, catId);
+				dataMan.setCategory (context.getUserSession(), dbms, id, catId);
 			}
 		}
 	}
@@ -856,7 +856,7 @@ class Harvester
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6)
 					{
-						dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+						dataMan.setOperation(context.getUserSession(), dbms, id, priv.getGroupId(), opId +"");
 					}
 					else
 						log.debug("       --> "+ name +" (skipped)");

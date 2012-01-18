@@ -255,7 +255,7 @@ class Harvester
 			if (!harvestUris.contains(localUri)) {
 				for (RecordInfo record: localUris.getRecords(localUri)) {
 					log.debug ("  - Removing deleted metadata with id: " + record.id);
-					dataMan.deleteMetadata (dbms, record.id);
+					dataMan.deleteMetadata (context.getUserSession(), dbms, record.id);
 		
 					if (record.isTemplate.equals("s")) {
 						//--- Uncache xlinks if a subtemplate
@@ -444,7 +444,7 @@ class Harvester
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -554,7 +554,7 @@ class Harvester
 		if (localRecords == null) return;
 
 		for (RecordInfo record: localRecords) {
-			dataMan.deleteMetadata (dbms, record.id);
+			dataMan.deleteMetadata (context.getUserSession(), dbms, record.id);
 
 			if (record.isTemplate.equals("s")) {
 				//--- Uncache xlinks if a subtemplate
@@ -1285,7 +1285,7 @@ class Harvester
 			if (name == null) {
 				log.debug ("    - Skipping removed category with id:"+ catId);
 			} else {
-				dataMan.setCategory (dbms, id, catId);
+				dataMan.setCategory (context.getUserSession(), dbms, id, catId);
 			}
 		}
 	}
@@ -1310,7 +1310,7 @@ class Harvester
 
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+						dataMan.setOperation(context.getUserSession(), dbms, id, priv.getGroupId(), opId +"");
 					} else {
 						log.debug("       --> "+ name +" (skipped)");
 					}

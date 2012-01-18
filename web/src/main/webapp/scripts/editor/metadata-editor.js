@@ -298,6 +298,9 @@ function doMoveElementAction(action, ref, id)
 			method: 'get',
 			parameters: pars,
 			onSuccess: function(req) {
+				if (req.status == 0) {
+					alert("Browser returned status 0 - Element has been moved but we didn't get the right response - please 'Save' record");
+				}
 				if (action.include('elem.up')) { 
 					var upElement = thisElement.previous();
 					upElement = upElement.remove();
@@ -393,6 +396,9 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 			method: 'get',
 			parameters: pars,
 			onSuccess: function(req) {
+				if (req.status == 0) {
+					alert("Got back status 0 - element has been added but we didn't receive the response - 'Save' record now");
+				}
 				var html = req.responseText;
 				
 				if (child == "geonet:attribute") {	// Need #122 to be fixed
@@ -466,6 +472,10 @@ function doSaveAction(action,validateAction)
 				method: 'post',
 				parameters: $('editForm').serialize(true),
 				onSuccess: function(req) {
+					if (req.status == 0) {
+						alert("Save succeeded but browser returned status 0");
+					}
+
 					var html = req.responseText;
 					if (divToRestore) divToRestore.removeClassName('editing');
 					if (html.startsWith("<?xml") < 0) { // service returns xml on success
@@ -502,6 +512,8 @@ function doSaveAction(action,validateAction)
 						setBunload(true); // reset warning for window destroy
 						initCalendar();
 						validateMetadataFields();
+					} else {
+						alert("Status returned was "+req.status+" this could be a problem");
 					}
 				},
 				onFailure: function(req) { 
@@ -1681,6 +1693,10 @@ function getValidationReport()
 			method: 'get',
 			parameters: pars,
 			onSuccess: function(req) {
+				if (req.status == 0) {
+					alert("Browser returned status 0 and validation report has been lost - try again?");
+					getValidationReport();
+				}
 				var html = req.responseText;
 				displayBox(html, 'validationReport', false);
 				updateValidationReportVisibilityRules($('checkError').checked);

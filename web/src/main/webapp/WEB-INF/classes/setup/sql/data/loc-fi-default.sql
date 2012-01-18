@@ -509,6 +509,12 @@ INSERT INTO IsoLanguagesDes VALUES (482,'fi','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'fi','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'fi','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
+INSERT INTO StatusValuesDes VALUES (0,'fi','Unknown');
+INSERT INTO StatusValuesDes VALUES (1,'fi','Draft');
+INSERT INTO StatusValuesDes VALUES (2,'fi','Approved');
+INSERT INTO StatusValuesDes VALUES (3,'fi','Retired');
+INSERT INTO StatusValuesDes VALUES (4,'fi','Submitted');
+INSERT INTO StatusValuesDes VALUES (5,'fi','Rejected');
 
 INSERT INTO RegionsDes VALUES (1,'fi','Armenia');
 INSERT INTO RegionsDes VALUES (2,'fi','Afghanistan');

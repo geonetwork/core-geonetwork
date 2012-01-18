@@ -30,6 +30,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
@@ -63,6 +65,9 @@ public class Remove implements Service
 		String      myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dataMan = gc.getDataManager();
+
 		if (myUserId.equals(id)) {
 			throw new IllegalArgumentException("You cannot delete yourself from the user database");
 		}
@@ -77,6 +82,17 @@ public class Remove implements Service
 				if (adminlist.size() == 0) {
 				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
 				}
+			}
+
+			// Before processing DELETE check that the user is not referenced as an
+			// elsewhere in the GeoNetwork database - an exception is thrown if
+			// this is the case
+			if (dataMan.isUserMetadataOwner(dbms, new Integer(id))) {
+				throw new IllegalArgumentException("Cannot delete a user that is also a metadata owner");
+			}
+
+			if (dataMan.isUserMetadataStatus(dbms, new Integer(id))) {
+				throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
 			}
 
 			dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);

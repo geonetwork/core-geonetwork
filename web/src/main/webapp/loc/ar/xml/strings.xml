@@ -14,6 +14,11 @@
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
   
   <editAttributes>Add more details</editAttributes>
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
     <useStopwords>مؤشر يستخدم stopwords وسين لهذه اللغات :</useStopwords>    
     <rebuildIndexMessage>إذا قمت بتغيير هذه القيم ، من المستحسن إعادة إنشاء الفهرس وسين.</rebuildIndexMessage>
 	<!-- new strings - 2.7 -->

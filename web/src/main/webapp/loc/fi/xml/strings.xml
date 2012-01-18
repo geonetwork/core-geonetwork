@@ -13,6 +13,11 @@
 	<ca>Català</ca> <!-- Do not translate! -->
 	<no>Norsk</no>  <!-- Do not translate! -->
 
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
   <editAttributes>Add more details</editAttributes>
     <useStopwords>The Lucene indeksointi käyttää pysäytyssanoja näille kielille:</useStopwords>    
     <rebuildIndexMessage>Jos muutat arvoja, on suositeltava tehdä Lucene-indeksointi uudelleen.</rebuildIndexMessage>

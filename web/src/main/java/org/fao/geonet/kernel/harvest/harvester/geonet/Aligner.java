@@ -138,7 +138,7 @@ public class Aligner
 				String id = localUuids.getID(uuid);
 
 				log.debug("  - Removing old metadata with id:"+ id);
-				dataMan.deleteMetadata(dbms, id);
+				dataMan.deleteMetadata(context.getUserSession(), dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
 			}
@@ -317,7 +317,7 @@ public class Aligner
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, siteId,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, siteId,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -344,7 +344,7 @@ public class Aligner
 		if (params.createRemoteCategory) {
     		Element categs = info.getChild("categories");
     		if (categs != null) {
-    		    Importer.addCategories(dataMan, dbms, id, categs);
+    		    Importer.addCategories(context.getUserSession(), dataMan, dbms, id, categs);
     		}
 		}
 		addPrivileges(id, info.getChild("privileges"));
@@ -371,7 +371,7 @@ public class Aligner
 			else
 			{
 				log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(dbms, id, catId);
+				dataMan.setCategory(context.getUserSession(), dbms, id, catId);
 			}
 		}
 	}
@@ -471,7 +471,7 @@ public class Aligner
 			if (opId == 0 || opId == 1 || opId == 5 || opId == 6)
 			{
 				log.debug("       --> "+ opName);
-				dataMan.setOperation(dbms, id, groupId, opId +"");
+				dataMan.setOperation(context.getUserSession(), dbms, id, groupId, opId +"");
 			}
 			else
 				log.debug("       --> "+ opName +" (skipped)");
@@ -624,7 +624,7 @@ public class Aligner
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {
-                Importer.addCategories(dataMan, dbms, id, categs);
+                Importer.addCategories(context.getUserSession(), dataMan, dbms, id, categs);
             }
         }
 		

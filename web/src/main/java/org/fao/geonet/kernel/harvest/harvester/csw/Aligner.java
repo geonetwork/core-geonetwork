@@ -137,7 +137,7 @@ public class Aligner
 				String id = localUuids.getID(uuid);
 
 				log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadata(dbms, id);
+				dataMan.deleteMetadata(context.getUserSession(), dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
 			}
@@ -191,7 +191,7 @@ public class Aligner
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -222,7 +222,7 @@ public class Aligner
 			else
 			{
 				log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(dbms, id, catId);
+				dataMan.setCategory(context.getUserSession(), dbms, id, catId);
 			}
 		}
 	}
@@ -251,7 +251,7 @@ public class Aligner
 					if (opId == 0 || opId == 5 || opId == 6)
 					{
 						log.debug("       --> "+ name);
-						dataMan.setOperation(dbms, id, priv.getGroupId(), opId +"");
+						dataMan.setOperation(context.getUserSession(), dbms, id, priv.getGroupId(), opId +"");
 					}
 					else
 						log.debug("       --> "+ name +" (skipped)");

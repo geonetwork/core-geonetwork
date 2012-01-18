@@ -83,6 +83,7 @@ public class SchemaManager
 	private static final int MODE_NEEDLE = 0;
 	private static final int MODE_ROOT = 1;
 	private static final int MODE_NEEDLEWITHVALUE = 2;
+	private static final int MODE_ATTRIBUTEWITHVALUE = 3;
 
 	private static final String GEONET_SCHEMA_URI = "http://geonetwork-opensource.org/schemas/schema-ident";
 	private static final Namespace GEONET_SCHEMA_PREFIX_NS = Namespace.getNamespace("gns", GEONET_SCHEMA_URI);
@@ -495,27 +496,34 @@ public class SchemaManager
 	public String autodetectSchema(Element md) {
 		return autodetectSchema(md, defaultSchema);
 	}
+
 	public String autodetectSchema(Element md, String defaultSchema) {			
 
 		beforeRead();
 		try {
 			String schema = null;
+
+			// -- check for attribute presence first
+			schema = compareElementsAndAttributes(md, MODE_ATTRIBUTEWITHVALUE);
+			if (schema != null) {
+				Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(attribute) examination");
+			}
 				
 			// -- check the autodetect elements
-			schema  = compareElements(md, MODE_NEEDLE);
+			schema  = compareElementsAndAttributes(md, MODE_NEEDLE);
 			if (schema != null) {
 				Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(needle) examination");
 			}
 		
 			if (schema == null) {
-				schema = compareElements(md, MODE_ROOT);
+				schema = compareElementsAndAttributes(md, MODE_ROOT);
 				if (schema != null) {
 					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(root element) examination");
 				}
 			}
 
 			if (schema == null) {
-				schema = compareElements(md, MODE_NEEDLEWITHVALUE);
+				schema = compareElementsAndAttributes(md, MODE_NEEDLEWITHVALUE);
 				if (schema != null) {
 					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(needle with value) examination");
 				}
@@ -1092,11 +1100,11 @@ public class SchemaManager
 
 	//--------------------------------------------------------------------------
 	/** Search all available schemas for one which contains
- 	  * the element(s) specified in the autodetect info
+ 	  * the element(s) or attributes specified in the autodetect info
 		*
 		* @param md the XML record whose schema we are trying to find
  	  */
-	private String compareElements(Element md, int mode) {
+	private String compareElementsAndAttributes(Element md, int mode) {
 		String returnVal = null;	
 		Set<String> allSchemas = getSchemas();
 		 Log.debug(Geonet.SCHEMA_MANAGER, "Schema autodetection using mode: " + mode + "...");
@@ -1108,36 +1116,53 @@ public class SchemaManager
 			for (Element elem : adElems) {			
 				List<Element> elemKids = elem.getChildren();
 				boolean match = false;
- 				
-				for (Element kid : elemKids) {
-					Attribute type = elem.getAttribute("type");
-					// --- is the kid the same as the root of the md
-					if (mode==MODE_ROOT && type != null && "root".equals(type.getValue())) {
-						Log.debug(Geonet.SCHEMA_MANAGER, "  Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
-						if (kid.getName().equals(md.getName()) && 
+
+				Attribute type = elem.getAttribute("type");
+				String searchAttValue = elem.getAttributeValue("searchAttributeValue");
+				String searchAttName  = elem.getAttributeValue("searchAttributeName");
+ 					
+				// --- try and find the attribute and value in md 
+				if (mode==MODE_ATTRIBUTEWITHVALUE && type != null  && "searchAttribute".equals(type.getValue()) && searchAttValue != null && searchAttName != null && searchAttName.length() != 0) {
+					Attribute searchAtt = new Attribute(searchAttName, searchAttValue);
+
+					Log.debug(Geonet.SCHEMA_MANAGER, "Comparing attribute "+searchAttName+"="+searchAttValue+" with "+md.getName()+" with namespace "+md.getNamespace());
+
+					if (isMatchingAttributeInMetadata(searchAtt, md)) {
+						match = true;
+					} else {
+						match = false;
+					}
+				} else {
+					for (Element kid : elemKids) {
+
+						// --- is the kid the same as the root of the md
+						if (mode==MODE_ROOT && type != null && "root".equals(type.getValue())) {
+							Log.debug(Geonet.SCHEMA_MANAGER, "  Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
+							if (kid.getName().equals(md.getName()) && 
 								kid.getNamespace().equals(md.getNamespace())) {
 									match = true;
 									break;
-						}
-					// --- try and find the kid in the md (kid only, not value)
-					} else if (mode==MODE_NEEDLE && type != null  && "search".equals(type.getValue())) {
-						Log.debug(Geonet.SCHEMA_MANAGER, "Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
+							}
+						// --- try and find the kid in the md (kid only, not value)
+						} else if (mode==MODE_NEEDLE && type != null  && "search".equals(type.getValue())) {
+							Log.debug(Geonet.SCHEMA_MANAGER, "Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
 
-						if (isMatchingElementInMetadata(kid, md, false)) {
-							match = true;
-						} else {
-							match = false;
-							break;
-						}
-					// --- try and find the kid in the md (kid + value)
-					} else if (mode==MODE_NEEDLEWITHVALUE) {
-						if (isMatchingElementInMetadata(kid, md, true)) {
-							match = true;
-						} else {
-							match = false;
-							break;							
-						}
- 					}
+							if (isMatchingElementInMetadata(kid, md, false)) {
+								match = true;
+							} else {
+								match = false;
+								break;
+							}
+						// --- try and find the kid in the md (kid + value)
+						} else if (mode==MODE_NEEDLEWITHVALUE) {
+							if (isMatchingElementInMetadata(kid, md, true)) {
+								match = true;
+							} else {
+								match = false;
+								break;							
+							}
+ 						}
+					}
 				}
 				if (match) return schemaName;
 			}
@@ -1145,6 +1170,33 @@ public class SchemaManager
 		return returnVal;
 	}
 	
+	//--------------------------------------------------------------------------
+	/** This method searches an entire metadata file for an attribute that
+	  *  matches the "needle" metadata attribute arg - A matching attribute 
+	  *  has the same name and value. 
+		*
+	  * @param needle the XML attribute we are trying to find
+	  * @param haystack the XML metadata record we are searching
+ 	  */
+
+	private boolean isMatchingAttributeInMetadata(Attribute needle, Element haystack) {
+		boolean returnVal = false;
+		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		
+		Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
+
+		while(haystackIterator.hasNext()){
+			Element tempElement = haystackIterator.next();
+			Attribute tempAtt = tempElement.getAttribute(needle.getName());
+			if (tempAtt.equals(needle)) {
+				returnVal = true;
+				break;
+			}
+		}
+ 		
+		return returnVal;
+	}
+			
 	//--------------------------------------------------------------------------
 	/** This method searches an entire metadata file for an element that
 	  *  matches the "needle" metadata element arg - A matching element

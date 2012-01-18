@@ -107,6 +107,7 @@ public class Geonet
         public static final String NOTIFICATIONS = "notifications";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";
+		public static final String EMAIL      = "email";
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
 		public static final String SHOWVALIDATIONERRORS   = "showvalidationerrors";
@@ -114,8 +115,10 @@ public class Geonet
 		public static final String SITE_URL   = "siteURL";
 		public static final String APP_PATH   = "path";
 		public static final String SCHEMA     = "schema";
+		public static final String STATUS     = "status";
         public static final String JUSTCREATED = "JUSTCREATED";
         public static final String FILTER     = "filter";
+        public static final String ENABLED    = "enabled";
 	}
 
 	//--------------------------------------------------------------------------
@@ -476,6 +479,9 @@ public class Geonet
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
 		public static final String STAT_LOG_ASYNCH = "statLogAsynch";
 		public static final String MAX_WRITES_IN_TRANSACTION = "maxWritesInTransaction";
+		public static final String USE_SUBVERSION  = "useSubversion";
+		public static final String SUBVERSION_PATH = "subversionPath";
+		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
         
 	}
 
@@ -511,6 +517,7 @@ public class Geonet
 	public static final String HARVESTER    = GEONETWORK + ".harvester";
 	public static final String SETTINGS     = GEONETWORK + ".settings";
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
+	public static final String SVN_MANAGER = GEONETWORK + ".svnmanager";
 	public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
 	public static final String DB			= GEONETWORK + ".database";
 	public static final String THESAURUS_MAN= GEONETWORK + ".thesaurus-man";
@@ -548,6 +555,7 @@ public class Geonet
 		public static final String MEF_IMPORT        = "mef.import";
 		public static final String MEF_EXPORT        = "mef.export";
 	}
+
 }
 
 //=============================================================================

@@ -73,8 +73,11 @@ public class ThreadUtils {
 		settingMan = sm;
 		dbUrl = props.get("url");
 		if (dbUrl != null) {
-			// so far only postgres has been tested with this function
+			// postgres has been tested with this function
 			if (dbUrl.toLowerCase().contains("postgres")) {
+				dbCanUseMultipleThreads = true;
+			// oracle has also been tested with this function
+			} else if (dbUrl.toLowerCase().contains("oracle")) {
 				dbCanUseMultipleThreads = true;
 			}
 		}

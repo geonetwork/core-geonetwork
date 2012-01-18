@@ -59,6 +59,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
@@ -66,9 +67,13 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.XmlSerializerDb;
+import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
@@ -86,6 +91,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.feature.type.AttributeDescriptor;
+
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -109,6 +115,7 @@ public class Geonetwork implements ApplicationHandler
 	private Element dbConfiguration;
 
 	private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
+
 	private static final String       IDS_ATTRIBUTE_NAME        = "id";
 
 	//---------------------------------------------------------------------------
@@ -156,8 +163,11 @@ public class Geonetwork implements ApplicationHandler
 		System.setProperty(webappName + ".lucene.dir", luceneDir);
 		
 		logger.info("   - Lucene directory is:" + luceneDir);
-		
-		
+
+		// Status actions class - load it
+		String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS); 
+		Class statusActionsClass = Class.forName(statusActionsClassName);
+
 		// Data directory
 		String defaultDataDir = handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
 		String dataSystemDir = System.getProperty(webappName + ".data.dir");
@@ -206,7 +216,9 @@ public class Geonetwork implements ApplicationHandler
 		dbConfiguration = Xml.loadFile(dbConfigurationFilePath);
         ConfigurationOverrides.updateWithOverrides(dbConfigurationFilePath, context.getServlet(), path, dbConfiguration);
 
-		Dbms dbms = initDatabase(context);
+		Pair<Dbms,Boolean> pair = initDatabase(context);
+		Dbms dbms = pair.one();
+		Boolean created = pair.two();
 
 		//------------------------------------------------------------------------
 		//--- initialize thread pool 
@@ -266,7 +278,7 @@ public class Geonetwork implements ApplicationHandler
 					logger.info("     Server is Enabled.");
 		
 					UserSession session = new UserSession();
-					session.authenticate(null, "z39.50", "", "", "Guest");
+					session.authenticate(null, "z39.50", "", "", "Guest", "");
 					context.setUserSession(session);
 					context.setIpAddress("127.0.0.1");
 					Server.init(host, z3950port, path, context, app_context);
@@ -305,7 +317,9 @@ public class Geonetwork implements ApplicationHandler
         logger.info(lc.toString());
        
 		DataStore dataStore = context.getResourceManager().getDataStore(Geonet.Res.MAIN_DB);
-		if (dataStore == null) dataStore = createShapefileDatastore(luceneDir);
+		if (dataStore == null) {
+			dataStore = createShapefileDatastore(luceneDir);
+		}
 
 		//--- no datastore for spatial indexing means that we can't continue
 		if (dataStore == null) {
@@ -336,13 +350,25 @@ public class Geonetwork implements ApplicationHandler
 		//------------------------------------------------------------------------
 		//--- get edit params and initialize DataManager
 
-		logger.info("  - Data manager...");
+		logger.info("  - Xml serializer and Data manager...");
+
+		String useSubversion = handlerConfig.getMandatoryValue(Geonet.Config.USE_SUBVERSION);
+
+		SvnManager svnManager = null;
+		XmlSerializer xmlSerializer = null;
+		if (useSubversion.equals("true")) {
+			String subversionPath = new File(path, handlerConfig.getMandatoryValue(Geonet.Config.SUBVERSION_PATH)).getAbsolutePath();
+			svnManager = new SvnManager(context, settingMan, subversionPath, dbms.getURL(), created);
+			xmlSerializer = new XmlSerializerSvn(settingMan, svnManager);
+		} else {
+			xmlSerializer = new XmlSerializerDb(settingMan);
+		}
 
 		File _htmlCacheDir = new File(htmlCacheDir);
 		if (!_htmlCacheDir.isAbsolute()) {
 			htmlCacheDir = path + htmlCacheDir;
 		}
-		DataManager dataMan = new DataManager(context, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, thesauriDir, path);
+		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, thesauriDir, path);
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
@@ -392,6 +418,9 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.app_context = app_context;
     gnContext.metadataNotifierMan = metadataNotifierMan;
 		gnContext.threadPool  = threadPool;
+		gnContext.xmlSerializer  = xmlSerializer;
+		gnContext.svnManager  = svnManager;
+		gnContext.statusActionsClass = statusActionsClass;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 
@@ -585,10 +614,10 @@ public class Geonetwork implements ApplicationHandler
 	 * exists, try to migrate the content.
 	 * 
 	 * @param context
-	 * @return
+	 * @return Pair with Dbms channel and Boolean set to true if db created
 	 * @throws Exception
 	 */
-	private Dbms initDatabase(ServiceContext context) throws Exception {
+	private Pair<Dbms, Boolean> initDatabase(ServiceContext context) throws Exception {
 		Dbms dbms = null;
 		try {
 			dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -602,6 +631,7 @@ public class Geonetwork implements ApplicationHandler
 		logger.info("  - Database connection on " + dbURL + " ...");
 		
 
+		Boolean created = false;
 		// Create db if empty
 		if (!Lib.db.touch(dbms)) {
 			logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
@@ -628,11 +658,12 @@ public class Geonetwork implements ApplicationHandler
 			// Copy logo
 			String uuid = UUID.randomUUID().toString();
 			initLogo(dbms, uuid);
-	
+			created = true;
 		} else {
 			logger.info("      Found an existing GeoNetwork database.");
 		}
-		return dbms;
+
+		return Pair.read(dbms, created);
 	}
 
 	/**
@@ -731,10 +762,6 @@ public class Geonetwork implements ApplicationHandler
 			logger.error("  Stack     : " +Util.getStackTrace(e));
 		}
 
-		//------------------------------------------------------------------------
-		//--- end Z39.50
-		logger.info("  - Z39.50...");
-		
 		
 		logger.info("  - ThreadPool ...");
 		threadPool.shutDown();
@@ -749,6 +776,7 @@ public class Geonetwork implements ApplicationHandler
 			logger.error("  Stack     : " +Util.getStackTrace(e));
 		}
 
+		logger.info("  - Z39.50...");
 		Server.end();
 	}
 
@@ -786,4 +814,3 @@ public class Geonetwork implements ApplicationHandler
 }
 
 //=============================================================================
-

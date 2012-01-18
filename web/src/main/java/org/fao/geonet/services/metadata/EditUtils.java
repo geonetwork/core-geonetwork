@@ -59,12 +59,14 @@ class EditUtils {
         this.context = context;
         this.gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         this.dataManager = gc.getDataManager();
+        this.xmlSerializer = gc.getXmlSerializer();
         this.accessMan = gc.getAccessManager();
         this.session = context.getUserSession();
 
     }
     protected ServiceContext context;
     protected DataManager dataManager;
+    protected XmlSerializer xmlSerializer;
 	protected GeonetContext gc;
 	protected AccessManager accessMan;
 	protected UserSession session;
@@ -191,7 +193,7 @@ class EditUtils {
      * @throws Exception
      */
     private Element applyChanges(Dbms dbms, String id, Hashtable changes, String currVersion) throws Exception {
-        Element md = XmlSerializer.select(dbms, "Metadata", id);
+        Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {

@@ -14,6 +14,11 @@
     <fi>Finnish</fi>  <!-- Do not translate! -->
 
   <editAttributes>Add more details</editAttributes>
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
   <subtemplate.admin>Manage directories</subtemplate.admin>
   <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
   <useStopwords>Lucene的索引使用这些语言的stopwords:</useStopwords>

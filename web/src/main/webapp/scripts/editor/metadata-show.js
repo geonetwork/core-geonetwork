@@ -22,6 +22,40 @@
 					list[i].checked = false;
 			}
 
+			function radioModalUpdate(div,service,modalbox,title)
+      {
+				changeMessage = $('changeMessage').value;
+				if (isWhitespace(changeMessage)) {
+					changeMessage = 'No information';
+				}    
+
+        var radio = $(div).getElementsBySelector('input[type="radio"]');
+				var pars = "&id="+$('metadataid').value+"&changeMessage="+changeMessage;
+				radio.each( function(s) {
+					if (s.checked) {
+						pars += "&"+s.name+"="+s.value;
+					}
+				});
+
+				if (modalbox != null && modalbox) {
+					service = getGNServiceURL(service) + '?' + pars;
+					Modalbox.show(service,{title: title, width: 600} );
+				} else {
+					var myAjax = new Ajax.Request(
+						getGNServiceURL(service),
+						{
+							method: 'get',
+							parameters: pars,
+							onSuccess: function() {},
+							onFailure: function(req) {
+								alert(translate("error") + service + " / status "+req.status+" text: "+req.statusText+" - " + translate("tryAgain"));
+							}
+						}
+					);
+					window.Modalbox.hide();
+				}
+			}
+
 			function checkBoxModalUpdate(div,service,modalbox,title)
       {
         var boxes = $(div).getElementsBySelector('input[type="checkbox"]');

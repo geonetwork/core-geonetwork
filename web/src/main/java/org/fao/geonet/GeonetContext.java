@@ -26,6 +26,8 @@ package org.fao.geonet;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SvnManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
@@ -42,6 +44,8 @@ import org.springframework.context.ApplicationContext;
 public class GeonetContext
 {
 	/* package */ DataManager       dataMan;
+	/* package */ SvnManager        svnManager;
+	/* package */ XmlSerializer     xmlSerializer;
 	/* package */ AccessManager     accessMan;
 	/* package */ SearchManager     searchMan;
 	/* package */ SchemaManager     schemaMan;
@@ -55,11 +59,15 @@ public class GeonetContext
   /* package */ MetadataNotifierManager metadataNotifierMan;
 	/* package */ ThreadPool        threadPool;
 
+	Class statusActionsClass;
+
 	//---------------------------------------------------------------------------
 	/*package*/ GeonetContext() {}
 	//---------------------------------------------------------------------------
 
 	public DataManager       getDataManager()       { return dataMan;      }
+	public SvnManager        getSvnManager()        { return svnManager;   }
+	public XmlSerializer     getXmlSerializer()     { return xmlSerializer;}
 	public AccessManager     getAccessManager()     { return accessMan;    }
 	public SearchManager     getSearchmanager()     { return searchMan;    }
 	public SchemaManager     getSchemamanager()     { return schemaMan;    }
@@ -77,6 +85,7 @@ public class GeonetContext
 
 	public String getSiteId()   { return settingMan.getValue("system/site/siteId"); }
 	public String getSiteName() { return settingMan.getValue("system/site/name");   }
+	public Class getStatusActionsClass() { return statusActionsClass; }
 }
 
 //=============================================================================

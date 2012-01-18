@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.mef;
 import jeeves.exceptions.BadFormatEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.UserSession;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -294,7 +295,7 @@ public class Importer {
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null, docType = null, title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
-                    String fcId = dm.insertMetadata(dbms, "iso19110", fc.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
+                    String fcId = dm.insertMetadata(context.getUserSession(), dbms, "iso19110", fc.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
                             userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 					Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
@@ -331,12 +332,12 @@ public class Importer {
 				new File(priDir).mkdirs();
 
 				if (categs != null)
-					addCategories(dm, dbms, id.get(index), categs);
+					addCategories(context.getUserSession(), dm, dbms, id.get(index), categs);
 
 				if (groupId == null)
-					addPrivileges(dm, dbms, id.get(index), privileges);
+					addPrivileges(context.getUserSession(), dm, dbms, id.get(index), privileges);
 				else
-					addOperations(dm, dbms, privileges, id.get(index), groupId);
+					addOperations(context.getUserSession(), dm, dbms, privileges, id.get(index), groupId);
 
 				if (indexGroup) {
 					dm.indexMetadataGroup(dbms, id.get(index));
@@ -410,7 +411,7 @@ public class Importer {
 			if (dm.existsMetadataUuid(dbms, uuid) && !uuidAction.equals(Params.NOTHING)) {
                 // user has privileges to replace the existing metadata
                 if(dm.getAccessManager().canEdit(context, dm.getMetadataId(dbms, uuid))) {
-                    dm.deleteMetadata(dbms, dm.getMetadataId(dbms, uuid));
+                    dm.deleteMetadata(context.getUserSession(), dbms, dm.getMetadataId(dbms, uuid));
                     Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                 }
                 // user does not hav privileges to replace the existing metadata
@@ -446,7 +447,7 @@ public class Importer {
                     //
                     String docType = "", title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
-                    dm.insertMetadata(dbms, schema, md.get(index), iLocalId, uuid, context.getUserSession().getUserIdAsInt(), groupId, source,
+                    dm.insertMetadata(context.getUserSession(), dbms, schema, md.get(index), iLocalId, uuid, context.getUserSession().getUserIdAsInt(), groupId, source,
                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 					id.add(index, Integer.toString(iLocalId));
@@ -466,7 +467,7 @@ public class Importer {
             String docType = null, title = null, category = null;
             boolean ufo = false, indexImmediate = false;
             id.add(index,
-                    dm.insertMetadata(dbms, schema, md.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
+                    dm.insertMetadata(context.getUserSession(), dbms, schema, md.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
                     userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
 		}
 
@@ -495,7 +496,7 @@ public class Importer {
 	 * @param categ
 	 * @throws Exception
 	 */
-	public static void addCategories(DataManager dm, Dbms dbms, String id,
+	public static void addCategories(UserSession session, DataManager dm, Dbms dbms, String id,
 			Element categ) throws Exception {
 		List locCats = dbms.select("SELECT id,name FROM Categories")
 				.getChildren();
@@ -512,7 +513,7 @@ public class Importer {
             else {
                 // --- metadata category exists locally
                 Log.debug(Geonet.MEF, " - Setting category : " + catName);
-                dm.setCategory(dbms, id, catId);
+                dm.setCategory(session, dbms, id, catId);
             }
         }
 	}
@@ -526,7 +527,7 @@ public class Importer {
 	 * @param privil
 	 * @throws Exception
 	 */
-	private static void addPrivileges(DataManager dm, Dbms dbms, String id,
+	private static void addPrivileges(UserSession session, DataManager dm, Dbms dbms, String id,
 			Element privil) throws Exception {
 		List locGrps = dbms.select("SELECT id,name FROM Groups").getChildren();
 		List list = privil.getChildren("group");
@@ -545,7 +546,7 @@ public class Importer {
 
 				Log.debug(Geonet.MEF, " - Setting privileges for group : "
 						+ grpName);
-				addOperations(dm, dbms, group, id, grpId);
+				addOperations(session, dm, dbms, group, id, grpId);
 				if (groupOwner) {
 					Log.debug(Geonet.MEF, grpName + " set as group Owner ");
 					dm.setGroupOwner(dbms, id, grpId);
@@ -564,7 +565,7 @@ public class Importer {
 	 * @param grpId
 	 * @throws Exception
 	 */
-	private static void addOperations(DataManager dm, Dbms dbms, Element group,
+	private static void addOperations(UserSession session, DataManager dm, Dbms dbms, Element group,
 			String id, String grpId) throws Exception {
 		List opers = group.getChildren("operation");
 
@@ -581,7 +582,7 @@ public class Importer {
                 // --- operation exists locally
 
                 Log.debug(Geonet.MEF, "   Adding --> " + opName);
-                dm.setOperation(dbms, id, grpId, opId + "");
+                dm.setOperation(session, dbms, id, grpId, opId + "");
             }
         }
 	}

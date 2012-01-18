@@ -520,6 +520,13 @@ INSERT INTO OperationsDes VALUES (3,'ar','Notify');
 INSERT INTO OperationsDes VALUES (5,'ar','Interactive Map');
 INSERT INTO OperationsDes VALUES (6,'ar','Featured');
 
+INSERT INTO StatusValuesDes VALUES (0,'ar','Unknown');
+INSERT INTO StatusValuesDes VALUES (1,'ar','Draft');
+INSERT INTO StatusValuesDes VALUES (2,'ar','Approved');
+INSERT INTO StatusValuesDes VALUES (3,'ar','Retired');
+INSERT INTO StatusValuesDes VALUES (4,'ar','Submitted');
+INSERT INTO StatusValuesDes VALUES (5,'ar','Rejected');
+
 INSERT INTO RegionsDes VALUES (1,'ar','Armenia');
 INSERT INTO RegionsDes VALUES (2,'ar','Afghanistan');
 INSERT INTO RegionsDes VALUES (3,'ar','Albania');
