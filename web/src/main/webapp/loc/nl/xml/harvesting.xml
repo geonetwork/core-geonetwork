@@ -126,6 +126,8 @@
 	<title>Titel</title>
 	<abstract>Samenvatting</abstract>
 	<keywords>Sleutelwoorden</keywords>
+	<minscale>Minimum schaalgetal</minscale>
+	<maxscale>Maximum schaalgetal</maxscale>
 	<subject>Onderwerp</subject>
 	<digital>Digitaal</digital>
 	<hardcopy>Hardcopy</hardcopy>

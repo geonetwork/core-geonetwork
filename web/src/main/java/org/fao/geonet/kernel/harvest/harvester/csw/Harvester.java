@@ -23,6 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
@@ -30,6 +36,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
@@ -46,14 +53,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.xpath.XPath;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
@@ -346,6 +345,8 @@ class Harvester
 		buildFilterQueryable(queriables, "dc:title", s.title);
 		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
 		buildFilterQueryable(queriables, "dc:subject", s.subject);
+		buildFilterQueryable(queriables, "dc:denominator", s.minscale, org.opengis.filter.PropertyIsGreaterThanOrEqualTo.NAME);
+		buildFilterQueryable(queriables, "dc:denominator", s.maxscale, org.opengis.filter.PropertyIsLessThanOrEqualTo.NAME);
 
 		//--- build filter expression
 
@@ -370,8 +371,14 @@ class Harvester
 	}
 
 	//---------------------------------------------------------------------------
-
-	private void buildFilterQueryable(List<Element> queryables, String name, String value)
+	private void buildFilterQueryable(List<Element> queryables, String name, String value) {
+		if (value.contains("%")) { 
+			buildFilterQueryable(queryables, name, value, org.opengis.filter.PropertyIsLike.NAME);
+		} else {
+			buildFilterQueryable(queryables, name, value, org.opengis.filter.PropertyIsEqualTo.NAME);
+		}
+	}
+	private void buildFilterQueryable(List<Element> queryables, String name, String value, String operator)
 	{
 		if (value.length() == 0)
 			return;
@@ -379,17 +386,17 @@ class Harvester
 		// add Like operator
 		Element prop;
 		
-		if (value.contains("%")) {
-			prop = new Element("PropertyIsLike", Csw.NAMESPACE_OGC);
+		if (operator.equals(org.opengis.filter.PropertyIsLike.NAME)) {
+			prop = new Element(operator, Csw.NAMESPACE_OGC);
 			prop.setAttribute("wildcard", "%");
 			prop.setAttribute("singleChar", "_");
 			prop.setAttribute("escapeChar", "\\");
 		} else {
-			prop     = new Element("PropertyIsEqualTo", Csw.NAMESPACE_OGC);
+			prop = new Element(operator, Csw.NAMESPACE_OGC);
 		}
 		
-		Element propName = new Element("PropertyName",      Csw.NAMESPACE_OGC);
-		Element literal  = new Element("Literal",           Csw.NAMESPACE_OGC);
+		Element propName = new Element("PropertyName", Csw.NAMESPACE_OGC);
+		Element literal  = new Element("Literal", Csw.NAMESPACE_OGC);
 		
 		propName.setText(name);
 		literal .setText(value);
@@ -412,7 +419,9 @@ class Harvester
 		buildCqlQueryable(queryables, "dc:title", s.title);
 		buildCqlQueryable(queryables, "dct:abstract", s.abstrac);
 		buildCqlQueryable(queryables, "dc:subject", s.subject);
-
+		buildCqlQueryable(queryables, "dct:denominator", s.minscale, ">=");
+		buildCqlQueryable(queryables, "dct:denominator", s.maxscale, "<=");
+		
 		//--- build CQL query
 
 		StringBuffer sb = new StringBuffer();
@@ -436,13 +445,18 @@ class Harvester
 	 */
 	private void buildCqlQueryable(List<String> queryables, String name, String value)
 	{
-		if (value.length() != 0)
+		if (value.length() != 0) {
 			if (value.contains("%"))
-				queryables.add(name +" like '"+ value +"'");
+				buildCqlQueryable(queryables, name, value, "like");
 			else
-				queryables.add(name +" = '"+ value +"'");
+				buildCqlQueryable(queryables, name, value, "=");
+		}
 	}
-
+	private void buildCqlQueryable(List<String> queryables, String name, String value, String operator)
+	{
+		if (value.length() != 0)
+			queryables.add(name +" " + operator + " '"+ value +"'");
+	}
 	//---------------------------------------------------------------------------
 
 	private Element doSearch(CatalogRequest request, int start, int max) throws Exception

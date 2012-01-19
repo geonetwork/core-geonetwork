@@ -29,6 +29,8 @@
 					<title><xsl:value-of    select="children/title/value" /></title>
 					<abstract><xsl:value-of select="children/abstract/value" /></abstract>
 					<subject><xsl:value-of  select="children/subject/value" /></subject>
+					<minscale><xsl:value-of select="children/minscale/value" /></minscale>
+					<maxscale><xsl:value-of select="children/maxscale/value" /></maxscale>
 				</search>
 			</xsl:for-each>
 		</searches>

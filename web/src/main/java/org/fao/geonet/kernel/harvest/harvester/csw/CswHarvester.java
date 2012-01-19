@@ -158,6 +158,8 @@ public class CswHarvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "title",    s.title);
 			settingMan.add(dbms, "id:"+searchID, "abstract", s.abstrac);
 			settingMan.add(dbms, "id:"+searchID, "subject",  s.subject);
+			settingMan.add(dbms, "id:"+searchID, "minscale", s.minscale);
+			settingMan.add(dbms, "id:"+searchID, "maxscale", s.maxscale);
 		}
 	}
 

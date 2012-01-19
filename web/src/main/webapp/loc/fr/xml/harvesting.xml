@@ -126,6 +126,8 @@
 	<title>Titre</title>
 	<abstract>Résumé</abstract>
 	<keywords>Mots clés</keywords>
+	<minscale>Échelle minimum</minscale>
+	<maxscale>Échelle maximum</maxscale>
 	<subject>Subject</subject>	
 	<digital>Digital</digital>
 	<hardcopy>Hardcopy</hardcopy>

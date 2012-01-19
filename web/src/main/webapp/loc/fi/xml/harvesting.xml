@@ -112,6 +112,8 @@
 	<title>Otsikko</title>
 	<abstract>Tiivistelmä</abstract>
 	<keywords>Avainsanat</keywords>
+	<minscale>Min scale denominator</minscale>
+	<maxscale>Max scale denominator</maxscale>
 	<subject>Aihe</subject>
 	<digital>Digitaalinen</digital>
 	<hardcopy>Tuloste</hardcopy>

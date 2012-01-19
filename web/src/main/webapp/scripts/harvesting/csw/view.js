@@ -140,7 +140,9 @@ function getData()
 			ANY_TEXT : xml.getElementById(divElem, 'csw.anytext') .value,
 			TITLE    : xml.getElementById(divElem, 'csw.title')   .value,
 			ABSTRACT : xml.getElementById(divElem, 'csw.abstract').value,
-			SUBJECT  : xml.getElementById(divElem, 'csw.subject') .value
+			SUBJECT  : xml.getElementById(divElem, 'csw.subject') .value,
+			MINSCALE : xml.getElementById(divElem, 'csw.minscale').value,
+			MAXSCALE : xml.getElementById(divElem, 'csw.maxscale').value
 		});
 	}
 	
@@ -217,7 +219,9 @@ function addSearch(search)
 		{ id:'csw.anytext',  type:'length',   minSize :0,  maxSize :200 },
 		{ id:'csw.title',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'csw.abstract', type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.subject',  type:'length',   minSize :0,  maxSize :200 }
+		{ id:'csw.subject',  type:'length',   minSize :0,  maxSize :200 },
+		{ id:'csw.minscale', type:'length',   minSize :0,  maxSize :200 },
+		{ id:'csw.maxscale', type:'length',   minSize :0,  maxSize :200 }
 	], id);
 }
 

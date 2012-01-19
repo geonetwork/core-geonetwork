@@ -46,6 +46,8 @@ class Search
 		title    = Util.getParam(search, "title",    "").trim();
 		abstrac  = Util.getParam(search, "abstract", "").trim();
 		subject  = Util.getParam(search, "subject",  "").trim();
+		minscale  = Util.getParam(search, "minscale",  "").trim();
+		maxscale  = Util.getParam(search, "maxscale",  "").trim();
 	}
 
 	//---------------------------------------------------------------------------
@@ -62,6 +64,8 @@ class Search
 		s.title    = title;
 		s.abstrac  = abstrac;
 		s.subject  = subject;
+		s.minscale = minscale;
+		s.maxscale = maxscale;
 
 		return s;
 	}
@@ -83,6 +87,8 @@ class Search
 	public String title;
 	public String abstrac;
 	public String subject;
+	public String minscale;
+	public String maxscale;
 }
 
 //=============================================================================

@@ -54,6 +54,19 @@
 				<td class="padded"><xsl:value-of select="/root/strings/subject"/></td>
 				<td class="padded"><input id="csw.subject" class="content" type="text" value="{subject}" size="30"/></td>
 			</tr>
+			
+			<tr>
+				<td/>
+				<td class="padded"><xsl:value-of select="/root/strings/minscale"/></td>
+				<td class="padded"><input id="csw.minscale" class="content" type="number" value="{minscale}" size="30"/></td>
+			</tr>
+			
+			<tr>
+				<td/>
+				<td class="padded"><xsl:value-of select="/root/strings/maxscale"/></td>
+				<td class="padded"><input id="csw.maxscale" class="content" type="number" value="{maxscale}" size="30"/></td>
+			</tr>
+			
 		</table>
 	</xsl:template>
 

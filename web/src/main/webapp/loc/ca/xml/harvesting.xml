@@ -123,6 +123,8 @@
 	<title>Títol</title>
 	<abstract>Resum</abstract>
 	<keywords>Paraules clau</keywords>
+	<minscale>Min scale denominator</minscale>
+	<maxscale>Max scale denominator</maxscale>
 	<subject>Assumpte</subject>
 	<digital>Digital</digital>
 	<hardcopy>Còpia impresa</hardcopy>

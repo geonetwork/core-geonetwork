@@ -126,6 +126,8 @@
 	<title>Título</title>
 	<abstract>Resumen</abstract>
 	<keywords>Palabras clave</keywords>
+	<minscale>Escala minima</minscale>
+	<maxscale>Escala maxima</maxscale>
 	<subject>Asunto</subject>
 	<digital>Digital</digital>
 	<hardcopy>Copia impresa</hardcopy>

@@ -125,6 +125,8 @@
 	<title>Tittel</title>
 	<abstract>Sammendrag</abstract>
 	<keywords>Nøkkelord</keywords>
+	<minscale>Min scale denominator</minscale>
+	<maxscale>Max scale denominator</maxscale>
 	<subject>Tema</subject>
 	<digital>Digital</digital>
 	<hardcopy>Kopi</hardcopy>
