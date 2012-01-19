@@ -167,7 +167,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             iconCls: 'cancel',
             id: 'deleteAction',
             handler: function(){
-                this.catalogue.massiveOp('Delete');
+                this.catalogue.massiveOp('Delete', function() {
+                    this.catalogue.metadataSelectNone();
+                });
             },
             scope: this,
             hidden: hide

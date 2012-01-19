@@ -115,10 +115,11 @@ public class BatchDelete implements Service
 			} else
 				context.debug("  Metadata not found in db:"+ uuid);
 				// TODO : add to notFound set
-
+			}
 		}
-		}
-
+		// Clear the selection after delete
+		SelectionManager.updateSelection("metadata", session, params.addContent(new Element("selected").setText("remove-all")), context);
+		
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)

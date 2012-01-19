@@ -1167,9 +1167,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      *  FIXME : Need work on GeoNetwork side to fix JS calls
      */
-    massiveOp: function(type){
+    massiveOp: function(type, cb){
         var url = this.services.massiveOp[type];
-        this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url);
+        this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
     },
     /** private: method[modalAction]
      *
