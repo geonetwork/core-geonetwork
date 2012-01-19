@@ -251,8 +251,8 @@ public class Utils {
 	public static void transferOwner(String userid) {
 		try {
 			final HttpClient c = new HttpClient();
-			Utils.sendRequest("xml.search", true, c);
-			Utils.sendRequest("metadata.select?selected=add-all", false, c);
+			Utils.sendRequest("main.search.embedded", true, c);
+			Utils.sendRequest("metadata.select?id=0&selected=add-all", false, c);
 			Utils.sendRequest("metadata.batch.newowner?user="+userid+"&group=2", false, c);
 		} catch (Exception e) {
 		  // TODO Auto-generated catch block
@@ -269,8 +269,8 @@ public class Utils {
 		try {
 			// Clean catalogue
 			final HttpClient c = new HttpClient();
-			Utils.sendRequest("xml.search", true, c);
-			Utils.sendRequest("metadata.select?selected=add-all", false, c);
+			Utils.sendRequest("main.search.embedded", true, c);
+			Utils.sendRequest("metadata.select?selected=add-all&id=0", false, c);
 			Utils.sendRequest("metadata.batch.delete", false, c);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

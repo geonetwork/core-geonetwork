@@ -20,7 +20,7 @@ public class StatusTest extends TestCase {
 		Utils.addUser("userone", "userone");
 		Utils.transferOwner("2"); // make the new user the owner of the samples
 	}
-	
+
 	@Test
 	public void testStatusSetOneMetadataRecord() {
 
@@ -54,8 +54,8 @@ public class StatusTest extends TestCase {
 
 			final HttpClient c = new HttpClient();
 			Utils.sendLogin(c, "userone", "userone");
-			Utils.sendRequest("xml.search", false, c);
-			Utils.sendRequest( "metadata.select?selected=add-all", false, c);
+			Utils.sendRequest("main.search.embedded", false, c);
+			Utils.sendRequest( "metadata.select?selected=add-all&id=0", false, c);
 			Utils.sendRequest("metadata.batch.update.status?&status=4&changeMessage=submitted", false, c);
 			String response = Utils
 					.sendRequest( "xml.search?_status=4", false, c);
