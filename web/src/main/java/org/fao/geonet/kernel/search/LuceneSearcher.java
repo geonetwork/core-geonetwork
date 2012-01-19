@@ -291,13 +291,17 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public void close() {
-		try {
-			_sm.releaseIndexReader(_reader);
-		} catch (IOException e) {
-			Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
-			e.printStackTrace();
-		}
+    private boolean closed = false;
+	public synchronized void close() {
+        if(!closed) {
+            try {
+                closed = true;
+                _sm.releaseIndexReader(_reader);
+            } catch (IOException e) {
+                Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
+                e.printStackTrace();
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------------

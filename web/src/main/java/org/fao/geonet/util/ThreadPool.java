@@ -61,10 +61,13 @@ public class ThreadPool {
 	}
 
 	public void runTask(Runnable task) {
+        if(Boolean.parseBoolean(System.getProperty("geonetwork.sequential.execution", "false"))) {
+            task.run();
+        } else {
 		this.task = task;
 		threadPool.execute(task);
-        if(Log.isDebug(Geonet.THREADPOOL))
-		    Log.debug(Geonet.THREADPOOL, toString());
+        if(Log.isDebug(Geonet.THREADPOOL)) Log.debug(Geonet.THREADPOOL, toString());
+        }
 	}
 
 	
