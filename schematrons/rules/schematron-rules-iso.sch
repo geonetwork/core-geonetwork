@@ -103,7 +103,7 @@ USA.
 		<sch:title>$loc/strings/M9</sch:title>
 		<sch:rule context="//gmd:MD_LegalConstraints[gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']
 			|//*[@gco:isoType='gmd:MD_LegalConstraints' and gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']">
-			<sch:let name="access" value="(not(gmd:otherConstraints) or gmd:otherConstraints/@gco:nilReason='missing')"/>
+			<sch:let name="access" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
 			<sch:assert
 				test="$access = false()"
 				>
@@ -117,7 +117,7 @@ USA.
 		</sch:rule>
 		<sch:rule context="//gmd:MD_LegalConstraints[gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']
 			|//*[@gco:isoType='gmd:MD_LegalConstraints' and gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']">
-			<sch:let name="use" value="(not(gmd:otherConstraints) or gmd:otherConstraints/@gco:nilReason='missing')"/>
+			<sch:let name="use" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
 			<sch:assert
 				test="$use = false()"
 				><sch:value-of select="$loc/strings/alert.M9.use"/>
