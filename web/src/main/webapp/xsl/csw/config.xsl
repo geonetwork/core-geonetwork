@@ -168,8 +168,10 @@
         </div>
         </form>
           <script>
+		    <xsl:variable name="apos">'</xsl:variable>
+			<xsl:variable name="escapedApos">\\'</xsl:variable>
             <xsl:for-each select="/root/response/record">
-                $('csw.<xsl:value-of select="field"/>_<xsl:value-of select="langid"/>').value = '<xsl:value-of select="translate(label, '&#xD;&#xA;', '\n')"/>';
+                $('csw.<xsl:value-of select="field"/>_<xsl:value-of select="langid"/>').value = '<xsl:value-of select="replace(translate(label, '&#xD;&#xA;', '\n'), $apos, $escapedApos)"/>';
             </xsl:for-each>
 
             	$("csw.enable").checked = <xsl:value-of select="/root/response/cswEnable"/>;
