@@ -358,7 +358,7 @@ public class Geonetwork implements ApplicationHandler
 		XmlSerializer xmlSerializer = null;
 		if (useSubversion.equals("true")) {
 			String subversionPath = new File(path, handlerConfig.getMandatoryValue(Geonet.Config.SUBVERSION_PATH)).getAbsolutePath();
-			svnManager = new SvnManager(context, settingMan, subversionPath, dbms.getURL(), created);
+			svnManager = new SvnManager(context, settingMan, subversionPath, dbms, created);
 			xmlSerializer = new XmlSerializerSvn(settingMan, svnManager);
 		} else {
 			xmlSerializer = new XmlSerializerDb(settingMan);

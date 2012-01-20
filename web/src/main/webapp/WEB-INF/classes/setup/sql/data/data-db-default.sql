@@ -886,6 +886,7 @@ INSERT INTO Settings VALUES (14,1,'platform',NULL);
 -- FIXME : needs to use maven filter for version and subVersion
 INSERT INTO Settings VALUES (15,14,'version','2.7.0-SNAPSHOT');
 INSERT INTO Settings VALUES (16,14,'subVersion','SNAPSHOT');
+INSERT INTO Settings VALUES (17,10,'svnUuid','');
 INSERT INTO Settings VALUES (20,1,'server',NULL);
 INSERT INTO Settings VALUES (21,20,'host','localhost');
 INSERT INTO Settings VALUES (22,20,'port','8080');

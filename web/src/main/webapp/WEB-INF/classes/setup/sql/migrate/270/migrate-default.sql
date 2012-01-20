@@ -32,6 +32,7 @@ INSERT INTO Settings VALUES (915,910,'defaultView','simple');
 
 INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
 INSERT INTO Settings VALUES (921,920,'maxthreads','1');
+INSERT INTO Settings VALUES (17,10,'svnUuid','');
 
 UPDATE Settings SET value='2.7.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

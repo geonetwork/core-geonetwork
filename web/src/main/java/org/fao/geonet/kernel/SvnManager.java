@@ -33,6 +33,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -57,13 +58,8 @@ import org.jdom.Element;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 public class SvnManager {
 
@@ -96,13 +92,19 @@ public class SvnManager {
 		 * @param context Service context used to get GeoNetwork context objects
 		 * @param sm SettingManager used to get system settings like catalog id 
      * @param subversionPath File path of the subversion repository.
-     * @param dbUrl Database Url used to find resource provider 
+     * @param dbms Database used to find resource provider
      * @param created set to true if a new database has been created
      */
-	public SvnManager(ServiceContext context, SettingManager sm, String subversionPath, String dbUrl, boolean created) throws Exception {
+	public SvnManager(ServiceContext context, SettingManager sm, String subversionPath, Dbms dbms, boolean created) throws Exception {
 
+        String dbUrl = dbms.getURL();
 		this.context = context;
-		String uuid = sm.getValue("system/site/siteId"); 
+		String uuid = sm.getValue("system/site/svnUuid");
+
+        if (StringUtils.isEmpty(uuid)) {
+            uuid = UUID.randomUUID().toString();
+            sm.setValue(dbms, "system/site/svnUuid", uuid);
+        }
 
     File subFile = new File(subversionPath);
 		boolean repoCreated = false;
