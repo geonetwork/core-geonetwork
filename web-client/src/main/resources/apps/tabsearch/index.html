@@ -1,0 +1,124 @@
+<html>
+<head>
+    <title>Geonetwork OpenSource</title>
+    <!-- Ext CSS and Libs -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
+    <link href="../../srv/en/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | Recent Changes"/>
+    <link href="../../srv/en/portal.opensearch" rel="search" type="application/opensearchdescription+xml" title="GeoNetwork"/>
+
+    <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/ext-all.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/xtheme-gray.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/ext-ux/Rating/rating.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/ext-ux/LightBox/lightbox.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/ext-ux/SuperBoxSelect/superboxselect.css" />
+    <link rel="stylesheet" type="text/css" href="../js/ext-ux/FileUploadField/file-upload.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/gndefault.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/gnmapdefault.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/gnmetadatadefault.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/GeoNetwork/resources/css/metadata-view.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/OpenLayers/theme/default/style.css" />
+
+    <style>
+
+        body,p,td,li,th {font-family:arial;}
+
+        #actions li {
+            margin:.3em;
+        }
+        #actions li a {
+            color:#666688;
+            text-decoration:none;
+        }
+        .sb {
+            width:140px;height:24px;font-size:18px;color:#999999;
+        }
+        .cntLrg, .cntLrg td{
+            text-align:center;font-size:18px;
+        }
+
+        .x-tab-right {padding-left:20px !important}
+        .x-tab-left{padding-right:20px !important}
+        .x-tab-strip-text{font-size:16px  !important;
+            padding:10px 0 !important}
+
+    </style>
+</head>
+<body>
+
+<div id="dvHeader">
+    <table width=100%><tr>
+        <td width=90%><div id="title"><img src="images/GeoNetwork_opensource_logo_.png"></div></td>
+        <td align=right valign=top><table><tr><td><div id="login-form"></div></td><td><div id="lang-form"></div></td></tr></table></td></td></tr>
+    </table>
+</div>
+    <div id="dvZoeken"  class=cntLrg style="margin:50px;">
+        <div id="dvIn">
+            <img src="images/GeoNetwork_opensource_logo_.png">
+            <br/><br/><br/><br/>
+            You're looking for Spatial data on
+        </div>
+
+
+     <div         id="dvOut">
+        <div style="font-size:14px">
+            <a href="javascript:void(Ext.fly('advSearch').setVisibilityMode(Ext.Element.DISPLAY).toggle())">Advanced Search</a> &nbsp; &nbsp;
+            <a href="javascript:void(setActiveTabByTitle('Map'))">Map</a> &nbsp;  &nbsp;
+            <a href="javascript:void(alert('Kindly provided by Geonetwork OpenSource, Sencha, OpenLayers, GeoExt'))">About</a>
+        </div>
+    </div>
+        <div id="infoPanel"></div>
+        <div id="tagCloudPanel"></div>
+        <div id="latest"></div>
+    </div>
+    <div id="dvRefine">
+
+        <b>By keyword:</b><br/>
+        <a href="#">Lifestock</a> (25)<br/>
+        <a href="#">Greenery</a> (18)<br/>
+        <a href="#">Glasshouse</a> (12)<br/>
+        <a href="#">Artificial</a> (7)<br/>
+        <a href="#">Cats and Dogs</a> (5)<br/>
+        <a href="#">more</a><br/>
+
+        <br/><br/>
+        <b>By Country:</b><br/>
+        <a href="#">Belgium</a> (15)<br/>
+        <a href="#">France</a> (12)<br/>
+        <a href="#">Germany</a> (9)<br/>
+        <a href="#">Netherlands</a> (8)<br/>
+        <a href="#">more</a><br/>
+    </div>
+    <div id="tabResults">
+        <div id="resultsPanel"></div>
+    </div>
+    <script type="text/javascript" src="../js/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../js/ext/ext-all.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/Rating/RatingItem.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/FileUploadField/FileUploadField.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/DateTime/DateTime.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/RowExpander/RowExpander.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/MultiselectItemSelector-3.0/DDView.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"></script>
+    <script type="text/javascript" src="../js/ext-ux/LightBox/lightbox.js"></script>
+
+
+    <script type="text/javascript" src="../js/proj4js-compressed.js"></script>
+    <script type="text/javascript" src="../js/OpenLayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../js/GeoExt/lib/overrides/override-ext-ajax.js"></script>
+    <script type="text/javascript" src="../js/GeoExt/lib/GeoExt.js"></script>
+    <script type="text/javascript" src="../js/GeoExt-ux/LayerOpacitySliderPlugin/LayerOpacitySliderPlugin.js"></script>
+
+    <script type="text/javascript" src="../js/GeoNetwork/lib/GeoNetwork.js"></script>
+
+    <script type="text/javascript" src="js/Settings.js"></script>
+    <script type="text/javascript" src="js/map/Settings.js"></script>
+    <script type="text/javascript" src="js/map/MapApp.js"></script>
+
+    <script type="text/javascript" src="js/basicTabs.js"></script>
+</body>
+</html>

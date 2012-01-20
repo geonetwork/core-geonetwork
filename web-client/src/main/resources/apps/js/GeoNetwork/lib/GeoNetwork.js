@@ -123,6 +123,7 @@
             "GeoNetwork/widgets/admin/SubTemplateManagerPanel.js",
             "GeoNetwork/widgets/admin/ThesaurusManagerPanel.js",
             "GeoNetwork/widgets/view/ViewWindow.js",
+            "GeoNetwork/widgets/view/ViewPanel.js",
             "GeoNetwork/widgets/editor/KeywordSelectionPanel.js",
             "GeoNetwork/widgets/editor/CRSSelectionPanel.js",
             "GeoNetwork/widgets/editor/SubTemplateSelectionPanel.js",
