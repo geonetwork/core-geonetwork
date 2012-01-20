@@ -230,7 +230,7 @@ GeoNetwork.mapApp = function() {
 	var createPrintPanel = function() {
         // The printProvider that connects us to the print service
         printProvider = new GeoExt.data.PrintProvider({
-            method: "GET",
+            method: "POST",
             url: GeoNetwork.map.printCapabilities,
             autoLoad: true
         });
