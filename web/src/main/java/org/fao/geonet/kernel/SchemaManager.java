@@ -503,29 +503,32 @@ public class SchemaManager
 		try {
 			String schema = null;
 
-			// -- check for attribute presence first
+			// -- check the autodetect elements for all schemas with the most
+			// -- specific test first, then in order of increasing generality, 
+			// -- first match wins
 			schema = compareElementsAndAttributes(md, MODE_ATTRIBUTEWITHVALUE);
 			if (schema != null) {
 				Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(attribute) examination");
 			}
 				
-			// -- check the autodetect elements
-			schema  = compareElementsAndAttributes(md, MODE_NEEDLE);
-			if (schema != null) {
-				Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(needle) examination");
+			if (schema == null) {
+				schema = compareElementsAndAttributes(md, MODE_NEEDLEWITHVALUE);
+				if (schema != null) {
+					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(needle with value) examination");
+				}
+			}
+
+			if (schema == null) {
+				schema  = compareElementsAndAttributes(md, MODE_NEEDLE);
+				if (schema != null) {
+					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(needle) examination");
+				}
 			}
 		
 			if (schema == null) {
 				schema = compareElementsAndAttributes(md, MODE_ROOT);
 				if (schema != null) {
 					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(root element) examination");
-				}
-			}
-
-			if (schema == null) {
-				schema = compareElementsAndAttributes(md, MODE_NEEDLEWITHVALUE);
-				if (schema != null) {
-					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(needle with value) examination");
 				}
 			}
 
@@ -1073,17 +1076,7 @@ public class SchemaManager
 		Element autodetect = root.getChild("autodetect", GEONET_SCHEMA_NS);
 		if (autodetect == null) autodetect = root.getChild("autodetect", GEONET_SCHEMA_PREFIX_NS);
 
-		List<Element> elements = new ArrayList<Element>();
-
-		List list = autodetect.getChildren();
-		for (Object aList : list) {
-			Element el = (Element) aList;
-
-			if (el.getName().equals("elements")) {
-				elements.add(el);
-			}
-		}
-		return elements;
+		return autodetect.getChildren();
 	}
 
 	//--------------------------------------------------------------------------
@@ -1110,27 +1103,44 @@ public class SchemaManager
 		 Log.debug(Geonet.SCHEMA_MANAGER, "Schema autodetection using mode: " + mode + "...");
 		
 		for (String schemaName : allSchemas) {		
+			Log.debug(Geonet.SCHEMA_MANAGER, "Doing schema "+schemaName);
 			Schema schema = hmSchemas.get(schemaName);
 			List<Element> adElems = schema.getAutodetectElements();
  			
 			for (Element elem : adElems) {			
+				Log.debug(Geonet.SCHEMA_MANAGER, "Checking autodetect element "+Xml.getString(elem)+" with name "+elem.getName());
+
 				List<Element> elemKids = elem.getChildren();
 				boolean match = false;
 
 				Attribute type = elem.getAttribute("type");
-				String searchAttValue = elem.getAttributeValue("searchAttributeValue");
-				String searchAttName  = elem.getAttributeValue("searchAttributeName");
  					
-				// --- try and find the attribute and value in md 
-				if (mode==MODE_ATTRIBUTEWITHVALUE && type != null  && "searchAttribute".equals(type.getValue()) && searchAttValue != null && searchAttName != null && searchAttName.length() != 0) {
-					Attribute searchAtt = new Attribute(searchAttName, searchAttValue);
+				// --- try and find the attribute and value in md (could be a 
+				// --- namespace as well)
+				if (mode==MODE_ATTRIBUTEWITHVALUE && elem.getName() == "attributes") {
+					// --- check non-namespace attributes first
+					List<Attribute> atts = elem.getAttributes();
+					for (Attribute searchAtt : atts) {
+						Log.debug(Geonet.SCHEMA_MANAGER, "Finding attribute "+searchAtt.toString());
 
-					Log.debug(Geonet.SCHEMA_MANAGER, "Comparing attribute "+searchAttName+"="+searchAttValue+" with "+md.getName()+" with namespace "+md.getNamespace());
+						if (isMatchingAttributeInMetadata(searchAtt, md)) {
+							match = true;
+						} else {
+							match = false;
+						}
+					}
 
-					if (isMatchingAttributeInMetadata(searchAtt, md)) {
-						match = true;
-					} else {
-						match = false;
+					// --- check namespace attributes (except those with Namespace URI
+					// --- set to GEONET_SCHEMA_URI)
+					List<Namespace> nss = elem.getAdditionalNamespaces();
+					for (Namespace ns : nss) {
+						Log.debug(Geonet.SCHEMA_MANAGER, "Finding namespace "+ns.toString());
+
+						if (isMatchingNamespaceInMetadata(ns, md)) {
+							match = true;
+						} else {
+							match = false;
+						}
 					}
 				} else {
 					for (Element kid : elemKids) {
@@ -1197,6 +1207,30 @@ public class SchemaManager
 		return returnVal;
 	}
 			
+	//--------------------------------------------------------------------------
+	/** This method searches an entire metadata file for a namespace that
+	  *  matches the "needle" namespace arg. 
+		*
+	  * @param needle the XML namespace we are trying to find
+	  * @param haystack the XML metadata record we are searching
+ 	  */
+
+	private boolean isMatchingNamespaceInMetadata(Namespace needle, Element haystack) {
+		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		
+		Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
+
+		while(haystackIterator.hasNext()){
+			Element tempElement = haystackIterator.next();
+			if (tempElement.getNamespace().equals(needle)) return true;
+			List<Namespace> nss = tempElement.getAdditionalNamespaces();
+			for (Namespace ns : nss) {
+				if (ns.equals(needle)) return true;
+			}
+		}
+ 		
+		return false;
+	}
 	//--------------------------------------------------------------------------
 	/** This method searches an entire metadata file for an element that
 	  *  matches the "needle" metadata element arg - A matching element
