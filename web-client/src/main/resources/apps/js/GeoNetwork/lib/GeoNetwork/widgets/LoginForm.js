@@ -83,6 +83,13 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     /** private: method[initComponent] 
      *  Initializes the login form results view.
      */
+
+    keys: [{
+        key: [Ext.EventObject.ENTER], handler: function() {
+            Ext.getCmp('btnLoginForm').fireEvent('click');
+        }
+    }],
+
     initComponent: function(){
     	Ext.applyIf(this, this.defaultConfig);
 
@@ -91,6 +98,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	            width: 50,
 	            text: OpenLayers.i18n('login'),
 	            iconCls: 'md-mn mn-login',
+                id: 'btnLoginForm',
 	            listeners: {
 	                click: function(){
 	                    this.catalogue.login(this.username.getValue(), this.password.getValue());
