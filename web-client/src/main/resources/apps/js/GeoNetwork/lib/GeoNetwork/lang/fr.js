@@ -25,6 +25,7 @@ GeoNetwork.Lang.fr = {
 	'downInPage': 'Se déplacer vers le bas des résultats',
     'example': "Exemple :",
     'helper': "Suggestion :",
+    'toggleLayerManager': 'Afficher le gestionnaire de couches',
     'tagName': "Nom de l'élément :",
     'enableTooltip': 'Activer les info-bulles pour obtenir une description complète de chaque champs.',
     'connectIssue': "Échec de connexion au catalogue",

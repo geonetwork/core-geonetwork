@@ -1094,8 +1094,9 @@ GeoNetwork.mapApp = function() {
             border: false,
             //renderTo:'map_container',
             items: [{
+                    id: 'layerManager',
                     region: 'east',
-                    xtype: 'panel',			
+                    xtype: 'panel',
                     collapsible: true,
                     collapsed : true,
                     collapseMode: "mini",

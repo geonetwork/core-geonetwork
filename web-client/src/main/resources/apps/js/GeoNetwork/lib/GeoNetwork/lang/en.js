@@ -25,6 +25,7 @@ GeoNetwork.lang.en = {
 	'downInPage': 'Scroll down in the results',
 	'example': "Example:",
     'helper': "Suggestion:",
+    'toggleLayerManager': 'Display map layer manager',
     'tagName': 'Element name:',
     'enableTooltip': 'Enable tooltips to get more information about each descriptors.',
     'connectIssue': "Catalogue connection issue",
