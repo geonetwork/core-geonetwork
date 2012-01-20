@@ -98,7 +98,8 @@
 		<allow service="xml.config.set"/>
 		<allow service="xml.config.doActions"/>
 		<allow service="lucene.config.reload"/>
-		
+        <allow service="sequential.execution.set"/>
+
 		<allow service="metadata.admin.index.rebuild"/>
 		<allow service="metadata.admin.index.rebuildxlinks"/>
 		<allow service="metadata.admin.index.optimize"/>

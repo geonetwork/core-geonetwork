@@ -394,6 +394,7 @@
   <db.numactive>Base de données / connexions utilisées :</db.numactive>	
   <db.numidle>Base de données / connexions disponibles :</db.numidle>	
   <db.maxactive>Base de données / nombre maximum de connexions :</db.maxactive>	
-  <db.statserror>Base de données / statistique :</db.statserror>	
+  <db.statserror>Base de données / statistique :</db.statserror>
+    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 </strings>
 

@@ -291,6 +291,7 @@
 		</tip>
 		
 	</tips>
+    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 	
 </strings>
 

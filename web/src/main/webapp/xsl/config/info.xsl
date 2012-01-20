@@ -23,7 +23,18 @@
 			<xsl:for-each select="*">
 				<xsl:sort order="ascending" select="name(.)"/>
 				<xsl:apply-templates mode="info" select="."/>
-			</xsl:for-each>		
+			</xsl:for-each>
+            <xsl:if test="name(.) = 'main'">
+                <xsl:variable name="value">
+                    <xsl:choose>
+                        <xsl:when test="system-property('geonetwork.sequential.execution') != ''">
+                            <xsl:value-of select="system-property('geonetwork.sequential.execution')"/>
+                        </xsl:when>
+                        <xsl:otherwise>false</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/*[name()='sequentialExecution']"/></label> <span class="info"><xsl:value-of select="$value"/></span><br/>
+            </xsl:if>
 		</fieldset>
 	</xsl:template>
 	
