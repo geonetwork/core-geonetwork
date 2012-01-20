@@ -75,11 +75,12 @@ public class Set implements Service
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getSettingManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Map<String, Object> values = new HashMap<String, Object>();
-
+		
+		String currentUuid = sm.getValue("system/site/siteId");
+		
 		for (ConfigEntry ce : entries)
 			ce.eval(values, params);
 
@@ -88,7 +89,13 @@ public class Set implements Service
 
         // Update inspire property in SearchManager
         gc.getSearchmanager().setInspireEnabled(new Boolean((String) values.get("system/inspire/enable"))); 
+		String newUuid = (String)values.get("system/site/siteId");
 
+        if (!currentUuid.equals(newUuid)) {
+			dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
+			dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
+        }
+        
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
@@ -102,6 +109,7 @@ public class Set implements Service
      */
 	private ConfigEntry entries[] =
 	{
+		new ConfigEntry(ConfigEntry.Type.STRING, true,  "site/siteId",              "system/site/siteId"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "site/name",                "system/site/name"),
 		new ConfigEntry(ConfigEntry.Type.STRING, false, "site/organization",        "system/site/organization"),
 

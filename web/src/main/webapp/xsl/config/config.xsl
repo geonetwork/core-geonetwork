@@ -210,6 +210,10 @@
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
+					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/siteId"/></td>
+					<td class="padded"><input id="site.siteId" class="content" type="text" value="" size="30"/></td>
+				</tr>
+				<tr>
 					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/name"/></td>
 					<td class="padded"><input id="site.name" class="content" type="text" value="" size="30"/></td>
 				</tr>

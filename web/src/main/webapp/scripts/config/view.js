@@ -12,6 +12,7 @@ function ConfigView(strLoader)
 
 	this.validator.add(
 	[
+		{ id:'site.siteId',   type:'length',   minSize :1,  maxSize :200 },
 		{ id:'site.name',     type:'length',   minSize :1,  maxSize :200 },
 		{ id:'site.organ',    type:'length',   minSize :0,  maxSize :200 },
 		
@@ -181,6 +182,7 @@ ConfigView.prototype.init = function()
  
 ConfigView.prototype.setData = function(data)
 {
+	$('site.siteId')  .value = data['SITE_ID'];
 	$('site.name')  .value = data['SITE_NAME'];
 	$('site.organ') .value = data['SITE_ORGAN'];
     $('server.protocol').value = data['SERVER_PROTOCOL'];
@@ -302,6 +304,7 @@ ConfigView.prototype.getData = function()
 {
 	var data =
 	{
+		SITE_ID   : $('site.siteId')  .value,
 		SITE_NAME   : $('site.name')  .value,	
 		SITE_ORGAN  : $('site.organ') .value,
         SERVER_PROTOCOL : $('server.protocol').value,

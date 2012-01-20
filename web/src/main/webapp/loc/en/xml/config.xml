@@ -211,6 +211,12 @@
 	<!-- tooltips -->
 	
 	<tips>
+		<tip id="site.siteId">
+			Unique catalogue identifier.
+			After changing the site identifier, user should update the index and the logo
+			from the administration panel.
+		</tip>
+
 		<tip id="site.name">
 			Used to identify the installation.
 		</tip>

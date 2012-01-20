@@ -28,6 +28,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
 	{
 		var data =
 		{
+			SITE_ID           : xml.evalXPath(node, 'site/siteId'),
 			SITE_NAME         : xml.evalXPath(node, 'site/name'),
 			SITE_ORGAN        : xml.evalXPath(node, 'site/organization'),
             SERVER_PROTOCOL   : xml.evalXPath(node, 'server/protocol'),
@@ -147,6 +148,7 @@ ConfigModel.prototype.setConfig_OK = function(node)
 ConfigModel.updateTemp = 
 '<config>'+
 '	<site>'+
+'		<siteId>{SITE_ID}</siteId>'+
 '		<name>{SITE_NAME}</name>'+
 '		<organization>{SITE_ORGAN}</organization>'+
 '	</site>'+
