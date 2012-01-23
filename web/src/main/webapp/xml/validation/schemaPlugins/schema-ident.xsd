@@ -68,8 +68,25 @@
 		<xs:choice minOccurs="1" maxOccurs="1">
 			<xs:element name="elements"       type="gns:elementsType"/>
 			<xs:element name="attributes"     type="gns:attributesType"/>
+			<xs:element name="namespaces"     type="gns:namespacesType"/>
     </xs:choice>
   </xs:complexType>
+
+<!-- ====================================================================== -->
+<!-- namespacesType complex type -->
+<!-- ====================================================================== -->
+
+  <xs:simpleType name="namespacesType">
+    <xs:annotation>
+      <xs:documentation>
+			Describes the namespace(s) that must exist in a metadata record for it
+			to be identified as belonging to this schema.
+      </xs:documentation>
+    </xs:annotation>
+		<xs:restriction base="xs:token"> <!-- no content allowed -->
+			<xs:enumeration value=""/>
+		</xs:restriction>
+  </xs:simpleType>
 
 <!-- ====================================================================== -->
 <!-- attributesType complex type -->

@@ -503,11 +503,11 @@ class Harvester
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
 
-		String schema = dm.autodetectSchema(record);
-    log.debug("getRecordInfo (schema): " + schema);
-
 		// get uuid and date modified
 		try {
+			String schema = dm.autodetectSchema(record);
+    	log.debug("getRecordInfo (schema): " + schema);
+
 			String identif  = dm.extractUUID(schema, record); 
 			if (identif.length() == 0) {
       	log.warning("Record doesn't have a uuid : "+ name);

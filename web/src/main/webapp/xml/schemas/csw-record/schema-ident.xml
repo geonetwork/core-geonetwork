@@ -6,6 +6,8 @@
 	<schemaLocation>http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd</schemaLocation>
 	<autodetect xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
 		<elements type="root">
+			<csw:BriefRecord/>
+			<csw:SummaryRecord/>
 			<csw:Record/>
 		</elements>
 	</autodetect>

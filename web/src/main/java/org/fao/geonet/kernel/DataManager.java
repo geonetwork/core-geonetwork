@@ -45,6 +45,8 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -1251,14 +1253,29 @@ public class DataManager {
 	}
 
     /**
-     *
-     * @param md
+		 * Checks autodetect elements in installed schemas to determine whether 
+		 * the metadata record belongs to that schema. Use this method when you 
+		 * want the default schema from the geonetwork config to be returned when
+		 * no other match can be found.
+		 *
+     * @param md Record to checked against schemas
      * @return
      */
-	public String autodetectSchema(Element md) {
+	public String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
 		return autodetectSchema(md, schemaMan.getDefaultSchema());
 	}
-	public String autodetectSchema(Element md, String defaultSchema) {
+
+    /**
+		 * Checks autodetect elements in installed schemas to determine whether 
+		 * the metadata record belongs to that schema. Use this method when you 
+		 * want to set the default schema to be returned when no other match can 
+		 * be found.
+		 *
+     * @param md Record to checked against schemas
+     * @param defaultSchema Schema to be assigned when no other schema matches
+     * @return
+     */
+	public String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
 		
 		Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
 				 + "'\n * with namespace:'" + md.getNamespace()
@@ -1675,8 +1692,8 @@ public class DataManager {
      * @return true if metadata is valid
      */
     public boolean validate(Element xml) {
-        String schema = autodetectSchema(xml);
         try {
+        		String schema = autodetectSchema(xml);
             validate(schema, xml);
             return true;
         }

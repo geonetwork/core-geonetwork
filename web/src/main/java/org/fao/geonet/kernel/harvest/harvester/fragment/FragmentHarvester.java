@@ -246,14 +246,13 @@ public class FragmentHarvester {
 
 		// Add schema
 		Element md = (Element) fragment.getChildren().get(0);
-	
-		String schema = dataMan.autodetectSchema (md); // e.g. iso19139; 
-		
-		if (schema == null) {
-			log.warning("Skipping metadata with unknown schema.");
-			harvestSummary.fragmentsUnknownSchema ++;
-		} else {
+
+		try {
+			String schema = dataMan.autodetectSchema (md); // e.g. iso19139; 
 			fragment.setAttribute("schema", schema);
+		} catch (Exception e) {
+			log.warning("Skipping metadata with problem schema: "+e.getMessage());
+			harvestSummary.fragmentsUnknownSchema ++;
 		}
 	}
 	
