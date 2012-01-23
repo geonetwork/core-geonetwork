@@ -682,10 +682,9 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
-              <directory>${basedir}/src/main/webapp</directory>
               <directory>${build.webapp.resources}</directory>
             </resource>
-            
+          
             <!-- Remove comment tag to include documentation in the build. 
             Python and Latex are required to build the documentation. -->
             
@@ -728,7 +727,8 @@
               <artifactId>geonetwork-client</artifactId>
               <type>jar</type>
             </overlay>
-          </overlays>          
+          </overlays>
+          <packagingExcludes>WEB-INF/metadata_subversion/**,WEB-INF/data/**</packagingExcludes>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           
           <attachClasses>true</attachClasses>
