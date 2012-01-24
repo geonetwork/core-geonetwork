@@ -20,6 +20,7 @@
 	<xsl:template match="*" mode="options">
 		<validate><xsl:value-of  select="validate/value" /></validate>
 		<recurse><xsl:value-of select="recurse/value" /></recurse>
+		<subtype><xsl:value-of select="subtype/value" /></subtype> 
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

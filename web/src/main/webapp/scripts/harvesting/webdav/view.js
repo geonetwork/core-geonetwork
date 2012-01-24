@@ -44,6 +44,7 @@ function init()
 		{ id:'wd.name',        type:'length',   minSize :1,  maxSize :200 },
 		{ id:'wd.url',         type:'length',   minSize :1,  maxSize :200 },
 		{ id:'wd.url',         type:'url' },
+		{ id:'wd.subtype',     type:'length',   minSize :1,  maxSize :200 },
 		{ id:'wd.username',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'wd.password',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'wd.every.days',  type:'integer',  minValue:0, maxValue:99 },
@@ -91,6 +92,7 @@ function setData(node)
 	hvutil.setOption(site,    'icon',     'wd.icon');
 	hvutil.setOption(options, 'validate', 'wd.validate');
 	hvutil.setOption(options, 'recurse',  'wd.recurse');
+	hvutil.setOption(options, 'subtype',  'wd.subtype');
 	
 	//--- add privileges entries
 	
@@ -116,7 +118,7 @@ function getData()
 	data.ICON     = $F('wd.icon');
 	data.VALIDATE = $('wd.validate').checked;
 	data.RECURSE  = $('wd.recurse') .checked;
-	
+	data.SUBTYPE  = $F('wd.subtype');
 	//--- retrieve privileges and categories information
 	
 	data.PRIVILEGES = this.getPrivileges();

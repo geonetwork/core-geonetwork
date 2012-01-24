@@ -26,6 +26,17 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/site"/></h1>
 	
 		<table border="0">
+
+			<tr>
+				<td class="padded" valign="bottom">Subtype</td>
+				<td class="padded">
+					<select id="wd.subtype" class="content" name="subytpe" size="1">
+						<option  value="waf">Web Access Folder(WAF)</option>
+						<option  value="webdav">Web DAV Server(WebDAV)</option> 				   
+					</select>
+				</td>
+			</tr>
+			
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/name"/></td>
 				<td class="padded"><input id="wd.name" class="content" type="text" value="" size="30"/></td>
@@ -75,6 +86,7 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
 
 		<table border="0">
+			
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
 				<td class="padded">

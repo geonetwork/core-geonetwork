@@ -121,6 +121,7 @@ public class WebDavHarvester extends AbstractHarvester {
 		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
 		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
 		settingMan.add(dbms, "id:"+optionsId, "recurse",  params.recurse);
+		settingMan.add(dbms, "id:"+optionsId, "subtype", params.subtype);
 	}
 
 	//---------------------------------------------------------------------------

@@ -26,11 +26,14 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -62,6 +65,7 @@ class Harvester {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
+		schemaMan = gc.getSchemamanager ();
 	}
 
 	//---------------------------------------------------------------------------
@@ -72,7 +76,14 @@ class Harvester {
 
 	public WebDavResult harvest() throws Exception {
 		log.debug("Retrieving remote metadata information for : "+ params.name);
-		RemoteRetriever rr = new WebDavRetriever();
+		
+		RemoteRetriever rr = null;		
+		if(params.subtype.equals("webdav"))
+			rr = new WebDavRetriever();
+		else if(params.subtype.equals("waf"))
+			rr = new WAFRetriever();
+		
+		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
 		rr.init(log, context, params);
 		List<RemoteFile> files = rr.retrieve();
 		log.debug("Remote files found : "+ files.size());
@@ -153,7 +164,12 @@ class Harvester {
 		log.debug("  - Setting uuid for metadata with remote path : "+ rf.getPath());
 
 		//--- set uuid inside metadata and get new xml
-		md = dataMan.setUUID(schema, uuid, md);
+		try {
+			md = dataMan.setUUID(schema, uuid, md);
+		} catch(Exception e) {
+			log.error("  - Failed to set uuid for metadata with remote path : "+ rf.getPath());
+			return;
+		}
 
 		log.debug("  - Adding metadata with remote path : "+ rf.getPath());
 
@@ -185,21 +201,20 @@ class Harvester {
 	private Element retrieveMetadata(RemoteFile rf) {
 		try {
 			log.debug("Getting remote file : "+ rf.getPath());
-			Element md = rf.getMetadata();
+			Element md = rf.getMetadata(schemaMan);
 			log.debug("Record got:\n"+ Xml.getString(md));
 
 			String schema = dataMan.autodetectSchema(md);
-			if (schema == null) {
+			if (!params.validate || validates(schema, md)) {
+				return (Element) md.detach();
+			}
+
+			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+			result.doesNotValidate++;
+		}
+		catch (NoSchemaMatchesException e) {
 				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());
 				result.unknownSchema++;
-			}
-			else {
-				if (!params.validate || validates(schema, md)) {
-					return (Element) md.detach();
-				}
-				log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
-				result.doesNotValidate++;
-			}
 		}
 		catch(JDOMException e) {
 			log.warning("Skipping metadata with bad XML format. Path is : "+ rf.getPath());
@@ -324,6 +339,7 @@ class Harvester {
 	private GroupMapper localGroups;
 	private UriMapper localUris;
 	private WebDavResult result;
+	private SchemaManager  schemaMan;
 }
 
 //=============================================================================
@@ -339,7 +355,7 @@ interface RemoteRetriever {
 interface RemoteFile {
 	public String  getPath();
 	public String  getChangeDate();
-	public Element getMetadata() throws JDOMException, IOException, Exception;
+	public Element getMetadata(SchemaManager  schemaMan) throws JDOMException, IOException, Exception;
 	public boolean isMoreRecentThan(String localDate);
 }
 

@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 import jeeves.utils.Xml;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -56,7 +57,7 @@ class WebDavRemoteFile implements RemoteFile {
 
 	//---------------------------------------------------------------------------
 
-	public Element getMetadata() throws Exception {
+	public Element getMetadata(SchemaManager  schemaMan) throws Exception {
 		try {
 			wr.setPath(path);
             return Xml.loadStream(wr.getMethodData());

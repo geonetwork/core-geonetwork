@@ -24,7 +24,7 @@
 
 	<info type="webdav">
 		<short>Web DAV</short>
-		<long>Сервер Web DAV</long>
+		<long>Web Access Folder/Сервер Web DAV</long>
 	</info>
 
 	<info type="csw">

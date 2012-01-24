@@ -63,6 +63,8 @@ public class WebDavParams extends AbstractParams
 
 		validate = Util.getParam(opt, "validate", false);
 		recurse  = Util.getParam(opt, "recurse",  false);
+		
+		subtype  = Util.getParam(opt, "subtype","");
 	}
 
 	//---------------------------------------------------------------------------
@@ -83,6 +85,8 @@ public class WebDavParams extends AbstractParams
 
 		validate = Util.getParam(opt, "validate", validate);
 		recurse  = Util.getParam(opt, "recurse",  recurse);
+		
+		subtype  = Util.getParam(opt, "subtype",  subtype);
 	}
 
 	//---------------------------------------------------------------------------
@@ -102,6 +106,8 @@ public class WebDavParams extends AbstractParams
 		copy.validate = validate;
 		copy.recurse  = recurse;
 
+		copy.subtype = subtype;
+		
 		return copy;
 	}
 
@@ -116,6 +122,8 @@ public class WebDavParams extends AbstractParams
 
 	public boolean validate;
 	public boolean recurse;
+	
+	public String subtype;
 }
 
 //=============================================================================
