@@ -281,7 +281,7 @@ public class Importer {
 
 				importRecord(uuid, localId, uuidAction, md, schema, index,
 						source, sourceName, context, id, createDate,
-						changeDate, groupId, isTemplate);
+						changeDate, groupId, isTemplate, dbms);
 
 				if (fc.size() != 0 && fc.get(index) != null) {
 					// UUID is set as @uuid in root element
@@ -373,13 +373,12 @@ public class Importer {
 			String uuidAction, List<Element> md, String schema, int index,
 			String source, String sourceName, ServiceContext context,
 			List<String> id, String createDate, String changeDate,
-			String groupId, String isTemplate) throws Exception {
+			String groupId, String isTemplate, Dbms dbms) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+		
 
 		if (uuid == null || uuid.equals("")
 				|| uuidAction.equals(Params.GENERATE_UUID)) {

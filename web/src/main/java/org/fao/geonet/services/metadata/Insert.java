@@ -125,17 +125,19 @@ public class Insert implements Service
 		String localId = null;
 		md.add(xml);
 		
+
+        DataManager dm = gc.getDataManager();
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        
 		// Import record
 		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
 				gc.getSiteId(), gc.getSiteName(), context, id, date,
-				date, group, isTemplate);
+				date, group, isTemplate, dbms);
 		
 		int iId = Integer.parseInt(id.get(0));
 		
 		
 		// Set template
-		DataManager dm = gc.getDataManager();
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		dm.setTemplate(dbms, iId, isTemplate, null);
 
 		
