@@ -710,7 +710,9 @@ public class DataManager {
      * @throws Exception
      */
 	public void versionMetadata(UserSession session, String id, Element md) throws Exception {
-		svnManager.createMetadataDir(id, session, md);
+	    if (svnManager != null) {
+	        svnManager.createMetadataDir(id, session, md);
+	    }
 	}
 
     /**
@@ -2223,7 +2225,9 @@ public class DataManager {
 		Element elRes = dbms.select(query, mdId, grpId, opId);
 		if (elRes.getChildren().size() == 0) {
 			dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) VALUES(?,?,?)", mdId, grpId, opId);
-			svnManager.setHistory(dbms, mdId+"", session);
+			if (svnManager != null) {
+			    svnManager.setHistory(dbms, mdId+"", session);
+			}
 		}
 	}
 
@@ -2252,7 +2256,9 @@ public class DataManager {
 	public void unsetOperation(UserSession session, Dbms dbms, int mdId, int groupId, int operId) throws Exception {
 		String query = "DELETE FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
 		dbms.execute(query, mdId, groupId, operId);
-		svnManager.setHistory(dbms, mdId+"", session);
+		if (svnManager != null) {
+		    svnManager.setHistory(dbms, mdId+"", session);
+		}
 	}
 
     /**
@@ -2370,7 +2376,9 @@ public class DataManager {
      */
 	public void setStatusExt(UserSession session, Dbms dbms, int id, int status, String changeDate, String changeMessage) throws Exception {
 		dbms.execute("INSERT into MetadataStatus(metadataId, statusId, userId, changeDate, changeMessage) VALUES (?,?,?,?,?)", id, status, session.getUserIdAsInt(), changeDate, changeMessage);
-		svnManager.setHistory(dbms, id+"", session);
+		if (svnManager != null) {
+		    svnManager.setHistory(dbms, id+"", session);
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -2391,7 +2399,9 @@ public class DataManager {
 
 		if (!isCategorySet(dbms, mdId, categId)) {
 			dbms.execute("INSERT INTO MetadataCateg(metadataId, categoryId) VALUES(?,?)", args);
-			svnManager.setHistory(dbms, mdId+"", session);
+			if (svnManager != null) {
+			    svnManager.setHistory(dbms, mdId+"", session);
+			}
 		}
 	}
 
@@ -2419,7 +2429,9 @@ public class DataManager {
 	public void unsetCategory(UserSession session, Dbms dbms, String mdId, String categId) throws Exception {
 		String query = "DELETE FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
 		dbms.execute(query, new Integer(mdId), new Integer(categId));
-		svnManager.setHistory(dbms, mdId+"", session);
+		if (svnManager != null) {
+		    svnManager.setHistory(dbms, mdId+"", session);
+		}
 	}
 
     /**
