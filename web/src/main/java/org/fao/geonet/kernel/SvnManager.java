@@ -86,7 +86,7 @@ public class SvnManager {
     /**
      *  Constructor. Creates the subversion repository if it doesn't exist
 		 *  or just open the subversion repository if it does. Stores the URL
-		 *  of the repository in repoUrl. Adds the commit/about listeners to 
+		 *  of the repository in repoUrl. Adds the commit/abort listeners to 
 		 *  the DbmsPool resource provider.
      *
 		 * @param context Service context used to get GeoNetwork context objects
@@ -118,27 +118,47 @@ public class SvnManager {
     } catch (SVNException e) {
 
       if (subFile.exists()) { // set the repoUrl and try and open it
-			
-				SVNRepository repo = null;
-        try {
-          repoUrl = SVNURL.fromFile(subFile);
-					repo = getRepository();
-        } catch (SVNException se) {
-          Log.error(Geonet.SVN_MANAGER, "Failed to open subversion repo at path "+subversionPath);
-					se.printStackTrace();
-					throw se;
-        }
+        repoUrl = SVNURL.fromFile(subFile);
 
-				String repoUuid = repo.getRepositoryUUID(true);
-				// check that repository uuid matches the geonetwork site uuid
-				if (!uuid.equals(repoUuid)) {
-					throw new IllegalArgumentException("Repository at "+subversionPath+" has uuid "+repoUuid+" which does not match Geonetwork siteId of "+uuid);
-				}
       } else {
       	e.printStackTrace();
 				throw new IllegalArgumentException("Problem creating or using repository at path "+subversionPath);
 			}
     }
+
+		// open the repository now
+		SVNRepository repo = null;
+		try {
+			repo = getRepository();
+    } catch (SVNException se) {
+      Log.error(Geonet.SVN_MANAGER, "Failed to open subversion repo at path "+subversionPath);
+			se.printStackTrace();
+			throw se;
+    }
+
+		// do some checks on existing repo and recreate it if empty
+		if (!repoCreated) {
+			String repoUuid = repo.getRepositoryUUID(true);
+			long latestRev = repo.getLatestRevision();
+			// check that repository has something in it
+			if (latestRev > 1) {
+				// check that repository uuid matches the repo uuid in database
+				if (!uuid.equals(repoUuid)) {
+					throw new IllegalArgumentException("Subversion repository at "+subversionPath+" has uuid "+repoUuid+" which does not match repository uuid held in database "+uuid);
+				}
+			} else {
+			// if nothing in repo and it doesn't have the uuid we expect then 
+			// recreate it and reopen it
+				if (!uuid.equals(repoUuid)) {
+    			Log.warning(Geonet.SVN_MANAGER, "Recreating subversion repository at "+subversionPath+" as previous repository was empty");
+					boolean enableRevisionProperties = true;
+					boolean force = true;
+      		repoUrl = SVNRepositoryFactory.createLocalRepository(subFile, uuid, enableRevisionProperties, force);
+					repoCreated = true;
+					repo = getRepository();
+				}
+			}
+		}
 
 		// set database URL as property on root of repository if database was
 		// created or if new subversion repo created
@@ -154,13 +174,12 @@ public class SvnManager {
 		} else {
 		// get database URL from root of repository and check against dbUrl
 		// if it doesn't match then stop
-			SVNRepository repo = getRepository();
 			SVNProperties rootProps = new SVNProperties();
 			Collection nullColl = null;
 			repo.getDir("/", -1, rootProps, nullColl);
 			String repoDbUrl = rootProps.getStringValue(Params.Svn.DBURLPROP).trim();
 			if (repoDbUrl == null || (!dbUrl.trim().equals(repoDbUrl))) {
-				throw new IllegalArgumentException("Repository uses database URL of '"+repoDbUrl+"' which does not match current database URL '"+dbUrl+"'. Modify the svn roperty "+Params.Svn.DBURLPROP+" on the root of the subversion repository at "+subversionPath+" or specify a different subversion repository");
+				throw new IllegalArgumentException("Repository uses database URL of '"+repoDbUrl+"' which does not match current database URL '"+dbUrl+"'. Modify the svn property "+Params.Svn.DBURLPROP+" on the root of the subversion repository at "+subversionPath+" or specify a different subversion repository");
 			}
 		}
 
