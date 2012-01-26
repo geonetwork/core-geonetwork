@@ -27,8 +27,8 @@
 				 work well for spatial searches. It now only works for very 
 				 strictly formatted content -->
 			<xsl:variable name="coverage" select="/csw:Record/ows:BoundingBox"/>
-			<xsl:variable name="north" select="substring-after($coverage/ows:UpperCorner,' ')"/>
-			<xsl:variable name="south" select="substring-after($coverage/ows:LowerCorner,' ')"/>
+			<xsl:variable name="north" select="substring-before($coverage/ows:UpperCorner,' ')"/>
+			<xsl:variable name="south" select="substring-before($coverage/ows:LowerCorner,' ')"/>
 			<xsl:variable name="east" select="substring-after($coverage/ows:UpperCorner,' ')"/>
 			<xsl:variable name="west" select="substring-after($coverage/ows:LowerCorner,' ')"/>
 			
@@ -81,12 +81,14 @@
 			<Field name="eastBL"  string="{$east}" store="false" index="true"/>
 			<Field name="southBL" string="{$south}" store="false" index="true"/>
 			<Field name="northBL" string="{$north}" store="false" index="true"/>
-			<Field name="geoBox" string="{concat($west, '|', 
-				$south, '|', 
-				$east, '|', 
-				$north
-				)}" store="true" index="false"/>
-			
+		  <xsl:if test="$west and $south and $east and $north">
+			  <Field name="geoBox" string="{concat($west, '|', 
+  				$south, '|', 
+  				$east, '|', 
+  				$north
+  				)}" store="true" index="false"/>
+		  </xsl:if>
+		
 			<xsl:for-each select="/csw:Record/dc:subject">
 				<xsl:apply-templates select=".">
 					<xsl:with-param name="name" select="'keyword'"/>
