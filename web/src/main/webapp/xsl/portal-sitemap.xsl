@@ -50,13 +50,12 @@
 		<xsl:param name="uuid" />
 		
 		<xsl:choose>
-			<xsl:when test="$schemaid='dublin-core'">dc.xml?uuid=<xsl:value-of select="$uuid"/></xsl:when>
-
-			<xsl:when test="$schemaid='fgdc-std'">fgdc.xml?uuid=<xsl:value-of select="$uuid"/></xsl:when>
-			
-			<xsl:when test="$schemaid='iso19115'">iso19115to19139.xml?uuid=<xsl:value-of select="$uuid"/></xsl:when>
-										
-			<xsl:otherwise>iso19139.xml?uuid=<xsl:value-of select="$uuid"/></xsl:otherwise>
+		  <xsl:when test="$schemaid='dublin-core'">xml_dublin-core?uuid=<xsl:value-of select="$uuid"/></xsl:when>
+		  <xsl:when test="$schemaid='fgdc-std'">xml_fgdc-std?uuid=<xsl:value-of select="$uuid"/></xsl:when>
+		  <xsl:when test="$schemaid='iso19115'">xml_iso19115to19139?uuid=<xsl:value-of select="$uuid"/></xsl:when>
+		  <xsl:when test="$schemaid='iso19110'">xml_iso19110?uuid=<xsl:value-of select="$uuid"/></xsl:when>
+		  <xsl:when test="$schemaid='iso19139'">xml_iso19139?uuid=<xsl:value-of select="$uuid"/></xsl:when>
+		  <xsl:otherwise>xml.metadata.get?uuid=<xsl:value-of select="$uuid"/></xsl:otherwise>
 		</xsl:choose>			
 	</xsl:template>
 </xsl:stylesheet>

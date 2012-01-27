@@ -55,7 +55,14 @@
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+	  
+	  <service name="xml_iso19110">
+	    <class name=".services.metadata.Show" />
+	    <output sheet="conversion/export/xml_iso19110.xsl" contentType="text/xml; charset=UTF-8"/>
+	    <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+	      <xml name="error" file="xml/privileges-error.xml" />
+	    </error>
+	  </service>
 	</services>
 </geonet>
 

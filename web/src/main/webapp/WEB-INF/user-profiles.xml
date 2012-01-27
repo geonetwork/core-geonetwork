@@ -417,8 +417,9 @@
 		<allow service="xml_iso19115to19139"/>
 		<allow service="xml_iso19115toarccatalog8"/>
 		<allow service="xml_iso19139"/>
+	  <allow service="xml_iso19110"/>
 
-		<!-- RSS services -->
+	  <!-- RSS services -->
 		<allow service="rss.latest"/>
 		<allow service="rss.search"/>
 		<allow service="rss.present"/>
@@ -495,6 +496,7 @@
    <allow service="contacts.getRole"/>
 	  
 	  <allow service="subtemplate"/>
+	  
 	</profile>
 
 	<!-- ====================================================================== -->
