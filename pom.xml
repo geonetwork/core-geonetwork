@@ -208,9 +208,9 @@
 
       <!-- XML -->
       <dependency>
-        <groupId>jdom</groupId>
+        <groupId>org.jdom</groupId>
         <artifactId>jdom</artifactId>
-        <version>1.0</version>
+        <version>1.1.2</version>
       </dependency>
       <dependency>
         <groupId>xalan</groupId>
@@ -654,7 +654,7 @@
     </dependency>
 
     <dependency>
-      <groupId>jdom</groupId>
+      <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
     </dependency>
     <dependency> 

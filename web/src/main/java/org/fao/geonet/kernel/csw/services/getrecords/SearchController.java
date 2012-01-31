@@ -219,7 +219,7 @@ public class SearchController
 			frags.removeContent();
 			for (String s : elemNames) {
 				try {
-					List obs = Xml.selectNodes(res, s, mds.getSchemaNS());
+					List obs = Xml.selectDocumentNodes(res, s, mds.getSchemaNS());
 					for (Object o : obs) {
 						if (o instanceof Element) {
 							Element elem = (Element)o;

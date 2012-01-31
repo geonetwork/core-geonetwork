@@ -705,6 +705,25 @@ public final class Xml
 		XPath xp = prepareXPath(xml, xpath, theNSs);
 		return xp.selectNodes(xml);
 	}
+	
+    /**
+     * Evaluates an XPath expression on an document and returns Elements.
+     *
+     * @param xml
+     * @param xpath
+     * @param theNSs
+     * @return
+     * @throws JDOMException
+     */
+	public static List<?> selectDocumentNodes(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
+		XPath xp = XPath.newInstance (xpath);
+		for (Namespace ns : theNSs ) {
+			xp.addNamespace(ns);
+		}
+        xml = (Element)xml.clone();
+        Document document = new Document(xml);
+        return xp.selectNodes(document);		
+	}	
 		
 	//---------------------------------------------------------------------------
 
