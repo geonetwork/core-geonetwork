@@ -719,7 +719,13 @@
       </xsl:with-param>
       <xsl:with-param name="help"></xsl:with-param>
       <xsl:with-param name="content">
-        <xsl:value-of select="gco:CharacterString"/>
+        <xsl:call-template name="addLineBreaksAndHyperlinks">
+          <xsl:with-param name="txt">
+            <xsl:apply-templates mode="localised" select=".">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:apply-templates>
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
