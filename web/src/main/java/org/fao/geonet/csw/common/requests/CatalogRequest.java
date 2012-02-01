@@ -24,6 +24,9 @@
 package org.fao.geonet.csw.common.requests;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Util;
+
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
@@ -37,6 +40,7 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.util.Xml;
@@ -435,9 +439,12 @@ public abstract class CatalogRequest
 		finally
 		{
 			httpMethod.releaseConnection();
-
+			try {
 			setupSentData(httpMethod);
 			setupReceivedData(httpMethod, data);
+			} catch (Throwable e) {
+			    Log.warning(Geonet.HARVESTER, "Exception was raised during cleanup of a CSW request : "+ Util.getStackTrace(e));
+			}
 		}
 	}
 
