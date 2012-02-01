@@ -316,8 +316,8 @@
 				<Field name="specificationTitle" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
 			
-			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date/gco:DateTime">
-				<Field name="specificationDate" string="{string(.)}" store="true" index="true" token="false"/>
+			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date">
+				<Field name="specificationDate" string="{string(gco:Date|gco:DateTime)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
