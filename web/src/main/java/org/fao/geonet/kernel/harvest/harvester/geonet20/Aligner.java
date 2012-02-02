@@ -89,7 +89,7 @@ public class Aligner
 				String id = localUuids.getID(uuid);
 
 				log.debug("  - Removing old metadata with id="+ id);
-				dataMan.deleteMetadata(context.getUserSession(), dbms, id);
+				dataMan.deleteMetadata(context, dbms, id);
 				dbms.commit();
 				this.result.locallyRemoved++;
 			}
@@ -173,7 +173,7 @@ public class Aligner
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, userid, group, remoteUuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, userid, group, remoteUuid,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 
@@ -204,7 +204,7 @@ public class Aligner
                 //--- remote category exists locally
 
                 log.debug("    - Setting category : " + catName);
-                dataMan.setCategory(context.getUserSession(), dbms, id, catId);
+                dataMan.setCategory(context, dbms, id, catId);
             }
         }
 	}
@@ -216,8 +216,8 @@ public class Aligner
 	private void addPrivileges(String id) throws Exception
 	{
 		//--- set view privilege for both groups 'intranet' and 'all'
-		dataMan.setOperation(context.getUserSession(), dbms, id, "0", "0");
-		dataMan.setOperation(context.getUserSession(), dbms, id, "1", "0");
+		dataMan.setOperation(context, dbms, id, "0", "0");
+		dataMan.setOperation(context, dbms, id, "1", "0");
 	}
 
 	//--------------------------------------------------------------------------
@@ -274,8 +274,7 @@ public class Aligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                UserSession session = null;
-                dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, changeDate, false);
+                dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, changeDate, false);
 
 				result.updatedMetadata++;
 			}
@@ -300,7 +299,7 @@ public class Aligner
 
             if (!existsCategory(catList, catName)) {
                 log.debug("  - Unsetting category : " + catName);
-                dataMan.unsetCategory(context.getUserSession(), dbms, id, catId);
+                dataMan.unsetCategory(context, dbms, id, catId);
             }
         }
 
@@ -316,7 +315,7 @@ public class Aligner
             {
                 if (!dataMan.isCategorySet(dbms, id, catId)) {
                     log.debug("  - Setting category : " + catName);
-                    dataMan.setCategory(context.getUserSession(), dbms, id, catId);
+                    dataMan.setCategory(context, dbms, id, catId);
                 }
             }
         }

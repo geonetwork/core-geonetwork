@@ -122,7 +122,7 @@ public class DefaultStatusActions implements StatusActions {
 		if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
 			String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
 			unsetAllOperations(id);
-			dm.setStatus(session, dbms, id, new Integer(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
+			dm.setStatus(context, dbms, id, new Integer(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
 		}
 		
 	}
@@ -156,7 +156,7 @@ public class DefaultStatusActions implements StatusActions {
 			}
 
 			//--- set status, indexing is assumed to take place later
-			dm.setStatusExt(session, dbms, mid, new Integer(status), changeDate, changeMessage);
+			dm.setStatusExt(context, dbms, mid, new Integer(status), changeDate, changeMessage);
 		}
 
 
@@ -185,11 +185,11 @@ public class DefaultStatusActions implements StatusActions {
     */
   private void setAllOperations(int mdId) throws Exception {
     String allGroup = "1";
-    dm.setOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.setOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.setOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.setOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.setOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
+    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
+    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
+    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
+    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
+    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
   }
 
   /**
@@ -199,11 +199,11 @@ public class DefaultStatusActions implements StatusActions {
     */
   private void unsetAllOperations(int mdId) throws Exception {
     String allGroup = "1";
-    dm.unsetOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.unsetOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.unsetOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.unsetOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.unsetOperation(session, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
+    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
+    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
+    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
+    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
+    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
   }
 		
 	/**

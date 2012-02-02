@@ -106,7 +106,7 @@ public class Update implements Service
                 boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadata(context.getUserSession(), dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
+				if (!dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
 					throw new ConcurrentUpdateEx(id);
 				}
 			} else {

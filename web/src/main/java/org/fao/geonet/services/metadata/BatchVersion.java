@@ -91,7 +91,7 @@ public class BatchVersion implements Service
 				} else {
 	
 					//--- now set metadata into subversion repo
-					dataMan.versionMetadata(session, id, md);
+					dataMan.versionMetadata(context, id, md);
 					context.debug("  Metadata with id " + id + " added to subversion repo.");
 					metadata.add(new Integer(id));
 				}

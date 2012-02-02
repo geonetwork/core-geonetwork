@@ -199,7 +199,7 @@ class Harvester
 				String id = localUuids.getID(uuid);
 
 				log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadataGroup(context.getUserSession(), dbms, id);
+				dataMan.deleteMetadataGroup(context, dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
 			}
@@ -257,7 +257,7 @@ class Harvester
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, userid, group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -390,7 +390,7 @@ class Harvester
 			else
 			{
 				log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(context.getUserSession(), dbms, id, catId);
+				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
 	}
@@ -419,7 +419,7 @@ class Harvester
 					if (opId == 0 || opId == 5 || opId == 6)
 					{
 						log.debug("       --> "+ name);
-						dataMan.setOperation(context.getUserSession(), dbms, id, priv.getGroupId(), opId +"");
+						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else
 						log.debug("       --> "+ name +" (skipped)");
@@ -459,8 +459,7 @@ class Harvester
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            UserSession session = null;
-            dataMan.updateMetadata(session, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false);
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false);
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both

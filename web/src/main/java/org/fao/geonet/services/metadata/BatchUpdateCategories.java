@@ -104,7 +104,7 @@ public class BatchUpdateCategories implements Service
 					String name = el.getName();
 
 					if (name.startsWith("_"))
-						dm.setCategory(us, dbms, id, name.substring(1));
+						dm.setCategory(context, dbms, id, name.substring(1));
 				}
 				metadata.add(new Integer(id));
 			}

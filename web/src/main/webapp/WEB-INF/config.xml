@@ -378,7 +378,9 @@
 		<param name="maxWritesInTransaction" value="1000" />
 
 		<param name="useSubversion" value="true"/>
-		<param name="subversionPath" value="WEB-INF/metadata_subversion"/>
+		<!-- if not specified then created as metadata_subversion dir in data dir 
+		<param name="subversionPath" value="/home/secretplace/metadata_subversion"/>
+		-->
 
 		<param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
 	</appHandler>

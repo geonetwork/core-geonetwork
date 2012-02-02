@@ -403,7 +403,7 @@ public class ImportFromDir implements Service
         String docType = null, title = null, createDate = null, changeDate = null;
         boolean ufo = true, indexImmediate = true;
         String isTemplate = "n";
-        dm.insertMetadata(context.getUserSession(), dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
+        dm.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 	}

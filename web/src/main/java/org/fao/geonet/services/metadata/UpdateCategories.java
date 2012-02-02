@@ -80,7 +80,7 @@ public class UpdateCategories implements Service {
 			String name = el.getName();
 
 			if (name.startsWith("_"))
-				dataMan.setCategory(context.getUserSession(), dbms, id, name.substring(1));
+				dataMan.setCategory(context, dbms, id, name.substring(1));
 		}
 
 		//--- index metadata

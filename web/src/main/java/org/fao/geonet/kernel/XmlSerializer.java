@@ -25,7 +25,7 @@ package org.fao.geonet.kernel;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -248,17 +248,17 @@ public abstract class XmlSerializer {
 
 	/* API to be overridden by extensions */
 
-	public abstract void delete(Dbms dbms, String table, String id, UserSession session) 
+	public abstract void delete(Dbms dbms, String table, String id, ServiceContext context) 
 	   throws Exception;
 
 	public abstract void update(Dbms dbms, String id, Element xml, 
-		 String changeDate, boolean updateDateStamp, UserSession session) 
+		 String changeDate, boolean updateDateStamp, ServiceContext context) 
 		 throws Exception;
 
 	public abstract String insert(Dbms dbms, String schema, Element xml, 
 					 int serial, String source, String uuid, String createDate,
 					 String changeDate, String isTemplate, String title,
-			 int owner, String groupOwner, String docType, UserSession session) 
+			 int owner, String groupOwner, String docType, ServiceContext context) 
 			 throws Exception;
 
 	public abstract Element select(Dbms dbms, String table, String id) 

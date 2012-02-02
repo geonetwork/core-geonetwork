@@ -108,7 +108,7 @@ public class BatchDelete implements Service
 					FileCopyMgr.removeDirectoryOrFile(pb);
 	
 					//--- delete metadata and return status
-					dataMan.deleteMetadata(session, dbms, id);
+					dataMan.deleteMetadata(context, dbms, id);
 					context.debug("  Metadata with id " + id + " deleted.");
 					metadata.add(new Integer(id));
 				}

@@ -72,9 +72,9 @@ public class SvnManager {
 	private Map<Dbms, SvnTask> tasks = new ConcurrentHashMap<Dbms, SvnTask>();
 
 	private ResourceListener resList = new ResourceListener() {
-		public void beforeClose(Object resource) { flush(resource, true); }
+		public void beforeClose(Object resource) { commit(resource); }
 		public void close(Object resource)       {} // do nothing on commit
-		public void abort(Object resource)       { flush(resource, false); }
+		public void abort(Object resource)       { abort(resource); }
 	};
 
 	// SvnTask holds information used to commit changes to a metadata record
@@ -195,27 +195,45 @@ public class SvnManager {
     /**
      * Create a string from the user information in the UserSession session.
      *
-		 * @param session Session describing the user carrying out this operation
+		 * @param context Context describing the user and service
 		 * @return The string representing the user information in the session
      */
-	private String sessionToLogMessage(UserSession session) {
-		String result = "GeoNetwork User "+session.getUserIdAsInt()+" (Username: "+session.getUsername()+" Name: "+session.getName()+" "+session.getSurname()+")";
+	private String sessionToLogMessage(ServiceContext context) {
+		UserSession session = context.getUserSession();
+		if (session == null) session = getDefaultSession();
+		String result = "GeoNetwork service: "+context.getService()+" GeoNetwork User "+session.getUserIdAsInt()+" (Username: "+session.getUsername()+" Name: "+session.getName()+" "+session.getSurname()+") Executed from IP address "+context.getIpAddress();
 		return result;
 	}
 
     /**
      * Create a map of the user information in the UserSession session.
      *
-		 * @param session Session describing the user carrying out this operation
+		 * @param context Context describing the user and service
 		 * @param props The map of properties to add the session props too
 		 * @return The map of properties with the session props added
      */
-	private Map<String,String> sessionToProps(UserSession session, Map<String,String> props) {
+	private Map<String,String> sessionToProps(ServiceContext context, Map<String,String> props) {
+		UserSession session = context.getUserSession();
+		if (session == null) session = getDefaultSession();
 		props.put(Params.Svn.OPERATOR, session.getUserId());
 		props.put(Params.Svn.USERNAME, session.getUsername());
 		props.put(Params.Svn.NAME,     session.getName());
 		props.put(Params.Svn.SURNAME,  session.getSurname());
+		props.put(Params.Svn.SERVICE,  context.getService());
+		props.put(Params.Svn.IPADDR,   context.getIpAddress());
 		return props;
+	}
+
+    /**
+     * Create a blank user session object in cases where the context doesn't
+		 * have one.
+     *
+		 * @return The blank user session object
+     */
+	private UserSession getDefaultSession() {
+		UserSession session = new UserSession();
+		session.authenticate("unknown", "unknown", "unknown", "unknown", "unknown", "unknown-email-address@nothing.com");
+		return session;
 	}
 
     /**
@@ -225,19 +243,19 @@ public class SvnManager {
      *
 		 * @param dbms The database channel to listen for commit/abort on
 		 * @param id The metadata id that will be tracked
-		 * @param session Session describing the user carrying out this operation
+		 * @param context Describing the servicer and user carrying out operation
      * @throws Exception when something goes wrong
      */
-	public void setHistory(Dbms dbms, String id, UserSession session) throws Exception {
+	public void setHistory(Dbms dbms, String id, ServiceContext context) throws Exception {
 
 		if (!exists(id)) return; // not in repo so exit
 
     Log.debug(Geonet.SVN_MANAGER, "History will be recorded on metadata "+id);
 
     Map<String,String> props = new HashMap<String,String>();
-		props = sessionToProps(session, props);
+		props = sessionToProps(context, props);
 
-		checkSvnTask(dbms, id, sessionToLogMessage(session), props);
+		checkSvnTask(dbms, id, sessionToLogMessage(context), props);
 	
     Log.debug(Geonet.SVN_MANAGER, "Changes to metadata "+id+" will be committed/aborted with the database channel "+dbms);
 		return;
@@ -269,15 +287,15 @@ public class SvnManager {
 		 * the metadata specified as the first version.
      *
 		 * @param id The metadata id that will be tracked
-		 * @param session Session describing the user carrying out this operation
+		 * @param context Service context describing user and operation
 		 * @param md Metadata record - initial version 
      * @throws Exception
      */
-	public void createMetadataDir(String id, UserSession session, Element md) throws Exception {
+	public void createMetadataDir(String id, ServiceContext context, Element md) throws Exception {
 
 		if (exists(id)) return; // already in repo so exit
 
-    String logMessage = sessionToLogMessage(session)+" adding directory for metadata "+id;
+    String logMessage = sessionToLogMessage(context)+" adding directory for metadata "+id;
     Log.debug(Geonet.SVN_MANAGER, logMessage);
 
     ISVNEditor editor = getEditor(logMessage);
@@ -290,7 +308,7 @@ public class SvnManager {
 			editor.closeDir();
 			editor.closeEdit();
 			// Add the id/metadata.xml item to the repository
-    	logMessage = sessionToLogMessage(session)+" adding initial version of metadata "+id;
+    	logMessage = sessionToLogMessage(context)+" adding initial version of metadata "+id;
     	editor = getEditor(logMessage);
 			editor.openRoot(-1);
     	SvnUtils.addFile(editor,
@@ -312,14 +330,14 @@ public class SvnManager {
      * Deletes a metadata directory from the subversion repository immediately.
      *
 		 * @param id The metadata id that will be removed
-		 * @param session Session describing the user carrying out this operation
+		 * @param context Service context describing the user and operation 
      * @throws Exception when something goes wrong
      */
-	public void deleteDir(String id, UserSession session) throws Exception {
+	public void deleteDir(String id, ServiceContext context) throws Exception {
 		
 		if (!exists(id)) return; // not in repo so exit
 
-    String logMessage = sessionToLogMessage(session)+" deleting directory for metadata "+id;
+    String logMessage = sessionToLogMessage(context)+" deleting directory for metadata "+id;
     Log.debug(Geonet.SVN_MANAGER, logMessage);
 
 		ISVNEditor editor = getEditor(logMessage);
@@ -336,13 +354,24 @@ public class SvnManager {
 	}
 
 		/**
-     * Flush (commit/abort) changes to the subversion repository.
+     * Abort changes to the subversion repository. Actually just remove any
+		 * task assigned to this dbms resource.
+     *
+		 * @param resource The resource being aborted that we're listening too
+     */
+	private void abort(Object resource) {
+		Dbms dbms = (Dbms)resource;
+
+		SvnTask task = tasks.get(dbms);
+		if (task != null) tasks.remove(dbms);
+	}
+
+		/**
+     * Commit changes to the subversion repository.
      *
 		 * @param resource The resource being committed that we're listening too
-		 * @param commit True if commit required, False otherwise
-     * @throws Exception when something goes wrong with the commit
      */
-	private void flush(Object resource, boolean commit) {
+	private void commit(Object resource) {
 		Dbms dbms = (Dbms)resource;
 
 		SvnTask task = tasks.get(dbms);
@@ -351,22 +380,28 @@ public class SvnManager {
 
 		if (task != null) {
 			try {
-				if (commit) {
-					editor = getEditor(task.sessionLogMessage+" (committing dbms session "+dbms+")");
-					editor.openRoot(-1); // open the root directory.
-					for (Iterator<String> it = task.ids.iterator(); it.hasNext();) {
-						String id = it.next();
-						commit(dbms, id, editor);
-						it.remove();
-					}
-					editor.closeDir(); // close the root directory.
-					SVNCommitInfo commitInfo = editor.closeEdit();
-       		Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids "+task.ids);
+				editor = getEditor(task.sessionLogMessage+" (committing dbms session "+dbms+")");
+				editor.openRoot(-1); // open the root directory.
+				for (Iterator<String> it = task.ids.iterator(); it.hasNext();) {
+					String id = it.next();
+					commitMetadata(dbms, id, editor);
+					it.remove();
 				}
-				tasks.remove(dbms);
+				editor.closeDir(); // close the root directory.
+				SVNCommitInfo commitInfo = editor.closeEdit();
+       	Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids "+task.ids);
 			} catch (Exception e) {
        	Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids "+task.ids);
 				e.printStackTrace();
+				if (editor != null) {
+					try {
+						editor.abortEdit();
+					} catch (Exception ex) {
+       			Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor");
+						ex.printStackTrace();
+					}
+				}
+			} finally {
 				tasks.remove(dbms);
 			}
 		}
@@ -408,7 +443,7 @@ public class SvnManager {
 	private SVNRepository getNewRepository() throws SVNException {
 		SVNRepository repository = SVNRepositoryFactory.create(repoUrl);
 		if (username != null) {
-			ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(username, password);
+			ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(new File(repoUrl.getPath()), username, password);
 			repository.setAuthenticationManager(authManager);
 		}
 		return repository;
@@ -447,7 +482,7 @@ public class SvnManager {
      * @param editor ISVNEditor for commits to subversion repo
 		 * @throws SVNException if something goes wrong
      */
-	public void commit(Dbms dbms, String id, ISVNEditor editor) throws Exception {
+	public void commitMetadata(Dbms dbms, String id, ISVNEditor editor) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
@@ -470,7 +505,6 @@ public class SvnManager {
 			commitMetadataStatus(editor, id, dbms, dataMan);
     } catch (Exception e) {
       editor.abortEdit();
-			dbms.abort();
       e.printStackTrace();
       throw e;
 		}
@@ -615,7 +649,7 @@ public class SvnManager {
 	private void commitMetadataPrivileges(ISVNEditor editor, String id, Dbms dbms) throws Exception {
     StringBuffer query = new StringBuffer();
 
-    query.append("SELECT g.name as group_name,                            ");
+    query.append("SELECT g.id as group_id, g.name as group_name,          ");
     query.append("       o.id as operation_id, o.name as operation_name   ");
 		query.append("FROM groups g                                           ");
 		query.append("JOIN OperationAllowed oa on oa.groupId = g.id           ");

@@ -146,6 +146,8 @@ public class Params
 		public static final String USERNAME  = "geonet:username";
 		public static final String NAME      = "geonet:name";
 		public static final String SURNAME   = "geonet:surname";
+		public static final String SERVICE   = "geonet:service";
+		public static final String IPADDR    = "geonet:ipaddress";
 	}
 
 }

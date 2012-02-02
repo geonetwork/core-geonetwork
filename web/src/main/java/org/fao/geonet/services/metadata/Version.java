@@ -84,7 +84,7 @@ public class Version implements Service
 		//-----------------------------------------------------------------------
 		//--- set metadata into the subversion repo
 
-		dataMan.versionMetadata(session, id, md);
+		dataMan.versionMetadata(context, id, md);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

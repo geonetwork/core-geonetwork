@@ -101,7 +101,7 @@ class Harvester {
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
 			log.debug("  - Removing old metadata before update with id: " + id);
-			dataMan.deleteMetadataGroup(context.getUserSession(), dbms, id);
+			dataMan.deleteMetadataGroup(context, dbms, id);
 			serverResults.locallyRemoved++;
 		}
 
@@ -312,7 +312,7 @@ class Harvester {
                     int owner = 1;
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
-					dataMan.insertMetadata(context.getUserSession(), dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
+					dataMan.insertMetadata(context, dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 				}
@@ -370,7 +370,7 @@ class Harvester {
 			if (name == null) {
 				log.debug("    - Skipping removed category with id:" + catId);
 			} else {
-				dataMan.setCategory(session, dbms, id, catId);
+				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
 
@@ -379,7 +379,7 @@ class Harvester {
 			if (catId == null) {
 				log.debug("    - Skipping removed category :" + serverCategory);
 			} else {
-				dataMan.setCategory(session, dbms, id, catId);
+				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
 	}
@@ -405,7 +405,7 @@ class Harvester {
 
 					// --- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(session, dbms, id, priv.getGroupId(), opId + "");
+						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId + "");
 					} else
 						log.debug("       --> " + name + " (skipped)");
 				}

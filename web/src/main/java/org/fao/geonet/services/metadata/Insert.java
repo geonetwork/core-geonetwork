@@ -149,7 +149,7 @@ public class Insert implements Service
 			categs.addContent((new Element("category")).setAttribute(
 					"name", category));
 
-			Importer.addCategories(context.getUserSession(), dm, dbms, id.get(0), categs);
+			Importer.addCategories(context, dm, dbms, id.get(0), categs);
 		} 
 
 		// Index
