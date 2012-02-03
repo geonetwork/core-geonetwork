@@ -35,7 +35,7 @@ public enum ResultType {
 
 	HITS("hits"),
     RESULTS("results"),
-    // TODO heikki: this is an invalid value and should be rejected
+    // this is a GeoNetwork-specific value, not in the CSW specs
     RESULTS_WITH_SUMMARY("results_with_summary"),
     VALIDATE("validate");
 
