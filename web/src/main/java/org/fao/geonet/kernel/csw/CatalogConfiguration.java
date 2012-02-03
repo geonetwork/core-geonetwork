@@ -184,6 +184,12 @@ public class CatalogConfiguration {
 			range = param
 					.getAttributeValue(Csw.ConfigFile.Parameter.Attr.RANGE, "false");
 
+
+            // TODO: OGC 07-45:
+            // Case sensitivity is as follows: For the common queryables use the same case as defined in the base
+            // specification (e.g. ‘apiso:title’), for the additional queryables use the cases as defined in this profile
+            // (tables 9-14), e.g. ‘apiso:RevisionDate’.
+
 			_fieldMapping.put(name.toLowerCase(), field);
 
 			if (range.equals("true"))

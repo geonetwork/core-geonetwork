@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+// TODO this class is not used anywhere
 public enum TypeName {
     DATASET("dataset"), DATASET_COLLECTION("datasetcollection"), SERVICE("service"), APPLICATION("application"),
+
+    // TODO heikki: these are the only 2 legal values
     RECORD("csw:Record"), METADATA("gmd:MD_Metadata");
 
     //------------------------------------------------------------------------

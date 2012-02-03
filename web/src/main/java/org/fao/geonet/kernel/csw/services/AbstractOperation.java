@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.csw.services;
 
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -52,48 +53,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-//=============================================================================
-
-public abstract class AbstractOperation
-{
+/**
+ *
+ */
+public abstract class AbstractOperation {
 	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
 
-	protected boolean checkService(Element request) throws CatalogException
-	{
+    /**
+     * OGC 07-006 and OGC 07-045:
+     * Mandatory. Fixed value of “CSW”.
+     *
+     * @param request
+     * @throws CatalogException
+     */
+	protected void checkService(Element request) throws MissingParameterValueEx, InvalidParameterValueEx {
 		String service = request.getAttributeValue("service");
-
-		if (service == null)
-			return false;
-
-		if (service.equals(Csw.SERVICE))
-			return true;
-
-		//--- this is just a fix to the incorrect XSD schema default
-
-		if (service.equals("http://www.opengis.net/cat/csw"))
-			return true;
-
-		throw new InvalidParameterValueEx("service", service);
+		if (StringUtils.isEmpty(service)) {
+			throw new MissingParameterValueEx("service");
+        }
+        // TODO heikki: that csw namespace is not a valid value. Earlier comment here states: "//--- this is just a fix to the incorrect XSD schema default." Check if that's still necessary.
+		if(!(service.equals(Csw.SERVICE)||service.equals("http://www.opengis.net/cat/csw"))) {
+            throw new InvalidParameterValueEx("service", service);
+        }
 	}
 
-	//---------------------------------------------------------------------------
-
-	protected void checkVersion(Element request) throws CatalogException
-	{
+    /**
+     * OGC 07-006 and OGC 07-045:
+     * Mandatory. Fixed value of “2.0.2”.
+     *
+     * @param request the request
+     * @throws CatalogException
+     */
+	protected void checkVersion(Element request) throws MissingParameterValueEx, InvalidParameterValueEx {
 		String version = request.getAttributeValue("version");
-
-		if (version == null)
-			return;
-
-		if (!version.equals(Csw.CSW_VERSION))
+		if (StringUtils.isEmpty(version)) {
+			throw new MissingParameterValueEx("version");
+        }
+		if (!version.equals(Csw.CSW_VERSION)) {
 			throw new InvalidParameterValueEx("version", version);
+        }
 	}
 
-	//---------------------------------------------------------------------------
 
 	protected void setAttrib(Element elem, String name, String value)
 	{
@@ -150,17 +154,20 @@ public abstract class AbstractOperation
 		}
 	}
 
-	//---------------------------------------------------------------------------
-
-	protected ElementSetName getElementSetName(Element parent, ElementSetName defValue) throws InvalidParameterValueEx
-	{
-		if (parent == null)
+    /**
+     * Retrieves ElementSetName from a JDOM element if that is not null, otherwise returns the provided default value.
+     *
+     * @param parent
+     * @param defValue
+     * @return
+     * @throws InvalidParameterValueEx
+     */
+	protected ElementSetName getElementSetName(Element parent, ElementSetName defValue) throws InvalidParameterValueEx {
+		if (parent == null) {
 			return defValue;
-
+        }
 		return ElementSetName.parse(parent.getChildText("ElementSetName", parent.getNamespace()));
 	}
-
-	//---------------------------------------------------------------------------
 
 	protected Map<String, String> retrieveNamespaces(String namespaces)
 	{

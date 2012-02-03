@@ -54,6 +54,14 @@ import org.jdom.Element;
 
 //=============================================================================
 
+/**
+ * TODO
+ * OGC 07045:
+ * - TYPENAME
+ * - Zero or one (Optional) Default action is to describe all types known to server
+ * - Optional. Must support “gmd:MD_Metadata”.
+ *
+ */
 public class GetRecordById extends AbstractOperation implements CatalogService
 {
 	//---------------------------------------------------------------------------
@@ -122,7 +130,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                     Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
 
                     Pair<Element, Element> results= _searchController.search(context, 0, 1, ResultType.HITS, OutputSchema.OGC_CORE,
-                            ElementSetName.BRIEF,  filterExpr, Csw.FILTER_VERSION_1_1, null, null, 0, cswServiceSpecificContraint);
+                            ElementSetName.BRIEF,  filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
 
 
                    Log.debug(Geonet.CSW_SEARCH, "GetRecordById cswServiceSpecificContraint result: " + Xml.getString(results.two()));
@@ -137,8 +145,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			    // to the requested MD 
 			    Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW); 
 				
-				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, ResultType.RESULTS);
-	
+				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
+
 				if (md != null)
 					response.addContent(md);
 			}

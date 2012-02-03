@@ -48,6 +48,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -2038,6 +2039,7 @@ public class DataManager {
 
     /**
      *
+     * @param context
      * @param id
      * @param small
      * @param file
@@ -2056,6 +2058,7 @@ public class DataManager {
 
     /**
      *
+     * @param context
      * @param id
      * @param small
      * @throws Exception
@@ -2068,6 +2071,7 @@ public class DataManager {
 
     /**
      *
+     * @param context
      * @param id
      * @param small
      * @param env
@@ -3081,6 +3085,35 @@ public class DataManager {
         dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getAbstract(), langId, "abstract");
         dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?", cswCapabilitiesInfo.getFees(), langId, "fees");
         dbms.execute("UPDATE CswServerCapabilitiesInfo SET label = ? WHERE langId = ? AND field = ?",  cswCapabilitiesInfo.getAccessConstraints(), langId, "accessConstraints");
+    }
+
+    /**
+     * Replaces the contents of table CustomElementSet.
+     *
+     * @param dbms database
+     * @param customElementSet customelementset definition to save
+     * @throws Exception hmm
+     */
+    public void saveCustomElementSets(Dbms dbms, CustomElementSet customElementSet) throws Exception {
+        dbms.execute("DELETE FROM CustomElementSet");
+        for(String xpath : customElementSet.getXpaths()) {
+             if(StringUtils.isNotEmpty(xpath)) {
+                 dbms.execute("INSERT INTO CustomElementSet (xpath) VALUES ('" + xpath + "')");
+             }
+        }
+    }
+
+    /**
+     * Retrieves contents of CustomElementSet.
+     *
+     * @param dbms database
+     * @return List of elements (denoted by XPATH)
+     * @throws Exception hmm
+     */
+    public List<Element> getCustomElementSets(Dbms dbms) throws Exception {
+		Element customElementSetList = dbms.select("SELECT * FROM CustomElementSet");
+        List<Element> records = customElementSetList.getChildren();
+        return records;
     }
 
 	//--------------------------------------------------------------------------

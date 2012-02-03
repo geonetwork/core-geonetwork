@@ -132,26 +132,36 @@ public class CatalogSearcher {
 	 * @return a list of id that match the given filter, ordered by sortFields
 	 */
 	public Pair<Element, List<ResultItem>> search(ServiceContext context,
-                                                  Element filterExpr, String filterVersion,
+                                                  Element filterExpr, String filterVersion, String typeName,
                                                   Sort sort, ResultType resultType, int startPosition, int maxRecords,
-                                                  int maxHitsInSummary, String cswServiceSpecificContraint)
-			throws CatalogException {
+                                                  int maxHitsInSummary, String cswServiceSpecificContraint) throws CatalogException {
 		Element luceneExpr = filterToLucene(context, filterExpr);
 
-		Log.debug(Geonet.CSW_SEARCH, "CatS: after filter2lucene:\n"+ Xml.getString(luceneExpr));
+		Log.debug(Geonet.CSW_SEARCH, "after filter2lucene:\n"+ Xml.getString(luceneExpr));
+
+        // OGC 07-045:
+        // If typeName equals to “csw:Record” no ISO metadata profile specific queryables must be used. The handling of
+        // the queryables is as defined as in chapter 10.8.4.11 of [OGC 07-006].
+
+        // If the typeNames attribute of a query equals to ‘gmd:MD_Metadata’ (‘gmd’ representing the
+        // ‘http://www.isotc211.org/2005/gmd’ namespace) any queryable that is part of the associated filter must be
+        // represented by a qualified name with a prefix (e.g. ‘apiso’), representing the
+        // ‘http://www.opengis.net/cat/csw/apiso/1.0’ namespace. This is true for both application profile queryables as
+        // well as for the OGC common core queryables (which are mapped to the gmd metadata schema then).
+
+        // TODO typeName is not enforced: restrict query to requested typeName (in remapFields)
 
 		if (luceneExpr != null) {
 			checkForErrors(luceneExpr);
 			remapFields(luceneExpr);
 		}
 
-		Log.debug(Geonet.CSW_SEARCH, "CatS: after remapfields:\n"+ Xml.getString(luceneExpr));
-
+		Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n"+ Xml.getString(luceneExpr));
 
 		try {
 			if (luceneExpr != null) {
 				convertPhrases(luceneExpr);
-				Log.debug(Geonet.CSW_SEARCH, "CatS: after convertphrases:\n"+ Xml.getString(luceneExpr));
+				Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n"+ Xml.getString(luceneExpr));
 			}
 
             return performSearch(context,

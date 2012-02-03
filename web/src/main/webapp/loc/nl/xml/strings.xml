@@ -1244,5 +1244,11 @@
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
 
+    <customize-elementset>Aanpassen element in te stellen</customize-elementset>
+    <csw-server-disabled>CSW server is uitgeschakeld.</csw-server-disabled>
+    <custom-elementset-intro>Definiëren die moeten worden opgenomen in uw aangepaste element hier is ingesteld. Elk element moet worden aangegeven door zijn volledige XPATH van de document root. Deze elementen en hun nakomelingen zullen worden opgenomen in de antwoorden op CSW GetRecord aanvragen met ElementSetName = VOL.</custom-elementset-intro>
+    <custom-elementset-revert>Om terug te keren naar de standaard ElementSetName = VOL reacties, verwijder alle elementen uit deze lijst.</custom-elementset-revert>
+    <custom-elementset-add>Toe te voegen element</custom-elementset-add>
+
     <wmslayers>WMS layers</wmslayers>
 </strings>

@@ -1067,5 +1067,11 @@
     <cswServerAccessConstraints>Restriccions d'accés</cswServerAccessConstraints>
     <cswServerContact>Contacte</cswServerContact>
 
+    <customize-elementset>Personalitzar conjunt d'elements</customize-elementset>
+    <csw-server-disabled>servidor de la CSW es desactiva.</csw-server-disabled>
+    <custom-elementset-intro>Definir els elements que s'han d'incloure en l'element personalitzat ajustat aquí. Cada element ha de ser identificat per la seva XPath total de l'arrel del document. Aquests elements i els seus descendents seran inclosos en les respostes a les sol licituds CSW GetRecord amb ElementSetName = FULL.</custom-elementset-intro>
+    <custom-elementset-revert>Per tornar a la ElementSetName default = respostes completes, eliminar tots els elements d'aquesta llista.</custom-elementset-revert>
+    <custom-elementset-add>Afegeix element</custom-elementset-add>
+
     <wmslayers>Capes WMS</wmslayers>
 </strings>

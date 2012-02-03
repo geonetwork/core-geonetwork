@@ -1,16 +1,16 @@
 #GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime
-#Tue, 24 Jan 2012 14:28:51 +1100
-
-version=2.7.0
+#Thu, 02 Feb 2012 17:51:16 +0100
+#Thu Feb 02 17:05:37 CET 2012
+jre_url=http\://java.sun.com/javase/downloads
+svn_revision=8648
+debugOn=on
+date=1251021751
+svn_url=https\://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk/installer
+buildDate=2012-02-02T17\:51\:16+0100
 subVersion=SNAPSHOT
+version=2.7.0
+ant.build.javac.target=1.5
+day=02-2-2012
 release=2.7.0
 javaVersion=1.5.0
-jre_url=http\://java.sun.com/javase/downloads
-ant.build.javac.target=1.5
-buildDate=2012-01-24T14\:28\:51+1100
-date=1228241428
-day=24-1-2012
-OS=Compiled on Linux (unix)
-debugOn=on
-svn_revision=8622
-svn_url=https\://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk/installer
+OS=Compiled on Windows 7 (win)

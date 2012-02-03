@@ -1231,5 +1231,11 @@
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
 
+    <customize-elementset>تخصيص عنصر من العناصر المحددة</customize-elementset>
+    <csw-server-disabled>تم تعطيل ملقم جنة وضع المرأة.</csw-server-disabled>
+    <custom-elementset-intro>ElementSetName = كامل. من جذر المستند. وسوف تدرج هذه العناصر وأولادهم في الاستجابة للطلبات GetRecord جنة وضع المرأة مع ليتم تضمينها في تحديد عناصر العنصر المخصص الخاص بك مجموعة هنا. ولا بد من تحديد كل عنصر من كسباث الكامل</custom-elementset-intro>
+    <custom-elementset-revert>العودة إلى ElementSetName الافتراضي الردود = كامل، وحذف كل العناصر من هذه القائمة.</custom-elementset-revert>
+    <custom-elementset-add>إضافة عنصر</custom-elementset-add>
+
     <wmslayers>WMS layers</wmslayers>
 </strings>

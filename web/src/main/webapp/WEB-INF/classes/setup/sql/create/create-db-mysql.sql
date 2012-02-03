@@ -25,6 +25,13 @@ CREATE TABLE Categories
 
 -- ======================================================================
 
+CREATE TABLE CustomElementSet
+  (
+    xpath  varchar(1000) not null
+  );
+
+-- ======================================================================
+
 CREATE TABLE Settings
   (
     id        int,

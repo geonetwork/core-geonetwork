@@ -1136,5 +1136,11 @@
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
 
+    <customize-elementset>Tilpass element satt</customize-elementset>
+    <csw-server-disabled>CSW server er deaktivert.</csw-server-disabled>
+    <custom-elementset-intro>Definere elementene som skal inkluderes i den tilpassede element er angitt her. Hvert element må identifiseres ved sin fulle XPath fra dokumentet roten. Disse elementene og deres etterkommere vil bli inkludert i svar på CSW GetRecord forespørsler med ElementSetName = FULL.</custom-elementset-intro>
+    <custom-elementset-revert>For å gå tilbake til standard ElementSetName = FULL svar, slette alle elementer fra denne listen.</custom-elementset-revert>
+    <custom-elementset-add>Legg til element</custom-elementset-add>
+
     <wmslayers>WMS layers</wmslayers>
 </strings>
