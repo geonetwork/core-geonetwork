@@ -85,26 +85,21 @@ public class UserQueryInput {
     private static Map<String, String> searchParamToLuceneField = new HashMap<String, String>();
     static {
         // Populate map for search parameter to Lucene mapping
-        searchParamToLuceneField.put(SearchParameter.SITEID,
-                LuceneIndexField.SOURCE);
-        searchParamToLuceneField.put(SearchParameter.INSPIRE,
-                LuceneIndexField.INSPIRE_CAT);
-        searchParamToLuceneField.put(SearchParameter.THEMEKEY,
-                LuceneIndexField.KEYWORD);
-        searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY,
-                LuceneIndexField.TOPIC_CATEGORY);
-        searchParamToLuceneField.put(SearchParameter.CATEGORY,
-                LuceneIndexField.CAT);
+        searchParamToLuceneField.put(SearchParameter.SITEID, LuceneIndexField.SOURCE);
+        searchParamToLuceneField.put(SearchParameter.INSPIRE, LuceneIndexField.INSPIRE_CAT);
+        searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
+        searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
+        searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
     }
-    private Map<String, HashSet<String>> searchCriteria = new HashMap<String, HashSet<String>>();
-    private Map<String, HashSet<String>> searchPrivilegeCriteria = new HashMap<String, HashSet<String>>();
+    private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
+    private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
     private Map<String, String> searchOption = new HashMap<String, String>();
 
-    public Map<String, HashSet<String>> getSearchCriteria() {
+    public Map<String, Set<String>> getSearchCriteria() {
         return searchCriteria;
     }
 
-    public Map<String, HashSet<String>> getSearchPrivilegeCriteria() {
+    public Map<String, Set<String>> getSearchPrivilegeCriteria() {
         return searchPrivilegeCriteria;
     }
 
@@ -135,8 +130,7 @@ public class UserQueryInput {
 
                         if (SECURITY_FIELDS.contains(nodeName)
                                 || nodeName.contains("_op")) {
-                            addValues(searchPrivilegeCriteria, nodeName,
-                                    nodeValue);
+                            addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
                         } else {
@@ -157,8 +151,14 @@ public class UserQueryInput {
         }
     }
 
-    private void addValues(Map<String, HashSet<String>> hash,
-            String nodeName, String nodeValue) {
+    /**
+     * TODO javadoc.
+     *
+     * @param hash
+     * @param nodeName
+     * @param nodeValue
+     */
+    private void addValues(Map<String, Set<String>> hash, String nodeName, String nodeValue) {
         Set<String> currentValues = searchCriteria.get(nodeName);
 
         if (currentValues == null) {
@@ -240,6 +240,7 @@ public class UserQueryInput {
      * 
      * @param jdom
      */
+    @SuppressWarnings({"JavadocReference"})
     private void protectRequest(Element jdom) {
         for (String fieldName : SECURITY_FIELDS) {
             jdom.removeChildren(fieldName);
@@ -252,13 +253,12 @@ public class UserQueryInput {
      */
     @Override
     public String toString() {
-        StringBuffer text = new StringBuffer();
-        Map<String, HashSet<String>> searchCriteria = getSearchCriteria();
-        for (Iterator iter = searchCriteria.entrySet().iterator(); iter
-                .hasNext();) {
+        StringBuilder text = new StringBuilder();
+        Map<String, Set<String>> searchCriteria = getSearchCriteria();
+        for (Iterator iter = searchCriteria.entrySet().iterator(); iter.hasNext();) {
             Entry entry = (Entry) iter.next();
             String fieldName = (String) entry.getKey();
-            HashSet<String> fieldValue = (HashSet<String>) entry.getValue();
+            Set<String> fieldValue = (Set<String>) entry.getValue();
             text.append(fieldName).append(":").append(fieldValue).append(" ");
         }
         return text.toString();

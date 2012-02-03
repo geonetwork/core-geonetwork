@@ -97,13 +97,13 @@ public class LuceneQueryInput extends UserQueryInput {
         for(String groupOwner : groupOwners) {
             groupOwnersToString.append(" groupOwner: " + groupOwner);
         }
-        return new StringBuffer().append("owner: ").append(owner)
+        return new StringBuilder().append("owner:").append(owner)
                 .append(groupsToString)
                 .append(groupOwnersToString)
-                .append(" isReviewer: ").append(isReviewer)
-                .append(" isUserAdmin: ").append(isUserAdmin)
-                .append(" isAdmin: ").append(isAdmin)
-                .append(super.toString()).toString();
+                .append(" isReviewer:").append(isReviewer)
+                .append(" isUserAdmin:").append(isUserAdmin)
+                .append(" isAdmin:").append(isAdmin)
+                .append(" ").append(super.toString()).toString();
     }
 
     public Set<String> getGroups() {
