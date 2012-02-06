@@ -78,6 +78,9 @@ operations[i++] = [ 'csw-TransactionUpdate', 'csw-Transaction | Update full reco
 operations[i++] = [ 'csw-TransactionUpdateProperties', 'csw-Transaction | Update properties', '' ];
 operations[i++] = [ 'csw-TransactionDelete', 'csw-Transaction | Delete', '' ];
 // TRANSACTION ------------- END -- //
+// HARVEST ------------- START -- //
+operations[i++] = [ 'csw-Harvest', 'csw-Harvest', '' ];
+// HARVEST ------------- END -- //
 
 function init() {
 	var operationsList = document.getElementById('request');
@@ -149,9 +152,6 @@ function loginAndRun() {
 	OpenLayers.Util.applyDefaults(opts, {
 		success : function(response) {
 			document.getElementById('response').value = response.responseText;
-        },
-		failure : function(response) {
-			document.getElementById('response').value = "ERROR PROCESSING REQUEST: \n\n" + response.responseText;
 		}
 	});
 	var request = OpenLayers.Request.GET(opts);

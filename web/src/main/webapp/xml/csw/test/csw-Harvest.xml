@@ -1,10 +1,15 @@
-<?xml version="1.0"?>
-<Harvest xmlns="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2">
-    <Source>http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</Source>
-    <ResourceType>http://www.isotc211.org/schemas/2005/gmd</ResourceType>
-    <ResourceFormat>application/xml</ResourceFormat>
-    <ResponseHandler>mailto:anemail@here.org</ResponseHandler>
-    <!--        
-        <HarvestInterval/>
-    -->
-</Harvest>
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:Harvest service="CSW" version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
+    <csw:Source>http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</csw:Source>
+    <csw:ResourceType>http://www.isotc211.org/schemas/2005/gmd/</csw:ResourceType>
+
+    <csw:ResourceFormat>application/xml</csw:ResourceFormat>
+
+    <!-- Harvest interval ISO8601 period format (run every day) -->
+    <!-- <csw:HarvestInterval>P0Y0M1DT0H0M0S</csw:HarvestInterval> -->
+
+    <!-- Handler to process request asynchronously  -->
+    <!-- <csw:ResponseHandler>mailto:anymail@domain.net</csw:ResponseHandler> -->
+ </csw:Harvest>

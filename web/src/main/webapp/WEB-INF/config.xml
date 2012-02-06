@@ -1262,7 +1262,15 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Catalogue Services for the Web configuration -->
+		<!-- Catalogue Services for the Web -->
+
+		<service name="csw">
+			<class name=".services.main.CswDiscoveryDispatcher" />
+		</service>
+
+		<service name="csw-publication">
+			<class name=".services.main.CswPublicationDispatcher" />
+		</service>
 
         <service name="csw.config.get">
             <class name=".guiservices.csw.Get" />

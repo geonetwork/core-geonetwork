@@ -134,6 +134,9 @@
         <allow service="csw.config.get"/>
         <allow service="csw.config.set"/>
 
+        <!-- csw publication -->
+        <allow service="csw-publication"/>
+
         <allow service="csw.customelementset.get"/>
         <allow service="csw.customelementset.set"/>
 
@@ -440,7 +443,7 @@
 		<!-- Allow GeoNetwork Mapping services -->
 		<allow service="xml.group.list"/>
 
-		<!-- Catalogue Services for the Web -->
+		<!-- Catalogue Services for the Web - Discovery -->
 		<allow service="csw"/>
 
 		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->

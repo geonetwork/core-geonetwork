@@ -61,8 +61,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.csw.CatalogConfiguration;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;	
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
+import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
@@ -754,6 +755,9 @@ public class Geonetwork implements ApplicationHandler
 	public void stop()
 	{
 		logger.info("Stopping geonetwork...");
+		
+        logger.info("shutting down CSW HarvestResponse executionService");
+        CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();		
 
 		//------------------------------------------------------------------------
 		//--- end search

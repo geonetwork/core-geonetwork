@@ -30,71 +30,65 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
-//=============================================================================
+import java.util.List;
 
-public class CswDispatcher implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-	
+/**
+ * Accepts CSW Publication operations.
+ */
+public class CswPublicationDispatcher implements Service {
 	private Logger logger;
 
-    /**
-     * The "filter" parameter value is the filter to apply to Lucene query using Lucene query syntax
-     * ( http://lucene.apache.org/java/2_4_0/queryparsersyntax.html).
-     *
-     * Service configuration example with filter" parameter:
-     *
-     * <service name="csw-custom">
-     *      <class name=".services.main.CswDispatcher" >
-     *         <param name="filter" value="+inspirerelated:on"/>
-     *      </class>
-     *  </service>
-     *
-     */
-	private String cswServiceSpecificContraint;
-
+    private String cswServiceSpecificContraint;
+	
 	public void init(String appPath, ServiceConfig config) throws Exception {
 		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
 	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		logger = context.getLogger();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
 		SettingManager settingMan = gc.getSettingManager();
-		
 		boolean cswEnable    = settingMan.getValueAsBool("system/csw/enable", false);
-		
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		
+
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+
+        String operation;
+        // KVP encoding
+        if(params.getName().equals("request")) {
+            operation = params.getChildText("request");
+        }
+        // SOAP encoding
+        else if(params.getName().equals("Envelope")) {
+            Element soapBody = params.getChild("Body");
+            List payloadList = soapBody.getChildren();
+            Element payload = (Element)payloadList.get(0);
+            operation = payload.getName();
+        }
+        // POX
+        else {
+            operation = params.getName();
+        }
+        System.out.println("CSW operation: " + operation);
+
+        if(!operation.equals("Harvest") && !operation.equals("Transaction")) {
+            System.out.println("Not a CSW Publication operation: " + operation);
+            Element info  = new Element("info").setText("Not a CSW Publication operation: " + operation + ". Did you mean to use the CSW Discovery service? Use service name /csw");
+			response.addContent(info);
+        }
+
 		// FIXME : response should be more explicit, an exception should be return ?
 		if (!cswEnable) {
 			logger.info("CSW is disabled");
 			Element info  = new Element("info").setText("CSW is disabled");
 			response.addContent(info);
-		} else {
-            logger.info("CSW filter: " + cswServiceSpecificContraint);
-            response = gc.getCatalogDispatcher().dispatch(params, context, cswServiceSpecificContraint);
+		}
+        else {
+			response = gc.getCatalogDispatcher().dispatch(params, context, cswServiceSpecificContraint);
         }
-
 		return response;
 	}
 }
-
-//=============================================================================
-
