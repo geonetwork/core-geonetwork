@@ -109,7 +109,7 @@ public abstract class JeevesException extends Exception
 	private static Element getStackTrace(Throwable t, int depth)
 	{
 		Element stack = new Element("stack");
-
+        boolean writing = true;
 		for (StackTraceElement ste : t.getStackTrace())
 		{
 			if (--depth < 0)
@@ -127,7 +127,14 @@ public abstract class JeevesException extends Exception
 			at.setAttribute("line",   (line == null) ? "???" : line);
 			at.setAttribute("method", (meth == null) ? "???" : meth);
 
-			stack.addContent(at);
+
+            if (--depth >= 0 || clas.startsWith("org.fao") || clas.startsWith("org.wfp") || clas.startsWith("jeeves")) {
+                writing = true;
+                stack.addContent(at);
+            } else if (writing) {
+                stack.addContent(new Element("skip").setText("..."));
+                writing = false;
+            }
 		}
 
 		return stack;
