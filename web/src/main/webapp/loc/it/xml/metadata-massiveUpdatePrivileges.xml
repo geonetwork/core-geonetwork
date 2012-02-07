@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Record di metadati non trovati</notfound>
+	<notowner>I Record di metadati non hanno i privilegi aggiornate poichè non ne sei il proprietario</notowner>
+	<updated>I Record di metadati hanno i privilegi aggiornati</updated>
+	<resultstitle>Risultati dell'aggiornamento dei privilegi</resultstitle>
+</strings>

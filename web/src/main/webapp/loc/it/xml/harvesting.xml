@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<select>Seleziona</select>
+	<name>Nome</name>
+	<directoryname>Directory</directoryname>
+	<type>Tipo</type>
+	<status>Stato</status>
+	<errors>Errori</errors>
+	<every>Tutti</every>
+	<lastRun>Ultima esecuzione</lastRun>
+	<operation>Funzione</operation>
+
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>Nodo remoto GeoNetwork v2.1</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>Nodo remoto GeoNetwork v2.0</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV server</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/ISO 2.0</short>
+		<long>Servizi Web di Catalogo, ISO Profile 2.0</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z39.50</short>
+		<long>Ricerca remota Z39.50</long>
+	</info>
+	
+	<info type="oaipmh">
+		<short>OAI-PMH</short>
+		<long>Protocollo OAI per la raccolta dei Matadati 2.0</long>
+	</info>
+
+	<info type="ogcwxs">
+		<short>OGC WxS</short>
+		<long>Servizi Web OGC (es.: WMS, WFS, WCS, WPS)</long>
+	</info>
+
+	<info type="arcsde">
+		<short>ArcSDE</short>
+		<long>ArcSDE server</long>
+	</info>
+
+	<info type="thredds">
+		<short>Thredds</short>
+		<long>Catalogo Thredds</long>
+	</info>
+	
+	<info type="metadatafragments">
+		<short>WFS Frammenti</short>
+		<long>Frammenti di metadati da OGC WFS</long>
+	</info>
+
+	<info type="filesystem">
+		<short>Filesystem Locale</short>
+		<long>Raccolta Filesystem Locale</long>
+	</info>	
+
+	
+	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+
+	<wxstype>Type of OGC webservice</wxstype>
+	<wxstypes>
+		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
+		<type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
+		<type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type>
+		<type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
+		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
+		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
+        <type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
+        <type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>        
+	</wxstypes>
+	
+	<wxslang>Linguaggio Metadati</wxslang>
+	<wxsImp>Tipo di importazione</wxsImp>
+	<wxs119Only>Di norma l'harvester del GetCapabilities creerà<br/>  i metadati per i soli servizi in ISO19119.</wxs119Only>
+	<wxs139>Crea metadati sul layer usando le informazione della GetCapabilities.</wxs139>
+	<wxs139Layer>Crea metadati sul layer usando attributei MetadataURL (se esistenti, altrimenti usa la GetCapabilities).</wxs139Layer>
+	<createThumbnails>Crea thumbnail per layer WMS.</createThumbnails>
+	
+	<serviceCategory>Categoria del servizio</serviceCategory>
+	<datasetCategory>Categoria dei dataset</datasetCategory>
+
+	<host>Host</host>
+	<port>Porta</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Usa account</useAccount>
+	<username>Nome Utente</username>
+	<password>Password</password>
+	
+	<search>Criteri di ricerca</search>
+	<siteName>Nome del sito</siteName>
+	
+	<freeText>Testo libero</freeText>
+	<title>Titolo</title>
+	<abstract>Descrizione</abstract>
+	<keywords>Parole chiave</keywords>
+	<subject>Oggetto</subject>
+	<digital>Digitale</digital>
+	<hardcopy>Stampa</hardcopy>
+	<siteId>ID del Sito</siteId>
+
+	<retrieve>Scarica</retrieve>
+	<warn>È possibile scaricare solo dopo il riempimento della parte del sito</warn>
+	
+	<content>Contenuto scaricato</content>
+	<importxslt>Applicare questo XSLT ai metadati scaricati</importxslt>
+
+	<options>Opzioni</options>
+	<everySpec>(giorni : ore : minuti)</everySpec>
+	<oneRun>Esecuzione singola</oneRun>
+	<createGroups>Crea gruppi</createGroups>
+	<createCateg>Crea categorie</createCateg>
+	<active>Attivo</active>
+	<inactive>Inattivo</inactive>
+	<retrieveSources>Recuperare le sorgenti</retrieveSources>
+	<retrieveGroups>Recuperare i gruppi</retrieveGroups>
+	<retrieveInfo>Recuperare le info</retrieveInfo>
+	<source>Sorgente</source>
+	<criteria>Criteri</criteria>
+	<validate>Convalidare</validate>
+	<recurse>Ricorsione</recurse>
+ 	<nodelete>Mantieni localmente se eliminato sul sito originario</nodelete>
+ 	<server>Server</server>	
+ 	<database>Database</database>	
+	<privileges>Privilegi</privileges>
+	<categories>Categorie</categories>
+	<url>URL</url>
+	<capabUrl>URL di capabilities</capabUrl>
+	<icon>Icona</icon>
+	<group>Gruppo</group>
+	<groups>Gruppi</groups>
+	<remoteGroup>Gruppo remoto</remoteGroup>
+	<copyPolicy>Politica di copia</copyPolicy>
+	<allGroup>Gruppo 'Tutti'</allGroup>
+	
+	<policy>
+		<copy>Copia</copy>
+		<createAndCopy>Crea e copia</createAndCopy>
+		<copyToIntranet>Copia nel gruppo Intranet</copyToIntranet>
+		<dontCopy>Non copiare</dontCopy>
+	</policy>
+	
+	<from>Da</from>
+	<until>Fino a</until>
+	<set>Impostare</set>
+	<prefix>Prefisso</prefix>
+	<stylesheet>Foglio di stile</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Aggiungi</add>
+	<edit>Modifica</edit>
+	<save>Salva</save>
+	<activate>Attiva</activate>
+	<deactivate>Disattiva</deactivate>
+	<run>Esegui</run>
+	<remove>Rimuovi</remove>
+	<refresh>Aggiorna</refresh>
+	
+	<days>giorni</days>
+	<hours>ore</hours>
+	<mins>minuti</mins>
+	
+	<threddslang>Linguaggio Metadati </threddslang>
+	<threddsImp>Tipo di importazione</threddsImp>
+	<threddsServiceMdOnly19119>Crea i metadati per tutti i servizi nel catalogo con ISO19119.</threddsServiceMdOnly19119>
+	<threddsCollectionDataset19115>Crea i metadati per le Collection Dataset.</threddsCollectionDataset19115>
+	<threddsAtomicDataset19115>Crea i metadati per Atomic Dataset.</threddsAtomicDataset19115>
+	<threddsCreateDefaultMd>Crea i metadati predefiniti</threddsCreateDefaultMd>
+	<threddsCreateFragments>Personalizza la creazione di metadati utilizzando frammenti XML</threddsCreateFragments>
+  <threddsFragmentStylesheetForCollections>Stylesheet da utilizzare per creare frammenti XML di metadati dai dataset di raccolta</threddsFragmentStylesheetForCollections>
+  <collectionFragmentStylesheet>Collection Stylesheet</collectionFragmentStylesheet>
+  <threddsFragmentStylesheetForAtomics>Stylesheet da utilizzare per creare frammenti XML di metadati dai atomic datasets</threddsFragmentStylesheetForAtomics>
+  <atomicFragmentStylesheet>Atomic Stylesheet</atomicFragmentStylesheet>
+	<threddsCreateSubtemplates>Crea i subtemplate per frammenti (Xlink sarà utilizzato nei metadati generati)</threddsCreateSubtemplates>
+	<threddsIgnoreHarvestOnCollections>Ignora attributo harvesting di raccolta datasets nel catalogo</threddsIgnoreHarvestOnCollections>
+	<threddsOSCollections>Seleziona lo schema per di raccolta dei record di metadati</threddsOSCollections>
+	<threddsIgnoreHarvestOnAtomics>Ignora attributo harvesting in atomic datasets</threddsIgnoreHarvestOnAtomics>
+	<threddsOSAtomics>Seleziona lo schema per atomic metadata records</threddsOSAtomics>
+	<threddsCreateThumbnails>Crea miniature di qualsiasi dataset forniti da WMS</threddsCreateThumbnails>
+	
+	<metadatafragmentsQuery>GetFeature Query</metadatafragmentsQuery>
+	<metadataFragmentsStylesheet>Stylesheet da utilizzare per creare frammenti</metadataFragmentsStylesheet>
+	<template>Template da utilizzare per costruire metadati utilizzando frammenti</template>
+	<fragmentCategory>Categoria per frammenti</fragmentCategory>
+	<recordCategory>Categoria per i record costruiti con frammenti collegati</recordCategory>
+
+	<z3950repositories>Z39.50 Server(s)</z3950repositories>
+	<z3950query>Z39.50 Query</z3950query>
+	
+	<cataUrl>Catalogo URL</cataUrl>
+	<!-- validator messages -->
+
+		<validator>
+		<length>
+			<cannotBeEmpty>Il campo '{NAME}' non può essere vuoto</cannotBeEmpty>
+			<invalidMinSize>Il campo '{NAME}' deve essere lungo almeno {VALUE} carattere/i</invalidMinSize>
+			<invalidMaxSize>Il campo '{NAME}' deve essere lungo al massimo {VALUE} carattere/i</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Il campo '{NAME}' deve essere un intero</notInt>
+			<invalidMinValue>Il campo '{NAME}' deve essere &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Il campo '{NAME}' deve essere &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Il campo '{NAME}' deve essere alfanumerico (starting with a letter)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Il campo '{NAME}' non è un nome host valido</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Il campo '{NAME}' non è un URL valido</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Selezionare almeno una voce</pleaseSelect>
+	<pleaseSelectGroup>Selezionare almeno un gruppo</pleaseSelectGroup>
+	<cannotAdd>Impossibile aggiungere una nuova voce</cannotAdd>
+	<cannotGet>Impossibile ottenere l'accesso/i</cannotGet>
+	<cannotRemove>Non è possibile rimuovere la voce selezionata</cannotRemove>
+	<cannotStart>Non è possibile attivare la voce selezionata/te</cannotStart>
+	<cannotStop>Non è possibile disattivare la voce selezionata/te</cannotStop>
+	<cannotRun>Impossibile eseguire la voce selezionata/te</cannotRun>
+	<confirmRemove>Rimuovere le voci selezionate? I nodi e tutti i metadati raccolti saranno rimossi.</confirmRemove>
+	<everyZero>L'intervallo di harvesting non può essere 0:0:0</everyZero>
+	<pleaseRetrieve>Scaricare alcuni siti prima di eseguire l'azione</pleaseRetrieve>
+	<cannotRetrieve>Impossibile recuperare le informazioni</cannotRetrieve>
+	<cannotUpdate>Impossibile aggiornare le informazioni sul server</cannotUpdate>
+	<supplyHost>Si prega di fornire il parametro 'host'</supplyHost>
+	<supplyServlet>Si prega di fornire il parametro 'servlet'</supplyServlet>
+	<pleaseSpecifySiteId>Specificare un Site ID non vuoto</pleaseSpecifySiteId>
+	<cannotQueryOai>Impossibile interrogare il server OAI-PMH</cannotQueryOai>
+	<gn20Unsafe>Si prega di notare che il collegamento con i nodi GeoNetwork con versioni obsolete è poco sicuro. 
+                    I vecchi nodi non hanno un Site ID unico e questo potrebbe portare a risultati imprevedibili (come rimuovere i nodi da altri harvesting).</gn20Unsafe>			
+	<supplyUrl>Fornire parametro 'url' un valido</supplyUrl>
+	
+	<oper>
+		<op id="0">Vista</op>
+		<op id="1">Download</op>
+		<op id="2">Modifica</op>
+		<op id="3">Notifica</op>
+		<op id="4">Amministrazione</op>
+		<op id="5">Mappa interattiva</op>
+		<op id="6">In evidenza</op>
+	</oper>
+	
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<statusTip>
+		<inactive>Inattivo</inactive>
+		<active>Attivo</active>
+		<running>In Esecuzione</running>
+	</statusTip>
+	
+	<tipHeader>
+		<total>Totale</total>
+		<added>Aggiunto</added>
+		<removed>Rimosso</removed>
+		<updated>Aggiornato</updated>
+		<unchanged>Non modificato</unchanged>
+		<unknownSchema>Schema sconosciuto</unknownSchema>
+		<unretrievable>Impossibile da recuperare</unretrievable>
+		<badFormat>Formato XML errato</badFormat>
+		<doesNotValidate>Non è valido</doesNotValidate>
+		<datasetAdded>Dataset</datasetAdded>
+		<datasetExist>Dataset esistenti</datasetExist>
+		<datasetMdUrl>URL del metadato usato</datasetMdUrl>
+		<thumbnails>Miniature</thumbnails>
+		<thumbnailsFailed>Miniature fallite</thumbnailsFailed>
+		<serviceRecords>Servizi aggiunti</serviceRecords>
+		<collectionDatasetRecords>Collezioni aggiunte</collectionDatasetRecords>
+		<atomicDatasetRecords>Atomic aggiunti</atomicDatasetRecords>
+        <fragmentsAdded>Frammenti aggiunti</fragmentsAdded>
+        <subtemplatesAdded>Sub-template aggiunti</subtemplatesAdded>
+        <fragmentsRemoved>Frammenti rimossi</fragmentsRemoved>
+        <subtemplatesRemoved>Sub-template rimossi</subtemplatesRemoved>
+		<fragmentsUnknownSchema>Frammenti con schema sconosciuto</fragmentsUnknownSchema>
+		<fragmentsReturned>Frammenti ritornati</fragmentsReturned>
+		<fragmentsMatched>Frammenti corrispondenti</fragmentsMatched>
+		<recordsBuilt>Record costruiti</recordsBuilt>
+	</tipHeader>
+	
+	<notRun>Non ancora eseguito</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Nome generico per identificare il nodo di harvesting
+		</tip>
+		
+		<tip id="gn.host">
+			L'host remoto a cui connettersi
+		</tip>
+		
+		<tip id="gn.retrieveSources">
+			Specificare i parametri <i>host</i>, <i>porta</i> e <i>servlet</i>, quindi premere questo bottone per recuperare tutte le sorgenti conosciute al nodo remoto.
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			Specificare i parametri <i>host</i>, <i>porta</i> e <i>servlet</i>, quindi premere questo bottone per recuperare tutti i gruppi accessibile dal nodo remoto.
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Aggiungere una ricerca sul nodo remoto. È necessario specificare almeno una ricerca al fine di
+                        recuperare alcuni metadati.
+		</tip>
+		
+		<tip id="gn.categories">
+			È possibile assegnare una o più categorie di metadati raccolti. Usre il <b>&lt;CTRL&gt;</b> 
+			per selezionare più di una categoria.
+		</tip>
+
+<!-- Z3950 harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+	
+		<tip id="z3950.repositories">
+			Selezionare una o più server Z39.50 mostrati
+		</tip>
+		
+		<tip id="z3950.query">
+			La query deve essere una query Z39.50 valida; es. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "water"
+		</tip>
+	
+		<tip id="z3950.profile">
+			Selezionare un profilo (di gruppo) di server Z39.50
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			La URL fornita deve puntare ad un documento di capabilities. Il formato di una URL di capabilities è del tipo: <i>http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1</i>			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Aggiungere una ricerca sul server remoto. È necessario specificare almeno una ricerca al fine di recuperare alcuni metadati.
+		</tip>
+		
+		<tip id="csw.groups">
+			È possibile scegliere i privilegi da associare ai metadati raccolti.
+		</tip>
+		
+		<tip id="csw.addGroups">
+			Selezionare uno o più gruppi (usando il tasto <b>&lt;CTRL&gt;</b>) sul pannello di sinistra e premere questo pulsante.
+		</tip>
+		
+		<tip id="csw.categories">
+			È possibile assegnare una o più categorie di metadati raccolti. Utilizzare il tasto <b>&lt;CTRL&gt;</b> per selezionare più di una categoria.
+		</tip>
+		<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="ogcwxs.wxstype">
+			Il tipo di servizi web OGC.	
+		</tip>
+		
+		<tip id="ogcwxs.version">
+			La versione dei servizi web OGC.	
+		</tip>
+		
+		<tip id="ogcwxs.lang">
+			La lingua dei metadati prodotti.	
+		</tip>
+		
+		<tip id="ogcwxs.capabUrl">
+			La URL fornita deve puntare ad un punto di ingresso servizio web. Il formato di una URL è del tipo:
+			http://HOST/PATH			
+		</tip>
+		
+		
+		
+		<tip id="ogcwxs.addSearch">
+			Aggiungere una ricerca sul server remoto. È necessario specificare almeno una ricerca al fine di recuperare alcuni metadati.
+		</tip>
+		
+		<tip id="ogcwxs.groups">
+			È possibile scegliere i privilegi da associare ai metadati raccolti.
+		</tip>
+		
+		<tip id="ogcwxs.addGroups">
+			Selezionare uno o più gruppi (usando il tasto <b>&lt;CTRL&gt;</b>) sul pannello di sinistra e premere questo pulsante.
+		</tip>
+		
+		<tip id="ogcwxs.categories">
+			È possibile assegnare una o più categorie di metadati raccolti. Utilizzare il tasto <b>&lt;CTRL&gt;</b> per selezionare più di una categoria.
+		</tip>
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			Questa URL deve puntare al server di OAI-PMH
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Aggiungere una ricerca sul server remoto. Se non si aggiungono criteri di ricerca, verrà effettuata una ricerca senza vincoli usando il formato "oai_dc".
+		</tip>
+		
+		<tip id="oai.groups">
+			È possibile scegliere i privilegi da associare ai metadati raccolti.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Selezionare uno o più gruppi (usando il tasto <b>&lt;CTRL&gt;</b>) sul pannello di sinistra e premere questo pulsante.
+		</tip>
+		
+		<tip id="oai.categories">
+			È possibile assegnare una o più categorie di metadati raccolti. Utilizzare il tasto <b>&lt;CTRL&gt;</b> per selezionare più di una categoria.
+		</tip>
+	
+		<tip id="oai.validate">
+			Scarica solo i metadati formalmente validi secondo il proprio schema.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Rimuovi questo criterio di ricerca
+		</tip>
+		
+		<tip id="oai.from">
+			 Scarica solo i dati a partire dalla data definita..
+		</tip>
+		
+		<tip id="oai.from.set">
+			Apri la finestra per l'impostazione della data iniziale
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Elimina il parametro "Da"
+		</tip>
+		
+		<tip id="oai.until">
+			Se definita, scarica solo i dati fino a questa data.
+		</tip>
+		
+		<tip id="oai.until.set">
+			Open dialog to set UNTIL date
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Elimina il parametro "UNTIL"
+		</tip>
+	
+		<tip id="oai.set">
+			Si può restringere l'harvesting a specifici insiemi di metadati definiti sul nodo remoto.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Scegliere il formato di metadati che si desidera scaricare.
+		</tip>
+	</tips>
+</strings>
+

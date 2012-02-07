@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Validazione del Metadato</heading>
+	<message>Il Metadato è stato validato con successo</message>
+	<schemaTronError>ma ci sono stati errori nella validazione rispetto alle regole dello schematron</schemaTronError>
+	<schemaTronValid>Validazione rispetto alle regole dello schematron riuscita</schemaTronValid>
+	<schemaTronReport>Report dello Schematron disponibile qui</schemaTronReport>
+</strings>

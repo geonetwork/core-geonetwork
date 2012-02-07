@@ -35,6 +35,7 @@ GeoNetwork.OGCUtil.getLanguage = function() {
         case 'ru': language = 'rus'; break;
         case 'pt': language = 'por'; break;
         case 'cn': language = 'chi'; break;
+        case 'it': language = 'ita'; break;
 
         default: language = 'eng';
     }

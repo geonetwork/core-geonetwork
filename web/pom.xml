@@ -365,6 +365,7 @@
 				<include>${geonetwork.build.dir}/scripts/map/lang/fr.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/tr.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/fi.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/lang/it.js</include>
                 
                 <include>${geonetwork.build.dir}/scripts/map/Ext.ux/form/DateTime.js</include>
                 
@@ -532,6 +533,7 @@
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Lang/es.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Lang/tr.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Lang/fi.js</include>
+                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Lang/it.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Drag.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Box.js</include>
                 <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/ZoomBox.js</include>

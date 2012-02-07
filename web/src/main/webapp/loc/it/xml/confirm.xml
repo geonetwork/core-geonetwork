@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<delUserConf>Cancellare l\'utente dal database?</delUserConf>
+	<delUserCsw>Questo utente è il contatto del tuo CSW ISO Profile, vuoi continuare?</delUserCsw>
+</strings>

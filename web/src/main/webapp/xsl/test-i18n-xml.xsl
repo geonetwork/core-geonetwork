@@ -17,6 +17,7 @@
 			<nl />
 			<pt />
 			<ca />
+			<it />
 		</langs>
 	</xsl:variable>
 

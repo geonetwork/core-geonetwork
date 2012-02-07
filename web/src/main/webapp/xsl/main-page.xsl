@@ -75,6 +75,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/ca.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/it.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/tr.js"></script>
 

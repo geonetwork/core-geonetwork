@@ -66,6 +66,8 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"></script>
+
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
                 
@@ -90,6 +92,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>

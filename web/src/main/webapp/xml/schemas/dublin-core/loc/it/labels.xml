@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:dct = "http://purl.org/dc/terms/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>Metadata</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Titolo</label>
+		<description>Nome dato alla risorsa. Tipicamente il titolo sarà un nome con il quale la risorsa è formalmente conosciuta.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Creatore</label>
+		<description>Un soggetto che è il principale responsabile della creazione del contenuto della risorsa.</description>
+      	<example>Esempi di Creatore includono una persona, una organizzazione, un servizio. Tipicamente, il nome di un Creatore dovrebbe essere usato per indicare l'entità.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Oggetto e parole chiave</label>
+		<description>Un argomento del contenuto della risorsa. Tipicamente, l'Oggetto sarà espresso come parole chiave, frasi chiave o codici di classificazione che descrivono un argomento della risorsa.</description>
+		<example>Si raccomanda di prendere i valori da un vocabolario controllato o da uno schema di classificazione formale.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Descrizione</label>
+		<description>Un sommario del contenuto della risorsa.</description>
+		<example>Esempi di Descrizione includono, ma non sono limitati da, un riassunto, una tavola dei contenuti, riferimenti ad una rappresentazione grafica del contenuto, o testo libero di descrizione.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Distributore</label>
+		<description>Un soggetto che rende la risorsa disponibile.</description>
+		<example>Esempi di Distributore includono una persona, una organizzazione, un servizio. Tipicamente, il nome di un Distributore dovrebbe essere usato per indicare l'entità.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Collaboratore</label>
+		<description>Un soggetto che ha contribuito al contenuto della risorsa.</description>
+		<example>Esempi di Collaboratore includono una persona, una organizzazione, un servizio. Tipicamente, il nome di un Collaboratore dovrebbe essere usato per indicare l'entità.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Data</label>
+		<description>La data di un evento nel ciclo di vita di una risorsa. Tipicamente, una Data sarà associata alla creazione o alla pubblicazione della risorsa.</description>
+		<example>Si raccomanda di codificare la data secondo la specifica ISO 8601, che include ,tra le altre, date nel formato AAAA-MM-GG.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Tipo di risorsa</label>
+		<description>La natura o il genere del contenuto della risorsa. Il Tipo include termini che descrivono categorie generali, funzioni, generi, o livelli di aggregazione del contenuto.</description>
+		<example>Si raccomanda di prendere i valori da un vocabolario controllato (ad esempio il vocabolario DCMI). Per descrivere le manifestazioni fisiche o digitali della risorsa si dovrebbe usare l'elemento Formato.</example>
+		<helper>
+			<option value="dataset">Dataset</option>
+			<option value="service">Servizio</option>
+		</helper>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Formato</label>
+		<description>La manifestazioni fisica o digitale della risorsa. Tipicamente, il Formato includerà il tipo di suppoto o le dimensioni della risorsa. Il Formato può essere usato per identificare il software, l'hardware o altra attrezzatura necessaria per visualizzare o utilizzare la risorsa.</description>
+		<example>Esempi di dimensioni includono grandezza e durata. Si raccomanda di prendere i valori da un vocabolario controllato (ad esempio, la lista degli Internet Media Types che definiscono formati di supporti informatici).</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Identificatore</label>
+		<description>Un riferimento univoco alla risorsa all'interno di un dato contesto.</description>
+		<example>Si raccomanda di identificare la risorsa usando un numero o una stringa conforme ad un sistema di identificazione formale. I sistemi di identificazione formale includono gli Uniform Resource Identifier (URI) (e, tra questi, gli Uniform Resource Locator (URL)), i Digital Object Identifier (DOI), e l'International Standard Book Number (ISBN).</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Sorgente</label>
+		<description>Un riferimento ad una risorsa dalla quale deriva la risorsa sotto esame. La risorsa sotto esamo potrebbe derivare dalla Sorgente in parte o del tutto.</description>
+		<example>Si raccomanda di identificare la risorsa riferita usando un numero o una stringa conforme ad un sistema di identificazione formale.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Lingua</label>
+		<description>Una lingua del contenuto della risorsa. Si raccomanda di usare la codifica RFC 3066, la quale, insieme all'ISO 639, definisce etichette a due o tre lettere per la lingua primarie e prevede l'uso di sotto-etichette.</description>
+		<example>Esempi includono "it" o "ita" per l'italiano, "akk" for Accadico, e "en-GB" per l'inglese usato nel Regno Unito.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Relazione</label>
+		<description>Un riferimento ad una risorsa correlata.</description>
+		<example>Si raccomanda di identificare la risorsa riferita usando un numero o una stringa conforme ad un sistema di identificazione formale.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Copertura</label>
+		<description>L'estensione o l'ambito del contenuto della risorsa. Tipicamente, la Copertura includerà la posizione spaziale (il nome di un posto oppure delle coordinate geografiche), un periodo temporale (un nome di un periodo, una data, o un intervallo di date), o una giurisdizione (tipo il nome di un'entità amministrativa). </description>
+		<example>Ad esempio: "North 90, South -90, East 180, West -180. Global". Si raccomanda di prendere i valori da un vocabolario controllato (ad esempio, il vocabolario dei nomi geografici [Thesaurus of Geographic Names - TGN]) e di usare, ove appropriato, nomi di posti o periodi temporali in preferenza a identificatori numerici, tipo coordinate e intervalli temporali.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Diritti</label>
+		<description>Informazioni sui diritti sulla risorsa.</description>
+		<example>Tipicamente, i Diritti conterranno una esposizione sulla gestione dei diritti, o un riferimento ad un servizio che fornisce tali informazioni. Le informazioni sui diritti spesso includono la proprietà intellettuale (Intellectual Property Rights -IPR), Copyright, e altri diritti di proprietà. Se l'elemento Diritti è assente, non deve essere fatta alcuna ipotesi sui diritti sulla risorsa.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Data di modifica</label>
+		<description>Data di modifica del metadato</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Riassunto</label>
+		<description>Un riassunto del contenuto della risorsa.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Spaziale</label>
+		<description>Caratterizzazione spaziale del contenuto della risorsa.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Audience</label>
+		<description>Classe di soggetti a cui la risorsa è diretta o utile.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Metodo di raccolta</label>
+		<description>Metodo con cui i dati sono aggiunti alla collezione.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Periodicità di raccolta</label>
+		<description>La frequenza con cui i dati sono aggiunti alla collezione.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Politica di raccolta</label>
+		<description>La politica che governa l'aggiunta dei dati alla collezione.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Instructional Method</label>
+		<description>A process, used to engender knowledge, attitudes and skills, that the resource is designed to support.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Origine</label>
+		<description>Una esposizione di qualsiasi cambiamente di proprietà o di custodia della risorsa a partire dalla sua creazione, che sia significativa per la sua autenticità, integrità e interpretazione.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Detentore dei diritti</label>
+		<description>Persona o organizzazione che possiede o esercita i diritti sulla risorsa.</description>
+	</element>
+	<!-- ==================================================== -->
+</labels>

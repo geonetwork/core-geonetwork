@@ -48,12 +48,13 @@
         <xsl:variable name="lang">
             <xsl:choose>
                 <xsl:when test="$langGui='ar'">ara</xsl:when>
-				<xsl:when test="$langGui='ca'">cat</xsl:when>				
+                <xsl:when test="$langGui='ca'">cat</xsl:when>				
                 <xsl:when test="$langGui='cn'">chi</xsl:when>
                 <xsl:when test="$langGui='de'">ger</xsl:when>
                 <xsl:when test="$langGui='es'">spa</xsl:when>
                 <xsl:when test="$langGui='fi'">fin</xsl:when>
                 <xsl:when test="$langGui='fr'">fre</xsl:when><!-- TODO : sometimes fra is used in metadata record -->
+                <xsl:when test="$langGui='it'">ita</xsl:when>
                 <xsl:when test="$langGui='nl'">dut</xsl:when>
                 <xsl:when test="$langGui='pt'">por</xsl:when>
                 <xsl:when test="$langGui='ru'">rus</xsl:when>

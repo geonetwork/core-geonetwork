@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<sourceUser>Sorgnte dell'editore</sourceUser>
+	<targetUser>Destinazione dell'editore</targetUser>
+	<sourceGroup>Sorgente del gruppo</sourceGroup>
+	<targetGroup>Destinazione del gruppo</targetGroup>
+	<operation>Operazione</operation>
+	
+	<cannotRetrieve>Non è possibile caricare l'informazione dal server</cannotRetrieve>
+	<cannotTransfer>Non è possibile trasferire la proprietà</cannotTransfer>
+	<noUser>Nessun editor di destinazione a cui trasferire la proprietà</noUser>
+	<transfer>Trasferisci</transfer>
+	<result>trasferiti i privilegi {PRIV} di {MD} metadati</result>
+	<noEditors>Non ci sono editor con metadati associati</noEditors>
+</strings>
+

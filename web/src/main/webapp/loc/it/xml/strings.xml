@@ -1,0 +1,1066 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+        <ar>عربي</ar> <!-- Do not translate! -->
+        <cn>中文</cn> <!-- Do not translate! -->
+        <de>Deutsch</de> <!-- Do not translate! -->
+        <en>English</en> <!-- Do not translate! -->
+        <es>Español</es> <!-- Do not translate! -->
+        <fi>Suomeksi</fi> <!-- Do not translate! -->
+        <fr>Français</fr> <!-- Do not translate! -->
+        <it>Italiano</it> <!-- Do not translate! -->
+        <nl>Nederlands</nl> <!-- Do not translate! -->
+        <ru>Русский</ru> <!-- Do not translate! -->
+        <pt>Рortuguês</pt> <!-- Do not translate! -->
+        <ca>Català</ca> <!-- Do not translate! -->
+        <tr>Türkçe</tr> <!-- Do not translate! -->
+
+	
+    
+    <useStopwords>L'indice Lucene usa stopwords per queste lingue:</useStopwords>    
+    <rebuildIndexMessage>Se si cambiano questi valori, è raccomandato di ricostruire l'indice Lucene.</rebuildIndexMessage>
+	<!-- new strings - SP 2.5 -->
+	<showRemoteHTML>Mostra HTML dal server remoto</showRemoteHTML>
+	<!-- end new strings -->
+
+	<createChild>Crea figlio</createChild>
+	<updateChildren>Aggiorna figli</updateChildren>
+	<updateChildrenOk>Figli aggiornati</updateChildrenOk>
+	<updateChildrenFailed>Aggiornamento dei figli fallito</updateChildrenFailed>
+	<massiveUpdateChildrenTitle>Aggiorna figli</massiveUpdateChildrenTitle>
+	<updateMode>Scegli la strategia applicata per aggiornare i figli dai genitori: </updateMode>
+	<addMode>Aggiungi sezioni</addMode>
+	<replaceMode>Sostituisci sezioni</replaceMode>
+	<updateChildrenHelp>
+		<div>
+			<h2>Maggiori dettagli</h2>
+			Aggiorna tutti i figli del record attuale di metadati. Seleziona la strategia da adottare per ogni sezione principale.
+			<br/>
+			<br/>
+			<b>Aggiungi</b> mantiene la sezione del figlio e aggiunge di seguito l'equivalente sezione del genitore.
+			<b>Sostituisci</b> elimina la sezione del figlio e la sostituisce con l'equivalente del genitore.
+			<br/>
+			<br/>
+			Identificatore del figlio, set dei caratteri, lingua, identifictore del genitore,
+			livello gerarchico, URI del dataset e la sezione identificazione (escluse estensione e parole chiave) sono sempre conservati.
+			I dati locali del genitore sono sempre sostituiti.
+			<br/>
+			<b>Le sezioni <i>distribuzione</i> e <i>manutenzione</i></b> sono sempre sostituite (anche nella modalità Aggiungi) poichè l'
+			ISO19115 non permette di averne più di una.
+		</div>
+	</updateChildrenHelp>
+	<otherActions>Altre azioni</otherActions>
+	<computeExtentFromKeywords>Calcola estensione (aggiungi)</computeExtentFromKeywords>
+	<computeExtentFromKeywordsReplace>Calcola estensione (sostituisci)</computeExtentFromKeywordsReplace>
+	<computeExtentFromKeywordsHelp>L'azione Calcola Estensione analizza le parole chiave dei metadati e ricerca un concetto similare contenente una estensione in tutto i dizionario disponibile.
+        Un'estensione è aggiunta per ogni parola chiave corrispondente. Nella modalità "aggiungi" gli elementi presenti sono conservati. 
+        Nella modalità "sostituisci", il riquadro limite esistente è rimosso (i limiti temporali, verticali e a poligono sono mantenuti). 
+	Salva i record dei metadati prima di lanciare l'esecuzione.</computeExtentFromKeywordsHelp>
+	<shortcutHelp js="true">Aiuto sulle scorciatoie?</shortcutHelp>
+	<helpShortcutsEditor>
+		<h2>Scorciatoie in modalità  <i>compilazione</i>:</h2>
+		<hr/>
+		<ul>
+			<li>ctrl+shift+s: Salva modifiche</li>
+			<li>ctrl+shift+v: Valida documento</li>
+			<li>ctrl+shift+q: Salva modifiche e chiudi</li>
+			<li>ctrl+shift+t: Imposta il thumbnail per il metadato corrente</li>
+			<li>ctrl+shift+r: Reimposta i valori iniziali</li>
+			<li>ctrl+shift+c: Annullare le modifiche</li>
+		</ul>
+	</helpShortcutsEditor>
+	<validationReport js="true">Report di validazione</validationReport>
+	<errorsOnly>Vedi solo errori</errorsOnly>
+	<schematronReport>Conformità con le raccomandazioni sui metadati (Schematron)</schematronReport>
+	<xsdReport>Conformità allo standard dei metadati (XML Schema)</xsdReport>
+	<rules name="schematron-rules-inspire">Disposizioni di esecuzione INSPIRE</rules>
+	<rules name="schematron-rules-iso">Regole ISO 19115/19119</rules>
+	<rules name="schematron-rules-geonetwork">Raccomandazioni di GeoNetwork</rules>	
+	<getCapabilitiesLayer js="true">Strato da GetCapabilities</getCapabilitiesLayer>
+	<ServiceUpdateError js="true">Errore durante il servizio di aggiornamento dei metadati</ServiceUpdateError>
+	<NotOwnerError js="true">Non si hanno i permessi per aggiornare questo record.</NotOwnerError>
+	<NoServiceURLError js="true">Controllare che la URL del servizio selezionato sia definito.</NoServiceURLError>
+	<GetCapabilitiesDocumentError js="true">Errore nel caricamento del servizio GetCapabilities dall'URL: </GetCapabilitiesDocumentError>
+	<noOperatesOn>Nessun dataset collegato</noOperatesOn>
+    <linkedDataset>Dataset collegati:</linkedDataset>
+    <linkedFeatureCatalogue>Cataloghi di entità collegati:</linkedFeatureCatalogue>
+	<linkedFeatureCatalogueHelp>Aggiungi una relazione tra i metadati correnti 
+              e un catalogo di entità nello standard ISO19110.</linkedFeatureCatalogueHelp>
+	<createLinkedFeatureCatalogue>Collega un catalogo di entità</createLinkedFeatureCatalogue>
+	<layerNameHelp js="true">Quando si collegano i metadati sui servizi 
+              con uno o più metadati sui dati, 
+              l'elemento della risorsa associata può contenere il nome del layer 
+              così come definito nel servizio OGC.
+              La lista dei layer del servizio può aiutare il revisore dei metadati ad aggiungere un valore esistente.</layerNameHelp>
+	<layerName js="true">Nome del layer</layerName>
+	<createIfNotExistButton js="true">Crea un nuovo record di metadati</createIfNotExistButton>
+	<associateService js="true">Collega metadati di un servizio</associateService>
+	<associateDataset js="true">Collega metadati di dati</associateDataset>
+	<associateServiceHelp>Per aggiungere un collegamento ai metadati di un servizio, ricerca un servizio e definisci un nome di un layer.</associateServiceHelp>
+	<associateDatasetHelp>Per aggiungere un collegamento ai dati, vai sulla vista ISO &gt; sezione Identificazione, e operare sugli elementi definiti.</associateDatasetHelp>
+	<addParent>Aggiungi o aggiorna la sezione dei metadati genitore</addParent>
+	<createAssoService>Crea una relazione</createAssoService>
+	<updateMdd>Aggiorna i matadati sui dati</updateMdd>
+	<datasetCreate>Crea i metadati sui dati</datasetCreate>
+	<linkedServices>Metadati sul servizio collegato:</linkedServices>
+	<linkedServiceMetadataHelp>Per aggiungere un collegamento ad un servizio, vai su vista ISO &gt; sezione Distribuzione.</linkedServiceMetadataHelp>
+	<linkedParentMetadata>Metadati Genitore/figlio:</linkedParentMetadata>
+	<linkedParentMetadataHelp>Per aggiungere un collegamento ad un genitore, vai su vista ISO &gt; sezione Metadati.</linkedParentMetadataHelp>
+	<linkedChildrenMetadata>Metadati figli:</linkedChildrenMetadata>
+	<linkedChildrenMetadataHelp>Lista di figli collegati al metadato corrente.</linkedChildrenMetadataHelp>
+	<linkedDatasetMetadata>Dati collegati:</linkedDatasetMetadata>
+	<serviceCreate>Crea un nuovo metadato di un servizio</serviceCreate>
+	<parentSearch js="true">Ricerca un record di metadati da assegnare come genitore del record corrente.</parentSearch>
+	<linkedMetadataSelectionWindowTitle js="true">Selezione dei metadati collegati</linkedMetadataSelectionWindowTitle>
+	<searchText js="true">Ricerca testuale</searchText>
+	<mdTitle js="true">Titolo dei Metadati</mdTitle>
+	<createRelation js="true">Crea una relazione</createRelation>
+	<export>Esporta (ZIP)</export>
+	<exportText>Esporta (TXT)</exportText>	
+	<addXMLFragment>Aggiungi dal dizionario ...</addXMLFragment>
+	<translateWithGoogle>Usa il servizio di traduzione di Google per suggerire una versione nella lingua selezionata.</translateWithGoogle>
+	<translateWithGoogle.maxSize js="true">Il testo da tradurre è maggiore di 5000 caratteri (vedi http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
+	<translateWithGoogle.emptyInput js="true">Il campo Lingua principale è vuoto. Aggiungere il valore lingua principale prima di utilizzare il servizio di traduzione.</translateWithGoogle.emptyInput>
+	<layersAdded js="true">I layer selezionati sono stati aggiunti</layersAdded>
+	<registrationFailed js="true">Errore, registrazione fallita:</registrationFailed>	
+	<tryAgain js="true">Riprova più tardi</tryAgain>
+	<cannotRetrieveGroup js="true">Non è stato possibile recuperare i gruppi</cannotRetrieveGroup>
+	<selectNewOwner js="true">Selezionare l'utente che sarà il nuovo proprietario</selectNewOwner>
+	<selectOwnerGroup js="true">Selezionare il gruppo a cui appartiene l'utente selezionato</selectOwnerGroup>
+	<selectOneFile js="true">Selezionare almeno un file da scaricare!</selectOneFile>
+	<checkEmail js="true">Inserire un indirizzo email corretto</checkEmail>
+	<addName js="true">Inserire un nome o un'organizzazione</addName>
+	<noComment js="true">Nessun commento</noComment>
+	<rateMetadataFailed js="true">Non è possibile valutare i metadati.</rateMetadataFailed>
+	<error js="true">Errore</error>
+	<errors>errori</errors>
+	<northSouth js="true">Nord &lt; Sud</northSouth>
+	<north90 js="true">Nord &gt; 90 gradi</north90>
+	<south90 js="true">Sud &lt; -90 gradi</south90>
+	<east180 js="true">Est &gt; 180 gradi</east180>
+	<west180 js="true">Ovest &lt; -180 gradi</west180>
+	<eastWest js="true">Est &lt; Ovest</eastWest>
+	<metadataSelectionError js="true">Errore nella selezione dei metadati.</metadataSelectionError>
+	<closeWindow js="true">Chiudi finestra</closeWindow>
+	<loseYourChange js="true">Premendo OK verrano perdute le modifiche effettuate sui metadati!</loseYourChange>
+	<errorDeleteElement js="true">Errore: Non è possibile eliminare l'elemento</errorDeleteElement>
+	<errorFromDoc js="true">dal documento:</errorFromDoc>
+	<errorMoveElement js="true">Errore: non si può spostare l'elemento</errorMoveElement>
+	<errorAddElement js="true">Errore: non si può aggiungere l'elemento </errorAddElement>
+	<errorSaveFailed js="true">Errore: nono si può salvare la form</errorSaveFailed>
+	<errorOnAction js="true">Errore: non si può effettuare l'operazione</errorOnAction>
+	<errorChangeProtocol js="true">Potrebbe essere stato caricato un file. Rimuovere il file prima di cambiare il protocollo</errorChangeProtocol>
+<!--	<selectOneFile js="true">Ricercare o inserire un nome di file prima di premere carica!</selectOneFile> -->
+	<uploadFailed js="true">Errore: caricamento fallito! - ritorno </uploadFailed>
+	<uploadSetFileNameFailed js="true">Errore: il caricamento è avvenuto ma non è possibile impostare il nome del file!</uploadSetFileNameFailed>
+	<cannotGetTooltip js="true">Impossibile caricare il tooltip dal server</cannotGetTooltip>
+	<maxResults js="true">Numero di risultati</maxResults>
+	<perThesaurus js="true"> per thesaurus</perThesaurus>
+	<anyThesaurus js="true">Ogni thesaurus</anyThesaurus>
+	<selectedKeywords js="true">Parole chiave selezionate</selectedKeywords>
+	<foundKeywords js="true">Parole chiave disponibili</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Seleziona parole chiave</keywordSelectionWindowTitle>
+	<crsSelectionWindowTitle js="true">Seleziona un sistema di riferimento</crsSelectionWindowTitle>
+	<selectedCRS js="true">Sistemi di riferimento selezionati</selectedCRS>
+	<foundCRS js="true">Sistemi di riferimento disponibili</foundCRS>
+	
+	<about>Info</about>
+	<abstract>Descrizione</abstract>
+	<accept>Invia</accept>
+	<actionOnSelect>azioni sulla selezione</actionOnSelect>
+	<add js="true">Aggiungi</add>
+	<addNewMetadata>Aggiungi un nuovo metadato</addNewMetadata>
+	<address>Indirizzo</address>
+	<admin>Amministrazione</admin>
+	<Administrator>Amministratore</Administrator>
+	<agrovocKeyword>Parole chiave di Agrovoc</agrovocKeyword>
+	<all>tutti</all>
+	<any>- Qualunque -</any>
+	<anytime>Nessun filtro temporale</anytime>
+	<appSchInfoTab>App. schema</appSchInfoTab>
+	<assigned>Assegnato</assigned>
+ 	<attrlabl>Etichetta dell'attributo</attrlabl>
+	<availability>Disponibilità</availability>
+	<back>Indietro</back>
+	<backToDescription>Torna alla descrizione del dato</backToDescription>
+	<backToPreviousPage>Torna alla pagina precedente</backToPreviousPage>
+	<backToEditor>Torna alla modifica dei metadati</backToEditor>
+	<batchImport>Importa tutti i metadati formattati in XML secondo lo standard ISO19115 da una directory locale</batchImport>
+	<batchImportTitle>Importazione multipla</batchImportTitle>
+	<begdate>Data di inzio</begdate>
+	<begtime>Data di inzio</begtime>
+	<bgFileDescChoice value="thumbnail">Thumbnail</bgFileDescChoice>
+	<bgFileDescChoice value="large_thumbnail">Thumbnail grande</bgFileDescChoice>
+	<bookmarkDelicious>Bookmark a Delicious</bookmarkDelicious>
+	<bookmarkDigg>Bookmark a Digg</bookmarkDigg>
+	<bookmarkEmail>Invia un riferimento a questo record via email</bookmarkEmail>
+	<bookmarkFacebook>Bookmark a Facebook</bookmarkFacebook>
+	<bookmarkPermanent>Link permanente a questa descrizione</bookmarkPermanent>
+	<bookmarkStumbleUpon>Bookmark a StumbleUpon</bookmarkStumbleUpon>
+	<bounding>Coordinate ai margini</bounding>
+	<boundingRelation value="equal">Uguale a</boundingRelation>
+	<boundingRelation value="overlaps">Si sovrappone a</boundingRelation>
+	<boundingRelation value="encloses">Racchiude</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">E' completamente all'esterno di</boundingRelation>
+	<browse>Sfoglia grafici</browse>
+	<browsen>Sfoglia nomi di file grafici</browsen>
+	<browsed>Sfoglia descrizioni di file grafici</browsed>
+	<browset>Sfoglia tipi di file grafici</browset>>
+	<byGroup>Vista per Gruppo</byGroup>
+	<byPackage>Vista per Package</byPackage>
+	<cancel>Annulla</cancel>
+	<categories>Categorie</categories>
+	<category>Categoria</category>
+	<categoryManagement>Gestione categorie</categoryManagement>
+	<categoryManDes>Aggiungi/modifica/elimina e mostra le categorie</categoryManDes>
+	<categoryNameMandatory>Deve essere inserito un nome per la categoria.</categoryNameMandatory>
+	<changeDate>Data di modifica del metadato</changeDate>
+	<checkusername>Verifica</checkusername>
+	<choose>-Scegli-</choose>
+	<chooseFile>Scegli la posizione del file da caricare</chooseFile>
+	<chooseLargeThumbnail>Scegli la posizione del file della miniatura grande</chooseLargeThumbnail>
+	<chooseThumbnail>Scegli la posizione del file della miniatura piccola</chooseThumbnail>
+	<city>Città</city>
+	<clear js="true">Pulisci</clear>
+	<clearAll>Pulisci tutto</clearAll>
+	<close js="true">Chiudi</close>
+	<completeTab>Visualizzazione avanzata</completeTab>
+	<completeTabEditor>Editor avanzato</completeTabEditor>
+    <confirmCancel>Si è sicuri di voler uscire dalla modalità editor (le modifiche saranno perse)</confirmCancel>
+    <confirmCancelCreate>Si è sicuri di voler interrompere la creazione di questo metadato?</confirmCancelCreate>
+	<confirmDelete>Si è sicuri di voler eliminare il metadato dal catalogo?</confirmDelete>
+	<confirmMassiveDelete>Si è sicuri di voler eliminare tutti i metadati selezionati dal database?</confirmMassiveDelete>
+	<confirmNewPassword>Conferma nuova password</confirmNewPassword>
+	<confirmPassword>Conferma password</confirmPassword>
+	<constraintsTab>Vincoli</constraintsTab>
+	<contactUs>Contatti</contactUs>
+	<contains>Contiene</contains>
+	<contentInfoTab>Informazioni sul contenuto</contentInfoTab>
+	<convert>Converti</convert>
+	<copyright1>Copyright</copyright1>
+	<copyright2><p>Tutti i diritti riservati.<br/> [Dichiarazione generica di copyright] </p></copyright2>
+	<country>Stato</country>
+	<create>Crea</create>
+	<createTip>Crea un nuovo metadato da questo template</createTip>
+	<crs code="EPSG:4326">WGS 84</crs>
+	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+	<cswTest>Test del profilo CSW ISO</cswTest>
+	<cswTestDesc>Pagina di prova del servizio CSW con profilo ISO</cswTestDesc>
+	<dataQualityTab>Qualità dei dati</dataQualityTab>
+	<datasetIssued>Estensione temporale</datasetIssued>
+	<datasetTab>Dataset</datasetTab>
+	<dateModified>Data di modifica</dateModified>
+	<dateRelChoice value="14">Prima</dateRelChoice>
+	<dateRelChoice value="15">Prima o durante</dateRelChoice>
+	<dateRelChoice value="16">Durante</dateRelChoice>
+	<dateRelChoice value="17">Durante o dopo</dateRelChoice>
+	<dateRelChoice value="18">Dopo</dateRelChoice>
+	<dateRelChoice/>
+	<decline>Declina</decline>
+	<definition>Definizione</definition>
+	<del>Elimina</del>
+	<delete>Elimina</delete>
+	<deleteCategory>Eliminare la categoria?</deleteCategory>
+	<deleteConfirmationTitle>Conferma di eliminazione del metadato</deleteConfirmationTitle>	
+	<deleteGroup>Eliminare in gruppo?</deleteGroup>
+	<descriptionTab>Descrizione</descriptionTab>
+	<desSchema>Schema di destinazione</desSchema>
+	<digital>Digitale</digital>
+	<directory>Directory</directory>
+	<dirParameter>(parametro 'dir' obbligatorio)</dirParameter>
+	<disclaimer1>Titolo del Disclaimer</disclaimer1>
+	<disclaimer2>Testo del Disclaimer</disclaimer2>
+	<distributionTab>Distribuzione</distributionTab>
+	<down>Sposta in basso</down>
+	<download>Scarica</download>
+	<downloadable>Scaricabile</downloadable>
+	<downloadData>Dato per lo scaricamento</downloadData>
+	<downloadEmail>Scarica Email</downloadEmail>
+	<downloadSelect>Scarica?</downloadSelect>
+	<downloadSelected>Scarica selezionati</downloadSelected>
+	<downloadSummary>Sommario di scaricamento</downloadSummary>
+	<downloadThemAll>Scarica tutto in locale</downloadThemAll>
+	<dsgpoly>imposta i dati G-Polygon</dsgpoly>
+	<durationDays>giorni</durationDays>
+	<durationHours>ore</durationHours>
+	<durationMinutes>minuti</durationMinutes>
+	<durationMonths>mesi</durationMonths>
+	<durationNbDays>Numero di giorni:</durationNbDays>
+	<durationNbHours>Numero di ore:</durationNbHours>
+	<durationNbMinutes>Numero di minuti:</durationNbMinutes>
+	<durationNbMonths>Numero di mesi:</durationNbMonths>
+	<durationNbSeconds>Numero di secondi:</durationNbSeconds>
+	<durationNbYears>Numero di anni:</durationNbYears>
+	<durationSeconds>secondi</durationSeconds>
+	<durationSign>Durata negativa</durationSign>
+	<durationYears>anni</durationYears>
+	<dynamic>Interattivo</dynamic>
+	<eastbc>Coordinata limite verso est</eastbc>
+	<edit>Modifica</edit>
+	<Editor>Redattore</Editor>
+	<email>Email</email>
+	<emailAddressInvalid js="true">L'indirizzo e-mail non è valido</emailAddressInvalid>
+<!--	<enclosing>Including</enclosing>
+	<enclosingCoordinate>Enclosing coordinates </enclosingCoordinate>-->
+	<enddate>Data finale</enddate>
+	<enttypl>Etichetta del tipo di entità</enttypl>
+	<exactCoordinate>Coordinate esatte</exactCoordinate>
+	<exactTerm>Termine esatto</exactTerm>
+	<extended>Ricerca avanzata</extended>
+	<extensionInfoTab>Info sull'estensione</extensionInfoTab>
+	<extent>Estensione</extent>
+	<featuredMap>In evidenza</featuredMap>
+	<feedback>Feedback</feedback>
+	<feedbackCardTitle>Feedback e commenti</feedbackCardTitle>
+	<feedbackComments>Feedback / commenti</feedbackComments>
+	<feedbackRequest>Per favore, fornisci i tuoi dettagli prima di fare il download</feedbackRequest>
+	<file>File</file>
+	<fileType>tipo di file:</fileType>
+	<fileUploadSuccessful>Caricamento file eseguito correttamente</fileUploadSuccessful>
+	<firstName>Nome</firstName>
+	<firstNameMandatory js="true">il campo Nome è obbligatorio</firstNameMandatory>
+	<foundWords>Numero di parole trovate:</foundWords>
+	<freeKeyword>Parole chiave libere</freeKeyword>
+	<from>Da</from>
+	<fromDateSelector>Seleziona la data di inizio</fromDateSelector>
+	<fuzzy>Accuratezza della ricerca</fuzzy>
+	<fuzzyImprecise>Impreciso</fuzzyImprecise>
+	<fuzzyPrecise>Preciso</fuzzyPrecise>
+	<fuzzySearch>Imposta la precisione della ricerca (da termine esatto a ricerca fuzzy).</fuzzySearch>
+	<general>Generale</general>
+	<generalInfo>Informazione generale</generalInfo>
+	<generateUUID>Genera UUID per il metadato inserito</generateUUID>
+	<georss>Apri un feed GeoRSS</georss>
+	<group>Gruppo</group>
+	<groupManagement>Gestione gruppi</groupManagement>
+	<groupManDes>Aggiungi/modifica/elimina e mostra i gruppi</groupManDes>
+	<groups>Gruppi</groups>
+	<harvestingManagement>Gestione harvesting</harvestingManagement>
+	<harvestingManDes>Aggiungi/modifica/elimina/start/stop i processi di harvesting</harvestingManDes>
+	<help>Aiuto</help>
+    <helpLinkTooltip js="true">Aiuto</helpLinkTooltip>
+	<helpComplete>Aiuto completo</helpComplete>
+	<helperList>Suggerimenti:</helperList>
+	<hideAdvancedOptions>Nascondi opzioni avanzate</hideAdvancedOptions>
+<!--	<highlights>In evidenza</highlights> -->
+	<hitsPerPage>Risultati per pagina</hitsPerPage>
+	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
+	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
+	<home>Home</home>
+	<i18n>Test i18n</i18n>
+	<i18nDesc>Pagina di test dei file di localizzazione</i18nDesc>
+	<identificationTab>Identificazione</identificationTab>
+	<identifier>Identificatore</identifier>
+<!--	<imAreaInterest>Seleziona un'area di interesse</imAreaInterest>
+	<imPan>Sposta</imPan>
+	<import>Importa</import>
+	<imZoomFull>Zoom alla massima estensione</imZoomFull>
+	<imZoomIn>Zoom in</imZoomIn>
+	<imZoomOut>Zoom out</imZoomOut>
+	<imZoomToLayer>Zoom all'estensione del layer selezionato</imZoomToLayer>
+-->
+    <indexLanguages>Stopwords</indexLanguages>
+    <indexLanguagesDes>Scelta delle lingue per le quali sono usati gli stopword</indexLanguagesDes>    
+	<infoTitle>Info</infoTitle>
+	<insert>Inserisci</insert>
+	<insertFileMode js="true">Carica file</insertFileMode>
+	<insertMode>Modalità d'inserimento:</insertMode>
+	<insertPasteMode>Copia/incolla</insertPasteMode>
+	<interactiveMap>Mappa interattiva</interactiveMap>
+<!--	<interMapInfo><h1>nformazioni sulle mappe interattive</h1><p>È possibile trovare mappe interattive cercando in GeoNetwork di dati digitali con una mappa interattiva, oppure connettersi direttamente a un pre-configurato server di mappe.</p><p> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
+	<intermapSearch>Ricerca geografica</intermapSearch>-->
+	<isoAll>ISO: Completo</isoAll>
+	<isoCore>ISO: Base</isoCore>
+	<isoMinimum>ISO: Minimo</isoMinimum>
+	<keyword>Parola chiave</keyword>
+	<keywords js="true">Parole chiave</keywords>
+	<keywordshelp>Seleziona parole chiave multiple usando il tasto Ctrl mentre selezioni con il mouse</keywordshelp>
+	<kind>Tipo</kind>
+	<kindChoice value="company">Società privata</kindChoice>
+	<kindChoice value="consultant">Consulente indipendente</kindChoice>
+	<kindChoice value="gov">Ente governativo</kindChoice>
+	<kindChoice value="int-org">Organizzazione internazionale</kindChoice>
+	<kindChoice value="ngo">ONG</kindChoice>
+	<kindChoice value="other">Altro</kindChoice>
+	<kindChoice value="uni">Università/Centro di ricerca</kindChoice>
+	<label>Etichetta</label>
+	<language>it</language>
+	<large_thumbnail>Clicca per vedere una miniatura più grande</large_thumbnail>
+	<lastNameMandatory js="true">Il campo cognome è obbligatorio</lastNameMandatory>
+	<latitude>Latitudine (tra -90 e 90) in gradi</latitude>
+	<latMax>lat (max)</latMax>
+	<latMin>lat (min)</latMin>
+	<legend>Legenda</legend>
+	<link>Collegamento</link>
+	<links>Collegamenti</links>
+	<loading>Caricamento ...</loading>
+	<local>ricerca locale</local>
+	<localiz>Localizzazione</localiz>
+	<localizationHelp>Attenzione! Questa form permette di aggiungere un valore chiave al database. Il valore non deve contenere spazi.<br/> Dopo aver aggiunto nuovi valori chiave, usare la pagina "Localizzazione" nel pannello di amministrazione per fornire il vero nome che si desidera visualizzare sul sito nelle diverse lingue.</localizationHelp>
+	<localizDes>Permette di cambiare le entità localizzate, come gruppi, categorie, ecc..</localizDes>
+	<localType>Locale</localType>
+	<location>Dove?</location>
+	<login>Login</login>
+	<loginCardTitle>Login / Accedi</loginCardTitle>
+	<loginwarning>Richiesto solamente per l'amministrazione del sito</loginwarning>
+	<logout>Logout</logout>
+	<logoutDes>Scollegamento</logoutDes>
+	<longitude>Longitudine (tra -180 e 180) in gradi</longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
+	<mainpageTitle>Trova mappe interattive, dati GIS, Immagini Satellitari e applicazioni relative</mainpageTitle>
+	<maintenanceTab>Manutenzione</maintenanceTab>
+	<management>Gestione</management>
+	<mandatory>Obbligatorio</mandatory>
+	<mandatoryIf>Obbligatorio se</mandatoryIf>
+	<mapType>Tipo di mappa</mapType>
+	<mapViewerClose>Chiudi Map Viewer</mapViewerClose>
+	<mapViewerLoading>Caricamento Map Viewer...</mapViewerLoading>
+	<mapViewerOpen>Apri Map Viewer</mapViewerOpen>
+	<massiveActions>Azioni in blocco:</massiveActions>
+	<massiveDeleteTitle>Operazione di eliminazione in blocco</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Riassegnazione in blocco del proprietario</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Operazione di aggiornamento categorie in blocco</massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Operazione di aggiornamento privilegi in blocco</massiveUpdatePrivilegesTitle>
+	<max>Massimo</max>
+	<mdRating>Votazione del dato</mdRating>
+	<mdUpdateError>Errore di aggiornamento</mdUpdateError>
+	<mefFile>file MEF</mefFile>
+	<message>Il nome utente o la password sono errati.<br/>Premere il bottone 'indietro' e provare di nuovo.</message>
+	<messageMdUpdateError>Spiacenti, si è verificato un errore durante l'aggiornamento del metadato.</messageMdUpdateError>
+	<messageChanged>Il metadato è stato modificato da un altro utente. Provare nuovamente.</messageChanged>
+	<messageDownload>Grazie per l'interesse. Cliccare su download per ricevere il dato.</messageDownload>
+	<messageLargeFile>Il file è troppo grande</messageLargeFile>
+	<messageNoPrivileges>Non si hanno i privilegi per eseguire l'azione.</messageNoPrivileges>
+	<messageNotPerformed>L'operazione richiesta potrebbe non essere eseguita.</messageNotPerformed>
+	<metadata.admin.index.desc>Ricostruisci l'indice Lucene</metadata.admin.index.desc>
+	<metadata.admin.index.failed>Operazione di indicizzazione fallita.</metadata.admin.index.failed>
+	<metadata.admin.index.success>Operazione di indicizzazione eseguita correttamente.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Ottimizza l'indice Lucene</metadata.admin.index.optimize.desc>
+	<metadata.admin.index.rebuildxlinks.desc>Pulisce la cache XLink e ricostruisce l'indice dei record con XLinks</metadata.admin.index.rebuildxlinks.desc>
+	<rebuildxlinks>Ricostruisce XLinks</rebuildxlinks>
+	<doYouReallyWantToDoThis js="true">Questa operazione potrebbe richiedere molto tempo sui cataloghi di grandi dimensioni e non dovrebbe essere effettuata nei periodi di massimo carico. Continuare?</doYouReallyWantToDoThis>
+	<optimize>Ottimizza</optimize>
+	<metadata.admin.index>Indice amministratore</metadata.admin.index>
+    <metadata-samples>Metadati di esempio</metadata-samples>
+    <metadata-samples-add>Aggiungi alcuni metadati di esempio</metadata-samples-add>
+    <metadata-samples-add-failed>Aggiunta di metadati di esempio fallita</metadata-samples-add-failed>
+    <metadata-samples-add-success>Metadati di esempio aggiunti con successo</metadata-samples-add-success>
+	<metadata-template-order>Organizza template</metadata-template-order>	
+	<metadata-template-order-desc>Ordina i tuoi template</metadata-template-order-desc>	
+	<metadata-template-add-default>Aggiungi template</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Aggiungi i template di default</metadata-template-add-default-desc>	
+	<metadata-template-select>Seleziona i template da aggiungere</metadata-template-select>	
+    <metadata>Metadati</metadata>
+	<metadataAdded>Aggiunti metadati con ID:</metadataAdded>
+	<metadataDeleted>Elimina metadati con ID:</metadataDeleted>
+	<metadataInsertResults>Risultati dell'importazione del metadato</metadataInsertResults>
+	<metadataJSForm>Metadato da una Form JS</metadataJSForm>
+	<metadataRecordsAdded>Numero totale di record di metadati aggiunti:</metadataRecordsAdded>
+	<min>Minimo</min>
+	<missing>MANCANTE o VUOTO</missing>
+	<missingSeeTab>MANCANTE- Vedere la scheda seguente nella barra laterale:</missingSeeTab>
+	<more>continua</more>
+	<moreinfo>Per maggiori informazioni contattare </moreinfo>
+	<name>Nome</name>
+	<newGroup>Aggiunge un nuovo gruppo</newGroup>
+	<newCategory>Aggiunge una nuova categoria</newCategory>
+	<newMdDes>Aggiunge un nuovo metadato in GeoNetwork utilizzando un template</newMdDes>
+	<newMdInsert>Nuovi metadati inseriti:</newMdInsert>
+	<newMetadata>Crea metadato</newMetadata>
+	<newOwner>Nuovo proprietario</newOwner>
+	<newPassword>Nuova password</newPassword>
+	<newUser>Aggiungi nuovo utente</newUser>
+	<next>Prossimo</next>
+	<noCategory>Nessuna categoria disponibile.</noCategory>
+	<noHelp>Spiacente, aiuto non disponibile</noHelp>
+	<noInfo>Spiacente, informazione non disponibile</noInfo>>
+	<noLogin>Non si è loggati</noLogin>
+	<none>nessuno</none>
+	<noOwnerRights>Privilegi/categorie bloccate: Non si hanno diritti sufficienti</noOwnerRights>
+	<northbc>Coordinata limite verso nord</northbc>
+	<noSelectedMd>Nessuna selezione, prima selezionare un metadato.</noSelectedMd>
+	<noTemplatesAvailable>Nessun template disponibile, prima importare un metadato.</noTemplatesAvailable>
+	<notfound>Non trovato</notfound>
+	<nothing>Nessuna azione in fase di import</nothing>
+	<notifications>Notifiche</notifications>
+	<online>Mappa interattiva</online>
+	<onlink>Collegamento online</onlink>
+	<opensearch>Il servizio opensearch di GeoNetwork permette la ricerca nel catalogo dei metadati.</opensearch>
+	<operation>Operazione</operation>
+	<options>Opzioni</options>
+	<organisation>Organizzazione/dipartimento</organisation>
+	<output>Output</output>
+	<outputType id="full">Completo</outputType>
+	<outputType id="text">Solo testo</outputType>
+	<overwrite>Sovrascrivi i metadati con lo stesso UUID</overwrite>
+	<overwriteFile>Sovrascrivi?</overwriteFile>
+	<owner>Proprietario</owner>
+	<ownerRights>Elimina/Privilegi/Categorie sbloccati: si possiedono i diritti di proprietario</ownerRights>
+	<page>Pagina </page>
+	<paper>Stampa</paper>
+	<partial>Sovrapposizione parziale</partial>
+	<partialCooordinate>Coordinate parziali </partialCooordinate>
+	<password>Password</password>
+	<passwordDoNotMatch>Non è stata inserita la stessa password due volte. Ridigitare la password.</passwordDoNotMatch>
+	<passwordEntry>Digita la tua password due volte.</passwordEntry>
+	<passwordLength>La tua password deve essere lunga almeno " + minLength + " caratteri. Riprova.</passwordLength>
+	<passwordOldRequired>La vecchia password è obbligatoria</passwordOldRequired>
+	<passwordSpace>Spiacente, gli spazi non sono ammessi nella password.</passwordSpace>
+	<persInfo>Informazioni personali</persInfo>
+	<placeKeyword>Inserire parole chiave</placeKeyword>
+	<porCatInfoTab>Catalogo</porCatInfoTab>
+	<poweredBy>Powered by </poweredBy>
+	<previous>Precedente</previous>
+	<privileges>Privilegi</privileges>
+	<profile>Profilo</profile>
+	<profileChoice value="Administrator">Amministratore</profileChoice>
+	<profileChoice value="Editor">Redattore</profileChoice>
+	<profileChoice value="RegisteredUser">Utente registrato</profileChoice>
+	<profileChoice value="Reviewer">Revisore</profileChoice>
+	<profileChoice value="UserAdmin">Utente amministratore</profileChoice>
+	<progress>Procedere</progress>
+	<progressChoice value="complete">completo</progressChoice>
+	<progressChoice value="in-work">in lavorazione</progressChoice>
+	<progressChoice value="planned">pianificato</progressChoice>
+	<progressChoice/>
+	<protocol>Protocollo</protocol>
+	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service: file di configurazione (*.AXL)</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
+    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
+    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
+    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
+    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
+    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Service</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File scaricabile (FTP)</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File scaricabile (HTTP)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Indirizzo web (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Indirizzo web di collaboratori (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Risorsa correlata (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Feed RSS (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Prodotto d'esempio (URL)</protocolChoice>
+	<protocolChoice show="-" value="UKST">Tipo di servizio sconosciuto</protocolChoice>
+	<pubdate>Data di pubblicazione</pubdate>
+	<publicationDate>Data di pubblicazione</publicationDate>
+	<publisher>Redattore</publisher>
+	<purpose>Scopo</purpose>
+	<rateIt>Dài un voto</rateIt>
+	<ratingMsg>Premi un tasto per dare un voto. Ci potrebbe volere un po' di tempo prima che i nuovi voti siano visibili.</ratingMsg>
+	<rawMetadata>Inserire metadato grezzo</rawMetadata>
+	<rebuild>Riorganizza</rebuild>
+	<recentAdditions>Modifiche recenti</recentAdditions>
+	<refSysTab>Sistema di riferimento</refSysTab>
+	<region>Regione</region>
+	<register>Registra</register>
+	<registerChoose>Voglio </registerChoose>
+	<RegisteredUser>Utente registrato</RegisteredUser>
+	<registerTitle>Maschera di autoregistrazione</registerTitle>
+	<registrationDetails>Dettagli chiave di registrazione inseriti: </registrationDetails>
+	<remote>Ricerca remota</remote>
+	<remoteType>Remoto</remoteType>
+	<remoteUpdates>Aggiornamenti remoti</remoteUpdates>
+	<remove>rimuovi</remove>
+	<res>risultati</res>
+	<reset>Reset</reset>
+	<resetFeedbackForm>Pulisci la maschera di feedback</resetFeedbackForm>
+	<resetPassword>Reset password</resetPassword>
+	<resetSearch>Pulisci la maschera di ricerca</resetSearch>
+	<ress>risultato</ress>
+	<restrictTo>Limita a</restrictTo>
+	<result>Ultimi risultati</result>
+	<resultsCoordinate>Risultati che soddisfano la ricerca per coordinate</resultsCoordinate>
+	<resultsFreeText>Risultati che soddisfano la ricerca per testo libero</resultsFreeText>
+	<resultsMatching>Risultati aggregati che soddisfano il criterio di ricerca:</resultsMatching>
+	<Reviewer>Revisore</Reviewer>
+	<rss>Apri un feed RSS</rss>
+	<rtitle>Titolo</rtitle>
+	<save>Salva</save>
+	<saveAndClose>Salva e chiudi</saveAndClose>
+	<saveAndValidate>Controlla</saveAndValidate>
+	<savepdf>Salva il risultato della ricerca come PDF</savepdf>
+	<printSelection>Stampa come PDF</printSelection>
+	<schema>Schema</schema>
+	<schematronError>Errore di Schematron</schematronError>
+	<search>Ricerca</search>
+	<searchAllText>Cosa?</searchAllText>
+	<searchBox>Ricerca per Data e Informazione</searchBox>
+	<searchIndex>Indice di ricerca</searchIndex>
+	<searching js="true">... Ricerca in corso ...</searching>
+	<searchPage>Pagina di ricerca</searchPage>
+	<searchPageDes>Salta alla pagina di ricerca metadati</searchPageDes>
+	<searchTemplates>ricerca template</searchTemplates>
+	<searchText>Cosa?</searchText>
+	<searchUnused>Ricerca metadato non usato o vuoto</searchUnused>
+	<searchUnusedTitle>Ricerca metadati non usati</searchUnusedTitle>
+	<select>Seleziona:</select>
+	<selectAll>Seleziona tutti i metadati</selectAll>
+	<selectAllNotPossible>Troppi elementi! Devono essere meno di</selectAllNotPossible>
+	<selected> selezionati</selected>
+	<selectedOnly>Visualizza solo i selezionati</selectedOnly>
+	<selection>Selezione</selection>
+	<selectNone>Deseleziona metadati selezionati</selectNone>
+	<server>Server</server>
+	<setAll>Imposta tutto</setAll>
+	<setOnSave>Il valore verrà impostato quando il record verrà salvato</setOnSave>
+	<shibLogin>Login Shibboleth</shibLogin>
+	<show>Metadati</show>
+	<showFileDownloadSummary>Mostra il selezionatore di file da scaricare</showFileDownloadSummary>
+	<simple>Ricerca semplice</simple>
+	<simpleTab>Vista base</simpleTab>
+	<simpleTabEditor>Editor di default</simpleTabEditor>
+	<singleFile>file singolo (XML, SLD, WMC...)</singleFile>
+	<site>Sito</site>
+	<siteId>ID del sito</siteId>
+	<sizeBytes>Dimensione (bytes)</sizeBytes>
+	<sortBy>Ordina per</sortBy>
+	<sortByType id="changeDate">Data di modifica</sortByType>
+	<sortByType id="popularity">Popolarità</sortByType>
+	<sortByType id="rating">Valutazione</sortByType>
+	<sortByType id="relevance">Rilevanza</sortByType>
+	<sortByType id="title">Titolo</sortByType>
+	<southbc>Coordinata limite verso sud</southbc>
+	<spacesNot js="true">In questo campo gli spazi non sono ammessi</spacesNot>
+	<spatial2Tab>Rappr. Spaz.</spatial2Tab>
+	<spatialTab>Info Spaz.</spatialTab>
+	<startsWith>Comincia con</startsWith>
+	<state>Stato</state>
+	<styleSheet>Foglio di stile</styleSheet>
+	<submit>Invia</submit>
+	<subtemplate>Subtemplate</subtemplate>
+	<subtemplateTitle>Titolo del subtemplate</subtemplateTitle>
+	<summaryTab>Sommario</summaryTab>
+	<surName>Cognome</surName>
+	<systemConfig>Configurazione del sistema</systemConfig>
+	<systemConfigDes>Permette di modificare alcuni parametri del sistema</systemConfigDes>
+	<template>Template</template>
+	<Term>Condizioni</Term>
+	<thanks>Grazie per l'iniziativa. GeoNetwork</thanks>
+	<theme>Categoria ISO del soggetto</theme>
+	<thumbnails>Miniature</thumbnails>
+	<timeout>Timeout</timeout>
+	<timeoutChoice value="10">dopo 10 secondi</timeoutChoice>
+	<timeoutChoice value="20">dopo 20 secondi</timeoutChoice>
+	<timeoutChoice value="30">dopo 30 secondi</timeoutChoice>
+	<title>GeoNetwork - Il portale dell'informazione territoriale</title>
+	<to>A</to>
+	<toDateSelector>Seleziona la data di fine</toDateSelector>
+	<tools>Strumenti</tools>
+	<topic>Argomento</topic>
+	<transferOwnership>Riassegna metadati</transferOwnership>
+	<transferOwnershipDes>Trasferisci la proprietà del metadato ad un altro utente</transferOwnershipDes>
+	<type>Tipo</type>
+	<up>Sposta in alto</up>
+	<update>Aggiorna</update>
+	<updateCategories>Aggiorna categorie</updateCategories>
+	<updateCategory>Aggiorna categoria</updateCategory>
+	<updateGroup>Aggiorna gruppo</updateGroup>
+	<updatePrivileges>Aggiorna privilegi</updatePrivileges>
+	<updateUserAccount>Aggiorna l'account dell'utente </updateUserAccount>
+	<upload>Carica</upload>
+	<user>Utente</user>
+	<UserAdmin>Utente amministratore</UserAdmin>
+	<userAtLeastOneGroup js="true">Selezionare almeno un gruppo.</userAtLeastOneGroup>
+	<userDefined>- Definito dall'utente -</userDefined>
+	<userInfo>Modifica l'informazione dell'utente</userInfo>
+	<userInfoDes>Permetti all'utente corrente di modificare le proprie informazioni</userInfoDes>
+	<userManagement>Gestione utenti</userManagement>
+	<userManDes>Aggiungi/modifica/cancella e mostra utenti</userManDes>
+	<username>Nome Utente</username>
+	<usernameMandatory>Il campo 'Nome Utente' è obbligatorio.</usernameMandatory>
+	<userPw>Cambia password</userPw>
+	<userPwDes>Permetti all'utente corrente di cambiare la password</userPwDes>
+	<uuidAction>Importa azioni:</uuidAction>
+	<validate>Valida</validate>
+	<validityBegins>Inizio validazione</validityBegins>
+	<validityEnds>e fine</validityEnds>
+	<view>Vista</view>
+	<viewInGE>Vista in Google Earth</viewInGE>
+	<waitGetCap js="true">Caricamento layer dal server, attendere...</waitGetCap>
+	<westbc>Coordinata limite verso ovest</westbc>
+	<what>Cosa?</what>
+	<when>Quando?</when>
+	<where>Dove?</where>
+	<winInfo1>Questa finestra mostra le risorse di GeoNetwork. Questa finestra può essere nascosta a volte, a seconda di come il browser gestisce le finestre. In questo caso, si dovrà attivare e disattivare manualmente la finestra in primo piano quando è necessario.</winInfo1>
+	<winInfo2>Attraverso l'icona di Help (?) puoi accedere a spiegazioni. Quando attivi questa icona, il suo output sarà visualizzato in questa finestra.</winInfo2>
+	<wwwlink>Web link</wwwlink>
+	<xmlInsert>Importa i metadati formattati in XML o MEF</xmlInsert>
+	<xmlInsertTitle>Importa metadato</xmlInsertTitle>
+	<xmlTab>Vista XML</xmlTab>
+	<inspireTab>Vista INSPIRE</inspireTab>
+	<inspireSection>
+		<identification>
+			<title>Identificazione</title>
+			<help>
+				<div>
+				Saranno forniti i seguenti elementi di metadato:
+				<ul>
+					<li>Titolo della risorsa:
+						E' un nome caratteristico, spesso unico, mediante il quale la risorsa è riconosciuta. Il dominio è testo libero.</li>
+					<li>Riassunto della risorsa:
+						E' un breve riassunto narrativo del contenuto della risorsa. Il dominio è testo libero.</li>
+					<li>Tipo di risorsa:
+						E' il tipo di risorsa descritta dai metadati. Il dominio è definito nella parte D.1.</li>
+					<li>Indirizzo della risorsa:
+						L'indirizzo della risorsa definisce il link alla risorsa o ad informazioni aggiuntive. Il dominio è stringa di caratteri, tipicamente come Uniform Resource Locator (URL).</li>
+					<li>Identificatore univoco della risorsa:
+						E' un valore che identifica univocamente la risorsa. Il dominio è obbligatoriamente un codice stringa, generalmente assegnato dal proprietario del dato e una stringa di caratteri relativa al contesto del codice identificativo (ad esempio il proprietario).	</li>
+					<li>Risorsa abbinata:
+						Se la risorsa è un servizio geografico, questo metadato ne identifica i dati di riferimento attraverso il loro Unique Resource Identifiers (URI). Il dominio è obbligatoriamente stringa di caratteri.Il dominio è obbligatoriamente un codice stringa, generalmente assegnato dal proprietario del dato e una stringa di caratteri relativa al contesto del codice identificativo (ad esempio il proprietario).</li>
+					<li>Lingua della risorsa:
+						Indica la lingua usata dalla risorsa. Il dominio è limitato alle lingue definite nello standard ISO 639-2.</li>
+				</ul>
+				</div>
+			</help>
+		</identification>
+		<classification>
+			<title>Classificazione di dati geografici e servizi</title>
+			<help>
+				<div>
+					<ul>
+						<li>Categoria del soggetto:			
+						La categoria del soggetto è uno schema di classificazione ad alto livello per aiutare nella ricerca basata su un argomento di risorse disponibili. Il dominio è definito nella parte D.2.</li>
+						<li>
+							Tipo di servizio geografico: 
+							E' una classificazione per aiutare nella ricerca di servizi geografici disponibili. Uno specifico servizio dovrebbe essere catalogato in una sola categoria. Il dominio è definito nella parte D.3.
+						</li>
+					</ul>
+				</div>
+			</help>
+		</classification>
+		<keywords>
+			<title>Parole chiave &amp;Temi INSPIRE</title>
+			<help>
+				<div>
+					In osservanza delle disposizioni di esecuzione di INSPIRE, se una risorsa è un dato geografico o una serie di dati geografici, almeno una parola chiave dovrebbe essere fornita dal General Environmental Multi-lingual Thesaurus (GEMET), descrivendo il tema principale come definito nelle appendici I, II or III della direttiva 2007/2/EC.
+					<br/>					
+					I titoli e le definizioni di tutti i 34 Temi di Dati Geografici di INSPIRE Spatial Data Themes sono stati integrati nel General Environmental Multi-lingual Thesaurus (GEMET) nelle 23 lingue ufficiali comunitarie: http://www.eionet.europa.eu/gemet/inspire_themes.
+					<br/>
+					Si noti che, in aggiunta ai temi geografici di INSPIRE, anche altre parole chiave possono essere aggiunte. Queste possono essere descritte come testo libero o possono derivare da un vocabolario controllato. In quest'ultimo caso la occorre citare il vocabolario d'origine, come descritto di seguito. 
+				</div>
+			</help>
+		</keywords>
+		<geoloc>
+			<title>Localizzazione geografica</title>
+			<help>
+				<div>
+					I requisiti per la localizzazione geografica con riferimento all'articolo Article 11(2)(e) della Direttiva 2007/2/EC dovrebbero essere indicati con un elemento dei metadati contenente i limiti geografici.
+					Questa è l'estensione geografica della risorsa nello spazio, espressa come area che la contiene. L'area dovrebbe essere espressa con le longitudini limite est ed ovest, con le latitudini limite nord e sud, con una precisione di almeno 2 decimali. 
+				</div>
+			</help>
+		</geoloc>
+		<temporal>
+			<title>Riferimento temporale</title>
+			<help>
+				<div>
+					Questo elemento dei  metadati risponde al requisito di avere informazioni sulla dimensione temporale dei dati, come stabilito dall'Articolo 8(2)(d) della Direttiva 2007/2/EC. Dovrebbe essere fornito almeno uno degli elementi dei metadati riferiti ai punti da 5.1 a 5.4. Il dominio è un insieme di date, ciascuna delle quali è riferita ad un sistema di riferimento temporale e dovrebbe essere espressa in una forma compatibile con quel sistema. Il sistema di default è quello Gregoriano, secondo lo standard ISO 8601.
+					<br/>
+					L'estensione temporale definisce il periodo coperto dal contenuto della risorsa.
+					
+					Questo periodo può essere espresso come uno tra i seguenti:
+					<ul>					
+						<li>una singola data</li>
+						<li>un intervallo espresso come data inziale e finale</li>
+						<li>un insieme di date singole ed intervalli</li>
+					</ul>
+				</div>
+			</help>
+		</temporal>
+		<quality>
+			<title>Qualità e validità</title>
+			<help>
+				<div> I requisiti di cui agli articoli 5(2) e 11(2) della Direttiva 2007/2/EC relativi alla qualità e validità dei dati geografici dovrebbero essere soddisfatti dai seguenti elementi: 
+					<ul>
+						<li>Genealogia:
+						E' una dichiarazione sulla storia del processo e/o sulla qualità globale dell'insieme dei dati geografici. Dove compatibile può includere un'asserzione se i dati sono stati validati o la cui qualità verificata, se è la versione ufficiale (in caso di più versioni) e se hanno validità ufficiale. Il dominio è testo libero.</li>
+						<li>
+							Risoluzione spaziale:
+							
+							La risoluzione spaziale indica il livello di dettaglio dei dati. Dovrebbe essere espressa come una distanza (per dati grigliati e raster) o come scala equivalente (per carte e prodotti derivati dalle carte). Una scala equivalente è generalmente espressa come un intero che rappresenta il denominatore. Una distanza di risoluzione dovrebbe essere espressa come un valore numerico con un'unità di misura.
+						</li>
+					</ul>				
+				</div>
+			</help>
+		</quality>
+		<conformity>
+			<title>Conformità</title>
+			<help>
+				<div>
+					I requisiti di cui agli articoli 5(2)(a) e 11(2)(d) della Direttiva 2007/2/EC che concernono la conformità e il grado di conformità, con le disposizioni di esecuzione adottate secondo l'Articolo 7(1) della Direttiva 2007/2/EC dovrebbero essere soddisfatti dai seguenti elementi:
+					<ul>
+						<li>Specifica:					
+							E' una citazione delle disposizioni di esecuzione adottate ai sensi dell' Articolo 7(1) della Direttiva 2007/2/EC o altre specifiche alle quali una risorsa si conforma. Una risorsa può adattarsi a più di una disposizione di esecuzione di cui all'Articolo 7(1) della Direttiva 2007/2/EC o altra specifica.
+							La citazione dovrebbe includere almeno il titolo e la data di riferimento (data di pubblicazione, data dell'ultima revisione o della creazione) della specifica relativa.
+						</li>
+						<li>Grado:					
+							E' il grado di conformità della risorsa alle disposizioni di esecuzione di cui all'Articolo 7(1) della Direttiva 2007/2/EC o altra specifica. Il dominio è definito nella parte D.							
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</conformity>
+		<constraint>
+			<title>Vincoli relativi all'accesso e all'uso</title>
+			<help>
+				<div>
+					Un vincolo relativo all'accesso e all'uso dovrebbe essere uno o entrambi i seguenti:
+					<ul>
+						<li>Condizioni che si applicano all'accesso e all'uso:					
+							Questo elemento di metadati definisce le condizioni per l'accesso e l'utilizzo di dati geografici e servizi e, dove applicabile, delle tariffe corrispondenti, come richiesto dagli articoli 5(2)(b) e 11(2)(f) della Direttiva 2007/2/EC. Il dominio è testo libero, ma l'elemento deve contenere valori numerici.
+							
+							Se nessuna condizione è applicabile, si dovrà usare "nessun criterio applicabile".
+Se non si conoscono i criteri, si dovrà usare "Criteri sconosciuti".
+Questo elemento fornisce anche informazioni su eventuali tariffe richieste per accedere e usare la risorsa, se applicabile, o far riferimento ad una URL dove si possono reperire le informazioni sulle tariffe.							
+						</li>
+						<li>Limitazioni all'accesso pubblico: 
+							Quando gli stati membri limitano l'accesso pubblico ai dati ed ai servizi geografici ai sensi dell'Articolo 13 della Direttiva 2007/2/EC, questo elemento dovrebbe fornire informazioni sulle limitazioni e le loro motivazioni. Se non ci sono limitazioni questo campo dovrebbe indicarlo. Il dominio è testo libero.							
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</constraint>
+		<org>
+			<title>Organizzazioni responsabili per la fornitura, la gestione, la manutenzione e la distribuzione</title>
+			<help>
+				<div>
+					Per gli obiettivi delgli Articoli 5(2)(d) e 11(2)(g) della Direttiva 2007/2/EC, i seguenti due elementi di metadati devono essere forniti:
+					<ul>
+						<li>Responsabile:
+							E' la descrizione del responsabile dell'organizzazione per la fornitura, la gestione, la manutenzione e la distribuzione della risorsa. Questa descrizione dovrebbe contenere:
+							il nome dell'organizzazione come testo libero e l'indirizzo email di contatto come stringa di caratteri.							
+						</li>
+						<li>Il ruolo del Responsabile:					
+							E' il ruolo dell'organizzazione responsabile. Il dominio è definito nella parte D.6.	
+						</li>
+					</ul>
+				</div>
+			</help>
+		</org>
+		<metadata>
+			<title>Metadati</title>
+			<help>Agli effetti dell'articolo 5(1) della Direttiva 2007/2/EC.</help>
+		</metadata>
+	</inspireSection>
+	<inspireAddConformity>Aggiungi la sezione di conformità ad INSPIRE</inspireAddConformity>
+	<xsdError>Errore di validazione XSD</xsdError>
+	<yourRegistration js="true">La tua registrazione...</yourRegistration>
+	<zip>Zip</zip>
+    	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.creator" content="GeoNetwork Team"/>
+		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="English French Spanish German Russian Chinese Dutch Portuguese"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<mainpage1>
+		<h1>Gli obiettivi di GeoNetwork sono:</h1>
+		<ul>
+			<li>Migliorare l'accesso e l'uso integrato di dati geografici ed informazioni</li>
+			<li>Supporto alle decisioni</li>
+			<li>Promuovere approcci interdisciplinari allo sviluppo sostenibile</li>
+			<li>Migliorare la conoscenza dei benefici dell'informazione geografica</li>
+		</ul>
+	</mainpage1>
+	<mainpage2>
+		<p>
+		GeoNetwork opensource permette di condividere semplicemente l'informazione geografica tematica tra organizzazioni differenti. 
+		Per maggiori informazioni si prega di contattare
+		</p>
+	</mainpage2>
+	<mainhelp1> Come ricercare... </mainhelp1>
+	<mainhelp2> Nascondi l'aiuto... </mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2"> Si può ricercare usando una delle opzioni fornite o una loro combinazione.<br/> Solo i risultati che soddisfano tutti i criteri verranno visualizzati. </font>
+		</p>
+		<p>
+			<font size="-2"> La ricerca <b>Cosa?</b> estrae il testo corrispondente in tutti i campi dei metadati contenuti in GeoNetwork. <br/>
+				<i> Quando si specifica più di una parola nel campo <b>Testo libero</b> esse saranno interpretate dal sistema come separate da AND. </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> La ricerca per <b>Argomento</b> troverà carte che corrispondono ad uno specifico argomento. </font>
+		</p>
+		<p>
+			<font size="-2"> La ricerca per <b>Dove?</b> troverà carte che corrispondono al parallelepipedo limite dell'area selezionata. </font>
+		</p>
+		<p>
+			<font size="-2"> Selezionando l'opzione "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Includendo</b> l'Area <b>Selezionata</b>" troverà le carte che coprono più dell'area selezionata.<br/>
+				<i>Per esempio: Carte Regionali o Globali, che, in mezzo ad altri paesi, copre anche il paese selezionato</i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> Selezionando l'opzione "<b>
+					<input name="demo" type="checkbox" checked="checked"/> sovrapposto parzialmente</b> l'Area <b>Selezionata</b>" troverà anche le carte che coprono parzialmente l'area selezionata. </font>
+		</p>
+	</mainhelp3>
+	<savexml>
+		<dc>Salva Dublin Core metadata come XML</dc>
+		<fgdc>Salva FGDC metadata come XML</fgdc>
+		<iso19115Esri>Salva metadato ISO19115 in XML per ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Salva metadato ISO19115/19139 come XML</iso19139>
+		<iso19139fra>Salva metadato ISO19115/19139 Fra come XML</iso19139fra>
+	</savexml>
+	<thesaurus>
+		<addelement>Aggiungi termine</addelement>
+		<admin>Gestisci thesaurus</admin>
+		<broader>Termine più ampio</broader>
+		<category>Categoria del thesaurus</category>
+		<consultation>Vista del thesaurus</consultation>
+		<delete>Elimina thesaurus</delete>
+		<deleteelement>Elimina termine</deleteelement>
+		<download>Scarica thesaurus</download>
+		<edit>Modifica thesaurus</edit>
+		<editelement>Modifica termine</editelement>
+		<edition>Modifica thesaurus</edition>
+		<en>in</en>
+		<foundKeyWords>Numero di termini trovati</foundKeyWords>
+		<foundKeyWordsLimit>Numero massimo di termini trovati</foundKeyWordsLimit>
+		<keywordConfirm>Conferma l'eliminazione della parola chiave</keywordConfirm>
+		<keywordDescription>Definizione della parola chiave:</keywordDescription>
+		<management>Gestisci thesauri</management>
+		<manDes>Aggiungi/modifica/cancella e visualizza thesauri</manDes>
+		<narrower>Termine più ristretto</narrower>
+		<related>Termine correlato</related>
+		<thesaurus>Thesaurus</thesaurus>
+		<unknown>Thesaurus sconosciuto</unknown>
+		<update>Aggiorna thesaurus</update>
+		<updateelement>Aggiorna termine</updateelement>
+		<upload>Carica thesaurus</upload>
+	</thesaurus>
+	<searchhelp>
+		<searchAllText>Inserisci qui il testo libero</searchAllText>
+		<rtitle>Inserisci qui il titolo</rtitle>
+		<abstract>Inserisci qui la descrizione</abstract>
+		<keywords>Estrai parole chiave da record esistenti di metadati</keywords>
+		<thesaurus>Estrai parole chiave da thesauri</thesaurus>
+	</searchhelp>
+
+    <inspire>
+        <what>
+            <l1>Opzioni di ricerca INSPIRE</l1>
+            <l2>Metadati INSPIRE</l2>
+            <l3>Solo metadati INSPIRE</l3>
+            <l4>Nascondi opzioni INSPIRE</l4>
+            <l5>Mostra opzioni INSPIRE</l5>
+            <l6>Appendice</l6>
+            <l7>Tipologia della fonte</l7>
+            <l8>Tutto</l8>
+            <l9>Dataset e serie di dataset</l9>
+            <l10>Servizi</l10>
+            <l11>Organizzazione</l11>
+            <l12>Mostra temi INSPIRE</l12>
+            <l13>Nascondi temi INSPIRE</l13>
+            <l14>Tema INSPIRE</l14>
+            <l15>Tipo di servizio</l15>
+        </what>
+        <annex1>
+            <l1>Sistemi di riferimento</l1>
+            <l2>Sistemi del reticolo geografico</l2>
+            <l3>Nomi geografici</l3>
+            <l4>Unità amministrative</l4>
+            <l5>Indirizzi</l5>
+            <l6>Particelle catastali</l6>
+            <l7>Reti di trasporto</l7>
+            <l8>Idrografia</l8>
+            <l9>Siti protetti</l9>
+        </annex1>
+        <annex2>
+            <l1>Altezza</l1>
+            <l2>Copertura del terreno</l2>
+            <l3>Ortofoto</l3>
+            <l4>Geologia</l4>
+        </annex2>
+        <annex3>
+            <l1>Unità statistiche</l1>
+            <l2>Costruzioni</l2>
+            <l3>Suolo</l3>
+            <l4>Uso del suolo</l4>
+            <l5>Salute e sicurezza</l5>
+            <l6>Servizi pubblici e governativi</l6>
+            <l7>Servizi di monitoraggio ambientale</l7>
+            <l8>Servizi produttivi ed industriali</l8>
+            <l9>Servizi agricoli e di acquacoltura</l9>
+            <l10>Distribuzione della popolazione - demografia</l10>
+            <l11>Gestione d'ambito/restrizioni/zone di regolazione e unità di report</l11>
+            <l12>Zone a rischio naturale</l12>
+            <l13>Condizioni atmosferiche</l13>
+            <l14>Caratteristiche meteorologiche</l14>
+            <l15>Caratteristiche oceanografiche</l15>
+            <l16>Regioni marine</l16>
+            <l17>Regioni bio-geografiche</l17>
+            <l18>Habitat e biotipi</l18>
+            <l19>Distribuzione delle specie</l19>
+            <l20>Risorse energetiche</l20>
+            <l21>Risorse minerali</l21>
+        </annex3>
+    </inspire>
+    
+    <selectMetadataFileAlert>Selezionare un file di metadati da inserire</selectMetadataFileAlert>        
+    <showMoreSearchFields>Mostra/Nascondi campi di ricerca</showMoreSearchFields>
+    <searchEitherOfTheWords>Almeno una parola</searchEitherOfTheWords>
+    <searchExactPhrase>Frase esatta</searchExactPhrase>
+    <searchAllWords>Tutte le parole</searchAllWords>
+    <searchWithoutWords>Senza le parole</searchWithoutWords>
+    
+    <showMap>Mostra mappa</showMap>
+    <mapViewer>Visualizzatore</mapViewer>
+
+    <uuid>Identificatore univoco</uuid>
+    <mymetadata>Miei metadati</mymetadata>
+    <addremove>Aggiungi/Rimuovi</addremove>
+    <enabled>Abilitato</enabled>
+<!--    <notifications>Notifica ai destinatari remoti</notifications> --> <!-- doppione -->
+    <url>URL</url>
+    
+    <cswServer>Server CSW</cswServer>
+    <cswServerDes>Descrizione server CSW</cswServerDes>
+    <cswServerConfig>Configurazione server CSW</cswServerConfig>
+    <cswServerEnable>Abilita</cswServerEnable>
+    <cswServerMetadataPublic>Il metadato inserito è pubblico (Transazione)</cswServerMetadataPublic>
+    <cswServerTitle>Titolo</cswServerTitle>
+    <cswServerAbstract>Riassunto</cswServerAbstract>
+    <cswServerFees>Tariffa</cswServerFees>
+    <cswServerAccessConstraints>Vincoli di accesso</cswServerAccessConstraints>
+    <cswServerContact>Contatto</cswServerContact>
+
+	<customize-elementset>Personalizza element set</customize-elementset>
+    <csw-server-disabled>Il server CSW è disabilitato.</csw-server-disabled>
+    <custom-elementset-intro>Definire gli elementi da includere nel set di elementi personalizzato. L'elemento deve essere identificato dal suo XPath completo dalla root del documento. Questi elementi ed i loro discendenti saranno inclusi nelle risposte alle richieste CSW GetRecord con ElementSetName = FULL.</custom-elementset-intro>
+    <custom-elementset-revert>Per ripristinare le risposte di default ElementSetName = FULL, eliminare tutti gli elementi da questa lista.</custom-elementset-revert>
+    <custom-elementset-add>Aggiungi elemento</custom-elementset-add>
+
+    <wmslayers>Layers WMS</wmslayers>
+</strings>
