@@ -112,9 +112,6 @@ public abstract class JeevesException extends Exception
         boolean writing = true;
 		for (StackTraceElement ste : t.getStackTrace())
 		{
-			if (--depth < 0)
-				return stack;
-
 			String clas = ste.getClassName();
 			String file = ste.getFileName();
 			String meth = ste.getMethodName();
@@ -128,7 +125,11 @@ public abstract class JeevesException extends Exception
 			at.setAttribute("method", (meth == null) ? "???" : meth);
 
 
-            if (--depth >= 0 || clas.startsWith("org.fao") || clas.startsWith("org.wfp") || clas.startsWith("jeeves")) {
+            if (--depth >= 0 || 
+                    clas.startsWith("org.fao") || 
+                    clas.startsWith("org.wfp") || 
+                    clas.startsWith("jeeves")  ||
+                    clas.startsWith("org.geonetwork")) {
                 writing = true;
                 stack.addContent(at);
             } else if (writing) {
