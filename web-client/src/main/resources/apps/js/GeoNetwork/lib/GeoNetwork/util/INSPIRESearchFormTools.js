@@ -32,6 +32,43 @@ Ext.namespace("GeoNetwork.util");
  * 
  */
 GeoNetwork.util.INSPIRESearchFormTools = {
+    /** api:method[getServiceTypeField]
+     *  :param multi: Create fields with multiselection combobox.
+     *
+     *  :return: service types combo box
+     *
+     */
+    getServiceTypeField : function (multi) {
+        var serviceTypes = [ [ 'discovery', OpenLayers.i18n('serviceType_discovery')  ], [ 'view', OpenLayers.i18n('serviceType_view')  ],
+                             [ 'transformation', OpenLayers.i18n('serviceType_transformation') ],
+                             [ 'invoke', OpenLayers.i18n('serviceType_invoke') ],[ 'other', OpenLayers.i18n('serviceType_other') ] ];
+
+        config = {
+                id : 'serviceType',
+                name : 'E_serviceType',
+                mode : 'local',
+                triggerAction : 'all',
+                fieldLabel : OpenLayers.i18n('serviceType'),
+                // value: annexes[1], // Set arbitrarily the second value of the
+                // array as the default one.
+                store : new Ext.data.ArrayStore({
+                    id : 0,
+                    fields : [ 'id', 'label' ],
+                    data : serviceTypes
+                }),
+                valueField : 'id',
+                displayField : 'label'
+            };
+        if (multi) {
+            Ext.apply(config, {
+                valueDelimiter: ' or '
+            });
+            return new Ext.ux.form.SuperBoxSelect(config);
+        } else {
+            return new Ext.form.ComboBox(config);
+        }
+    },
+
     /** api:method[getAnnexField] 
      *  :param multi: Create fields with multiselection combobox.
      *  
@@ -166,6 +203,74 @@ GeoNetwork.util.INSPIRESearchFormTools = {
              return new Ext.form.ComboBox(config);
         }
     },
+    /** api:method[getClassificationDataServicesField]
+     *  :param services: Catalogue service URLs (eg. catalogue.services).
+     *  :param multi: Create fields with multiselection combobox.
+     *
+     *  :return: An INSPIRE classification data services combo box
+     *
+     *  Use xml.search.keywords service to retrieve the list of all INSPIRE themes
+     *  in current GUI language.
+     *
+     */
+    getClassificationDataServicesField : function (services, multi) {
+        var Keyword, classificationDataServicesStore;
+
+        Keyword = Ext.data.Record.create([ {
+            name : 'id'
+        }, {
+            name : 'value'
+        }, {
+            name : 'definition'
+        }, {
+            name : 'uri'
+        }]);
+
+        // Keyword store
+        classificationDataServicesStore = new Ext.data.Store({
+            proxy : new Ext.data.HttpProxy({
+                url : services.searchKeyword,
+                method : 'GET'
+            }),
+            baseParams : {
+                pNewSearch : true,
+                pTypeSearch : 1,
+                pKeyword: '*',
+                pThesauri : 'external.theme.inspire-service-taxonomy',
+                pMode : 'searchBox',
+                maxResults : '35'
+            },
+            reader : new Ext.data.XmlReader({
+                record : 'keyword',
+                id : 'id'
+            }, Keyword),
+            fields : [ "id", "value", "definition", "uri" ],
+            sortInfo : {
+                field : "value"
+            }
+        });
+
+        classificationDataServicesStore.load();
+        var config = {
+            id : 'keyword',
+            name : 'E_keyword',
+            mode : 'local',
+            triggerAction : 'all',
+            fieldLabel : OpenLayers.i18n('inspireClassificationDataServices'),
+            store : classificationDataServicesStore,
+            valueField : 'value',
+            displayField : 'value'
+        };
+        if (multi) {
+            Ext.apply(config, {
+                valueDelimiter: ' or ',
+                stackItems: true
+            });
+            return new Ext.ux.form.SuperBoxSelect(config);
+        } else {
+            return new Ext.form.ComboBox(config);
+        }
+    },
     /** api:method[getINSPIREFields]
      *  :param services: Catalogue service URLs (eg. catalogue.services).
      *  :param multi: Create fields with multiselection combobox.
@@ -174,7 +279,9 @@ GeoNetwork.util.INSPIRESearchFormTools = {
      *  Create an INSPIRE form with annexes, themes and related checkbox fields.
      */
     getINSPIREFields : function (services, multi) {
-        return [this.getAnnexField(multi), 
+        return [this.getAnnexField(multi),
+                        this.getServiceTypeField(multi),
+                        this.getClassificationDataServicesField(services, multi),
                         this.getThemesField(services, multi), 
                         this.getRelatedField()];
     }

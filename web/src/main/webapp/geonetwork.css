@@ -1114,6 +1114,15 @@ span.labelField {
     font-size: 0.9em;
 }
 
+span.labelFieldDisabled {
+    display: table-cell;
+    display: inline-block;
+    width: 180px;
+    vertical-align: top;
+    font-size: 0.9em;
+    color: #b4b4b4;
+}
+
 span.labelFieldSmall {
     display: table-cell;
     display: inline-block;

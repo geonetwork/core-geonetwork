@@ -1160,6 +1160,116 @@
 	</searchhelp>
 
     <inspire>
+        <serviceType>
+            <value id="discovery">Discovery Service (discovery)</value>
+            <value id="view">View Service (view)</value>
+            <value id="download">Download Service (download)</value>
+            <value id="transformation">Transformation Service (transformation)</value>
+            <value id="invoke">Invoke Spatial Data Service (invoke)</value>
+            <value id="other">Other Services (other)</value>
+        </serviceType>
+        <spatialDataService>
+            <group label="Geographic human interaction services">
+                <value id="humanInteractionService">Geographic human interaction services</value>
+                <value id="humanCatalogueViewer">Catalogue viewer</value>
+                <value id="humanGeographicViewer">Geographic viewer</value>
+                <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanChainDefinitionEditor">Chain definition editor</value>
+                <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
+                <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
+                <value id="humanGeographicSymbolEditor">Geographic symbol editor</value>
+                <value id="humanFeatureGeneralizationEditor">Feature generalisation editor</value>
+                <value id="humanGeographicDataStructureViewer">Geographic data-structure viewer</value>
+            </group>
+
+            <group label="Geographic model/information management service">
+                <value id="infoManagementService">Geographic model/information management service</value>
+                <value id="infoFeatureAccessService">Feature access service</value>
+                <value id="infoMapAccessService">Map access service</value>
+                <value id="infoCoverageAccessService">Coverage access service</value>
+                <value id="infoSensorDescriptionService">Sensor description service</value>
+                <value id="infoProductAccessService">Product access service</value>
+                <value id="infoFeatureTypeService">Feature type service</value>
+                <value id="infoCatalogueService">Catalogue service</value>
+                <value id="infoRegistryService">Registry service</value>
+                <value id="infoGazetteerService">Gazetteer service</value>
+                <value id="infoOrderHandlingService">Order handling service</value>
+                <value id="infoStandingOrderService">Standing order service</value>
+            </group>
+
+            <group label="Geographic workflow/task management services">
+                <value id="taskManagementService">Geographic workflow/task management services</value>
+                <value id="chainDefinitionService">Chain definition service</value>
+                <value id="workflowEnactmentService">Workflow enactment service</value>
+                <value id="subscriptionService">Subscription service</value>
+            </group>
+
+            <group label="Geographic processing services – spatial">
+                <value id="spatialProcessingService">Geographic processing services – spatial</value>
+                <value id="spatialCoordinateConversionService">Coordinate conversion service </value>
+                <value id="spatialCoordinateTransformationService">Coordinate transformation service </value>
+                <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service </value>
+                <value id="spatialImageCoordinateConversionService">Image coordinate conversion service</value>
+                <value id="spatialRectificationService">Rectification service</value>
+                <value id="spatialOrthorectificationService">Orthorectification service</value>
+                <value id="spatialSensorGeometryModelAdjustmentService">Sensor geometry model adjustment service</value>
+                <value id="spatialImageGeometryModelConversionService">Image geometry model conversion service</value>
+                <value id="spatialSubsettingService">Subsetting service</value>
+                <value id="spatialSamplingService">Sampling service</value>
+                <value id="spatialTilingChangeService">Tiling change service</value>
+                <value id="spatialDimensionMeasurementService">Dimension measurement service</value>
+                <value id="spatialFeatureManipulationService">Feature manipulation services</value>
+                <value id="spatialFeatureMatchingService">Feature matching service</value>
+                <value id="spatialFeatureGeneralizationService">Feature generalisation service</value>
+                <value id="spatialRouteDeterminationService">Route determination service</value>
+                <value id="spatialPositioningService">Positioning service</value>
+                <value id="spatialProximityAnalysisService">Proximity analysis service</value>
+            </group>
+
+            <group label="Geographic processing services – thematic">
+                <value id="thematicProcessingService">Geographic processing services – thematic</value>
+                <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
+                <value id="thematicClassificationService">Thematic classification service</value>
+                <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
+                <value id="thematicSubsettingService">Subsetting service</value>
+                <value id="thematicSpatialCountingService">Spatial counting service</value>
+                <value id="thematicChangeDetectionService">Change detection service</value>
+                <value id="thematicGeographicInformationExtractionService">Geographic information extraction services</value>
+                <value id="thematicImageProcessingService">Image processing service</value>
+                <value id="thematicReducedResolutionGenerationService">Reduced resolution generation service</value>
+                <value id="thematicImageManipulationService">Image Manipulation Services</value>
+                <value id="thematicImageUnderstandingService">Image understanding services</value>
+                <value id="thematicImageSynthesisService">Image synthesis services</value>
+                <value id="thematicMultibandImageManipulationService">Multiband image manipulation</value>
+                <value id="thematicObjectDetectionService">Object detection service</value>
+                <value id="thematicGeoparsingService">Geoparsing service</value>
+                <value id="thematicGeocodingService">Geocoding service</value>
+            </group>
+
+             <group label="Geographic processing services – temporal">
+                <value id="temporalProcessingService">Geographic processing services – temporal</value>
+                <value id="temporalReferenceSystemTransformationService"> Temporal reference system transformation service</value>
+                <value id="temporalSubsettingService">Subsetting service</value>
+                <value id="temporalSamplingService">Sampling service</value>
+                <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
+            </group>
+
+            <group label="Geographic processing services – metadata">
+                <value id="metadataProcessingService">Geographic processing services – metadata</value>
+                <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
+                <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
+            </group>
+
+            <group label="Geographic communication services">
+                <value id="comService">Geographic communication services</value>
+                <value id="comEncodingService">Encoding service</value>
+                <value id="comTransferService">Transfer service</value>
+                <value id="comGeographicCompressionService">Geographic compression service</value>
+                <value id="comGeographicFormatConversionService">Geographic format conversion service</value>
+                <value id="comMessagingService">Messaging service</value>
+                <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
+            </group>
+        </spatialDataService>
         <what>
             <l1>Recherche INSPIRE</l1>
             <l2>Métadonnées INSPIRE</l2>
@@ -1176,46 +1286,47 @@
             <l13>Cacher les thèmes INSPIRE</l13>
             <l14>Thèmes INSPIRE</l14>
             <l15>Type de service</l15>
+        <l16>Classification of data services</l16>
         </what>
         <annex1>
-            <l1>Référentiels de coordonnées</l1>
-            <l2>Systèmes de maillage géographique</l2>
-            <l3>Dénominations géographiques</l3>
-            <l4>Unités administratives</l4>
-            <l5>Adresses</l5>
-            <l6>Parcelles cadastrales</l6>
-            <l7>Réseaux de transport</l7>
-            <l8>Hydrographie</l8>
-            <l9>Sites protégés</l9>
+            <theme id="inspire_CoordinateRefSystems">Référentiels de coordonnées</theme>
+            <theme id="inspire_GeographicalGridSystems">Systèmes de maillage géographique</theme>
+            <theme id="inspire_GeographicalNames">Dénominations géographiques</theme>
+            <theme id="inspire_AdministrativeUnits">Unités administratives</theme>
+            <theme id="inspire_Addresses">Adresses</theme>
+            <theme id="inspire_CadastralParcels">Parcelles cadastrales</theme>
+            <theme id="inspire_TransportNetworks">Réseaux de transport</theme>
+            <theme id="inspire_Hydrography">Hydrographie</theme>
+            <theme id="inspire_ProtectedSites">Sites protégés</theme>
         </annex1>
         <annex2>
-            <l1>Altitude</l1>
-            <l2>Occupation des terres</l2>
-            <l3>Ortho-imagerie</l3>
-            <l4>Géologie</l4>
+            <theme id="inspire_Elevation">Altitude</theme>
+            <theme id="inspire_LandCover">Occupation des terres</theme>
+            <theme id="inspire_Orthoimagery">Ortho-imagerie</theme>
+            <theme id="inspire_Geology">Géologie</theme>
         </annex2>
         <annex3>
-            <l1>Unités statistiques</l1>
-            <l2>Bâtiments</l2>
-            <l3>Sols</l3>
-            <l4>Usage des sols</l4>
-            <l5>Santé et sécurité des personnes</l5>
-            <l6>Services d'utilité publique et services publics</l6>
-            <l7>Installations de suivi environnemental</l7>
-            <l8>Lieux de production et sites industriels</l8>
-            <l9>Installations agricoles et aquacoles</l9>
-            <l10>Répartition de la population — démographie</l10>
-            <l11>Zones de gestion, de restriction ou de réglementation et unités de déclaration</l11>
-            <l12>Zones à risque naturel</l12>
-            <l13>Conditions atmosphériques</l13>
-            <l14>Caractéristiques géographiques météorologiques</l14>
-            <l15>Caractéristiques géographiques océanographiques</l15>
-            <l16>Régions maritimes</l16>
-            <l17>Régions biogéographiques</l17>
-            <l18>Habitats et biotopes</l18>
-            <l19>Répartition des espèces</l19>
-            <l20>Sources d'énergie</l20>
-            <l21>Ressources minérales</l21>
+            <theme id="inspire_StatisticalUnits">Unités statistiques</theme>
+            <theme id="inspire_Buildings">Bâtiments</theme>
+            <theme id="inspire_Soil">Sols</theme>
+            <theme id="inspire_LandUse">Usage des sols</theme>
+            <theme id="inspire_HumanHealthAndSafety">Santé et sécurité des personnes</theme>
+            <theme id="inspire_UtilityAndGovernmentServices">Services d'utilité publique et services publics</theme>
+            <theme id="inspire_EnvironmentalMonitoringFacilities">Installations de suivi environnemental</theme>
+            <theme id="inspire_ProductionAndIndustrialFacilities">Lieux de production et sites industriels</theme>
+            <theme id="inspire_AgriculturalAndAquacultureFacilities">Installations agricoles et aquacoles</theme>
+            <theme id="inspire_PopulationDistribution-Demography">Répartition de la population — démographie</theme>
+            <theme id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits">Zones de gestion, de restriction ou de réglementation et unités de déclaration</theme>
+            <theme id="inspire_NaturalRiskZones">Zones à risque naturel</theme>
+            <theme id="inspire_AtmosphericConditions">Conditions atmosphériques</theme>
+            <theme id="inspire_MeteorologicalGeographicalFeatures">Caractéristiques géographiques météorologiques</theme>
+            <theme id="inspire_OceanographicGeographicalFeatures">Caractéristiques géographiques océanographiques</theme>
+            <theme id="inspire_SeaRegions">Régions maritimes</theme>
+            <theme id="inspire_Bio-geographicalRegions">Régions biogéographiques</theme>
+            <theme id="inspire_HabitatsAndBiotopes">Habitats et biotopes</theme>
+            <theme id="inspire_SpeciesDistribution">Répartition des espèces</theme>
+            <theme id="inspire_EnergyResources">Sources d'énergie</theme>
+            <theme id="inspire_MineralResources">Ressources minérales</theme>
         </annex3>
     </inspire>
     

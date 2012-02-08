@@ -335,22 +335,24 @@
                 </select>
             </div>
 
+            <!-- Source type -->
             <div class="row">  <!-- div row-->
-                <span class="labelField"><!--Brontype--><xsl:value-of select="/root/gui/strings/inspire/what/l7"/></span>
-                <select id="inspirebrontype" class="content" name="inspirebrontype" style="width:200px; !important" onchange="inspireBrontypeChanged(this.value)">
+                <span class="labelField"><xsl:value-of select="/root/gui/strings/inspire/what/l7"/></span>
+                <select id="type" class="content" name="type" style="width:200px; !important" onchange="inspireSourceTypeChanged(this.value)">
                     <option value="" selected="selected"/>
                     <option value="dataset"><!--Datasets en dataset series--><xsl:value-of select="/root/gui/strings/inspire/what/l9"/></option>
                     <option value="service"><!--Services--><xsl:value-of select="/root/gui/strings/inspire/what/l10"/></option>
                 </select>
             </div>
 
+            <!--Service type-->
             <div class="row">  <!-- div row-->
-                <span class="labelField"><!--Service type--><xsl:value-of select="/root/gui/strings/inspire/what/l15"/></span>
-                <select id="protocol" class="content" style="width:200px; !important">
-                   <option value="" selected="selected"></option>
-                   <xsl:for-each select="/root/gui/strings/protocolChoice[@show='y']">
-                       <option value="{@value}">
-                           <xsl:if test="@value=/root/gui/searchDefaults/protocol">
+                <span class="labelField" id="serviceTypeLabel"><xsl:value-of select="/root/gui/strings/inspire/what/l15"/></span>
+                <select id="serviceType" name="serviceType" class="content" style="width:200px; !important">
+                   <option value="" ></option>
+                   <xsl:for-each select="/root/gui/strings/inspire/serviceType/value">
+                       <option value="{@id}">
+                           <xsl:if test="@value=/root/gui/searchDefaults/serviceType">
                                <xsl:attribute name="selected"/>
                            </xsl:if>
                            <xsl:value-of select="."/>
@@ -358,243 +360,79 @@
                    </xsl:for-each>
                 </select>
              </div>
+        
+            <!-- Classification of spatial data service -->
+            <div class="row"> <!-- div row-->
+                <input type="hidden" id="keyword"  name="keyword" value="" />
+
+                <span class="labelField" id="classificationDataServiceLabel"><xsl:value-of select="/root/gui/strings/inspire/what/l16"/></span>
+                <select id="classificationDataService" class="content" style="width:200px; !important"  onchange="inspireClassificationDataServiceChanged(this.value)">
+                    <option value=""></option>
+                    <xsl:for-each select="/root/gui/strings/inspire/spatialDataService/group">
+                        <optgroup label="{@label}">
+                        <xsl:for-each select="value">
+                        <option value="{@id}">
+                            <xsl:if test="@value=/root/gui/searchDefaults/spatialDataService">
+                                <xsl:attribute name="selected"/>
+                            </xsl:if>
+                           <xsl:value-of select="."/>
+                        </option>
+                        </xsl:for-each>
+                        </optgroup>
+                    </xsl:for-each>
+                </select>
+            </div>
+
+
+            <!-- INSPIRE Thema -->
+             <div>                           <!-- style="float:left; margin-left: 20px;"-->
+                <fieldset>
+                    <legend><!--INSPIRE Thema--><xsl:value-of select="/root/gui/strings/inspire/what/l14"/></legend>
+                    <div id="inspirethemesdiv">
+                       <div> <!--style="max-height:170px;height:170px;overflow:auto;"-->
+                            <div class="inspireThemeTitle"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> I</div>
+
+                            <xsl:for-each select="/root/gui/strings/inspire/annex1/theme">
+                               <xsl:sort select="." />
+                                <div class="inspireThemeElement">
+                               <input type="checkbox" value="{.}" name="inspiretheme" id="{@id}"/>
+
+                               <span>
+                                   <label for="{@id}"><xsl:value-of select="."/></label>
+                               </span>
+                               </div>
+                            </xsl:for-each>
+
+                            <div class="inspireThemeTitle"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> II</div>
+
+                            <xsl:for-each select="/root/gui/strings/inspire/annex2/theme">
+                                <xsl:sort select="." />
+
+                            <div class="inspireThemeElement">
+                               <input type="checkbox" value="{.}" name="inspiretheme" id="{@id}"/>
+
+                               <span>
+                                   <label for="{@id}"><xsl:value-of select="."/></label>
+                               </span>
+                            </div>
+                            </xsl:for-each>
+
+                            <div class="inspireThemeTitle"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> III</div>
+
+                            <xsl:for-each select="/root/gui/strings/inspire/annex3/theme">
+                               <xsl:sort select="." />
+                            <div class="inspireThemeElement">
+                            <input type="checkbox" value="{.}" name="inspiretheme" id="{@id}"/>
+                            <span>
+                            <label for="{@id}"><xsl:value-of select="."/></label>
+                            </span>
+                            </div>
+                            </xsl:for-each>
+                       </div>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-
-        <!-- INSPIRE Thema -->
-        <div> <!-- style="float:left; margin-left: 20px;"-->
-            <fieldset>
-               <legend><!--INSPIRE Thema--><xsl:value-of select="/root/gui/strings/inspire/what/l14"/></legend>
-
-               <div id="inspirethemesdiv">
-                   <div> <!--style="max-height:170px;height:170px;overflow:auto;"-->
-
-                   <div class="inspireThemeTitle"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> I</div>
-
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l3}" name="inspiretheme" id="inspire_GeographicalNames"/>
-
-                           <span>
-                               <label for="inspire_GeographicalNames"><!--Geographical names--><xsl:value-of select="/root/gui/strings/inspire/annex1/l3"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l4}" name="inspiretheme" id="inspire_AdministrativeUnits"/>
-
-                           <span>
-                               <label for="inspire_AdministrativeUnits"><!--Administrative units--><xsl:value-of select="/root/gui/strings/inspire/annex1/l4"/></label>
-                           </span>
-                      </div>
-                      <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l5}" name="inspiretheme" id="inspire_Addresses"/>
-
-                           <span>
-                               <label for="inspire_Addresses"><!--Addresses--><xsl:value-of select="/root/gui/strings/inspire/annex1/l5"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l6}" name="inspiretheme" id="inspire_CadastralParcels"/>
-
-                           <span>
-                               <label for="inspire_CadastralParcels"><!--Cadastral parcels--><xsl:value-of select="/root/gui/strings/inspire/annex1/l6"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l7}" name="inspiretheme" id="inspire_TransportNetworks"/>
-
-                           <span>
-                               <label for="inspire_TransportNetworks"><!--Transport networks--><xsl:value-of select="/root/gui/strings/inspire/annex1/l7"/></label>
-                           </span>
-                      </div>
-                      <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l8}" name="inspiretheme" id="inspire_Hydrography"/>
-
-                           <span>
-                               <label for="inspire_Hydrography"><!--Hydrography--><xsl:value-of select="/root/gui/strings/inspire/annex1/l8"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex1/l9}" name="inspiretheme" id="inspire_ProtectedSites"/>
-
-                           <span>
-                               <label for="inspire_ProtectedSites"><!--Protected sites--><xsl:value-of select="/root/gui/strings/inspire/annex1/l9"/></label>
-                           </span>
-                       </div>
-
-
-                       <div class="inspireThemeTitle"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> II</div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex2/l1}" name="inspiretheme" id="inspire_Elevation"/>
-
-                           <span>
-                               <label for="inspire_Elevation"><!--Elevation--><xsl:value-of select="/root/gui/strings/inspire/annex2/l1"/></label>
-                           </span>
-                      </div>
-                      <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex2/l2}" name="inspiretheme" id="inspire_LandCover"/>
-
-                           <span>
-                               <label for="inspire_LandCover"><!--Land cover--><xsl:value-of select="/root/gui/strings/inspire/annex2/l2"/></label>
-                           </span>
-                      </div>
-                      <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex2/l3}" name="inspiretheme" id="inspire_Orthoimagery"/>
-
-                           <span>
-                               <label for="inspire_Orthoimagery"><!--Orthoimagery--><xsl:value-of select="/root/gui/strings/inspire/annex2/l3"/></label>
-                           </span>
-                      </div>
-                      <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex2/l4}" name="inspiretheme" id="inspire_Geology"/>
-
-                           <span>
-                               <label for="inspire_Geology"><!--Geology--><xsl:value-of select="/root/gui/strings/inspire/annex2/l4"/></label>
-                           </span>
-                      </div>
-
-
-                      <div class="inspireThemeTitle"><xsl:value-of select="/root/gui/strings/inspire/what/l6"/> III</div>
-
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l1}" name="inspiretheme" id="inspire_StatisticalUnits"/>
-
-                           <span>
-                               <label for="inspire_StatisticalUnits"><!--Statistical units--><xsl:value-of select="/root/gui/strings/inspire/annex3/l1"/></label>
-                           </span>
-                        </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l2}" name="inspiretheme" id="inspire_Buildings"/>
-
-                           <span>
-                               <label for="inspire_Buildings"><!--Buildings--><xsl:value-of select="/root/gui/strings/inspire/annex3/l2"/></label>
-                           </span>
-                       </div>
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l3}" name="inspiretheme" id="inspire_Soil"/>
-
-                           <span>
-                               <label for="inspire_Soil"><!--Soil--><xsl:value-of select="/root/gui/strings/inspire/annex3/l3"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l4}" name="inspiretheme" id="inspire_LandUse"/>
-
-                           <span>
-                               <label for="inspire_LandUse"><!--Land use--><xsl:value-of select="/root/gui/strings/inspire/annex3/l4"/></label>
-                           </span>
-                       </div>
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l5}" name="inspiretheme" id="inspire_HumanHealthAndSafety"/>
-
-                           <span>
-                               <label for="inspire_HumanHealthAndSafety"><!--Human health and safety--><xsl:value-of select="/root/gui/strings/inspire/annex3/l5"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l6}" name="inspiretheme" id="inspire_UtilityAndGovernmentServices"/>
-
-                           <span>
-                               <label for="inspire_UtilityAndGovernmentServices"><!--Utility and Government services--><xsl:value-of select="/root/gui/strings/inspire/annex3/l6"/></label>
-                           </span>
-                       </div>
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l7}" name="inspiretheme" id="inspire_EnvironmentalMonitoringFacilities"/>
-
-                           <span>
-                               <label for="inspire_EnvironmentalMonitoringFacilities"><!--Environmental monitoring facilities--><xsl:value-of select="/root/gui/strings/inspire/annex3/l7"/></label>
-                           </span>
-                       </div>
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l8}>" name="inspiretheme" id="inspire_ProductionAndIndustrialFacilities"/>
-
-                           <span>
-                               <label for="inspire_ProductionAndIndustrialFacilities"><!--Production and industrial facilities--><xsl:value-of select="/root/gui/strings/inspire/annex3/l8"/></label>
-                           </span>
-                       </div>
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l9}" name="inspiretheme" id="inspire_AgriculturalAndAquacultureFacilities"/>
-
-                           <span>
-                               <label for="inspire_AgriculturalAndAquacultureFacilities"><!--Agricultural and aquaculture facilities--><xsl:value-of select="/root/gui/strings/inspire/annex3/l9"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l10}" name="inspiretheme" id="inspire_PopulationDistribution-Demography"/>
-                            <span>
-                               <label for="inspire_PopulationDistribution-Demography"><!--Population distribution - demography--><xsl:value-of select="/root/gui/strings/inspire/annex3/l10"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l11}" name="inspiretheme" id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits"/>
-                            <span>
-                               <label for="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits"><!--Area management/restriction/regulation zones and reporting units-->
-                                   <xsl:value-of select="/root/gui/strings/inspire/annex3/l11"/></label>
-                           </span>
-                        </div>
-                        <div class="inspireThemeElement">
-                            <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l12}" name="inspiretheme" id="inspire_NaturalRiskZones"/>
-                            <span>
-                               <label for="inspire_NaturalRiskZones"><!--Natural risk zones--><xsl:value-of select="/root/gui/strings/inspire/annex3/l12"/></label>
-                           </span>
-                        </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l13}" name="inspiretheme" id="inspire_AtmosphericConditions"/>
-                           <span>
-                               <label for="inspire_AtmosphericConditions"><!--Atmospheric conditions--><xsl:value-of select="/root/gui/strings/inspire/annex3/l13"/></label>
-                           </span>
-                       </div>
-                        <div class="inspireThemeElement">
-                            <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l14}" name="inspiretheme" id="inspire_MeteorologicalGeographicalFeatures"/>
-                            <span>
-                               <label for="inspire_MeteorologicalGeographicalFeatures"><!--Meteorological geographical features--><xsl:value-of select="/root/gui/strings/inspire/annex3/l14"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l15}" name="inspiretheme" id="inspire_OceanographicGeographicalFeatures"/>
-                           <span>
-                               <label for="inspire_OceanographicGeographicalFeatures"><!--Oceanographic geographical features--><xsl:value-of select="/root/gui/strings/inspire/annex3/l15"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l16}" name="inspiretheme" id="inspire_SeaRegions"/>
-                           <span>
-                               <label for="inspire_SeaRegions"><!--Sea regions--><xsl:value-of select="/root/gui/strings/inspire/annex3/l16"/></label>
-                           </span>
-                        </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l17}" name="inspiretheme" id="inspire_Bio-geographicalRegions"/>
-                            <span>
-                               <label for="inspire_Bio-geographicalRegions"><!--Bio-geographical regions--><xsl:value-of select="/root/gui/strings/inspire/annex3/l17"/></label>
-                           </span>
-                        </div>
-                        <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l18}" name="inspiretheme" id="inspire_HabitatsAndBiotopes"/>
-                            <span>
-                               <label for="inspire_HabitatsAndBiotopes"><!--Habitats and biotopes--><xsl:value-of select="/root/gui/strings/inspire/annex3/l18"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                           <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l19}" name="inspiretheme" id="inspire_SpeciesDistribution"/>
-                           <span>
-                               <label for="inspire_SpeciesDistribution"><!--Species distribution--><xsl:value-of select="/root/gui/strings/inspire/annex3/l19"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                            <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l20}" name="inspiretheme" id="inspire_EnergyResources"/>
-                            <span>
-                               <label for="inspire_EnergyResources"><!--Energy resources--><xsl:value-of select="/root/gui/strings/inspire/annex3/l20"/></label>
-                           </span>
-                       </div>
-                       <div class="inspireThemeElement">
-                          <input type="checkbox" value="{/root/gui/strings/inspire/annex3/l21}" name="inspiretheme" id="inspire_MineralResources"/>
-                          <span>
-                               <label for="inspire_MineralResources"><!--Mineral resources--><xsl:value-of select="/root/gui/strings/inspire/annex3/l21"/></label>
-                           </span>
-                       </div>
-                   </div>
-               </div>
-            </fieldset>
-        </div>
-
     </div>
        <!-- end INSPIRE search elements -->
 </xsl:template>

@@ -314,11 +314,6 @@ function resetAdvancedSearch()
 
 	// reset the selectors so that new searches are done to fill them
 	selectorIds = [];
-
-    // reset INSPIRE options
-    resetInspireOptions();
-    // End reset INSPIRE options    
-
 }
 
 /**********************************************************
@@ -1290,18 +1285,8 @@ function inspireAnnexChanged(inspireannex) {
     }
 }
 
-function inspireOrganisationChanged(groupId) {
-	setParam('group',groupId);
-}
-
-// TODO: document asspumtion: there is an input field 'type'
-function inspireBrontypeChanged(brontype) {
-    setParam('type',brontype);
-}
-
-// TODO: document asspumtion: there is an input field 'protocol'
-function inspireServiceTypeChanged(servicetype) {
-    setParam('protocol',servicetype);
+function inspireClassificationDataServiceChanged(classification) {
+    setParam('keyword', classification);
 }
 
 function taggleVisibility(elementId) {
@@ -1317,54 +1302,6 @@ function taggleVisibility(elementId) {
 	else {
 		return;
 	}
-}
-
-function resetInspireOptions() {
-    if (!$('inspire')) return;
-
-     // reset INSPIRE options
-	$('inspire').checked=false;
-	setParam('title','');
-	setParam('inspireannex','');
-	setParam('inspirebrontype','');
-	setParam('protocol','');
-	setParam('orgselect_inspire','');
-
-	$('inspire_GeographicalNames').checked=false;
-	$('inspire_AdministrativeUnits').checked=false;
-	$('inspire_Addresses').checked=false;
-	$('inspire_CadastralParcels').checked=false;
-	$('inspire_TransportNetworks').checked=false;
-	$('inspire_Hydrography').checked=false;
-	$('inspire_ProtectedSites').checked=false;
-	$('inspire_Elevation').checked=false;
-	$('inspire_LandCover').checked=false;
-	$('inspire_Orthoimagery').checked=false;
-	$('inspire_Geology').checked=false;
-	$('inspire_StatisticalUnits').checked=false;
-	$('inspire_Buildings').checked=false;
-	$('inspire_Soil').checked=false;
-	$('inspire_LandUse').checked=false;
-	$('inspire_HumanHealthAndSafety').checked=false;
-	$('inspire_UtilityAndGovernmentServices').checked=false;
-	$('inspire_EnvironmentalMonitoringFacilities').checked=false;
-	$('inspire_ProductionAndIndustrialFacilities').checked=false;
-	$('inspire_AgriculturalAndAquacultureFacilities').checked=false;
-	$('inspire_PopulationDistribution-Demography').checked=false;
-	$('inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits').checked=false;
-	$('inspire_NaturalRiskZones').checked=false;
-	$('inspire_AtmosphericConditions').checked=false;
-	$('inspire_MeteorologicalGeographicalFeatures').checked=false;
-	$('inspire_OceanographicGeographicalFeatures').checked=false;
-	$('inspire_SeaRegions').checked=false;
-	$('inspire_Bio-geographicalRegions').checked=false;
-	$('inspire_HabitatsAndBiotopes').checked=false;
-	$('inspire_SpeciesDistribution').checked=false;
-	$('inspire_EnergyResources').checked=false;
-	$('inspire_MineralResources').checked=false;
-	$('inspire_MineralResources').checked=false;
-	$('inspire_MineralResources').checked=false;
-	// End reset INSPIRE options
 }
 
 function clearNode(node)
@@ -1383,5 +1320,24 @@ function im_mm_getURLselectedbbox(northBL, southBL, eastBL, westBL)
             $("eastBL").value + " " + $("southBL").value + ", " +
             $("westBL").value + " " + $("southBL").value + ", " +
             $("westBL").value + " "  + $("northBL").value + "))";
+}
+
+function inspireSourceTypeChanged(sourceType) {
+    if (sourceType == 'dataset') {
+        $("serviceType").value = '';
+        $("serviceType").disable();
+        $("serviceTypeLabel").className = "labelFieldDisabled";
+
+        $("classificationDataService").value = '';
+        $("classificationDataService").disable();
+        $("classificationDataServiceLabel").className = "labelFieldDisabled";
+
+    } else {
+        $("serviceType").enable();
+        $("serviceTypeLabel").className = "labelField";
+
+        $("classificationDataService").enable();
+        $("classificationDataServiceLabel").className = "labelField";
+    }
 }
 /*** EOF ***********************************************************/
