@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -118,15 +119,18 @@ public class GetRelated implements Service {
 
         Element relatedRecords = new Element("relations");
 
+        Element md = Show.getCached(context.getUserSession(), Integer.toString(id));
         if (type.equals("") || type.contains("children")) {
             relatedRecords.addContent(search(uuid, "children", context, from,
                     to, fast));
         }
         if (type.equals("") || type.contains("parent")) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            Element md = gc.getDataManager().getMetadata(context,
-                    String.valueOf(id), forEditing, withValidationErrors,
-                    keepXlinkAttributes);
+            if(md == null) {
+                md = gc.getDataManager().getMetadata(context,
+                        String.valueOf(id), forEditing, withValidationErrors,
+                        keepXlinkAttributes);
+            }
             if (md != null) {
                 Element parent = md.getChild("parentIdentifier", gmd);
                 if (parent != null) {
@@ -158,9 +162,11 @@ public class GetRelated implements Service {
         if (type.equals("") || type.contains("dataset")
                 || type.contains("fcat") || type.contains("source")) {
             boolean forEditing = false, withValidationErrors = false;
-            Element md = gc.getDataManager()
+            if(md == null) {
+                md = gc.getDataManager()
                     .getMetadata(context, String.valueOf(id), forEditing,
                             withValidationErrors, false);
+            }
 
             // Get datasets related to service search
             if (type.equals("") || type.contains("dataset")) {

@@ -31,6 +31,7 @@
 		<service name="metadata.show">
 			<class name=".services.metadata.Show">
 				<param name="addRefs" value="y" />
+				<param name="cache" value="y" />
 			</class>
 
 			<output sheet="metadata-show.xsl">
@@ -40,6 +41,7 @@
 				<call name="relation" class =".guiservices.metadata.GetRelated"/>
 				<call name="sources"  class=".guiservices.util.Sources"/>
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+				<call name="clear"  class=".services.metadata.ClearCachedShowMetadata"/>
 			</output>
 
 			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
@@ -52,6 +54,7 @@
 		<service name="metadata.show.embedded">
 			<class name=".services.metadata.Show">
 				<param name="addRefs" value="y" />
+				<param name="cache" value="y" />
 			</class>
 
 			<output sheet="metadata-show-embedded.xsl">
@@ -61,6 +64,7 @@
 				<call name="relation" class =".guiservices.metadata.GetRelated"/>
 				<call name="sources"  class=".guiservices.util.Sources"/>
 				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+				<call name="clear"  class=".services.metadata.ClearCachedShowMetadata"/>
 			</output>
 
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">

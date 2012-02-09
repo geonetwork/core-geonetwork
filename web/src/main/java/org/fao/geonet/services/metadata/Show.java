@@ -49,7 +49,7 @@ import org.jdom.Element;
 
 public class Show implements Service
 {
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
@@ -67,6 +67,8 @@ public class Show implements Service
 
 		skip = params.getValue("addRefs", "n");
 		addRefs = skip.equals("y");
+		
+		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}
 
 	//--------------------------------------------------------------------------
@@ -147,10 +149,27 @@ public class Show implements Service
 		if (!skipPopularity)
 			dm.increasePopularity(context, id);
 
+		if(cache) {
+		    cache(context.getUserSession(), elMd, id);
+		}
+		
 		return elMd;
 	}
 
-	//--------------------------------------------------------------------------
+	private final static String KEY = "SHOW_METADATA";
+    private static void cache( UserSession userSession, Element elMd, String id ) {
+        userSession.setProperty(KEY+id, elMd);
+    }
+    
+    public static Element getCached(UserSession userSession, String id) {
+        return (Element) userSession.getProperty(KEY+id);
+    }
+
+    static void unCache(UserSession userSession, String id) {
+        userSession.removeProperty(KEY+id);
+    }
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
@@ -159,6 +178,8 @@ public class Show implements Service
 	private boolean skipPopularity;
 	private boolean skipInfo;
 	private boolean addRefs;
+    private boolean cache;
+    
 }
 //=============================================================================
 
