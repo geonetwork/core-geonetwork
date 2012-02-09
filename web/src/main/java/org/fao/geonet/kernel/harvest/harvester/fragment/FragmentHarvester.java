@@ -228,8 +228,8 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Add a random uuid to the xml fragment if one hasn't been provided and the 
-     * detected schema of the xml frgament  
+     * Add a random uuid to the xml fragment if one hasn't been provided and 
+		 * the schema of the xml fragment  
      *   
      * @param fragment		fragment to which metadata should be added 
      * 
@@ -244,16 +244,17 @@ public class FragmentHarvester {
 			log.warning("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(fragment));
 		}
 
-		// Add schema
-		Element md = (Element) fragment.getChildren().get(0);
-
-		try {
-			String schema = dataMan.autodetectSchema (md); // e.g. iso19139; 
-			fragment.setAttribute("schema", schema);
-		} catch (Exception e) {
-			log.warning("Skipping metadata with problem schema: "+e.getMessage());
-			harvestSummary.fragmentsUnknownSchema ++;
+		// Add schema as an attribute (if not already present)
+		String setSchema = fragment.getAttributeValue("schema");
+		if (setSchema == null || setSchema.trim().length() == 0) {
+			fragment.setAttribute("schema", params.outputSchema);
+		} else {
+			if (!dataMan.existsSchema(setSchema)) {
+				log.warning("Skipping fragment with schema set to unknown schema: "+setSchema);
+				harvestSummary.fragmentsUnknownSchema ++;
+			}
 		}
+
 	}
 	
 	//---------------------------------------------------------------------------
@@ -414,8 +415,7 @@ public class FragmentHarvester {
 		log.debug("	- Attempting to insert metadata record with link");
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
-		String templateSchema = dataMan.autodetectSchema(template);
-		template = dataMan.setUUID(templateSchema, recUuid, template); 
+		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
 
         //
         // insert metadata
@@ -423,7 +423,7 @@ public class FragmentHarvester {
         int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, templateSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -505,6 +505,7 @@ public class FragmentHarvester {
 		public String url;
 		public String uuid;
 		public String templateId;
+		public String outputSchema;
 		public String isoCategory;
 		public Boolean createSubtemplates;
 		public Iterable<Privileges> privileges;

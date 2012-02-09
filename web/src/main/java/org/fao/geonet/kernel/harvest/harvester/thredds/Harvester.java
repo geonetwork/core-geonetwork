@@ -1377,6 +1377,7 @@ class Harvester
 		collectionParams.templateId = params.collectionMetadataTemplate;
 		collectionParams.url = params.url;
 		collectionParams.uuid = params.uuid;
+		collectionParams.outputSchema = params.outputSchemaOnCollectionsFragments;
 		return collectionParams;
 	}
 
@@ -1397,6 +1398,7 @@ class Harvester
 		atomicParams.templateId = params.atomicMetadataTemplate;
 		atomicParams.url = params.url;
 		atomicParams.uuid = params.uuid;
+		atomicParams.outputSchema = params.outputSchemaOnAtomicsFragments;
 		return atomicParams;
 	}
 

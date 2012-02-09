@@ -337,6 +337,7 @@ class Harvester
 	    FragmentParams fragmentParams = new FragmentHarvester.FragmentParams();
 		fragmentParams.categories = params.getCategories();
 		fragmentParams.createSubtemplates = params.createSubtemplates;
+		fragmentParams.outputSchema = params.outputSchema;
 		fragmentParams.isoCategory = params.recordsCategory;
 		fragmentParams.privileges = params.getPrivileges();
 		fragmentParams.templateId = params.templateId;
