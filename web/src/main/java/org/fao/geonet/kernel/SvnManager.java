@@ -74,7 +74,7 @@ public class SvnManager {
 	private ResourceListener resList = new ResourceListener() {
 		public void beforeClose(Object resource) { commit(resource); }
 		public void close(Object resource)       {} // do nothing on commit
-		public void abort(Object resource)       { abort(resource); }
+		public void abort(Object resource)       { rollback(resource); }
 	};
 
 	// SvnTask holds information used to commit changes to a metadata record
@@ -359,7 +359,7 @@ public class SvnManager {
      *
 		 * @param resource The resource being aborted that we're listening too
      */
-	private void abort(Object resource) {
+	private void rollback(Object resource) {
 		Dbms dbms = (Dbms)resource;
 
 		SvnTask task = tasks.get(dbms);
