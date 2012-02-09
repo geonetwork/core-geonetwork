@@ -120,7 +120,7 @@
                             location.replace(getGNServiceURL('main.search') + "?hitsPerPage=10&editable=true");
 
                         } else {
-                            location.replace(getGNServiceURL('main.home'));
+                            location.replace(getGNServiceURL('home'));
                         }
 
                         runRssSearch();
