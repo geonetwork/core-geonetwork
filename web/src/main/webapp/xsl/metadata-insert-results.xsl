@@ -72,7 +72,7 @@
             <xsl:when test="/root/gui/config/client/@widget='true'">
               <button class="content" onclick="goBack()" id="back"><xsl:value-of
                 select="/root/gui/strings/back"/></button> &#160; <button class="content"
-                  onclick="load('{/root/gui/config/client/@url}?hl={/root/gui/language}#uuid={/root/response/uuid}')"
+                  onclick="load('{/root/gui/config/client/@url}?hl={/root/gui/language}#id={/root/response/id}')"
                   ><xsl:value-of select="/root/gui/strings/show"/></button> &#160; <button
                     class="content"
                     onclick="load('{/root/gui/config/client/@url}?hl={/root/gui/language}#edit={/root/response/id}')"
