@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -167,7 +168,13 @@ public class UserQueryInput {
         setNorthBL(jdom.getChildText(SearchParameter.NORTHBL));
         setSouthBL(jdom.getChildText(SearchParameter.SOUTHBL));
         setRelation(jdom.getChildText(SearchParameter.RELATION));
-        setEditable(jdom.getChildText(SearchParameter.EDITABLE));
+        Element isEditable = jdom.getChild(SearchParameter.EDITABLE);
+        if(isEditable != null && StringUtils.isNotEmpty(isEditable.getText())) {
+            setEditable(isEditable.getText());
+        }
+        else {
+            setEditable("false");
+        }
         
     }
 
