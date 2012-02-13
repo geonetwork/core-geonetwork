@@ -273,7 +273,12 @@ public class UserQueryInput {
     }
 
     public void setEditable(String editable) {
-        this.editable = editable;
+        if(editable.equals("true")) {
+            this.editable = editable;
+        }
+        else {
+            this.editable = "false";
+        }
     }
 
     public String getEditable() {

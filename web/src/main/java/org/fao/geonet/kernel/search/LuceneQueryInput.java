@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -80,6 +81,14 @@ public class LuceneQueryInput extends UserQueryInput {
 
         Element isAdminE = jdom.getChild(SearchParameter.ISADMIN);
         setAdmin(isAdminE != null);
+
+        Element isEditable = jdom.getChild(SearchParameter.EDITABLE);
+        if(isEditable != null && StringUtils.isNotEmpty(isEditable.getText())) {
+            setEditable(isEditable.getText());
+        }
+        else {
+            setEditable("false");
+        }
 
     }
 
