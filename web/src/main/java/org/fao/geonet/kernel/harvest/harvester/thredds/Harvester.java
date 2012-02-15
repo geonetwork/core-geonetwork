@@ -783,11 +783,11 @@ class Harvester
 			//--- supplied to the user for choice)
 			Element md = null;
 			if (isCollection) {
-				String difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF) + Geonet.Path.DIF_STYLESHEET;
+				String difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF) + Geonet.Path.DIF_STYLESHEETS + "/DIFToISO.xsl";
 				log.info("Transforming collection dataset to "+params.outputSchemaOnCollectionsDIF);
 				md = Xml.transform(dif, difToIsoStyleSheet);
 			} else {
-				String difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnAtomicsDIF) + Geonet.Path.DIF_STYLESHEET;
+				String difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnAtomicsDIF) + Geonet.Path.DIF_STYLESHEETS + "/DIFToISO.xsl";
 				log.info("Transforming atomic dataset to "+params.outputSchemaOnAtomicsDIF);
 				md = Xml.transform(dif, difToIsoStyleSheet);
 			}
@@ -914,13 +914,13 @@ class Harvester
 			schemaDir = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF);
 		}
 
-		cdmCoordsToIsoKeywordsStyleSheet = schemaDir + Geonet.Path.CONVERT_STYLESHEETS + "CDMCoords-to-ISO19139Keywords.xsl";
+		cdmCoordsToIsoKeywordsStyleSheet = schemaDir + Geonet.Path.DIF_STYLESHEETS + "/CDMCoords-to-ISO19139Keywords.xsl";
 
 		// -- FIXME: This is still schema dependent and needs to be improved
 		// -- What we wait upon is finalization of the new coverage data parameters
 		// -- metadata elements (inside MD_ContentInformation) in ISO19115/19139
 		if (schemaDir.contains("iso19139.mcp")) {
-			cdmCoordsToIsoMcpDataParametersStyleSheet = schemaDir + Geonet.Path.CONVERT_STYLESHEETS + "CDMCoords-to-ISO19139MCPDataParameters.xsl";
+			cdmCoordsToIsoMcpDataParametersStyleSheet = schemaDir + Geonet.Path.DIF_STYLESHEETS + "/CDMCoords-to-ISO19139MCPDataParameters.xsl";
 		} else {
 			cdmCoordsToIsoMcpDataParametersStyleSheet = null;
 		}
