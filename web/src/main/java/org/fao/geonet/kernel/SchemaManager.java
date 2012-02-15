@@ -155,6 +155,16 @@ public class SchemaManager
 		}
 		return schemaManager;
 	}
+
+    /**
+     * Ensures singleton-ness by preventing cloning.
+     *
+     * @throws CloneNotSupportedException
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 	
 	//--------------------------------------------------------------------------
 	//---
