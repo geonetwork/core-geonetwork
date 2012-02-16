@@ -95,7 +95,6 @@ public class Harvest extends AbstractOperation implements CatalogService {
      * Returns name of this CSW operation.
      * @return name
      */
-    @Override
 	public String getName() {
 		return "Harvest";
 	}
@@ -108,7 +107,6 @@ public class Harvest extends AbstractOperation implements CatalogService {
 	 * @return response xml
 	 * @throws CatalogException hmm
 	 */
-    @Override
 	public Element execute(Element request, ServiceContext serviceContext) throws CatalogException {
         System.out.println("CSW Harvest execute, request is:\n" + Xml.getString(request));
         try {
@@ -315,7 +313,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
      * @param params - params
      * @return adapted getrequest
 	 */
-    @Override
+    
 	public Element adaptGetRequest(Map<String, String> params) {
 		
         String service = params.get("service");
@@ -348,7 +346,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
      * @return parameter values
      * @throws CatalogException hmm
      */
-    @Override
+    
 	public Element retrieveValues(String parameterName) throws CatalogException {
 		return null;
 	}
@@ -637,7 +635,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
 		// run
         Element response = Util.exec(activeParams, context, new Util.Job() {
-            @Override
+            
             public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws SQLException {
                 System.out.println("doHarvest starting harvester job");
 					hm.start(dbms, id);
@@ -736,7 +734,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * File Transfer Protocol.
          */
         FTP {
-            @Override
+            
             public String toString() {
                 return "ftp://";
             }
@@ -745,7 +743,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * Hypertext Transfer Protocol.
          */
         HTTP {
-            @Override
+            
             public String toString() {
                 return "http://";
             }
@@ -754,7 +752,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * Electronic mail.
          */
         EMAIL {
-            @Override
+            
             public String toString() {
                 return "mailto:";
             }
@@ -982,7 +980,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * Polls periodically wether this harvester is still running and when it has finished creates a HarvestResponse
          * and sends it to the url in responseHandler.
          */
-        @Override
+        
         public void run() {
             try {
                 System.out.println("AsyncHarvestResponse run started");
@@ -1019,7 +1017,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          *         typically because it has already completed normally;
          *         <tt>true</tt> otherwise
          */
-        @Override
+        
         public boolean cancel(boolean mayInterruptIfRunning) {
             return false;
         }
@@ -1030,7 +1028,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          *
          * @return <tt>true</tt> if this task was cancelled before it completed
          */
-        @Override
+        
         public boolean isCancelled() {
             return false;
         }
@@ -1044,7 +1042,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          *
          * @return <tt>true</tt> if this task completed
          */
-        @Override
+        
         public boolean isDone() {
             return false;
         }
@@ -1062,7 +1060,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * @throws InterruptedException if the current thread was interrupted
          *                              while waiting
          */
-        @Override
+        
         public Object get() throws InterruptedException, ExecutionException {
             return null;
         }
@@ -1084,7 +1082,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * @throws java.util.concurrent.TimeoutException
          *                              if the wait timed out
          */
-        @Override
+        
         public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
             return null;
         }

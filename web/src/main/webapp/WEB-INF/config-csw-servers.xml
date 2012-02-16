@@ -7,7 +7,7 @@
         <!-- Catalogue Services for the Web services -->
 
         <service name="csw">
-            <class name=".services.main.CswDispatcher" />
+            <class name=".services.main.CswDiscoveryDispatcher" />
         </service>
 
 
@@ -27,13 +27,13 @@
             Some examples:
 
             <service name="csw-custom">
-                <class name=".services.main.CswDispatcher" >
+            <class name=".services.main.CswDiscoveryDispatcher" >
                    <param name="filter" value="+inspirerelated:on"/>
                 </class>
             </service>
 
             <service name="csw-custom2">
-                <class name=".services.main.CswDispatcher" >
+            <class name=".services.main.CswDiscoveryDispatcher" >
                    <param name="filter" value="+inspirerelated:on +keyword:Elevation"/>
                 </class>
             </service>
