@@ -179,3 +179,18 @@ function goSubmit(form_name){
     document.forms[form_name].submit();
 }
 
+
+function checkBatchNewOwner(action, title) {
+    if (Ext.getDom('user').value == '') {
+    	Ext.Msg.alert(title, "selectNewOwner");
+        return false;
+    }
+    if (Ext.getDom('group').value == '') {
+    	Ext.Msg.alert(title, "selectOwnerGroup");
+        return false;
+    }
+    catalogue.doAction(catalogue.services.metadataMassiveNewOwner + "?" + Ext.Ajax.serializeForm(Ext.getDom('batchnewowner')), null, null, null, function(response){
+        Ext.getDom('batchnewowner').parentNode.innerHTML = response.responseText;
+    });
+}
+

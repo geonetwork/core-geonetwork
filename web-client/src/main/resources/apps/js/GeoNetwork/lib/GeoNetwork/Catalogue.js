@@ -328,6 +328,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             },
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
+            metadataMassiveNewOwner: serviceUrl + 'metadata.batch.newowner',
             getGroups: serviceUrl + 'xml.info?type=groups',
             getRegions: serviceUrl + 'xml.info?type=regions',
             getSources: serviceUrl + 'xml.info?type=sources',
