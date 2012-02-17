@@ -26,6 +26,13 @@
 			</platform>
 		</site>
 	</xsl:template>
+
+    <xsl:template match="inspire">
+        <inspire>
+            <enable><xsl:value-of select="children/enable/value"/></enable>
+            <enableSearchPanel><xsl:value-of select="children/enableSearchPanel/value"/></enableSearchPanel>
+        </inspire>
+    </xsl:template>
 	
 	<!-- ============================================================================================= -->
 

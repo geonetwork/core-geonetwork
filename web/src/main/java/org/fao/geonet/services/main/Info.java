@@ -109,6 +109,9 @@ public class Info implements Service
 			if (type.equals("site"))
 				result.addContent(gc.getSettingManager().get("system", -1));
 
+			else if (type.equals("inspire"))
+				result.addContent(gc.getSettingManager().get("system/inspire", -1));
+
 			else if (type.equals("categories"))
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));
 

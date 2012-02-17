@@ -334,6 +334,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getSources: serviceUrl + 'xml.info?type=sources',
             getUsers: serviceUrl + 'xml.info?type=users',
             getSiteInfo: serviceUrl + 'xml.info?type=site',
+            getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             schemaInfo: serviceUrl + 'xml.schema.info',
             getZ3950repositories: serviceUrl + 'xml.info?type=z3950repositories',
             getCategories: serviceUrl + 'xml.info?type=categories',
@@ -481,6 +482,26 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var properties = ['name', 'organization', 'siteId'];
         var request = OpenLayers.Request.GET({
             url: this.services.getSiteInfo,
+            async: false
+        });
+
+        if (request.responseXML) {
+            var xml = request.responseXML.documentElement;
+            Ext.each(properties, function(item, idx){
+                info[item] = xml.getElementsByTagName(item)[0].childNodes[0].nodeValue;
+            });
+        }
+        return info;
+    },
+    /** api: method[getInspireInfo]
+     *
+     *  Return catalogue inspire information (enable, enableSearchPanel).
+     */
+    getInspireInfo: function(){
+        var info = {};
+        var properties = ['enable', 'enableSearchPanel'];
+        var request = OpenLayers.Request.GET({
+            url: this.services.getInspireInfo,
             async: false
         });
 
