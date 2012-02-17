@@ -454,6 +454,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
+        // TODO : this.ownerAction visible to userAdmin only #781
         var actions = [this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
                         this.updatePrivilegesAction, this.createMetadataAction, this.mdImportAction,
                         this.mdImportAction, this.adminAction, this.otherItem];
