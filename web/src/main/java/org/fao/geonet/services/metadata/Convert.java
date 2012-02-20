@@ -21,21 +21,37 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.guiservices.schemas;
+package org.fao.geonet.services.metadata;
 
-import java.util.List;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.oaipmh.Lib;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Get implements Service
+/** Converts a particular metadata using the supplied XSLT name.
+  */
+
+public class Convert implements Service
 {
+    //--------------------------------------------------------------------------
+	//---
+	//--- Init
+	//---
+	//--------------------------------------------------------------------------
+
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -47,38 +63,28 @@ public class Get implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+		SchemaManager sm = gc.getSchemamanager();
 
-		SchemaManager schemaMan = gc.getSchemamanager();
+		String id = Utils.getIdentifierFromParameters(params, context);
+		if (id == null) throw new MetadataNotFoundEx("Metadata not found.");
 
-		Element schemas = new Element("schemalist");
+		Element elMd = new Show().exec(params, context);
+		if (elMd == null) throw new MetadataNotFoundEx(id);
 
-		for (String schema : schemaMan.getSchemas()) {
-			Element elem = new Element("name").setText(schema);
-			// is it a plugin schema?
-			if (schemaMan.isPluginSchema(schema)) {
-				elem.setAttribute("plugin","true");
-			} else {
-				elem.setAttribute("plugin","false");
-			}
-			// is it editable?
-			if (schemaMan.getSchema(schema).canEdit()) {
-				elem.setAttribute("edit","true");
-			} else {
-				elem.setAttribute("edit","false");
-			}
-			// get the conversion information and add it too
-			List<Element> convElems = schemaMan.getConversionElements(schema);
-			if (convElems.size() > 0) {
-				Element conv = new Element("conversions");
-				conv.addContent(convElems);
-				elem.addContent(conv);
-			}
-			schemas.addContent(elem);
-		}
+		//--- get XSLT converter name from params
+		String styleSheet = Util.getParam(params, Params.STYLESHEET);
 
-		return schemas;
+		//--- get metadata info and create an env that works with oai translators
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
+		String schemaDir = sm.getSchemaDir(mdInfo.schemaId);
+		Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
+
+		//--- transform the metadata with the created env and specified stylesheet
+		return Lib.transform(schemaDir, env, elMd, styleSheet);
 	}
-}
 
+}
 //=============================================================================
 

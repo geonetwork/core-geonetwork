@@ -192,6 +192,26 @@ public class Schema {
 		this.plugin = plugin; 
 	}
 
+	private List<Element> conversionElements = new ArrayList<Element>();
+
+	/**
+		* Get List of XML elements that describes how to convert metadata records
+		* that belong to this schema to other schemas
+		*
+		*/
+	public List<Element> getConversionElements() { return conversionElements; }
+
+	/**
+		* Set List of XML elements that describes how to convert metadata records
+		* that belong to this schema to other schemas
+		*
+		* @param conversionElements List of JDOM elements
+		*
+		*/
+	public void setConversionElements(List<Element> conversionElements) { 
+		this.conversionElements = conversionElements; 
+	}
+
 }
 
 

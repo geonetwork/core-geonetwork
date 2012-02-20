@@ -421,6 +421,62 @@ public class SchemaManager
 	}
 
 	//--------------------------------------------------------------------------
+	/**	Return the schema converter elements for a schema (as a list of 
+	  * cloned elements).
+		*
+		* @param schema the metadata schema we want search
+		* @throws Exception if schema is not registered
+	  */
+
+	public List<Element> getConversionElements(String name) throws Exception {
+
+		beforeRead();
+		try {
+			Schema schema = hmSchemas.get(name);
+			List<Element> childs = schema.getConversionElements();
+			List<Element> dChilds = new ArrayList<Element>();
+			for (Element child : childs) {
+				if (child instanceof Element) dChilds.add((Element)child.clone());	
+			}
+			return dChilds;
+		} finally {
+			afterRead();
+		}
+	}
+
+	//--------------------------------------------------------------------------
+	/**	Return the schema converter(s) that produce the specified namespace
+		*
+		* @param schema the metadata schema we want search
+		* @param namespaceURI the namespace URI we are looking for
+		* @return List of XSLTs that produce this namespace URI (full pathname)
+		* @throws Exception if schema is not registered
+	  */
+
+	public List<String> existsConverter(String name, String namespaceUri) throws Exception {
+
+		List<String> result = new ArrayList<String>();
+
+		beforeRead();
+		try {
+			Schema schema = hmSchemas.get(name);
+			List<Element> converterElems = schema.getConversionElements();
+			for (Element elem : converterElems) {
+				String nsUri = elem.getAttributeValue("nsUri");
+				if (nsUri != null && nsUri.equals(namespaceUri)) {
+					String xslt = elem.getAttributeValue("xslt");
+					if (xslt != null) {
+						result.add(schema.getDir() + FS + xslt);
+					}
+				}
+			}
+			return result;
+		} finally {
+			afterRead();
+		}
+	}
+
+	//--------------------------------------------------------------------------
 	/**	Does the schema named in the parameter exist?
 		*
 		* @param schema the metadata schema we want to check existence of
@@ -751,9 +807,10 @@ public class SchemaManager
 		* @param xmLSubstitutionsFile name schema substitutions file
 		* @param xmlIdFile name of XML file that identifies the schema
 		* @param oasisCatFile name of XML OASIS catalog file 
+		* @param conversionsFile name of XML conversions file 
 		*/
 
-	private void addSchema(String fromAppPath, String name, boolean isPluginSchema, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile) throws Exception {
+	private void addSchema(String fromAppPath, String name, boolean isPluginSchema, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
 		String path = new File(xmlSchemaFile).getParent();
 
 		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
@@ -807,7 +864,8 @@ public class SchemaManager
 									extractADElements(xmlIdFile),
 									xfMap,
 									isPluginSchema,
-									extractSchemaLocation(xmlIdFile));
+									extractSchemaLocation(xmlIdFile),
+									extractConvElements(conversionsFile));
 
 		Log.debug(Geonet.SCHEMA_MANAGER, "Property "+Jeeves.XML_CATALOG_FILES+" is "+System.getProperty(Jeeves.XML_CATALOG_FILES));
 
@@ -984,8 +1042,9 @@ public class SchemaManager
 		* @param xfMap Map containing XML localized info files (as Jeeves XmlFiles)
 		* @param isPlugin true if schema is a plugin schema 
 		* @param schemaLocation namespaces and URLs of their xsds
+		* @param convElems List of elements in conversion file
 		*/
-	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir, SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap, boolean isPlugin, String schemaLocation) { 
+	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir, SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap, boolean isPlugin, String schemaLocation, List<Element> convElems) { 
 		
 		Schema schema = new Schema();
 
@@ -998,6 +1057,7 @@ public class SchemaManager
 		schema.setInfo(xfMap);
 		schema.setPluginSchema(isPlugin);
 		schema.setSchemaLocation(schemaLocation);
+		schema.setConversionElements(convElems);
 
 		hmSchemas.put(name, schema);
 	}
@@ -1060,6 +1120,7 @@ public class SchemaManager
     				String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
     				String idFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_ID;
     				String oasisCatFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_OASIS;
+    				String conversionsFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
    
 	 					String stage = "";
     				try {
@@ -1073,7 +1134,7 @@ public class SchemaManager
     						Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchemas[i]+" already exists - cannot add!");
     					} else {
 	 							stage = "adding the schema information";
-    						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile);
+    						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
     						numberOfSchemasAdded++;
     					}
     				} catch (Exception e) {
@@ -1123,6 +1184,23 @@ public class SchemaManager
 		if (autodetect == null) autodetect = root.getChild("autodetect", GEONET_SCHEMA_PREFIX_NS);
 
 		return autodetect.getChildren();
+	}
+
+	//--------------------------------------------------------------------------
+	/** Extract conversion elements from conversions file
+	  *
+		* @param xmlConvFile name of schema XML conversions file
+		*/
+	private List<Element> extractConvElements(String xmlConvFile) throws Exception {
+		List<Element> result = new ArrayList<Element>();
+		if (!(new File(xmlConvFile).exists())) {
+			Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
+		} else {
+			Element root = Xml.loadFile(xmlConvFile);
+			if (root.getName() != "conversions") throw new IllegalArgumentException("Schema conversions file "+xmlConvFile+" is invalid, no <conversions> root element");
+			result = root.getChildren();
+		}
+		return result;
 	}
 
 	//--------------------------------------------------------------------------

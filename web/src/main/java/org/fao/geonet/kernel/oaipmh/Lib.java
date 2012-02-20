@@ -81,7 +81,7 @@ public class Lib
 
 	//--------------------------------------------------------------------------
 
-	public static Element transform(String schemaDir, Element md, String uuid, String changeDate, String targetFormat, String baseUrl, String siteUrl, String siteName) throws Exception {
+	public static Element prepareTransformEnv(String uuid, String changeDate, String baseUrl, String siteUrl, String siteName) {
 
 		//--- setup environment
 
@@ -93,6 +93,13 @@ public class Lib
 		env.addContent(new Element("siteURL")   .setText(siteUrl));
 		env.addContent(new Element("siteName")  .setText(siteName));
 
+		return env;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public static Element transform(String schemaDir, Element env, Element md, String targetFormat) throws Exception {
+
 		//--- setup root element
 
 		Element root = new Element("root");
@@ -101,7 +108,7 @@ public class Lib
 
 		//--- do an XSL transformation
 
-		String styleSheet = schemaDir + "/convert/" + targetFormat + ".xsl";
+		String styleSheet = schemaDir + "/convert/" + targetFormat;
 
 		return Xml.transform(root, styleSheet);
 	}

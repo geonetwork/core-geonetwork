@@ -119,7 +119,8 @@ public class GetRecord implements OaiPmhService
 		} else {
 			String schemaDir = sm.getSchemaDir(schema);
 			if (Lib.existsConverter(schemaDir, prefix)) {
-				md = Lib.transform(schemaDir, md, uuid, changeDate, prefix, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
+				Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
+				md = Lib.transform(schemaDir, env, md, prefix+".xsl");
 			} else {
 				throw new CannotDisseminateFormatException("Unknown prefix : "+ prefix);
 			}
