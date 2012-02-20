@@ -188,15 +188,15 @@
 		<xsl:param name="forBrief" select="false()"/>
 	
 		<xsl:variable name="schema" select="string(geonet:info/schema)"/>
-		<xsl:variable name="schemaServicePrefix" select="concat('xml_',$schema)"/>
 		<xsl:variable name="mid" select="string(geonet:info/id)"/>
 		<xsl:variable name="url" select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService)"/>
 													
-    <xsl:for-each select="/root/gui/services/service[starts-with(@name,$schemaServicePrefix)]">
+    <xsl:for-each select="/root/gui/schemalist/name[text()=$schema]/conversions/converter">
 			<xsl:variable name="serviceName" select="@name"/>
-			<xsl:variable name="serviceUrl" select="concat($url,'/',$serviceName,'?id=',$mid)"/>
-			<xsl:variable name="exportLabel" select="/root/gui/schemas/*[name()=$schema]/strings/*[name()=$serviceName]"/>
-			<xsl:choose>
+      <xsl:if test="/root/gui/services/service[@name=$serviceName]">
+				<xsl:variable name="serviceUrl" select="concat($url,'/',$serviceName,'?id=',$mid,'&amp;styleSheet=',@xslt)"/>
+				<xsl:variable name="exportLabel" select="/root/gui/schemas/*[name()=$schema]/strings/*[name()=$serviceName]"/>
+				<xsl:choose>
 				<xsl:when test="$forBrief">
 					<xsl:element name="link">
 						<xsl:attribute name="href">
@@ -213,7 +213,8 @@
 						<img src="{/root/gui/url}/images/xml.png" alt="{$exportLabel}" title="{$exportLabel}" border="0"/>
 					</a>
 				</xsl:otherwise>
-			</xsl:choose>
+				</xsl:choose>
+			</xsl:if>
 		</xsl:for-each>
 
 		<!-- add pdf link -->
