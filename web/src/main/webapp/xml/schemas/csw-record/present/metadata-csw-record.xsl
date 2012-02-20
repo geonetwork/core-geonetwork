@@ -11,7 +11,7 @@
   
 	<!-- main template - the way into processing csw-record which is 
 	     processed in dublic-core mode -->
-	<xsl:template name="csw-record">
+	<xsl:template name="metadata-csw-record">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>

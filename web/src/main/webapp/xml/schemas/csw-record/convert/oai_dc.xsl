@@ -4,8 +4,7 @@
 						xmlns:gco="http://www.isotc211.org/2005/gco"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ows="http://www.opengis.net/ows"
 						xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
-		<!-- ==================================================== -->
-		<element name="csw:Record">
+
 	<!-- ============================================================================================ -->
 	
 	<xsl:output indent="yes"/>
