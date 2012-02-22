@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -514,10 +515,16 @@ public class Thesaurus {
         for(DateFormat df: dfList) {
             try {
                 thesaurusDate = df.parse(dateVal);
-            } catch(Exception ex) {
+                Log.debug(Geonet.THESAURUS_MAN, "Parsed '"+dateVal+"' as " + thesaurusDate);
+                break; // parsing complete, skip next
+            } catch(ParseException ex) {
                 // Ignore the exception and try next format
-                ex.printStackTrace();
+                // ex.printStackTrace();
             }
+        }
+
+        if(thesaurusDate == null) {
+            Log.warning(Geonet.THESAURUS_MAN, "Error parsing thesaurus date '"+dateVal+"' in " + dateEl.getQualifiedName());
         }
 
         return thesaurusDate;

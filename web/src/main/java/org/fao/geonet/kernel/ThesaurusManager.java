@@ -47,7 +47,7 @@ public class ThesaurusManager {
 	private String thesauriDirectory = null;
 
 	/**
-	 * 
+	 *
 	 * @param appPath
 	 * @param thesauriRepository
 	 * @throws Exception
@@ -66,7 +66,7 @@ public class ThesaurusManager {
 
 		initThesauriTable(thesauriDir);
 	}
-	
+
 	/**
 	 * @param fname
 	 * @param type
@@ -75,10 +75,10 @@ public class ThesaurusManager {
 	 */
 	public String buildThesaurusFilePath(String fname, String type, String dname) {
 		return thesauriDirectory+File.separator+type+File.separator+Geonet.CodeList.THESAURUS+File.separator+dname+File.separator+fname;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param thesauriDirectory
 	 */
 	private void initThesauriTable(File thesauriDirectory) {
@@ -114,11 +114,11 @@ public class ThesaurusManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param thesauriDirectory
 	 */
 	private void loadRepositories(File thesauriDirectory, String root) {
-		
+
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				return name.endsWith(".rdf");
@@ -128,6 +128,7 @@ public class ThesaurusManager {
 		String[] rdfDataFile = thesauriDirectory.list(filter);
 
         for (String aRdfDataFile : rdfDataFile) {
+            Log.debug(Geonet.THESAURUS_MAN, "Loading thesaurus file : "+ aRdfDataFile);
 
             Thesaurus gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile));
             try {
@@ -141,19 +142,19 @@ public class ThesaurusManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param gst
 	 */
 	public void addThesaurus(Thesaurus gst) throws Exception {
 
 		String thesaurusName = gst.getKey();
-		
+
 		Log.debug(Geonet.THESAURUS_MAN, "Adding thesaurus : "+ thesaurusName);
 
 		if (existsThesaurus(thesaurusName)) {
 			throw new Exception ("A thesaurus exists with code " + thesaurusName);
 		}
-		
+
 		LocalRepository thesaurusRepository;
 		try {
 			RepositoryConfig repConfig = new RepositoryConfig(gst.getKey());
@@ -165,42 +166,42 @@ public class ThesaurusManager {
 			repConfig.addSail(memSail);
 			repConfig.setWorldReadable(true);
 			repConfig.setWorldWriteable(true);
-			
+
 			thesaurusRepository = service.createRepository(repConfig);
 
 			gst.setRepository(thesaurusRepository);
-			
+
 			thesauriTable.put(thesaurusName, gst);
-			
+
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 			throw e;
-		} 			
+		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param name
 	 */
 	public void remove(String name){
 		service.removeRepository(name);
 		thesauriTable.remove(name);
 	}
-	
+
 	// =============================================================================
 	// PUBLIC SERVICES
 
 	public String getThesauriDirectory() {
 		return thesauriDirectory;
 	}
-	
+
 	public Hashtable<String, Thesaurus> getThesauriTable() {
 		return thesauriTable;
 	}
 
     public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriTable.get(thesaurusName);
-	}	
+	}
 
 	/**
 	 * @param name
