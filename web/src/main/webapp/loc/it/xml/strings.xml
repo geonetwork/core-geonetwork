@@ -948,7 +948,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 		<en>in</en>
 		<foundKeyWords>Numero di termini trovati</foundKeyWords>
 		<foundKeyWordsLimit>Numero massimo di termini trovati</foundKeyWordsLimit>
-		<keywordConfirm>Conferma l'eliminazione della parola chiave</keywordConfirm>
+		<keywordConfirm>Confermare l\'eliminazione della parola chiave</keywordConfirm>
 		<keywordDescription>Definizione della parola chiave:</keywordDescription>
 		<management>Gestisci thesauri</management>
 		<manDes>Aggiungi/modifica/cancella e visualizza thesauri</manDes>
