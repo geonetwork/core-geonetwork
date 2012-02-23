@@ -196,9 +196,11 @@ public class SearchController {
         //
         // clear selection from session when query filter change
         //
-        String requestId = Util.scramble(Xml.getString(filterExpr));
-        String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
-        if (sessionRequestId != null && !sessionRequestId.equals(requestId)) {
+    QueryReprentationForSession sessionQueryReprentation = (QueryReprentationForSession) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
+    QueryReprentationForSession requestQueryReprentation = new QueryReprentationForSession(context, filterExpr);
+
+    if (sessionQueryReprentation == null ||
+            !requestQueryReprentation.equals(sessionQueryReprentation)) {
             // possibly close old selection
             SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
 		    if (oldSelection != null){
@@ -206,7 +208,7 @@ public class SearchController {
                 oldSelection = null;
             }
         }
-        session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestId);
+        session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestQueryReprentation);
     }
 
     /**
