@@ -116,7 +116,6 @@
     <xsl:template name="getMetadataTitle">
         <xsl:param name="uuid"/>
     	<xsl:variable name="metadataTitle" select="java:getIndexField(string(substring(/root/gui/url, 2)), string($uuid), 'title', string(/root/gui/language))"/>
-            
         <xsl:choose>
             <xsl:when test="$metadataTitle=''">
             	<xsl:variable name="metadataDefaultTitle" select="java:getIndexField(string(substring(/root/gui/url, 2)), string($uuid), '_defaultTitle', string(/root/gui/language))"/>
@@ -152,8 +151,8 @@
 		<xsl:param name="edit"/>
 
 		<xsl:variable name="metadata" select="/root/gmd:MD_Metadata|/root/*[@gco:isoType='gmd:MD_Metadata']"/>
-
 		<xsl:if test="starts-with(geonet:info/schema, 'iso19139') or geonet:info/schema = 'iso19110'">
+
 			<xsl:variable name="uuid" select="$metadata/geonet:info/uuid"/>
 			
 			<xsl:variable name="isService" select="$metadata/gmd:identificationInfo/srv:SV_ServiceIdentification|
@@ -173,11 +172,9 @@
 					<xsl:with-param name="metadata" select="$metadata"/>
 				</xsl:call-template>
 			</xsl:variable>
-
-
-
 			<xsl:if test="normalize-space($parent)!='' or $children or $services or $relatedRecords or
-				$metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn or $edit">
+				$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn or $edit">
+
 		        <div class="relatedElements">
 					<!-- Parent/child relation
 						displayed for both service and datasets metadata.
@@ -293,12 +290,12 @@
 
 					<!-- Datasets linked to a service
 					. -->
-		        	<xsl:if test="$isService and ($edit or $metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn)">
+          <xsl:if test="$isService and ($edit or $metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn)">
 						<h3><img src="{/root/gui/url}/images/dataset.gif"
 							align="absmiddle"/>
 							<xsl:value-of select="/root/gui/strings/linkedDatasetMetadata"/></h3>
 						<ul>
-							<xsl:for-each select="$metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn[@uuidref!='']">
+							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn[@uuidref!='']">
 								<li><a class="arrow" href="metadata.show?uuid={@uuidref}">
 									<xsl:call-template name="getMetadataTitle">
 										<xsl:with-param name="uuid" select="@uuidref"/>

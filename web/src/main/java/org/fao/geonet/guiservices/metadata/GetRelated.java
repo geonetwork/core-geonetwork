@@ -51,13 +51,13 @@ import java.util.Iterator;
 
 /**
  * Perform a search and return all children metadata record for current record.
- * 
+ *
  * In some cases, related records found :
  * <ul>
  * <li>could not be readable by current user.</li>
  * <li>could not be visible by current user.</li>
  * </ul>
- * 
+ *
  * Parameters:
  * <ul>
  * <li>type: service|children|related|parent|dataset|source|fcat|null (ie. all)</li>
@@ -66,7 +66,7 @@ import java.util.Iterator;
  * <li>id or uuid: could be optional if call in Jeeves service forward call. In
  * that case geonet:info/uuid is used.</li>
  * </ul>
- * 
+ *
  */
 public class GetRelated implements Service {
 
@@ -99,14 +99,14 @@ public class GetRelated implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
+        Dbms dbms = null;
 
         if (info == null) {
             String mdId = Utils.getIdentifierFromParameters(params, context);
             if (mdId == null)
                 throw new MetadataNotFoundEx("Metadata not found.");
 
+            dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
             uuid = dm.getMetadataUuid(dbms, mdId);
             if (uuid == null)
                 throw new MetadataNotFoundEx("Metadata not found.");
@@ -134,8 +134,9 @@ public class GetRelated implements Service {
             if (md != null) {
                 Element parent = md.getChild("parentIdentifier", gmd);
                 if (parent != null) {
-                    String parentUuid = parent.getChildText("CharacterString",
-                            gco);
+                    String parentUuid = parent.getChildText("CharacterString", gco);
+
+                    if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
                     String parentId = dm.getMetadataId(dbms, parentUuid);
 
                     try {
@@ -204,7 +205,7 @@ public class GetRelated implements Service {
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
                     to, fast));
-            
+
         }
 
         return relatedRecords;
