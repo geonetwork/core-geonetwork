@@ -341,12 +341,12 @@
 	<begtime>Anfangszeit</begtime>
 	<bgFileDescChoice value="large_thumbnail">Große Miniaturansicht</bgFileDescChoice>
 	<bgFileDescChoice value="thumbnail">Miniaturansicht</bgFileDescChoice>
-	<bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
-	<bookmarkDigg>Bookmark on Digg</bookmarkDigg>
-	<bookmarkEmail>Send a reference to this record by email</bookmarkEmail>
-	<bookmarkFacebook>Bookmark on Facebook</bookmarkFacebook>
-	<bookmarkPermanent>Permanent link to this description</bookmarkPermanent>
-	<bookmarkStumbleUpon>Bookmark on StumbleUpon</bookmarkStumbleUpon>
+    <bookmarkDelicious>Lesezeichen auf Delicious</bookmarkDelicious>
+    <bookmarkDigg>Lesezeichen auf Digg</bookmarkDigg>
+    <bookmarkEmail>Eine Referenz zu diesem Eintrag als E-Mail versenden</bookmarkEmail>
+    <bookmarkFacebook>Lesezeichen auf Facebook</bookmarkFacebook>
+    <bookmarkPermanent>Permalink für diese Beschreibung</bookmarkPermanent>
+    <bookmarkStumbleUpon>Lesezeichen auf StumbleUpon</bookmarkStumbleUpon>
 	<bounding>Bounding Coordinates</bounding>
 	<boundingRelation value="encloses">anfügen</boundingRelation>
 	<boundingRelation value="equal">ist genau</boundingRelation>

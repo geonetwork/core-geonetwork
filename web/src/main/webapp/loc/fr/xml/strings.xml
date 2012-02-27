@@ -348,12 +348,12 @@
 	<begtime>Date de début</begtime> <!-- FIXME: check if only begdate is needed -->
 	<bgFileDescChoice value="large_thumbnail">Vignette grand format</bgFileDescChoice>
 	<bgFileDescChoice value="thumbnail">Vignette</bgFileDescChoice>
-	<bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
-	<bookmarkDigg>Bookmark on Digg</bookmarkDigg>
-	<bookmarkEmail>Send a reference to this record by email</bookmarkEmail>
-	<bookmarkFacebook>Bookmark on Facebook</bookmarkFacebook>
-	<bookmarkPermanent>Permanent link to this description</bookmarkPermanent>
-	<bookmarkStumbleUpon>Bookmark on StumbleUpon</bookmarkStumbleUpon>
+	<bookmarkDelicious>Favori pour Delicious</bookmarkDelicious>
+	<bookmarkDigg>Favori pour Digg</bookmarkDigg>
+	<bookmarkEmail>Envoie par email d'une référence pour cet enregistrement</bookmarkEmail>
+	<bookmarkFacebook>Favori pour Facebook</bookmarkFacebook>
+	<bookmarkPermanent>Lien permanent vers cette description</bookmarkPermanent>
+	<bookmarkStumbleUpon>Favori pour StumbleUpon</bookmarkStumbleUpon>
 	<bounding>Coordonnées de l'emprise</bounding>
 	<boundingRelation value="encloses">contient</boundingRelation>
 	<boundingRelation value="equal">identique</boundingRelation>
