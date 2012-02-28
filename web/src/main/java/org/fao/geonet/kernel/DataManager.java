@@ -693,7 +693,7 @@ public class DataManager {
      * @throws Exception
      */
 	public String getMetadataSchema(Dbms dbms, String id) throws Exception {
-		List list = dbms.select("SELECT schemaId FROM Metadata WHERE id = " +id).getChildren();
+		List list = dbms.select("SELECT schemaId FROM Metadata WHERE id = ?", new Integer(id)).getChildren();
 
 		if (list.size() == 0)
 			throw new IllegalArgumentException("Metadata not found for id : " +id);
@@ -1378,8 +1378,9 @@ public class DataManager {
 	public String createMetadata(ServiceContext context, Dbms dbms, String templateId, String groupOwner,
 										  SerialFactory sf, String source, int owner,
 										  String parentUuid, String isTemplate) throws Exception {
-		String query = "SELECT schemaId, data FROM Metadata WHERE id="+ templateId;
-		List listTempl = dbms.select(query).getChildren();
+		int iTemplateId = new Integer(templateId);
+		String query = "SELECT schemaId, data FROM Metadata WHERE id=?";
+		List listTempl = dbms.select(query, iTemplateId).getChildren();
 
 		if (listTempl.size() == 0) {
 			throw new IllegalArgumentException("Template id not found : " + templateId);
@@ -1404,7 +1405,7 @@ public class DataManager {
 		copyDefaultPrivForGroup(context, dbms, id, groupOwner);
 
 		//--- store metadata categories copying them from the template
-		List categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = "+templateId).getChildren();
+		List categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = ?",iTemplateId).getChildren();
 
         for (Object aCategList : categList) {
             Element elRec = (Element) aCategList;
@@ -1585,7 +1586,7 @@ public class DataManager {
      */
 	public boolean existsMetadata(Dbms dbms, int id) throws Exception {
 		//FIXME : should use lucene
-		List list = dbms.select("SELECT id FROM Metadata WHERE id="+ id).getChildren();
+		List list = dbms.select("SELECT id FROM Metadata WHERE id=?", new Integer(id)).getChildren();
 		return list.size() != 0;
 	}
 
@@ -1599,7 +1600,7 @@ public class DataManager {
 	public boolean existsMetadataUuid(Dbms dbms, String uuid) throws Exception {
 		//FIXME : should use lucene
 
-		List list = dbms.select("SELECT uuid FROM Metadata WHERE uuid='" + uuid + "'").getChildren();
+		List list = dbms.select("SELECT uuid FROM Metadata WHERE uuid=?",uuid).getChildren();
 		return list.size() != 0;
 	}
 
@@ -2471,8 +2472,8 @@ public class DataManager {
         if(autoFixing) {
         	Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
             
-        	String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = " + id;
-            Element rec = dbms.select(query).getChild("record");
+        	String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = ?";
+            Element rec = dbms.select(query, new Integer(id)).getChild("record");
             Boolean isTemplate = rec != null && !rec.getChildText("istemplate").equals("n");
             
             // don't process templates
@@ -2529,8 +2530,8 @@ public class DataManager {
         Map<String,Element> unregisteredMetadata = new HashMap<String,Element>();
 
         String query = "select m.id, m.uuid, m.data, mn.notifierId, mn.action from metadata m left join metadatanotifications mn on m.id = mn.metadataId\n" +
-                "where (mn.notified is null or mn.notified = 'n') and (mn.action <> 'd') and (mn.notifierId is null or mn.notifierId = " + notifierId + ")";
-        List<Element> results = dbms.select(query).getChildren();
+                "where (mn.notified is null or mn.notified = 'n') and (mn.action <> 'd') and (mn.notifierId is null or mn.notifierId = ?)";
+        List<Element> results = dbms.select(query, new Integer(notifierId)).getChildren();
         Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata after select: " + (results != null));
 
         if (results != null) {
@@ -2559,8 +2560,8 @@ public class DataManager {
         Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete after dbms");
 
         String query = "select metadataId as id, metadataUuid as uuid, notifierId, action from metadatanotifications " +
-                "where (notified = 'n') and (action = 'd') and (notifierId = " + notifierId + ")";
-        List<Element> results = dbms.select(query).getChildren();
+                "where (notified = 'n') and (action = 'd') and (notifierId = ?)";
+        List<Element> results = dbms.select(query, new Integer(notifierId)).getChildren();
         Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete after select: " + (results != null));
 
         if (results != null) {
@@ -2741,10 +2742,10 @@ public class DataManager {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
-									"uuid, isHarvested, harvestUuid, popularity, rating, owner, displayOrder FROM Metadata WHERE id = " + id;
+									"uuid, isHarvested, harvestUuid, popularity, rating, owner, displayOrder FROM Metadata WHERE id = ?";
 
 		// add Metadata table infos: schemaId, createDate, changeDate, source,
-		Element rec = dbms.select(query).getChild("record");
+		Element rec = dbms.select(query, new Integer(id)).getChild("record");
 
 		String  schema     = rec.getChildText("schemaid");
 		String  createDate = rec.getChildText("createdate");
@@ -2807,8 +2808,8 @@ public class DataManager {
         }
         
 		// add owner name
-		query = "SELECT username FROM Users WHERE id = " + owner;
-		Element record = dbms.select(query).getChild("record");
+		query = "SELECT username FROM Users WHERE id = ?";
+		Element record = dbms.select(query, new Integer(owner)).getChild("record");
 		if (record != null) {
 			String ownerName = record.getChildText("username");
 			addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
@@ -2816,7 +2817,7 @@ public class DataManager {
 
 		// add categories
 		List categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories "+
-												"WHERE metadataId = " + id + " AND categoryId = id ORDER BY id").getChildren();
+												"WHERE metadataId = ? AND categoryId = id ORDER BY id", new Integer(id)).getChildren();
 
         for (Object category1 : categories) {
             Element category = (Element) category1;
@@ -3098,7 +3099,7 @@ public class DataManager {
         dbms.execute("DELETE FROM CustomElementSet");
         for(String xpath : customElementSet.getXpaths()) {
              if(StringUtils.isNotEmpty(xpath)) {
-                 dbms.execute("INSERT INTO CustomElementSet (xpath) VALUES ('" + xpath + "')");
+                 dbms.execute("INSERT INTO CustomElementSet (xpath) VALUES (?)", xpath);
              }
         }
     }
