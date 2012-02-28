@@ -136,9 +136,9 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param table
      * @param id
 		 * @param context
-     * @throws SQLException
+     * @throws Exception
      */
-	public void delete(Dbms dbms, String table, String id, ServiceContext context) throws SQLException {
+	public void delete(Dbms dbms, String table, String id, ServiceContext context) throws Exception {
 		deleteDb(dbms, table, id);
 	}
 

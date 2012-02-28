@@ -221,12 +221,12 @@ public abstract class XmlSerializer {
      * @param id
      * @throws SQLException
      */
-	protected void deleteDb(Dbms dbms, String table, String id) throws SQLException {
+	protected void deleteDb(Dbms dbms, String table, String id) throws Exception {
 		// TODO: Ultimately we want to remove any xlinks in this document
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
-		String query = "DELETE FROM " + table + " WHERE id="+id;
-		dbms.execute(query);
+		String query = "DELETE FROM " + table + " WHERE id=?";
+		dbms.execute(query, new Integer(id));
 	}
 
     /**

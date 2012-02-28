@@ -233,7 +233,7 @@ public class AccessManager
 			}
 			else
 			{
-				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=" + usrSess.getUserId());
+				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",usrSess.getUserIdAsInt());
 
 				List list = elUserGrp.getChildren();
 
@@ -260,7 +260,7 @@ public class AccessManager
 		HashSet<String> hs = new HashSet<String>();
 
 		String query= "SELECT * FROM Users WHERE id=?";
-		List   list = dbms.select(query, userId).getChildren();
+		List   list = dbms.select(query, new Integer(userId)).getChildren();
 
 		//--- return an empty list if the user does not exist
 
@@ -270,11 +270,13 @@ public class AccessManager
 		Element user    = (Element) list.get(0);
 		String  profile = user.getChildText("profile");
 
-		query = profile.equals(Geonet.Profile.ADMINISTRATOR)
-					 ? "SELECT id AS grp FROM Groups"
-					 : "SELECT groupId AS grp FROM UserGroups WHERE userId=" + userId;
+		Element elUserGrp;
+		if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+			elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
+		} else {
+			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", new Integer(userId));
+		}
 
-		Element elUserGrp = dbms.select(query);
 
 		for(Object o : elUserGrp.getChildren())
 		{
@@ -368,7 +370,7 @@ public class AccessManager
 		}
 
     /**
-     * Returns owners ofr metadata records.
+     * Returns owners of metadata records.
      * @param dbms
      * @param metadataId
      * @return
@@ -414,8 +416,8 @@ public class AccessManager
      */
     public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
         // group 'all' has the magic id 1.
-        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = " + metadataId;
-        Element result = dbms.select(query);
+        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
+        Element result = dbms.select(query, new Integer(metadataId));
         if(result == null) {
             return false;
         }
