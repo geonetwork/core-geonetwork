@@ -43,6 +43,7 @@ import org.geotools.data.h2.H2JNDIDataStoreFactory;
 import org.geotools.data.mysql.MySQLJNDIDataStoreFactory;
 import org.geotools.data.oracle.OracleNGJNDIDataStoreFactory;
 import org.geotools.data.postgis.PostgisNGJNDIDataStoreFactory;
+import org.geotools.data.postgis.PostgisNGDataStoreFactory;
 import org.geotools.data.sqlserver.SQLServerJNDIDataStoreFactory;
 import org.geotools.data.DataStore;
 
@@ -81,6 +82,8 @@ public class JNDIPool extends AbstractDbmsPool {
 
 			this.name = url;
 
+			int iMaxOpen = -1;
+
 			Map<String,String> params = new HashMap<String,String>();
 
 			String uTest = url.toLowerCase();
@@ -92,12 +95,20 @@ public class JNDIPool extends AbstractDbmsPool {
 				provideDataStore = provideDataStoreStr.equals("true");
 			}
 
+			iMaxOpen = getPreparedStatementCacheSize(config);
+			if (iMaxOpen != -1) {
+				params.put(JDBCDataStoreFactory.MAX_OPEN_PREPARED_STATEMENTS.key, iMaxOpen+"");
+			}
+
 			if (uTest.contains("db2")) { 
 				params.put(dbType, "db2");
 				DB2NGJNDIDataStoreFactory factory = new DB2NGJNDIDataStoreFactory();
 				dataStore = (JDBCDataStore)factory.createDataStore(params);
 			} else if (uTest.contains("postgis")) {
 				params.put(dbType, "postgis");
+				if (iMaxOpen != -1) {
+					params.put(PostgisNGDataStoreFactory.PREPARED_STATEMENTS.key, "true");
+				}
 				PostgisNGJNDIDataStoreFactory factory = new PostgisNGJNDIDataStoreFactory();
 				dataStore = (JDBCDataStore)factory.createDataStore(params);
 			} else if (uTest.contains("oracle")) {
@@ -174,6 +185,21 @@ public class JNDIPool extends AbstractDbmsPool {
 		sb.append('\n');
 
 		return sb.toString();
+	}
+
+	// --------------------------------------------------------------------------
+
+	private int getPreparedStatementCacheSize(Element config) throws NumberFormatException {
+		int iMaxOpen = -1;
+		String maxOpenPreparedStatements = config.getChildText(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS);
+		if (maxOpenPreparedStatements != null) {
+			try {
+				iMaxOpen = new Integer(maxOpenPreparedStatements);
+			} catch (NumberFormatException nfe) {
+				throw new IllegalArgumentException(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS+" has non-integer value "+maxOpenPreparedStatements);
+			}
+		}
+		return iMaxOpen;
 	}
 }
 // =============================================================================

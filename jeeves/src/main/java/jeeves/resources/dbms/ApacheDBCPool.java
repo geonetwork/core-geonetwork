@@ -36,6 +36,7 @@ import jeeves.constants.Jeeves;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import org.geotools.data.DataStore;
+
 import org.geotools.data.postgis.PostgisDataStoreFactory;
 
 import org.jdom.Element;
@@ -95,11 +96,10 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		String validationQuery = config.getChildText(Jeeves.Res.Pool.VALIDATION_QUERY);
 		String transactionIsolation = config.getChildText(Jeeves.Res.Pool.TRANSACTION_ISOLATION);
 		if (transactionIsolation == null) {
-			// use SERIALIZABLE for everything by default except ORACLE which
-			// returns way too many cannot SERIALIZE errors - use READ_COMMITTED
-			// for that
-			transactionIsolation = Jeeves.Res.Pool.TRANSACTION_ISOLATION_SERIALIZABLE;
-			if (url.toUpperCase().contains("ORACLE")) transactionIsolation = Jeeves.Res.Pool.TRANSACTION_ISOLATION_READ_COMMITTED;
+			// use READ_COMMITTED for everything by default except McKoi which 
+			// only supports SERIALIZABLE 
+			transactionIsolation = Jeeves.Res.Pool.TRANSACTION_ISOLATION_READ_COMMITTED;
+			if (url.toUpperCase().contains("MCKOI")) transactionIsolation = Jeeves.Res.Pool.TRANSACTION_ISOLATION_SERIALIZABLE;
 		} else {
 			Set<String> isolations = new HashSet<String>();
 			isolations.add(Jeeves.Res.Pool.TRANSACTION_ISOLATION_SERIALIZABLE);
