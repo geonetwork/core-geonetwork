@@ -155,20 +155,20 @@ public class Info implements Service
 	{
 		UserSession session = context.getUserSession();
 
-		if (!session.isAuthenticated())
-			return Lib.local.retrieve(dbms, "Groups", "id < 2", "id");
+		if (!session.isAuthenticated()) {
+			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", "id < ?", "id", 2);
+		}
 
 		//--- retrieve user groups
 
 		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile()))
-			return Lib.local.retrieve(dbms, "Groups", null, "id");
+			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 		else
 		{
-			String query = "SELECT groupId as id FROM UserGroups WHERE "+
-								"userId=" + session.getUserId();
+			String query = "SELECT groupId as id FROM UserGroups WHERE userId=?";
 
-			Set<String> ids = Lib.element.getIds(dbms.select(query));
-			Element groups = Lib.local.retrieve(dbms, "Groups", null, "id");
+			Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserIdAsInt()));
+			Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 
 			return Lib.element.pruneChildren(groups, ids);
 		}

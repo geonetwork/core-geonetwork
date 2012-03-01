@@ -73,6 +73,11 @@ public class CswDiscoveryDispatcher implements Service {
         // KVP encoding
         if(params.getName().equals("request")) {
             operation = params.getChildText("request");
+						if (operation == null) {
+							Element info = new Element("info").setText("No 'request' parameter found");
+							response.addContent(info);
+							return response;
+						}
         }
         // SOAP encoding
         else if(params.getName().equals("Envelope")) {

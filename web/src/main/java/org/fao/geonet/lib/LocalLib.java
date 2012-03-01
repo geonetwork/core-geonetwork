@@ -158,28 +158,28 @@ public class LocalLib
 
 	public Element retrieve(Dbms dbms, String table) throws SQLException
 	{
-		return retrieve(dbms, table, null, null, null);
+		return retrieve(dbms, table, null, null, null, (Object[])null);
 	}
 
 	//-----------------------------------------------------------------------------
 
-	public Element retrieve(Dbms dbms, String table, String where) throws SQLException
+	public Element retrieveWhere(Dbms dbms, String table, String where, Object... args) throws SQLException
 	{
-		return retrieve(dbms, table, null, where, null);
+		return retrieve(dbms, table, null, where, null, args);
 	}
 
 	//-----------------------------------------------------------------------------
 
-	public Element retrieve(Dbms dbms, String table, String where, String orderBy) throws SQLException
+	public Element retrieveWhereOrderBy(Dbms dbms, String table, String where, String orderBy, Object... args) throws SQLException
 	{
-		return retrieve(dbms, table, null, where, orderBy);
+		return retrieve(dbms, table, null, where, orderBy, args);
 	}
 
 	//-----------------------------------------------------------------------------
 
 	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
 	{
-		return retrieve(dbms, table, id, null, null);
+		return retrieve(dbms, table, id, null, null, new Integer(id));
 	}
 
 	//-----------------------------------------------------------------------------
@@ -188,7 +188,7 @@ public class LocalLib
 	//---
 	//-----------------------------------------------------------------------------
 
-	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy)
+	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args)
 												throws SQLException
 	{
 		String query1 = "SELECT * FROM "+table;
@@ -201,17 +201,20 @@ public class LocalLib
 		}
 		else
 		{
-			query1 += " WHERE id="   +id;
-			query2 += " WHERE idDes="+id;
+			query1 += " WHERE id=?";
+			query2 += " WHERE idDes=?";
 		}
 
 		if (orderBy != null)
 			query1 += " ORDER BY "+ orderBy;
 
-		Element result = dbms.select(query1);
+		Element result = dbms.select(query1, args);
 
 		List base = result.getChildren();
-		List des  = dbms.select(query2).getChildren();
+
+		List des;
+		if (id != null) des = dbms.select(query2, args).getChildren();
+		else des = dbms.select(query2).getChildren();
 
 		//--- preprocess data for faster access
 

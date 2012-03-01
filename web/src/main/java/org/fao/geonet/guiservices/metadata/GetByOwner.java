@@ -53,28 +53,31 @@ public class GetByOwner implements Service {
 
         String ownerId = context.getUserSession().getUserId();
         String userProfile = context.getUserSession().getProfile();
-        String userId = context.getUserSession().getUserId();
 
         if (userProfile == null) {
            throw new OperationNotAllowedEx("Unauthorized user attempted to list editable metadata ");
         }
 
+				boolean useOwnerId = true;
+
         // if the user is an admin, return all metadata
         if(userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
             query = "SELECT id FROM Metadata WHERE isHarvested='n'" ;
+						useOwnerId = false;
         }
         // if the user is a reviewer, return all metadata of the user's groups
         else if(userProfile.equals(Geonet.Profile.REVIEWER) || userProfile.equals(Geonet.Profile.USER_ADMIN)) {
             query = "SELECT id FROM Metadata "+
-                        "WHERE groupOwner IN (SELECT groupId FROM UserGroups WHERE userId='"+ownerId+
-                        "' AND isHarvested='n')" ;
+                    "WHERE groupOwner IN "+
+										"(SELECT groupId FROM UserGroups WHERE userId=? "+
+                    "AND isHarvested='n')" ;
         }
         // if the user is an editor, return metadata owned by this user
         else if(userProfile.equals(Geonet.Profile.EDITOR) ) {
-            query = "SELECT id FROM Metadata WHERE owner="+ownerId+
+            query = "SELECT id FROM Metadata WHERE owner=?"+
                         " AND isHarvested='n'" ;
         } else {
-            throw new OperationNotAllowedEx("Unauthorized user " + userId + " attempted to list editable metadata ");
+            throw new OperationNotAllowedEx("Unauthorized user " + ownerId + " attempted to list editable metadata ");
         }
 
         // Sorting
@@ -90,7 +93,12 @@ public class GetByOwner implements Service {
             query += " ORDER BY rating DESC";
         }
 
-        Element result = dbms.select(query);
+        Element result;
+				if (useOwnerId) {
+					result = dbms.select(query, new Integer(ownerId));
+				} else {
+					result = dbms.select(query);
+				}
         _response = new Element("response");
 
         for (Iterator iter = result.getChildren().iterator(); iter.hasNext();) {

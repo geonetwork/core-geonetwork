@@ -33,6 +33,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
+import java.util.List;
 
 //=============================================================================
 
@@ -59,8 +60,7 @@ public class UserGroups implements Service
 	{
 		String id = params.getChildText(Params.ID);
 
-		if (id == null)
-			return new Element(Jeeves.Elem.RESPONSE);
+		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
 		UserSession usrSess = context.getUserSession();
 		String      myProfile = usrSess.getProfile();
@@ -71,8 +71,8 @@ public class UserGroups implements Service
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 			// -- get the profile of the user id supplied
-			String query= "SELECT * FROM Users WHERE id="+id;
-			java.util.List  uList = dbms.select(query).getChildren();
+			String query= "SELECT * FROM Users WHERE id=?";
+			List<Element>  uList = dbms.select(query, new Integer(id)).getChildren();
 
 			if (uList.size() == 0)
 				throw new IllegalArgumentException("user "+id+" doesn't exist");
@@ -80,20 +80,18 @@ public class UserGroups implements Service
 			Element theUser    = (Element) uList.get(0);
 			String  theProfile = theUser.getChildText("profile");
 
-			//--- retrieve user groups iof the user id supplied
+			//--- retrieve user groups of the user id supplied
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
 			Element theGroups;
 
 			if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
 				theGroups = dbms.select("SELECT id, name, description FROM Groups");
 			} else {
-				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=" + id);
+				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=?",new Integer(id));
 			}
 
-			java.util.List list = theGroups.getChildren();
-			for(int i=0; i<list.size(); i++)
-			{
-				Element group = (Element)list.get(i);
+			List<Element> list = theGroups.getChildren();
+			for (Element group : list) {
 				group.setName("group");
 				elGroups.addContent((Element)group.clone());
 			}
@@ -103,7 +101,7 @@ public class UserGroups implements Service
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info
 
-				java.util.List adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId="+myUserId+" or userId = "+id+" group by groupId having count(*) > 1").getChildren();
+				List<Element> adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId =?  group by groupId having count(*) > 1", new Integer(myUserId),new Integer(id)).getChildren();
 				if (adminlist.size() == 0) {
 					throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
 				}

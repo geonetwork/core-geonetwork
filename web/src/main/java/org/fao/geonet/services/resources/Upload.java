@@ -82,12 +82,11 @@ public class Upload implements Service
 		StringBuffer query = new StringBuffer();
 		query.append("SELECT m.id, m.source, m.uuid ");
 		query.append("FROM   Metadata m ");
-		query.append("WHERE  m.id = ");
-		query.append(id);
+		query.append("WHERE  m.id = ?");
 
 		String siteId = "unknown";
 		String mdUuid = "unknown";
-		Element sites = dbms.select(query.toString());
+		Element sites = dbms.select(query.toString(), new Integer(id));
 		if (sites != null) {
 			for (Iterator i = sites.getChildren().iterator(); i.hasNext(); ) {
 				Element site = (Element)i.next();
