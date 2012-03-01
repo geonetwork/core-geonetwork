@@ -192,6 +192,11 @@
 						 otherwise specify false or leave the parameter out and a 
 						 shapefile will be used for the spatial index -->
 				<provideDataStore>true</provideDataStore>
+				<!-- set this value to -1 if you don't want prepared statements to
+				     be cached when querying/maintaining the spatial index 
+						 (note this is only applicable when
+						 provideDataStore is set to true) -->
+				<maxOpenPreparedStatements>300</maxOpenPreparedStatements>
 				<!-- NOTE any other parameter specified here is ignored as this 
              should be handled in the container -->
       </config>
