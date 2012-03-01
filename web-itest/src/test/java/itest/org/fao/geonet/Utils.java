@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -42,6 +43,18 @@ public class Utils {
 		return sendRequest(urlWithGetParameter, loginFirst, c);
 	}
 
+	public static String sendRequestToFail(String urlWithGetParameter, boolean loginFirst, HttpClient c)
+	throws IOException {
+
+		if (loginFirst)
+			sendLogin(c);
+
+		final GetMethod m = new GetMethod(Utils.geonetworkUri
+				+ urlWithGetParameter);
+		int status = c.executeMethod(m);
+		return m.getResponseBodyAsString();
+	}
+	
 	public static String sendRequest(String urlWithGetParameter, boolean loginFirst, HttpClient c)
 	throws IOException {
 
@@ -260,6 +273,17 @@ public class Utils {
 		}
 	}
 
+	public static void setSequential() {
+		try {
+			// Clean catalogue
+			final HttpClient c = new HttpClient();
+			Utils.sendRequest("sequential.execution.set?value=true", true, c);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Clean all catalogue content base on a default search.
 	 * This will not remove templates.
@@ -272,8 +296,44 @@ public class Utils {
 			Utils.sendRequest("main.search.embedded", true, c);
 			Utils.sendRequest("metadata.select?selected=add-all&id=0", false, c);
 			Utils.sendRequest("metadata.batch.delete", false, c);
+			// Drop users other than the admin user
+			dropAllNonAdminUsers(false, c);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Get all users currently in users table 
+	 */
+	private static List<Element> getUsers(boolean loginFirst, HttpClient c) {
+		List<Element> result = new ArrayList<Element>();
+		try {
+			if (loginFirst) sendLogin(c);
+			String response = Utils.sendRequest("xml.user.list", false, c);
+			Element resp = Xml.loadString(response, false);
+			result = resp.getChildren();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	/**
+	 * Drop all users that aren't user number 1 - the God user
+	 */
+	public static void dropAllNonAdminUsers(boolean loginFirst, HttpClient c) {
+		try {
+			if (loginFirst) sendLogin(c);
+			List<Element> users = getUsers(false, c);
+			for (Element user : users) {
+				String userId = user.getChildText("id");
+				if (userId.equals("1")) continue;
+				Utils.sendRequest("user.remove?id="+userId, false, c);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -291,9 +351,17 @@ public class Utils {
 	}
 
 	/**
-	 * Add a user called userone with password userone at 'Editor' level 
+	 * Add a user with username, password to sample group (2) as an Editor
 	 */
 	public static void addUser(String username, String password) {
+		addUser(username, password, "2", "Editor");
+	}
+
+	/**
+	 * Add a user with username, password, groupid and profile 
+	 */
+	public static String addUser(String username, String password, String group, String profile) {
+		String userId = "-1";
 		try {
 			final HttpClient c = new HttpClient();
 
@@ -301,12 +369,21 @@ public class Utils {
 
 			String response = Utils.sendRequest("xml.user.list", false, c);
 			if (!response.contains(username)) {
-				Utils.sendRequest("user.update?zip=92373&state=CA&surname=Mouse&org=DRQH&password="+password+"&kind=gov&city=Bluelands&country=USA&id=&operation=newuser&username="+username+"&password2="+password+"&address390BlueHillsSt&email=userone@userone.com&name=User&groups=2&profile=Editor", false, c);
+				Utils.sendRequest("user.update?zip=92373&state=CA&surname=Mouse&org=DRQH&password="+password+"&kind=gov&city=Bluelands&country=USA&id=&operation=newuser&username="+username+"&password2="+password+"&address390BlueHillsSt&email=userone@userone.com&name=User&groups="+group+"&profile="+profile, false, c);
 			}
 
+			List<Element> users = getUsers(false, c);
+			for (Element user : users) {
+				String listUsername = user.getChildText("username");
+				if (listUsername.equals(username)) {
+				 	userId = user.getChildText("id");
+				}
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		return userId;
 	}
 }

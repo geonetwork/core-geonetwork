@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 public class SearchTest extends TestCase {
 	public SearchTest() {
+		Utils.setSequential();
 		Utils.cleanCatalogue();
 	}
 	

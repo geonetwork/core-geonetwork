@@ -12,13 +12,14 @@ import junit.framework.TestCase;
 
 public class StatusTest extends TestCase {
 	public StatusTest() {
+		Utils.setSequential();
 	}
 
 	private void init() {
 		Utils.cleanCatalogue();
 		Utils.addSamples();
-		Utils.addUser("userone", "userone");
-		Utils.transferOwner("2"); // make the new user the owner of the samples
+		String userId = Utils.addUser("userone", "userone", "2", "Editor");
+		Utils.transferOwner(userId); // make the new user the owner of the samples
 	}
 
 	@Test
