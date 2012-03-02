@@ -9,82 +9,146 @@ import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.constants.Geonet;
 
 import java.io.File;
-
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/* Lucene only allows one IndexWriter to be open at a time.  
-   However, multiple threads can use this single IndexWriter.  
-   This class manages a global IndexWriter and uses reference counting to 
-   determine when it can be closed.  */
-
+/* Lucene only allows one IndexWriter to be open at a time.
+ However, multiple threads can use this single IndexWriter.
+ This class manages a global IndexWriter and uses reference counting to
+ determine when it can be closed.  */
 public class LuceneIndexWriterFactory {
-	
-	protected volatile IndexWriter _writer;
-	protected int _count;
-	private File _luceneDir;
-	private PerFieldAnalyzerWrapper _analyzer;
-	private LuceneConfig _luceneConfig;
-	
-	private final Lock optimizingLock = new ReentrantLock();
-	
-	public LuceneIndexWriterFactory(File luceneDir, PerFieldAnalyzerWrapper analyzer, LuceneConfig luceneConfig) {
-		_luceneDir = luceneDir;
-		_analyzer = analyzer;
-		_luceneConfig = luceneConfig;
-	}
 
-	public synchronized void openWriter() throws Exception {
-		if (_count == 0) {
-			_writer = new IndexWriter(FSDirectory.open(_luceneDir), _analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
-			_writer.setRAMBufferSizeMB(_luceneConfig.getRAMBufferSize());
-			_writer.setMergeFactor(_luceneConfig.getMergeFactor());
-		}
-		_count++;
-		Log.info(Geonet.INDEX_ENGINE, "Opening Index_writer, ref count " + _count + " ram in use " 
-				+ _writer.ramSizeInBytes() + " docs buffered "
-				+ _writer.numRamDocs());
-	}
+    protected final Map<String, IndexWriter> _writers = new HashMap<String, IndexWriter>();
+    protected volatile int _count;
+    private final File _luceneDir;
+    private final PerFieldAnalyzerWrapper _analyzer;
+    private final LuceneConfig _luceneConfig;
 
-	public synchronized boolean isOpen() {
+    private final Lock optimizingLock = new ReentrantLock();
+
+    public LuceneIndexWriterFactory( File luceneDir, PerFieldAnalyzerWrapper analyzer, LuceneConfig luceneConfig ) {
+        _luceneDir = luceneDir;
+        _analyzer = analyzer;
+        _luceneConfig = luceneConfig;
+    }
+    public synchronized void openWriter() {
+        _count++;
+        Log.info(Geonet.INDEX_ENGINE, "Opening Index_writer, ref count " + _count);
+    }
+
+    public synchronized boolean isOpen() {
         return _count > 0;
-	}
+    }
 
-	public synchronized void closeWriter() throws Exception {
-		
-		// lower reference count, close if count reaches zero
-		if (_count > 0) {
-			_count--;
-			Log.info(Geonet.INDEX_ENGINE, "Closing Index_writer, ref _count "+_count+" ram in use "+_writer.ramSizeInBytes()+" docs buffered "+_writer.numRamDocs());
-			if (_count==0) _writer.close(); 
-			else _writer.commit();
-		}
-	}
+    public synchronized void closeWriter() throws Exception {
+        Log.info(Geonet.INDEX_ENGINE, "Closing Index_writer, ref _count " + _count);
 
-	public synchronized void commit() throws Exception {
-		if (isOpen()) _writer.commit();
-	}
-		
-	public void addDocument(Document doc) throws Exception {
-		_writer.addDocument(doc);
-	}
+        // lower reference count, close if count reaches zero
+        if (_count > 0) {
+            _count--;
+            if (_count == 0) {
+                for( Map.Entry<String, IndexWriter> entry : _writers.entrySet() ) {
+                    String locale = entry.getKey();
+                    IndexWriter writer = entry.getValue();
+                    Log.info(Geonet.INDEX_ENGINE, "Closing Index_writer, locale: " + locale + " ram in use: " + writer.ramSizeInBytes()
+                            + " docs buffered: " + writer.numRamDocs());
+                    writer.close();
+                }
+                _writers.clear();
+            } else {
+                commit();
+            }
+        }
+    }
 
-	public void deleteDocuments(Term term) throws Exception {
-		_writer.deleteDocuments(term);
-	}
-	
-	public void optimize() throws Exception {
-		if (optimizingLock.tryLock()) {
-			try {
-				Log.info(Geonet.INDEX_ENGINE,"Optimizing the Lucene Index...");
-				_writer.optimize(); 
-				Log.info(Geonet.INDEX_ENGINE,"Optimizing Done.");
-			} finally {
-				optimizingLock.unlock();
-			}
-		}
-	}
+    public synchronized void commit() throws Exception {
+        if (isOpen()) {
+            for( IndexWriter writer : openWriters()) {
+                writer.commit();
+            }
 
+        }
+    }
 
-	
+    public synchronized void addDocument( String locale, Document doc ) throws Exception {
+        getWriter(locale).addDocument(doc);
+    }
+
+    public synchronized void deleteDocuments( Term term ) throws Exception {
+        for( IndexWriter writer : allExistingWriters() ) {
+            writer.deleteDocuments(term);
+        }
+    }
+
+    public void optimize() throws Exception {
+        if (optimizingLock.tryLock()) {
+            try {
+                openWriter();
+                Log.info(Geonet.INDEX_ENGINE, "Optimizing the Lucene Index...");
+                for( IndexWriter writer : allExistingWriters() ) {
+                    writer.optimize();
+                }
+                Log.info(Geonet.INDEX_ENGINE, "Optimizing Done.");
+            } finally {
+                closeWriter();
+                optimizingLock.unlock();
+
+            }
+        }
+    }
+    public synchronized void createDefaultLocale() throws IOException {
+        File enLocale = new File(_luceneDir, "en");
+        enLocale.mkdirs();
+        IndexWriter writer = new IndexWriter(FSDirectory.open(enLocale), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
+        writer.close();
+    }
+
+    static String normalize( String locale ) {
+        if (locale == null) {
+            return "none";
+        }
+        String trimmed = locale.trim().toLowerCase();
+        int max = Math.min(2, trimmed.length());
+        return trimmed.substring(0, max);
+    }
+
+    // ------------------- Private methods ------------------- //
+
+    private Collection<IndexWriter> allExistingWriters() throws Exception {
+        File[] files = _luceneDir.listFiles();
+        if (files != null) {
+            for( File file : files ) {
+                getWriter(file.getName());
+            }
+        }
+        return _writers.values();
+    }
+    private Collection<IndexWriter> openWriters() throws Exception {
+        return _writers.values();
+    }
+    private IndexWriter getWriter( String locale ) throws Exception {
+        Log.debug(Geonet.LUCENE, "getting writer for locale " + locale);
+        locale = normalize(locale);
+        Log.debug(Geonet.LUCENE, "normalized locale " + locale);
+        IndexWriter writer = _writers.get(locale);
+        if (writer == null) {
+            File indexDir = new File(_luceneDir, locale);
+            if (!indexDir.exists() && !indexDir.mkdirs()) {
+                throw new Error("Unable to create index directory: " + indexDir);
+            }
+            
+            writer = new IndexWriter(FSDirectory.open(indexDir), SearchManager.getAnalyzer(locale), IndexWriter.MaxFieldLength.UNLIMITED);
+            writer.setRAMBufferSizeMB(_luceneConfig.getRAMBufferSize());
+            writer.setMergeFactor(_luceneConfig.getMergeFactor());
+            _writers.put(locale, writer);
+        }
+        Log.info(Geonet.INDEX_ENGINE, "Opening Index_writer, locale: " + _count + " ram in use: " + writer.ramSizeInBytes()
+                + " docs buffered: " + writer.numRamDocs());
+        return writer;
+    }
+
 }

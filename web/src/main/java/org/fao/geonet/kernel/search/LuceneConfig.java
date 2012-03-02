@@ -38,10 +38,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
@@ -105,24 +106,24 @@ public class LuceneConfig {
 		}
 	};
 
-	private HashSet<String> tokenizedFields = new HashSet<String>();
-	private HashMap<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
-	private HashMap<String, String> dumpFields = new HashMap<String, String>();
+	private Set<String> tokenizedFields = new HashSet<String>();
+	private Map<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
+	private Map<String, String> dumpFields = new HashMap<String, String>();
 
 	private String defaultAnalyzerClass;
 
-	private HashMap<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
-	private HashMap<String, Float> fieldBoost = new HashMap<String, Float>();
-    private HashMap<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
-	private HashMap<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
+	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
+	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
+    private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
+	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
 
 	private String boostQueryClass;
-	private HashMap<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
-	private HashMap<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
+	private Map<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
 
 	private String documentBoostClass;
-    private HashMap<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-    private HashMap<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+    private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
+    private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
 
 	private Element luceneConfig;
 
@@ -463,7 +464,7 @@ public class LuceneConfig {
 	 * @return The list of tokenized fields which could not determined using
 	 *         Lucene API.
 	 */
-	public HashSet<String> getTokenizedField() {
+	public Set<String> getTokenizedField() {
 		return this.tokenizedFields;
 	}
 
@@ -481,14 +482,14 @@ public class LuceneConfig {
 	 * @return The list of numeric fields which could not determined using
 	 *         Lucene API.
 	 */
-	public HashMap<String, LuceneConfigNumericField> getNumericFields() {
+	public Map<String, LuceneConfigNumericField> getNumericFields() {
 		return this.numericFields;
 	}
 
 	/**
 	 * @return The list of fields to dump from the index on fast search.
 	 */
-	public HashMap<String, String> getDumpFields() {
+	public Map<String, String> getDumpFields() {
 		return this.dumpFields;
 	}
 	
@@ -504,8 +505,7 @@ public class LuceneConfig {
 	/**
 	 * Check if a field is numeric or not
 	 * 
-	 * @param The
-	 *            field name
+	 * @param fieldName field name
 	 * @return True if the field has to be indexed as a numeric field
 	 */
 	public boolean isNumericField(String fieldName) {
@@ -596,7 +596,7 @@ public class LuceneConfig {
 	 * 
 	 * @return Each specific fields analyzer.
 	 */
-	public HashMap<String, String> getFieldSpecificAnalyzers() {
+	public Map<String, String> getFieldSpecificAnalyzers() {
 		return this.fieldSpecificAnalyzers;
 	}
 
@@ -604,7 +604,7 @@ public class LuceneConfig {
      * 
      * @return Each fields boost factor.
      */
-    public HashMap<String, Float> getFieldBoost() {
+    public Map<String, Float> getFieldBoost() {
         return this.fieldBoost;
     }
     public Float getFieldBoost(String field) {

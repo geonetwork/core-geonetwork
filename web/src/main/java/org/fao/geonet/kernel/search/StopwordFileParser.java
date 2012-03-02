@@ -1,15 +1,14 @@
 package org.fao.geonet.kernel.search;
 
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-
-import jeeves.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
 
 /**
  * Parses stopword files. Stopword files have lines with zero or more stopwords. Any content from the character | until
@@ -26,39 +25,40 @@ public class StopwordFileParser {
      * @return set of stopwords, or null if none found
      */
     public static Set<String> parse(String filepath) {
-        filepath = filepath + "_stop.txt";
+        if (filepath.endsWith("README.txt")) {
+            return null;
+        }
         Log.debug(Geonet.INDEX_ENGINE, "StopwordParser parsing file: " + filepath);
         Set<String> stopwords = null;
         try {
             File file = new File(filepath);
-            if(file.exists()) {
+            if (file.exists() && !file.isDirectory()) {
                 Scanner scanner = new Scanner(new FileReader(file));
                 try {
-                    while (scanner.hasNextLine()){
-                      Set<String> stopwordsFromLine = parseLine(scanner.nextLine());
-                      if(stopwordsFromLine != null) {
-                          if(stopwords == null) {
-                              stopwords = new HashSet<String>();
-                          }
-                          stopwords.addAll(stopwordsFromLine);
-                      }
+                    while (scanner.hasNextLine()) {
+                        Set<String> stopwordsFromLine = parseLine(scanner.nextLine());
+                        if (stopwordsFromLine != null) {
+                            if (stopwords == null) {
+                                stopwords = new HashSet<String>();
+                            }
+                            stopwords.addAll(stopwordsFromLine);
+                        }
                     }
                 }
                 finally {
                     scanner.close();
                 }
             }
-            // file does not exist
+            // file does not exist or is a directory
             else {
-                Log.debug(Geonet.INDEX_ENGINE, "Did not find requested stopwords file: " + file.getAbsolutePath());
+                Log.warning(Geonet.INDEX_ENGINE, "Invalid stopwords file: " + file.getAbsolutePath());
             }
         }
-        catch(IOException x) {
-            System.out.println(x.getMessage());
+        catch (IOException x) {
+            Log.warning(Geonet.INDEX_ENGINE, x.getMessage() + " (this exception is swallowed)");
             x.printStackTrace();
-            Log.debug(Geonet.INDEX_ENGINE, "This exception is swallowed");
         }
-        if(stopwords != null) {
+        if (stopwords != null) {
             Log.debug(Geonet.INDEX_ENGINE, "Added # " + stopwords.size() + " stopwords");
         }
         else {
@@ -78,16 +78,15 @@ public class StopwordFileParser {
         Set<String> stopwords = null;
         Scanner scanner = new Scanner(line);
         scanner.useDelimiter("\\|");
-        if(scanner.hasNext()) {
+        if (scanner.hasNext()) {
             String stopwordsPart = scanner.next();
             Scanner whitespaceTokenizer = new Scanner(stopwordsPart);
-            while(whitespaceTokenizer.hasNext()) {
+            while (whitespaceTokenizer.hasNext()) {
                 String stopword = whitespaceTokenizer.next();
-                if(stopwords == null) {
+                if (stopwords == null) {
                     stopwords = new HashSet<String>();
                 }
                 stopwords.add(stopword);
-                //System.out.println("Adding stopword: " + stopword);
             }
         }
         return stopwords;

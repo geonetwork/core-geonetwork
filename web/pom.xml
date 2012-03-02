@@ -130,6 +130,18 @@
       <artifactId>lucene-analyzers</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-misc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queries</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>pcj</groupId>
+        <artifactId>pcj</artifactId>
+    </dependency>    
+    <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
@@ -312,6 +324,18 @@
       <artifactId>netcdf</artifactId>
       <version>4.0.patch</version>
     </dependency>
+      <!-- language detection -->
+      <dependency>
+          <groupId>com.cybozu.labs</groupId>
+          <artifactId>langdetect</artifactId>
+          <version>1.0.0.0</version>
+      </dependency>
+      <dependency>
+          <groupId>net.arnx.jsonic</groupId>
+          <artifactId>jsonic</artifactId>
+          <version>1.2.0</version>
+      </dependency>
+      <!-- end language detection -->
 		<dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>

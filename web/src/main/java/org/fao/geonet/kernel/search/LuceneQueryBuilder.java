@@ -23,17 +23,8 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.StringTokenizer;
-
+import com.google.common.base.Splitter;
 import jeeves.utils.Log;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -50,8 +41,16 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.XslUtil;
 
-import com.google.common.base.Splitter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Class to create a Lucene query from a {@link LuceneQueryInput} representing a
@@ -76,6 +75,7 @@ public class LuceneQueryBuilder {
     private Set<String> _tokenizedFieldSet;
     private PerFieldAnalyzerWrapper _analyzer;
     private Map<String, LuceneConfig.LuceneConfigNumericField> _numericFieldSet;
+    private String _language;
 
     // Lat long bounding box constants
     private static final Double minBoundingLatitudeValue = -90.0;
@@ -83,13 +83,19 @@ public class LuceneQueryBuilder {
     private static final Double minBoundingLongitudeValue = -180.0;
     private static final Double maxBoundingLongitudeValue = 180.0;
 
-
-    // Only one spatial search criteria could be added.
+    /**
+     * Only one spatial search criteria could be added.
+     */
     private boolean spatialCriteriaAdded;
-    // Only one temporal search criteria could be added
+    /**
+     * Only one temporal search criteria could be added.
+     */
     private boolean temporalCriteriaAdded;
-    // Template = "n" is added if not set in search criteria
+    /**
+     * Template = "n" is added if not set in search criteria.
+     */
     private boolean templateCriteriaAdded;
+
 
     /**
      * TODO javadoc.
@@ -97,13 +103,15 @@ public class LuceneQueryBuilder {
      * @param tokenizedFieldSet names of tokenized fields
      * @param numericFieldSet names of numeric fields
      * @param analyzer Lucene analyzer
+     * @param langCode language of search terms
      */
     public LuceneQueryBuilder(Set<String> tokenizedFieldSet,
                               Map<String, LuceneConfig.LuceneConfigNumericField> numericFieldSet,
-                              PerFieldAnalyzerWrapper analyzer) {
+                              PerFieldAnalyzerWrapper analyzer, String langCode) {
         _tokenizedFieldSet = tokenizedFieldSet;
         _numericFieldSet = numericFieldSet;
         _analyzer = analyzer;
+        _language = langCode;
     }
 
     /**
@@ -203,7 +211,14 @@ public class LuceneQueryBuilder {
         }
         query = buildORQuery(searchCriteriaOR, query, similarity);
         query = buildANDQuery(searchCriteria, query, similarity, processedRangeFields);
-        return query;
+        if(StringUtils.isNotEmpty(_language)) {
+            Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
+            return addLocaleTerm(query, _language, luceneQueryInput.isRequestedLanguageOnly());
+        }
+        else {
+            Log.debug(Geonet.LUCENE, "no language set, not adding locale query");
+            return query;
+        }
     }
 
     /**
@@ -1228,7 +1243,44 @@ public class LuceneQueryBuilder {
         }
     }
 
+    /**
+     * Whether a string equals the wildcard *.
+     * @param s
+     * @return
+     */
     private boolean onlyWildcard(String s) {
         return "*".equals(StringUtils.trim(s));
+    }
+
+    /**
+     * TODO javadoc.
+     *
+     * @param query
+     * @param langCode
+     * @return
+     */
+    static Query addLocaleTerm( Query query, String langCode, boolean requestedLanguageOnly ) {
+
+        if (langCode == null) {
+            return query;
+        }
+        BooleanQuery booleanQuery;
+        if (query instanceof BooleanQuery) {
+            booleanQuery = (BooleanQuery) query;
+        }
+        else {
+            booleanQuery = new BooleanQuery();
+            booleanQuery.add(query, BooleanClause.Occur.SHOULD);
+        }
+
+        String twoCharLang = XslUtil.twoCharLangCode(langCode);
+        if(requestedLanguageOnly) {
+            booleanQuery.add(new TermQuery(new Term("_locale", twoCharLang)), BooleanClause.Occur.MUST);
+        }
+        else {
+            booleanQuery.add(new TermQuery(new Term("_locale", twoCharLang)), BooleanClause.Occur.SHOULD);
+        }
+
+        return booleanQuery;
     }
 }

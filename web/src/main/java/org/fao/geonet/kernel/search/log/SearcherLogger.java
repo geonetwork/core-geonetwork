@@ -17,15 +17,12 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
-import java.sql.SQLException;
 
 /**
  * A class to log Lucene search queries (context, search parameters and search

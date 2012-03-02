@@ -29,6 +29,12 @@
 	<xlinkResolver>XLink-elementtien muodostaminen</xlinkResolver>
 
     <inspire>Inspire</inspire>
+
+    <multilingual>Monikielinen asetukset</multilingual>
+    <autoDetectEnable>Ota automaattinen havaita etsittäväks kieltä</autoDetectEnable>
+    <requestedlanguageonly>Etsi vain pyydetystä kielestä</requestedlanguageonly>
+    <requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
+    <requestedlanguageignored>Ohita pyydetyt kieli haku</requestedlanguageignored>
 		
 	<downloadservice>Latauspalvelu</downloadservice>
 	<leave>Käytä metatiedoissa olevaa linkkiä</leave>
@@ -289,8 +295,22 @@
 		<tip id="xlinkResolver.enable">
 			Jos otettu käyttöön, XLink-linkit metatieto-osioihin lasketaan. 
 		</tip>
-		
-	</tips>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            Jos asetettu, haku kieli tunnistetaan automaattisesti. Huomaa, että tämä ei toimi kovin hyvin lyhyiden hakutermejä.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Vain palauttaa hakutulokset pyydetyt kielellä.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Palauta hakutulokset pyydetyt kielen päälle.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Ohita pyydetään kieli hakutuloksia.
+        </tip>
+
+    </tips>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 	
 </strings>

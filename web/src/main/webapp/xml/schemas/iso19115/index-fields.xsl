@@ -15,7 +15,15 @@
 	<!-- ========================================================================================= -->
 
 	<xsl:template match="/">
-		<Document>
+		<xsl:variable name="langCode" select="string(/Metadata/mdLang/languageCode/@value)"/>
+		<Document locale="{$langCode}">
+
+			<!-- locale information -->	
+	        <Field name="_locale" string="{$langCode}" store="true" index="true"/>
+            <Field name="_docLocale" string="{$langCode}" store="true" index="true"/>
+      			
+        	<!-- For multilingual docs it is good to have a title in the default locale.  In this type of metadata we don't have one but in the general case we do so we need to add it to all -->
+            <Field name="_defaultTitle" string="{string(/Metadata/dataIdInfo/idCitation/resTitle)}" store="true" index="true"/>
 	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === Title === -->	
@@ -27,7 +35,6 @@
         	<!-- not tokenized title for sorting -->
             <Field name="_title" string="{string(/Metadata/dataIdInfo/idCitation/resTitle)}" 
                     store="false" index="true"/>
-      			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 			<!-- === Abstract === -->	
 			<xsl:apply-templates select="/Metadata/dataIdInfo/idAbs">

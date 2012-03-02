@@ -22,18 +22,15 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.*;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.TopologyException;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.JeevesJCS;
 import jeeves.utils.Log;
-
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.lucene.document.Document;
@@ -67,13 +64,15 @@ import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.TopologyException;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.SPATIAL_FILTER_JCS;
+import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter._SPATIAL_INDEX_TYPENAME;
 
 public abstract class SpatialFilter extends Filter
 {

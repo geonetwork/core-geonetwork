@@ -25,6 +25,12 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
+    <multilingual>meertalige instellingen</multilingual>
+    <autoDetectEnable>Schakel automatische detectie zoek taal</autoDetectEnable>
+    <requestedlanguageonly>Zoek alleen in gewenste taal</requestedlanguageonly>
+    <requestedlanguagesorted>Zoekresultaten in gewenste taal gesorteerd op de top</requestedlanguagesorted>
+    <requestedlanguageignored>Negeer gevraagde zoektaal</requestedlanguageignored>
+
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -352,7 +358,22 @@
 		<tip id="searchStats.enable">
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
-	</tips>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            Indien ingesteld, wordt de zoektaal automatisch gedetecteerd. Merk op dat dit niet zo goed bij korte zoektermen.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Alleen zoekresultaten weergegeven in de gewenste taal.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Terug zoekresultaten in de gewenste taal op de top.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Negeer gevraagde taal voor de zoekresultaten.
+        </tip>
+
+    </tips>
 	
 	<data.dir>Data directory:</data.dir>
   <codeList.dir>Thesaurus directory:</codeList.dir>

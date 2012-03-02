@@ -16,6 +16,12 @@
 	
 	<searchStats>Search Statistics</searchStats>
 
+    <multilingual>متعدد اللغات إعدادات</multilingual>
+    <autoDetectEnable>تمكين صناعة السيارات في الكشف عن طلب بحث لغة</autoDetectEnable>
+    <requestedlanguageonly>البحث فقط في اللغة المطلوبة</requestedlanguageonly>
+    <requestedlanguagesorted>نتائج البحث في اللغة المطلوبة على أعلى مرتبة</requestedlanguagesorted>
+    <requestedlanguageignored>تجاهل اللغة المطلوبة في البحث</requestedlanguageignored>
+
 	<threadedindexing>Multi-threaded Indexing</threadedindexing>
 	<maxthreads>Number of processing threads</maxthreads>
 	<recommendedThreads>Recommended</recommendedThreads>
@@ -343,6 +349,20 @@
 		<tip id="downloadservice.leave">
 				Selecting this option means that GeoNetwork will not handle file downloads.
 		</tip>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            إذا مجموعة، ويتم الكشف عن تلقائيا لغة البحث. لاحظ أن هذا لا يعمل بشكل جيد جدا لشروط البحث القصير.
+        </tip>
+        <tip id="requestedlanguage.only">
+            عودة فقط نتائج البحث في اللغة المطلوبة.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            ترجع نتائج البحث في اللغة المطلوبة على القمة.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            تجاهل اللغة المطلوبة لنتائج البحث.
+        </tip>
 
 		<!-- xlinkResolver -->
 

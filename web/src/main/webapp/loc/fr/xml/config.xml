@@ -41,6 +41,12 @@
 	<reasonForOne>Fonction non testée ou non supportée pour la base de données</reasonForOne>
 	<reasonForMore>A partir du nombre de processeurs</reasonForMore>
 
+    <multilingual>paramètres multilingues</multilingual>
+    <autoDetectEnable>Activer l'auto-détection langage de requête de recherche</autoDetectEnable>
+    <requestedlanguageonly>Rechercher uniquement dans la langue demandée</requestedlanguageonly>
+    <requestedlanguagesorted>Résultats de la recherche dans la langue demandée triés sur le dessus</requestedlanguagesorted>
+    <requestedlanguageignored>Ignorer la langue demandée à la recherche</requestedlanguageignored>
+
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>
@@ -365,7 +371,22 @@
 		<tip id="searchStats.enable">
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
-	</tips>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            Si ensemble, la langue de recherche est automatiquement détecté. Notez que cela ne fonctionne pas très bien des termes de recherche de courte durée.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Seulement retourner des résultats de recherche dans la langue demandée.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Retour des résultats de recherche dans la langue demandée sur le dessus.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Ignorer la langue demandée pour les résultats de recherche.
+        </tip>
+
+    </tips>
 	
 	<data.dir>Répertoire des données :</data.dir>
   <codeList.dir>Répertoire des thesaurus :</codeList.dir>

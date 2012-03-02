@@ -22,6 +22,8 @@
 //==============================================================================
 package org.fao.geonet.kernel;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Locale;
 
 public final class LocaleUtil
@@ -37,6 +39,9 @@ public final class LocaleUtil
      */
     public static Locale toLocale(String langCode)
     {
+        if(StringUtils.isEmpty(langCode)) {
+            return Locale.getDefault();
+        }
         if( langCode.length()<2 && langCode.length()<3 ){
             throw new AssertionError(langCode+" must be a 2 or 3 letter ISO code");
         }

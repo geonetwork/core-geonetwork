@@ -1,10 +1,11 @@
 package org.fao.geonet.util;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -153,25 +154,34 @@ public final class XslUtil
      * 
      * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
-    public static String getIndexField(Object appName, Object uuid, Object field, Object lang)
-    {
-    	String webappName = appName.toString();
-		String luceneSystemDir = System.getProperty(webappName + ".lucene.dir");
-		
-		if (luceneSystemDir == null) {
-			Log.debug(Geonet.GEONETWORK, "Failed to get Lucene directory from environment.");
-			return "";
-		}
-			
-    	String id = uuid.toString();
-    	String fieldname = field.toString();
-    	String language = (lang.toString().equals("")?Geonet.DEFAULT_LANGUAGE:lang.toString());
-    	try {
-    		return LuceneSearcher.getMetadataFromIndex(luceneSystemDir + "/nonspatial", id, fieldname);
-    	} catch (Exception e) {
-			Log.debug(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
-    		return "";
-		}
+    public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
+        String webappName = appName.toString();
+        String id = uuid.toString();
+        String fieldname = field.toString();
+        String language = (lang.toString().equals("") ? null : lang.toString());
+        try {
+            String fieldValue = LuceneSearcher.getMetadataFromIndex(webappName, language, id, fieldname);
+            if(fieldValue == null) {
+                return getIndexFieldById(appName,uuid,field,lang);
+            }
+            return fieldValue == null ? "" : fieldValue;
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            return "";
+        }
+    }
+
+    public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {
+        String webappName = appName.toString();
+        String fieldname = field.toString();
+        String language = (lang.toString().equals("") ? null : lang.toString());
+        try {
+            String fieldValue = LuceneSearcher.getMetadataFromIndexById(webappName, language, id.toString(), fieldname);
+            return fieldValue == null ? "" : fieldValue;
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            return "";
+        }
     }
     
     /**
@@ -212,5 +222,28 @@ public final class XslUtil
         }
         
         return "";
+    }
+    /**
+     * the basic way that {@linkplain #twoCharLangCode} works is by taking the first two letters of the
+     * language code.  However since there are multiple ways to map certain language or some time that method does not
+     * work this mapping contains the exceptions.
+     */
+    private static final Map<String,String> LANG_CODE_EXCEPTION_MAPPING;
+    static {
+        Map<String, String> hm = new HashMap<String, String>();
+        hm.put("ger", "de");
+        hm.put("ge", "de");
+
+        LANG_CODE_EXCEPTION_MAPPING = Collections.unmodifiableMap(hm);
+    }
+
+    public static String twoCharLangCode(String langCode) {
+        if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
+
+        String exception = LANG_CODE_EXCEPTION_MAPPING.get(langCode);
+
+        if(exception!=null) return exception;
+
+        return langCode.substring(0,2).toLowerCase();
     }
 }

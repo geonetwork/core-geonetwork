@@ -201,6 +201,11 @@ ConfigView.prototype.setData = function(data)
 	
 	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
 
+    $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
+    $('requestedLanguage.only').checked = data['REQUESTED_LANGUAGE_ONLY'] == 'true';
+    $('requestedLanguage.sorted').checked = data['REQUESTED_LANGUAGE_SORTED'] == 'true';
+    $('requestedLanguage.ignored').checked = data['REQUESTED_LANGUAGE_IGNORED'] == 'true';
+
 	$('searchStats.enable').checked = data['SEARCHSTATS_ENABLE'] == 'true';
 
 	$('downloadservice.simple')        .checked = data['DOWNLOADSERVICE_SIMPLE'] == 'true';
@@ -322,7 +327,12 @@ ConfigView.prototype.getData = function()
 		OAI_CACHESIZE			: $('oai.cachesize')  .value,
 
 		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
-	
+
+        AUTODETECT_ENABLE : $('autodetect.enable').checked,
+        REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').checked,
+        REQUESTED_LANGUAGE_SORTED : $('requestedLanguage.sorted').checked,
+        REQUESTED_LANGUAGE_IGNORED : $('requestedLanguage.ignored').checked,
+
 		SEARCHSTATS_ENABLE : $('searchStats.enable').checked,
 	
 		DOWNLOADSERVICE_SIMPLE : $('downloadservice.simple').checked,

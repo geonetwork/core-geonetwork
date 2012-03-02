@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.utils.Log;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
@@ -30,8 +31,14 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 
+import java.io.File;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -44,11 +51,39 @@ import java.util.Set;
  * @author heikki doeleman
  */
 public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
-
-    private Set<String> stopwords = null;
+ 
+    private Set<String> stopwords = new HashSet<String>();
     private boolean enablePositionIncrements = true;
     private boolean ignoreCase = true;
-
+    
+    /*
+    private synchronized void readStopwords(File stopwordsDir) {
+        if(stopwordsMap.keySet().size() > 0) {
+            System.out.println("stopwords already loaded. Restart app to re-load");
+        }
+        if(!stopwordsDir.exists() || !stopwordsDir.isDirectory()) {
+            Log.warning("GeoNetworkAnalyzer", "Invalid stopwords directory " + stopwordsDir.getAbsolutePath() + ", not using any stopwords");
+            return;
+        }
+        else {
+            System.out.println("loading stopwords");
+            for(File stopwordsFile : stopwordsDir.listFiles()) {
+                System.out.println("stopwords file " + stopwordsFile.getName());
+                String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
+                System.out.println("language: " + language);
+                if(language.length() != 2) {
+                    System.out.println("HUH " + language);
+                }
+                // look up stopwords for that language
+                Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());         
+                if(stopwordsForLanguage != null) {
+                    stopwordsMap.put(language, stopwordsForLanguage);
+                }
+            }
+        }        
+    }
+    */
+        
     /**
      * Creates this analyzer using no stopwords.
      */
@@ -57,18 +92,11 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
     }
 
     /**
-     * Creates this analyzer using the provided stopwords, which may be null.
      * 
-     * @param stopwords
      */
     public GeoNetworkAnalyzer(Set<String> stopwords) {
         super();
         this.stopwords = stopwords;
-        if(stopwords != null) {
-            for(String sw : stopwords) {
-                Log.debug("GeoNetworkAnalyzer", "stopword: " + sw);
-            }
-        }
     }
 
     /**
@@ -81,11 +109,9 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
      */
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-
         final Tokenizer source = new StandardTokenizer(Version.LUCENE_30, reader);
-
-        if(stopwords != null) {
-            return new TokenStreamComponents(source, new StopFilter(enablePositionIncrements, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))), stopwords, ignoreCase));
+        if(CollectionUtils.isNotEmpty(this.stopwords)) {
+            return new TokenStreamComponents(source, new StopFilter(enablePositionIncrements, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))), this.stopwords, ignoreCase));
         }
         else {
             return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))));

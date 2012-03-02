@@ -200,7 +200,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
         }
 
-        Sort sort = getSortFields(request);
+        Sort sort = getSortFields(request, context);
 
         Element response;
 
@@ -497,7 +497,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @throws InvalidParameterValueEx if typeNames does not have one of the mandated values
      */
     private String checkTypenames(Element query) throws MissingParameterValueEx, InvalidParameterValueEx {
-        System.out.println("checking typenames in query:\n" + Xml.getString(query));
+        Log.debug(Geonet.CSW_SEARCH, "checking typenames in query:\n" + Xml.getString(query));
         Attribute typeNames = query.getAttribute("typeNames", query.getNamespace());
         typeNames = query.getAttribute("typeNames");
         if(typeNames != null) {
@@ -527,7 +527,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return elementnames strategy
      */
     private String getElementNameStrategy(Element query) {
-        System.out.println("getting elementnameStrategy from query:\n" + Xml.getString(query));
+        Log.debug(Geonet.CSW_SEARCH, "getting elementnameStrategy from query:\n" + Xml.getString(query));
         Attribute elementNameStrategyA = query.getAttribute("elementnameStrategy");
         // default
         String elementNameStrategy = "relaxed";
@@ -543,10 +543,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             // use default
             elementNameStrategy = "relaxed";
         }
-        System.out.println("elementNameStrategy: " + elementNameStrategy);
+        Log.debug(Geonet.CSW_SEARCH, "elementNameStrategy: " + elementNameStrategy);
         return elementNameStrategy;
     }
-
 
     /**
      * Checks that not ElementName and ElementSetName are both present in the query, see OGC 07-006 section 10 8 4 9.
@@ -653,9 +652,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * TODO javadoc.
      *
      * @param request
+     * @param context 
      * @return
      */
-    private Sort getSortFields(Element request) {
+    private Sort getSortFields(Element request, ServiceContext context) {
 		Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
 		if (query == null) {
 			return null;
@@ -667,7 +667,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         }
 
 		List list = sortBy.getChildren();
-		List<Pair<String, Boolean>> al = new ArrayList<Pair<String, Boolean>>();
+		List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
         for (Object aList : list) {
             Element el = (Element) aList;
             String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
@@ -676,14 +676,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
             String luceneField = FieldMapper.map(field);
             if (luceneField != null) {
-                al.add(Pair.read(luceneField, "DESC".equals(order)));
+                sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
             }
             else {
-                al.add(Pair.read(field, "DESC".equals(order)));
+                sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
 		// we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(al);
+		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
 	}
 
 

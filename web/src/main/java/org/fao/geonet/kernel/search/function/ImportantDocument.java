@@ -23,13 +23,13 @@
 
 package org.fao.geonet.kernel.search.function;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Fieldable;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
 
 /**
  * Compute a boost factor for document according to field custom field values.

@@ -98,7 +98,7 @@ public class Set implements Service {
         //
         // re-initialize Lucene analyzer with changed stopwords
         //
-        gc.getSearchmanager().createAnalyzer(settingInfo);
+     //   gc.getSearchmanager().createAnalyzer(settingInfo);
 
         response.addContent(new Element("displayRebuildIndex"));
 		return response;

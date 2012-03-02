@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -74,7 +75,8 @@ public class Set implements Service {
      * @throws Exception
      */
     private void saveCustomElementSets(Element params, GeonetContext gc, Dbms dbms) throws Exception {
-        System.out.println("\n\n\nset customelementset:\n" + Xml.getString(params));
+        Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Xml.getString(params));
+
         CustomElementSet customElementSet = new CustomElementSet();
         List<Element> xpaths = params.getChildren("xpath");
         for(Element xpath : xpaths) {

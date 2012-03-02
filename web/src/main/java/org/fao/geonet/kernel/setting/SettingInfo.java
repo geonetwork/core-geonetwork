@@ -99,9 +99,63 @@ public class SettingInfo
 		return value;
 	}
 
-	//---------------------------------------------------------------------------
+    /**
+     * Whether to use auto detection of the language used in search terms.
+     * @return
+     */
+    public boolean getAutoDetect() {
+        String value = sm.getValue("system/autodetect/enable");
+        if(value == null) {
+            return false;
+        }
+        else {
+            return value.equals("true");
+        }
+    }
 
-	public boolean getLuceneIndexOptimizerSchedulerEnabled()
+    /**
+     * Whether search results should be only in the requested language.
+     * @return
+     */
+    public boolean getRequestedLanguageOnly() {
+        String value = sm.getValue("system/requestedLanguage/only");
+        if(value == null) {
+            return false;
+        }
+        else {
+            return value.equals("true");
+        }
+    }
+
+    /**
+     * Whether search results should be sorted with the requested language on top.
+     * @return
+     */
+    public boolean getRequestedLanguageOnTop() {
+        String value = sm.getValue("system/requestedLanguage/sorted");
+        if(value == null) {
+            return false;
+        }
+        else {
+            return value.equals("true");
+        }
+    }
+
+    /**
+     * Whether search should ignore the requested language.
+     * @return
+     */
+    public boolean getIgnoreRequestedLanguage() {
+        String value = sm.getValue("system/requestedLanguage/ignored");
+        if(value == null) {
+            return false;
+        }
+        else {
+            return value.equals("true");
+        }
+    }
+
+    public boolean getLuceneIndexOptimizerSchedulerEnabled()
 	{
 		String value = sm.getValue("system/indexoptimizer/enable");
 		if (value == null) return false;
@@ -257,6 +311,7 @@ public class SettingInfo
 	//---------------------------------------------------------------------------
 
 	private SettingManager sm;
+
 }
 
 //=============================================================================

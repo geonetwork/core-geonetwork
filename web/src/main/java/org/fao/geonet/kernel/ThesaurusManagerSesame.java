@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.openrdf.model.BNode;
@@ -245,18 +246,13 @@ public class ThesaurusManagerSesame {
 	 * @throws QueryEvaluationException
 	 * @throws AccessDeniedException
 	 */
-	public QueryResultsTable performRequest(String query,
-			LocalRepository thesaurusRepository) throws IOException,
-			MalformedQueryException, QueryEvaluationException,
-			AccessDeniedException {
+	public QueryResultsTable performRequest(String query, LocalRepository thesaurusRepository) throws IOException,
+            MalformedQueryException, QueryEvaluationException, AccessDeniedException {
 
-		System.out.println("Requete : " + query);
+        Log.debug(Geonet.THESAURUS_MAN, "Requete : " + query);
 
-		QueryResultsTable resultsTable = thesaurusRepository.performTableQuery(
-				QueryLanguage.SERQL, query);
-
+		QueryResultsTable resultsTable = thesaurusRepository.performTableQuery(QueryLanguage.SERQL, query);
 		printResultsTable(resultsTable);
-
 		return resultsTable;
 	}
 
@@ -269,9 +265,8 @@ public class ThesaurusManagerSesame {
 	 * @throws QueryEvaluationException
 	 * @throws AccessDeniedException
 	 */
-	public Element getAllPrefLabel(String thesaurusRepository)
-			throws IOException, MalformedQueryException,
-			QueryEvaluationException, AccessDeniedException {
+	public Element getAllPrefLabel(String thesaurusRepository) throws IOException, MalformedQueryException,
+            QueryEvaluationException, AccessDeniedException {
 
 		String query = "SELECT prefLab, note "
 				+ " from {} rdf:type {skos:Concept}; "
@@ -284,8 +279,7 @@ public class ThesaurusManagerSesame {
 
 		printResultsTable(resultsTable);
 
-		Element elDescKeys = resultsTableToXmlKeywords(resultsTable
-        );
+		Element elDescKeys = resultsTableToXmlKeywords(resultsTable);
 		Element elThesaName = new Element("thesaName");
 		Element elResTitle = new Element("resTitle");
 		elResTitle.addContent(thesaurusRepository);
@@ -315,8 +309,6 @@ public class ThesaurusManagerSesame {
 
 				System.out.print("\t");
 			}
-
-			System.out.println();
 		}
 	}
 

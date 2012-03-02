@@ -41,12 +41,12 @@ import org.fao.geonet.lib.Lib;
 import ucar.nc2.util.net.EasySSLProtocolSocketFactory;
 
 /**
- * Metadata notifier client to manage the communication with notification servlet
+ * Metadata notifier client to manage the communication with notification servlet.
  *  
  */
 public class MetadataNotifierClient {
     /**
-     * Uses the notifier update service to handle insertion and updates of metadata
+     * Uses the notifier update service to handle insertion and updates of metadata.
      *
      * @param metadata
      * @param metadataUuid
@@ -120,7 +120,7 @@ public class MetadataNotifierClient {
 	}
 
     /**
-     * Uses the notifier delete service to handle deletion of metadata
+     * Uses the notifier delete service to handle deletion of metadata.
      *
      * @param metadataUuid
      * @throws MetadataNotifierClientException

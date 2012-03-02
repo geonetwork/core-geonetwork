@@ -15,8 +15,17 @@
 	<!-- ========================================================================================= -->
 
 	<xsl:template match="/">
-		<Document>
-	
+		<!-- TODO I don't know what tag the language is in so this needs to be done -->
+		<xsl:variable name="langCode" select="string(/Metadata/mdLang/languageCode/@value)"/>
+		<Document locale="{$langCode}">
+
+			<!-- locale information -->	
+	        <Field name="_locale" string="{$langCode}" store="true" index="true"/>
+            <Field name="_docLocale" string="{$langCode}" store="true" index="true"/>
+      			
+        	<!-- For multilingual docs it is good to have a title in the default locale.  In this type of metadata we don't have one but in the general case we do so we need to add it to all -->
+            <Field name="_defaultTitle" string="{string(/metadata/idinfo/citation/citeinfo/title)}" store="true" index="true"/>
+		
 			<xsl:apply-templates select="/metadata/idinfo/citation/citeinfo/title">
 				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>

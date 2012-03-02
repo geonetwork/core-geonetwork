@@ -23,6 +23,12 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
+    <multilingual>flerspråklige innstillinger</multilingual>
+    <autoDetectEnable>Aktiver automatisk detektere søket språk</autoDetectEnable>
+    <requestedlanguageonly>Søk kun i forespurte språket</requestedlanguageonly>
+    <requestedlanguagesorted>Søkeresultater i forespurte språket sortert på toppen</requestedlanguagesorted>
+    <requestedlanguageignored>Ignorer forespurte språket i søket</requestedlanguageignored>
+
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -335,7 +341,22 @@
 		<tip id="xlinkResolver.enable">
 			If set, XLinks to metadata fragments in records will be resolved.
 		</tip>
-	</tips>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            Hvis satt, vil søket språk automatisk oppdaget. Merk at dette ikke fungerer veldig godt for korte søketermer.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Bare returnerer søkeresultater på det forespurte språket.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Returner søkeresultater i det forespurte språket på toppen.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Ignorer forespurte språket for søkeresultater.
+        </tip>
+
+    </tips>
 	
 	
   <data.dir>Data directory:</data.dir>

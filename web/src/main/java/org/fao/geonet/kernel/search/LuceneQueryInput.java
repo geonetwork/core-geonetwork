@@ -44,7 +44,17 @@ public class LuceneQueryInput extends UserQueryInput {
     private boolean isReviewer;
     private boolean isUserAdmin;
     private boolean isAdmin;
-    
+
+    private boolean requestedLanguageOnly;
+
+    public boolean isRequestedLanguageOnly() {
+        return requestedLanguageOnly;
+    }
+
+    public void setRequestedLanguageOnly(boolean requestedLanguageOnly) {
+        this.requestedLanguageOnly = requestedLanguageOnly;
+    }
+
     /**
      * Creates this from a JDOM element.
      * 

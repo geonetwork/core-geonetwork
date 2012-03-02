@@ -53,6 +53,7 @@
 		<xsl:call-template name="oai"/>
 		<xsl:call-template name="xlinkResolver"/>
 		<xsl:call-template name="searchStats"/>
+        <xsl:call-template name="multilingual"/>
 		<xsl:call-template name="downloadservice"/>
 		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="localrating"/>
@@ -68,17 +69,70 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template name="searchStats">
-		<h1 align="left"><xsl:value-of select="/root/gui/config/searchStats"/></h1>
-		<div align="left" style="{$style}">
-			<table>
-				<tr>
-					<td class="padded" width="{$width}"><label for="searchStats.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
-					<td class="padded"><input id="searchStats.enable" class="content" type="checkbox"/></td>
-				</tr>
-			</table>
-		</div>
-	</xsl:template>
+	<xsl:template name="multilingual">
+        <h1 align="left"><xsl:value-of select="/root/gui/config/multilingual"/></h1>
+        <div align="left" style="{$style}">
+            <table>
+                <tr>
+                    <td class="padded">
+                        <input id="autodetect.enable" class="content" type="checkbox"/>
+                    </td>
+                    <td class="padded">
+                        <label for="autodetect.enable">
+                            <xsl:value-of select="/root/gui/config/autoDetectEnable"/>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div align="left" style="{$style}">
+            <input align="left" type="radio" id="requestedLanguage.only" value="only" name="requestedlanguage"/>
+            <label for="requestedlanguage.only">
+                <xsl:value-of select="/root/gui/config/requestedlanguageonly"/>
+            </label>
+            <div align="left" style="{$style}">
+                <span id="requestedlanguage_only.subpanel">
+                    <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.only']"/>
+                </span>
+            </div>
+        </div>
+        <div align="left" style="{$style}">
+            <input align="left" type="radio" id="requestedLanguage.sorted" value="sorted" name="requestedlanguage"/>
+            <label for="requestedlanguage.sorted">
+                <xsl:value-of select="/root/gui/config/requestedlanguagesorted"/>
+            </label>
+            <div align="left" style="{$style}">
+                <span id="requestedlanguage_sorted.subpanel">
+                    <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.sorted']"/>
+                </span>
+            </div>
+        </div>
+        <div align="left" style="{$style}">
+            <input align="left" type="radio" id="requestedLanguage.ignored" value="ignored" name="requestedlanguage"/>
+            <label for="requestedlanguage.ignored">
+                <xsl:value-of select="/root/gui/config/requestedlanguageignored"/>
+            </label>
+            <div align="left" style="{$style}">
+                <span id="requestedlanguage_ignored.subpanel">
+                    <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.ignored']"/>
+                </span>
+            </div>
+        </div>
+    </xsl:template>
+
+    <!-- ============================================================================================= -->
+
+    <xsl:template name="searchStats">
+        <h1 align="left"><xsl:value-of select="/root/gui/config/searchStats"/></h1>
+        <div align="left" style="{$style}">
+            <table>
+                <tr>
+                    <td class="padded" width="{$width}"><label for="searchStats.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
+                    <td class="padded"><input id="searchStats.enable" class="content" type="checkbox"/></td>
+                </tr>
+            </table>
+        </div>
+    </xsl:template>
 
     <!-- ============================================================================================= -->
 

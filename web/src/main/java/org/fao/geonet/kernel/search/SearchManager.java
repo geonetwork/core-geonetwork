@@ -22,27 +22,9 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
@@ -51,7 +33,6 @@ import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -67,7 +48,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -83,12 +63,12 @@ import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
 import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
@@ -96,16 +76,37 @@ import org.geotools.data.Transaction;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
+import org.jdom.Content;
 import org.jdom.Element;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Indexes metadata using Lucene.
  */
-public class SearchManager
-{
+public class SearchManager {
 	public static final int LUCENE = 1;
 	public static final int Z3950 = 2;
 	public static final int UNUSED = 3;
@@ -119,7 +120,7 @@ public class SearchManager
     private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
 
 	private final File _stylesheetsDir;
-    private static String _stopwordsDir;
+    private static File _stopwordsDir;
 	private final Element _summaryConfig;
 	private LuceneConfig _luceneConfig;
 	private File _luceneDir;
@@ -128,10 +129,17 @@ public class SearchManager
      * Used when adding documents to the Lucene index, and also to analyze query terms at search time.
      */
 	private static PerFieldAnalyzerWrapper _analyzer;
+
+    /**
+     * Maps languages to Analyzer that contains GeoNetworkAnalyzers initialized with stopwords for this 
+     * language.
+     */
+    private static Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
+    
 	private static Object _documentBoostClass;
-	private String         _luceneTermsToExclude;
-	private boolean        _logSpatialObject;
-	private SchemaManager  _scm;
+	private String _luceneTermsToExclude;
+	private boolean _logSpatialObject;
+	private SchemaManager _scm;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private String _htmlCacheDir;
     private Spatial _spatial;
@@ -148,6 +156,16 @@ public class SearchManager
     private String _thesauriDir;
 	private boolean _logAsynch;
 
+
+    public SettingInfo get_settingInfo() {
+        return _settingInfo;
+    }
+
+    /**
+     * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
+     */
+    private static final String LANGUAGE_PROFILES_DIR_PATH = "resources/language-profiles";
+
     public void setInspireEnabled(boolean inspireEnabled) {
         this._inspireEnabled = inspireEnabled;
     }
@@ -155,57 +173,28 @@ public class SearchManager
     /**
      * Creates GeoNetworkAnalyzer, using Admin-defined stopwords if there are any.
      *
-     * @param settingInfo Utility to read Settings
      * @return GeoNetworkAnalyzer
      */
-    private static Analyzer createGeoNetworkAnalyzer(SettingInfo settingInfo) {
+    private static Analyzer createGeoNetworkAnalyzer(Set<String> stopwords) {
         Log.debug(Geonet.SEARCH_ENGINE, "Creating GeoNetworkAnalyzer");
-        Set<String> stopwords = findStopwords(settingInfo);
         return new GeoNetworkAnalyzer(stopwords);
     }
 
     /**
      * Creates a default- (hardcoded) configured PerFieldAnalyzerWrapper.
      *
-     * @param settingInfo Utility to read Settings
      * @return PerFieldAnalyzerWrapper
      */
-	private static PerFieldAnalyzerWrapper createDefaultPerFieldAnalyzerWrapper(SettingInfo settingInfo) {
+	private static PerFieldAnalyzerWrapper createHardCodedPerFieldAnalyzerWrapper(Set<String> stopwords) {
         PerFieldAnalyzerWrapper pfaw;
-        Analyzer geoNetworkAnalyzer = createGeoNetworkAnalyzer(settingInfo);
+        Analyzer geoNetworkAnalyzer = createGeoNetworkAnalyzer(stopwords);
 		pfaw = new PerFieldAnalyzerWrapper(geoNetworkAnalyzer);
-		pfaw.addAnalyzer("_uuid", new GeoNetworkAnalyzer());
-		pfaw.addAnalyzer("parentUuid", new GeoNetworkAnalyzer());
-		pfaw.addAnalyzer("operatesOn", new GeoNetworkAnalyzer());
-		pfaw.addAnalyzer("subject", new KeywordAnalyzer());
+		pfaw.addAnalyzer(LuceneIndexField.UUID, new GeoNetworkAnalyzer());
+		pfaw.addAnalyzer(LuceneIndexField.PARENTUUID, new GeoNetworkAnalyzer());
+		pfaw.addAnalyzer(LuceneIndexField.OPERATESON, new GeoNetworkAnalyzer());
+		pfaw.addAnalyzer(LuceneIndexField.SUBJECT, new KeywordAnalyzer());
         return pfaw;
 	}
-
-    /**
-     * Retrieves stopwords for selected languages.
-     *
-     * @param settingInfo Utility to read Settings
-     * @return stopwords
-     */
-    private static Set<String> findStopwords(SettingInfo settingInfo) {
-        Set<String> allStopwords = null;
-        // retrieve index languages defined by administrator
-        Set<IndexLanguage> languages = settingInfo.getSelectedIndexLanguages();
-        if(languages != null) {
-            for(IndexLanguage language : languages) {
-                Log.debug(Geonet.SEARCH_ENGINE,"Loading stopwords for " + language.getName());
-                // look up stopwords for that language
-                Set<String> stopwords = StopwordFileParser.parse(_stopwordsDir + File.separator + language.getName());
-                if(stopwords != null) {
-                    if (allStopwords == null) {
-                        allStopwords = new HashSet<String>();
-                    }
-                    allStopwords.addAll(stopwords);
-                }
-            }
-        }
-        return allStopwords;
-    }
 
 	/**
 	 *
@@ -214,37 +203,68 @@ public class SearchManager
 	public static PerFieldAnalyzerWrapper getAnalyzer() {
 		return _analyzer;
 	}
+    
+    public static PerFieldAnalyzerWrapper getAnalyzer(String language) {
+        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)analyzerMap.get(language); 
+        if(analyzer != null) {
+            Log.debug(Geonet.LUCENE, "returning analyzer for language " + language);
+            return analyzer;
+        }
+        else {
+            Log.info(Geonet.LUCENE, "did not find analyzer for language " + language + ", returning default analyzer");
+            return _analyzer;
+        }
+    }
 
 	/**
 	 * Returns a default- (hardcoded) configured PerFieldAnalyzerWrapper, creating it if necessary.
      *
-	 * @return	PerFieldAnalyzerWrapper
 	 */
-	public static PerFieldAnalyzerWrapper getDefaultAnalyzer(SettingInfo settingInfo) {
-        Log.debug(Geonet.SEARCH_ENGINE,"getting hardcoded PerFieldAnalyzerWrapper");
+	private static void initHardCodedAnalyzers() {
+        Log.debug(Geonet.SEARCH_ENGINE, "initializing hardcoded analyzers");
         // no default analyzer instantiated: create one
         if(_defaultAnalyzer == null) {
-            // use hardcoded default PerFieldAnalyzerWrapper
-            _defaultAnalyzer = createDefaultPerFieldAnalyzerWrapper(settingInfo);
+            // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
+            _defaultAnalyzer = createHardCodedPerFieldAnalyzerWrapper(null);
         }
-        return _defaultAnalyzer;
+        if(!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
+            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() + ", not using any stopwords.");
+        }
+        else {
+            Log.debug(Geonet.LUCENE, "loading stopwords");
+            for(File stopwordsFile : _stopwordsDir.listFiles()) {
+                String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
+                if(language.length() != 2) {
+                    Log.warning(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
+                }
+                // look up stopwords for that language
+                Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
+                if(stopwordsForLanguage != null) {
+                    Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                    Analyzer languageAnalyzer = createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage);
+                    analyzerMap.put(language, languageAnalyzer);
+                }
+                else {
+                    Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                }
+            }
+        }        
 	}
 
     /**
      * Creates an analyzer based on its definition in the Lucene config.
      * 
      * @param analyzerClassName Class name of analyzer to create
-     * @param settingInfo Utility to read Settings
      * @param field The Lucene field this analyzer is created for
      * @return
      */
-    private Analyzer createAnalyzerFromLuceneConfig(String analyzerClassName, SettingInfo settingInfo, String field) {
+    private Analyzer createAnalyzerFromLuceneConfig(String analyzerClassName, String field, Set<String> stopwords) {
         Analyzer analyzer = null;
         try {
             Log.debug(Geonet.SEARCH_ENGINE, "Creating analyzer defined in Lucene config:" + analyzerClassName);
             // GNA analyzer
             if(analyzerClassName.equals("org.fao.geonet.kernel.search.GeoNetworkAnalyzer")) {
-                analyzer = createGeoNetworkAnalyzer(settingInfo);
+                analyzer = createGeoNetworkAnalyzer(stopwords);
             }
             // non-GNA analyzer
             else {
@@ -273,45 +293,85 @@ public class SearchManager
             }
         }
         catch (Exception z) {
-            Log.warning(Geonet.SEARCH_ENGINE, " Error on analyzer initialization: " + z.getMessage() + ". Check your Lucene configuration. Default analyzer will be used for field " + field);
+            Log.warning(Geonet.SEARCH_ENGINE, " Error on analyzer initialization: " + z.getMessage() + ". Check your Lucene configuration. Hardcoded default analyzer will be used for field " + field);
             z.printStackTrace();
         }
         finally {
             // creation of analyzer has failed, default to GeoNetworkAnalyzer
             if(analyzer == null) {
                 Log.warning(Geonet.SEARCH_ENGINE, "Creating analyzer has failed, defaulting to GeoNetworkAnalyzer");
-                analyzer = createGeoNetworkAnalyzer(settingInfo);
+                analyzer = createGeoNetworkAnalyzer(stopwords);
             }
         }
         return analyzer;
     }
 
 	/**
-	 * Creates analyzer according to Lucene configuration.
-	 * If default analyzer class is not set a default per field analyzer is created by @see #getDefaultAnalyzer().
-	 * If an error occurs on instantiating an analyzer, GeoNetworkAnalyzer is used.
+	 * Creates analyzers. An analyzer is created for each language that has a stopwords file, and a stopword-less
+     * default analyzer is also created.
 	 *
-     * @param settingInfo Utility to read Settings
+     * If no analyzer class is specified in Lucene configuration, a default hardcoded PerFieldAnalyzer is created
+     * (@see #initHardCodedAnalyzers()).
+     *
+	 * If an error occurs instantiating an analyzer, GeoNetworkAnalyzer is used.
 	 */
-	public void createAnalyzer(SettingInfo settingInfo) {
+	public void createAnalyzer() {
 		Log.debug(Geonet.SEARCH_ENGINE, "createAnalyzer start");
 		String defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
         Log.debug(Geonet.SEARCH_ENGINE, "defaultAnalyzer defined in Lucene config: " + defaultAnalyzerClass);
         // there is no default analyzer defined in lucene config
 		if (defaultAnalyzerClass == null) {
-            _analyzer = getDefaultAnalyzer(settingInfo);
+            // create default (hardcoded) analyzer
+            initHardCodedAnalyzers();
 		}
-        // there is a default analyzer defined in lucene config
+        // there is an analyzer defined in lucene config
         else {
-            // create the default analyzer
-            Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, settingInfo, null);
+
+            if(!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() + ", not using any stopwords.");
+            }
+            else {
+                Log.debug(Geonet.LUCENE, "loading stopwords");
+                for(File stopwordsFile : _stopwordsDir.listFiles()) {
+                    String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
+                    // TODO check for valid ISO 639-1 codes could be better than this
+                    if(language.length() != 2) {
+                        Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-1 language as filename: " + language);
+                    }
+                    // look up stopwords for that language
+                    Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
+                    if(stopwordsForLanguage != null) {
+                        Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+
+                        // create the default analyzer according to Lucene config
+                        Analyzer a = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, stopwordsForLanguage);
+                        PerFieldAnalyzerWrapper languageAnalyzer = new PerFieldAnalyzerWrapper(a);
+                        // now handle the exceptions to the default analyzer as defined in lucene config
+                        for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
+                            String field = e.getKey();
+                            String aClassName = e.getValue();
+                            Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
+                            Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field ,stopwordsForLanguage);
+                            languageAnalyzer.addAnalyzer(field, analyzer);
+                        }
+                        analyzerMap.put(language, languageAnalyzer);
+                        
+                    }
+                    else {
+                        Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                    }
+                }
+            }            
+
+            // create the default analyzer according to Lucene config
+            Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, null);
 			_analyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
             // now handle the exceptions to the default analyzer as defined in lucene config
 			for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
 				String field = e.getKey();
 				String aClassName = e.getValue();
 				Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
-                Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, settingInfo, field);
+                Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field, null);
                 _analyzer.addAnalyzer(field, analyzer);
 			}
 		}
@@ -334,10 +394,9 @@ public class SearchManager
 	 * @throws Exception
 	 */
 	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String thesauriDir,
-			String summaryConfigXmlFile, LuceneConfig lc, 
-			boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude, 
-			DataStore dataStore, int maxWritesInTransaction, SettingInfo si, SchemaManager scm, JeevesServlet servlet) throws Exception
-	{
+                         String summaryConfigXmlFile, LuceneConfig lc, boolean logAsynch, boolean logSpatialObject,
+                         String luceneTermsToExclude, DataStore dataStore, int maxWritesInTransaction, SettingInfo si,
+                         SchemaManager scm, JeevesServlet servlet) throws Exception {
 		_scm = scm;
 		_thesauriDir = thesauriDir;
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
@@ -349,28 +408,37 @@ public class SearchManager
         _settingInfo = si;
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
-        _stopwordsDir = appPath + STOPWORDS_DIR_PATH;
+        _stopwordsDir = new File(appPath + STOPWORDS_DIR_PATH);
+
+        /**
+         * Initialize language detector. NOTE this can only be invoked once without causing a exception.
+         */
+        DetectorFactory.loadProfile(appPath + LANGUAGE_PROFILES_DIR_PATH);
 
         _inspireEnabled = si.getInspireEnabled();
-        createAnalyzer(si);
+        createAnalyzer();
         createDocumentBoost();
         
-		if (!_stylesheetsDir.isDirectory())
-			throw new Exception("directory " + _stylesheetsDir + " not found");
+		if (!_stylesheetsDir.isDirectory()) {
+            throw new Exception("directory " + _stylesheetsDir + " not found");
+        }
 
 		File htmlCacheDirTest   = new File(appPath, htmlCacheDir);
-		if (!htmlCacheDirTest.isDirectory())
-			throw new IllegalArgumentException("directory " + htmlCacheDir + " not found");
+		if (!htmlCacheDirTest.isDirectory() && !htmlCacheDirTest.mkdirs()) {
+            throw new IllegalArgumentException("directory " + htmlCacheDir + " not found");
+        }
 		_htmlCacheDir = htmlCacheDir;
 
 
 		_luceneDir = new File(luceneDir + NON_SPATIAL_DIR);
 
-		if (!_luceneDir.isAbsolute()) _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
+		if (!_luceneDir.isAbsolute()) {
+            _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
+        }
 
-     _luceneDir.getParentFile().mkdirs();
+        _luceneDir.getParentFile().mkdirs();
 
-     _spatial = new Spatial(dataStore, maxWritesInTransaction);
+        _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
      	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;
@@ -380,12 +448,13 @@ public class SearchManager
 		initZ3950();
 
 		if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
-      _optimizerBeginAt  = si.getLuceneIndexOptimizerSchedulerAt();
-      _optimizerInterval = si.getLuceneIndexOptimizerSchedulerInterval();
-      scheduleOptimizerThread();
-    } else {
-      Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
-    }
+            _optimizerBeginAt  = si.getLuceneIndexOptimizerSchedulerAt();
+            _optimizerInterval = si.getLuceneIndexOptimizerSchedulerInterval();
+            scheduleOptimizerThread();
+        }
+        else {
+            Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
+        }
 	}
 
 	private void createDocumentBoost() {
@@ -407,7 +476,8 @@ public class SearchManager
                     Log.warning(Geonet.SEARCH_ENGINE, "   Now trying without parameter");
                     _documentBoostClass = clazz.newInstance();
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -419,43 +489,36 @@ public class SearchManager
 	 */
 	public void reloadLuceneConfiguration (LuceneConfig lc) {
 		_luceneConfig = lc;
-		createAnalyzer(_settingInfo);
+		createAnalyzer();
 		createDocumentBoost();
 	}
 
 	public LuceneConfig getCurrentLuceneConfiguration () {
 		return _luceneConfig;
 	}
-	//-----------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
      *
      * @throws Exception
      */
-	public void end() throws Exception
-	{
+	public void end() throws Exception {
 		endZ3950();
 		_spatial.end();
 		_optimizerTimer.cancel();
 	}
 
-	//-----------------------------------------------------------------------------
-
     /**
      * TODO javadoc.
      *
      * @throws Exception
      */
-	public synchronized void disableOptimizer() throws Exception
-  {
-    Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
-    if (_optimizerTimer != null) {
-      _optimizerTimer.cancel();
+	public synchronized void disableOptimizer() throws Exception {
+        Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
+        if (_optimizerTimer != null) {
+            _optimizerTimer.cancel();
+        }
     }
-  }
-
-	//-----------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -464,17 +527,16 @@ public class SearchManager
      * @param optimizerInterval
      * @throws Exception
      */
-	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception
-	{
-		if (_dateFormat.format(optimizerBeginAt.getTime()).equals(_dateFormat.format(_optimizerBeginAt.getTime())) && (optimizerInterval == _optimizerInterval)) return; // do nothing unless at and interval has changed
-
+	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
+		if (_dateFormat.format(optimizerBeginAt.getTime()).equals(_dateFormat.format(_optimizerBeginAt.getTime())) &&
+                (optimizerInterval == _optimizerInterval)) {
+            return; // do nothing unless at and interval has changed
+        }
 		_optimizerInterval = optimizerInterval;
 		_optimizerBeginAt  = optimizerBeginAt;
 		if (_optimizerTimer != null) _optimizerTimer.cancel();
 		scheduleOptimizerThread();
 	}
-
-	//-----------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -490,8 +552,6 @@ public class SearchManager
 
 		Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index to run at "+_dateFormat.format(beginAt)+" and every "+_optimizerInterval+" minutes afterwards");
 	}
-
-	//-----------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -511,12 +571,12 @@ public class SearchManager
 		ts.set(Calendar.SECOND,				timeToStart.get(Calendar.SECOND));
 
 		// if the starttime has already past then schedule for tommorrow
-		if (now.after(ts)) ts.add(Calendar.DAY_OF_MONTH, 1);
+		if (now.after(ts)) {
+            ts.add(Calendar.DAY_OF_MONTH, 1);
+        }
 
 		return ts.getTime();
 	}
-
-	//-----------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -525,31 +585,14 @@ public class SearchManager
 	class OptimizeTask extends TimerTask {
 		public void run() {
 			try {
-				_indexWriter.openWriter();
-			} catch (Exception e) {
-				Log.error(Geonet.INDEX_ENGINE, "Optimize task failed to open the index: "+e.getMessage());
-				e.printStackTrace();
-			}
-
-			try {
-				Log.info(Geonet.INDEX_ENGINE, "Index Optimization Thread Task...started");
 				_indexWriter.optimize();
-				Log.info(Geonet.INDEX_ENGINE, "Index Optimization Thread Task...ended");
-			} catch (Exception e) {
+			}
+            catch (Exception e) {
 				Log.error(Geonet.INDEX_ENGINE, "Optimize task failed: "+e.getMessage());
 				e.printStackTrace();
-			} finally {
-				try {
-					_indexWriter.closeWriter();
-				} catch (Exception e) {
-					Log.error(Geonet.INDEX_ENGINE, "Optimize task failed to close the index: "+e.getMessage());
-					e.printStackTrace();
-				}
 			}
 		}
 	}
-
-	//-----------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -559,16 +602,12 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-	public MetaSearcher newSearcher(int type, String stylesheetName)
-		throws Exception
-	{
-		switch (type)
-		{
+	public MetaSearcher newSearcher(int type, String stylesheetName) throws Exception {
+		switch (type) {
 			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _luceneConfig);
-			case Z3950:  return new Z3950Searcher(this, _scm, stylesheetName);
+			case Z3950: return new Z3950Searcher(this, _scm, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
-
-			default:     throw new Exception("unknown MetaSearcher type: " + type);
+			default: throw new Exception("unknown MetaSearcher type: " + type);
 		}
 	}
 
@@ -576,33 +615,25 @@ public class SearchManager
 	 * Lucene init/end methods. Creates the Lucene index directory.
 	 * @throws Exception
 	 */
-	private void initLucene()
-		throws Exception
-	{
+	private void initLucene() throws Exception {
 		setupIndex(false);
 	}
 
-	//-----------------------------------------------------------------------------
 	// Z39.50 init/end methods
 
 	/**
-         * Initializes the Z3950 client searcher.
+     * Initializes the Z3950 client searcher.
 	 */
 	private void initZ3950() {}
 
 	/**
 	 * deinitializes the Z3950 client searcher.
 	 */
-	private void endZ3950() {
-	}
-
-	//-----------------------------------------------------------------------------
+	private void endZ3950() {}
 
 	public String getHtmlCacheDir() {
 		return _htmlCacheDir;
 	}
-
-	//-----------------------------------------------------------------------------
 
 	public boolean getLogAsynch() {
 		return _logAsynch;
@@ -612,13 +643,10 @@ public class SearchManager
 		return _logSpatialObject;
 	}
 
-	//-----------------------------------------------------------------------------
-
 	public String getLuceneTermsToExclude() {
 		return _luceneTermsToExclude;
 	}
 
-	//--------------------------------------------------------------------------------
 	// indexing methods
 
 	/**
@@ -631,18 +659,21 @@ public class SearchManager
 	 * @param title
 	 * @throws Exception
 	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
-	{
-		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from index");
+	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
+                      String title) throws Exception {
+		Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
 		_indexWriter.openWriter();
 		try {
-			Document doc = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
-			_indexWriter.addDocument(doc);
-		} finally {
+            List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
+            for( Pair<String, Document> document : docs ) {
+                _indexWriter.addDocument(document.one(), document.two());
+                Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
+            }
+		}
+        finally {
 			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
 			_indexWriter.closeWriter();
 		}
-
 		_spatial.writer().index(schemaDir, id, metadata);
 	}
 
@@ -667,12 +698,14 @@ public class SearchManager
      * @param title
      * @throws Exception
      */
-	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title) throws Exception
-	{
-		Document doc = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, true);
-		_indexWriter.addDocument(doc);
-
-		_spatial.writer().index(schemaDir, id, metadata);
+	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
+                           String title) throws Exception {
+        List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title,
+                true);
+        for( Pair<String, Document> document : docs ) {
+            _indexWriter.addDocument(document.one(), document.two());
+        }
+        _spatial.writer().index(schemaDir, id, metadata);
 	}
 
     /**
@@ -713,8 +746,9 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-    private Document buildIndexDocument(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title, boolean group) throws Exception
-	{
+	private List<Pair<String,Document>> buildIndexDocument(String schemaDir, Element metadata, String id,
+                                                           List<Element> moreFields, String isTemplate, String title,
+                                                           boolean group) throws Exception {
 
 		Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
 		if (group) deleteGroup("_id", id);
@@ -728,11 +762,16 @@ public class SearchManager
 			// create empty document with only title and "any" fields
 			xmlDoc = new Element("Document");
 
-            StringBuilder sb = new StringBuilder();
+			Element defaultDoc = new Element("Document");
+            defaultDoc.setAttribute(Geonet.LUCENE_LOCALE_KEY, Geonet.DEFAULT_LANGUAGE);
+            xmlDoc.addContent(defaultDoc);
+
+           StringBuilder sb = new StringBuilder();
 			allText(metadata, sb);
-			addField(xmlDoc, "title", title, true, true);
-			addField(xmlDoc, "any", sb.toString(), true, true);
-		} else {
+			addField(xmlDoc, LuceneIndexField.TITLE, title, true, true);
+			addField(xmlDoc, LuceneIndexField.ANY, sb.toString(), true, true);
+		}
+        else {
 			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
 					+ Xml.getString(metadata));
 
@@ -741,18 +780,27 @@ public class SearchManager
 			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
 					+ Xml.getString(xmlDoc));
 		}
-		// add _id field
-		addField(xmlDoc, "_id", id, true, true);
 
-		// add more fields
-        for (Element moreField : moreFields) {
-            xmlDoc.addContent(moreField);
-        }
+        @SuppressWarnings("unchecked")
+        List<Element> documentElements = xmlDoc.getContent();
 
-		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n"
-				+ Xml.getString(xmlDoc));
+        List<Pair<String, Document>> documents = new ArrayList<Pair<String, Document>>();
+        for( Element doc : documentElements ) {
+            // add _id field
+            addField(doc, LuceneIndexField.ID, id, true, true);
 
-        return newDocument(xmlDoc);
+            // add more fields
+            for( Element moreField : moreFields ) {
+                doc.addContent((Content) moreField.clone());
+            }
+            String locale = doc.getAttributeValue("locale");
+            if(locale == null || locale.trim().isEmpty()) {
+                locale = Geonet.DEFAULT_LANGUAGE;
+            }
+            documents.add(Pair.read(locale, newDocument(doc)));
+        }		
+		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
+        return documents;
 	}
 
 	/**
@@ -764,13 +812,13 @@ public class SearchManager
 	 * @param store
 	 * @param index
 	 */
-	private static void addField(Element xmlDoc, String name, String value, boolean store, boolean index)
-	{
+	private static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
 		Element field = makeField(name, value, store, index);
 		xmlDoc.addContent(field);
 	}
+
     /**
-    * Creates a new XML field for the Lucene index
+    * Creates a new XML field for the Lucene index.
     * 
     * @param name
     * @param value
@@ -778,17 +826,40 @@ public class SearchManager
     * @param index
     * @return
     */
-	public static Element makeField(String name, String value, boolean store,
-												boolean index) {
+	public static Element makeField(String name, String value, boolean store, boolean index) {
 		Element field = new Element("Field");
-
-		field.setAttribute("name",   name);
-		field.setAttribute("string", value);
-		field.setAttribute("store",  store+"");
-		field.setAttribute("index",  index+"");
-
+		field.setAttribute(LuceneFieldAttribute.NAME.toString(), name);
+		field.setAttribute(LuceneFieldAttribute.STRING.toString(), value);
+		field.setAttribute(LuceneFieldAttribute.STORE.toString(), Boolean.toString(store));
+		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
 		return field;
 	}
+    private enum LuceneFieldAttribute {
+        NAME {
+            @Override
+            public String toString() {
+                return "name";
+            }
+        },
+        STRING  {
+            @Override
+            public String toString() {
+                return "string";
+            }
+        },
+        STORE  {
+            @Override
+            public String toString() {
+                return "store";
+            }
+        },
+        INDEX  {
+            @Override
+            public String toString() {
+                return "index";
+            }
+        }
+    }
 	/**
 	 * Extracts text from metadata record.
 	 *
@@ -812,8 +883,6 @@ public class SearchManager
 		}
 	}
 
-	//--------------------------------------------------------------------------------
-
     /**
      *  deletes a document.
      *
@@ -822,20 +891,18 @@ public class SearchManager
      * @throws Exception
      */
 	public void delete(String fld, String txt) throws Exception {
-
 		// possibly remove old document
 		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from delete");
 		_indexWriter.openWriter();
 		try {
 			_indexWriter.deleteDocuments(new Term(fld, txt));
-		} finally {
+		}
+        finally {
 			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
 			_indexWriter.closeWriter();
 		}
 		_spatial.writer().delete(txt);
 	}
-
-	//--------------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -843,10 +910,8 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-	public ArrayList<Integer> getDocsWithXLinks() throws Exception
-	{
-		IndexReader reader = getIndexReader();
-
+	public Set<Integer> getDocsWithXLinks() throws Exception {
+		IndexReader reader = getIndexReader(null);
 		try {
 			FieldSelector idXLinkSelector = new FieldSelector() {
 				public final FieldSelectorResult accept(String name) {
@@ -855,7 +920,7 @@ public class SearchManager
 				}
 			};
 
-			ArrayList<Integer> docs = new ArrayList<Integer>();
+			Set<Integer> docs = new LinkedHashSet<Integer>();
 			for (int i = 0; i < reader.maxDoc(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
 				Document doc = reader.document(i, idXLinkSelector);
@@ -871,12 +936,11 @@ public class SearchManager
 				}
 			}
 			return docs;
-		} finally {
+		}
+        finally {
 			releaseIndexReader(reader);
 		}
 	}
-
-	//--------------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
@@ -884,10 +948,8 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-	public HashMap<String,String> getDocsChangeDate() throws Exception
-	{
-		IndexReader reader = getIndexReader();
-
+	public Map<String,String> getDocsChangeDate() throws Exception {
+		IndexReader reader = getIndexReader(null);
 		try {
 			FieldSelector idChangeDateSelector = new FieldSelector() {
 				public final FieldSelectorResult accept(String name) {
@@ -897,7 +959,7 @@ public class SearchManager
 			};
 
 			int capacity = (int)(reader.maxDoc() / 0.75)+1;
-			HashMap<String,String> docs = new HashMap<String,String>(capacity);
+			Map<String,String> docs = new HashMap<String,String>(capacity);
 			for (int i = 0; i < reader.maxDoc(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
                 Document doc = reader.document(i, idChangeDateSelector);
@@ -909,10 +971,10 @@ public class SearchManager
 				docs.put(id, doc.get("_changeDate"));
 			}
 			return docs;
-		} finally {
+		}
+        finally {
 			releaseIndexReader(reader);
 		}
-
 	}
 
 	/**
@@ -922,12 +984,9 @@ public class SearchManager
 	 * @return	The list of values for the field
 	 * @throws Exception
 	 */
-	public Vector<String> getTerms(String fld) throws Exception
-	{
+	public Vector<String> getTerms(String fld) throws Exception {
 		Vector<String> terms = new Vector<String>();
-
-		IndexReader reader = getIndexReader();
-
+		IndexReader reader = getIndexReader(null);
 		try {
 			TermEnum enu = reader.terms(new Term(fld, ""));
 			if (enu.term()==null) return terms;
@@ -935,9 +994,11 @@ public class SearchManager
 				Term term = enu.term();
 				if (!term.field().equals(fld)) break;
 				terms.add(enu.term().text());
-			} while (enu.next());
+			}
+            while (enu.next());
 			return terms;
-		} finally {
+		}
+        finally {
 			releaseIndexReader(reader);
 		}
 	}
@@ -957,36 +1018,32 @@ public class SearchManager
 	 * @return	An unsorted and unordered list of terms with their frequency.
 	 * @throws Exception
 	 */
-	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms, int threshold) throws Exception
-	{
+	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
+                                                int threshold) throws Exception {
 		List<TermFrequency> termList = new ArrayList<TermFrequency>();
-		IndexReader reader = getIndexReader();
+		IndexReader reader = getIndexReader(null);
 		TermEnum term = reader.terms(new Term(fieldName, ""));
 		int i = 0;
-		// TODO : we should apply the same Analyzer used for field indexing
-		// to the term searched.
-
 		try {
 			if (term.term()!=null) {
 				// Extract terms containing search value.
 				do {
-					if (!term.term().field().equals(fieldName) || (++i > maxNumberOfTerms))
+					if (!term.term().field().equals(fieldName) || (++i > maxNumberOfTerms)) {
 						break;
-	
-					if (term.docFreq() >= threshold
-							&& term.term().text().contains(searchValue)) {
-						TermFrequency freq = new TermFrequency(term.term().text(), term
-								.docFreq());
+                    }
+					if (term.docFreq() >= threshold && term.term().text().contains(searchValue)) {
+						TermFrequency freq = new TermFrequency(term.term().text(), term.docFreq());
 						termList.add(freq);
 					} 
-				} while (term.next());
+				}
+                while (term.next());
 			}
-		} finally {
+		}
+        finally {
 			releaseIndexReader(reader);
 		}
 		return termList;
 	}
-
 
 	/**
 	 * Frequence of terms.
@@ -1012,16 +1069,14 @@ public class SearchManager
 		public int compareTo(Object o) {
 			if (o instanceof TermFrequency) {
 				TermFrequency oFreq = (TermFrequency) o;
-				return new CompareToBuilder()
-						.append(frequency, oFreq.frequency).append(term,
-								oFreq.term).toComparison();
-			} else {
+				return new CompareToBuilder().append(frequency, oFreq.frequency).append(term, oFreq.term).toComparison();
+			}
+            else {
 				return 0;
 			}
 		}
 	}
 
-	//-----------------------------------------------------------------------------
 	// utilities
 
     /**
@@ -1033,15 +1088,23 @@ public class SearchManager
      * @throws Exception
      */
     Element getIndexFields(String schemaDir, Element xml) throws Exception {
-
+        Element documents = new Element("Documents");
         try {
-            String styleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
+            String defaultStyleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
+            String otherLocalesStyleSheet = new File(schemaDir, "language-index-fields.xsl").getAbsolutePath();
             Map<String, String> params = new HashMap<String, String>();
             params.put("inspire", Boolean.toString(_inspireEnabled));
             params.put("thesauriDir", _thesauriDir);
-            final Element fields = Xml.transform(xml, styleSheet, params);
-            return fields;
-        } catch (Exception e) {
+            Element defaultLang = Xml.transform(xml, defaultStyleSheet, params);
+            if (new File(otherLocalesStyleSheet).exists()) {
+                @SuppressWarnings("unchecked")
+                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet, params).removeContent();
+                mergeDefaultLang(defaultLang, otherLanguages);
+                documents.addContent(otherLanguages);
+            }
+            documents.addContent(defaultLang);
+        }
+        catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage() + "\n\t Marking the metadata as _nonIndexed=true in index");
             Element xmlDoc = new Element("Document");
             addField(xmlDoc, "_indexingError", "1", true, true);
@@ -1049,12 +1112,91 @@ public class SearchManager
             StringBuilder sb = new StringBuilder();
             allText(xml, sb);
             addField(xmlDoc, "any", sb.toString(), false, true);
-            return xmlDoc;
+            documents.addContent(xmlDoc);
         }
+        return documents;
     }
 
-    //-----------------------------------------------------------------------------
 	// utilities
+    /**
+     * If otherLanguages has a document that is the same locale as the default then remove it from
+     * otherlanguages and merge the fields with those in defaultLang
+     */
+    @SuppressWarnings("unchecked")
+    private void mergeDefaultLang( Element defaultLang, List<Element> otherLanguages ) {
+        final String langCode;
+        if (defaultLang.getAttribute("locale") == null) {
+            langCode = "";
+        }
+        else {
+            langCode = defaultLang.getAttributeValue("locale");
+        }
+
+        Element toMerge = null;
+
+        for( Element element : otherLanguages ) {
+            String clangCode;
+            if (element.getAttribute("locale") == null) {
+                clangCode = "";
+            }
+            else {
+                clangCode = element.getAttributeValue("locale");
+            }
+
+            if (clangCode.equals(langCode)) {
+                toMerge = element;
+                break;
+            }
+        }
+
+        SortedSet<Element> toInclude = new TreeSet<Element>(new Comparator<Element>(){
+            public int compare( Element o1, Element o2 ) {
+                // <Field name="_locale" string="{string($iso3LangId)}" store="true" index="true" token="false"/>
+                int name = compare(o1, o2, "name");
+                int string = compare(o1, o2, "string");
+                int store = compare(o1, o2, "store");
+                int index = compare(o1, o2, "index");
+                if (name != 0) {
+                    return name;
+                }
+                if (string != 0) {
+                    return string;
+                }
+                if (store != 0) {
+                    return store;
+                }
+                if (index != 0) {
+                    return index;
+                }
+                return 0;
+            }
+            private int compare( Element o1, Element o2, String attName ) {
+                return safeGet(o1, attName).compareTo(safeGet(o2, attName));
+            }
+            public String safeGet( Element e, String attName ) {
+                String att = e.getAttributeValue(attName);
+                if (att == null) {
+                    return "";
+                } else {
+                    return att;
+                }
+            }
+        });
+
+        if (toMerge != null) {
+            toMerge.detach();
+            otherLanguages.remove(toMerge);
+            for( Element element : (List<Element>) defaultLang.getChildren() ) {
+                toInclude.add(element);
+            }
+            for( Element element : (List<Element>) toMerge.getChildren() ) {
+                toInclude.add(element);
+            }
+            toMerge.removeContent();
+            defaultLang.removeContent();
+            defaultLang.addContent(toInclude);
+        }
+    }
 
     /**
      * TODO javadoc.
@@ -1064,31 +1206,26 @@ public class SearchManager
      * @return
      * @throws Exception
      */
-	Element transform(String styleSheetName, Element xml) throws Exception
-	{
+	Element transform(String styleSheetName, Element xml) throws Exception {
 		try {
-			String styleSheetPath = new File(_stylesheetsDir, styleSheetName)
-					.getAbsolutePath();
+			String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
 			return Xml.transform(xml, styleSheetPath);
-		} catch (Exception e) {
-			Log.error(Geonet.INDEX_ENGINE,
-					"Search stylesheet contains errors : " + e.getMessage());
+		}
+        catch (Exception e) {
+			Log.error(Geonet.INDEX_ENGINE, "Search stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
 	}
 
-    //-----------------------------------------------------------------------------
-	/**
-	 * Returns a reopened index reader to do operations on
-	 * an up-to-date index.
-	 *
-	 * @return
-	 */
-	public IndexReader getIndexReader() throws InterruptedException, IOException {
-		return _indexReader.getReader();
-	}
-
-	//-----------------------------------------------------------------------------
+    /**
+     * Returns a reopened index reader to do operations on an up-to-date index.
+     * 
+     * @param priorityLocale the locale to prioritize. may be null
+     * @return
+     */
+    public IndexReader getIndexReader( String priorityLocale ) throws InterruptedException, IOException {
+        return _indexReader.getReader(priorityLocale);
+    }
 
 	/**
 	 * check if the reader is current or the index has been updated since it was obtained
@@ -1102,46 +1239,47 @@ public class SearchManager
         return _indexReader.isUpToDateReader(reader);
     }
 
-	//-----------------------------------------------------------------------------
-
     /**
      * TODO javadoc.
      *
      * @param reader
      * @throws IOException
      */
-	public void releaseIndexReader(IndexReader reader) throws IOException {
+	public void releaseIndexReader(IndexReader reader) throws InterruptedException, IOException {
 		_indexReader.releaseReader(reader);
 	}
-
 
     /**
      *  Creates an index in directory luceneDir if not already there.
      */
 	private void setupIndex(boolean rebuild) throws Exception {
-		// if rebuild forced don't check
+        if (_indexReader == null) {
+            _indexReader = new LuceneIndexReaderFactory(_luceneDir);
+        }
+        if (_indexWriter == null) {
+            _indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer, _luceneConfig);
+        }
+
+        // if rebuild forced don't check
 		boolean badIndex = true;
 		if (!rebuild) {
+		    IndexReader reader = null;
 			try {
-				IndexReader reader = IndexReader.open(FSDirectory.open(_luceneDir));
-				reader.close();
-				badIndex = false;
-			} catch (Exception e) {
-				Log.error(Geonet.INDEX_ENGINE,
-						"Exception while opening lucene index, going to rebuild it: "
-								+ e.getMessage());
+                _indexReader = new LuceneIndexReaderFactory(_luceneDir);
+                reader = _indexReader.getReader(null);
+                badIndex = false;
+            }
+            catch (AssertionError e) {
+                Log.error(Geonet.INDEX_ENGINE,
+                        "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
 			}
 		}
 		// if rebuild forced or bad index then rebuild index
 		if (rebuild || badIndex) {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
 			if (_spatial != null) _spatial.writer().reset();
-			IndexWriter writer = new IndexWriter(FSDirectory.open(_luceneDir), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
-			writer.close();
+			_indexWriter.createDefaultLocale();
 		}
-
-    _indexReader = new LuceneIndexReaderFactory(_luceneDir);
-		_indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer, _luceneConfig);
 	}
 
 	/**
@@ -1153,10 +1291,9 @@ public class SearchManager
 			_indexWriter.optimize();
 			_indexWriter.closeWriter();
 			return true;
-		} catch (Exception e) {
-			Log.error(Geonet.INDEX_ENGINE,
-					"Exception while optimizing lucene index: "
-							+ e.getMessage());
+		}
+        catch (Exception e) {
+			Log.error(Geonet.INDEX_ENGINE, "Exception while optimizing lucene index: " + e.getMessage());
 			return false;
 		}
 	}
@@ -1181,14 +1318,15 @@ public class SearchManager
 			if (!xlinks) {
 				setupIndex(true);
 				dataMan.init(context, dbms, true);
-			} else {
+			}
+            else {
 				dataMan.rebuildIndexXLinkedMetadata(context);
 			}
 			return true;
-		} catch (Exception e) {
-			Log.error(Geonet.INDEX_ENGINE,
-					"Exception while rebuilding lucene index, going to rebuild it: "
-							+ e.getMessage());
+		}
+        catch (Exception e) {
+			Log.error(Geonet.INDEX_ENGINE, "Exception while rebuilding lucene index, going to rebuild it: " +
+                    e.getMessage());
 			return false;
 		}
 	}
@@ -1200,14 +1338,15 @@ public class SearchManager
      * @param xml	The list of field to be indexed.
      * @return
      */
-	private Document newDocument(Element xml)
-	{
+	private Document newDocument(Element xml) {
 		Document doc = new Document();
 		
+		boolean hasLocaleField = false;
         for (Object o : xml.getChildren()) {
             Element field = (Element) o;
             String name = field.getAttributeValue("name");
             String string = field.getAttributeValue("string"); // Lower case field is handled by Lucene Analyzer.
+            if(name.equals(Geonet.LUCENE_LOCALE_KEY)) hasLocaleField = true;
             if (string.trim().length() > 0) {
             	String sStore = field.getAttributeValue("store");
                 String sIndex = field.getAttributeValue("index");
@@ -1236,7 +1375,8 @@ public class SearchManager
                 }
                 if (isNumeric) {
                 	addNumericField(doc, name, string, store, bIndex);
-                } else {
+                }
+                else {
                     Field f = new Field(name, string, store, index);
 
                     // Boost a particular field according to Lucene config. 
@@ -1250,6 +1390,10 @@ public class SearchManager
             }
         }
         
+        if(!hasLocaleField) {
+           doc.add(new Field(Geonet.LUCENE_LOCALE_KEY,Geonet.DEFAULT_LANGUAGE,Field.Store.YES,Field.Index.NOT_ANALYZED));
+        }
+        
         // Set boost to promote some types of document selectively according to DocumentBoosting class
         if (_documentBoostClass != null) {
             Float f = ((DocumentBoosting)_documentBoostClass).getBoost(doc);
@@ -1258,7 +1402,6 @@ public class SearchManager
                 doc.setBoost(f);
             }
         }
-        
 		return doc;
 	}
 
@@ -1273,44 +1416,38 @@ public class SearchManager
 	 * @param index
 	 * @return
 	 */
-	private void addNumericField(Document doc, String name, String string, Store store,
-			boolean index) {
+	private void addNumericField(Document doc, String name, String string, Store store, boolean index) {
 		LuceneConfigNumericField fieldConfig = _luceneConfig.getNumericField(name);
-		
-		// string = cleanNumericField(string);	
+		// string = cleanNumericField(string);
 		NumericField field = new NumericField(name, fieldConfig.getPrecisionStep(), store, index);
 		// TODO : reuse the numeric field for better performance
-		
-		Log.debug(Geonet.INDEX_ENGINE,
-				"Indexing numeric field: " + name +
-						" with value: " + string );
-		
+		Log.debug(Geonet.INDEX_ENGINE, "Indexing numeric field: " + name + " with value: " + string );
 		try {
 			String paramType = fieldConfig.getType();
 			if ("double".equals(paramType)) {
 				double d = Double.valueOf(string);
 				field.setDoubleValue(d);
-			} else if ("float".equals(paramType)) {
+			}
+            else if ("float".equals(paramType)) {
 				float f = Float.valueOf(string);
 				field.setFloatValue(f);
-			} else if ("long".equals(paramType)) {
+			}
+            else if ("long".equals(paramType)) {
 				long l = Long.valueOf(string);
 				field.setLongValue(l);
-			} else {
+			}
+            else {
 				int i = Integer.valueOf(string);
 				field.setIntValue(i);
 			}
-			
 			doc.add(field);
-		} catch (Exception e) {
-			Log.warning(Geonet.INDEX_ENGINE,
-					"Failed to index numeric field: " + name +
-							" with value: " + string + ", error is:" + e.getMessage());
+		}
+        catch (Exception e) {
+			Log.warning(Geonet.INDEX_ENGINE, "Failed to index numeric field: " + name + " with value: " + string + ", error is:" + e.getMessage());
 		}
 	}
 
-	public Spatial getSpatial()
-    {
+	public Spatial getSpatial() {
         return _spatial;
     }
 
@@ -1318,38 +1455,26 @@ public class SearchManager
      * TODO javadoc.
      *
      */
-	public class Spatial
-	{
-
-				private final DataStore _datastore;
+	public class Spatial {
+		private final DataStore _datastore;
         private static final long 	TIME_BETWEEN_SPATIAL_COMMITS = 10000;
         private final Map<String, Constructor<? extends SpatialFilter>> _types;
         {
-            HashMap<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
-
+            Map<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
             try {
-                types.put(Geonet.SearchResult.Relation.ENCLOSES,
-                        constructor(ContainsFilter.class));
-                types.put(Geonet.SearchResult.Relation.CROSSES,
-                        constructor(CrossesFilter.class));
-                types.put(Geonet.SearchResult.Relation.OUTSIDEOF,
-                        constructor(IsFullyOutsideOfFilter.class));
-                types.put(Geonet.SearchResult.Relation.EQUAL,
-                        constructor(EqualsFilter.class));
-                types.put(Geonet.SearchResult.Relation.INTERSECTION,
-                        constructor(IntersectionFilter.class));
-                types.put(Geonet.SearchResult.Relation.OVERLAPS,
-                        constructor(OverlapsFilter.class));
-                types.put(Geonet.SearchResult.Relation.TOUCHES,
-                        constructor(TouchesFilter.class));
-                types.put(Geonet.SearchResult.Relation.WITHIN,
-                        constructor(WithinFilter.class));
-                // types.put(Geonet.SearchResult.Relation.CONTAINS,
-                // constructor(BeyondFilter.class));
-                // types.put(Geonet.SearchResult.Relation.CONTAINS,
-                // constructor(DWithinFilter.class));
-            } catch (Exception e) {
-								e.printStackTrace();
+                types.put(Geonet.SearchResult.Relation.ENCLOSES, constructor(ContainsFilter.class));
+                types.put(Geonet.SearchResult.Relation.CROSSES, constructor(CrossesFilter.class));
+                types.put(Geonet.SearchResult.Relation.OUTSIDEOF, constructor(IsFullyOutsideOfFilter.class));
+                types.put(Geonet.SearchResult.Relation.EQUAL, constructor(EqualsFilter.class));
+                types.put(Geonet.SearchResult.Relation.INTERSECTION, constructor(IntersectionFilter.class));
+                types.put(Geonet.SearchResult.Relation.OVERLAPS, constructor(OverlapsFilter.class));
+                types.put(Geonet.SearchResult.Relation.TOUCHES, constructor(TouchesFilter.class));
+                types.put(Geonet.SearchResult.Relation.WITHIN, constructor(WithinFilter.class));
+                // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
+                // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException("Unable to create types mapping", e);
             }
             _types = Collections.unmodifiableMap(types);
@@ -1373,16 +1498,16 @@ public class SearchManager
 				 * open. 
          * @throws Exception
          */
-        public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception
-        {
+        public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception {
             _lock = new ReentrantLock();
             _datastore = dataStore;
-						if (maxWritesInTransaction > 1) {
+			if (maxWritesInTransaction > 1) {
             	_transaction = new DefaultTransaction("SpatialIndexWriter");
-						} else {
+            }
+            else {
             	_transaction = Transaction.AUTO_COMMIT;
-						}
-						_maxWritesInTransaction = maxWritesInTransaction;
+            }
+            _maxWritesInTransaction = maxWritesInTransaction;
             _timer = new Timer(true);
             _gmlParser = new Parser(new GMLConfiguration());
             boolean rebuildIndex;
@@ -1390,7 +1515,8 @@ public class SearchManager
             rebuildIndex = createWriter(_datastore);
             if (rebuildIndex) {
                 setupIndex(true);
-            }else{
+            }
+            else{
                 // since the index is considered good we will
                 // call getIndex to make sure the in-memory index is
                 // generated
@@ -1405,22 +1531,23 @@ public class SearchManager
          * @return
          * @throws IOException
          */
-        private boolean createWriter(DataStore datastore) throws IOException
-        {
+        private boolean createWriter(DataStore datastore) throws IOException {
             boolean rebuildIndex;
             try {
-                _writer = new SpatialIndexWriter(datastore, _gmlParser,
-                        _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(datastore, _gmlParser,_transaction, _maxWritesInTransaction, _lock);
                 rebuildIndex = _writer.getFeatureSource().getSchema() == null;
-            } catch (Exception e) {
-								String exceptionString = Xml.getString(JeevesException.toElement(e));
-                Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:"+exceptionString);
+            }
+            catch (Exception e) {
+                String exceptionString = Xml.getString(JeevesException.toElement(e));
+                Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:" +
+                        exceptionString);
                 try {
-          				_writer.reset();
-								} catch (Exception e1) {
-          				Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer: "+e1.getMessage());
-									e1.printStackTrace();
-        				}
+                    _writer.reset();
+                }
+                catch (Exception e1) {
+                    Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer: "+e1.getMessage());
+                    e1.printStackTrace();
+                }
                 rebuildIndex = true;
             }
             return rebuildIndex;
@@ -1429,17 +1556,19 @@ public class SearchManager
         /**
          * Close spatial index.
          */
-				public void end() {
-                    _lock.lock();
-                    try {
-                        _writer.close();
-                    } catch (IOException e) {
-                        Log.error(Geonet.SPATIAL,"error closing spatial index: "+e.getMessage());
-												e.printStackTrace();
-                    } finally {
-                        _lock.unlock();
-                    }
-				}
+		public void end() {
+            _lock.lock();
+            try {
+                _writer.close();
+            }
+            catch (IOException e) {
+                Log.error(Geonet.SPATIAL,"error closing spatial index: "+e.getMessage());
+                e.printStackTrace();
+            }
+            finally {
+                _lock.unlock();
+            }
+        }
 
         /**
          * TODO javadoc.
@@ -1451,21 +1580,20 @@ public class SearchManager
          * @throws Exception
          */
         public Filter filter(org.apache.lucene.search.Query query, Element filterExpr, String filterVersion)
-                throws Exception
-        {
-
+                throws Exception {
             _lock.lock();
             try {
             	Parser filterParser = getFilterParser(filterVersion);
             	FeatureSource featureSource = _writer.getFeatureSource();
                 SpatialIndex index = _writer.getIndex();
-                return OgcGenericFilters.create(query, filterExpr,
-                        featureSource, index, filterParser);
-            } catch (Exception e) {
+                return OgcGenericFilters.create(query, filterExpr, featureSource, index, filterParser);
+            }
+            catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
-    			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " +
-            			filterVersion + "):" + Xml.getString(filterExpr) + ". Error is: " + e.toString());
-            } finally {
+    			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " + filterVersion + "):" +
+                        Xml.getString(filterExpr) + ". Error is: " + e.toString());
+            }
+            finally {
                 _lock.unlock();
             }
         }
@@ -1480,19 +1608,17 @@ public class SearchManager
          * @throws Exception
          */
         public SpatialFilter filter(org.apache.lucene.search.Query query,
-                Geometry geom, Element request) throws Exception
-        {
+                Geometry geom, Element request) throws Exception {
             _lock.lock();
             try {
-                String relation = Util.getParam(request,
-                        Geonet.SearchResult.RELATION,
+                String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
                 SpatialIndexWriter writer = writerNoLocking();
                 SpatialIndex index = writer.getIndex();
                 FeatureSource featureSource = writer.getFeatureSource();
-                return _types.get(relation).newInstance(query, geom,
-                        featureSource, index);
-            } finally {
+                return _types.get(relation).newInstance(query, geom, featureSource, index);
+            }
+            finally {
                 _lock.unlock();
             }
         }
@@ -1503,8 +1629,7 @@ public class SearchManager
          * @return
          * @throws Exception
          */
-        public SpatialIndexWriter writer() throws Exception
-        {
+        public SpatialIndexWriter writer() throws Exception {
             _lock.lock();
             try {
                 if (_committerTask != null) {
@@ -1513,7 +1638,8 @@ public class SearchManager
                 _committerTask = new Committer();
                 _timer.schedule(_committerTask, TIME_BETWEEN_SPATIAL_COMMITS);
                 return writerNoLocking();
-            } finally {
+            }
+            finally {
                 _lock.unlock();
             }
         }
@@ -1523,11 +1649,9 @@ public class SearchManager
          * @return
          * @throws Exception
          */
-        private SpatialIndexWriter writerNoLocking() throws Exception
-        {
+        private SpatialIndexWriter writerNoLocking() throws Exception {
             if (_writer == null) {
-                _writer = new SpatialIndexWriter(_datastore, _gmlParser,
-                        _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(_datastore, _gmlParser, _transaction, _maxWritesInTransaction, _lock);
             }
             return _writer;
         }
@@ -1548,28 +1672,24 @@ public class SearchManager
          * TODO javadoc.
          *
          */
-        private class Committer extends TimerTask
-        {
-
+        private class Committer extends TimerTask {
             @Override
-            public void run()
-            {
+            public void run() {
                 _lock.lock();
                 try {
                     if (_committerTask == this) {
                         _writer.commit();
                         _committerTask = null;
                     }
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     Log.error(Geonet.SPATIAL, "error writing spatial index "+e.getMessage());
-                } finally {
+                }
+                finally {
                     _lock.unlock();
                 }
             }
-
         }
-
-
     }
 
     /**
@@ -1580,12 +1700,9 @@ public class SearchManager
      * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    private static Constructor<? extends SpatialFilter> constructor(
-            Class<? extends SpatialFilter> clazz) throws SecurityException,
-            NoSuchMethodException
-    {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class,
-                Geometry.class, FeatureSource.class,
+    private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
+            throws SecurityException, NoSuchMethodException {
+        return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, FeatureSource.class,
                 SpatialIndex.class);
     }
 }

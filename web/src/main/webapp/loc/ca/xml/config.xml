@@ -23,6 +23,12 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
+    <multilingual>configuració multilingüe</multilingual>
+    <autoDetectEnable>Activa l'auto-detecció de llenguatge de sol·licitud de cerca</autoDetectEnable>
+    <requestedlanguageonly>Cercar només en l'idioma requerit</requestedlanguageonly>
+    <requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
+    <requestedlanguageignored>Omet l'idioma sol·licitat en la recerca</requestedlanguageignored>
+
 	<oai>Proveïdor OAI</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -381,7 +387,22 @@
 		<tip id="xlinkResolver.enable">
 			If set, XLinks to metadata fragments in records will be resolved.
 		</tip>
-	</tips>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            Si s'estableix, el llenguatge de cerca es detecta automàticament. Fixeu-vos que això no funciona molt bé per als termes de cerca curts.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Només retornar resultats de cerca en l'idioma sol·licitat.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Mostra els resultats de cerca en l'idioma sol·licitat a la part superior.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Omet l'idioma sol·licitat pels resultats de cerca.
+        </tip>
+
+    </tips>
 	
 	<data.dir>Data directory:</data.dir>
   <codeList.dir>Thesaurus directory:</codeList.dir>

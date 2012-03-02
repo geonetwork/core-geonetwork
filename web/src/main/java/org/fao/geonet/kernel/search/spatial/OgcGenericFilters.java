@@ -1,13 +1,12 @@
 package org.fao.geonet.kernel.search.spatial;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
@@ -50,10 +49,9 @@ import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
 import org.opengis.geometry.BoundingBox;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OgcGenericFilters
 {

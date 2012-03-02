@@ -26,6 +26,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -79,7 +80,7 @@ public class Get implements Service {
 
         result.addContent(cswEnabledElement);
 
-        System.out.println("\n\n\nget customelementset:\n" + Xml.getString(result));
+        Log.debug(Geonet.CUSTOM_ELEMENTSET, "get customelementset:\n" + Xml.getString(result));
 
         return result;
 	}

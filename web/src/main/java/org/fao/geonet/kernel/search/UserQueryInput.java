@@ -23,6 +23,10 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,10 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 /**
  * Search parameters that can be provided by a search client.

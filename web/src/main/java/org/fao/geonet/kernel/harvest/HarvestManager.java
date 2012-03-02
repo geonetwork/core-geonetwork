@@ -173,7 +173,6 @@ public class HarvestManager
 	public String add2(Dbms dbms, Element node) throws JeevesException, SQLException
 	{
 		Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
-        System.out.println("HarvestManager adding harvesting node : \n"+ Xml.getString(node));
 
 		String type = node.getAttributeValue("type");
 
@@ -182,8 +181,7 @@ public class HarvestManager
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
-		Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
-        System.out.println("HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().uuid);
+		Log.debug(Geonet.HARVEST_MAN, "HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().uuid);
 		return ah.getParams().uuid;
 	}
 

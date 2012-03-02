@@ -92,7 +92,8 @@ public class DataManager {
     }
 
     /**
-     * initializes the search manager and index not-indexed metadata.
+     * Initializes the search manager and index not-indexed metadata.
+     *
      * @param context
      * @param svnManager
      * @param xmlSerializer
@@ -147,7 +148,7 @@ public class DataManager {
 		Log.debug(Geonet.DATA_MANAGER, "DB CONTENT:\n'"+ Xml.getString(result) +"'"); 
 
 		// get lastchangedate of all metadata in index
-		HashMap<String,String> docs = searchMan.getDocsChangeDate();
+		Map<String,String> docs = searchMan.getDocsChangeDate();
 
 		// set up results HashMap for post processing of records to be indexed
 		ArrayList<String> toIndex = new ArrayList<String>();
@@ -207,6 +208,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param context
      * @throws Exception
@@ -214,7 +216,7 @@ public class DataManager {
 	public synchronized void rebuildIndexXLinkedMetadata(ServiceContext context) throws Exception {
 		
 		// get all metadata with XLinks
-		ArrayList<Integer> toIndex = searchMan.getDocsWithXLinks();
+		Set<Integer> toIndex = searchMan.getDocsWithXLinks();
 
 		Log.debug(Geonet.DATA_MANAGER, "Will index "+toIndex.size()+" records with XLinks");
 		if ( toIndex.size() > 0 ) {
@@ -230,6 +232,12 @@ public class DataManager {
 		}
 	}
     
+    /**
+     * TODO javadoc.
+     *
+     * @param context
+     * @param ids
+     */
     private void batchRebuild(ServiceContext context, List<String> ids) {
 
         // split reindexing task according to number of processors we can assign
@@ -253,6 +261,12 @@ public class DataManager {
         executor.shutdown();
     }
 
+    /**
+     * TODO javadoc.
+     * @param dbms dbms
+     * @param id metadata id
+     * @throws Exception hmm
+     */
     public void indexInThreadPoolIfPossible(Dbms dbms, String id) throws Exception {
         if(ServiceContext.get() == null ) {
             boolean indexGroup = false;
@@ -263,19 +277,21 @@ public class DataManager {
     }
 
     /**
-     * Add metadata ids to the thread pool for indexing.
+     * Adds metadata ids to the thread pool for indexing.
      *
      * @param context
      * @param id
+     * @throws SQLException
      */
 	public void indexInThreadPool(ServiceContext context, String id, Dbms dbms) throws SQLException {
         indexInThreadPool(context, Collections.singletonList(id), dbms);
     }
     /**
-     * Add metadata ids to the thread pool for indexing.
+     * Adds metadata ids to the thread pool for indexing.
      *
      * @param context
      * @param ids
+     * @throws SQLException
      */
     public void indexInThreadPool(ServiceContext context, List<String> ids, Dbms dbms) throws SQLException {
 
@@ -287,11 +303,17 @@ public class DataManager {
                 Runnable worker = new IndexMetadataTask(context, ids);
                 gc.getThreadPool().runTask(worker);
             }
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
+            Log.error(Geonet.DATA_MANAGER, e.getMessage());
             e.printStackTrace();
+            // TODO why swallow
         }
     }
 
+    /**
+     * TODO javadoc.
+     */
     final class IndexMetadataTask implements Runnable {
 
         private final ServiceContext context;
@@ -312,6 +334,9 @@ public class DataManager {
             this.count = count;
         }
 
+        /**
+         * TODO javadoc.
+         */
         public void run() {
             try {
                 // poll context to see whether servlet is up yet
@@ -329,22 +354,27 @@ public class DataManager {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
                                     indexMetadataGroup(dbms, ids.get(i).toString());
-                                } catch (Exception e) {
+                                }
+                                catch (Exception e) {
                                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
                                 }
                             }
-                        } finally {
+                        }
+                        finally {
                             endIndexGroup();
                         }
-                    } else {
+                    }
+                    else {
                         indexMetadata(dbms, ids.get(0), false);
                     }
-                } finally {
+                }
+                finally {
                     //-- commit Dbms resource (which makes it available to pool again)
                     //-- to avoid exhausting Dbms pool
                     context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
                 e.printStackTrace();
             }
@@ -379,6 +409,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -637,6 +668,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param schema
      * @param md
@@ -686,6 +718,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -706,8 +739,9 @@ public class DataManager {
 
     /**
      *
-     * @param session
+     * @param context
      * @param id
+     * @param md
      * @throws Exception
      */
 	public void versionMetadata(ServiceContext context, String id, Element md) throws Exception {
@@ -729,7 +763,7 @@ public class DataManager {
 
         /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx
-     * if xsd errors or SchematronValidationErrorEx if schematron rules fails
+     * if xsd errors or SchematronValidationErrorEx if schematron rules fails.
      *
      * @param schema
      * @param xml
@@ -743,7 +777,7 @@ public class DataManager {
 
     /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx
-     * if xsd errors or SchematronValidationErrorEx if schematron rules fails
+     * if xsd errors or SchematronValidationErrorEx if schematron rules fails.
      *
      * @param schema
      * @param xml
@@ -1173,6 +1207,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -1186,6 +1221,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -1199,6 +1235,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -1212,6 +1249,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -1229,6 +1267,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @param dbms
      * @param id
@@ -1243,6 +1282,7 @@ public class DataManager {
 	}
 
     /**
+     * TODO javadoc.
      *
      * @return
      */
@@ -1256,12 +1296,13 @@ public class DataManager {
 	}
 
     /**
-		 * Checks autodetect elements in installed schemas to determine whether 
-		 * the metadata record belongs to that schema. Use this method when you 
-		 * want the default schema from the geonetwork config to be returned when
-		 * no other match can be found.
+     * Checks autodetect elements in installed schemas to determine whether the metadata record belongs to that schema.
+     * Use this method when you want the default schema from the geonetwork config to be returned when no other match
+     * can be found.
 		 *
      * @param md Record to checked against schemas
+     * @throws SchemaMatchConflictException
+     * @throws NoSchemaMatchesException
      * @return
      */
 	public String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
@@ -1269,13 +1310,13 @@ public class DataManager {
 	}
 
     /**
-		 * Checks autodetect elements in installed schemas to determine whether 
-		 * the metadata record belongs to that schema. Use this method when you 
-		 * want to set the default schema to be returned when no other match can 
-		 * be found.
+     * Checks autodetect elements in installed schemas to determine whether the metadata record belongs to that schema.
+     * Use this method when you want to set the default schema to be returned when no other match can be found.
 		 *
      * @param md Record to checked against schemas
      * @param defaultSchema Schema to be assigned when no other schema matches
+     * @throws SchemaMatchConflictException
+     * @throws NoSchemaMatchesException
      * @return
      */
 	public String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
@@ -1313,6 +1354,7 @@ public class DataManager {
 
     /**
      * Rates a metadata.
+     *
      * @param dbms
      * @param id
      * @param ipAddress ipAddress IP address of the submitting client
@@ -1502,8 +1544,8 @@ public class DataManager {
 	}
 
     /**
-     * Retrieves a metadata (in xml) given its id. Use this method when you
-		 * must retrieve a metadata in the same transaction.
+     * Retrieves a metadata (in xml) given its id. Use this method when you must retrieve a metadata in the same
+     * transaction.
      * @param dbms
      * @param id
      * @return
@@ -1518,7 +1560,8 @@ public class DataManager {
 	}
 
     /**
-     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if requested.
+     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
+     * requested.
      * 
      * @param srvContext
      * @param id
@@ -1640,7 +1683,8 @@ public class DataManager {
 	}
 
     /**
-     * Updates a metadata record. Deletes validation report currently in session (if any). If user asks for validation the validation report will be (re-)created then.
+     * Updates a metadata record. Deletes validation report currently in session (if any). If user asks for validation
+     * the validation report will be (re-)created then.
      *
      * @param context
      * @param dbms
@@ -1654,7 +1698,9 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	public synchronized boolean updateMetadata(ServiceContext context, Dbms dbms, String id, Element md, boolean validate, boolean ufo, boolean index, String lang, String changeDate, boolean updateDateStamp) throws Exception {
+	public synchronized boolean updateMetadata(ServiceContext context, Dbms dbms, String id, Element md,
+                                               boolean validate, boolean ufo, boolean index, String lang,
+                                               String changeDate, boolean updateDateStamp) throws Exception {
 		// when invoked from harvesters, session is null?
 				UserSession session = context.getUserSession();
         if(session != null) {
@@ -1921,9 +1967,9 @@ public class DataManager {
     /**
      * Removes a metadata.
      *
+     * @param context
      * @param dbms
      * @param id
-		 * @param session
      * @throws Exception
      */
 	public synchronized void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
@@ -2272,7 +2318,7 @@ public class DataManager {
     /**
      * Sets VIEW and NOTIFY privileges for a metadata to a group.
      *
-     * @param session the UserSession
+     * @param context service context
      * @param dbms the database
      * @param id metadata id
      * @param groupId group id
@@ -2538,7 +2584,7 @@ public class DataManager {
         if (results != null) {
           for(Element result : results) {
               String uuid = result.getChild("uuid").getText();
-              System.out.println("getUnnotifiedMetadata: " + uuid);
+              Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata: " + uuid);
               unregisteredMetadata.put(uuid, (Element)((Element)result.clone()).detach());
           }
         }
@@ -2568,7 +2614,7 @@ public class DataManager {
         if (results != null) {
           for(Element result : results) {
               String uuid = result.getChild("uuid").getText();
-              System.out.println("getUnnotifiedMetadataToDelete: " + uuid);
+              Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete: " + uuid);
               unregisteredMetadata.put(uuid, (Element)((Element)result.clone()).detach());
 
           }
@@ -2610,7 +2656,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setMetadataNotifiedError(String metadataId, String metadataUuid, String notifierId, boolean deleteNotification, String error, Dbms dbms) throws Exception {
-        System.out.println("setMetadataNotifiedError");
+        Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError");
        try {
        String query = "DELETE FROM MetadataNotifications WHERE metadataId=? AND notifierId=?";
        dbms.execute(query, new Integer(metadataId), new Integer(notifierId));
@@ -2621,7 +2667,8 @@ public class DataManager {
        dbms.commit();
 
        Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError finished for metadata with id " + metadataId + "and notitifer with id " + notifierId);
-       } catch (Exception ex) {
+       }
+       catch (Exception ex) {
            ex.printStackTrace();
            throw ex;
        }
@@ -3143,7 +3190,7 @@ public class DataManager {
 	private SvnManager svnManager;
 
     /**
-     *
+     * TODO javadoc.
      */
 	class IncreasePopularityTask implements Runnable {
         private ServiceContext srvContext;
