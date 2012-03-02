@@ -3548,9 +3548,19 @@
               <xsl:when test="$ptFreeTextTree//gmd:LocalisedCharacterString">                
                 <!-- Create combo to select language.
                 On change, the input with selected language is displayed. Others hidden. -->
-                
-                <xsl:variable name="mainLanguageRef" select="concat('_', gco:CharacterString/geonet:element/@ref|
-                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref)"/>
+
+                <xsl:variable name="mainLanguageRef">
+                  <xsl:choose>
+                      <xsl:when test="gco:CharacterString/geonet:element/@ref" >
+                          <xsl:value-of select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                          <xsl:value-of select="concat('_',
+                                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref)"/>
+                      </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:variable>
+
                 <xsl:variable name="suggestionDiv" select="concat('suggestion', $mainLanguageRef)"/>
                 
                 <!-- Language selector is only displayed when more than one language
