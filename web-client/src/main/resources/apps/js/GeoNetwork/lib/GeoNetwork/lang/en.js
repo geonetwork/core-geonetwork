@@ -167,6 +167,7 @@ GeoNetwork.lang.en = {
     'hitsPerPage': 'Hits per page',
     'sortBy': 'Sort by',
     'relevance': 'Relevance',
+    'options': 'Options',
     'title': 'Title',
     'changeDate': 'Change date',
     'rating': 'Rating',

@@ -288,7 +288,7 @@ GeoNetwork.util.SearchFormTools = {
         
         /* Extra option */
         var sortByFields = GeoNetwork.util.SearchFormTools.getSortByCombo();
-        
+
         var hitsPerPageField = new Ext.form.ComboBox({
             id: 'E_hitsperpage',
             name: 'E_hitsperpage',
@@ -306,7 +306,7 @@ GeoNetwork.util.SearchFormTools = {
             displayField: 'id'
         });
         var options = new Ext.form.FieldSet({
-            title: 'Options',
+            title: OpenLayers.i18n('options'),
             autoWidth: true,
             collapsible: true,
             collapsed: true,

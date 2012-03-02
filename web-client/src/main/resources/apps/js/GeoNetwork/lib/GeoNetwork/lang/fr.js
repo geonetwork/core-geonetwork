@@ -163,6 +163,7 @@ GeoNetwork.Lang.fr = {
     'tempExtent': 'Étendue temporelle',
     'hitsPerPage': 'Nombre par page',
     'sortBy': 'Trier par',
+    'options': 'Options',
     'relevance': 'Pertinence',
     'title': 'Titre',
     'changeDate': 'Date de mise à jour',
