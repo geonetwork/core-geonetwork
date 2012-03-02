@@ -1684,7 +1684,9 @@ public class DataManager {
         finally {
             if(index) {
                 //--- update search criteria
-                indexInThreadPoolIfPossible(dbms,id);
+                boolean indexGroup = false;
+                boolean processSharedObjects = false;
+                indexMetadata(dbms, id, indexGroup, processSharedObjects, servContext);
             }
 		}
 		return true;
