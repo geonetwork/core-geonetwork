@@ -205,7 +205,7 @@ public class XslProcessing implements Service {
             if (save) {
                 boolean validate = true;
                 boolean ufo = true;
-                boolean index = true;
+                boolean index = false;
                 String language = context.getLanguage();
                 // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
                 boolean updateDateStamp = true;

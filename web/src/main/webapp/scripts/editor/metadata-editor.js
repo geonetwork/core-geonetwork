@@ -1116,7 +1116,23 @@ function addKeyword(k, first){
 	else
 		$("themekey").value = k;
 }
-
+function doSaveThen(locationAfterSave) {
+	new Ajax.Request(
+	    getGNServiceURL('metadata.update'),
+        {
+            method: 'post',
+            parameters: $('editForm').serialize(true),
+            onSuccess: function(req) {
+                location.replace(getGNServiceURL(locationAfterSave));
+            },
+            onFailure: function(req) {
+                alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+                Element.remove($("editorOverlay"));
+                setBunload(true); // reset warning for window destroy
+            }
+	    }
+	);
+}
 
 /**
  * Property: linkedMetadataSelectionWindow
@@ -1146,7 +1162,9 @@ function showLinkedMetadataSelectionPanel(ref, name) {
                             // For backwards compatibility the Feature Catalogue relations are stored in database also
     						var url = 'xml.relation.insert?parentId=' + document.mainForm.id.value +
     								'&childUuid=' + metadata[0].data.uuid;
-    						
+                            var eBusy = $('editorBusy');
+                            if (eBusy) eBusy.show();
+                            disableEditForm();
 
     						var myExtAJaxRequest = Ext.Ajax.request({
     							url: url,
@@ -1157,13 +1175,16 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     								// Refresh current edits
 
                                     // Stores the he Feature Catalogue relation in the metadata, updating the editor view
-    								window.location.replace("metadata.processing?uuidref=" + metadata[0].data.uuid +
-                                        "&id=" + document.mainForm.id.value +
-                                        "&process=update-attachFeatureCatalogue");
+                                    doSaveThen("metadata.processing?uuidref=" + metadata[0].data.uuid +
+                                            "&id=" + document.mainForm.id.value +
+                                            "&process=update-attachFeatureCatalogue");
     							},
     							failure:function (result, request) { 
     								Ext.MessageBox.alert(translate("error") 
     											+ " / status " + result.status + " text: " + result.statusText + " - " + translate("tryAgain"));
+                                    Element.remove($("editorOverlay"));
+                                    if (eBusy) eBusy.hide();
+
     								setBunload(true); // reset warning for window destroy
     							}
     						});
@@ -1335,11 +1356,14 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 	    					"&process=update-srv-attachDataset&uuidref=" +
 	    					uuid +
 	    					"&scopedName=" + layerName;
-					
-					Ext.Ajax.request({
-						url: serviceUpdateUrl,
-						method: 'GET',
-						success: function(result, request) {
+					var eBusy = $('editorBusy');
+					if (eBusy) eBusy.show();
+					disableEditForm();
+
+                    Ext.Ajax.request({
+                        url: serviceUpdateUrl,
+                        method: 'GET',
+                        success: function(result, request) {
 							var response = result.responseText;
 							
 							// Check error
@@ -1348,16 +1372,22 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 							} else if (response.indexOf('error')!=-1) {
 								alert(translate("error") + response);
 							}
+
 							// 2. Update current metadata record, in current window
-							window.location.replace("metadata.processing?uuid=" + uuid + 
+							doSaveThen("metadata.processing?uuid=" + uuid + 
 			    					"&process=update-onlineSrc&desc=" +
 			    					layerName + "&url=" +
 			    					escape(metadata[0].data.uri) +
 			    					"&scopedName=" + layerName);
+
 						},
-						failure:function (result, request) { 
+						failure:function (result, request) {
+							if (eBusy) eBusy.hide();
+							Element.remove($("editorOverlay"));
+
 							Ext.MessageBox.alert(translate("ServiceUpdateError"));
 							setBunload(true);
+
 						}
 					});
 					
