@@ -66,23 +66,21 @@ public class PwUpdate implements Service
 		UserSession session = context.getUserSession();
 		String      userId  = session.getUserId();
 
-		if (userId == null)
-			throw new UserNotFoundEx(null);
+		if (userId == null) throw new UserNotFoundEx(null);
 
 		
 		// check valid user 
-		Element elUser = dbms.select(	"SELECT * FROM Users " +
-												"WHERE id=" + userId);
+		int iUserId = Integer.parseInt(userId);
+		Element elUser = dbms.select(	"SELECT * FROM Users WHERE id=?",iUserId);
 		if (elUser.getChildren().size() == 0)
 			throw new UserNotFoundEx(userId);
 
 		// check old password
-		elUser = dbms.select(	"SELECT * FROM Users " +
-												"WHERE id=" + userId + " AND password='" + Util.scramble(password) + "'");
+		String query = "SELECT * FROM Users WHERE id=? AND password=?";
+		elUser = dbms.select(query, iUserId, Util.scramble(password));
 		if (elUser.getChildren().size() == 0) {
 			// Check old password hash method
-			elUser = dbms.select(	"SELECT * FROM Users " +
-					"WHERE id=" + userId + " AND password='" + Util.oldScramble(password) + "'");
+			elUser = dbms.select(query, iUserId, Util.oldScramble(password));
 
 			if (elUser.getChildren().size() == 0)
 				throw new IllegalArgumentException("Old password is not correct");
@@ -90,7 +88,7 @@ public class PwUpdate implements Service
 		
 		
 		// all ok so change password
-		dbms.execute ( "UPDATE Users SET password=? WHERE id=?", newPassword, new Integer(userId));
+		dbms.execute("UPDATE Users SET password=? WHERE id=?", newPassword, new Integer(userId));
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

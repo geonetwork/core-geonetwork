@@ -66,7 +66,7 @@ public class List implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		HashSet hsMyGroups = getGroups(dbms, session.getUserId(), session.getProfile());
+		Set<String> hsMyGroups = getGroups(dbms, session.getUserId(), session.getProfile());
 
 		Set profileSet = context.getProfileManager().getProfilesSet(session.getProfile());
 
@@ -76,7 +76,7 @@ public class List implements Service
 
 		//--- now filter them
 
-		ArrayList alToRemove = new ArrayList();
+		java.util.List<Element> alToRemove = new ArrayList<Element>();
 
 		for(Iterator i=elUsers.getChildren().iterator(); i.hasNext(); )
 		{
@@ -94,8 +94,7 @@ public class List implements Service
 
 		//--- remove unwanted users
 
-		for(int i=0; i<alToRemove.size(); i++)
-			((Element) alToRemove.get(i)).detach();
+		for (Element elem : alToRemove) elem.detach();
 
 		//--- return result
 
@@ -108,19 +107,20 @@ public class List implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private HashSet getGroups(Dbms dbms, String id, String profile) throws Exception
+	private Set<String> getGroups(Dbms dbms, String id, String profile) throws Exception
 	{
-		String query = (profile.equals(ProfileManager.ADMIN))
-							? "SELECT id FROM Groups"
-							: "SELECT groupId AS id FROM UserGroups WHERE userId=" + id;
+		Element groups;
+		if (profile.equals(ProfileManager.ADMIN)) {
+			groups = dbms.select("SELECT id FROM Groups");
+		} else {
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", new Integer(id));
+		}
 
-		java.util.List list = dbms.select(query).getChildren();
+		java.util.List<Element> list = groups.getChildren();
 
-		HashSet hs = new HashSet();
+		Set<String> hs = new HashSet<String>();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
+		for(Element el : list) {
 			hs.add(el.getChildText("id"));
 		}
 

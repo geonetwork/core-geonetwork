@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
+import java.util.List;
 
 //=============================================================================
 
@@ -72,31 +73,32 @@ public class Remove implements Service
 			throw new IllegalArgumentException("You cannot delete yourself from the user database");
 		}
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
-				myProfile.equals("UserAdmin"))  {
+		int iId = Integer.parseInt(id);
+
+		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals("UserAdmin"))  {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 			if (myProfile.equals("UserAdmin")) {
-				java.util.List adminlist =dbms.select("SELECT groupId FROM UserGroups WHERE userId="+myUserId+" or userId = "+id+" group by groupId having count(*) > 1").getChildren();
-				if (adminlist.size() == 0) {
+				Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", new Integer(myUserId), iId);
+				if (admin.getChildren().size() == 0) {
 				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
 				}
 			}
 
-			// Before processing DELETE check that the user is not referenced as an
+			// Before processing DELETE check that the user is not referenced 
 			// elsewhere in the GeoNetwork database - an exception is thrown if
 			// this is the case
-			if (dataMan.isUserMetadataOwner(dbms, new Integer(id))) {
+			if (dataMan.isUserMetadataOwner(dbms, iId)) {
 				throw new IllegalArgumentException("Cannot delete a user that is also a metadata owner");
 			}
 
-			if (dataMan.isUserMetadataStatus(dbms, new Integer(id))) {
+			if (dataMan.isUserMetadataStatus(dbms, iId)) {
 				throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
 			}
 
-			dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
-			dbms.execute ("DELETE FROM Users      WHERE     id=" + id);
+			dbms.execute ("DELETE FROM UserGroups WHERE userId=?",iId);
+			dbms.execute ("DELETE FROM Users      WHERE     id=?",iId);
 		} else {
 			throw new IllegalArgumentException("You don't have rights to delete this user");
 		}
