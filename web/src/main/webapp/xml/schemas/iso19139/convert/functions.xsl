@@ -121,8 +121,8 @@
         <xsl:variable name="poundLangId" select="concat('#',translate($isoDocLangId,$LOWER, $UPPER))" />
 
         <xsl:choose>
-        <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0]]) != 0">
-            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0]])"></xsl:value-of>
+        <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0]) != 0">
+            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0])"></xsl:value-of>
         </xsl:when>
         <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation//gmd:title/gco:CharacterString[1]) != 0">
             <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation//gmd:title/gco:CharacterString[1])"></xsl:value-of>
