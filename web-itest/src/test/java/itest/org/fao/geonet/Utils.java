@@ -369,7 +369,7 @@ public class Utils {
 
 			String response = Utils.sendRequest("xml.user.list", false, c);
 			if (!response.contains(username)) {
-				Utils.sendRequest("user.update?zip=92373&state=CA&surname=Mouse&org=DRQH&password="+password+"&kind=gov&city=Bluelands&country=USA&id=&operation=newuser&username="+username+"&password2="+password+"&address390BlueHillsSt&email=userone@userone.com&name=User&groups="+group+"&profile="+profile, false, c);
+				Utils.sendRequest("user.update?zip=92373&state=CA&surname=Mouse&org=DRQH&password="+password+"&kind=gov&city=Bluelands&country=USA&id=&operation=newuser&username="+username+"&password2="+password+"&address=390BlueHillsSt&email=userone@userone.com&name=User&groups="+group+"&profile="+profile, false, c);
 			}
 
 			List<Element> users = getUsers(false, c);
