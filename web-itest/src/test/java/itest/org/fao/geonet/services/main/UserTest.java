@@ -128,10 +128,17 @@ public class UserTest extends TestCase {
 			password = "BenBen?";
 			name = "Rhys";
 			surname = "Cropper";
-			group="2"; // sample group
+			group="1"; // try to add to a group we don't belong to
 			profile = "Editor";
 			id = null; // adding a new user so no id
 			operation = "newuser";
+			request = buildUserUpdateRequest(username, password, name, surname, group, profile, id, operation);
+			response = Utils.sendRequestToFail(request, false, c);
+			assertTrue(response.contains("IllegalArgumentException"));
+
+			// that didn't work so set the group to one that we administer and try
+			// again
+			group = "2";
 			request = buildUserUpdateRequest(username, password, name, surname, group, profile, id, operation);
 			Utils.sendRequest(request, false, c);
 				
