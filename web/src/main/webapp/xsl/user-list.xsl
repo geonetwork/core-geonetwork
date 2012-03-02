@@ -40,10 +40,10 @@
 		
 		<table border="0">
 			<tr>
-				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/username"/></b></th>
-				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/surName"/></b></th>
-				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/firstName"/></b></th>
-				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/strings/profile"/></b></th>
+				<th class="padded" style="width:100px;"><b><xsl:value-of select="/root/gui/strings/username"/></b></th>
+				<th class="padded" style="width:100px;"><b><xsl:value-of select="/root/gui/strings/surName"/></b></th>
+				<th class="padded" style="width:100px;"><b><xsl:value-of select="/root/gui/strings/firstName"/></b></th>
+				<th class="padded" style="width:100px;"><b><xsl:value-of select="/root/gui/strings/profile"/></b></th>
 				<th class="padded"><b><xsl:value-of select="/root/gui/strings/operation"/></b></th>
 			</tr>
 			<xsl:for-each select="/root/response/record">
