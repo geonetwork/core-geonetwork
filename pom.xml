@@ -390,6 +390,21 @@
         <version>${lucene.version}</version>
       </dependency>
       <dependency>
+          <groupId>org.apache.lucene</groupId>
+          <artifactId>lucene-misc</artifactId>
+          <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.lucene</groupId>
+          <artifactId>lucene-queries</artifactId>
+          <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>pcj</groupId>
+          <artifactId>pcj</artifactId>
+          <version>1.2</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.jcs</groupId>
         <artifactId>jcs</artifactId>
         <version>1.3</version> <!-- TODO check version -->
@@ -644,6 +659,18 @@
         <artifactId>izpack-standalone-compiler</artifactId>
         <version>4.3.1</version>
       </dependency>
+        <!-- language detection -->
+       <dependency>
+          <groupId>com.cybozu.labs</groupId>
+          <artifactId>langdetect</artifactId>
+          <version>1.0.0.0</version>
+      </dependency>
+        <dependency>
+            <groupId>net.arnx.jsonic</groupId>
+            <artifactId>jsonic</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <!-- end language detection -->
     </dependencies>
   </dependencyManagement>
 
@@ -670,7 +697,7 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
-
+     
   </dependencies>
 
   <!-- ================================================================== -->
@@ -734,6 +761,14 @@
         <name>svnkit repository</name>
         <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
     </repository>
+
+      <!-- seasar repo, has jsonic - used by langdetect -->
+      <repository>
+          <id>maven.seasar.org</id>
+          <name>The Seasar Foundation Maven2 Repository</name>
+          <url>http://maven.seasar.org/maven2</url>
+      </repository>
+
   </repositories>
 
   <pluginRepositories>
