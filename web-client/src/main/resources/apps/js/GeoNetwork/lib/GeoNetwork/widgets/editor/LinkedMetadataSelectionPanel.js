@@ -369,6 +369,9 @@ GeoNetwork.editor.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
         if (values.length > 0) {
             this.linkedMetadataStore.loadData(r);
         }
+        if (this.loadingMask !== null) {
+            this.loadingMask.hide();
+        }
     }
 });
 
