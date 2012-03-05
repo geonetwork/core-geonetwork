@@ -94,16 +94,15 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     },
     /** private: method[displayLinkedData]
      *  Display the record in the metadata related table (only available in simple view mode).
+     *  Elements are grouped by type.
      */
     displayLinkedData: function(record){
         var table = Ext.query('table.related', this.body.dom),
             type = record.get('type');
         var el = Ext.get(table[0]);
         var exist = el.child('tr td[class*=' + type + ']');
-        var link = '<li><a href="#" onclick="javascript:catalogue.metadataShow(\'' + 
-            record.get('uuid') + '\');return false;" ' + 
-            'title="' + record.get('abstract') + '">' + 
-            record.get('title') + '</a></li>';
+        var link = this.relatedTpl.apply(record.data)
+            
         if (exist !== null) {
             exist.next().child('li').insertHtml('afterEnd', link);
         } else {
@@ -345,21 +344,12 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         Ext.applyIf(this, this.defaultConfig);
         
         this.tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.SIMPLE);
+        this.relatedTpl = new Ext.XTemplate(this.relatedTpl || GeoNetwork.Templates.Relation.SHORT);
         
-        /*this.tools = [{
-            id: 'newwindow',
-            qtip: OpenLayers.i18n('newWindow'),
-            handler: function(e, toolEl, panel, tc){
-                window.open(GeoNetwork.Util.getBaseUrl(location.href) + "#uuid=" + this.metadataUuid);
-                this.hide();
-            },
-            scope: this
-        }];*/
         this.tbar = [this.createViewMenu(), this.createActionMenu(), '->', this.createPrintMenu(), this.createTooltipMenu()];
         
         GeoNetwork.view.ViewPanel.superclass.initComponent.call(this);
         this.metadataSchema = this.record ? this.record.get('schema') : '';
-        // todo add to tab titlethis.setTitle(this.record ? this.record.get('title') : '');
         this.add(new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl + '&currTab=' + this.currTab,
@@ -370,14 +360,8 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             frame: false,
             autoScroll: true
         }));
-        
-        this.on('beforeshow', function(el) {
-           // el.setSize(
-           //     el.getWidth() > Ext.getBody().getWidth() ? Ext.getBody().getWidth() : el.getWidth(),
-           //     el.getHeight() > Ext.getBody().getHeight() ? Ext.getBody().getHeight() : el.getHeight()); 
-        });
     }
 });
 
-/** api: xtype = gn_view_viewwindow */
+/** api: xtype = gn_view_viewpanel */
 Ext.reg('gn_view_viewpanel', GeoNetwork.view.ViewPanel);
