@@ -91,6 +91,7 @@
             "GeoNetwork/util/HelpTools.js",
             "GeoNetwork/data/GroupStore.js",
             "GeoNetwork/data/UserStore.js",
+            "GeoNetwork/data/StatusStore.js",
             "GeoNetwork/data/CategoryStore.js",
             "GeoNetwork/data/ValidationRuleStore.js",
             "GeoNetwork/data/SuggestionStore.js",

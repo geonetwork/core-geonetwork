@@ -62,6 +62,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     adminMenuSeparator: undefined,
     duplicateAction: undefined,
     createChildAction: undefined,
+    statusAction: undefined,
+    versioningAction: undefined,
     adminAction: undefined,
     categoryAction: undefined,
     viewAction: undefined,
@@ -110,19 +112,42 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.createChildAction = new Ext.Action({
             text: OpenLayers.i18n('createChild'),
-            iconCls: 'md-mn-copy',
+            iconCls: 'childIcon',
             handler: function(){
                 var id = this.record.get('id');
                 GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('createChild'), true);
             },
             scope: this
         });
+        // FIXME : tooltip for actions does not work
         this.adminAction = new Ext.Action({
             text: OpenLayers.i18n('privileges'),
+            tooltip: OpenLayers.i18n('privilegesTT'),
             iconCls : 'privIcon',
             handler: function(){
                 var id = this.record.get('id');
                 this.catalogue.metadataAdmin(id);
+            },
+            scope: this
+        });
+        this.statusAction = new Ext.Action({
+            text: OpenLayers.i18n('status'),
+            tooltip: OpenLayers.i18n('statusTT'),
+            iconCls : 'statusIcon',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataStatus(id);
+            },
+            scope: this
+        });
+        // TODO : enable only if SVN manager is on.
+        this.versioningAction = new Ext.Action({
+            text: OpenLayers.i18n('versioning'),
+            tooltip: OpenLayers.i18n('versioningTT'),
+            iconCls : 'versioningIcon',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataVersioning(id);
             },
             scope: this
         });
@@ -139,7 +164,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.otherActions = new Ext.menu.Item({
             text: OpenLayers.i18n('otherActions'),
             menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.categoryAction]
+                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
             }
         });
         this.add(this.otherActions);
@@ -263,6 +288,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         /* Actions status depend on records */
         this.editAction.setDisabled(!isEditable);
         this.adminAction.setDisabled(!isEditable && !isHarvested);
+        this.statusAction.setDisabled(!isEditable && !isHarvested);
+        this.versioningAction.setDisabled(!isEditable && !isHarvested);
         this.categoryAction.setDisabled(!isEditable && !isHarvested);
         this.deleteAction.setDisabled(!isEditable && !isHarvested);
         

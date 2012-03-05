@@ -54,7 +54,8 @@ function clearAll(id){
     checkAllInputsIn(id, false);
 }
 
-/** Modal box validation
+/** 
+ *  Modal box with checkbox validation
  *
  */
 function checkBoxModalUpdate(div, service, modalbox, title){
@@ -77,6 +78,31 @@ function checkBoxModalUpdate(div, service, modalbox, title){
         }
     }, null);
 }
+
+function radioModalUpdate(div, service, modalbox, title) {
+    changeMessage = Ext.getDom('changeMessage').value;
+    if (Ext.isEmpty(changeMessage)) {
+        changeMessage = OpenLayers.i18n('noInfo');
+    }
+
+    var radios = Ext.DomQuery.select('input[type="radio"]');
+    var pars = "?id=" + Ext.getDom('metadataid').value + "&changeMessage="
+            + changeMessage;
+    Ext.each(radios, function(s){
+        if (s.checked) {
+            pars += "&" + s.name + "=" + s.value;
+        }
+    });
+    
+    catalogue.doAction(service + pars, null, null, title, function(response){
+        Ext.getDom(div).innerHTML = response.responseText;
+        if (service === 'metadata.status') {
+            Ext.getCmp('modalWindow').close();
+        }
+    }, null);
+}
+
+
 
 function addGroups(xmlRes){
     var list = xmlRes.getElementsByTagName('group'), i;
@@ -182,11 +208,11 @@ function goSubmit(form_name){
 
 function checkBatchNewOwner(action, title) {
     if (Ext.getDom('user').value == '') {
-    	Ext.Msg.alert(title, "selectNewOwner");
+        Ext.Msg.alert(title, "selectNewOwner");
         return false;
     }
     if (Ext.getDom('group').value == '') {
-    	Ext.Msg.alert(title, "selectOwnerGroup");
+        Ext.Msg.alert(title, "selectOwnerGroup");
         return false;
     }
     catalogue.doAction(catalogue.services.metadataMassiveNewOwner + "?" + Ext.Ajax.serializeForm(Ext.getDom('batchnewowner')), null, null, null, function(response){

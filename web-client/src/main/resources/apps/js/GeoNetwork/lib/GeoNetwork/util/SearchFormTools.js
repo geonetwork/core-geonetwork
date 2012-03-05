@@ -923,6 +923,38 @@ GeoNetwork.util.SearchFormTools = {
             return new Ext.form.ComboBox(config);
         }
     },
+    /** api:method[getStatusField]
+     *  :return: Status field
+     *
+     */
+    getStatusField: function(url, multi){
+        var store = GeoNetwork.data.StatusStore(url);
+        store.load();
+        
+        var tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>';
+        
+        var config = {
+                id: 'E__status',
+                name: 'E__status',
+                mode: 'local',
+                autoSelect: false,
+                triggerAction: 'all',
+                fieldLabel: OpenLayers.i18n('status'),
+                store: store,
+                valueField: 'id',
+                displayField: 'label',
+                tpl: tpl
+            };
+        if (multi) {
+            Ext.apply(config, {
+                valueDelimiter: ' or ',
+                displayFieldTpl: '{[values.label.' + OpenLayers.Lang.getCode() + ']}'
+                });
+            return new Ext.ux.form.SuperBoxSelect(config);
+        } else {
+            return new Ext.form.ComboBox(config);
+        }
+    },
     /** api:method[getTypesField]
      *  :return: Type selection using combo box based
      *   on hierarchy level values.
@@ -930,7 +962,8 @@ GeoNetwork.util.SearchFormTools = {
     getTypesField: function(codeList, multi){
         var defaultCodeList = [['dataset', OpenLayers.i18n('dataset')], 
                                ['series', OpenLayers.i18n('series')],
-                               ['service', OpenLayers.i18n('service')]],
+                               ['service', OpenLayers.i18n('service')],
+                               ['model', OpenLayers.i18n('featureCat')]],
             config = {
                     name: 'E_type',
                     mode: 'local',

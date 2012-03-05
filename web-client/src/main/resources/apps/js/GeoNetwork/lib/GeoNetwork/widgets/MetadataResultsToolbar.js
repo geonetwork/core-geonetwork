@@ -88,6 +88,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     updatePrivilegesAction: undefined,
     
+    updateStatusAction: undefined,
+    
+    updateVersionAction: undefined,
+    
     createMetadataAction: undefined,
     
     newMetadataWindow: undefined,
@@ -208,13 +212,35 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-       
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, this.updatePrivilegesAction);
+        this.updateStatusAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('updateStatus'),
+            id: 'updateStatusAction',
+            iconCls : 'statusIcon',
+            handler: function(){
+                this.catalogue.massiveOp('Status');
+            },
+            scope: this,
+            hidden: hide
+        });
+        this.updateVersionAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('updateVersion'),
+            id: 'updateVersionAction',
+            iconCls : 'versioningIcon',
+            handler: function(){
+                this.catalogue.massiveOp('Versioning');
+            },
+            scope: this,
+            hidden: hide
+        });
+        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
+                this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
         
         this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);
+        this.actionMenu.addItem(this.updateStatusAction);
+        this.actionMenu.addItem(this.updateVersionAction);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to

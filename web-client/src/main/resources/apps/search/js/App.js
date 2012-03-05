@@ -284,24 +284,26 @@ GeoNetwork.app = function(){
         var validField = GeoNetwork.util.SearchFormTools.getValidField(true);
         var spatialTypes = GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField(null, true);
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
+        var statusField = GeoNetwork.util.SearchFormTools.getStatusField(services.getStatus, true);
         
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
-                                metadataTypeField, validField);
+                                metadataTypeField, validField, statusField);
         var adv = {
             xtype: 'fieldset',
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
             autoWidth: true,
             collapsible: true,
-            collapsed: (urlParameters.advanced?false:true),
+            collapsed: urlParameters.advanced!==undefined ? false : true,
             defaultType: 'checkbox',
             defaults: {
                 width: 160
             },
             items: advancedCriteria
         };
+        
         var formItems = [];
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
                     GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true, 
@@ -311,7 +313,7 @@ GeoNetwork.app = function(){
         
         
         // Hide or show extra fields after login event
-        var adminFields = [groupField, metadataTypeField, validField];
+        var adminFields = [groupField, metadataTypeField, validField, statusField];
         Ext.each(adminFields, function(item){
             item.setVisible(false);
         });
@@ -654,7 +656,6 @@ GeoNetwork.app = function(){
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
             }
-            
             
             // Init cookie
             cookie = new Ext.state.CookieProvider({

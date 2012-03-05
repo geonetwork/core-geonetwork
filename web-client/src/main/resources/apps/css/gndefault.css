@@ -281,6 +281,15 @@ table.related * a:hover,
 .privIcon {
   background-image : url(../images/default/group_key.png) !important;
 }
+.childIcon {
+  background-image : url(../images/default/chart_organisation.png) !important;
+}
+.statusIcon {
+  background-image : url(../images/default/tag_blue_add.png) !important;
+}
+.versioningIcon {
+  background-image : url(../images/default/date_go.png) !important;
+}
 .downloadAllIcon {
   background-image : url(../images/default/folder_page_white.png) !important;
 }
