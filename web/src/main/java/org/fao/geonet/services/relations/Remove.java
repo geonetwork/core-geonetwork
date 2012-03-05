@@ -63,8 +63,7 @@ public class Remove implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		dbms.execute ("DELETE FROM Relations WHERE id=" + String.valueOf(parentId) 
-		        + " AND relatedId=" + String.valueOf(childId));
+		dbms.execute("DELETE FROM Relations WHERE id=? AND relatedId=?",parentId,childId);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

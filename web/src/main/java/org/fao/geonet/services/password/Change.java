@@ -99,8 +99,7 @@ public class Change implements Service {
 		// check valid user 
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
-		Element elUser = dbms.select(	"SELECT * FROM Users " +
-												"WHERE username='" + username + "'");
+		Element elUser = dbms.select(	"SELECT * FROM Users WHERE username=?", username);
 		if (elUser.getChildren().size() == 0)
 			throw new UserNotFoundEx(username);
 

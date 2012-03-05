@@ -182,8 +182,7 @@ public class AddLimitations implements Service
 
 		//--- now get the users name, organisation and email address to 
 		//--- prepopulate the feedback form
-		String myUserId  = session.getUserId();
-		Element elUser = dbms.select ("SELECT Surname, Name, Email, Organisation FROM Users WHERE id=" + myUserId);
+		Element elUser = dbms.select ("SELECT Surname, Name, Email, Organisation FROM Users WHERE id=?", session.getUserIdAsInt());
 		Element elRec = elUser.getChild("record");
 		if (elRec != null) {
 			response.addContent(elRec.cloneContent());

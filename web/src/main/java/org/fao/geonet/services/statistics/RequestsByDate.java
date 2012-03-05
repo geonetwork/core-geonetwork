@@ -155,7 +155,7 @@ public class RequestsByDate implements Service {
 
 		TimeSeries ts = new TimeSeries("By " + this.graphicType.toLowerCase(), this.chartClass);
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		List resultSet = dbms.select(query).getChildren();
+		List resultSet = dbms.select(query, this.dateFrom, this.dateTo).getChildren();
 
 		for (int i=0; i < resultSet.size(); i++) {
 			Element record = (Element) resultSet.get(i);
@@ -248,9 +248,9 @@ public class RequestsByDate implements Service {
 		StringBuilder query = new StringBuilder("SELECT ");
         query.append(requestDateSubstring);
         query.append(" as reqdate, count(*) as number FROM Requests ");
-		query.append(" where requestdate >= '").append(this.dateFrom);
-		query.append("' and requestdate <= '").append(this.dateTo);
-        query.append("' GROUP BY ");
+		query.append(" where requestdate >= ?");
+		query.append(" and requestdate <= ?");
+        query.append(" GROUP BY ");
         query.append(requestDateSubstring);
         query.append(" ORDER BY ");
         query.append(requestDateSubstring);

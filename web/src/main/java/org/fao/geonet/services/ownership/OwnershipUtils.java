@@ -48,7 +48,7 @@ public class OwnershipUtils
 
 		String query = "SELECT DISTINCT Users.id, username, name, surname, profile FROM Users, Metadata WHERE owner=Users.id";
 
-		List   list  = dbms.select(query).getChildren();
+		List<Element> list  = dbms.select(query).getChildren();
 
 		return getUsers(context,us,dbms,list);
 	}
@@ -60,18 +60,18 @@ public class OwnershipUtils
 
 		String query = "SELECT DISTINCT id, username, name, surname, profile FROM Users WHERE profile not like 'RegisteredUser'";
 
-		List   list  = dbms.select(query).getChildren();
+		List<Element>   list  = dbms.select(query).getChildren();
 
 		return getUsers(context,us,dbms,list);
 	}
 
-	public static List<Element> getUsers(ServiceContext context, UserSession us, Dbms dbms, List list) throws SQLException
+	public static List<Element> getUsers(ServiceContext context, UserSession us, Dbms dbms, List<Element> list) throws SQLException
 	{
 
-		int id = Integer.parseInt(us.getUserId());
+		int id = us.getUserIdAsInt();
 
 		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
-			return (List<Element>) list;
+			return list;
 
 		//--- we have a user admin
 
@@ -81,12 +81,10 @@ public class OwnershipUtils
 
 		//--- now filter them
 
-		ArrayList<Element> newList = new ArrayList<Element>();
+		List<Element> newList = new ArrayList<Element>();
 
-		for(Object o : list)
+		for (Element elRec : list)
 		{
-			Element elRec = (Element) o;
-
 			String userId = elRec.getChildText("id");
 			String profile= elRec.getChildText("profile");
 
@@ -108,15 +106,12 @@ public class OwnershipUtils
 
 	private static Set<String> getUserGroups(Dbms dbms, int id) throws SQLException
 	{
+
+		Set<String> hs = new HashSet<String>();
+
 		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
-
-		List list = dbms.select(query, id).getChildren();
-
-		HashSet<String> hs = new HashSet<String>();
-
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
+		List<Element> list = dbms.select(query, id).getChildren();
+		for (Element el : list) {
 			hs.add(el.getChildText("id"));
 		}
 

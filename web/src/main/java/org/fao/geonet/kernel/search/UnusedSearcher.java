@@ -78,10 +78,10 @@ class UnusedSearcher extends MetaSearcher
 
 		String query =	"SELECT DISTINCT id, createDate, changeDate "+
 							"FROM   Metadata "+
-							"WHERE  isTemplate='n' AND isHarvested='n' AND source='"+ siteId +"'";
+							"WHERE  isTemplate='n' AND isHarvested='n' AND source=?";
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		List list = dbms.select(query).getChildren();
+		List list = dbms.select(query, siteId).getChildren();
 
         for (Object aList : list) {
             Element rec = (Element) aList;
@@ -169,9 +169,9 @@ class UnusedSearcher extends MetaSearcher
 
 	private boolean hasInternetGroup(Dbms dbms, String id) throws SQLException
 	{
-		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId="+id;
+		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId=?";
 
-		List list = dbms.select(query).getChildren();
+		List list = dbms.select(query, new Integer(id)).getChildren();
 
 		Element record = (Element) list.get(0);
 

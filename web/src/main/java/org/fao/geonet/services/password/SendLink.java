@@ -97,8 +97,7 @@ public class SendLink implements Service {
 				.open(Geonet.Res.MAIN_DB);
 		
 		// check valid user 
-		Element elUser = dbms.select(	"SELECT * FROM Users " +
-						"WHERE username='" + username + "'");
+		Element elUser = dbms.select(	"SELECT * FROM Users WHERE username=?",username);
 		if (elUser.getChildren().size() == 0)
 			throw new UserNotFoundEx(username);
 
