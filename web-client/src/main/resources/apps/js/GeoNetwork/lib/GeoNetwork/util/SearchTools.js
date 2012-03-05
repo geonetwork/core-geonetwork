@@ -186,14 +186,21 @@ GeoNetwork.util.SearchTools = {
      *  Test with radio, dates and geometry (TODO)
      */
     populateFormFromParams: function(form, map){
-    
         form.cascade(function(cur){
             if (cur.getName) {
                 var name = cur.getName();
-                if (name.indexOf('_') !== -1) { // Shortcut if URL params does not contain prefix
+                if (name.indexOf('_') !== -1) { // if URL field name contains prefix (eg. E_)
                     name = name.substring(2);
                     if (map[name]) {
+                        // Set form field value
                         cur.setValue(map[name]);
+                        
+                        // register on store load event to set value after store loaded
+                        if (cur.getXType() === 'superboxselect') {
+                            cur.store.on('load', function (){
+                                cur.setValue(map[name]);
+                            });
+                        }
                     }
                 } else if (map[name]) {
                     cur.setValue(map[name]);
