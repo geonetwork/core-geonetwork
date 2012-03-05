@@ -95,8 +95,6 @@ public class Groups implements Service
 			}
 		}
 
-		dbms.commit();
-
 		for (String groupId : myGroups)
 		{
 			List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
@@ -107,12 +105,11 @@ public class Groups implements Service
 				record.detach();
 				record.setName("targetGroup");
 				response.addContent(record);
-
-				String query = "SELECT id, surname, name FROM Users, UserGroups "+
-									"WHERE id=userId AND profile='Editor' AND groupId=?";
+				// List all group users or administrator
+				String query = "SELECT id, surname, name FROM Users LEFT JOIN UserGroups ON (id = userId) "+
+									" WHERE (groupId=? AND profile != 'RegisteredUser') OR profile = 'Administrator'";
 
 				Element editors = dbms.select(query, new Integer(groupId));
-				dbms.commit();
 
 				for (Object o : editors.getChildren())
 				{
