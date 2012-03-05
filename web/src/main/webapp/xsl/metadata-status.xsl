@@ -30,7 +30,7 @@
 										<td class="padded" align="left" colspan="2">
 											<xsl:variable name="profile" select="/root/gui/session/profile"/>
 
-											<input type="radio" name="status" value="{id}">
+											<input type="radio" name="status" value="{id}" id="st{id}">
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
 												</xsl:if>
@@ -47,8 +47,9 @@
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</xsl:if>
-
-												<xsl:value-of select="label/child::*[name() = $lang]"/>
+												<label for="st{id}">
+													<xsl:value-of select="label/child::*[name() = $lang]"/>
+												</label>
 											</input>
 										</td>
 									</tr>
