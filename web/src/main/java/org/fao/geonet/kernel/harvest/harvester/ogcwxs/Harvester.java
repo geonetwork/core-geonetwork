@@ -530,9 +530,17 @@ class Harvester
 			
 			// Get metadataUrl xlink:href
 			// TODO : add support for WCS & WFS metadataUrl element.
-			XPath mdUrl 		= XPath.newInstance ("./MetadataURL[@type='TC211' and Format='text/xml']/OnlineResource");
-			Element onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
-			
+            XPath mdUrl 		= XPath.newInstance ("./x:MetadataURL[@type='TC211' and x:Format='text/xml']/x:OnlineResource");
+            mdUrl.addNamespace("x", layer.getNamespace().getURI());
+            Element onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
+
+            // Check if metadataUrl in WMS 1.3.0 format
+            if (onLineSrc == null) {
+                mdUrl 		= XPath.newInstance ("./x:MetadataURL[@type='ISO19115:2003' and x:Format='text/xml']/x:OnlineResource");
+                mdUrl.addNamespace("x", layer.getNamespace().getURI());
+                onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
+            }
+
 			if (onLineSrc != null) {
 				org.jdom.Attribute href = onLineSrc.getAttribute ("href", xlink);
 
@@ -540,6 +548,11 @@ class Harvester
 					mdXml = href.getValue ();
 					try {
 						xml = Xml.loadFile (new URL(mdXml));
+
+                        // If url is CSW GetRecordById remove envelope
+                        if (xml.getName().equals("GetRecordByIdResponse")) {
+                            xml = (Element) xml.getChildren().get(0);
+                        }
 
 						schema = dataMan.autodetectSchema (xml); // ie. iso19115 or 139 or DC
 						// Extract uuid from loaded xml document
