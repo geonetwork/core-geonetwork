@@ -306,6 +306,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/OpenSearchSuggestionReader.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/OpenSearchSuggestionStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/RegionStore.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/StatusStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/SubTemplateTypeStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/SuggestionStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusFeedStore.js</include>
