@@ -170,7 +170,9 @@
     <metadataInspireView>INSPIRE view</metadataInspireView>
     <metadataXmlView>XML view</metadataXmlView>
     <metadataAdvancedView>Advanced view</metadataAdvancedView>
-
+	
+	<metadataPrivs>Metadata privileges</metadataPrivs>
+	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
 	<!-- Buttons -->
 	
 	<save>Save</save>

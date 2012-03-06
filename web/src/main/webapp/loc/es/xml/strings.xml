@@ -484,6 +484,7 @@
 	<generateUUID>Generar UUID para el metadato insertado</generateUUID>
 	<georss>Abrir alimentación GeoRSS</georss>
 	<group>Grupo de usuarios</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Gestión de grupos de usuarios</groupManagement>
 	<groupManDes>Añadir/modificar/borrar y mostrar grupos</groupManDes>
 	<groups>Grupos</groups>
@@ -860,6 +861,7 @@
 	<userPwDes>Permite a los usuarios cambiar la contraseña</userPwDes>
 	<uuidAction>Acciones de importación:</uuidAction>
 	<validate>Validar</validate>
+	<assign>Atribuir a este catálogo</assign>
 	<validityBegins>Comienzo</validityBegins>
 	<validityEnds>y fin válidos</validityEnds>
 	<view>Ver</view>

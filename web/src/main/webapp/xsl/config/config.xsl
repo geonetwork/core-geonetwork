@@ -60,6 +60,7 @@
         <xsl:call-template name="autofixing"/>
         <xsl:call-template name="inspire"/>
         <xsl:call-template name="metadataviews"/>
+		<xsl:call-template name="metadataprivs"/>
 		<xsl:call-template name="harvester"/>
 		<xsl:call-template name="proxy"/>
 		<xsl:call-template name="feedback"/>
@@ -213,7 +214,18 @@
 			</table>
 		</div>
     </xsl:template>
-
+	
+	<xsl:template name="metadataprivs">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/metadataPrivs"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><label for="metadata.usergrouponly"><xsl:value-of select="/root/gui/config/md.usergrouponly"/></label></td>
+					<td class="padded"><input id="metadata.usergrouponly" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
     <!-- ============================================================================================= -->
 
 	<xsl:template name="harvester">

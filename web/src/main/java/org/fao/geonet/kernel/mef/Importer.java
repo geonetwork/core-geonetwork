@@ -260,11 +260,21 @@ public class Importer {
 					uuid = general.getChildText("uuid");
 					createDate = general.getChildText("createDate");
 					changeDate = general.getChildText("changeDate");
-					// --- If siteId is not set, set to current node
-					source = Util.getParam(general, Params.SITE_ID, gc
-							.getSiteId());
-					sourceName = general.getChildText("siteName");
-					localId = general.getChildText("localId");
+					// If "assign" checkbox is set to true, we assign the metadata to the current catalog siteID/siteName
+					boolean assign = Util.getParam(params, "assign", "off")
+							.equals("on");
+					if (assign) {
+						Log.debug(Geonet.MEF, "Assign to local catalog");
+						source = gc.getSiteId();
+					} else {	
+						// --- If siteId is not set, set to current node
+						source = Util.getParam(general, Params.SITE_ID, gc
+								.getSiteId());
+						sourceName = general.getChildText("siteName");
+						localId = general.getChildText("localId");
+						
+						Log.debug(Geonet.MEF, "Assign to catalog: " + source);
+					}
 					isTemplate = general.getChildText("isTemplate").equals(
 							"true") ? "y" : "n";
 					rating = general.getChildText("rating");

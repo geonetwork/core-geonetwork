@@ -30,6 +30,9 @@ INSERT INTO Settings VALUES (913,910,'enableInspireView','false');
 INSERT INTO Settings VALUES (914,910,'enableXmlView','true');
 INSERT INTO Settings VALUES (915,910,'defaultView','simple');
 
+INSERT INTO Settings VALUES (917,1,'metadataprivs',NULL);
+INSERT INTO Settings VALUES (918,917,'usergrouponly','false');
+
 INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
 INSERT INTO Settings VALUES (921,920,'maxthreads','1');
 INSERT INTO Settings VALUES (17,10,'svnUuid','');

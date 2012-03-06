@@ -81,6 +81,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
             METADATA_XML_VIEW                : xml.evalXPath(node, 'metadata/enableXmlView'),
             METADATA_DEFAULT_VIEW            : xml.evalXPath(node, 'metadata/defaultView'),
 
+            METADATA_PRIVS_USERGROUPONLY     : xml.evalXPath(node, 'metadataprivs/usergrouponly'),
+            
             HARVESTER           : xml.evalXPath(node, 'harvester/enableEditing'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
             AUTO_FIXING       : xml.evalXPath(node, 'autofixing/enable'),
@@ -233,6 +235,9 @@ ConfigModel.updateTemp =
 '		<enableXmlView>{METADATA_XML_VIEW}</enableXmlView>'+
 '		<defaultView>{METADATA_DEFAULT_VIEW}</defaultView>'+
 '	</metadata>' +
+'	<metadataprivs>' +
+'		<usergrouponly>{METADATA_PRIVS_USERGROUPONLY}</usergrouponly>'+
+'	</metadataprivs>' +
 '	<harvester>' +
 '		<enableEditing>{HARVESTER}</enableEditing>'+
 '	</harvester>' +

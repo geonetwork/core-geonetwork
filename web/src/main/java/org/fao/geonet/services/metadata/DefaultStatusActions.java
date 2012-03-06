@@ -315,6 +315,7 @@ public class DefaultStatusActions implements StatusActions {
 		* @return string Search link to metadata
 		*/
 	private String buildMetadataSearchLink(String status, String changeDate) {
+		// FIXME : hard coded link to main.search 
 		return siteUrl+"/main.search?_status="+status+"&_statusChangeDate="+changeDate;
 	}
 }

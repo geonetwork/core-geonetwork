@@ -237,7 +237,9 @@ ConfigView.prototype.setData = function(data)
     $('metadata.enableInspireView').checked = data['METADATA_INSPIRE_VIEW'] == 'true';
     $('metadata.enableXmlView').checked = data['METADATA_XML_VIEW'] == 'true';
     $('metadata.defaultView').value = data['METADATA_DEFAULT_VIEW'];
-
+    
+    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'];
+    
     $('harvester.enableEditing').checked = data['HARVESTER'] == 'true';
 
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
@@ -365,6 +367,8 @@ ConfigView.prototype.getData = function()
         METADATA_XML_VIEW : $('metadata.enableXmlView').checked,
         METADATA_DEFAULT_VIEW: $('metadata.defaultView').value,
 
+        METADATA_PRIVS_USERGROUPONLY : $('metadata.usergrouponly').checked,
+        
         HARVESTER : $('harvester.enableEditing').checked,
 
 		PROXY_USE  : $('proxy.use') .checked,

@@ -483,6 +483,7 @@
 	<generateUUID>Genereer een UUID voor de nieuwe metadata</generateUUID>
 	<georss>Open een GeoRSS feed</georss>
 	<group>Groep</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Beheer groepen</groupManagement>
 	<groupManDes>Toevoegen/wijzigen/verwijderen en bekijken van groepen</groupManDes>
 	<groups>Groepen</groups>
@@ -876,6 +877,7 @@
 	<userPwDes>Sta de huidige gebruiker toe het wachtwoord te wijzigen</userPwDes>
 	<uuidAction>Import akties:</uuidAction>
 	<validate>Valideren</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Validatie begint</validityBegins>
 	<validityEnds>en eindigt op</validityEnds>
 	<view>Bekijk</view>

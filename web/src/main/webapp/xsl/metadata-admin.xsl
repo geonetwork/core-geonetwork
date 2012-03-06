@@ -66,72 +66,79 @@
 						<!-- loop on other groups except -->
 						<xsl:for-each select="/root/response/groups/group">
 							<xsl:sort select="name"/>
-							<xsl:if test="id!='0' and id!='1' and id!='-1'">
-								<xsl:variable name="groupId" select="id"/>
-								<tr id="row.{id}">
-									<td class="padded">
-										<span>
-											<xsl:if test="$disabled">
-												<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+							
+							<xsl:variable name="userGroup" select="@userGroup"/>
+							<xsl:if test="(/root/gui/env/metadataprivs/usergrouponly='false' and $userGroup!='true') or $userGroup='true'">
+								<xsl:if test="id!='0' and id!='1' and id!='-1'">
+									<xsl:variable name="groupId" select="id"/>
+									<tr id="row.{id}">
+										<td class="padded">
+											<span>
+												<xsl:if test="$disabled">
+													<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="label/child::*[name() = $lang]"/>
+												<xsl:if test="/root/gui/env/metadataprivs/usergrouponly!='true' and $userGroup='true'"><xsl:text> *</xsl:text></xsl:if>
+											</span>
+										</td>
+										
+								<!-- loop on all operations leaving editing and notify to last -->
+										<xsl:for-each select="oper">
+											<xsl:if test="id!='2' and id!='3'">
+												<td class="padded" align="center" width="80">
+													<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
+														<xsl:if test="on">
+															<xsl:attribute name="checked"/>
+														</xsl:if>
+														<xsl:if test="$disabled">
+															<xsl:attribute name="disabled"/>
+														</xsl:if>
+													</input>
+												</td>
 											</xsl:if>
-											<xsl:value-of select="label/child::*[name() = $lang]"/>
-										</span>
-									</td>
-									
-							<!-- loop on all operations leaving editing and notify to last -->
-									<xsl:for-each select="oper">
-										<xsl:if test="id!='2' and id!='3'">
-											<td class="padded" align="center" width="80">
-												<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
-													<xsl:if test="on">
-														<xsl:attribute name="checked"/>
+										</xsl:for-each>
+										<xsl:for-each select="oper">
+											<xsl:if test="id='2' or id='3'">
+												<td class="padded" align="center" width="80">
+													<xsl:if test="$userGroup='true'">
+														<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
+															<xsl:if test="on">
+																<xsl:attribute name="checked"/>
+															</xsl:if>
+															<xsl:if test="$disabled">
+																<xsl:attribute name="disabled"/>
+															</xsl:if>
+														</input>
 													</xsl:if>
-													<xsl:if test="$disabled">
-														<xsl:attribute name="disabled"/>
-													</xsl:if>
-												</input>
-											</td>
-										</xsl:if>
-									</xsl:for-each>
-									<xsl:for-each select="oper">
-										<xsl:if test="id='2' or id='3'">
-											<td class="padded" align="center" width="80">
-												<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
-													<xsl:if test="on">
-														<xsl:attribute name="checked"/>
-													</xsl:if>
-													<xsl:if test="$disabled">
-														<xsl:attribute name="disabled"/>
-													</xsl:if>
-												</input>
-											</td>
-										</xsl:if>
-									</xsl:for-each>
-
-									<!-- 'set all' button -->
-
-									<td>
-										<button class="content" onclick="setAll('row.{id}'); return false;">
-											<xsl:if test="$disabled">
-												<xsl:attribute name="disabled"/>
-												<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+												</td>
 											</xsl:if>
-											<xsl:value-of select="/root/gui/strings/setAll"/>
-										</button>
-									</td>
-
-									<!-- 'clear all' button -->
-
-									<td>
-										<button class="content" onclick="clearAll('row.{id}'); return false;">
-											<xsl:if test="$disabled">
-												<xsl:attribute name="disabled"/>
-												<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="/root/gui/strings/clearAll"/>
-										</button>
-									</td>
-								</tr>
+										</xsl:for-each>
+	
+										<!-- 'set all' button -->
+	
+										<td>
+											<button class="content" onclick="setAll('row.{id}'); return false;">
+												<xsl:if test="$disabled">
+													<xsl:attribute name="disabled"/>
+													<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="/root/gui/strings/setAll"/>
+											</button>
+										</td>
+	
+										<!-- 'clear all' button -->
+	
+										<td>
+											<button class="content" onclick="clearAll('row.{id}'); return false;">
+												<xsl:if test="$disabled">
+													<xsl:attribute name="disabled"/>
+													<xsl:attribute name="style">color: #A0A0A0;</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="/root/gui/strings/clearAll"/>
+											</button>
+										</td>
+									</tr>
+								</xsl:if>
 							</xsl:if>
 						</xsl:for-each>
 						<xsl:if test="not($disabled)">
@@ -148,7 +155,10 @@
 								</td>
 							</tr>
 						</xsl:if>
-					</table>			
+					</table>
+					<xsl:if test="/root/gui/env/metadataprivs/usergrouponly!='true'">
+					* <xsl:value-of select="/root/gui/strings/usergroups"/>
+					</xsl:if>
 				</div>
 			</xsl:with-param>
 		</xsl:call-template>

@@ -122,7 +122,7 @@
 				<xsl:variable name="lang" select="/root/gui/language"/>
 
 				<tr id="group.list">
-					<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
+					<th class="padded"><xsl:value-of select="/root/gui/strings/usergroups"/></th>
 					<td class="padded">
 						<select class="content" size="7" name="groups" multiple="" id="groups">
 							<xsl:for-each select="/root/gui/groups/record">

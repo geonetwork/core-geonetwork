@@ -482,6 +482,7 @@
 	<generateUUID>Generiere UUID für eingefügte Metadaten</generateUUID>
 	<georss>Öffnen eines GeoRSS feed</georss>
 	<group>Gruppe</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Gruppen Management</groupManagement>
 	<groupManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Gruppen</groupManDes>
 	<groups>Gruppen</groups>
@@ -860,6 +861,7 @@
 	<userPwDes>Benutzerpasswort für Metadatenkatalog ändern</userPwDes>
 	<uuidAction>Import Aktionen:</uuidAction>
 	<validate>Validieren</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Gültigkeit ab</validityBegins>
 	<validityEnds>und endet</validityEnds>
 	<view>Ansicht</view>

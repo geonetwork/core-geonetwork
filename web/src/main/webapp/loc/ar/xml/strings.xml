@@ -481,6 +481,7 @@
 	<generateUUID>Generate UUID for inserted metadata</generateUUID>
 	<georss>فتح GeoRSS</georss>
 	<group>مجموعة</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>إدارة مجموعة</groupManagement>
 	<groupManDes>إضافة / تعديل / حذف مجموعة</groupManDes>
 	<groups>مجموعات</groups>
@@ -863,6 +864,7 @@
 	<userPwDes>امنح المستخدم الحالة امكانية تغير كلمة المرور</userPwDes>
 	<uuidAction>Import actions:</uuidAction>
 	<validate>تفيير</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>التقييم يبدأ</validityBegins>
 	<validityEnds>وينتهي</validityEnds>
 	<view>View</view>

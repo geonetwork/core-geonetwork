@@ -91,12 +91,7 @@ public class PrepareBatchUpdatePrivileges implements Service
 			//--- get all operations that this group can do on given metadata
 			String sGrpId = el.getChildText("id");
 
-			if (!userGroups.contains(sGrpId))
-			{
-				el.detach();
-				i--;
-				continue;
-			}
+			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
 
 			int grpId = Integer.parseInt(sGrpId);
 

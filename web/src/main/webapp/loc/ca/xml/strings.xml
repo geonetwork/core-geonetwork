@@ -337,6 +337,7 @@
 	<generateUUID>Generar UUID per les metadadades inserides</generateUUID>
 	<georss>Obrir alimentació GeoRSS</georss>
 	<group>Grup</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Gestió de grups</groupManagement>
 	<groupManDes>Afegir/modificar/esborrar i mostrar grups</groupManDes>
 	<groups>Grups</groups>
@@ -705,6 +706,7 @@
 	<userPwDes>Permet als usuaris canviar la contrasenya</userPwDes>
 	<uuidAction>Accions d'importació:</uuidAction>
 	<validate>Validar</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Inici</validityBegins>
 	<validityEnds>i fi vàlids</validityEnds>
 	<view>Veure</view>

@@ -410,6 +410,7 @@
 	<generateUUID>Lag UUID for innlagte metadata</generateUUID>
 	<georss>Åpne en GeoRSS datastrøm</georss>
 	<group>Gruppe</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Gruppehåndtering</groupManagement>
 	<groupManDes>Legg til/endre/slette og vis grupper</groupManDes>
 	<groups>grupper</groups>
@@ -779,6 +780,7 @@
 	<userPwDes>Tillat bruker å endre passord</userPwDes>
 	<uuidAction>Importhendelser:</uuidAction>
 	<validate>Validér</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Validering starter</validityBegins>
 	<validityEnds>og slutter</validityEnds>
 	<view>Vis</view>

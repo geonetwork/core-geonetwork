@@ -104,19 +104,14 @@ public class GetAdminOper implements Service
 		for(int i=0; i<list.size(); i++)
 		{
 			Element el = (Element) list.get(i);
-
+			
 			el.setName(Geonet.Elem.GROUP);
 
 			//--- get all operations that this group can do on given metadata
 
 			String sGrpId = el.getChildText("id");
 
-			if (!userGroups.contains(sGrpId))
-			{
-				el.detach();
-				i--;
-				continue;
-			}
+			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
 
 			int grpId = Integer.parseInt(sGrpId);
 

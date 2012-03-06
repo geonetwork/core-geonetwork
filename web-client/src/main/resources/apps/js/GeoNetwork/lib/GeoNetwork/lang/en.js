@@ -250,6 +250,8 @@ GeoNetwork.lang.en = {
     'administration': 'Administration',
     'validationReport': 'Validation report',
     'status': 'Status',
+    'updateStatus': 'Update status',
+    'updateVersion': 'Activate versioning',
     'statusTT': 'Change the status of a record according to its life cycle phase',
     'versioning': 'Start versioning',
     'versioningTT': 'Once activated, all changes in the metadata record will be recorded in SVN repository',

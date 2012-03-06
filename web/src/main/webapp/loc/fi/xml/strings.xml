@@ -335,6 +335,7 @@
 	<generateUUID>Generoi tiedostotunniste automaattisesti (SUOSITELTAVA)</generateUUID>
 	<georss>Avaa GeoRSS-syöte</georss>
 	<group>Käyttäjäryhmä</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Käyttäjäryhmien ylläpito</groupManagement>
 	<groupManDes>Selaa ja päivitä käyttäjäryhmiä.</groupManDes>
 	<groups>Ryhmät</groups>
@@ -695,6 +696,7 @@
 	<userPwDes>Vaihda Paikkatietohakemistossa käyttämäsi salasana.</userPwDes>
 	<uuidAction>Tiedostotunniste</uuidAction>
 	<validate>Validoi</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Validointi alkaa</validityBegins>
 	<validityEnds>Validointi päättyy</validityEnds>
 	<view>Katsele</view>

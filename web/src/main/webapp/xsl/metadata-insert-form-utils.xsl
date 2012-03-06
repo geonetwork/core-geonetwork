@@ -78,6 +78,17 @@
             </td>
         </tr>
 
+        <!-- Assign to current catalog -->
+        <tr id="gn.assign">
+            <th class="padded">
+                <label for="assign">
+                    <xsl:value-of select="/root/gui/strings/assign"/>
+                </label>
+            </th>
+            <td>
+                <input class="content" type="checkbox" name="assign" id="assign"/>
+            </td>
+        </tr>
 
 
         <!-- groups -->

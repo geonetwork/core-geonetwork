@@ -489,6 +489,7 @@ ISO 19115 не позволяет иметь более одного.
 	<generateUUID>Сгенерировать UUID-идентификатор для вставленных метаданных</generateUUID>
 	<georss>Открыть ленту GeoRSS</georss>
 	<group>Группа</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>Группы пользователей</groupManagement>
 	<groupManDes>Добавить/изменить/удалить информацию о группах</groupManDes>
 	<groups>Группы</groups>
@@ -865,6 +866,7 @@ ISO 19115 не позволяет иметь более одного.
 	<userPwDes>Позволяет текущему пользователю изменить пароль</userPwDes>
 	<uuidAction>Действия:</uuidAction>
 	<validate>Проверить</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Действие начинается</validityBegins>
 	<validityEnds>и заканчивается</validityEnds>
 	<view>Вид</view>

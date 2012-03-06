@@ -528,3 +528,7 @@ be use for custom styling in view mode */
 .topSecret *, .confidential *, .restricted *, .secret * {
     color: #ff0a0f !important;
 }
+.color {
+    border-left-width: 5px;
+    border-left-style: solid;
+}

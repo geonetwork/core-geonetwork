@@ -168,7 +168,9 @@
     <metadataInspireView>Vista INSPIRE</metadataInspireView>
     <metadataXmlView>Vista XML</metadataXmlView>
     <metadataAdvancedView>Vista avanzada</metadataAdvancedView>
-
+	
+	<metadataPrivs>Metadata privileges</metadataPrivs>
+	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
 	<!-- Buttons -->
 
 	<save>Guardar</save>

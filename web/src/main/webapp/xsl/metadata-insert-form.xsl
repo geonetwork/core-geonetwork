@@ -74,16 +74,22 @@
             function displayAllForm(show) {
                 var display;
 
-                if (show == true) 
+                if (show == true) {
                     display='';
-                else 
+                    mefdisplay='none';
+                }
+                else {
                     display='none';
+                    mefdisplay='';
+                }
                 
                 displayElement('gn.type',display);
                 displayElement('gn.stylesheet',display);
                 displayElement('gn.validate',display);
                 displayElement('gn.groups',display);
                 displayElement('gn.categories',display);
+                displayElement('gn.assign',mefdisplay);
+                
             }
             
             function displayElement(id, value) {

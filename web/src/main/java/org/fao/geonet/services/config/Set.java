@@ -181,7 +181,9 @@ public class Set implements Service
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadata/enableInspireView", "system/metadata/enableInspireView"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadata/enableXmlView", "system/metadata/enableXmlView"),
         new ConfigEntry(ConfigEntry.Type.STRING, true,  "metadata/defaultView", "system/metadata/defaultView"),
-
+        
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "metadataprivs/usergrouponly", "system/metadataprivs/usergrouponly"),
+        
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "harvester/enableEditing", "system/harvester/enableEditing"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "proxy/use",                "system/proxy/use"),

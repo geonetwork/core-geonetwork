@@ -486,6 +486,7 @@
 	<generateUUID>Generate UUID for inserted metadata</generateUUID>
 	<georss>Open a GeoRSS feed</georss>
 	<group>Group</group>
+	<usergroups>User groups</usergroups>
   <choice>Choice</choice>
   <sequence>Sequence</sequence>
 	<groupManagement>Group management</groupManagement>
@@ -871,6 +872,7 @@
 	<userPwDes>Allow current user to change password</userPwDes>
 	<uuidAction>Import actions:</uuidAction>
 	<validate>Validate</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Validity begins</validityBegins>
 	<validityEnds>and ends</validityEnds>
 	<view>View</view>

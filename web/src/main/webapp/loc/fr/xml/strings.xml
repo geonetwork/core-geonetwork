@@ -492,6 +492,7 @@
 	<generateUUID>Générer un nouvel identifiant pour les métadonnées insérées</generateUUID>
 	<georss>Ouvrez flux GeoRSS</georss>
 	<group>Groupe</group>
+	<usergroups>Groupes de l'utilisateur</usergroups>
   <choice>Choix</choice>
   <sequence>Séquence</sequence>
 	<groupManagement>Gestion des groupes</groupManagement>
@@ -870,6 +871,7 @@
 	<userPwDes>Autoriser l'utilisateur en cours de changer le mot de passe</userPwDes>
 	<uuidAction>Actions à l'import :</uuidAction>
 	<validate>Valider</validate>
+	<assign>Affecter à ce catalogue</assign>
 	<validityBegins>Date de début de validité</validityBegins>
 	<validityEnds> et fin </validityEnds>
 	<view>Voir</view>

@@ -483,6 +483,7 @@
 	<generateUUID>Generate UUID for inserted metadata</generateUUID>
 	<georss>打开GeoRSS馈入</georss>
 	<group>用户组</group>
+	<usergroups>User groups</usergroups>
 	<groupManagement>用户组管理</groupManagement>
 	<groupManDes>新增/修改/删除以及显示用户组</groupManDes>
 	<groups>用户组</groups>
@@ -860,6 +861,7 @@
 	<userPwDes>允许该用户修改口令</userPwDes>
 	<uuidAction>Import actions:</uuidAction>
 	<validate>有效性检查</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>有效期自</validityBegins>
 	<validityEnds>有效期至</validityEnds>
 	<view>View</view>

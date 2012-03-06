@@ -123,7 +123,9 @@
 	<otherlogins>Salli muiden käyttäjien kirjautua</otherlogins>
 
 	<geonetworkdb>GeoNetwork-autentikointi</geonetworkdb>
-
+	
+	<metadataPrivs>Metadata privileges</metadataPrivs>
+	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
 	<ldap>LDAP</ldap>
 	<defProfile>Default profile</defProfile>
 	<login>Login</login>

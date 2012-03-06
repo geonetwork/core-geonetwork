@@ -166,7 +166,9 @@
     <metadataInspireView>Vue INSPIRE</metadataInspireView>
     <metadataXmlView>Vue XML</metadataXmlView>
     <metadataAdvancedView>Vue avancée</metadataAdvancedView>
-
+	
+	<metadataPrivs>Privilèges des métadonnées</metadataPrivs>
+	<md.usergrouponly>Définir les privilèges uniquement pour les groupes de l'utilisateur</md.usergrouponly>
 	<!-- Buttons -->
 
 	<save>Sauvegarder</save>
