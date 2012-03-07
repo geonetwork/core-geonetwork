@@ -508,14 +508,22 @@ class Harvester
 			
 			// Get metadataUrl xlink:href
 			// TODO : add support for WCS & WFS metadataUrl element.
-            XPath mdUrl 		= XPath.newInstance ("./x:MetadataURL[@type='TC211' and x:Format='text/xml']/x:OnlineResource");
-            mdUrl.addNamespace("x", layer.getNamespace().getURI());
+
+            // Check if add namespace prefix to Xpath queries.  If layer.getNamespace() is:
+            //    * Namespace.NO_NAMESPACE, should not be added, otherwise exception is launched
+            //    * Another namespace, should be added a namespace prefix to Xpath queries, otherwise doesn't find any result
+            String dummyNsPrefix = "";
+            boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
+            if (addNsPrefix) dummyNsPrefix = "x:";
+
+            XPath mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='TC211' and " + dummyNsPrefix + "Format='text/xml']/" + dummyNsPrefix + "OnlineResource");
+            if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
             Element onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
 
             // Check if metadataUrl in WMS 1.3.0 format
             if (onLineSrc == null) {
-                mdUrl 		= XPath.newInstance ("./x:MetadataURL[@type='ISO19115:2003' and x:Format='text/xml']/x:OnlineResource");
-                mdUrl.addNamespace("x", layer.getNamespace().getURI());
+                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='ISO19115:2003' and " + dummyNsPrefix + "Format='text/xml']/" + dummyNsPrefix + "OnlineResource");
+                if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
                 onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
             }
 
