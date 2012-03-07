@@ -45,8 +45,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 //=============================================================================
@@ -204,7 +206,12 @@ public class FragmentHarvester {
 				recUuid = UUID.randomUUID().toString();
 			}
 			
-			createMetadata(recUuid, recordMetadata);
+			String id = dataMan.getMetadataId(dbms, recUuid);
+			if (id == null) {
+				createMetadata(recUuid, recordMetadata);
+			} else {
+				updateMetadata(recUuid, id, recordMetadata);
+			}
 		}
 	}
 
@@ -212,7 +219,7 @@ public class FragmentHarvester {
 	/** 
      * Add fragment metadata to the fragment   
      *   
-     * @param fragment		fragment to which metdata should be added
+     * @param fragment		fragment to which metadata should be added
      * 
      */
 	private void addMetadata(Element fragment) {
@@ -267,41 +274,103 @@ public class FragmentHarvester {
 	private void createSubtemplates(Element fragment) throws Exception {
  	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
  	    	List<Element> children = fragment.getChildren();
- 			for (Element child: children) {
- 				createSubtemplate(child);
- 			}
+ 				for (Element child: children) {
+ 					createOrUpdateSubtemplate(child);
+ 				}
 	    } else {
-	    	createSubtemplate(fragment);
+	    	createOrUpdateSubtemplate(fragment);
 	    }
 	}
 	    
 	//---------------------------------------------------------------------------
 	/** 
-     * Create a sub-template for an xml fragment 
+     * Create or update a sub-template for an xml fragment 
      *   
      * @param fragment		fragment for which a sub-template should be created
      * 
      */
-	private void createSubtemplate(Element fragment) throws Exception {
+	private void createOrUpdateSubtemplate(Element fragment) throws Exception {
 		String uuid = fragment.getAttributeValue("uuid");
 		
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-		
 		String schema = fragment.getAttributeValue("schema");
+
+		String title = fragment.getAttributeValue("title");
 		
 		if (schema==null) return;  //skip fragments with unknown schema
 		
 		Element md = (Element) fragment.getChildren().get(0);
 
+		String id = dataMan.getMetadataId(dbms, uuid);
+		if (id == null) {
+			createSubtemplate(schema, md, uuid, title);
+		} else {
+			updateSubtemplate(id, uuid, md);
+		}
+
+	}
+
+	//---------------------------------------------------------------------------
+	/** 
+     * Update a sub-template for an xml fragment 
+     *   
+     * @param id        id of subtemplate to update
+     * @param uuid      uuid of subtemplate being updated
+     * @param md				Subtemplate
+     * 
+     */
+	private void updateSubtemplate(String id, String uuid, Element md) throws Exception {
+		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = new Date();
+
+								//
+                // update metadata
+                //
+                boolean validate = false;
+                boolean ufo = false;
+                boolean index = false;
+                String language = context.getLanguage();
+        dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, df.format(date), false);
+				int iId = Integer.parseInt(id);
+	
+
+        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+        addPrivileges(id);
+
+        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
+        addCategories(id);
+
+				dataMan.setTemplateExt(dbms, iId, "s", null);
+				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
+        dataMan.indexMetadataGroup(dbms, id);
+
+        dbms.commit();
+
+				harvestSummary.updatedMetadata.add(uuid);
+				harvestSummary.fragmentsUpdated++;
+	}
+
+	//---------------------------------------------------------------------------
+	/** 
+     * Create a sub-template for an xml fragment 
+     *   
+     * @param schema		Schema to which the sub-template belongs
+     * @param md				Subtemplate
+     * @param uuid			Uuid of subtemplate
+     * @param title			Title of subtemplate
+     * 
+     */
+	private void createSubtemplate(String schema, Element md, String uuid, String title) throws Exception {
+		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = new Date();
+		
 //		log.debug("  - Adding metadata fragment with " + uuid + " schema is set to " + schema + " XML is "+ Xml.getString(md));
 		
         //
         // insert metadata
         //
         int userid = 1;
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        String group= null, isTemplate= null, docType= null, category= null;
+        boolean ufo= false, indexImmediate= false;
         String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
@@ -399,10 +468,54 @@ public class FragmentHarvester {
 			// log.debug("Element found "+Xml.getString(elem));
 			// Replace the referencing element with the fragment
 			Element parent = reference.getParentElement(); 
-			parent.setContent(parent.indexOf(reference),(Element)md.clone());
+			Element newMd = (Element)md.clone();
+			// add the fragment uuid as an id attribute so that any xlinks local to 
+			// the document that use the uuid will resolve
+			newMd.setAttribute("id",uuid); 
+			parent.setContent(parent.indexOf(reference),newMd);
 		}
 	}
 	    
+	//---------------------------------------------------------------------------
+	/** 
+     * Update a metadata record with the filled in template
+     *   
+     * @param recUuid			Uuid of metadata record being updated
+     * @param id					Metadata id of record being updated
+     * @param template		filled in template
+     * 
+     */
+	private void updateMetadata(String recUuid, String id, Element template) throws Exception, SQLException {
+		// now update existing record with the filled in template
+		log.debug("	- Attempting to update metadata record "+id+" with links");
+		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = new Date();
+		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
+	
+								//
+                // update metadata
+                //
+                boolean validate = false;
+                boolean ufo = false;
+                boolean index = false;
+                String language = context.getLanguage();
+        dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
+
+				int iId = Integer.parseInt(id);
+
+        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+        addPrivileges(id);
+
+        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
+        addCategories(id);
+
+        dataMan.indexMetadataGroup(dbms, id);	
+
+        dbms.commit();
+				harvestSummary.recordsUpdated++;
+				harvestSummary.updatedMetadata.add(recUuid);
+	}
+
 	//---------------------------------------------------------------------------
 	/** 
      * Create a metadata record from the filled in template
@@ -515,9 +628,12 @@ public class FragmentHarvester {
 	public class HarvestSummary {
 		public int fragmentsMatched;
 		public int recordsBuilt;
+		public int recordsUpdated;
 		public int fragmentsReturned;
 		public int fragmentsAdded;
+		public int fragmentsUpdated;
 		public int fragmentsUnknownSchema;
+		public Set<String> updatedMetadata = new HashSet<String>();
 	}
 
 	static private final Namespace xlink   = Namespace.getNamespace ("xlink", "http://www.w3.org/1999/xlink");

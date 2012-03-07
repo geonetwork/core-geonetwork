@@ -35,6 +35,10 @@
 				<td class="tipCell"><xsl:value-of select="subtemplatesAdded"/></td>
 			</tr>
 			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/subtemplatesUpdated"/></td>
+				<td class="tipCell"><xsl:value-of select="subtemplatesUpdated"/></td>
+			</tr>
+			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/subtemplatesRemoved"/></td>
 				<td class="tipCell"><xsl:value-of select="subtemplatesRemoved"/></td>
 			</tr>
@@ -53,6 +57,10 @@
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/recordsBuilt"/></td>
 				<td class="tipCell"><xsl:value-of select="recordsBuilt"/></td>
+			</tr>
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/recordsUpdated"/></td>
+				<td class="tipCell"><xsl:value-of select="recordsUpdated"/></td>
 			</tr>
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/doesNotValidate"/></td>

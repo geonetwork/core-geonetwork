@@ -37,6 +37,16 @@
 					<input id="wfsfeatures.url" class="content" type="text" value="http://" size="30"/>
 				</td>
 			</tr>
+
+			<tr>
+				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
+				<td class="padded">
+					<select id="wfsfeatures.icon" class="content" name="icon" size="1"/>
+					&#xA0;
+					<img id="wfsfeatures.icon.image" src="" alt="" />
+				</td>
+			</tr>
+
 			<!-- TODO : Do we have to set up an account for WxS secured ? -->
 			<tr style="display:none;">
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>

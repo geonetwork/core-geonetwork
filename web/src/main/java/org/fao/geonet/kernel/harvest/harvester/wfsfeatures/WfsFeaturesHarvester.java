@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -77,6 +78,8 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 
 	protected void doDestroy(Dbms dbms) throws SQLException
 	{
+		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+		icon.delete();
 		Lib.sources.delete(dbms, params.uuid);
 	}
 
@@ -100,6 +103,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/"+ params.icon, params.uuid);
 
 		return id;
 	}
@@ -129,6 +133,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		//--- could be half updated and so it could be in an inconsistent state
 
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
+		Lib.sources.copyLogo(context, "/images/harvesting/"+ copy.icon, copy.uuid);
 
 		params = copy;
 	}
@@ -141,6 +146,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		WfsFeaturesParams params = (WfsFeaturesParams) p;
 
 		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
 		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
 		settingMan.add(dbms, "id:"+optionsId, "query",  params.query);
 		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
@@ -191,11 +197,13 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		if (result != null) {
 			add(res, "total",          					result.total);
 			add(res, "subtemplatesAdded",       result.subtemplatesAdded);
+			add(res, "subtemplatesUpdated",     result.subtemplatesUpdated);
 			add(res, "subtemplatesRemoved",  		result.subtemplatesRemoved);
 			add(res, "fragmentsUnknownSchema", 	result.fragmentsUnknownSchema);
 			add(res, "fragmentsReturned",				result.fragmentsReturned);
 			add(res, "fragmentsMatched",				result.fragmentsMatched);
 			add(res, "recordsBuilt",						result.recordsBuilt);
+			add(res, "recordsUpdated",					result.recordsUpdated);
 			add(res, "doesNotValidate",					result.doesNotValidate);
 		}	
 		return res;
@@ -232,10 +240,12 @@ class WfsFeaturesResult
 	public int total;										// = recordsBuilt + subtemplatesAdded 
 	public int subtemplatesAdded;				// = fragments added to database
 	public int subtemplatesRemoved;			// = fragments removed to database
+	public int subtemplatesUpdated;			// = fragments updated in database
 	public int fragmentsReturned;				// = fragments returned
 	public int fragmentsMatched;				// = fragments matched to template
 	public int fragmentsUnknownSchema;	// = fragments with unknown schema
 	public int recordsBuilt;				// = records built from template
+	public int recordsUpdated;		// = records built from template and updated
 	public int doesNotValidate;			// = completed records that didn't validate
 	public int recordsRemoved;		// = records removed
 }

@@ -57,6 +57,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 /** 
@@ -84,6 +85,7 @@ import java.util.List;
  *      <streamFeatures>false</streamFeatures>
  *      <createSubtemplates>true</createSubtemplates>
  *      <templateId>3</templateId>
+ *      <icon>wfs.gif</icon>
  *    </site>
  *    <options>
  *      <every>90</every>
@@ -187,7 +189,7 @@ class Harvester
 
 		log.info("Retrieving metadata fragments for : " + params.name);
         
-		//--- clean all before harvest : Remove/Add mechanism
+		//--- collect all existing metadata uuids before we update
 		localUuids = new UUIDMapper(dbms, params.uuid);
 
 		//--- parse the xml query from the string - TODO: default should be 
@@ -204,9 +206,6 @@ class Harvester
 
 		//--- harvest metadata and subtemplates from fragments using generic fragment harvester
 		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, dbms, getFragmentHarvesterParams());
-
-		//--- Delete any existing subtemplates/metadata 
-		deleteExistingMetadata();
 
 		if (params.streamFeatures) {
 			harvestFeatures(wfsQuery, fragmentHarvester);
@@ -292,34 +291,40 @@ class Harvester
             throws Exception {
 		
 	    HarvestSummary fragmentResult = fragmentHarvester.harvest(xml, params.url);
+
+			deleteOrphanedMetadata(fragmentResult.updatedMetadata);
 	    	
 	    result.fragmentsReturned += fragmentResult.fragmentsReturned;
 	    result.fragmentsUnknownSchema += fragmentResult.fragmentsUnknownSchema;
 	    result.subtemplatesAdded += fragmentResult.fragmentsAdded;
 	    result.fragmentsMatched += fragmentResult.fragmentsMatched;
 	    result.recordsBuilt += fragmentResult.recordsBuilt;
+	    result.recordsUpdated += fragmentResult.recordsUpdated;
+	    result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
 
 	    result.total = result.subtemplatesAdded + result.recordsBuilt;
     }
 
 	/** 
-     * Remove old metadata and subtemplates and uncache subtemplates
-     * 
+     * Remove old metadata and subtemplates and uncache any subtemplates
+		 * that are left over after the update.
      */
 	
-	public void deleteExistingMetadata() throws Exception {
-		log.debug("  - Removing old metadata fragments before update with harvestUUid of " + params.uuid);
+	public void deleteOrphanedMetadata(Set<String> updatedMetadata) throws Exception {
+		log.debug("  - Removing orphaned metadata records and fragments after update");
 		
 		for (String uuid : localUuids.getUUIDs()) {
-			String id = localUuids.getID(uuid);
-			dataMan.deleteMetadata(context, dbms, id);
-			String isTemplate = localUuids.getTemplate(uuid);
+			if (!updatedMetadata.contains(uuid)) {	
+				String id = localUuids.getID(uuid);
+				dataMan.deleteMetadata(context, dbms, id);
+				String isTemplate = localUuids.getTemplate(uuid);
 			
-			if (isTemplate.equals("s")) {
-				Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
-				result.subtemplatesRemoved ++;
-			} else {
-				result.recordsRemoved ++;
+				if (isTemplate.equals("s")) {
+					Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
+					result.subtemplatesRemoved ++;
+				} else {
+					result.recordsRemoved ++;
+				}
 			}
 		}
 		

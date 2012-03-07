@@ -31,8 +31,12 @@ wfsfeatures.View = function(xmlLoader)
 	this.setData        = setData;
 	this.getData        = getData;
 	this.isDataValid    = isDataValid;
+	this.clearIcons     = clearIcons;
+	this.addIcon        = addIcon;
 
 	Event.observe('wfsfeatures.outputSchema', 'change', ker.wrap(this, changeFragmentSchemaOptions));
+
+	Event.observe('wfsfeatures.icon', 'change', ker.wrap(this, updateIcon));
 
 //=====================================================================================
 //===
@@ -82,9 +86,19 @@ function setEmpty()
 	$('wfsfeatures.stylesheet').value = '';
 	$('wfsfeatures.streamFeatures').checked = false;
 	$('wfsfeatures.createSubtemplates').checked = true;
-	
+
+	var icons = $('wfsfeatures.icon').options;
+
+	for (var i=0; i<icons.length; i++) {
+		if (icons[i].value == 'wfs.gif') {
+			icons[i].selected = true;
+			break;
+		}
+	}
 	
 	shower.update();
+	updateIcon();
+
 }
 
 //=====================================================================================
@@ -120,6 +134,7 @@ function setData(node)
 	this.selectCategories(node);	
 	
 	shower.update();
+	updateIcon();
 }
 
 //=====================================================================================
@@ -137,6 +152,7 @@ function getData()
 	data.CREATESUBTEMPLATES = $('wfsfeatures.createSubtemplates').checked;
 	data.TEMPLATEID       	= $F('wfsfeatures.templateId');
 	data.RECORDSCATEGORY  	= $F('wfsfeatures.recordsCategory');
+	data.ICON								= $F('wfsfeatures.icon');
 	
 	//--- retrieve privileges and categories information
 	
@@ -154,6 +170,31 @@ function isDataValid()
 		return false;
 		
 	return this.isDataValidCommon();
+}
+
+
+//=====================================================================================
+
+function clearIcons() 
+{ 
+	$('wfsfeatures.icon').options.length = 0;
+}
+
+//=====================================================================================
+
+function addIcon(file)
+{
+	gui.addToSelect('wfsfeatures.icon', file, file);
+}
+
+//=====================================================================================
+
+function updateIcon()
+{
+	var icon = $F('wfsfeatures.icon');
+	var image= $('wfsfeatures.icon.image');
+	
+	image.setAttribute('src', Env.url +'/images/harvesting/'+icon);
 }
 
 //=====================================================================================

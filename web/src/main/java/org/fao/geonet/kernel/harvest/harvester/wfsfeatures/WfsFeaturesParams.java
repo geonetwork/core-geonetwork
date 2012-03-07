@@ -59,6 +59,7 @@ public class WfsFeaturesParams extends AbstractParams
 		Element opt  = node.getChild("options");
 
 		url       			= Util.getParam(site, "url",  "");
+		icon 						= Util.getParam(site, "icon", "wfs.gif");
 		lang  	  			= Util.getParam(opt, "lang",  "");
 		query						= Util.getParam(opt, "query",  "");
 		outputSchema		= Util.getParam(opt, "outputSchema",  "");
@@ -83,6 +84,7 @@ public class WfsFeaturesParams extends AbstractParams
 		Element opt  = node.getChild("options");
 
 		url       			= Util.getParam(site, "url",  url);
+		icon            = Util.getParam(site, "icon", "wfs.gif");
 		lang  	  			= Util.getParam(opt,  "lang",  lang);
 		query						= Util.getParam(opt,  "query",  "");
 		outputSchema		= Util.getParam(opt,  "outputSchema",  "");
@@ -105,6 +107,7 @@ public class WfsFeaturesParams extends AbstractParams
 		copyTo(copy);
 
 		copy.url  				= url;
+		copy.icon					= icon;
 		copy.lang 				= lang;
 		copy.query		 		= query;
 		copy.outputSchema	= outputSchema;
@@ -122,6 +125,7 @@ public class WfsFeaturesParams extends AbstractParams
 	//---------------------------------------------------------------------------
 
 	public String url;
+	public String icon;
 	public String lang;
 	public String query;
 	public String outputSchema;

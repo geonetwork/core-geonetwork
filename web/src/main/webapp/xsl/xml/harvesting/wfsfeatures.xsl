@@ -12,6 +12,7 @@
 
 	<xsl:template match="*" mode="site">
 		<url><xsl:value-of select="url/value" /></url>
+		<icon><xsl:value-of select="icon/value" /></icon>
 	</xsl:template>
 
 	<!-- ==================================================================== -->
