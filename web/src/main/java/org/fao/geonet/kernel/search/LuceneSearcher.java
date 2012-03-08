@@ -926,7 +926,7 @@ public class LuceneSearcher extends MetaSearcher
                 analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, analyzer, tokenizedFieldSet);
             }
 
-            if(StringUtils.isEmpty(analyzedString)) {
+            if(StringUtils.isNotEmpty(analyzedString) ) {
             // no wildcards
             if(string.indexOf('*') < 0 && string.indexOf('?') < 0) {
                 // similarity is not set or is 1
