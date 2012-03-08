@@ -314,13 +314,16 @@ class Harvester
 		log.debug("  - Removing orphaned metadata records and fragments after update");
 		
 		for (String uuid : localUuids.getUUIDs()) {
+			String isTemplate = localUuids.getTemplate(uuid);
+			if (isTemplate.equals("s")) {
+					Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
+			}
+
 			if (!updatedMetadata.contains(uuid)) {	
 				String id = localUuids.getID(uuid);
 				dataMan.deleteMetadata(context, dbms, id);
-				String isTemplate = localUuids.getTemplate(uuid);
 			
 				if (isTemplate.equals("s")) {
-					Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
 					result.subtemplatesRemoved ++;
 				} else {
 					result.recordsRemoved ++;
