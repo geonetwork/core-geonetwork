@@ -28,8 +28,10 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.logos.Logos;
 import org.jdom.Element;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -82,64 +84,33 @@ public class SourcesLib
 		dbms.execute("DELETE FROM Sources WHERE uuid=?", uuid);
 	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void copyLogo(ServiceContext context, String icon, String uuid)
-	{
-		File src = new File(context.getAppPath() + icon);
-		File des = new File(context.getAppPath() +"images/logos", uuid +".gif");
+    public void retrieveLogo(ServiceContext context, String host, int port, String servlet, String uuid)
+    {
+        String logo = uuid +".gif";
 
-		try
-		{
-			FileInputStream  is = new FileInputStream (src);
-			FileOutputStream os = new FileOutputStream(des);
+        XmlRequest req = new XmlRequest(host, port);
+        Lib.net.setupProxy(context, req);
+        req.setAddress("/"+ servlet + "/images/logos/" + logo);
 
-			BinaryFile.copy(is, os, true, true);
-		}
-		catch (IOException e)
-		{
-			//--- we ignore exceptions here, just log them
+        File logoFile = new File(Logos.locateLogosDir(context));
 
-			context.warning("Cannot copy icon -> "+ e.getMessage());
-			context.warning(" (C) Source : "+ src);
-			context.warning(" (C) Destin : "+ des);
-		}
-	}
+        try
+        {
+            req.executeLarge(logoFile);
+        }
+        catch (IOException e)
+        {
+            context.warning("Cannot retrieve logo file from : "+ host+":"+port);
+            context.warning("  (C) Logo  : "+ logo);
+            context.warning("  (C) Excep : "+ e.getMessage());
 
-	//---------------------------------------------------------------------------
+            logoFile.delete();
 
-	public void copyUnknownLogo(ServiceContext context, String uuid)
-	{
-		copyLogo(context, "/images/unknown-logo.gif", uuid);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void retrieveLogo(ServiceContext context, String host, int port, String servlet, String uuid)
-	{
-		String logo = uuid +".gif";
-
-		XmlRequest req = new XmlRequest(host, port);
-		Lib.net.setupProxy(context, req);
-		req.setAddress("/"+ servlet + Geonet.Path.LOGOS + logo);
-
-		File logoFile = new File(context.getAppPath() + Geonet.Path.LOGOS + logo);
-
-		try
-		{
-			req.executeLarge(logoFile);
-		}
-		catch (IOException e)
-		{
-			context.warning("Cannot retrieve logo file from : "+ host+":"+port);
-			context.warning("  (C) Logo  : "+ logo);
-			context.warning("  (C) Excep : "+ e.getMessage());
-
-			logoFile.delete();
-
-			copyUnknownLogo(context, uuid);
-		}
-	}
+            Logos.copyUnknownLogo(context, uuid);
+        }
+    }
 }
 
 //=============================================================================

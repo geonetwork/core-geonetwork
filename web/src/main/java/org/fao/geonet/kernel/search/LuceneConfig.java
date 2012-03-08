@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -148,19 +149,19 @@ public class LuceneConfig {
 	 * @param servlet
    * @param luceneConfigXmlFile
 	 */
-	public LuceneConfig(String appPath, JeevesServlet servlet, String luceneConfigXmlFile) {
+	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
 		Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
-		this.load(servlet, luceneConfigXmlFile);
+		this.load(servletContext, luceneConfigXmlFile);
 	}
 
-	private void load(JeevesServlet servlet, String luceneConfigXmlFile) {
+	private void load(ServletContext servletContext, String luceneConfigXmlFile) {
 		try {
 			luceneConfig = Xml.loadStream(new FileInputStream(
 					this.configurationFile));
-			if (servlet != null) {
-				ConfigurationOverrides.updateWithOverrides(luceneConfigXmlFile, servlet, appPath, luceneConfig);
+			if (servletContext != null) {
+				ConfigurationOverrides.updateWithOverrides(luceneConfigXmlFile, servletContext, appPath, luceneConfig);
 			}
 			
 			// Main Lucene index configuration option

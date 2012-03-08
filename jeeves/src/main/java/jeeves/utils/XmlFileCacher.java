@@ -32,11 +32,13 @@ import java.io.IOException;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.sources.http.JeevesServlet;
 
+import javax.servlet.ServletContext;
+
 //=============================================================================
 
 public class XmlFileCacher
 {
-	private JeevesServlet servlet;
+	private ServletContext servletContext;
     private String appPath;
 
     //--------------------------------------------------------------------------
@@ -48,21 +50,24 @@ public class XmlFileCacher
     {
         this(file, null, appPath);
     }
-	public XmlFileCacher(File file, JeevesServlet jeevesServlet, String appPath)
+    /**
+     * @param servletContext if non-null the config-overrides can be applied to the xml file when it is loaded
+     */
+	public XmlFileCacher(File file, ServletContext servletContext, String appPath)
 	{
 		//--- 10 seconds as default interval
-		this(file, 10, jeevesServlet, appPath);
+		this(file, 10, servletContext, appPath);
 	}
 
 	//--------------------------------------------------------------------------
 	/**
-	 * @param jeevesServlet if non-null the config-overrides can be applied to the xml file when it is loaded
+	 * @param servletContext if non-null the config-overrides can be applied to the xml file when it is loaded
 	 */
-	public XmlFileCacher(File file, int interval, JeevesServlet jeevesServlet, String appPath)
+	public XmlFileCacher(File file, int interval, ServletContext servletContext, String appPath)
 	{
 		this.file     = file;
 		this.interval = interval;
-		this.servlet = jeevesServlet;
+		this.servletContext = servletContext;
 		this.appPath = appPath;
 	}
 
@@ -115,7 +120,7 @@ public class XmlFileCacher
 	protected Element load() throws JDOMException, IOException
 	{
 		Element xml = Xml.loadFile(file);
-	    ConfigurationOverrides.updateWithOverrides(file.getPath(), servlet, appPath, xml);
+	    ConfigurationOverrides.updateWithOverrides(file.getPath(), servletContext, appPath, xml);
         return xml;
 	}
 

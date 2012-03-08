@@ -44,6 +44,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.logos.Logos;
 import org.jdom.Element;
 
 /**
@@ -54,15 +55,21 @@ import org.jdom.Element;
  */
 public class Set implements Service {
     private String harvestingLogoDirectory;
-    private String nodeLogoDirectory;
+    private volatile String nodeLogoDirectory = null;
 
     public void init(String appPath, ServiceConfig params) throws Exception {
-        harvestingLogoDirectory = appPath + "images/harvesting/";
-        nodeLogoDirectory = appPath + "images/logos/";
     }
 
     public Element exec(Element params, ServiceContext context)
             throws Exception {
+        synchronized (this) {
+            if(harvestingLogoDirectory == null) {
+                harvestingLogoDirectory = Logos.locateHarvesterLogosDir(context);
+            }
+            if(nodeLogoDirectory == null) {
+                nodeLogoDirectory = Logos.locateLogosDir(context);
+            }
+        }
         String file = Util.getParam(params, Params.FNAME);
         String asFavicon = Util.getParam(params, Params.FAVICON, "0");
 

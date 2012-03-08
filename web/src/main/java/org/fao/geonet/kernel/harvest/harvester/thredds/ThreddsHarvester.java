@@ -35,6 +35,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.logos.Logos;
 import org.jdom.Element;
 
 //=============================================================================
@@ -77,7 +78,7 @@ public class ThreddsHarvester extends AbstractHarvester
 
 	protected void doDestroy(Dbms dbms) throws SQLException
 	{
-		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
+        File icon = new File(Logos.locateLogosDir(context), params.uuid +".gif");
 
 		icon.delete();
 		Lib.sources.delete(dbms, params.uuid);
@@ -103,7 +104,7 @@ public class ThreddsHarvester extends AbstractHarvester
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Lib.sources.copyLogo(context, "/images/harvesting/"+ params.icon, params.uuid);
+		Logos.copyLogo(context, "harvesting/"+ params.icon, params.uuid);
 
 		return id;
 	}
@@ -133,7 +134,7 @@ public class ThreddsHarvester extends AbstractHarvester
 		//--- could be half updated and so it could be in an inconsistent state
 
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
-		Lib.sources.copyLogo(context, "/images/harvesting/"+ copy.icon, copy.uuid);
+		Logos.copyLogo(context, "harvesting/"+ copy.icon, copy.uuid);
 
 		params = copy;
 	}

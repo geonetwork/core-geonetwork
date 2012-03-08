@@ -34,6 +34,8 @@ import java.util.Properties;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.sources.http.JeevesServlet;
 
+import javax.servlet.ServletContext;
+
 //=============================================================================
 
 public class ServerLib
@@ -44,7 +46,7 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public ServerLib(JeevesServlet servlet, String appPath) throws IOException
+	public ServerLib(ServletContext servletContext, String appPath) throws IOException
 	{
 		this.appPath = appPath;
 
@@ -53,8 +55,8 @@ public class ServerLib
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(appPath + SERVER_PROPS), "UTF-8"));
 		try {
-			List<String> lines = ConfigurationOverrides.loadFileAndUpdate(
-					SERVER_PROPS, servlet, appPath, reader);
+			List<String> lines = ConfigurationOverrides.loadTextFileAndUpdate(
+                    SERVER_PROPS, servletContext, appPath, reader);
 			StringBuilder b = new StringBuilder();
 			for (String string : lines) {
 				b.append(string);

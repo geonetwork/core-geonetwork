@@ -52,6 +52,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.jdom.Element;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -118,9 +119,9 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public void loadProfiles(JeevesServlet servlet, String file) throws Exception
+	public void loadProfiles(ServletContext servletContext, String file) throws Exception
 	{
-		profilMan = new ProfileManager(servlet, appPath, appPath + Jeeves.Path.WEBINF + file);
+		profilMan = new ProfileManager(servletContext, appPath, appPath + Jeeves.Path.WEBINF + file);
 	}
 
 	//---------------------------------------------------------------------------

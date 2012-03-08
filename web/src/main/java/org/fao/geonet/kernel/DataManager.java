@@ -295,6 +295,7 @@ public class DataManager {
     public void indexInThreadPool(ServiceContext context, List<String> ids, Dbms dbms) throws SQLException {
 
         if(dbms != null) dbms.commit();
+
         try {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 

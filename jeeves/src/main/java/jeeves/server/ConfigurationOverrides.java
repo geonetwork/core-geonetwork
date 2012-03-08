@@ -1,6 +1,5 @@
 package jeeves.server;
 
-import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.XPath;
 import jeeves.utils.Xml;
@@ -10,6 +9,8 @@ import org.apache.log4j.spi.LoggerRepository;
 import org.jdom.*;
 import org.jdom.filter.Filter;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -147,18 +148,16 @@ public class ConfigurationOverrides {
     static {
         WEB_XML_NS.add(Namespace.getNamespace("http://java.sun.com/xml/ns/j2ee"));
     }
-
-
     /**
      * Update the logging configuration so that it uses the configuration defined in the overrides rather than the defaults
      * 
-     * @param servlet the servlet that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
+     * @param context the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
      * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
      */
-    public static void updateLoggingAsAccordingToOverrides(JeevesServlet servlet, String appPath) throws JDOMException, IOException {
-        String resource = lookupOverrideParameter(servlet, appPath);
+    public static void updateLoggingAsAccordingToOverrides(ServletContext context, String appPath) throws JDOMException, IOException {
+        String resource = lookupOverrideParameter(context, appPath);
 
-        ServletResourceLoader loader = new ServletResourceLoader(servlet,appPath);
+        ServletResourceLoader loader = new ServletResourceLoader(context,appPath);
         Element xml = loader.loadXmlResource(resource);
         if (xml != null) {
             doUpdateLogging(xml, loader);
@@ -194,17 +193,17 @@ public class ConfigurationOverrides {
 
     /**
      * 
+     *
      * @param configFile the path to the configuration file that has been loaded (and is the configRoot).  This is used to identify overrides
-     * @param servlet the servlet that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
-     * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
-     * @param configElement the root element of the configuration (obtained by loading configFile)  
-     * @throws JDOMException
+     * @param context
+     *@param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
+     * @param configElement the root element of the configuration (obtained by loading configFile)    @throws JDOMException
      * @throws IOException
      */
-    public static void updateWithOverrides(String configFile, JeevesServlet servlet, String appPath, Element configElement) throws JDOMException, IOException {
-        String resource = lookupOverrideParameter(servlet,appPath);
+    public static void updateWithOverrides(String configFile, ServletContext context, String appPath, Element configElement) throws JDOMException, IOException {
+        String resource = lookupOverrideParameter(context,appPath);
 
-        ServletResourceLoader loader = new ServletResourceLoader(servlet,appPath);
+        ServletResourceLoader loader = new ServletResourceLoader(context,appPath);
         updateConfig(loader,resource,configFile, configElement);
     }
 
@@ -500,12 +499,12 @@ public class ConfigurationOverrides {
         Log.debug(Log.JEEVES, msg);
     }
 
-    private static String lookupOverrideParameter(JeevesServlet servlet,String appPath) throws JDOMException, IOException {
+    private static String lookupOverrideParameter(ServletContext context,String appPath) throws JDOMException, IOException {
         String resource;
-        if(servlet == null) {
+        if(context == null) {
             resource = lookupOverrideParamFromAppPath(appPath);
         } else {
-            resource = lookupOverrideParamFromServlet(servlet);
+            resource = lookupOverrideParamFromServlet(context);
         }
         return resource;
     }
@@ -551,17 +550,17 @@ public class ConfigurationOverrides {
     	}
 	}
 
-	private static String lookupOverrideParamFromServlet(JeevesServlet servlet) throws IOException, JDOMException {
+	private static String lookupOverrideParamFromServlet(ServletContext context) throws IOException, JDOMException {
         String resource;
-        resource = System.getProperty(servlet.getServletContext().getServletContextName()+"."+OVERRIDES_KEY);
+        resource = System.getProperty(context.getServletContextName()+"."+OVERRIDES_KEY);
         if (resource == null || resource.trim().isEmpty()) {
-            resource = lookupOverrideParamFromConfigFile(servlet.getServletContext().getResource("/WEB-INF/"+CONFIG_OVERRIDES_FILENAME));
+            resource = lookupOverrideParamFromConfigFile(context.getResource("/WEB-INF/" + CONFIG_OVERRIDES_FILENAME));
         }
         if (resource == null || resource.trim().isEmpty()) {
             resource = System.getProperty(OVERRIDES_KEY);
         }
         if (resource == null || resource.trim().isEmpty()) {
-            resource = servlet.getServletContext().getInitParameter(OVERRIDES_KEY);
+            resource = context.getInitParameter(OVERRIDES_KEY);
         }
         return resource;
     }
@@ -717,11 +716,11 @@ public class ConfigurationOverrides {
     }
 
     static class ServletResourceLoader extends ResourceLoader {
-        private final JeevesServlet servlet;
+        private final ServletContext context;
         private String appPath;
 
-        ServletResourceLoader(JeevesServlet servlet, String appPath) {
-            this.servlet = servlet;
+        ServletResourceLoader(ServletContext context, String appPath) {
+            this.context = context;
             this.appPath = appPath;
         }
 
@@ -735,9 +734,9 @@ public class ConfigurationOverrides {
                 } catch (MalformedURLException e) {
                     URL url;
                     try {
-                        if(servlet != null) {
+                        if(context != null) {
                             // try to get resource from the servlet context if servlet is non-null
-                            url = servlet.getServletContext().getResource(resource);
+                            url = context.getResource(resource);
                         } else {
                             // fall back to appPath is servlet is null 
                             File appBasedFile = new File(appPath,resource);
@@ -768,24 +767,50 @@ public class ConfigurationOverrides {
     }
 
     /**
+     * Load an XML file and applies the overrides to the file
+     * 
+     *
+     * @param servletRelativePath file to load.  It is assumed to be with the servlet and is assumed to start with /.
+     * @param context the ServletContext to use for locating the file
+     * @return
+     */
+    public static Element loadXmlFileAndUpdate(String servletRelativePath, ServletContext context) {
+        String appPath = context.getContextPath();
+        Element elem = null;
+        try {
+            elem = Xml.loadFile(context.getRealPath(servletRelativePath));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            updateWithOverrides(servletRelativePath, context, appPath, elem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.error(Log.JEEVES, "Unable to read overrides for config.xml: "+e);
+        }
+        return elem;
+    }
+
+
+    /**
      * Loads a text file, compares each line to the textFile elements in the overrides file and if a match is found replaces that line with the line in the overrides
      * 
      * Examples of use are to be able to update server.props using overrides and the sql data,create, etc... files with overrides so that the files can contain the defaults
      * and the specifics for a particular platform can be configured using overrides
      * 
      * @param configFilePath The path to the files to be loaded and overriden.  IE /WEB-INF/server.prop
-     * @param servlet the servlet that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
+     * @param contex the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
      * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
      * @param reader a buffered reader opened to the file to be loaded.
      * 
      * @return the array of lines in the file.
      * @throws JDOMException 
      */
-	public static List<String> loadFileAndUpdate(String configFilePath, JeevesServlet servlet, String appPath, BufferedReader reader) throws IOException {
-	    ServletResourceLoader loader = new ServletResourceLoader(servlet,appPath);
+	public static List<String> loadTextFileAndUpdate(String configFilePath, ServletContext context, String appPath, BufferedReader reader) throws IOException {
+	    ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
 	    
         try {
-            String resource = lookupOverrideParameter(servlet, appPath);
+            String resource = lookupOverrideParameter(context, appPath);
             return loadFileAndUpdate(loader, resource, configFilePath, reader);
         } catch (JDOMException e) {
             return loadFileAndUpdate(loader, null, configFilePath, reader);

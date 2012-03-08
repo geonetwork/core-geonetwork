@@ -27,6 +27,7 @@ import jeeves.server.ConfigurationOverrides;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Util;
 
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -35,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,17 +49,17 @@ public class TextLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public List<String> load(JeevesServlet jeevesServlet, String appPath, String file) throws FileNotFoundException, IOException
+	public List<String> load(ServletContext servletContext, String appPath, String file) throws FileNotFoundException, IOException
 	{
-		return load(jeevesServlet, appPath, file, "ISO-8859-1");
+		return load(servletContext, appPath, file, "ISO-8859-1");
 	}
 
-	public List<String> load(JeevesServlet jeevesServlet, String appPath, String file, String encoding) throws FileNotFoundException, IOException
+	public List<String> load(ServletContext servletContext, String appPath, String file, String encoding) throws FileNotFoundException, IOException
 	{
 		FileInputStream is = new FileInputStream(file);
 		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, encoding));
 
-		return ConfigurationOverrides.loadFileAndUpdate(file, jeevesServlet, appPath, ir);
+		return ConfigurationOverrides.loadTextFileAndUpdate(file, servletContext, appPath, ir);
 	}
 	
 	//---------------------------------------------------------------------------

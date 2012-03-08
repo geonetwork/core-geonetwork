@@ -36,6 +36,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.logos.Logos;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
@@ -54,6 +55,7 @@ import java.io.FileFilter;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 
@@ -68,7 +70,6 @@ public class Info implements Service
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
 		importXslPath = new File(appPath + Geonet.Path.IMPORT_STYLESHEETS);
-		iconPath   = new File(appPath +"/images/harvesting");
 		oaiSchema  = new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");
 	}
 
@@ -95,7 +96,7 @@ public class Info implements Service
 			if (name.equals("type")) {
 
 				if (type.equals("icons"))
-					result.addContent(getIcons());
+					result.addContent(getIcons(context));
 
 				else if (type.equals("oaiPmhServer"))
 					result.addContent(getOaiPmhServer(el, context));
@@ -138,15 +139,14 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element getIcons()
+	private Element getIcons(ServiceContext context)
 	{
-		File icons[] = iconPath.listFiles(iconFilter);
+		Set<File> icons = Logos.listFiles(context, "harvesting", iconFilter);
 
 		Element result = new Element("icons");
 
-		if (icons != null)
-			for (File icon : icons)
-				result.addContent(new Element("icon").setText(icon.getName()));
+		for (File icon : icons)
+			result.addContent(new Element("icon").setText(icon.getName()));
 
 		return result;
 	}
@@ -367,7 +367,6 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private File iconPath;
 	private File oaiSchema;
 	private File importXslPath;
 	

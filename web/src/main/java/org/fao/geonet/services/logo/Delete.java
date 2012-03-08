@@ -32,17 +32,23 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.logos.Logos;
 import org.jdom.Element;
 
 public class Delete implements Service {
 	private String logoDirectory;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		logoDirectory = appPath + "images/harvesting/";
 	}
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+       synchronized (this) {
+            if(logoDirectory == null) {
+                logoDirectory = Logos.locateHarvesterLogosDir(context);
+            }
+        }
+
 		String file = Util.getParam(params, Params.FNAME);
 		
 		if (file.contains("..")) {

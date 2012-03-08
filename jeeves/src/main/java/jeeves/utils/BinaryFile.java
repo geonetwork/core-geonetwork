@@ -27,6 +27,9 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
+
+import org.apache.commons.io.IOUtils;
+
 import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
 import org.globus.ftp.Session;
@@ -42,7 +45,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
 
 //=============================================================================
 
@@ -431,26 +435,33 @@ public final class BinaryFile
 	/**
 	 * Copies an input stream (from a file) to an output stream 
 	 */
-	public static void copy(InputStream in, OutputStream out, boolean closeInput,
-									boolean closeOutput) throws IOException
-	{
-		BufferedInputStream input = new BufferedInputStream(in);
+	public static void copy(InputStream in, OutputStream out,
+			boolean closeInput, boolean closeOutput) throws IOException {
 
-		try
-		{
-			byte buffer[] = new byte[BUF_SIZE];
-			int nRead;
+		try {
+			if (in instanceof FileInputStream) {
+				FileInputStream fin = (FileInputStream) in;
+				WritableByteChannel outChannel;
+				if (out instanceof FileOutputStream) {
+					outChannel = ((FileOutputStream) out).getChannel();
+				} else {
+					outChannel = Channels.newChannel(out);
+				}
+				fin.getChannel().transferTo(0, Long.MAX_VALUE, outChannel);
+			} else {
+				BufferedInputStream input = new BufferedInputStream(in);
 
-			while ((nRead = input.read(buffer)) > 0)
-				out.write(buffer, 0, nRead);
-		}
-		finally
-		{
+				byte buffer[] = new byte[BUF_SIZE];
+				int nRead;
+
+				while ((nRead = input.read(buffer)) > 0)
+					out.write(buffer, 0, nRead);
+			}
+		} finally {
 			if (closeInput)
-				in.close();
-
+				IOUtils.closeQuietly(in);
 			if (closeOutput)
-				out.close();
+				IOUtils.closeQuietly(out);
 		}
 	}
 

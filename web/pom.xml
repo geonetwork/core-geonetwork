@@ -784,7 +784,7 @@
             </connector>
           </connectors>
           <webApp>${project.build.directory}/geonetwork</webApp>
-<!--          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml> -->
+          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
 <!--      <webAppSourceDirectory>${build.webapp.resources}</webAppSourceDirectory> -->
           <webAppConfig>
             <contextPath>/geonetwork</contextPath>

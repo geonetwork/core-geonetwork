@@ -326,7 +326,9 @@
 	<appHandler class="org.fao.geonet.Geonetwork">
 	  <param name="luceneDir" value="WEB-INF/lucene" />
 	  <param name="dataDir" value="WEB-INF/data" />
-	  <!--  
+      <!-- the root of the directory containing logos and harvesting images (and in future other images that are site dependent and should not be replaced when a new webapp is deployed) -->
+      <param name="dataImagesDir" value="images" />
+	  <!--
 	  Thesaurus directory. Default value is WEB-INF/data/codelist.
 	  <param name="codeListDir" value="WEB-INF/data/codelist" />-->
 

@@ -30,6 +30,7 @@ import jeeves.utils.Util;
 import jeeves.utils.XmlFileCacher;
 import org.jdom.Element;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 
 //=============================================================================
@@ -91,7 +92,11 @@ public class XmlFile implements GuiService
 		if (localized) xmlFilePath = appPath + base +"/"+ lang +"/"+ file;
 		else xmlFilePath = appPath + file;
 
-		if (xmlCache == null) xmlCache = new XmlFileCacher(new File(xmlFilePath),context.getServlet(),appPath);
+        ServletContext servletContext = null;
+        if(context.getServlet() != null) {
+            servletContext = context.getServlet().getServletContext();
+        }
+		if (xmlCache == null) xmlCache = new XmlFileCacher(new File(xmlFilePath),servletContext,appPath);
 
 		Element result = null;
 		try {
@@ -99,7 +104,7 @@ public class XmlFile implements GuiService
 		} catch (Exception e) {
 			e.printStackTrace();
 			String xmlDefaultLangFilePath = appPath + base +"/"+ defaultLang +"/"+ file;
-			xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),context.getServlet(), appPath);
+			xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
 			result = (Element)xmlCache.get().clone();
 		}
 		return result.setName(name);

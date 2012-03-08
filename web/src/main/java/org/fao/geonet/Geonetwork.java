@@ -24,16 +24,13 @@
 package org.fao.geonet;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import jeeves.constants.Jeeves;
@@ -46,7 +43,6 @@ import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.ProxyInfo;
 import jeeves.utils.Util;
@@ -77,6 +73,7 @@ import org.fao.geonet.kernel.XmlSerializerDb;
 import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
+import org.fao.geonet.logos.Logos;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.util.z3950.Repositories;
@@ -98,6 +95,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
+
+import javax.servlet.ServletContext;
 
 //=============================================================================
 
@@ -145,7 +144,11 @@ public class Geonetwork implements ApplicationHandler
 		String baseURL = context.getBaseUrl();
 		String webappName = baseURL.substring(1);
 
-		ServerLib sl = new ServerLib(context.getServlet(), path);
+        ServletContext servletContext = null;
+        if (context.getServlet() != null) {
+            servletContext = context.getServlet().getServletContext();
+        }
+		ServerLib sl = new ServerLib(servletContext, path);
 		String version = sl.getVersion();
 		String subVersion = sl.getSubVersion();
 
@@ -155,47 +158,13 @@ public class Geonetwork implements ApplicationHandler
 
 		// Init directory path
 		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
+        String luceneDir = locateLuceneDir(webappName, handlerConfig);
+        String dataDir = locateDataDir(webappName, handlerConfig);
+        String thesauriDir = locateThesaurusDir(webappName, handlerConfig, dataDir);
 
-		// Lucene
-		String luceneSystemDir = System.getProperty(webappName + ".lucene.dir");
-		String luceneDir = (luceneSystemDir != null ? luceneSystemDir : path
-				+ handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR));
-		handlerConfig.setValue(Geonet.Config.LUCENE_DIR, luceneDir);
-		System.setProperty(webappName + ".lucene.dir", luceneDir);
-		
-		logger.info("   - Lucene directory is:" + luceneDir);
-
-		// Status actions class - load it
-		String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS); 
-		Class statusActionsClass = Class.forName(statusActionsClassName);
-
-		// Data directory
-		String defaultDataDir = handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
-		String dataSystemDir = System.getProperty(webappName + ".data.dir");
-		if (dataSystemDir != null)
-			initDataDirectory(dataSystemDir, path + defaultDataDir);
-		
-		String dataDir = (dataSystemDir != null ? dataSystemDir : path
-				+ defaultDataDir);
-		handlerConfig.setValue(Geonet.Config.DATA_DIR, dataDir);
-		if (!new File(dataDir).isAbsolute())
-			logger.info("   - Data directory is not an absolute path. Relative path is not recommended.\n" +
-					"Update " + webappName + ".data.dir environment variable or dataDir parameter in config.xml." );
-		
-		
-		String defaultThesaurusDir = handlerConfig.getValue(Geonet.Config.CODELIST_DIR, null);
-                String thesaurusSystemDir = System.getProperty(webappName + ".codeList.dir");
-                String thesauriDir = (thesaurusSystemDir != null ? thesaurusSystemDir : 
-                                        (defaultThesaurusDir != null ? defaultThesaurusDir : dataDir + "/codelist/")
-                                        );
-        thesauriDir = new File(thesauriDir).getAbsoluteFile().getPath();
-		handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
-		System.setProperty(webappName + ".codeList.dir", thesauriDir);
-                
-		System.setProperty(webappName + ".data.dir", dataDir);
-                
-		logger.info("   - Data directory is:" + dataDir);
-
+        // Status actions class - load it
+        String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS);
+        Class statusActionsClass = Class.forName(statusActionsClassName);
 
 		String luceneConfigXmlFile = handlerConfig
 				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
@@ -215,7 +184,7 @@ public class Geonetwork implements ApplicationHandler
 		// --- Check current database and create database if an emty one is found
 		String dbConfigurationFilePath = path + "/WEB-INF/config-db.xml";
 		dbConfiguration = Xml.loadFile(dbConfigurationFilePath);
-        ConfigurationOverrides.updateWithOverrides(dbConfigurationFilePath, context.getServlet(), path, dbConfiguration);
+        ConfigurationOverrides.updateWithOverrides(dbConfigurationFilePath, servletContext, path, dbConfiguration);
 
 		Pair<Dbms,Boolean> pair = initDatabase(context);
 		Dbms dbms = pair.one();
@@ -236,7 +205,7 @@ public class Geonetwork implements ApplicationHandler
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
 
 		// --- Migrate database if an old one is found
-		migrateDatabase(context.getServlet(), dbms, settingMan, version, subVersion);
+		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
 		
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
@@ -313,7 +282,8 @@ public class Geonetwork implements ApplicationHandler
         
 		String luceneTermsToExclude = "";
 		luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
-		LuceneConfig lc = new LuceneConfig(path, context.getServlet(), luceneConfigXmlFile);
+
+		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
        
@@ -339,7 +309,7 @@ public class Geonetwork implements ApplicationHandler
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
 				dataStore, maxWritesInTransaction, 
-				new SettingInfo(settingMan), schemaMan, context.getServlet());
+				new SettingInfo(settingMan), schemaMan, servletContext);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -422,7 +392,7 @@ public class Geonetwork implements ApplicationHandler
 		gnContext.thesaurusMan= thesaurusMan;
 		gnContext.oaipmhDis   = oaipmhDis;
 		gnContext.app_context = app_context;
-    gnContext.metadataNotifierMan = metadataNotifierMan;
+        gnContext.metadataNotifierMan = metadataNotifierMan;
 		gnContext.threadPool  = threadPool;
 		gnContext.xmlSerializer  = xmlSerializer;
 		gnContext.svnManager  = svnManager;
@@ -433,7 +403,7 @@ public class Geonetwork implements ApplicationHandler
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application 
-        createSiteLogo(gnContext.getSiteId());
+        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database
@@ -457,8 +427,57 @@ public class Geonetwork implements ApplicationHandler
 		return gnContext;
 	}
 
+    private String locateThesaurusDir(String webappName, ServiceConfig handlerConfig, String dataDir) {
+        String defaultThesaurusDir = handlerConfig.getValue(Geonet.Config.CODELIST_DIR, null);
+        String thesaurusSystemDir = System.getProperty(webappName + ".codeList.dir");
+        String thesauriDir = (thesaurusSystemDir != null ? thesaurusSystemDir :
+                                (defaultThesaurusDir != null ? defaultThesaurusDir : dataDir + "/codelist/")
+                                );
+        thesauriDir = new File(thesauriDir).getAbsoluteFile().getPath();
+        handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
+        System.setProperty(webappName + ".codeList.dir", thesauriDir);
+        return thesauriDir;
+    }
 
-	/**
+    private String locateLuceneDir(String webappName, ServiceConfig handlerConfig) {
+        // Lucene
+        String luceneSystemDir = System.getProperty(webappName + ".lucene.dir");
+        String luceneDir = (luceneSystemDir != null ? luceneSystemDir : path
+                + handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR));
+        handlerConfig.setValue(Geonet.Config.LUCENE_DIR, luceneDir);
+        System.setProperty(webappName + ".lucene.dir", luceneDir);
+
+        logger.info("   - Lucene directory is:" + luceneDir);
+        return luceneDir;
+    }
+
+    private String locateDataDir(String webappName, ServiceConfig handlerConfig) {
+        // Data directory
+        String defaultDataDir = handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
+        String absoluteDataDir = handlerConfig.getValue(Geonet.Config.DATA_DIR, null);
+        String dataSystemDir = System.getProperty(webappName + ".data.dir");
+        if (dataSystemDir != null) {
+            initDataDirectory(dataSystemDir, path + defaultDataDir);
+        } else if (absoluteDataDir != null) {
+
+        }
+
+        String dataDir = (dataSystemDir != null ? dataSystemDir : path
+                + defaultDataDir);
+        handlerConfig.setValue(Geonet.Config.DATA_DIR, dataDir);
+        if (!new File(dataDir).isAbsolute())
+            logger.info("   - Data directory is not an absolute path. Relative path is not recommended.\n" +
+                    "Update " + webappName + ".data.dir environment variable or dataDir parameter in config.xml." );
+
+        System.setProperty(webappName + ".data.dir", dataDir);
+
+        logger.info("   - Data directory is:" + dataDir);
+
+        return dataDir;
+    }
+
+
+    /**
 	 * Check if data directory is empty or not. If empty,
 	 * add mandatory elements (codelist).
 	 *  
@@ -505,13 +524,14 @@ public class Geonetwork implements ApplicationHandler
 	 * If not, apply migration SQL script :
 	 *  resources/sql/migration/{version}-to-{version}-{dbtype}.sql.
 	 * eg. 2.4.3-to-2.5.0-default.sql
-	 * 
-	 * @param dbms
-	 * @param settingMan
-	 * @param webappVersion
-	 * @param subVersion
-	 */
-	private void migrateDatabase(JeevesServlet jeevesServlet, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion) {
+	 *
+     * @param dbms
+     * @param settingMan
+     * @param webappVersion
+     * @param subVersion
+     * @param appPath
+     */
+	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
 		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
@@ -562,7 +582,7 @@ public class Geonetwork implements ApplicationHandler
                         anyMigrationAction = true;
                         logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
                         try {
-                            Lib.db.insertData(jeevesServlet, dbms, path, filePath, filePrefix);
+                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
                         } catch (Exception e) {
                             logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
                             e.printStackTrace();
@@ -584,7 +604,7 @@ public class Geonetwork implements ApplicationHandler
 			
 			// Update the logo 
 			String siteId = settingMan.getValue("system/site/siteId");
-			initLogo(dbms, siteId);
+			initLogo(servletContext, dbms, siteId, appPath);
 			
 			// TODO : Maybe a force rebuild index is required in such situation.
 			
@@ -635,7 +655,11 @@ public class Geonetwork implements ApplicationHandler
 	
 		String dbURL = dbms.getURL();
 		logger.info("  - Database connection on " + dbURL + " ...");
-		
+
+        ServletContext servletContext = null;
+        if(context.getServlet() != null) {
+            servletContext = context.getServlet().getServletContext();
+        }
 
 		Boolean created = false;
 		// Create db if empty
@@ -648,8 +672,8 @@ public class Geonetwork implements ApplicationHandler
 			    String filePrefix = file.getAttributeValue("filePrefix");
 			    logger.info("         - SQL create file:" + filePath + " prefix:" + filePrefix + " ...");
                 // Do we need to remove object before creating the database ?
-    			Lib.db.removeObjects(context.getServlet(), dbms, path, filePath, filePrefix);
-    			Lib.db.createSchema(context.getServlet(), dbms, path, filePath, filePrefix);
+    			Lib.db.removeObjects(servletContext, dbms, path, filePath, filePrefix);
+    			Lib.db.createSchema(servletContext, dbms, path, filePath, filePrefix);
 			}
 			
 	        List<Element> dataConfiguration = dbConfiguration.getChild("data").getChildren();
@@ -657,13 +681,13 @@ public class Geonetwork implements ApplicationHandler
                 String filePath = path + file.getAttributeValue("path");
                 String filePrefix = file.getAttributeValue("filePrefix");
                 logger.info("         - SQL data file:" + filePath + " prefix:" + filePrefix + " ...");
-                Lib.db.insertData(context.getServlet(), dbms, path, filePath, filePrefix);
+                Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
 	        }
 	        dbms.commit();
             
 			// Copy logo
 			String uuid = UUID.randomUUID().toString();
-			initLogo(dbms, uuid);
+			initLogo(servletContext, dbms, uuid, context.getAppPath());
 			created = true;
 		} else {
 			logger.info("      Found an existing GeoNetwork database.");
@@ -674,14 +698,15 @@ public class Geonetwork implements ApplicationHandler
 
 	/**
 	 * Copy the default dummy logo to the logo folder based on uuid
-	 * @param dbms
-	 * @param nodeUuid
-	 * @throws FileNotFoundException
+     *
+     * @param dbms
+* @param nodeUuid
+* @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	private void initLogo(Dbms dbms, String nodeUuid) {
-		createSiteLogo(nodeUuid);
+	private void initLogo(ServletContext servletContext, Dbms dbms, String nodeUuid, String appPath) {
+		createSiteLogo(nodeUuid, servletContext, appPath);
 		
 		try {
 			dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", nodeUuid);
@@ -695,14 +720,18 @@ public class Geonetwork implements ApplicationHandler
      *
      * @param nodeUuid
      */
-    private void createSiteLogo(String nodeUuid) {
+    private void createSiteLogo(String nodeUuid, ServletContext servletContext, String appPath) {
         try {
-            File logo = new File(path +"/images/logos/"+ nodeUuid +".gif");
+            String logosDir = Logos.locateLogosDir(servletContext, appPath);
+            File logo = new File(logosDir, nodeUuid +".gif");
             if (!logo.exists()) {
-                FileInputStream  is = new FileInputStream (path +"/images/logos/dummy.gif");
-                FileOutputStream os = new FileOutputStream(path +"/images/logos/"+ nodeUuid +".gif");
-                logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
-                BinaryFile.copy(is, os, true, true);
+                FileOutputStream os = new FileOutputStream(logo);
+                try {
+                    os.write(Logos.loadImage(servletContext, appPath, "logos/dummy.gif", new byte[0]));
+                    logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
+                } finally {
+                    os.close();
+                }
             }
         } catch (Exception e) {
             logger.error("      Error when setting the logo: " + e.getMessage());

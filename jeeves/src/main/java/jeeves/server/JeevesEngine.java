@@ -46,6 +46,7 @@ import jeeves.utils.Xml;
 import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Element;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.BufferedReader;
@@ -107,7 +108,10 @@ public class JeevesEngine
 		{
 			PropertyConfigurator.configure(configPath +"log4j.cfg");
 
-            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servlet, appPath);
+            ServletContext servletContext = null;
+            if(servlet != null) servletContext= servlet.getServletContext();
+
+            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servletContext, appPath);
 
 			this.appPath = appPath;
 
@@ -149,10 +153,10 @@ public class JeevesEngine
 			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
 
-			loadConfigFile(servlet, configPath, Jeeves.CONFIG_FILE, serviceMan);
+			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
 			info("Initializing profiles...");
-			serviceMan.loadProfiles(servlet,profilesFile);
+			serviceMan.loadProfiles(servletContext, profilesFile);
 
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
@@ -246,7 +250,7 @@ public class JeevesEngine
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private void loadConfigFile(JeevesServlet servlet, String path, String file, ServiceManager serviceMan) throws Exception
+	private void loadConfigFile(ServletContext servletContext, String path, String file, ServiceManager serviceMan) throws Exception
 	{
 		file = path + file;
 
@@ -254,7 +258,7 @@ public class JeevesEngine
 
 		Element configRoot = Xml.loadFile(file);
 
-        ConfigurationOverrides.updateWithOverrides(file, servlet, appPath, configRoot);
+        ConfigurationOverrides.updateWithOverrides(file, servletContext, appPath, configRoot);
 
 		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);
@@ -314,7 +318,7 @@ public class JeevesEngine
 		{
 			Element include = includes.get(i);
 
-			loadConfigFile(servlet, path, include.getText(), serviceMan);
+			loadConfigFile(servletContext, path, include.getText(), serviceMan);
 		}
 	}
 

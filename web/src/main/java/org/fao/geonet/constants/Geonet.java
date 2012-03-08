@@ -148,6 +148,7 @@ public class Geonet
 		public static final String OGC_STYLESHEETS    = "/convert/OGCWxSGetCapabilitiesto19119";
 		public static final String CONVERT_STYLESHEETS       = "/convert/";
 		public static final String LOGOS              = "/images/logos/";
+		public static final String DIF_STYLESHEET     = "/convert/DIFToISO.xsl";
 		public static final String XML                = Jeeves.Path.XML;
 	}
 
@@ -534,7 +535,8 @@ public class Geonet
 	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";
 	public static final String LDAP         = GEONETWORK + ".ldap";
-	public static final String EDITOR       = GEONETWORK + ".editor";
+	public static final String LOGOS        =  GEONETWORK + ".logos";
+	public static final String EDITOR				= GEONETWORK + ".editor";
 	public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
 	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
 	public static final String SPATIAL      = GEONETWORK + ".spatial";

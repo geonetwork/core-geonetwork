@@ -30,6 +30,7 @@ import jeeves.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -61,11 +62,11 @@ public class ProfileManager
 	  */
 
 	@SuppressWarnings("unchecked")
-	public ProfileManager(JeevesServlet servlet, String appPath, String profilesFile) throws Exception
+	public ProfileManager(ServletContext servletContext, String appPath, String profilesFile) throws Exception
 	{
 		Element elProfiles = Xml.loadFile(profilesFile);
-		if (servlet != null) {
-		      ConfigurationOverrides.updateWithOverrides(profilesFile, servlet, appPath, elProfiles);
+		if (servletContext != null) {
+		      ConfigurationOverrides.updateWithOverrides(profilesFile, servletContext, appPath, elProfiles);
 		}
 		htProfiles  = new Hashtable<String, Element>(50);
 
