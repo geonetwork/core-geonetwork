@@ -28,9 +28,9 @@ import java.util.Hashtable;
 
 //=============================================================================
 
-/** Abstraction layer from the user session
-  */
-
+/**
+ * Abstraction layer from the user session.
+ */
 public class UserSession
 {
 	private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
@@ -71,34 +71,34 @@ public class UserSession
 		this.sHttpSession = sHttpSession;
 	}
 
-	/** Sets a generic property
-	  */
-
+	/**
+     * Sets a generic property.
+	 */
 	public void setProperty(String name, Object value)
 	{
 		htProperties.put(name, value);
 	}
 
 	//--------------------------------------------------------------------------
-	/** Gets a generic property
-	  */
-
+	/**
+     * Gets a generic property.
+	 */
 	public Object getProperty(String name)
 	{
 		return htProperties.get(name);
 	}
 
 	//--------------------------------------------------------------------------
-	/** Removes a generic property
-	  */
-
+	/**
+     * Removes a generic property.
+	 */
 	public void removeProperty(String name)
 	{
 		htProperties.remove(name);
 	}
 
     /**
-     * Clears user session properties and authentication
+     * Clears user session properties and authentication.
      */
     public void clear() {
         authenticate(null, null, null, null, null, null);
@@ -107,9 +107,9 @@ public class UserSession
     }
 
 	//--------------------------------------------------------------------------
-	/** Says that the user is authenticated and this id and profile must be used
-	  */
-
+	/**
+     * Says that the user is authenticated and this id and profile must be used.
+	 */
 	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr)
 	{
 		sUserId    = userId;
@@ -140,4 +140,3 @@ public class UserSession
 }
 
 //=============================================================================
-
