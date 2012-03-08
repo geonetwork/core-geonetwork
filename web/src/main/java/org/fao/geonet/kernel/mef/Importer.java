@@ -34,6 +34,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
@@ -114,29 +115,32 @@ public class Importer {
                 for (File file : Files) {
                     if (file != null && !file.isDirectory()) {
                         Element metadata = Xml.loadFile(file);
-                        String metadataSchema = dm.autodetectSchema(metadata, null);
+                        try {
+                            String metadataSchema = dm.autodetectSchema(metadata, null);
+                            // If local node doesn't know metadata
+                            // schema try to load next xml file.
+                            if (metadataSchema == null) {
+                                continue;
+                            }
 
-                        // If local node doesn't know metadata
-                        // schema try to load next xml file.
-                        if (metadataSchema == null) {
+                            // If schema is preferred local node schema
+                            // load that file.
+                            if (metadataSchema.equals(preferredSchema)) {
+                                Log.debug(Geonet.MEF, "Found metadata file "
+                                        + file.getName()
+                                        + " with preferred schema ("
+                                        + preferredSchema + ").");
+                                handleMetadata(metadata, index);
+                                return;
+                            }
+                            else {
+                                Log.debug(Geonet.MEF, "Found metadata file "
+                                        + file.getName() + " with known schema ("
+                                        + metadataSchema + ").");
+                                metadataValidForImport = metadata;
+                            }
+                        } catch (NoSchemaMatchesException e) {
                             continue;
-                        }
-
-                        // If schema is preferred local node schema
-                        // load that file.
-                        if (metadataSchema.equals(preferredSchema)) {
-                            Log.debug(Geonet.MEF, "Found metadata file "
-                                    + file.getName()
-                                    + " with preferred schema ("
-                                    + preferredSchema + ").");
-                            handleMetadata(metadata, index);
-                            return;
-                        }
-                        else {
-                            Log.debug(Geonet.MEF, "Found metadata file "
-                                    + file.getName() + " with known schema ("
-                                    + metadataSchema + ").");
-                            metadataValidForImport = metadata;
                         }
                     }
                 }
