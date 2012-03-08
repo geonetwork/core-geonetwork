@@ -766,7 +766,7 @@
           </overlays>
           <packagingExcludes>WEB-INF/metadata_subversion/**,WEB-INF/data/**</packagingExcludes>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-          
+          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
           <warName>geonetwork</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
