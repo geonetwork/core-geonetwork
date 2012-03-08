@@ -69,7 +69,7 @@ public class Transfer implements Service {
 		//--- transfer privileges (if case)
 
 		Set<String> sourcePriv = retrievePrivileges(dbms, sourceUsr, sourceGrp);
-		Set<String> targetPriv = retrievePrivileges(dbms, targetUsr, targetGrp);
+		Set<String> targetPriv = retrievePrivileges(dbms, null, targetGrp);
 
 		//--- a commit just to release some resources
 
@@ -117,14 +117,20 @@ public class Transfer implements Service {
     /**
      *
      * @param dbms
-     * @param userId
+     * @param userId can be null
      * @param groupId
      * @return
      * @throws SQLException
      */
-	private Set<String> retrievePrivileges(Dbms dbms, int userId, int groupId) throws SQLException {
-		String query = "SELECT * FROM OperationAllowed, Metadata WHERE metadataId=id AND owner=? AND groupId=?";
-		List list = dbms.select(query, userId, groupId).getChildren();
+	private Set<String> retrievePrivileges(Dbms dbms, Integer userId, int groupId) throws SQLException {
+	    List list;
+	    if(userId==null) {
+            String query = "SELECT * FROM OperationAllowed WHERE groupId=?";
+            list = dbms.select(query, groupId).getChildren();
+	    } else {
+            String query = "SELECT * FROM OperationAllowed, Metadata WHERE metadataId=id AND owner=? AND groupId=?";
+            list = dbms.select(query, userId, groupId).getChildren();
+	    }
 		Set<String> result = new HashSet<String>();
 		for (Object o : list) {
 			Element elem = (Element) o;
