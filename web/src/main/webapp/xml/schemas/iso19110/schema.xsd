@@ -10,10 +10,16 @@
 		<xs:documentation>This file was generated from ISO TC/211 UML class diagrams == 01-27-2005 19:50:55 ====== </xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
-	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../iso19139/schema/gmd/citation.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../iso19139/schema/gmd/metadataEntity.xsd"/>	
 	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../iso19139/schema/gco/basicTypes.xsd"/>
-	<xs:import namespace="http://www.isotc211.org/2005/gmx" schemaLocation="../iso19139/schema/gmx/gmx.xsd"/>
-	<!-- ########################################################################### -->
+
+	<!-- Original imports causing error in schema loading in GeoNetwork --> 
+ 	<!-- src-resolve: Cannot resolve the name 'gmd:AbstractDQ_PositionalAccuracy' to a(n) 'element declaration' component. --> 
+
+	<!--<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../iso19139/schema/gmd/citation.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../iso19139/schema/gco/basicTypes.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmx" schemaLocation="../iso19139/schema/gmx/gmx.xsd"/>-->
+
 	<!-- ########################################################################### -->
 	<!-- ================================== Classes ================================= -->
 	<xs:complexType name="FC_ListedValue_Type">

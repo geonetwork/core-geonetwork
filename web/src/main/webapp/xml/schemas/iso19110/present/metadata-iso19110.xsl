@@ -253,7 +253,6 @@
     <xsl:template mode="elementEP" match="
         geonet:child[@name='definitionReference']|
         geonet:child[@name='featureCatalogue']|
-        geonet:child[@name='featureType']|
         geonet:child[@name='valueMeasurementunit']|
         gfc:FC_InheritanceRelation/geonet:child[@name='subtype']|
         gfc:FC_InheritanceRelation/geonet:child[@name='supertype']
@@ -307,6 +306,11 @@
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="edit" select="$edit"/>
             <xsl:with-param name="flat" select="$flat"/>
+        </xsl:apply-templates>
+
+        <xsl:apply-templates mode="elementEP" select="geonet:child[@name='featureType' and @prefix='gfc']">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit" select="$edit"/>
         </xsl:apply-templates>
 
     </xsl:template>
