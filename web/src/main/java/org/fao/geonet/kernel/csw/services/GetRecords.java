@@ -168,8 +168,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             if(setName.equals(ElementSetName.FULL)) {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 List<Element> customElementSets;
+                Dbms dbms = null;
                 try {
-                    Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+					dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
                     customElementSets = gc.getDataManager().getCustomElementSets(dbms);
                     // custom elementset defined
                     if(!CollectionUtils.isEmpty(customElementSets)) {
@@ -183,6 +184,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 }
                 catch(Exception x) {
                     Log.warning(Geonet.CSW, "Failed to check for custom element sets; ignoring -- request will be handled with default FULL elementsetname. Message was: " + x.getMessage());
+                    // an error here could make the dbms unusable so close it so that a new one can be used...
+                    // should it be committed or aborted?
+                    if(dbms != null) {
+                    	try {
+							context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+						} catch (Exception e) {
+							throw new RuntimeException("Unable to close database connection", e);
+						}
+                    }
                 }
             }
         }
