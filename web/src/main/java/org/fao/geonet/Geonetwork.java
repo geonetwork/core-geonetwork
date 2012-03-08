@@ -374,11 +374,7 @@ public class Geonetwork implements ApplicationHandler
 			xmlSerializer = new XmlSerializerDb(settingMan);
 		}
 
-		File _htmlCacheDir = new File(htmlCacheDir);
-		if (!_htmlCacheDir.isAbsolute()) {
-			htmlCacheDir = path + htmlCacheDir;
-		}
-		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, htmlCacheDir, dataDir, thesauriDir, path);
+		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, path);
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem

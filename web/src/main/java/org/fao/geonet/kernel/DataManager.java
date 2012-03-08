@@ -103,13 +103,12 @@ public class DataManager {
      * @param dbms
      * @param ss
      * @param baseURL
-     * @param htmlCacheDir
      * @param dataDir
      * @param thesaurusDir TODO
      * @param appPath
      * @throws Exception
      */
-	public DataManager(ServiceContext context, SvnManager svnManager, XmlSerializer xmlSerializer, SchemaManager scm, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String htmlCacheDir, String dataDir, String thesaurusDir, String appPath) throws Exception {
+	public DataManager(ServiceContext context, SvnManager svnManager, XmlSerializer xmlSerializer, SchemaManager scm, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String dataDir, String thesaurusDir, String appPath) throws Exception {
 		searchMan = sm;
 		accessMan = am;
 		settingMan= ss;
