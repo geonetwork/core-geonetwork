@@ -49,7 +49,14 @@
 	<field name="gmd:distributionFormat">
 		<suggest name="gmd:MD_Format"/>
 		</field> -->
-	
+
+    <field name="gmd:transferOptions">
+        <suggest name="gmd:MD_DigitalTransferOptions"/>
+    </field>
+
+    <field name="gmd:MD_DigitalTransferOptions">
+        <suggest name="gmd:onLine"/>
+    </field>
 	
 	
 	<!-- Contact info: suggest all by default. -->
