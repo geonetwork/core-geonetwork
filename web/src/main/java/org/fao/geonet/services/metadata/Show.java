@@ -41,6 +41,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import jeeves.utils.Xml;
 
 //=============================================================================
 
@@ -152,7 +153,7 @@ public class Show implements Service
 		if(cache) {
 		    cache(context.getUserSession(), elMd, id);
 		}
-		
+		elMd.removeAttribute("schemaLocation", Xml.xsiNS);
 		return elMd;
 	}
 
