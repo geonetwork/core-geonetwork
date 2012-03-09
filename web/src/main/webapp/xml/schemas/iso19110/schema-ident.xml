@@ -3,7 +3,7 @@
 	<name>iso19110</name>
 	<id>ae229ba0-dde3-11df-99ab-001c2346de4c</id>
 	<version>1.0</version>
-	<schemaLocation>http://www.isotc211.org/2005/gfc http://eden.ign.fr/xsd/isotc211/iso19110/20060608/gfc/gfc.xsd</schemaLocation>
+	<schemaLocation>http://www.isotc211.org/2005/gfc http://www.isotc211.org/2005/gfc/gfc.xsd</schemaLocation>
 	<autodetect xmlns:gfc="http://www.isotc211.org/2005/gfc">
 		<elements type="root">
 			<gfc:FC_FeatureCatalogue/>
