@@ -93,7 +93,7 @@ import java.util.UUID;
 public final class Xml 
 {
 
-	private static Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+	public static Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 
    //--------------------------------------------------------------------------
 

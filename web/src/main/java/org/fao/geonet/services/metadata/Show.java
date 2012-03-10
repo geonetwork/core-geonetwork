@@ -153,7 +153,11 @@ public class Show implements Service
 		if(cache) {
 		    cache(context.getUserSession(), elMd, id);
 		}
-		elMd.removeAttribute("schemaLocation", Xml.xsiNS);
+
+		String skipSchemaLoc = Util.getParam(params, "skipSchemaLocation", "n");
+		if (skipSchemaLoc.equals("y")) {
+			elMd.removeAttribute("schemaLocation", Xml.xsiNS);
+		}
 		return elMd;
 	}
 
