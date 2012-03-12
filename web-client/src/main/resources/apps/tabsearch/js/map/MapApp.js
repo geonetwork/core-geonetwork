@@ -1074,7 +1074,7 @@ GeoNetwork.mapApp = function() {
         createToolbars();         
         createTree();
         createLegendPanel();
-        createPrintPanel();
+        //createPrintPanel();
         
         var mapOverlay = createMapOverlay();
        
@@ -1085,7 +1085,7 @@ GeoNetwork.mapApp = function() {
             layout: 'accordion',
             deferredRender:false, 
             items: [
-                tree, printPanel
+                tree //, printPanel
             ]
         });
        
@@ -1094,15 +1094,15 @@ GeoNetwork.mapApp = function() {
             border: false,
             //renderTo:'map_container',
             items: [{
-                    region: 'east',
+                    region: 'west',
                     xtype: 'panel',			
+                    header: false,			
                     collapsible: true,
-                    collapsed : true,
                     collapseMode: "mini",
                     split:true,
                     border: false,
-                    width:170,
-                    minSize: 170,
+                    width:200,
+                    minSize: 200,
                     maxSize: 300,
                     layout: 'border',
                     items: [accordion, legendPanel]

@@ -1,25 +1,27 @@
-<html>
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Geonetwork OpenSource</title>
-    <!-- Ext CSS and Libs -->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>GeoNetwork</title>
 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
-    <link href="../../srv/en/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | Recent Changes"/>
-    <link href="../../srv/en/portal.opensearch" rel="search" type="application/opensearchdescription+xml" title="GeoNetwork"/>
+    <link href="../../srv/en/rss.latest?georss=gml" rel="alternate" type="application/rss+xml"
+          title="GeoNetwork opensource GeoRSS | Recent Changes"/>
+    <link href="../../srv/en/portal.opensearch" rel="search"
+          type="application/opensearchdescription+xml" title="GeoNetwork"/>
+
 
     <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/ext-all.css"/>
     <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/xtheme-gray.css"/>
     <link rel="stylesheet" type="text/css" href="../js/ext-ux/Rating/rating.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext-ux/LightBox/lightbox.css"/>
     <link rel="stylesheet" type="text/css" href="../js/ext-ux/SuperBoxSelect/superboxselect.css" />
+    <link rel="stylesheet" type="text/css" href="../js/ext-ux/LightBox/lightbox.css"/>
     <link rel="stylesheet" type="text/css" href="../js/ext-ux/FileUploadField/file-upload.css"/>
     <link rel="stylesheet" type="text/css" href="../js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/gndefault.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/gnmapdefault.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/gnmetadatadefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/gndefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/gnmapdefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/gnmetadatadefault.css"/>
     <link rel="stylesheet" type="text/css" href="../js/GeoNetwork/resources/css/metadata-view.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/OpenLayers/theme/default/style.css" />
 
     <style>
 
@@ -39,61 +41,35 @@
             text-align:center;font-size:18px;
         }
 
-        .x-tab-right {padding-left:20px !important}
-        .x-tab-left{padding-right:20px !important}
-        .x-tab-strip-text{font-size:16px  !important;
-            padding:10px 0 !important}
-
+        #GNtabs .x-tab-right {padding-left:12px !important}
+        #GNtabs .x-tab-left{padding-right:12px !important}
+        #GNtabs .x-tab-strip-text{font-size:14px  !important;padding:6px 0 !important}
+        #GNtabs ul.x-tab-strip-top {
+            background-image: url(images/abstract_background_blue.jpg) !important;
+            background-repeat: repeat-x !important ;
+            background-position: 0 -80px  !important;
+        }
     </style>
 </head>
 <body>
-
-<div id="dvHeader">
-    <table width=100%><tr>
-        <td width=90%><div id="title"><img src="images/GeoNetwork_opensource_logo_.png"></div></td>
-        <td align=right valign=top><table><tr><td><div id="login-form"></div></td><td><div id="lang-form"></div></td></tr></table></td></td></tr>
-    </table>
+<div id="loading-mask"></div>
+<div id="loading">
+    <div class="loading-indicator">Loading ...</div>
 </div>
-    <div id="dvZoeken"  class=cntLrg style="margin:50px;">
-        <div id="dvIn">
-            <img src="images/GeoNetwork_opensource_logo_.png">
-            <br/><br/><br/><br/>
-            You're looking for Spatial data on
+
+<div id="header">
+    <div id="title" class="mn-main"> </div>
+</div>
+<div id="mn-top">
+    <div class="pipe"><a href="javascript:void(app.getHelpWindow().show());">Help</a></div>
+    <div class="pipe" id="lang-form"></div>
+    <div class="pipe" id="login-form"></div>
         </div>
 
+<div id="tag"></div>
 
-     <div         id="dvOut">
-        <div style="font-size:14px">
-            <a href="javascript:void(Ext.fly('advSearch').setVisibilityMode(Ext.Element.DISPLAY).toggle())">Advanced Search</a> &nbsp; &nbsp;
-            <a href="javascript:void(setActiveTabByTitle('Map'))">Map</a> &nbsp;  &nbsp;
-            <a href="javascript:void(alert('Kindly provided by Geonetwork OpenSource, Sencha, OpenLayers, GeoExt'))">About</a>
-        </div>
-    </div>
-        <div id="infoPanel"></div>
-        <div id="tagCloudPanel"></div>
-        <div id="latest"></div>
-    </div>
-    <div id="dvRefine">
+<div id="shortcut" style="display:none;"></div>
 
-        <b>By keyword:</b><br/>
-        <a href="#">Lifestock</a> (25)<br/>
-        <a href="#">Greenery</a> (18)<br/>
-        <a href="#">Glasshouse</a> (12)<br/>
-        <a href="#">Artificial</a> (7)<br/>
-        <a href="#">Cats and Dogs</a> (5)<br/>
-        <a href="#">more</a><br/>
-
-        <br/><br/>
-        <b>By Country:</b><br/>
-        <a href="#">Belgium</a> (15)<br/>
-        <a href="#">France</a> (12)<br/>
-        <a href="#">Germany</a> (9)<br/>
-        <a href="#">Netherlands</a> (8)<br/>
-        <a href="#">more</a><br/>
-    </div>
-    <div id="tabResults">
-        <div id="resultsPanel"></div>
-    </div>
     <script type="text/javascript" src="../js/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="../js/ext/ext-all.js"></script>
     <script type="text/javascript" src="../js/ext-ux/Rating/RatingItem.js"></script>
@@ -112,13 +88,19 @@
     <script type="text/javascript" src="../js/GeoExt/lib/overrides/override-ext-ajax.js"></script>
     <script type="text/javascript" src="../js/GeoExt/lib/GeoExt.js"></script>
     <script type="text/javascript" src="../js/GeoExt-ux/LayerOpacitySliderPlugin/LayerOpacitySliderPlugin.js"></script>
+<!-- script type="text/javascript" src="../js/GeoExt-ux/GeoNamesSearchCombo/GeoNamesSearchCombo.js"></script -->
 
     <script type="text/javascript" src="../js/GeoNetwork/lib/GeoNetwork.js"></script>
 
     <script type="text/javascript" src="js/Settings.js"></script>
+<script type="text/javascript" src="js/Shortcuts.js"></script>
     <script type="text/javascript" src="js/map/Settings.js"></script>
     <script type="text/javascript" src="js/map/MapApp.js"></script>
+<script type="text/javascript" src="js/basicTabs.js"></script>
 
-    <script type="text/javascript" src="js/basicTabs.js"></script>
+<!--<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("language", "1");
+</script>-->
 </body>
 </html>

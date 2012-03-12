@@ -57,6 +57,7 @@ GeoNetwork.app = function(){
         iMap.init(GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAIN_MAP_OPTIONS);
         metadataResultsView.addMap(iMap.getMap());
         visualizationModeInitialized = true;
+        return iMap;
     }
 
 
@@ -104,7 +105,7 @@ GeoNetwork.app = function(){
             renderTo: 'login-form',
             catalogue: catalogue,
             layout: 'hbox',
-            width:210,
+            bodyStyle:{"background-color":"transparent"},
             hideLoginLabels: GeoNetwork.hideLoginLabels
         });
 
@@ -147,16 +148,34 @@ GeoNetwork.app = function(){
         });
     }
 
+
+    function getResultsMap() {
+        // Create map panel
+        var map = new OpenLayers.Map('results_map', GeoNetwork.map.MAP_OPTIONS);       
+        map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
+        map.zoomToMaxExtent();
+        
+        mapPanel = new GeoExt.MapPanel({
+            id: "resultsMap",
+            height: 125,
+            width: 250,
+            map: map,
+        });
+  
+        return mapPanel;
+
+        // TODO: Add in a widget
+        //return new GeoNetwork.map.SeachResultsMap();
+    }
+
     /**
      * Create a default search form with advanced mode button
      *
      * @return
      */
     function createSearchForm(){
-
         // Add advanced mode criteria to simple form - start
-        var advancedCriteria1 = [];
-        var advancedCriteria2 = [];
+        var advancedCriteria = [];
         var services = catalogue.services;
 //        var orgNameField = new GeoNetwork.form.OpenSearchSuggestionTextField({
 //            hideLabel: false,
@@ -175,6 +194,7 @@ GeoNetwork.app = function(){
                 field: 'orgName'
             }
         });
+
         var orgNameField = new Ext.ux.form.SuperBoxSelect({
             hideLabel: false,
             minChars: 0,
@@ -189,9 +209,6 @@ GeoNetwork.app = function(){
 //            tpl: tpl,
             fieldLabel: OpenLayers.i18n('org')
         });
-
-
-
 
         // Multi select keyword
         var themekeyStore = new GeoNetwork.data.OpenSearchSuggestionStore({
@@ -242,7 +259,6 @@ GeoNetwork.app = function(){
             items: GeoNetwork.util.SearchFormTools.getWhen()
         });
 
-
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -251,38 +267,28 @@ GeoNetwork.app = function(){
         var spatialTypes = GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField(null, true);
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
 
-        advancedCriteria1.push(themekeyField, orgNameField, categoryField, metadataTypeField, validField );
-
-        advancedCriteria2.push(catalogueField, groupField, when, spatialTypes, denominatorField);
-
+        advancedCriteria.push(themekeyField, orgNameField, categoryField,
+            spatialTypes, denominatorField,
+            catalogueField, groupField,
+            metadataTypeField, validField);
         var adv = {
             xtype: 'fieldset',
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
             autoWidth: true,
-            margin: "0 20px",
             collapsible: true,
             collapsed: (urlParameters.advanced?false:true),
             defaultType: 'checkbox',
-            items: [
-                {   id:"CLL",
-                    xtype:"panel",
-                    layout:"column",
-                    items:[
-                        {   id:'col1',items:advancedCriteria1,columnWidth: .5,width:300 },
-                        {   id:'col2',items:advancedCriteria2,columnWidth: .5,width:300 }
-                    ]
-                }
-            ]};
+            defaults: {
+                width: 160
+            },
+            items: advancedCriteria
+        };
         var formItems = [];
-        formItems.push( new GeoNetwork.form.OpenSearchSuggestionTextField({
-            hideLabel: true,
-            width: 285,
-            minChars: 2,
-            loadingText: '...',
-            hideTrigger: true,
-            url: catalogue.services.opensearchSuggest
-        }), adv);
+        formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services,
+            GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true,
+            GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
+            adv);
         // Add advanced mode criteria to simple form - end
 
 
@@ -302,41 +308,71 @@ GeoNetwork.app = function(){
                 item.setVisible(false);
             });
         });
+        var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
+        var hitsPerPageField = new Ext.form.ComboBox({
+            id: 'E_hitsperpage',
+            name: 'E_hitsperpage',
+            mode: 'local',
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('hitsPerPage'),
+            value: hitsPerPage[1], // Set arbitrarily the second value of the
+            // array as the default one.
+            store: new Ext.data.ArrayStore({
+                id: 0,
+                fields: ['id'],
+                data: hitsPerPage
+            }),
+            valueField: 'id',
+            displayField: 'id'
+        });
 
+
+        var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
 
         return new Ext.FormPanel({
             id: 'searchForm',
+            bodyStyle: 'text-align: center;',
             border: false,
             //autoShow : true,
-            //padding: 5,
-            //autoHeight : true,
-            style: {
-                marginLeft: 'auto',
-                marginRight: 'auto'
-            },
-            items: formItems,
-            buttons: [{
-                tooltip: OpenLayers.i18n('resetSearchForm'),
-                // iconCls: 'md-mn-reset',
-                id: 'resetBt',
-                icon: '../images/default/cross.png',
                 listeners: {
-                    click: function(){
-                        Ext.getCmp('searchForm').getForm().reset();
+                afterrender: function(){
+                    //Ext.getCmp("advSearchTabs").getEl().toggle();
                     }
-                }
-            }, {
+            },
+            items:[
+                // Simple search form and search buttons
+                {
+                    bodyStyle:{'padding-top':'50px'},
+                    layout: {
+                        type: 'hbox',
+                        pack: 'center',
+                        align: 'center'
+                    },
+                    border:false,
+                    items:[
+                        {html:'<h1>Search for spatial data on</h1>',margins:'5 10 5 10',border:false },
+                        new GeoNetwork.form.OpenSearchSuggestionTextField({
+                           //hideLabel: true,
+                           width: 285,
+                           height:40,
+                           minChars: 2,
+                           loadingText: '...',
+                           hideTrigger: true,
+                           url: catalogue.services.opensearchSuggest
+
+                        }),
+                        new Ext.Button({
                 text: OpenLayers.i18n('search'),
-                id: 'searchBt',
+                           id: 'searchBt', margins:'3 5 3 5',
                 icon: '../js/GeoNetwork/resources/images/default/find.png',
                 // FIXME : iconCls : 'md-mn-find',
                 iconAlign: 'right',
                 listeners: {
                     click: function(){
 
-                        if (Ext.getCmp('geometryMap')) {
+                                   /*if (Ext.getCmp('geometryMap')) {
                             metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
-                        }
+                                   }*/
                         var any = Ext.get('E_any');
                         if (any) {
                             if (any.getValue() === OpenLayers.i18n('fullTextSearch')) {
@@ -346,10 +382,109 @@ GeoNetwork.app = function(){
 
                         catalogue.startRecord = 1; // Reset start record
                         search();
-                        setActiveTabByTitle('Results');
+                                   setTab('results');
+                               }
+                           }
+                        }),
+                        new Ext.Button( {
+                           text: OpenLayers.i18n('reset'),
+                           tooltip: OpenLayers.i18n('resetSearchForm'),
+                           // iconCls: 'md-mn-reset',
+                           id: 'resetBt', margins:'3 5 3 5',
+                           icon: '../images/default/cross.png',
+                           iconAlign: 'right',
+                           listeners: {
+                               click: function(){
+                                   Ext.getCmp('searchForm').getForm().reset();
+                               }
                     }
+                       })
+                    ]
+                },
+
+                // Panel with Advanced search, Help and About Links
+                {
+                    layout: {
+                        type: 'hbox',
+                        pack: 'center',
+                        align: 'center'
+                    },
+                    id:'advSearch',
+                    bodyStyle:{padding:'20px 0px 20px 0px'},
+                    border:false,
+                    height:60,
+                    defaults:{bodyStyle:{},margins:'0 10 0 10',border:false},
+                    bodyStyle: 'margin: auto;',
+                    items: [
+                        {html:'<a href=javascript:void(Ext.get("advSearchTabs").toggle())>'+OpenLayers.i18n('Advanced')+'</a>'},
+                        {html:'<a href="javascript:void(app.getHelpWindow().show());">'+OpenLayers.i18n('Help')+'</a>'},
+                        {html:'<a href="javascript:void(app.getAboutWindow().show());">'+OpenLayers.i18n('About')+'</a><br/><br/>'}
+                    ]
+                },
+                //  Advanced search form
+                {
+                    id:'advSearchTabs',
+                    layout: {
+                        type: 'hbox',
+                        pack:'center',
+                        align: 'center'
+                    },
+                    plain:true,
+                    autoHeight:true,
+                    border:false,
+                    deferredRender: false,
+                    defaults:{bodyStyle:'padding:10px'},
+                    items:[
+                        // What panel
+                        {
+                            title:'What',
+                            margins:'0 5 0 0',
+                            layout:'form',
+                            items:[
+                                advancedCriteria,GeoNetwork.util.SearchFormTools.getTypesField(GeoNetwork.searchDefault.activeMapControlExtent, true)
+                            ]
+                        },
+                        // Where panel
+                        {
+                            title:'Where',
+                            margins:'0 5 0 5',
+                            bodyStyle:'padding:0px',
+                            layout:'form',
+                            items:[
+                                GeoNetwork.util.SearchFormTools.getSimpleMap(GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS,false)
+                                //,new GeoExt.ux.GeoNamesSearchCombo({ map: Ext.getCmp('geometryMap').map, zoom: 12})
+                            ]
+                        },
+                        // When panel
+                        {
+                            title:'When',
+                            margins:'0 5 0 5',
+                            defaultType: 'datefield',
+                            layout:'form',
+                            items:GeoNetwork.util.SearchFormTools.getWhen()
+                        },
+                        // INSPIRE panel
+                        {
+                            title:'INSPIRE',
+                            margins:'0 5 0 5',
+                            hidden: hideInspirePanel,
+                            defaultType: 'datefield',
+                            layout:'form',
+                            items: GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
+                        }  /*,
+                        //Options
+                     {
+                            title:'Options',
+                            margins:'0 0 0 5',
+                            layout:'form',
+                            items:[
+                                GeoNetwork.util.SearchFormTools.getSortByCombo(),hitsPerPageField
+                            ]
+                        }*/
+
+                    ]
                 }
-            },{xtype: 'tbfill'}]
+            ]
         });
     }
 
@@ -359,25 +494,19 @@ GeoNetwork.app = function(){
     }
 
     function initPanels(){
-        var infoPanel = Ext.getCmp('infoPanel'),
-            resultsPanel = Ext.getCmp('resultsPanel'),
-            tagCloudPanel = Ext.getCmp('tagCloudPanel');
-        if (infoPanel.isVisible()) {
-            infoPanel.hide();
-        }
+        //var //infoPanel = Ext.getCmp('infoPanel'),
+        var resultsPanel = Ext.getCmp('resultsPanel');
+            //tagCloudPanel = Ext.getCmp('tagCloudPanel');
         if (!resultsPanel.isVisible()) {
             resultsPanel.show();
-        }
-        if (!tagCloudPanel.isVisible()) {
-            tagCloudPanel.show();
         }
 
         // Init map on first search to prevent error
         // when user add WMS layer without initializing
         // Visualization mode
-        if (GeoNetwork.MapModule) {
-            initMap();
-        }
+        //if (GeoNetwork.MapModule && !visualizationModeInitialized) {
+        //    initMap();
+        //}
     }
     /**
      * Bottom bar
@@ -448,13 +577,15 @@ GeoNetwork.app = function(){
             border: false,
             hidden: true,
             bodyCssClass: 'md-view',
+            autoScroll:true,
             autoWidth: true,
-            layout: 'fit',
             tbar: tBar,
+            layout: 'fit',
             items: metadataResultsView,
             // paging bar on the bottom
             bbar: bBar
         });
+ 
         return resultPanel;
     }
     function loadCallback(el, success, response, options){
@@ -464,7 +595,7 @@ GeoNetwork.app = function(){
             //createLatestUpdate();
         } else {
             Ext.get('infoPanel').getUpdater().update({url:'home_en.html'});
-           // Ext.get('helpPanel').getUpdater().update({url:'help_en.html'});
+            Ext.get('helpPanel').getUpdater().update({url:'help_en.html'});
         }
     }
     /** private: methode[createInfoPanel]
@@ -472,18 +603,18 @@ GeoNetwork.app = function(){
      *
      *  :return:
      */
-    function createInfoPanel(){
+    function creatAboutPanel(){
         return new Ext.Panel({
             border: true,
             id: 'infoPanel',
             baseCls: 'md-info',
             autoWidth: true,
-            contentEl: 'infoContent',
+            //contentEl: 'infoContent',
             autoLoad: {
-                url: 'home_' + catalogue.LANG + '.html',
+                url: catalogue.services.rootUrl + '/about?modal=true',
                 callback: loadCallback,
                 scope: this,
-                loadScripts: false
+                loadScripts: true
             }
         });
     }
@@ -496,13 +627,14 @@ GeoNetwork.app = function(){
         return new Ext.Panel({
             border: false,
             frame: false,
+            bodyStyle:{'background-color':'white',padding:'5px'},
+            autoScroll:true,
             baseCls: 'none',
             id: 'helpPanel',
             autoWidth: true,
-            renderTo: 'shortcut',
             autoLoad: {
                 url: 'help_' + catalogue.LANG + '.html',
-                //callback: initShortcut, todo error
+                callback: initShortcut,
                 scope: this,
                 loadScripts: false
             }
@@ -614,7 +746,7 @@ GeoNetwork.app = function(){
 
     function createHeader(){
         var info = catalogue.getInfo();
-        Ext.getDom('title').innerHTML = '<img class="catLogo" src="../../images/logos/' + info.siteId + '.gif"/>&nbsp;' + info.name;
+        Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/banner_logo.png" title="'  + info.name + '"/>';
         document.title = info.name;
     }
 
@@ -651,107 +783,169 @@ GeoNetwork.app = function(){
                 metadataEditFn: edit
             });
 
-            //createHeader();
+            createHeader();
 
             // Search form
             searchForm = createSearchForm();
 
+
+
             // Top navigation widgets
+            //createModeSwitcher();
             createLanguageSwitcher(lang);
             createLoginForm();
             edit();
+
+            // Results map 
+            resultsMap = getResultsMap();
 
             // Search result
             resultsPanel = createResultsPanel();
 
             // Extra stuffs
-            infoPanel = createInfoPanel();
+            //infoPanel = {};//createInfoPanel();
             //helpPanel = createHelpPanel();
+
             tagCloudViewPanel = createTagCloud();
+
+
+            // Initialize map viewer
+            if (GeoNetwork.MapModule) {
+                initMap();                
+            }
+
 
             // Register events on the catalogue
 
-            var margins = '35 0 0 0';
+            var margins = '0 0 0 0';
 
+            if (!visualizationModeInitialized) initMap();
 
-
-
-
-           // Configure viewport
            var viewport = new Ext.Viewport({
                 layout:'border',
-                items:[
-                    {xtype:'panel', height:80, contentEl:'dvHeader',region:'north',border:false,margin:"2,2,20,2"},
-
-
+                id:'vp',
+                items:[   //todo: should add header here?
+                    {id:'header',height:80,region:'north',border:false},
                     new Ext.TabPanel({
-                        id:'center',
                         region:'center',
+                        id:'GNtabs',
                         deferredRender:false,
                         plain:true,
                         autoScroll: true,
-                        margins:'0 4 4 0',
+                        defaults:{ autoScroll:true },
+                        margins:'0 0 0 0',
+                        border: false,
                         activeTab:0,
                         items:[
-                            {
-                                title:OpenLayers.i18n('Search'),
-                                contentEl:'dvZoeken',
-                                padding:"40px",
+                            {//basic search panel
+                                title:OpenLayers.i18n('Home'),
+                                //contentEl:'dvZoeken',
+                                
+                                layout:'fit',
                                 closable:false,
                                 autoScroll:true,
-                                items:[{id:'insearch',contentEl:'dvIn', border:false},searchForm,{id:'out',contentEl:'dvOut', border:false, style:{align:"center"} }]
-                            },
-                            {
-                                id:'tabRes',layout:'border',
-                                title: OpenLayers.i18n('Results'),
+                                items:[        
+                                    {id:'alignCenter',
+                                    border:false,
+                                    layout: 'column', 
+                                    layoutConfig: { pack: 'center', align: 'center' },
                                 items: [{
-                                    title:'Refine search',region:'west',width:150,
-                                    padding:'10px',
-                                    contentEl:'dvRefine'
+                                        columnWidth: .05,
+                                        border: false,
+                                        html: '&nbsp;'
                                 },{
-                                    region:'center',
-                                    padding: '10px',
-                                    items: [resultPanel],
-                                    closable:false,
-                                    autoScroll:true
-                                }
+                                        columnWidth: .90,
+                                        border: false,
+                                        items: [
+                                                    searchForm,
+                                                    //{id:'out',contentEl:'dvOut', border:false, style:{align:"center"}}
                                 ]
+                                    },{
+                                        border: false,
+                                        columnWidth: .05, 
+                                        items: [tagCloudViewPanel]
+                                    }]    
+                                }]
                             },
-                            {
-                                id:'east',
-                                title:OpenLayers.i18n('Map'),
+                            {//search results panel
+                                id:'results',
+                                title:OpenLayers.i18n('List'),
+                                layout: 'fit',
+                                autoScroll:true,    
                                 layout:'border',
-                                hidden: !GeoNetwork.MapModule,
-                                closable:false,
+                                items:[
+                                    {//sidebar searchform
+                                        region:'west',
+                                        id:'west',
+                                        border: true,
+                                        width:250,                                        
+                                        items: [resultsMap]
+                                        //html: 'Facetet panel'
+
+                                    },
+                                    { //search results
+                                        /*region:'center',
+                                        id:'center',
+                                        split:true,
+                                        margins:margins,
+                                        border: false,
+                                        items:[resultsPanel]*/
+                                        layout: 'fit',
+                                        region:'center',                                        
+                                        border: false,
                                 autoScroll:true,
-                                items: [{
-                                    title:'Layers',region:'west',width:150, padding:'10px',html:'Look for <i>Add data to Map</i> link in search results to view content on the map'
-                                },{
-                                    region:'center',
-                                    xtype: "gx_mappanel",
-                                    id: "mappanel",
-                                    layers: [new OpenLayers.Layer.OSM( "Simple OSM Map")],
-                                    extent: "-5,35,15,55"
+                                        items:[resultPanel]
+                                    }
+                                ],
+                                /* Hide tab panel until a search is done
+                                   Seem "hidden:true" as in other places doesn't work for Tabs, and need to use a listener! 
+                                   
+                                   See http://www.sencha.com/forum/showthread.php?65441-Starting-A-Tab-Panel-with-a-Hidden-Tab
+                                */
+                                listeners: {
+                                    render: function(c){
+                                      c.ownerCt.hideTabStripItem(c);
+                                    }
                                 }
-                                ]
+
+
+                            },
+                            {//map
+                                id:'map',
+                                title:OpenLayers.i18n('Map'),
+                                layout:'fit',                              
+                                margins:margins,
+                                items: [iMap.getViewport()]
 
                             }
                         ]
-                    })
-
+                    }
+                    ),
+                    {
+                        id:'footer',
+                        region:'south',
+                        align:'left',
+                        bodyStyle:{'text-align':'left', padding:'0px 3px'},
+                        border:true,
+                        html:"<span class='madeBy'>"+ OpenLayers.i18n('Powered by') +" <a href='http://geonetwork-opensource.org/'><img style='width:80px' src='../images/default/gn-logo.png' title='GeoNetwork OpenSource' border='0' /></a></span></div>",
+                        layout:'fit'
+                 }
                 ]
             });
 
 
+            // Hide advanced search options
+            Ext.get("advSearchTabs").hide();
 
-
+            //Ext.getCmp('mapprojectionselector').syncSize();
+            //Ext.getCmp('mapprojectionselector').setWidth(130);
 
             /* Trigger visualization mode if mode parameter is 1
             TODO : Add visualization only mode with legend panel on
-            */
+
             if (urlParameters.mode) {
                 app.switchMode(urlParameters.mode, false);
-            }
+            } */
 
             /* Init form field URL according to URL parameters */
             GeoNetwork.util.SearchTools.populateFormFromParams(searchForm, urlParameters);
@@ -775,6 +969,9 @@ GeoNetwork.app = function(){
             // FIXME : should be in Search field configuration
             Ext.get('E_any').setWidth(285);
             Ext.get('E_any').setHeight(28);
+
+            metadataResultsView.addMap( Ext.getCmp('resultsMap').map);
+
             if (GeoNetwork.searchDefault.activeMapControlExtent) {
                 Ext.getCmp('geometryMap').setExtent();
             }
@@ -782,7 +979,7 @@ GeoNetwork.app = function(){
                 Ext.getCmp('geometryMap').map.zoomToExtent(urlParameters.bounds);
             }
 
-            resultPanel.setHeight(Ext.getCmp('center').getHeight());
+            //resultPanel.setHeight(Ext.getCmp('center').getHeight());
 
             var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin'];
             Ext.each(events, function (e) {
@@ -790,6 +987,8 @@ GeoNetwork.app = function(){
                     if (searching === true) {
                         Ext.getCmp('searchBt').fireEvent('click');
                     }
+
+        
                 });
             });
         },
@@ -802,8 +1001,35 @@ GeoNetwork.app = function(){
             // TODO : maybe we should switch to visualization mode also ?
             return iMap;
         },
+        getHelpWindow: function(){
+            return new Ext.Window({
+                title: OpenLayers.i18n('Help'),
+                layout: 'fit',
+                height: 600,
+                width: 600,
+                closable: true,
+                resizable: true,
+                draggable: true,
+                items: [createHelpPanel()]
+            });
+        },
+        getAboutWindow: function(){
+            return new Ext.Window({
+                title: OpenLayers.i18n('About'),
+                layout: 'fit',
+                height: 600,
+                width: 600,
+                closable: true,
+                resizable: true,
+                draggable: true,
+                items: [creatAboutPanel()]
+            });
+        },
         getCatalogue: function(){
             return catalogue;
+        },
+        getMetadataResultsView: function() {
+            return metadataResultsView;    
         },
         /**
          * Do layout
@@ -812,13 +1038,18 @@ GeoNetwork.app = function(){
          * @return
          */
         loadResults: function(response){
+            // Show "List results" panel
+            var tabPanel = Ext.getCmp("GNtabs");            
+            tabPanel.unhideTabStripItem(tabPanel.items.itemAt(1));
 
             initPanels();
 
             // FIXME : result panel need to update layout in case of slider
             // Ext.getCmp('resultsPanel').syncSize();
+
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
-            Ext.getCmp('nextBt').setDisabled(catalogue.startRecord + parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
+            Ext.getCmp('nextBt').setDisabled(catalogue.startRecord +
+                parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
             if (Ext.getCmp('E_sortBy').getValue()) {
                 Ext.getCmp('sortByToolBar').setValue(Ext.getCmp('E_sortBy').getValue()  + "#" + Ext.getCmp('sortOrder').getValue() );
 
@@ -827,12 +1058,45 @@ GeoNetwork.app = function(){
 
             }
 
+
+            // Fix for width sortBy combo in toolbar
+            // See this: http://www.sencha.com/forum/showthread.php?122454-TabPanel-deferred-render-false-nested-toolbar-layout-problem
+            Ext.getCmp('sortByToolBar').syncSize();
+            Ext.getCmp('sortByToolBar').setWidth(130);
+        
             resultsPanel.syncSize();
-            resultsPanel.setHeight(Ext.getCmp('center').getHeight());
+            
+
+            //resultsPanel.setHeight(Ext.getCmp('center').getHeight());
 
             //Ext.getCmp('west').syncSize();
             //Ext.getCmp('center').syncSize();
-            Ext.ux.Lightbox.register('a[rel^=lightbox]');
+            //Ext.ux.Lightbox.register('a[rel^=lightbox]');
+        },
+        /**
+         * Switch from one mode to another
+         *
+         * @param mode
+         * @param force
+         * @return
+         */
+        switchMode: function(mode, force){
+            setTab('map');
+            mode = '1';
+            //console.log(visualizationModeInitialized);
+
+            if (!visualizationModeInitialized) {
+                initMap();
+            }
+            //console.log(    iMap);
+            if (iMap) {
+                var e = Ext.getCmp('map');
+                e.add(iMap.getViewport());
+                e.doLayout();
+                Ext.getCmp('vp').syncSize();
+                }
+
+
         }
     };
 };
@@ -841,60 +1105,109 @@ Ext.onReady(function () {
     var lang = /hl=([a-z]{2})/.exec(location.href);
     GeoNetwork.Util.setLang(lang && lang[1], '..');
 
-
     Ext.QuickTips.init();
-    //setTimeout(function(){
-    //    Ext.get('loading').remove();
-    //     Ext.get('loading-mask').fadeOut({remove:true});
-    // }, 250);
+    setTimeout(function(){
+        Ext.get('loading').remove();
+        Ext.get('loading-mask').fadeOut({remove:true});
+    }, 250);
 
     app = new GeoNetwork.app();
     app.init();
-    //alter default title template resultsview todo: move
-    GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/> <a href="#" onclick="javascript:getTab(\'{uuid}\');return false;">{title}</a>' +
-        '<span class="md-action-menu"> - <a rel="mdMenu">>></a></span></h1>';
-
     catalogue = app.getCatalogue();
 
     //overwrite default detail-click action
     catalogue.metadataShow = function (uuid) {
-        tabPanel = Ext.getCmp("center");
+        console.log(uuid);
+        tabPanel = Ext.getCmp("GNtabs");
         var tabs = tabPanel.find( 'id', uuid );
         if (tabs[0])
             tabPanel.setActiveTab( tabs[ 0 ] );
         else {
-
             // Retrieve information in synchrone mode    todo: this doesn't work here
-            //var store = GeoNetwork.data.MetadataResultsFastStore();
-            //catalogue.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
-            //var record = store.getAt(store.find('uuid', uuid));
+            var store = GeoNetwork.data.MetadataResultsFastStore();
+            catalogue.kvpSearch("fast=index", null, null, null, true, store, null, false);
+            var record = store.getAt(store.find('uuid', uuid));
 
-            tabPanel.add({
-                title: uuid.substr(1,12),     //todo: put shortened title here
-                iconCls: 'tabs',
-                id:uuid,
-                closable:true,
-                items: [new GeoNetwork.view.ViewPanel({
+            var RowTitle = uuid;
+
+            try{RowTitle=record.data.title;} catch (e) {}
+            var RowLabel =  RowTitle;
+            if (RowLabel.length > 18) RowLabel =  RowLabel.substr(0,17)+"...";
+
+            var aResTab = new GeoNetwork.view.ViewPanel({
                     serviceUrl: catalogue.services.mdView + '?uuid=' + uuid,
                     lang: catalogue.lang,
+                autoScroll:true,
+                resultsView: app.getMetadataResultsView(),
+                layout:'fit',
+                //autoHeight:true,
+                padding:'5px 25px',
                     currTab: GeoNetwork.defaultViewMode || 'simple',
                     printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
                     catalogue: catalogue,
-                    maximized: true,
+                //maximized: true,
                     metadataUuid: uuid,
-                    record: 0 //record
-                })]
+                record: record
+            });
+
+            // Override zoomToAction (maye better way?). TODO: Check as seem calling old handler code
+            aResTab.actionMenu.zoomToAction.setHandler(function(){
+                    var uuid = this.record.get('uuid');
+                    this.resultsView.zoomTo(uuid);
+
+                    // Custom code to display Map tab
+                    tabPanel.setActiveTab( tabPanel.items.itemAt(2) );
+                },
+                aResTab.actionMenu);
+           
+            aResTab.actionMenu.viewAction.hide();
+
+            tabPanel.add({
+                title: RowLabel,
+                tabTip:RowTitle,
+                iconCls: 'tabs',
+                id:uuid,
+                closable:true,
+                items: [
+                    aResTab
+                ]
             }).show();
 
         }
+
+
     }
+
+     /*catalogue.on('afterLogin', function(){
+             tabPanel = Ext.getCmp("GNtabs");
+                   tabPanel.add({
+                        title: 'Admin',
+                        tabTip:'Administration',
+                        iconCls: 'tabs',
+                        id: 'adminPnl',
+                        closable:false,
+                        autoLoad:{
+                            url:catalogue.services.admin,
+                            scripts:true
+                        }
+                    }).show();
+        });*/
+
+    /* Focus on full text search field */
+    //Ext.getDom('E_any').focus(true);
 
 });
 
-	
-	// This is assuming that the TabPanel is defined as a global variable 'tabPanel'
-function setActiveTabByTitle( tabTitle ) {
-    tabPanel = Ext.getCmp("center");
-    var tabs = tabPanel.find( 'title', tabTitle );
-    tabPanel.setActiveTab( tabs[ 0 ] );
+function setTab(id){
+    tabPanel = Ext.getCmp("GNtabs");
+    var tabs = tabPanel.find( 'id', id );
+    if (tabs[0]) tabPanel.setActiveTab( tabs[ 0 ] );
+    else console.log(id);
+}
+
+    
+function addWMSLayer(arr)
+{
+    app.switchMode('1', true);
+    app.getIMap().addWMSLayer(arr);
 }
