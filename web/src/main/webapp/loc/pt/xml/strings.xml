@@ -1328,7 +1328,11 @@
 
     <uuid>Unique identifier</uuid>    
     <mymetadata>meus metadados</mymetadata>
-    <addremove>Adicionar / Remover</addremove>
+	<quickSearch>Quick search links</quickSearch>
+	<catalogueRecords>Catalogue metadata</catalogueRecords>
+	<harvestedRecords>Harvested metadata</harvestedRecords>
+	<catalogueTemplates>Catalogue templates</catalogueTemplates>
+	<addremove>Adicionar / Remover</addremove>
     <enabled>habilitado</enabled>
     <notifications>Notificação para alvos remotos</notifications>
     <url>URL</url>    

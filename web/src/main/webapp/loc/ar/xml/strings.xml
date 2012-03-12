@@ -1328,6 +1328,11 @@
 
     <uuid>Unique identifier</uuid>    
     <mymetadata>بلدي الفوقية</mymetadata>
+	
+	<quickSearch>Quick search links</quickSearch>
+	<catalogueRecords>Catalogue metadata</catalogueRecords>
+	<harvestedRecords>Harvested metadata</harvestedRecords>
+	<catalogueTemplates>Catalogue templates</catalogueTemplates>
     <addremove>إضافة / إزالة</addremove>
     <enabled>مكن</enabled>
     <notifications>إخطار إلى أهداف بعيدة</notifications>

@@ -1344,7 +1344,11 @@
 
     <uuid>Identifiant unique</uuid>    
     <mymetadata>Mes métadonnées</mymetadata>
-    <addremove>Ajouter / Supprimer</addremove>
+	<quickSearch>Recherches rapides</quickSearch>
+	<catalogueRecords>Métadonnées du catalogue</catalogueRecords>
+	<harvestedRecords>Métadonnées moissonnées</harvestedRecords>
+	<catalogueTemplates>Modèles de saisie</catalogueTemplates>
+	<addremove>Ajouter / Supprimer</addremove>
     <enabled>Activé</enabled>
 	<notifications>Notification de n&#339;uds distants</notifications>
     <url>URL</url>    

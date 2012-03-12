@@ -1337,7 +1337,11 @@
     <mapViewer>Map viewer</mapViewer>
 
     <uuid>Unique identifier</uuid>
-    <mymetadata>my metadata</mymetadata>
+    <quickSearch>Quick search links</quickSearch>
+    <mymetadata>My metadata</mymetadata>
+    <catalogueRecords>Catalogue metadata</catalogueRecords>
+    <harvestedRecords>Harvested metadata</harvestedRecords>
+    <catalogueTemplates>Catalogue templates</catalogueTemplates>
     <addremove>Add/Remove</addremove>
     <enabled>Enabled</enabled>
     <notifications>Notification to remote targets</notifications>

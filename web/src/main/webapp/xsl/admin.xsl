@@ -125,14 +125,54 @@
 							<xsl:with-param name="desc" select="/root/gui/strings/searchUnused"/>
 						</xsl:call-template>
 
-                        <xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'main.search'"/>
-							<xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true'"/>
-
-							<xsl:with-param name="title"
-								select="/root/gui/strings/mymetadata"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
-						</xsl:call-template>
+						<xsl:choose>
+							<xsl:when test="/root/gui/config/client/@widget='true'">
+								
+								<xsl:call-template name="addrow">
+									<xsl:with-param name="service" select="'metadata.create.form'"/>
+									<xsl:with-param name="displayLink" select="false()"/>
+									<xsl:with-param name="title" select="/root/gui/strings/quickSearch"/>
+									<xsl:with-param name="content">
+										<ul>
+											<li>
+												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;_owner=', /root/gui/session/userId)}">
+													<xsl:value-of select="/root/gui/strings/mymetadata"/>
+												</a>
+											</li>
+											<li>
+												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;advanced&amp;siteId=', /root/gui/env/site/siteId)}">
+													<xsl:value-of select="/root/gui/strings/catalogueRecords"/>
+												</a>
+											</li>
+											<li>
+												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;_isHarvested=y')}">
+													<xsl:value-of select="/root/gui/strings/harvestedRecords"/>
+												</a>
+											</li>
+											<li>
+												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;advanced&amp;template=y')}">
+													<xsl:value-of select="/root/gui/strings/catalogueTemplates"/>
+												</a>
+											</li>
+										</ul>
+										
+										
+									</xsl:with-param>
+								</xsl:call-template>
+								
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="addrow">
+									<xsl:with-param name="service" select="'main.search'"/>
+									<xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true'"/>
+									
+									<xsl:with-param name="title"
+										select="/root/gui/strings/mymetadata"/>
+									<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
+								</xsl:call-template>
+							</xsl:otherwise>
+						</xsl:choose>
+						
 
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'transfer.ownership'"/>

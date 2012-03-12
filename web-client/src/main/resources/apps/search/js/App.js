@@ -286,10 +286,19 @@ GeoNetwork.app = function(){
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
         var statusField = GeoNetwork.util.SearchFormTools.getStatusField(services.getStatus, true);
         
+        // Add hidden fields to be use by quick metadata links from the admin panel (eg. my metadata).
+        var ownerField = new Ext.form.TextField({
+            name: 'E__owner',
+            hidden: true
+        });
+        var isHarvestedField = new Ext.form.TextField({
+            name: 'E__isHarvested',
+            hidden: true
+        });
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
-                                metadataTypeField, validField, statusField);
+                                metadataTypeField, validField, statusField, ownerField, isHarvestedField);
         var adv = {
             xtype: 'fieldset',
             title: OpenLayers.i18n('advancedSearchOptions'),
