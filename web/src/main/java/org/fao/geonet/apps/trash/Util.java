@@ -29,22 +29,24 @@ import org.jdom.Element;
 
 import java.util.List;
 
-public class Util
-{
-	public static DbmsPool getDbmsPool(String configFile)
-		throws Exception
-	{
+public class Util {
+    /**
+     * TODO javadoc.
+     *
+     * @param configFile
+     * @return
+     * @throws Exception
+     */
+	public static DbmsPool getDbmsPool(String configFile) throws Exception {
 		Element configRoot    = Xml.loadFile(configFile);
 		Element resourcesRoot = configRoot.getChild(ConfigFile.Child.RESOURCES);
 		List resList = resourcesRoot.getChildren(ConfigFile.Resources.Child.RESOURCE);
 
-		for(int i=0; i<resList.size(); i++)
-		{
+		for(int i=0; i<resList.size(); i++) {
 			Element res = (Element) resList.get(i);
 			String  name      = res.getChildText(ConfigFile.Resource.Child.NAME);
 
-			if (name.equals("main-db"))
-			{
+			if (name.equals("main-db")) {
 				Element config    = res.getChild(ConfigFile.Resource.Child.CONFIG);
 				DbmsPool pool = new DbmsPool();
 				pool.init(name, config);
@@ -54,13 +56,18 @@ public class Util
 		throw new Exception("resource 'main-db' not found");
 	}
 
-	public static Element getServices(String configFile, String pack)
-		throws Exception
-	{
-		Element configRoot    = Xml.loadFile(configFile);
+    /**
+     * TODO javadoc.
+     *
+     * @param configFile
+     * @param pack
+     * @return
+     * @throws Exception
+     */
+	public static Element getServices(String configFile, String pack) throws Exception {
+		Element configRoot = Xml.loadFile(configFile);
 		List services = configRoot.getChildren(ConfigFile.Child.SERVICES);
-		for (int i = 0; i < services.size(); i++)
-		{
+		for (int i = 0; i < services.size(); i++) {
 			Element ss = (Element)services.get(i);
 			String p = ss.getAttributeValue(ConfigFile.Services.Attr.PACKAGE);
 			if (p != null && p.equals(pack)) return ss;
@@ -68,4 +75,3 @@ public class Util
 		return null;
 	}
 }
-

@@ -512,8 +512,6 @@
 	<imZoomIn>reinzoomen</imZoomIn>
 	<imZoomOut>rauszoomen</imZoomOut>
 	<imZoomToLayer>Zoom auf ausgewählten Layer</imZoomToLayer>
-    <indexLanguages>Stoppwörter</indexLanguages>
-    <indexLanguagesDes>Sie können die Sprachen für die Stoppwörter verwendet werden.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Einfügen</insert>
 	<insertFileMode js="true">Dateiupload</insertFileMode>

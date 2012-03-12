@@ -367,8 +367,6 @@
 	<imZoomIn>Apropar</imZoomIn>
 	<imZoomOut>Allunyar</imZoomOut>
 	<imZoomToLayer>Zoom a la capa</imZoomToLayer>
-	<indexLanguages>Paraules buides</indexLanguages>
-    <indexLanguagesDes>Permet definir els idiomes on s'utilitzen paraules buides.</indexLanguagesDes> 
 	<infoTitle>Informació</infoTitle>
 	<insert>Inserir</insert>
 	<insertFileMode js="true">Carregar arxiu</insertFileMode>

@@ -513,8 +513,6 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Fazer zoom ao layer seleccionado</imZoomToLayer>
-    <indexLanguages>Stopwords</indexLanguages>
-    <indexLanguagesDes>Você pode definir os idiomas para os quais são utilizados stopwords.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Inserir</insert>
 	<insertFileMode js="true">Upload ficheiro</insertFileMode>

@@ -514,8 +514,6 @@
 	<imZoomIn>Acercar</imZoomIn>
 	<imZoomOut>Alejar</imZoomOut>
 	<imZoomToLayer>Zoom a la capa</imZoomToLayer>
-    <indexLanguages>Palabras vacías</indexLanguages>
-    <indexLanguagesDes>Puede definir los idiomas que se utilizan palabras vacías.</indexLanguagesDes>    
 	<infoTitle>Información</infoTitle>
 	<insert>Insertar</insert>
 	<insertFileMode js="true">Subir fichero</insertFileMode>

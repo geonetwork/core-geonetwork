@@ -466,18 +466,7 @@
 						<xsl:with-param name="content" select="$classification"/>
 					</xsl:call-template>
 
-
-
-
 					<xsl:variable name="indexConfiguration">
-
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'index.languages.get'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/indexLanguages"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/indexLanguagesDes"
-							/>
-						</xsl:call-template>
-
 						<xsl:if
 							test="/root/gui/services/service/@name='metadata.admin.index.rebuild' and /root/gui/services/service/@name='metadata.admin.index.optimize'">
 							<xsl:call-template name="admin-index"/>
@@ -489,8 +478,6 @@
 						<xsl:with-param name="title" select="/root/gui/strings/indexConfiguration"/>
 						<xsl:with-param name="content" select="$indexConfiguration"/>
 					</xsl:call-template>
-
-
 
 					<!-- samples and tests services 
 					<xsl:variable name="adminServices">

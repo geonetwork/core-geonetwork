@@ -1416,18 +1416,6 @@
 				</class>
 		   <output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
 		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- index languages -->
-		<service name="index.languages.get">
-			<class name=".guiservices.stopwords.Get" />
-			<output sheet="indexlanguages.xslt" />
-		</service>
-
-		<service name="index.languages.set">
-			<class name=".guiservices.stopwords.Set" />
-			<output sheet="indexlanguages.xslt" />
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- relation services -->

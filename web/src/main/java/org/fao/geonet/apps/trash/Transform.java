@@ -19,9 +19,7 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
 package org.fao.geonet.apps.trash;
-
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.resources.dbms.DbmsPool;
@@ -30,13 +28,19 @@ import org.jdom.Element;
 
 import java.util.List;
 
-public class Transform
-{
-	public static void main(String args[])
-	{
+/**
+ * TODO javadoc.
+ *
+ */
+public class Transform {
+    /**
+     * TODO javadoc.
+     *
+     * @param args
+     */
+	public static void main(String args[]) {
 		// check args
-		if (args.length != 4)
-		{
+		if (args.length != 4) {
 			System.err.println("usage: transform table field template config");
 			System.exit(1);
 		}
@@ -48,8 +52,7 @@ public class Transform
 
 		DbmsPool pool = null;
 		Dbms     dbms = null;
-		try
-		{
+		try {
 			// get dbms pool and open dbms connection
 			pool = Util.getDbmsPool(configFile);
 			dbms = (Dbms)pool.open();
@@ -60,8 +63,7 @@ public class Transform
 			// loop on ids
 			System.out.println("transforming records"); // DEBUG
 			List records = result.getChildren("record");
-			for (int i = 0; i < records.size(); i++)
-			{
+			for (int i = 0; i < records.size(); i++) {
 				Element record = (Element)records.get(i);
 
 				// get id
@@ -84,20 +86,17 @@ public class Transform
 			System.out.println("database closed, exiting"); // DEBUG
 			System.exit(0);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			e.printStackTrace();
 
 			// possibly abort the transaction
 			if (pool != null && dbms != null)
-				try
-				{
+				try {
 					System.out.println("aborting changes"); // DEBUG
 					pool.abort(dbms);
 					System.out.println("database closed"); // DEBUG
 				}
-				catch (Exception e2)
-				{
+				catch (Exception e2) {
 					e2.printStackTrace();
 				}
 			System.out.println("exiting"); // DEBUG
@@ -105,12 +104,17 @@ public class Transform
 		}
 	}
 
-	private static String applyTemplate(String source, String templateFile)
-		throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param source
+     * @param templateFile
+     * @return
+     * @throws Exception
+     */
+	private static String applyTemplate(String source, String templateFile) throws Exception {
 		Element xml = Xml.loadString(source, false);
 		Element result = Xml.transform(xml, templateFile);
 		return Xml.getString(result);
 	}
 }
-

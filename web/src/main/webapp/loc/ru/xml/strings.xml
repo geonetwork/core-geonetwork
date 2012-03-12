@@ -519,8 +519,6 @@ ISO 19115 не позволяет иметь более одного.
 	<imZoomIn>Увеличить</imZoomIn>
 	<imZoomOut>Уменьшить</imZoomOut>
 	<imZoomToLayer>Увеличить/уменьшить до размеров выбранного слоя</imZoomToLayer>
-    <indexLanguages>Стоп-слова</indexLanguages>
-    <indexLanguagesDes>Вы можете определить языки, для которых используются стоп-слова.</indexLanguagesDes>    
 	<infoTitle>Информация</infoTitle>
 	<insert>Вставить</insert>
 	<insertFileMode js="true">Выгрузить файл</insertFileMode>

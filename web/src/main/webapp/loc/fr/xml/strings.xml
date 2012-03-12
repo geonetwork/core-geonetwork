@@ -524,8 +524,6 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
-    <indexLanguages>Mots vides</indexLanguages>
-    <indexLanguagesDes>Vous pouvez définir les langues pour lesquelles sont utilisés les mots vides.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Insérer</insert>
 	<insertFileMode js="true">Import de fichiers</insertFileMode>

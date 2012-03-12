@@ -511,8 +511,6 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Zoom to selected layer extent</imZoomToLayer>
-    <indexLanguages>Stopwords</indexLanguages>
-    <indexLanguagesDes>يمكنك تحديد اللغات التي تستخدم stopwords.</indexLanguagesDes>
 	<infoTitle>معلومات</infoTitle>
 	<insert>إدخال</insert>
 	<insertFileMode js="true">File Upload</insertFileMode>

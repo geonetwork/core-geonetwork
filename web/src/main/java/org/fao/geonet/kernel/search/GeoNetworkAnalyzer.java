@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -31,14 +30,9 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.domain.IndexLanguage;
 
-import java.io.File;
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -55,35 +49,7 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
     private Set<String> stopwords = new HashSet<String>();
     private boolean enablePositionIncrements = true;
     private boolean ignoreCase = true;
-    
-    /*
-    private synchronized void readStopwords(File stopwordsDir) {
-        if(stopwordsMap.keySet().size() > 0) {
-            System.out.println("stopwords already loaded. Restart app to re-load");
-        }
-        if(!stopwordsDir.exists() || !stopwordsDir.isDirectory()) {
-            Log.warning("GeoNetworkAnalyzer", "Invalid stopwords directory " + stopwordsDir.getAbsolutePath() + ", not using any stopwords");
-            return;
-        }
-        else {
-            System.out.println("loading stopwords");
-            for(File stopwordsFile : stopwordsDir.listFiles()) {
-                System.out.println("stopwords file " + stopwordsFile.getName());
-                String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                System.out.println("language: " + language);
-                if(language.length() != 2) {
-                    System.out.println("HUH " + language);
-                }
-                // look up stopwords for that language
-                Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());         
-                if(stopwordsForLanguage != null) {
-                    stopwordsMap.put(language, stopwordsForLanguage);
-                }
-            }
-        }        
-    }
-    */
-        
+
     /**
      * Creates this analyzer using no stopwords.
      */

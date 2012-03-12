@@ -124,12 +124,6 @@
     <allow service="stat.deleteTmpGraphics"/>
     <allow service="stat.tableExport"/>
 
-
-    <!-- index languages-->
-    <allow service="index.languages.get"/>
-    <allow service="index.languages.set"/>
-		
-
         <!-- csw config-->
         <allow service="csw.config.get"/>
         <allow service="csw.config.set"/>

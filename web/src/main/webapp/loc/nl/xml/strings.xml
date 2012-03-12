@@ -515,8 +515,6 @@
 	<imZoomIn>Zoom in</imZoomIn>
 	<imZoomOut>Zoom out</imZoomOut>
 	<imZoomToLayer>Laat de geselecteerde layer van de map zien</imZoomToLayer>
-    <indexLanguages>Stopwoorden</indexLanguages>
-    <indexLanguagesDes>U kunt de talen definiëren waarvoor stopwoorden worden gebruikt.</indexLanguagesDes>    
 	<infoTitle>Info</infoTitle>
 	<insert>Invoegen</insert>
 	<insertFileMode js="true">Bestand Toevoegen</insertFileMode>

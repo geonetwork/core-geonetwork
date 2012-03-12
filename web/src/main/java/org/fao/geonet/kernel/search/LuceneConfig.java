@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.ConfigurationOverrides;
-import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.TopFieldCollector;
@@ -146,7 +145,7 @@ public class LuceneConfig {
 	 * Creates a new Lucene configuration from an XML configuration file.
 	 * 
 	 * @param appPath
-	 * @param servlet
+	 * @param servletContext
    * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
@@ -375,8 +374,15 @@ public class LuceneConfig {
 		}
 	}
 
-	private void loadClassParameters(int type, String field, String clazz,
-			List<Object> children) {
+    /**
+     * TODO javadoc.
+     *
+     * @param type
+     * @param field
+     * @param clazz
+     * @param children
+     */
+	private void loadClassParameters(int type, String field, String clazz, List<Object> children) {
 		if (children == null)
 			return; // No params
 
