@@ -83,6 +83,7 @@
           <excludes>
             <exclude>src/main/resources/apps/js/GeoNetwork-mini*.js</exclude>
             <exclude>src/main/resources/apps/search/js/App-mini.js</exclude>
+            <exclude>src/main/resources/apps/tabsearch/js/App-mini.js</exclude>
             <exclude>**/GeoExt/examples/*.js</exclude>
             <exclude>**/ext/**/*.js</exclude>
             <exclude>**/ext-4.0-pr1/**/*.js</exclude>
@@ -404,6 +405,19 @@
                 <include>${project.build.directory}/classes/apps/search/js/App.js</include>
               </includes>
             </aggregation>
+
+            <aggregation>
+              <output>src/main/resources/apps/tabsearch/js/App-mini.js</output>
+              <includes>
+                <include>../../js/GeoNetwork-mini.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/map/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/map/MapApp.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/Shortcuts.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/App.js</include>
+              </includes>
+            </aggregation>
+
            <!-- <aggregation>
               <output>${geonetwork.webapp.dir}/apps/search/css/style.css</output>
               <includes>
