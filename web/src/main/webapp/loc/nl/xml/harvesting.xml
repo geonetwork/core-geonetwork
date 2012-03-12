@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<select>Selecteer</select>
 	<name>Naam</name>
-	<directoryname>Directory</directoryname>
+	<directoryname>Folder</directoryname>
 	<type>Type</type>
 	<status>Status</status>
 	<errors>Fouten</errors>
 	<every>Elke</every>
 	<lastRun>Vorige actie</lastRun>
-	<operation>Operatie</operation>
+	<operation>Bewerking</operation>
 
 	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
 	
@@ -29,7 +29,7 @@
 	
 	<info type="csw">
 		<short>CSW/ISO 2.0</short>
-		<long>Catalogue Services for the Web ISO Profile 2.0</long>
+		<long>Cataloog Services voor het Web ISO Profiel 2.0</long>
 	</info>
 	
 	<info type="z3950">
@@ -64,19 +64,19 @@
 
 	<info type="filesystem">
 		<short>Lokaal Bestandsysteem</short>
-		<long>Lokale Harvesting Bestandsysteem</long>
+		<long>Lokaal Harvesting Bestandsysteem</long>
 	</info>	
 
 	<info type="z3950Config">
 		<short>Z3950 Server Config Harvesting</short>
-		<long>Z3950 Server Configuration Harvesting</long>
+		<long>Z3950 Server Configuratie Harvesting</long>
 	</info>
 
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Website</site>
 	
-	<category>Category</category>
+	<category>Categorie</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Type OGC webservice</wxstype>
@@ -148,23 +148,23 @@
 	<inactive>Inactief</inactive>
 	<retrieveSources>Haal bronnen op</retrieveSources>
 	<retrieveGroups>Haal groepen op</retrieveGroups>
-        <retrieveInfo>Retrieve info</retrieveInfo>
+          <retrieveInfo>Vind info</retrieveInfo>
 	<source>Bron</source>
 	<criteria>Criteria</criteria>
 	<validate>Valideren</validate>
 	<recurse>Teruggaan</recurse>
 	<nodelete>Bewaar lokaal indien verwijderd bij de bronhouder</nodelete>
 	<server>Server</server>	
-	<database>Database</database>	
-	<privileges>Privileges</privileges>
+	<database>Databank</database>	
+	<privileges>Rechten</privileges>
 	<categories>Categorieën</categories>
 	<url>URL</url>
 	<capabUrl>Service URL</capabUrl>
-	<icon>Icon</icon>
+	<icon>Icoon</icon>
 	<group>Groep</group>
 	<groups>Groepen</groups>
 	<remoteGroup>Remote groep</remoteGroup>
-	<copyPolicy>Kopieren beleid</copyPolicy>
+	<copyPolicy>Kopiëren beleid</copyPolicy>
 	<allGroup>Groep 'Iedereen'</allGroup>
 	
 	<policy>
@@ -189,15 +189,15 @@
 	<deactivate>Deactiveren</deactivate>
 	<run>Uitvoeren</run>
 	<remove>Verwijderen</remove>
-	<refresh>Verversen</refresh>
-	<history>History</history>
-	<clone>Clone</clone>
+	<refresh>Vernieuwen</refresh>
+	<history>Geschiedenis</history>
+	<clone>Kopiëer</clone>
 	
 	<days>dagen</days>
 	<hours>uren</hours>
 	<mins>minuten</mins>
 	
-	<threddslang>Metadata language</threddslang>
+	<threddslang>Metadata taal</threddslang>
 	<threddsCreateDIFMd>Extract DIF metadata elements and create ISO metadata</threddsCreateDIFMd>
 	<threddsCreateFragments>Extract Unidata dataset discovery metadata using fragments</threddsCreateFragments>
   <threddsFragmentStylesheet>Stylesheet to create metadata fragments</threddsFragmentStylesheet>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<heading>Metadata Validatie</heading>
-	<message>Metadata met succes gevalideerd </message>
-	<schemaTronError>maar er waren fouten in het valideren in relatie tot de schematron rules</schemaTronError>
-	<schemaTronValid>Validatie is tegen de schematron rules gelukt</schemaTronValid>
-	<schemaTronReport>Schematron report hier verkrijgbaar</schemaTronReport>
-  <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>
-  <onElementOf>One of the following elements </onElementOf>
-  <isExpected> is expected.</isExpected>
-  <isNotComplete> is not complete.</isNotComplete>
-  <elementLocated>Parent element is </elementLocated>
-  <missingElement>Missing element. The content of element: </missingElement>
-  <invalidValue>Invalid or missing value.</invalidValue>
-  <notValidFor> is not a valid value for </notValidFor>
-  <xsdErrorIs>XSD error is: </xsdErrorIs>
-  <inElement> in element </inElement>
+	<message>Metadata met succes gevalideerd</message>
+	<schemaTronError>maar er werden fouten gevonden bij het valideren in relatie tot de schematron regels</schemaTronError>
+	<schemaTronValid>Validatie tegen de schematron regels is gelukt</schemaTronValid>
+	<schemaTronReport>Schematron rapport hier verkrijgbaar</schemaTronReport>
+  <invalidElement>Ongeldig element. Ongeldige inhoud gevonden voor het element: </invalidElement>
+  <onElementOf>Eén van de volgende elementen </onElementOf>
+  <isExpected> wordt verwacht.</isExpected>
+  <isNotComplete> is niet volledig.</isNotComplete>
+  <elementLocated>Parent element </elementLocated>
+  <missingElement>ontbreekt. De inhoud van het element is: </missingElement>
+  <invalidValue>ongeldig of er ontbreekt een waarde.</invalidValue>
+  <notValidFor>niet geldig voor: </notValidFor>
+  <xsdErrorIs>XSD fout is: </xsdErrorIs>
+  <inElement> in het element </inElement>
 </strings>

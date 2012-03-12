@@ -14,16 +14,16 @@
 	<network>Netwerk</network>
 	<netmask>Netmask</netmask>
 	
-	<searchStats>Search Statistics</searchStats>
+	<searchStats>Zoek Statistieken</searchStats>
 
 	<z3950>Z39.50 Server</z3950>
 	<enable>Aanzetten</enable>
 		
-	<threadedindexing>Multi-threaded Indexing</threadedindexing>
-	<maxthreads>Number of processing threads</maxthreads>
-	<recommendedThreads>Recommended</recommendedThreads>
-	<reasonForOne>Database not tested or doesn't support</reasonForOne>
-	<reasonForMore>From number of processors</reasonForMore>
+	<threadedindexing>Multi-threaded Indexering</threadedindexing>
+	<maxthreads>Aantal behandelde threads</maxthreads>
+	<recommendedThreads>Aanbevolen</recommendedThreads>
+	<reasonForOne>Databank niet getest of niet ondersteund</reasonForOne>
+	<reasonForMore>Van het aantal processors</reasonForMore>
 
     <multilingual>meertalige instellingen</multilingual>
     <autoDetectEnable>Schakel automatische detectie zoek taal</autoDetectEnable>
@@ -111,17 +111,17 @@
 	<accessConstraints>Toegangsrestricties</accessConstraints>
     <cswMetadataPublic>Toegevoegde metadata is publiek beschikbaar</cswMetadataPublic>
     
-	<clickablehyperlinks>Klikbare hyperlinks</clickablehyperlinks>
+	<clickablehyperlinks>Aanklikbare hyperlinks</clickablehyperlinks>
 	
-	<localrating>Locale Waardering</localrating>
+	<localrating>Lokale Waardering</localrating>
     <autofixing>Automatische correcties</autofixing>
 	
 	<proxy>Proxy</proxy>
 	<use>Gebruik</use>
 	<username>Gebruikersnaam</username>
 	
-	<feedback>Respons</feedback>
-	<email>EMail</email>
+	<feedback>Antwoord</feedback>
+	<email>E-mail</email>
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Poort</smtpPort>
 	
@@ -139,7 +139,7 @@
 		
 	<ldap>LDAP Authenticatie</ldap>
 	<defProfile>Standaard profiel</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
+    <uidAttr>Uid attribuut</uidAttr>
 	<login>Login</login>
 	<userDN>Gebruiker DN</userDN>
 	<distNames>Gedist. Namen</distNames>
@@ -148,8 +148,8 @@
 	<userAttribs>Gebruikers eigenschappen</userAttribs>
 	<password>Wachtwoord</password>
 	<profile>Profiel</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
+    <group>Groep</group>
+    <defGroup>Standaard groep</defGroup>
 
 	<shib>Shibboleth Authenticatie</shib>
 	<path>Locatie</path>
@@ -157,26 +157,26 @@
 	<surname>Achternaam</surname>
 	<firstname>Voornaam</firstname>
 
-    <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+    <metadataEnableInspireSearch>Inschakelen zoekpaneel</metadataEnableInspireSearch>
 
     <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
-    <metadataDefaultView>Default view</metadataDefaultView>
-    <metadataSimpleView>Simple view</metadataSimpleView>
+    <metadataEnableSimpleView>Inschakelen eenvoudige view</metadataEnableSimpleView>
+    <metadataEnableIsoView>Inschakelen ISO view</metadataEnableIsoView>
+    <metadataEnableInspireView>Inschakelen INSPIRE view</metadataEnableInspireView>
+    <metadataEnableXmlView>Inschakelen XML view</metadataEnableXmlView>
+    <metadataDefaultView>Standaard view</metadataDefaultView>
+    <metadataSimpleView>Eenvoudige view</metadataSimpleView>
     <metadataIsoView>ISO view</metadataIsoView>
     <metadataInspireView>INSPIRE view</metadataInspireView>
     <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Advanced view</metadataAdvancedView>
-	
+    <metadataAdvancedView>Geavanceerde view</metadataAdvancedView>
+
 	<metadataPrivs>Metadata privileges</metadataPrivs>
 	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
 	<!-- Buttons -->
 	
 	<save>Bewaren</save>
-	<refresh>Verversen</refresh>
+	<refresh>Vernieuwen</refresh>
 	
 	<!-- validator messages -->
 	
@@ -194,7 +194,7 @@
 		</integer>		
 		
 		<alphanum>
-			<notAlphaNumeric>Het veld '{NAME}' moet alphanumeriek zijn en beginnen met een letter</notAlphaNumeric>
+			<notAlphaNumeric>Het veld '{NAME}' moet alfanumeriek zijn en beginnen met een letter</notAlphaNumeric>
 		</alphanum>
 		
 		<hostname>
@@ -227,11 +227,11 @@
 		
 		<tip id="server.host">
 			De <b>host</b> en <b>poort</b> waarden worden gebruikt om de URL samen te stellen
-			voor deze GeoNetwork server. Ze worden bijvoorbeeld gebruikt tijdens het editen 
-			van metadata om de bron voor de koppelingen aan te maken en om de specificaties
+			voor deze GeoNetwork server. Ze worden bijvoorbeeld gebruikt tijdens het editeren 
+			van metadata, om de bron voor de koppelingen aan te maken en om de specificaties
                   van de server door te geven tijdens een CS/W aanvraag.
 			<br/>
-			<b>Opmerking:</b> U dient de GAST tool te gebruiken om deze wijzigingen door te voeren
+			<b>Opmerking:</b> u dient de GAST tool te gebruiken om deze wijzigingen door te voeren
                   in de metadata. 
 		</tip>
 		
@@ -245,10 +245,10 @@
 		<!-- Z39.50 -->
 		
 		<tip id="z3950.enable">
-			Als deze optie is ingeschakeld zal Geonetwork de Z39.50 servercomponent gebruiken.
+			Als deze optie is ingeschakeld zal GeoNetwork de Z39.50 servercomponent gebruiken.
 			Deze component maakt gebruik van het ISO23950 protocol.
 			<br/>
-			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren. 
+			<b>Opmerking:</b> start GeoNetwork opnieuw om deze wijziging door te voeren. 
 		</tip>
 		
 		<tip id="z3950.port">
@@ -264,13 +264,13 @@
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
 			If set to modification date, the date at which the metadata was last modified is searched
 			<br/>
-			<b>Please note:</b> restart GeoNetwork to make this change active.
+			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren.
 		</tip>
 		
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
-			<b>Please note:</b> restart GeoNetwork to make this change active.
+			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren.
 		</tip>
 		
 		<tip id="oai.cachesize">
@@ -289,12 +289,12 @@
 		<tip id="csw.title">Titel</tip>
 		<tip id="csw.abstract">Samenvatting</tip>
 		<tip id="csw.fees">Kosten</tip>
-		<tip id="csw.accessConstraints">Toegangsrestricties</tip>
+		<tip id="csw.accessConstraints">Toegangsbeperkingen</tip>
 
 		<!-- clickable hyperlinks -->
 		
 		<tip id="clickablehyperlinks.enable">
-			Als deze optie is ingeschakeld zal GeoNetwork klikbare hyperlinks tonen in de metadata.
+			Als deze optie is ingeschakeld zal GeoNetwork aanklikbare hyperlinks tonen in de metadata.
 		</tip>
 
 		<!-- local rating -->
@@ -317,12 +317,12 @@
 		<!-- feedback -->
 		
 		<tip id="feedback.email">
-			Dit is het emailadres van de administrator waar respons terecht moet komen.
+			Dit is het e-mailadres van de administrator waar respons terecht moet komen.
 		</tip>
 		
 		<tip id="feedback.mail.host">
-			De SMTP <b>host</b> en <b>poort</b> waarden worden gebruikt om email te verzenden
-			naar gebruikers van GeoNetwork's wanneer een bepaalde dataset wordt gedownload.
+			De SMTP <b>host</b> en <b>poort</b> waarden worden gebruikt om een e-mail te verzenden
+			naar gebruikers van GeoNetwork wanneer een bepaalde dataset wordt gedownload.
 		</tip>
 		
 		<!-- removed metadata -->
@@ -334,8 +334,8 @@
 		
 		<tip id="userSelfRegistration.enable">
 			Indien geselecteerd, dan zijn gebruikers in staat om zichzelf te registreren. 
-            Deze gebruikers krijgen het GUEST group profiel. Er wordt een email gestuurd 
-            naar de gebruiker met een gebruikersnaam en wachtwoord via het 'feedback' email account.
+            Deze gebruikers krijgen het GUEST group profiel. Er wordt een e-mail gestuurd 
+            naar de gebruiker met een gebruikersnaam en wachtwoord via het 'feedback' e-mail account.
 			<br/>
 		</tip>
 
@@ -375,36 +375,36 @@
             Negeer gevraagde taal voor de zoekresultaten.
         </tip>
 
-    </tips>
+	</tips>
 	
-	<data.dir>Data directory:</data.dir>
-  <codeList.dir>Thesaurus directory:</codeList.dir>
+	<data.dir>Data folder:</data.dir>
+  <codeList.dir>Thesaurus folder:</codeList.dir>
 	<xslt.factory>XSLT factory:</xslt.factory>
-	<java.vm.name>JVM name:</java.vm.name>
+	<java.vm.name>JVM naam:</java.vm.name>
 	<java.vm.vendor>JVM vendor:</java.vm.vendor>
-	<java.version>JVM version:</java.version>
-	<os.arch>System architecture:</os.arch>
-	<os.name>System name:</os.name>
-	<mem.total>Total memory:</mem.total>
-	<mem.free>Total free memory:</mem.free>
-	<index.size.lucene>Lucene index size (ko):</index.size.lucene>
-	<index.size>Total index size (ko):</index.size>
-	<index.path>Index directory:</index.path>
-	<index>Lucene index information</index>
-	<main>System information</main>
-	<catalogue>Catalogue information</catalogue>
-	<database>Database information</database>
-	<system>Catalogue configuration</system>
-	<siteId>Catalogue identifier:</siteId>
-	<version>Version:</version>
-	<subVersion>Sub-version:</subVersion>
-	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database URL:</db.url>	
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
-	<db.statserror>Database statistics:</db.statserror>
+	<java.version>JVM versie:</java.version>
+	<os.arch>Systeem architectuur:</os.arch>
+	<os.name>Systeem naam:</os.name>
+	<mem.total>Totaal geheugen:</mem.total>
+	<mem.free>Totaal beschikbaar geheugen:</mem.free>
+	<index.size.lucene>Lucene index grootte (ko):</index.size.lucene>
+	<index.size>Totale index grootte (ko):</index.size>
+	<index.path>Index folder:</index.path>
+	<index>Lucene index informatie</index>
+	<main>Systeem informatie</main>
+	<catalogue>Cataloog informatie</catalogue>
+	<database>Databank informatie</database>
+	<system>Cataloog configuratie</system>
+	<siteId>Cataloog identifier:</siteId>
+	<version>Versie:</version>
+	<subVersion>Subversie:</subVersion>
+	<index.lucene.config>Lucene configuratie:</index.lucene.config>
+	<db.url>Databank URL:</db.url>	
+	<db.openattempt>Databank Status:</db.openattempt>	
+	<db.numactive>Databank connecties in gebruik:</db.numactive>	
+	<db.numidle>Databank connecties beschikbaar:</db.numidle>	
+	<db.maxactive>Maximum aantal databank connecties:</db.maxactive>	
+	<db.statserror>Databank statistieken:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 </strings>
 

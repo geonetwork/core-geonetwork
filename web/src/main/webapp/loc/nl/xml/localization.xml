@@ -6,7 +6,7 @@
 	<entityType>
 		<type id="groups">Groepen</type>
 		<type id="categories">Categorieen</type>
-		<type id="operations">Operaties</type>
+		<type id="operations">Bewerkingen</type>
 		<type id="regions">Regios</type>
 	</entityType>
 	
@@ -16,7 +16,7 @@
 			<!-- Buttons -->
 	
 	<save>Bewaren</save>
-	<refresh>Verversen</refresh>
+	<refresh>Vernieuwen</refresh>
 	
 	<!-- validator messages -->
 	

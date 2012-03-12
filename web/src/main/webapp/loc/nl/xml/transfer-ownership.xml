@@ -5,11 +5,11 @@
 	<targetUser>Doel editor</targetUser>
 	<sourceGroup>Bron groep</sourceGroup>
 	<targetGroup>Doel groep</targetGroup>
-	<operation>Operatie</operation>
+	<operation>Bewerking</operation>
 	
 	<cannotRetrieve>Kan geen informatie van server ophalen</cannotRetrieve>
 	<cannotTransfer>Kan de rechten van de eigenaar niet overzetten</cannotTransfer>
-	<noUser>Geen doel editor waaraan de eigenaarsrechten op overgezet kunnen worden</noUser>
+	<noUser>Geen doel editor waarop de eigenaarsrechten overgezet kunnen worden</noUser>
 	<transfer>Overzetten</transfer>
 	<result>{PRIV} rechten van {MD} metadata overgezet</result>
 	<noEditors>Er zijn geen editors met de geassocieerde metadata</noEditors>
