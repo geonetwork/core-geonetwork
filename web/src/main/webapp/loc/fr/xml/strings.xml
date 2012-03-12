@@ -14,6 +14,7 @@
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+	<changeLogMessage>Information sur le changement d'état</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>

@@ -15,6 +15,7 @@
 
 	<!-- new strings - 2.7 -->
 	<status>Status</status>
+	<changeLogMessage>Change Log Message</changeLogMessage>
 	<updateStatus>Wijzigingsstatus</updateStatus>
 	<batchUpdateStatusTitle>Batch Wijzigingsstatus Operation</batchUpdateStatusTitle>
 	<startVersion>Start Versioning</startVersion>

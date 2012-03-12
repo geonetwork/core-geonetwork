@@ -12,7 +12,7 @@
 	<ca>Català</ca> <!-- Do not translate! -->
     <no>Norsk</no>  <!-- Do not translate! -->
     <fi>Suomeksi</fi>  <!-- Do not translate! -->
-
+	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>

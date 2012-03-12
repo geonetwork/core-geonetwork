@@ -14,6 +14,7 @@
 	<no>Norsk</no>  <!-- Do not translate! -->
 
 	<status>Status</status>
+	<changeLogMessage>Change Log Message</changeLogMessage>
 	<updateStatus>Update status</updateStatus>
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
 	<startVersion>Start Versioning</startVersion>

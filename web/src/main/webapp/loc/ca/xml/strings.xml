@@ -13,7 +13,8 @@
 	<no>Norsk</no>  <!-- Do not translate! -->
     <fi>Finnish</fi>  <!-- Do not translate! -->
   
-  <editAttributes>Add more details</editAttributes>
+	<editAttributes>Add more details</editAttributes>
+	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>

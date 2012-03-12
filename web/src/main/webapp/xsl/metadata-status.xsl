@@ -56,7 +56,7 @@
 								</xsl:for-each>				
 								<tr width="100%">
 									<td align="left">
-										<xsl:value-of select="'Change Log Message: '"/>
+										<xsl:value-of select="/root/gui/strings/changeLogMessage"/>
 									</td>
 									<td align="left">
 										<textarea rows="8" cols="25" id="changeMessage" name="changeMessage"/>
