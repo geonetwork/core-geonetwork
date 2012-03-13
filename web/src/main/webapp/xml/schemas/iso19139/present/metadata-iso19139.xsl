@@ -3242,9 +3242,9 @@
 		<xsl:param name="langId"/>
 		<xsl:param name="info"/>
 		
-			<xsl:if test="gmd:citation/gmd:CI_Citation/gmd:title">
+			<xsl:if test="gmd:citation/*/gmd:title">
 				<title>
-					<xsl:apply-templates mode="localised" select="gmd:citation/gmd:CI_Citation/gmd:title">
+					<xsl:apply-templates mode="localised" select="gmd:citation/*/gmd:title">
 						<xsl:with-param name="langId" select="$langId"></xsl:with-param>
 					</xsl:apply-templates>
 				</title>
