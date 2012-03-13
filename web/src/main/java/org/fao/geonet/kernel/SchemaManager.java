@@ -27,30 +27,27 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-import jeeves.server.dispatchers.guiservices.XmlFile;
-
 import org.apache.commons.lang.StringUtils;
-
-import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.search.spatial.Pair;
-
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
 import org.jdom.Namespace;
+import org.jdom.filter.ElementFilter;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -58,9 +55,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,14 +63,14 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-
-//=============================================================================
-
-public class SchemaManager
-{
+/**
+ * TODO javadoc.
+ *
+ */
+public class SchemaManager {
 	private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
 	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
-        private String[] xslUriSuffix = { "", "-edit"};
+    private String[] xslUriSuffix = { "", "-edit"};
 	private String   schemaPluginsDir;
 	private String   schemaPluginsCat;
 	private String	 defaultLang;
@@ -105,13 +100,15 @@ public class SchemaManager
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
-	/**	Constructor
-		*
-		* @param basePath the web app base path
-		* @param defaultLang the default language (taken from context)
-		* @param defaultSchema the default schema (taken from config.xml)
-	  */
-
+	/**
+     * Constructor.
+	 *
+	 * @param basePath the web app base path
+	 * @param sPDir
+     * @param defaultLang the default language (taken from context)
+	 * @param defaultSchema the default schema (taken from config.xml)
+     * @throws Exception
+	 */
 	private SchemaManager(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception {
 
 		hmSchemas .clear();
@@ -149,6 +146,16 @@ public class SchemaManager
 
 	}
 
+    /**
+     * Returns singleton instance.
+     *
+     * @param basePath
+     * @param sPDir
+     * @param defaultLang
+     * @param defaultSchema
+     * @return
+     * @throws Exception
+     */
 	public synchronized static SchemaManager getInstance(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception { 
 		if (schemaManager == null) {
 			schemaManager = new SchemaManager(basePath, sPDir, defaultLang, defaultSchema);
@@ -172,14 +179,13 @@ public class SchemaManager
 	//---
 	//--------------------------------------------------------------------------
 
-	/**	Return a boolean indicating whether the schema is a plugin schema or
-	  * not
-		*
-		* @param schema name of schema to check to see whether it is a plugin schema
-	  */
-
+	/**
+     * Returns a boolean indicating whether the schema is a plugin schema or not.
+	 *
+	 * @param name name of schema to check to see whether it is a plugin schema
+     * @return
+	 */
 	public boolean isPluginSchema(String name) {
-
 		beforeRead();
 		try {
 			Schema schema = hmSchemas.get(name);
@@ -193,12 +199,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the MetadataSchema object
-		*
-		* @param schema the metadata schema we want the MetadataSchema for
-	  */
-
+	/**
+     * Return the MetadataSchema objects
+	 *
+	 * @param name the metadata schema we want the MetadataSchema for
+     * @return
+	 */
 	public MetadataSchema getSchema(String name) {
 
 		beforeRead();
@@ -215,13 +221,13 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** Add a plugin schema to the list of schemas registered here
-		*
-		* @param schema the metadata schema we want to add
-		* @param in stream containing a zip archive of the schema to add
-	  */
-
+	/**
+     * Adds a plugin schema to the list of schemas registered here.
+	 *
+	 * @param name the metadata schema we want to add
+	 * @param in stream containing a zip archive of the schema to add
+     * @throws Exception
+	 */
 	public void addPluginSchema(String name, InputStream in) throws Exception {
 
 		beforeWrite();
@@ -232,13 +238,13 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** Update a plugin schema in the list of schemas registered here
-		*
-		* @param schema the metadata schema we want to update
-		* @param in stream containing a zip archive of the schema to update
-	  */
-
+	/**
+     * Updates a plugin schema in the list of schemas registered here.
+	 *
+	 * @param name the metadata schema we want to update
+	 * @param in stream containing a zip archive of the schema to update
+     * @throws Exception
+	 */
 	public void updatePluginSchema(String name, InputStream in) throws Exception {
 
 		beforeWrite();
@@ -252,12 +258,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema directory
-		*
-		* @param schema the metadata schema we want the directory for
+	/**
+     * Returns the schema directory.
+	 *
+	 * @param name the metadata schema we want the directory for
+     * @return
 	  */
-
 	public String getSchemaDir(String name) {
 
 		beforeRead();
@@ -273,14 +279,14 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema location as a JDOM attribute - this can be 
-	  * either an xsi:schemaLocation or xsi:noNamespaceSchemaLocation
-		* depending on the schema
-		*
-		* @param schema the metadata schema we want the schemaLocation for
+	/**
+     * Returns the schema location as a JDOM attribute - this can be  either an xsi:schemaLocation or
+     * xsi:noNamespaceSchemaLocation depending on the schema.
+	 *
+	 * @param name the metadata schema we want the schemaLocation for
+     * @param context
+     * @return
 	  */
-
 	public Attribute getSchemaLocation(String name, ServiceContext context) {
 
 		Attribute out = null;
@@ -318,12 +324,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema templatesdirectory
-		*
-		* @param schema the metadata schema we want the templates directory for
+	/**
+     * Returns the schema templatesdirectory.
+	 *
+	 * @param name the metadata schema we want the templates directory for
+     * @return
 	  */
-
 	public String getSchemaTemplatesDir(String name) {
 
 		beforeRead();
@@ -340,12 +346,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema sample data directory
-		*
-		* @param schema the metadata schema we want the sample data directory for
-	  */
-
+	/**
+     * Returns the schema sample data directory.
+	 *
+	 * @param name the metadata schema we want the sample data directory for
+     * @return
+	 */
 	public String getSchemaSampleDataDir(String name) {
 
 		beforeRead();
@@ -362,12 +368,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema csw presentation directory
-		*
-		* @param schema the metadata schema we want the csw present info directory
+	/**
+     * Returns the schema csw presentation directory.
+	 *
+	 * @param name the metadata schema we want the csw present info directory
+     * @return
 	  */
-
 	public String getSchemaCSWPresentDir(String name) {
 
 		beforeRead();
@@ -382,13 +388,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema information (usually localized codelists, labels etc)
-	  * XmlFile objects
-		*
-		* @param schema the metadata schema we want schema info for 
+	/**
+     * Return the schema information (usually localized codelists, labels etc) XmlFile objects.
+	 *
+	 * @param name the metadata schema we want schema info for
+     * @return
 	  */
-
 	public Map<String, XmlFile> getSchemaInfo(String name) {
 
 		beforeRead();
@@ -398,18 +403,18 @@ public class SchemaManager
 			if (schema == null)
 				throw new IllegalArgumentException("Schema not registered : " + name);
 
-			final Map<String, XmlFile> xfInfo = schema.getInfo();
-			return xfInfo;
-		} finally {
+            return schema.getInfo();
+		}
+        finally {
 			afterRead();
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the list of schema names that have been registered 
-		*
-	  */
-
+	/**
+     * Returns the list of schema names that have been registered.
+     *
+     * @return
+     */
 	public Set<String> getSchemas()	{
 
 		beforeRead();
@@ -420,14 +425,13 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema converter elements for a schema (as a list of 
-	  * cloned elements).
-		*
-		* @param schema the metadata schema we want search
-		* @throws Exception if schema is not registered
-	  */
-
+	/**
+     * Returns the schema converter elements for a schema (as a list of cloned elements).
+	 *
+	 * @param name the metadata schema we want search
+	 * @throws Exception if schema is not registered
+     * @return
+	 */
 	public List<Element> getConversionElements(String name) throws Exception {
 
 		beforeRead();
@@ -436,7 +440,7 @@ public class SchemaManager
 			List<Element> childs = schema.getConversionElements();
 			List<Element> dChilds = new ArrayList<Element>();
 			for (Element child : childs) {
-				if (child instanceof Element) dChilds.add((Element)child.clone());	
+				if (child != null) dChilds.add((Element)child.clone());
 			}
 			return dChilds;
 		} finally {
@@ -444,15 +448,14 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Return the schema converter(s) that produce the specified namespace
-		*
-		* @param schema the metadata schema we want search
-		* @param namespaceURI the namespace URI we are looking for
-		* @return List of XSLTs that produce this namespace URI (full pathname)
-		* @throws Exception if schema is not registered
-	  */
-
+	/**
+     * Return the schema converter(s) that produce the specified namespace.
+	 *
+	 * @param name the metadata schema we want search
+	 * @param namespaceUri the namespace URI we are looking for
+	 * @return List of XSLTs that produce this namespace URI (full pathname)
+	 * @throws Exception if schema is not registered
+	 */
 	public List<String> existsConverter(String name, String namespaceUri) throws Exception {
 
 		List<String> result = new ArrayList<String>();
@@ -476,12 +479,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Does the schema named in the parameter exist?
-		*
-		* @param schema the metadata schema we want to check existence of
-	  */
-
+	/**
+     * Whether the schema named in the parameter exist.
+	 *
+	 * @param name the metadata schema we want to check existence of
+     * @return
+	 */
 	public boolean existsSchema(String name) {
 
 		beforeRead();
@@ -492,13 +495,14 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Delete the schema from the schema information hash tables
-		*
-		* @param schema the metadata schema we want to delete - can only
-		*        be a plugin schema
-	  */
 
+	/**
+     * Deletes the schema from the schema information hash tables.
+	 *
+	 * @param name the metadata schema we want to delete - can only be a plugin schema
+     * @return
+     * @throws Exception
+	 */
 	public boolean deletePluginSchema(String name) throws Exception {
 
 		beforeWrite();
@@ -510,12 +514,12 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Get the SchemaSuggestions class for the supplied schema name
-		*
-		* @param schema the metadata schema whose suggestions class we want
-	  */
-
+	/**
+     * Gets the SchemaSuggestions class for the supplied schema name.
+	 *
+	 * @param name the metadata schema whose suggestions class we want
+     * @return
+	 */
 	public SchemaSuggestions getSchemaSuggestions(String name) {
 
 		beforeRead();
@@ -525,21 +529,20 @@ public class SchemaManager
 			if (schema == null)
 				throw new IllegalArgumentException("Schema suggestions not registered : " + name);
 
-			final SchemaSuggestions sugg = schema.getSuggestions();
-			return sugg;
-		} finally {
+            return schema.getSuggestions();
+		}
+        finally {
 			afterRead();
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Get the namespace URI from the schema information (XSD) 
-	  * for the supplied prefix
-		*
-		* @param name the metadata schema whose namespaces we are searching
-		* @param prefix the namespace prefix we want the URI for
-	  */
-
+	/**
+     * Gets the namespace URI from the schema information (XSD) for the supplied prefix.
+	 *
+	 * @param name the metadata schema whose namespaces we are searching
+	 * @param prefix the namespace prefix we want the URI for
+     * @return
+	 */
 	public String getNamespaceURI(String name, String prefix) {
 
 		beforeRead();
@@ -556,17 +559,26 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** 
- 		* Used to detect the schema of an imported metadata file
- 		* 
- 		* @param md the imported metadata file
- 		*/
-
+	/**
+ 	 * Used to detect the schema of an imported metadata file.
+ 	 *
+ 	 * @param md the imported metadata file
+     * @return
+     * @throws org.fao.geonet.exceptions.NoSchemaMatchesException
+     * @throws org.fao.geonet.exceptions.SchemaMatchConflictException
+ 	 */
 	public String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
 		return autodetectSchema(md, defaultSchema);
 	}
 
+    /**
+     *
+     * @param md
+     * @param defaultSchema
+     * @return
+     * @throws SchemaMatchConflictException
+     * @throws NoSchemaMatchesException
+     */
 	public String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {			
 
 		beforeRead();
@@ -640,6 +652,7 @@ public class SchemaManager
 	 *
 	 * @param md the metadata record being checked for prime namespace equality
 	 * @param schema the name of the metadata schema we want to test
+     * @return
 	 */
 	private boolean checkNamespace(Element md, String schema) {
 		boolean result = false;
@@ -659,19 +672,20 @@ public class SchemaManager
 	}
 	
 	
-	/**
+  /**
    * Invoked just before reading, waits until reading is allowed.
    */
   private synchronized void beforeRead() {
     while (activeWriters > 0) {
       try {
         wait();
-      } catch (InterruptedException iex) {}
+      } catch (InterruptedException iex) {
+          // TODO what to do
+      }
 		}
     ++activeReaders;
   }
 
-	//--------------------------------------------------------------------------
   /**
    * Invoked just after reading.
    */
@@ -680,7 +694,6 @@ public class SchemaManager
     notifyAll();
   }
 
-	//--------------------------------------------------------------------------
   /**
    * Invoked just before writing, waits until writing is allowed.
    */
@@ -693,7 +706,6 @@ public class SchemaManager
     ++activeWriters;
   }
 
-	//--------------------------------------------------------------------------
   /**
    * Invoked just after writing.
    */
@@ -702,11 +714,12 @@ public class SchemaManager
     notifyAll();
   }
 
-	//--------------------------------------------------------------------------
-	/**	Really delete the schema from the schema information hash tables
+	/**
+     * Really delete the schema from the schema information hash tables.
 	 *
-	 * @param schema the metadata schema we want to delete - can only
-	 *        be a plugin schema
+	 * @param name the metadata schema we want to delete - can only be a plugin schema
+     * @return
+     * @throws Exception
 	 */
 	private boolean realDeletePluginSchema(String name) throws Exception {
 
@@ -720,13 +733,13 @@ public class SchemaManager
 		return false;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Really add a plugin schema to the list of schemas registered here
-		*
-		* @param schema the metadata schema we want to add
-		* @param in stream containing a zip archive of the schema to add
+	/**
+     * Really add a plugin schema to the list of schemas registered here.
+	 *
+	 * @param name the metadata schema we want to add
+	 * @param in stream containing a zip archive of the schema to add
+     * @throws Exception
 	  */
-
 	private void realAddPluginSchema(String name, InputStream in) throws Exception {
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 
@@ -751,14 +764,14 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** helper to copy zipentry to on disk file
-  	*
-		* @param in the InputStream to copy from (usually a zipEntry)
-		* @param out the OutputStream to copy to (eg. file output stream)
-		*/
-	private static final void copyInputStream(InputStream in, OutputStream out) throws Exception
-  {
+	/**
+     * helper to copy zipentry to on disk file.
+  	 *
+	 * @param in the InputStream to copy from (usually a zipEntry)
+	 * @param out the OutputStream to copy to (eg. file output stream)
+     * @throws Exception
+	 */
+	private static void copyInputStream(InputStream in, OutputStream out) throws Exception {
     byte[] buffer = new byte[1024];
     int len;
 
@@ -768,13 +781,13 @@ public class SchemaManager
     out.close();
   }
 		
-	//--------------------------------------------------------------------------
-	/** unpack the schema supplied as a zip archive into the appropriate dir.
-	  *
-		* @param dir the directory into which the zip archive will be unpacked
-		* @param schemaZipArchive the schema zip archive
-	  */
-
+	/**
+     * unpack the schema supplied as a zip archive into the appropriate dir.
+	 *
+	 * @param dir the directory into which the zip archive will be unpacked
+	 * @param in the schema zip archive
+     * @throws Exception
+	 */
 	private void unpackSchemaZipArchive(File dir, InputStream in) throws Exception {
 
 		// -- unpack the schema zip archive into it
@@ -796,20 +809,21 @@ public class SchemaManager
 		zipStream.close();
 	}
 
-	//--------------------------------------------------------------------------
-	/** Loads the metadata schema from disk and adds it to the pool
-	  *
-		* @param fromAppPath webapp path
-		* @param name schema name
-		* @param isPluginSchema boolean that is set to true if schema is plugin
-		* @param xmlSchemaFile name of XML schema file (usually schema.xsd)
-		* @param xmlSuggestFile name of schema suggestions file
-		* @param xmLSubstitutionsFile name schema substitutions file
-		* @param xmlIdFile name of XML file that identifies the schema
-		* @param oasisCatFile name of XML OASIS catalog file 
-		* @param conversionsFile name of XML conversions file 
-		*/
-
+	/**
+     * Loads the metadata schema from disk and adds it to the pool.
+	 *
+	 * @param fromAppPath webapp path
+	 * @param name schema name
+	 * @param isPluginSchema boolean that is set to true if schema is plugin
+	 * @param schemaPluginCatRoot
+     * @param xmlSchemaFile name of XML schema file (usually schema.xsd)
+	 * @param xmlSuggestFile name of schema suggestions file
+	 * @param xmlSubstitutionsFile name schema substitutions file
+	 * @param xmlIdFile name of XML file that identifies the schema
+	 * @param oasisCatFile name of XML OASIS catalog file
+	 * @param conversionsFile name of XML conversions file
+     * @throws Exception
+	 */
 	private void addSchema(String fromAppPath, String name, boolean isPluginSchema, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
 		String path = new File(xmlSchemaFile).getParent();
 
@@ -879,37 +893,39 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** Read the elements from the schema plugins catalog for use by other
-	  * methods
-	  *
-		* @param name the name of the schema to use
-		*/
-
+	/**
+     * Read the elements from the schema plugins catalog for use by other methods.
+	 *
+     * @return
+     * @throws Exception
+     */
 	private Element getSchemaPluginCatalog() throws Exception {
 		// -- open schemaPlugins catalog, get children named uri
-		Element root = Xml.loadFile(schemaPluginsCat);		
-		return root;
+        return Xml.loadFile(schemaPluginsCat);
 	}
 
-	//--------------------------------------------------------------------------
-	/** Build a path to the schema plugin presentation xslt
-	  *
-		* @param name the name of the schema to use
-		*/
 
+	/**
+     * Build a path to the schema plugin presentation xslt.
+	 *
+	 * @param name the name of the schema to use
+     * @param suffix
+     * @return
+	 */
 	private String buildSchemaPresentXslt(String name, String suffix) {
 		return "../" + schemaPluginsDir + "/" + name + "/present/metadata-" + name + suffix + ".xsl";
 	}
 
-	//--------------------------------------------------------------------------
-	/** Deletes the presentation xslt from the schemaplugin oasis catalog
-	  *
-		* @param root the list of elements from the schemaplugin-uri-catalog
-		* @param name the name of the schema to use
-		*/
-
+	/**
+     * Deletes the presentation xslt from the schemaplugin oasis catalog.
+	 *
+	 * @param root the list of elements from the schemaplugin-uri-catalog
+	 * @param name the name of the schema to use
+     * @return
+     * @throws Exception
+	 */
 	private Element deleteSchemaFromPluginCatalog(String name, Element root) throws Exception {
+        @SuppressWarnings(value = "unchecked")
 		List<Content> contents = root.getContent();
 
 		for (String suffix : xslUriSuffix) {
@@ -936,17 +952,18 @@ public class SchemaManager
 		return root;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Gets the next available blank number that can be used to map the
-	  * presentation xslt used by the schema (see metadata-utils.xsl and 
-		* Geonet.File.METADATA_MAX_BLANKS). If the presentation xslt is 
-		* already mapped then we exit early with return value -1
-	  *
-		* @param root the list of elements from the schemaplugin-uri-catalog
-		* @param name the name of the schema to use
-		*/
-
+	/**
+     * Gets the next available blank number that can be used to map the presentation xslt used by the schema (see
+     * metadata-utils.xsl and Geonet.File.METADATA_MAX_BLANKS). If the presentation xslt is already mapped then we exit
+     * early with return value -1.
+	 *
+	 * @param root the list of elements from the schemaplugin-uri-catalog
+	 * @param name the name of the schema to use
+     * @return
+     * @throws Exception
+	 */
 	private int getHighestSchemaPluginCatalogId(String name, Element root) throws Exception {
+        @SuppressWarnings("unchecked")
 		List<Content> contents = root.getContent();
 
 		String baseBlank = Geonet.File.METADATA_BASEBLANK;
@@ -985,16 +1002,14 @@ public class SchemaManager
 		return baseNrInt;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Creates a uri remap entry in the schema plugins catalog for the 
-	  * presentation xslt used by the schema
-	  *
-		* @param name the name of the schema to use
-		* @param baseNrInt the number of the plugin schema to map the presentation
-		*        xslt to
-		* @param root the list of elements from the schemaplugin-uri-catalog
-		*/
-
+	/**
+     * Creates a uri remap entry in the schema plugins catalog for the presentation xslt used by the schema.
+	 *
+	 * @param name the name of the schema to use
+	 * @param baseNrInt the number of the plugin schema to map the presentation xslt to
+	 * @param root the list of elements from the schemaplugin-uri-catalog
+     * @throws Exception
+	 */
 	private void createUriEntryInSchemaPluginCatalog(String name, int baseNrInt, Element root) throws Exception {
 
 		baseNrInt = baseNrInt + 1;
@@ -1017,34 +1032,38 @@ public class SchemaManager
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** Write the schema plugin catalog out
-	  *
-		* @param root the list of elements from the schemaplugin-uri-catalog
-		*/
+
+	/**
+     * Writes the schema plugin catalog out.
+	 *
+	 * @param root the list of elements from the schemaplugin-uri-catalog
+     * @throws Exception
+	 */
 	private void writeSchemaPluginCatalog(Element root) throws Exception {
-		Xml.writeResponse(new Document((Element)root.detach()), 
-	new BufferedOutputStream(new FileOutputStream(new File(schemaPluginsCat))));
+		Xml.writeResponse(new Document((Element)root.detach()),
+                new BufferedOutputStream(new FileOutputStream(new File(schemaPluginsCat))));
 		Xml.resetResolver();	
 		Xml.clearTransformerFactoryStylesheetCache();
 	}
 
-	//--------------------------------------------------------------------------
-	/** Puts information into the schema information hashtables
-	  *
-		* @param id schema id (uuid)
-		* @param version schema version
-		* @param name schema name
-		* @param mds MetadataSchema object with details of XML schema info 
-		* @param schemaDir path name of schema directory
-		* @param sugg SchemaSuggestions object
-		* @param adElems List of autodetect XML elements (as JDOM Elements)
-		* @param xfMap Map containing XML localized info files (as Jeeves XmlFiles)
-		* @param isPlugin true if schema is a plugin schema 
-		* @param schemaLocation namespaces and URLs of their xsds
-		* @param convElems List of elements in conversion file
-		*/
-	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir, SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap, boolean isPlugin, String schemaLocation, List<Element> convElems) { 
+	/**
+     * Puts information into the schema information hashtables.
+	 *
+	 * @param id schema id (uuid)
+	 * @param version schema version
+	 * @param name schema name
+	 * @param mds MetadataSchema object with details of XML schema info
+	 * @param schemaDir path name of schema directory
+	 * @param sugg SchemaSuggestions object
+	 * @param adElems List of autodetect XML elements (as JDOM Elements)
+	 * @param xfMap Map containing XML localized info files (as Jeeves XmlFiles)
+	 * @param isPlugin true if schema is a plugin schema
+	 * @param schemaLocation namespaces and URLs of their xsds
+	 * @param convElems List of elements in conversion file
+	 */
+	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir,
+                               SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap,
+                               boolean isPlugin, String schemaLocation, List<Element> convElems) {
 		
 		Schema schema = new Schema();
 
@@ -1062,14 +1081,13 @@ public class SchemaManager
 		hmSchemas.put(name, schema);
 	}
 
-	//--------------------------------------------------------------------------
-	/** Deletes information from the schema information hashtables, the schema
-	  * directory itself and the mapping for the schema presentation xslt
-		* from the schemaplugins oasis catalog
-	  *
-		* @param name schema name
-		*/
-
+	/**
+     * Deletes information from the schema information hashtables, the schema directory itself and the mapping for the
+     * schema presentation xslt from the schemaplugins oasis catalog.
+	 *
+	 * @param name schema name
+     * @throws Exception
+	 */
 	private void removeSchemaInfo(String name) throws Exception { 
 		Schema schema = hmSchemas.get(name);
 
@@ -1081,12 +1099,11 @@ public class SchemaManager
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
 	}
 
-	//--------------------------------------------------------------------------
-	/** Deletes information into the schema directory 
-	  *
-		* @param dir schema directory to remove
-		*/
-
+	/**
+     * Deletes information into the schema directory.
+	 *
+	 * @param dir schema directory to remove
+  	 */
 	private void removeSchemaDir(String dir) { 
 		// -- FIXME: get schema directory and zip it up into the deleted metadata 
 		// -- directory?
@@ -1094,19 +1111,20 @@ public class SchemaManager
 		Log.debug(Geonet.SCHEMA_MANAGER, "Removing schema directory "+dir);
 		boolean deleteOp = deleteDir(new File(dir));
 		Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
-
 	}
 
-	//--------------------------------------------------------------------------
-	/** Processes schemas in either web/xml/schemas or schema plugin directory
-	  *
-		* @param fromAppPath web app path
-		* @param schemasDir path name of directory containing schemas
-		* @param saSchemas list of schemas in schemasDir to process 
-		* @param isPluginSchema boolean that is set to true if schema is plugin
-		*/
-
-	private int processSchemas(String fromAppPath, String schemasDir, String[] saSchemas, boolean isPluginSchema, Element schemaPluginCatRoot) {
+	/**
+     * Processes schemas in either web/xml/schemas or schema plugin directory.
+	 *
+	 * @param fromAppPath web app path
+	 * @param schemasDir path name of directory containing schemas
+	 * @param saSchemas list of schemas in schemasDir to process
+	 * @param isPluginSchema boolean that is set to true if schema is plugin
+     * @param schemaPluginCatRoot
+     * @return
+	 */
+	private int processSchemas(String fromAppPath, String schemasDir, String[] saSchemas, boolean isPluginSchema,
+                               Element schemaPluginCatRoot) {
 
 		int numberOfSchemasAdded = 0;
 
@@ -1149,12 +1167,15 @@ public class SchemaManager
 		return numberOfSchemasAdded;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Extract schema version and uuid info from identification file and 
-	  * compare specified name with name in identification file
-	  *
-		* @param xmlidFile name of schema XML identification file
-		*/
+	/**
+     * Extract schema version and uuid info from identification file and compare specified name with name in
+     * identification file.
+	 *
+	 * @param xmlIdFile name of schema XML identification file
+     * @param name
+     * @return
+     * @throws Exception
+	 */
 	private Pair<String, String> extractIdInfo(String xmlIdFile, String name) throws Exception {
 		// FIXME: should be validating parser
 		Element root = Xml.loadFile(xmlIdFile);
@@ -1173,24 +1194,27 @@ public class SchemaManager
 		return Pair.read(id.getText(), version.getText());
 	}
 
-	//--------------------------------------------------------------------------
-	/** Extract schema autodetect info from identification file
-	  *
-		* @param xmlidFile name of schema XML identification file
-		*/
+	/**
+     * Extracts schema autodetect info from identification file.
+	 *
+	 * @param xmlIdFile name of schema XML identification file
+     * @return
+     * @throws Exception
+	 */
 	private List<Element> extractADElements(String xmlIdFile) throws Exception {
 		Element root = Xml.loadFile(xmlIdFile);
 		Element autodetect = root.getChild("autodetect", GEONET_SCHEMA_NS);
 		if (autodetect == null) autodetect = root.getChild("autodetect", GEONET_SCHEMA_PREFIX_NS);
-
 		return autodetect.getChildren();
 	}
 
-	//--------------------------------------------------------------------------
-	/** Extract conversion elements from conversions file
-	  *
-		* @param xmlConvFile name of schema XML conversions file
-		*/
+	/**
+     * Extract conversion elements from conversions file.
+	 *
+	 * @param xmlConvFile name of schema XML conversions file
+     * @return
+     * @throws Exception
+	 */
 	private List<Element> extractConvElements(String xmlConvFile) throws Exception {
 		List<Element> result = new ArrayList<Element>();
 		if (!(new File(xmlConvFile).exists())) {
@@ -1203,11 +1227,13 @@ public class SchemaManager
 		return result;
 	}
 
-	//--------------------------------------------------------------------------
-	/** Extract schemaLocation info from identification file
-	  *
-		* @param xmlidFile name of schema XML identification file
-		*/
+	/**
+     * Extract schemaLocation info from identification file.
+	 *
+     * @param xmlIdFile name of schema XML identification file
+     * @return
+     * @throws Exception
+	 */
 	private String extractSchemaLocation(String xmlIdFile) throws Exception {
 		Element root = Xml.loadFile(xmlIdFile);
 		Element schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_NS);
@@ -1215,12 +1241,15 @@ public class SchemaManager
 		return schemaLocElem.getText();
 	}
 
-	//--------------------------------------------------------------------------
-	/** Search all available schemas for one which contains
- 	  * the element(s) or attributes specified in the autodetect info
-		*
-		* @param md the XML record whose schema we are trying to find
- 	  */
+	/**
+     * Search all available schemas for one which contains the element(s) or attributes specified in the autodetect
+     * info.
+	 *
+	 * @param md the XML record whose schema we are trying to find
+     * @param mode
+     * @return
+     * @throws org.fao.geonet.exceptions.SchemaMatchConflictException
+ 	 */
 	private String compareElementsAndAttributes(Element md, int mode) throws SchemaMatchConflictException {
 		String returnVal = null;	
 		Set<String> allSchemas = getSchemas();
@@ -1315,15 +1344,14 @@ public class SchemaManager
 		return returnVal;
 	}
 	
-	//--------------------------------------------------------------------------
-	/** This method searches an entire metadata file for an attribute that
-	  *  matches the "needle" metadata attribute arg - A matching attribute 
-	  *  has the same name and value. 
-		*
-	  * @param needle the XML attribute we are trying to find
-	  * @param haystack the XML metadata record we are searching
- 	  */
-
+	/**
+     * This method searches an entire metadata file for an attribute that matches the "needle" metadata attribute
+     * arg - A matching attribute has the same name and value.
+	 *
+	 * @param needle the XML attribute we are trying to find
+	 * @param haystack the XML metadata record we are searching
+     * @return
+ 	 */
 	private boolean isMatchingAttributeInMetadata(Attribute needle, Element haystack) {
 		boolean returnVal = false;
 		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
@@ -1338,19 +1366,17 @@ public class SchemaManager
 				break;
 			}
 		}
- 		
 		return returnVal;
 	}
 			
-	//--------------------------------------------------------------------------
-	/** This method searches all elements of a metadata for a namespace that
-	  *  matches the "needle" namespace arg. (Note: matching namespaces
-		* have the same URI, prefix is ignored).
-		*
-	  * @param needle the XML namespace we are trying to find
-	  * @param haystack the XML metadata record we are searching
- 	  */
-
+	/**
+     * This method searches all elements of a metadata for a namespace that matches the "needle" namespace arg. (Note:
+     * matching namespaces have the same URI, prefix is ignored).
+	 *
+	 * @param needle the XML namespace we are trying to find
+	 * @param haystack the XML metadata record we are searching
+     * @return
+ 	 */
 	private boolean isMatchingNamespaceInMetadata(Namespace needle, Element haystack) {
 		Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
 
@@ -1365,13 +1391,13 @@ public class SchemaManager
 		return false;
 	}
 
-	//--------------------------------------------------------------------------
-	/** This method searches an elements and its namespaces for a match with
-	  * an input namespace.
-		*
-	  * @param ns the XML namespace we are trying to find
-	  * @param elem the XML metadata element whose namespaces are to be searched
- 	  */
+	/**
+     * This method searches an elements and its namespaces for a match with an input namespace.
+	 *
+	 * @param ns the XML namespace we are trying to find
+	 * @param elem the XML metadata element whose namespaces are to be searched
+     * @return
+ 	 */
 	private boolean checkNamespacesOnElement(Namespace ns, Element elem) {
 		if (elem.getNamespace().equals(ns)) return true;
 		List<Namespace> nss = elem.getAdditionalNamespaces();
@@ -1381,17 +1407,15 @@ public class SchemaManager
 		return false;
 	}
 
-	//--------------------------------------------------------------------------
-	/** This method searches an entire metadata file for an element that
-	  *  matches the "needle" metadata element arg - A matching element
-	  *  has the same name, namespace and value. 
-		*
-	  * @param needle the XML element we are trying to find
-	  * @param haystack the XML metadata record we are searching
-	  * @param checkValue compare the value of the needle with the value of the 
-		*                   element we find in the md
- 	  */
-
+	/**
+     * This method searches an entire metadata file for an element that matches the "needle" metadata element arg - A
+     * matching element has the same name, namespace and value.
+	 *
+	 * @param needle the XML element we are trying to find
+	 * @param haystack the XML metadata record we are searching
+	 * @param checkValue compare the value of the needle with the value of the element we find in the md
+     * @return
+ 	 */
 	private boolean isMatchingElementInMetadata(Element needle, Element haystack, boolean checkValue) {
 		boolean returnVal = false;
 		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
@@ -1429,13 +1453,12 @@ public class SchemaManager
 		return returnVal;
 	}
 	
-	//--------------------------------------------------------------------------
-	/**	This method deletes all the files and directories inside another the
-	  * schema dir and then the schema dir itself                    
-		*
-		* @param dir the dir whose contents are to be deleted 
-	  */
-
+	/**
+     * This method deletes all the files and directories inside another the schema dir and then the schema dir itself.
+	 *
+	 * @param dir the dir whose contents are to be deleted
+     * @return
+	 */
 	private boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
@@ -1448,14 +1471,13 @@ public class SchemaManager
 		return dir.delete();
 	}
 
-	//--------------------------------------------------------------------------
-	/**	Create a URL that can be used to point to a schema XSD delivered by 
-	  * GeoNetwork
-		*
-		* @param context the ServiceContext used to get setting manager and appPath
-		* @param schemaDir the schema directory
-	  */
-
+	/**
+     * Create a URL that can be used to point to a schema XSD delivered by GeoNetwork.
+	 *
+	 * @param context the ServiceContext used to get setting manager and appPath
+	 * @param schemaDir the schema directory
+     * @return
+	 */
 	public String getSchemaUrl(ServiceContext context, String schemaDir) {
 		SettingInfo si = new SettingInfo(context);
 
@@ -1468,11 +1490,4 @@ public class SchemaManager
 	public String getDefaultSchema() {
 		return defaultSchema;
 	}
-
-	//--------------------------------------------------------------------------
-
-
 }
-
-//=============================================================================
-
