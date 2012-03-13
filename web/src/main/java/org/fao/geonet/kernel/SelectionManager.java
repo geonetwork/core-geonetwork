@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Manage objects selection for a user session
+ * Manage objects selection for a user session.
  */
 public class SelectionManager {
 
@@ -27,8 +27,7 @@ public class SelectionManager {
 
 	public static final String SELECTION_METADATA = "metadata";
 
-	// used to limit select all if get system setting maxrecords fails
-	// or contains value we can't parse
+	// used to limit select all if get system setting maxrecords fails or contains value we can't parse
 	public static final int DEFAULT_MAXHITS = 1000;
 
     private static final String ADD_ALL_SELECTED = "add-all";
@@ -49,7 +48,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Update result elements to present </br>
+	 * Update result elements to present. </br>
 	 * <ul>
 	 * <li>set selected true if result element in session</li>
 	 * <li>set selected false if result element not in session</li>
@@ -100,7 +99,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Update selected element in session
+	 * Updates selected element in session.
 	 * <ul>
 	 * <li>[selected=add] : add selected element</li>
 	 * <li>[selected=remove] : remove non selected element</li>
@@ -121,8 +120,7 @@ public class SelectionManager {
 	 * 
 	 * @return number of selected elements
 	 */
-	public static int updateSelection(String type, UserSession session,
-			Element params, ServiceContext context) {
+	public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
 
 		// Get ID of the selected/deselected metadata
 		String paramid = params.getChildText(Params.ID);
@@ -145,21 +143,20 @@ public class SelectionManager {
 	 * 
 	 * @param type
 	 *            The type of selected element handled in session
-	 * @param selected
+	 * @param context
+     * @param selected
 	 *            true, false, single, all, none
 	 * @param paramid
 	 *            id of the selected element
 	 * 
 	 * @return number of selected element
 	 */
-	public int updateSelection(String type, ServiceContext context,
-			String selected, String paramid) {
+	public int updateSelection(String type, ServiceContext context, String selected, String paramid) {
 
 		// Get the selection manager or create it
 		Set<String> selection = this.getSelection(type);
 		if (selection == null) {
-			this.selections.put(type, Collections
-					.synchronizedSet(new HashSet<String>()));
+			this.selections.put(type, Collections.synchronizedSet(new HashSet<String>()));
 		}
 		if (selected != null) {
 			if (selected.equals(ADD_ALL_SELECTED))
@@ -197,7 +194,7 @@ public class SelectionManager {
 
     /**
 	 * <p>
-	 * Gets selection manager in session, if null creates it
+	 * Gets selection manager in session, if null creates it.
 	 * </p>
 	 * 
 	 * @param session
@@ -205,8 +202,7 @@ public class SelectionManager {
 	 * @return selection manager
 	 */
 	public static SelectionManager getManager(UserSession session) {
-		SelectionManager manager = (SelectionManager) session
-				.getProperty(Geonet.Session.SELECTED_RESULT);
+		SelectionManager manager = (SelectionManager) session.getProperty(Geonet.Session.SELECTED_RESULT);
 		if (manager == null) {
 			manager = new SelectionManager(session);
 			session.setProperty(Geonet.Session.SELECTED_RESULT, manager);
@@ -216,7 +212,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Select all element in a LuceneSearcher or CatalogSearcher
+	 * Selects all element in a LuceneSearcher or CatalogSearcher.
 	 * </p>
 	 * 
 	 * @param type
@@ -264,7 +260,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Close the current selection manager for the given element type
+	 * Closes the current selection manager for the given element type.
 	 * </p>
 	 * 
 	 * @param type
@@ -289,7 +285,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Gets selection for given element type
+	 * Gets selection for given element type.
 	 * </p>
 	 * 
 	 * @param type
@@ -303,7 +299,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Add new element to the selection
+	 * Adds new element to the selection.
 	 * </p>
 	 * 
 	 * @param type
@@ -319,7 +315,7 @@ public class SelectionManager {
 
 	/**
 	 * <p>
-	 * Add a collection to the selection
+	 * Adds a collection to the selection.
 	 * </p>
 	 * 
 	 * @param type
