@@ -528,7 +528,6 @@
             <aggregation>
               <output>${geonetwork.webapp.dir}/scripts/lib/gn.search.js</output>
               <includes>
-                <!--include>${geonetwork.build.dir}/scripts/gn_intermap.js</include-->
                 <include>${geonetwork.build.dir}/scripts/gn_search.js</include>
               </includes>
             </aggregation>

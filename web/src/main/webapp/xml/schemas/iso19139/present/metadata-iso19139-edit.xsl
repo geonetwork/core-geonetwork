@@ -2333,44 +2333,6 @@
   </xsl:template>
 
   <!-- ============================================================================= -->
-  <!-- online resources: ARCIMS - FIXME : remove or update -->
-  <!-- ============================================================================= -->
-
-  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'ESRI:AIMS-') and contains(gmd:protocol/gco:CharacterString,'-get-image') and gmd:name]" priority="2">
-    <xsl:param name="schema"/>
-    <xsl:param name="edit"/>
-    <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
-    <xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
-    <xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
-    
-    <xsl:choose>
-      <xsl:when test="$edit=true()">
-        <xsl:apply-templates mode="iso19139EditOnlineRes" select=".">
-          <xsl:with-param name="schema" select="$schema"/>
-        </xsl:apply-templates>
-      </xsl:when>
-      <xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!='' and string($name)!=''">
-        <xsl:apply-templates mode="simpleElement" select=".">
-          <xsl:with-param name="schema"  select="$schema"/>
-          <xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
-          <xsl:with-param name="text">
-              <a href="javascript:runIM_addService('{$linkage}','{$name}',1)" title="{/root/strings/interactiveMap}">
-                <xsl:choose>
-                <xsl:when test="string($description)!=''">
-                  <xsl:value-of select="$description"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$name"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </a>
-          </xsl:with-param>
-        </xsl:apply-templates>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- ============================================================================= -->
   <!-- online resources: download -->
   <!-- ============================================================================= -->
 
@@ -2717,11 +2679,6 @@
         <xsl:choose>
           <xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and not(contains($linkage,$download_check))">
             <link type="download"><xsl:value-of select="$linkage"/></link>
-          </xsl:when>
-          <xsl:when test="starts-with($protocol,'ESRI:AIMS-') and contains($protocol,'-get-image') and string($linkage)!='' and string($name)!=''">
-            <link type="arcims">
-              <xsl:value-of select="concat('javascript:runIM_addService(&#34;'  ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;, 1)' )"/>
-            </link>
           </xsl:when>
           <xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
             <link type="wms">

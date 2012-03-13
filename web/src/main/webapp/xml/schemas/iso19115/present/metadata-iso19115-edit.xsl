@@ -986,10 +986,7 @@
 					<xsl:with-param name="schema"  select="$schema"/>
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
-						<!-- ETJ 
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={linkage}&amp;service={orName}&amp;type=2')" title="{/root/strings/interactiveMap}">
-						-->
-						<a href="javascript:runIM_addService('{$linkage}','{$name}',2)" title="{/root/strings/interactiveMap}"> 
+						<a href="javascript:addWMSServerLayers('{$linkage}')" title="{/root/strings/interactiveMap}"> 
 								<xsl:choose>
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
@@ -1046,47 +1043,6 @@
 					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
 					<xsl:with-param name="text">
 						<a href="javascript:runIM_selectService('{$linkage}',2,{//geonet:info/id})" title="{/root/strings/interactiveMap}"> 
-							<xsl:choose>
-								<xsl:when test="string($description)!=''">
-									<xsl:value-of select="$description"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$name"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</a>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:template>
-
-	<!--
-	online resources: ARCIMS
-	-->
-	<xsl:template mode="iso19115" match="onLineSrc[starts-with(./protocol,'ESRI:AIMS-') and contains(./protocol,'-get-image') and ./orName]">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		<xsl:variable name="linkage" select="linkage" />
-		<xsl:variable name="name" select="normalize-space(orName)" />
-		<xsl:variable name="description" select="normalize-space(orDesc)" />
-		
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<xsl:apply-templates mode="iso19115EditOnlineRes" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:when test="string(../../../geonet:info/dynamic)='true' and string($linkage)!='' and string($name)!=''">
-				<xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema"  select="$schema"/>
-					<xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
-					<xsl:with-param name="text">
-						<!-- ETj
-						<a href="javascript:popInterMap('{/root/gui/url}/intermap/srv/{/root/gui/language}/map.addServicesExt?url={linkage}&amp;service={orName}&amp;type=1')" title="{/root/strings/interactiveMap}">
-						-->
-							<a href="javascript:runIM_addService('{$linkage}','{$name}',1)" title="{/root/strings/interactiveMap}"> 
-								
 							<xsl:choose>
 								<xsl:when test="string($description)!=''">
 									<xsl:value-of select="$description"/>
@@ -1835,21 +1791,13 @@
 				</xsl:if>
 				
 				<!-- The old links still in use by some systems. Deprecated -->
-				<xsl:comment>The use of these links should be a</xsl:comment>
 				<xsl:choose>
 					<xsl:when test="starts-with(./protocol,'WWW:DOWNLOAD-') and contains(./protocol,'http--download') and string($linkage)!='' and not(contains($linkage,$download_check))"> <!-- FIXME -->
 						<link type="download"><xsl:value-of select="$linkage"/></link>
 					</xsl:when>
-					<xsl:when test="starts-with(./protocol,'ESRI:AIMS-') and contains(./protocol,'-get-image') and string($linkage)!='' and string($name)!=''">
-						<link type="arcims">
-							<!-- ETj  <xsl:value-of select="concat('javascript:popInterMap(&#34;',/root/gui/url,'/intermap/srv/',/root/gui/language,'/map.addServicesExt?url=',linkage,'&amp;service=',orName,'&amp;type=1&#34;)')"/> -->							
-							<xsl:value-of select="concat('javascript:runIM_addService(&#34;',$linkage,'&#34;,&#34;',$name,'&#34;,1);')"/>
-						</link>
-					</xsl:when>
 					<xsl:when test="starts-with(./protocol,'OGC:WMS-') and contains(./protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
 						<link type="wms">
-							<!-- ETj -->
-							<xsl:value-of select="concat('javascript:runIM_addService(&#34;',$linkage,'&#34;,&#34;',$name,'&#34;,2);')"/>
+							<xsl:value-of select="concat('javascript:addWMSServerLayers(&#34;',$linkage,'&#34;);')"/>
 						</link>
 						<link type="googleearth">
 							<xsl:value-of select="concat(/root/gui/locService,'/google.kml?uuid=',$uuid,'&amp;layers=',$name)"/>
