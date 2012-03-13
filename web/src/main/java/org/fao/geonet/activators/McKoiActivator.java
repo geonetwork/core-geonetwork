@@ -33,8 +33,10 @@ import org.jdom.Element;
 
 //==============================================================================
 
-public class McKoiActivator implements Activator
-{
+/**
+ * TODO javadoc.
+ */
+public class McKoiActivator implements Activator {
 	private McKoiDB mckoiDB = new McKoiDB();
 
 	//---------------------------------------------------------------------------
@@ -43,8 +45,14 @@ public class McKoiActivator implements Activator
 	//---
 	//---------------------------------------------------------------------------
 
-	public void startup(String appPath, Element config) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param appPath
+     * @param config
+     * @throws Exception
+     */
+	public void startup(String appPath, Element config) throws Exception {
 		String configFile = config.getChildText("configFile");
 		String address    = config.getChildText("address");
 
@@ -56,6 +64,10 @@ public class McKoiActivator implements Activator
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     */
 	public void shutdown()
 	{
 		mckoiDB.stop();

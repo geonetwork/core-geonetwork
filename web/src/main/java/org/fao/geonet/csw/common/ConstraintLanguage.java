@@ -4,12 +4,11 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 
 /**
- * Check that constraint language is one of CQL or FILTER
+ * Check that constraint language is one of CQL or FILTER.
  * 
  *
  */
-public enum ConstraintLanguage
-{
+public enum ConstraintLanguage {
 	CQL("CQL_TEXT"), FILTER("FILTER");
 
 	//------------------------------------------------------------------------
@@ -20,11 +19,15 @@ public enum ConstraintLanguage
 
 	public String toString() { return language; }
 
-	//------------------------------------------------------------------------
-
-	public static ConstraintLanguage parse(String language) throws MissingParameterValueEx,
-																						InvalidParameterValueEx
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param language
+     * @return
+     * @throws MissingParameterValueEx
+     * @throws InvalidParameterValueEx
+     */
+	public static ConstraintLanguage parse(String language) throws MissingParameterValueEx, InvalidParameterValueEx {
 		if (language == null)
 			throw new MissingParameterValueEx("constraintLanguage");
 

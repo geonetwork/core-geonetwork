@@ -2,6 +2,9 @@ package org.fao.geonet.csw.common;
 
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 
+/**
+ * TODO javadoc.
+ */
 public enum ElementSetName {
 	BRIEF("brief"), SUMMARY("summary"), FULL("full");
 

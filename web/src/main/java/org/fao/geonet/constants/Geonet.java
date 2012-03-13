@@ -29,10 +29,10 @@ import jeeves.constants.Jeeves;
 
 import org.jdom.Namespace;
 
-//=============================================================================
-
-public class Geonet
-{
+/**
+ * TODO javadoc.
+ */
+public class Geonet {
 	public static final String CONTEXT_NAME = "contextName";
 	public static final String DEFAULT_LANGUAGE = "en";
 	public static final Namespace XSD_NAMESPACE = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -42,11 +42,10 @@ public class Geonet
 	public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
     public static final String LUCENE_LOCALE_KEY = "_locale";
 
-	//--------------------------------------------------------------------------
-	//--- container for file names
-
-	public class File
-	{
+    /**
+     * Container for file names.
+     */
+	public class File {
 		public static final String SCHEMA              = "schema.xsd";
 		public static final String SCHEMATRON          = "schematron.xsl";
 		public static final String SCHEMATRON_XML      = "schematron_xml.xsl";
@@ -85,16 +84,14 @@ public class Geonet
 		public static final int METADATA_MAX_BLANKS 	 = 20;
 	}
 
-	public class SchemaPath
-	{
+	public class SchemaPath {
 		public static final String OAI_PMH = "xml/validation/oai/OAI-PMH.xsd";
 	}
 
-	//--------------------------------------------------------------------------
-	//--- container for elements
-
-	public class Elem
-	{
+    /**
+     * Container for elements.
+     */
+	public class Elem {
 		public static final String DOMAINS    = "domains";
 		public static final String GROUPS     = "groups";
 		public static final String GROUP      = "group";
@@ -123,18 +120,15 @@ public class Geonet
         public static final String ENABLED    = "enabled";
 	}
 
-	//--------------------------------------------------------------------------
-	//--- container for element attribs
+    /**
+     * Container for element attribs.
+     */
+	public class Attr {}
 
-	public class Attr
-	{
-	}
-
-	//--------------------------------------------------------------------------
-	//--- resource directory and search configuration file
-
-	public class Path
-	{
+    /**
+     * Resource directory and search configuration file.
+     */
+	public class Path {
 		public static final String SCHEMAS            = Jeeves.Path.XML + "schemas/";
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
@@ -152,11 +146,10 @@ public class Geonet
 		public static final String XML                = Jeeves.Path.XML;
 	}
 
-	//--------------------------------------------------------------------------
-	//--- Session constants
-
-	public class Session
-	{
+    /**
+     * Session constants.
+     */
+	public class Session {
 		public static final String MAIN_SEARCH				= "main.search";
 		public static final String SEARCH_RESULT			= "search.result";
 		public static final String LAST_SEARCH_RESULT = "last.search.result";
@@ -172,11 +165,10 @@ public class Geonet
 		public static final String FILE_DISCLAIMER    = "file.disclaimer";
 	}
 
-	//--------------------------------------------------------------------------
-	//--- resource names
-
-	public class Res
-	{
+    /**
+     * Resource names.
+     */
+	public class Res {
 		public static final String MAIN_DB = "main-db";
 	}
 
@@ -186,8 +178,7 @@ public class Geonet
 	 * @see ../services.util.MainUtil.getDefaultSearch for
 	 * default values.
 	 */
-	public class SearchResult
-	{
+	public class SearchResult {
         /** Parameter name: {@value #TITLE} - Free text field that searches
          * in the title */
 		public static final String TITLE         = "title";
@@ -393,11 +384,10 @@ public class Geonet
 		public static final String BUILD_SUMMARY = "buildSummary";
 		public static final String SUMMARY_ONLY = "summaryOnly";
 
-
-		//-----------------------------------------------------------------------
-
-        public class ResultType 
-        {
+        /**
+         * TODO javadoc.
+         */
+        public class ResultType  {
             public static final String RESULTS                  = "results";
             public static final String HITS                     = "hits";
             public static final String VALIDATE                 = "validate";
@@ -408,10 +398,10 @@ public class Geonet
             public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
         }
 
-		//-----------------------------------------------------------------------
-
-		public class Relation
-		{
+        /**
+         * TODO java.
+         */
+		public class Relation {
 			public static final String EQUAL     = "equal";
 			public static final String OVERLAPS  = "overlaps";
 			public static final String ENCLOSES  = "encloses";
@@ -423,18 +413,18 @@ public class Geonet
             public static final String WITHIN = "within";
 		}
 
-		//-----------------------------------------------------------------------
-
-		public class Output
-		{
+        /**
+         * TODO javadoc.
+         */
+		public class Output {
 			public static final String FULL = "full";
 			public static final String TEXT = "text";
 		}
 
-		//-----------------------------------------------------------------------
-
-		public class SortBy
-		{
+        /**
+         * TODO javadoc.
+         */
+		public class SortBy {
 			public static final String RELEVANCE = "relevance";
 			public static final String RATING    = "rating";
 			public static final String POPULARITY= "popularity";
@@ -447,11 +437,10 @@ public class Geonet
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	//--- container for profile names
-
-	public class Profile
-	{
+    /**
+     * Container for profile names.
+     */
+	public class Profile {
 		public static final String ADMINISTRATOR = "Administrator";
 		public static final String USER_ADMIN    = "UserAdmin";
 		public static final String REVIEWER      = "Reviewer";
@@ -460,11 +449,10 @@ public class Geonet
 		public static final String GUEST         = "Guest";
 	}
 
-	//--------------------------------------------------------------------------
-	//--- container for config elements that are inside the configuration file
-
-	public class Config
-	{
+    /**
+     * Container for config elements that are inside the configuration file.
+     */
+	public class Config {
 		public static final String HTMLCACHE_DIR    = "htmlCacheDir";
 		public static final String LUCENE_DIR       = "luceneDir";
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
@@ -489,22 +477,20 @@ public class Geonet
         
 	}
 
-	//--------------------------------------------------------------------------
-	//--- container for element values
-
-	public class Text
-	{
+    /**
+     * Container for element values.
+     */
+	public class Text {
 		public static final String ON         = "on";
 		public static final String OFF        = "off";
 		public static final String DOWN       = "down";
 		public static final String GRAPH_OVER = "graphOver";
 	}
 
-	//--------------------------------------------------------------------------
-	//--- Codelist directories
-
-	public class CodeList
-	{
+    /**
+     * Codelist directories.
+     */
+	public class CodeList {
 		public static final String LOCAL              = "local";
 		public static final String EXTERNAL           = "external";
 
@@ -513,9 +499,9 @@ public class Geonet
 		public static final String CRS                = "crs";
 	}
 
-	//--------------------------------------------------------------------------
+	//
 	//--- logging
-
+    //
 	public static final String GEONETWORK   = "geonetwork";
 	public static final String HARVEST_MAN  = GEONETWORK + ".harvest-man";
 	public static final String HARVESTER    = GEONETWORK + ".harvester";
@@ -549,12 +535,11 @@ public class Geonet
   // keys for logging search log
 	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
 	public static final String THREADPOOL = GEONETWORK + ".threadpool";
-	
-	//--------------------------------------------------------------------------
-	//--- services
 
-	public class Service
-	{
+    /**
+     * Services.
+     */
+	public class Service {
 		public static final String XML_LOGIN         = "xml.user.login";
 		public static final String XML_LOGOUT        = "xml.user.logout";
 		public static final String XML_INFO          = "xml.info";
@@ -566,6 +551,3 @@ public class Geonet
 	}
 
 }
-
-//=============================================================================
-

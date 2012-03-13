@@ -23,13 +23,10 @@
 
 package org.fao.geonet.constants;
 
-//=============================================================================
-
-/** Constants for service parameters (elements and attributes)
-  */
-
-public class Params
-{
+/**
+ * Constants for service parameters (elements and attributes).
+ */
+public class Params {
 	public static final String ACCESS       = "access";
 	public static final String BTN          = "btn";
 	public static final String CATEGORY     = "category";
@@ -117,29 +114,39 @@ public class Params
     public static final String STATUS = "status";
     public static final String CHANGE_MESSAGE = "changeMessage";
 
-	public class Access
-	{
+    /**
+     * TODO javadoc.
+     */
+	public class Access {
 		public static final String PUBLIC  = "public";
 		public static final String PRIVATE = "private";
 	}
 
-	public class Operation
-	{
+    /**
+     * TODO javadoc.
+     */
+	public class Operation {
 		public static final String NEWUSER  = "newuser";
 		public static final String EDITINFO = "editinfo";
 		public static final String FULLUPDATE = "fullupdate";
 		public static final String RESETPW = "resetpw";
 	}
 
+    /**
+     * TODO javadoc.
+     */
 	public class Status { 
-    public static final String UNKNOWN   = "0";
-    public static final String DRAFT     = "1";
-    public static final String APPROVED  = "2";
-    public static final String RETIRED   = "3";
-    public static final String SUBMITTED = "4";
-    public static final String REJECTED  = "5";
+        public static final String UNKNOWN   = "0";
+        public static final String DRAFT     = "1";
+        public static final String APPROVED  = "2";
+        public static final String RETIRED   = "3";
+        public static final String SUBMITTED = "4";
+        public static final String REJECTED  = "5";
 	}
 
+    /**
+     * TODO javadoc.
+     */
 	public class Svn {
 		public static final String DBURLPROP = "geonet:dburl";
 		public static final String OPERATOR  = "geonet:operator";
@@ -151,6 +158,3 @@ public class Params
 	}
 
 }
-
-//=============================================================================
-

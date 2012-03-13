@@ -32,7 +32,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,19 +40,16 @@ import java.util.Map;
 /**
  * Class to parse GetCapabilities document.
  */
-public class CswServer
-{
+public class CswServer {
 	public static final String GET_RECORDS      = "GetRecords";
 	public static final String GET_RECORD_BY_ID = "GetRecordById";
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-
-	public CswServer(Element capab)
-	{
+    /**
+     * Constructor.
+     *
+     * @param capab
+     */
+	public CswServer(Element capab) {
 		parse(capab);
 	}
 
@@ -63,9 +59,8 @@ public class CswServer
 	//---
 	//---------------------------------------------------------------------------
 
-	public void parse(Element capab)
-	{
-		logs      .clear();
+	public void parse(Element capab) {
+		logs.clear();
 		operations.clear();
 
         parseVersions(capab);
@@ -83,23 +78,23 @@ public class CswServer
 	//--- Private methods
 	//---
 	//---------------------------------------------------------------------------
-	/**
-	 * Get available operations in the GetCapabilities document 
-	 */
-	private void parseOperations(Element capabil)
-	{
+
+    /**
+     * Get available operations in the GetCapabilities document.
+     *
+     * @param capabil
+     */
+	private void parseOperations(Element capabil) {
 		Element operMd = capabil.getChild("OperationsMetadata", Csw.NAMESPACE_OWS);
 
 		if (operMd == null)
 			log("Missing 'ows:OperationsMetadata' element");
 
 		else
-			for(Object e : operMd.getChildren())
-			{
+			for(Object e : operMd.getChildren()) {
 				Element elem = (Element) e;
 
-				if ("Operation".equals(elem.getName()))
-				{
+				if ("Operation".equals(elem.getName())) {
 					CswOperation oper = extractOperation(elem);
 
 					if (oper != null)
@@ -108,21 +103,19 @@ public class CswServer
 			}
     }
 
-	//---------------------------------------------------------------------------
-
-	/**
-	 * Get operations name and properties needed for futur operation calls. 
-	 */
-	private CswOperation extractOperation(Element oper)
-	{
+    /**
+     * Get operations name and properties needed for futur operation calls.
+     *
+     * @param oper
+     * @return
+     */
+	private CswOperation extractOperation(Element oper) {
 		String name = oper.getAttributeValue("name");
 
-		if (name == null)
-		{
+		if (name == null) {
 			log("Operation has no 'name' attribute");
 			return null;
 		}
-
 
 		CswOperation op = new CswOperation();
 		op.name   = name;
@@ -130,7 +123,6 @@ public class CswServer
 		List<Element> dcp = oper.getChildren("DCP", Csw.NAMESPACE_OWS);
 		evaluateUrl(dcp, op);
 
-		
 		List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
 		log("Found " + parameters.size() + " parameters for operation: " + name);
 		List<Element> outputSchemas = null;
@@ -222,17 +214,19 @@ public class CswServer
     }
 
     /**
-     * Get server supported versions
+     * Gets server supported versions.
+     *
+     * @param capabil
      */
-    private void parseVersions(Element capabil)
-    {
+    private void parseVersions(Element capabil) {
         List<String> serverVersions = new ArrayList<String>();
         Element serviceIdentificationMd = capabil.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
 
         if (serviceIdentificationMd == null) {
             log("Missing 'ows:ServiceTypeVersion' element");
-        } else {
-
+        }
+        else {
+            @SuppressWarnings(value = "unchecked")
             List<Element> serviceIdentificationMdElems = serviceIdentificationMd.getChildren();
             for (Element value : serviceIdentificationMdElems) {
                 String valueName = value.getName();
@@ -260,19 +254,15 @@ public class CswServer
 
     }
 
-
-	//---------------------------------------------------------------------------
-	/**
-	 * Search for valid POST or GET
-	 * URL and check that service is available
-	 * using GET method or POST/XML.
-	 * 
-	 * SOAP services are not supported (TODO ?).
-	 */
-	private void evaluateUrl(List<Element> dcps, CswOperation op)
-	{
-		if (dcps == null)
-		{
+    /**
+     * Search for valid POST or GET URL and check that service is available using GET method or POST/XML.
+     *
+     * SOAP services are not supported (TODO ?).
+     * @param dcps
+     * @param op
+     */
+	private void evaluateUrl(List<Element> dcps, CswOperation op) {
+		if (dcps == null) {
 			log("Missing 'ows:DCP' element in operation");
 			return;
 		}
@@ -305,9 +295,8 @@ public class CswServer
 				}
 			}
 			
-			
-			
 			// POST method
+            @SuppressWarnings(value = "unchecked")
 			List<Element> postUrlList = http.getChildren("Post", Csw.NAMESPACE_OWS);
 
             for(Element postUrl: postUrlList) {
@@ -347,8 +336,7 @@ public class CswServer
 
 	//---------------------------------------------------------------------------
 
-	private void log(String message)
-	{
+	private void log(String message) {
 		logs.add(message);
 		Log.debug(Geonet.HARVEST_MAN, message);
 	}
