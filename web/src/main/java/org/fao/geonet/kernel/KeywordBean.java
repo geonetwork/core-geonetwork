@@ -30,6 +30,10 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO javadoc.
+ *
+ */
 public class KeywordBean {
 	private int id;
 	private String value;
@@ -45,12 +49,12 @@ public class KeywordBean {
     private String thesaurusTitle;
 	private String thesaurusDate;
 
-	private static final Namespace NS_GMD = Namespace.getNamespace("gmd",
-			"http://www.isotc211.org/2005/gmd");
-	private static final Namespace NS_GCO = Namespace.getNamespace("gco",
-			"http://www.isotc211.org/2005/gco");
+	private static final Namespace NS_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+	private static final Namespace NS_GCO = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 	
 	/**
+     * TODO javadoc.
+     *
 	 * @param id
 	 * @param value
 	 * @param definition
@@ -61,6 +65,9 @@ public class KeywordBean {
 	 * @param coordNorth
 	 * @param thesaurus
 	 * @param selected
+     * @param lang
+     * @param thesaurusTitle
+     * @param thesaurusDate
 	 */
 	public KeywordBean(int id, String value, String definition, String code, 
 				String coordEast, String coordWest, 
@@ -83,6 +90,8 @@ public class KeywordBean {
 	}
 
 	/**
+     * TODO javadoc.
+     *
 	 * @param id
 	 * @param value
 	 * @param definition
@@ -99,6 +108,8 @@ public class KeywordBean {
 	}
 	
 	/**
+     * TODO javadoc.
+     *
 	 * @param value
 	 * @param definition
 	 * @param thesaurus
@@ -111,8 +122,6 @@ public class KeywordBean {
 		this.thesaurus = thesaurus;
 		this.selected = selected;
 	}
-
-	
 
 	public String getDefinition() {
 		return definition;
@@ -162,13 +171,18 @@ public class KeywordBean {
 		this.id = id;
 	}
 
-	/*
-	 * return the URI of the keyword concept
+	/**
+	 * Returns the URI of the keyword concept.
 	 */
 	public String getCode() {
 		return code;
 	}
 
+    /**
+     * TODO javadoc.
+     *
+     * @return
+     */
 	public String getRelativeCode() {
 		if (code.contains("#"))
 		    return code.split("#")[1];
@@ -176,6 +190,11 @@ public class KeywordBean {
 			return code;
 	}
 
+    /**
+     * TODO javadoc.
+     *
+     * @return
+     */
 	public String getNameSpaceCode() {
 		if (code.contains("#"))
 			return code.split("#")[0] + "#";
@@ -218,15 +237,19 @@ public class KeywordBean {
 	public void setCoordSouth(String coordSouth) {
 		this.coordSouth = coordSouth;
 	}
-	
+
+    /**
+     * TODO javadoc.
+     *
+     * @return
+     */
 	public String getType() {
 		int tmpDotIndex = thesaurus.indexOf('.');
 		return thesaurus.substring(tmpDotIndex+1, thesaurus.indexOf(".",tmpDotIndex+1));
 	}
 	
 	/**
-	 * Transform a KeywordBean object into its
-	 * iso19139 representation
+	 * Transforms a KeywordBean object into its iso19139 representation.
 	 * 
 	 * <pre>
 	 * 		<gmd:keyword xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="">
@@ -267,8 +290,7 @@ public class KeywordBean {
 	}
 
 	/**
-	 * Transform a list of KeywordBean object into its
-	 * iso19139 representation
+	 * Transforms a list of KeywordBean object into its iso19139 representation.
 	 *  
 	 *  <pre>
 	 *  <gmd:MD_Keywords>
@@ -329,7 +351,7 @@ public class KeywordBean {
 	}
 	
 	/**
-	 * Create keyword type element.
+	 * Creates keyword type element.
 	 * 
 	 * @param kb
 	 * @return
@@ -345,7 +367,7 @@ public class KeywordBean {
 	}
 	
 	/**
-	 * Create thesaurus name element.
+	 * Creates thesaurus name element.
 	 * 
 	 * @param kb
 	 * @return
