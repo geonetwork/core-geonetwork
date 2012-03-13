@@ -29,7 +29,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
@@ -61,10 +60,10 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
@@ -72,15 +71,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Iterator;
-import java.util.Arrays;
 
 //=============================================================================
 
@@ -410,7 +408,9 @@ public class CatalogSearcher {
         }
         // TODO do not just use context getlanguage ?
 
-		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeLocalisedQuery(luceneExpr, SearchManager.getAnalyzer(context.getLanguage()), _tokenizedFieldSet, _numericFieldSet, context.getLanguage(), false);
+		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeLocalisedQuery(luceneExpr,
+                SearchManager.getAnalyzer(context.getLanguage()), _tokenizedFieldSet, _numericFieldSet,
+                context.getLanguage(), false);
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
         Query cswCustomFilterQuery = null;

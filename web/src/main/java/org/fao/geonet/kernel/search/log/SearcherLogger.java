@@ -22,6 +22,7 @@ import org.fao.geonet.constants.Geonet;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -35,31 +36,45 @@ import java.util.Vector;
  * 
  */
 public class SearcherLogger {
+
 	private ServiceContext srvContext;
 	private boolean isEnabled;
-  private boolean logSpatial;
-  private List<String> luceneTermsToExclude;
+    private List<String> luceneTermsToExclude;
 
-	/**
-	 * Constructor
-	 */
+    /**
+     * Constructor.
+     *
+     * @param srvContext
+     * @param logSpatial
+     * @param luceneTermsList
+     */
 	public SearcherLogger(ServiceContext srvContext, boolean logSpatial, String luceneTermsList) {
 		this.srvContext = srvContext;
-    this.logSpatial = logSpatial;
 
-    this.luceneTermsToExclude = Arrays.asList(luceneTermsList.split(","));
+        this.luceneTermsToExclude = Arrays.asList(luceneTermsList.split(","));
 		
 		if (srvContext == null) { // todo: handle exception/errors
 			Log.warning(Geonet.SEARCH_LOGGER, "null serviceContext object. will not be able to log queries...");
 			this.isEnabled = false;
-		} else {
+		}
+        else {
 			this.isEnabled = true;
 		}
 
-		Log.debug(Geonet.SEARCH_LOGGER, "SearcherLogger created. Spatial object logging ? " 
-				+ this.logSpatial + ". lucene terms to exclude from log: " + luceneTermsList);
+		Log.debug(Geonet.SEARCH_LOGGER, new StringBuilder().append("SearcherLogger created. Spatial object logging ? ")
+                .append(logSpatial).append(". lucene terms to exclude from log: ")
+                .append(luceneTermsList).toString());
 	}
 
+    /**
+     * TODO javadoc.
+     *
+     * @param query
+     * @param numHits
+     * @param sort
+     * @param geomFilterWKT
+     * @param guiService
+     */
 	public void logSearch(Query query, int numHits, Sort sort, String geomFilterWKT, String guiService) {
 		if (!isEnabled) {
 			return;
@@ -112,21 +127,25 @@ public class SearcherLogger {
     			}
     		}
     		*/
-		}catch (Exception e) {
+		}
+        catch (Exception e) {
             // I dont want the log to cause an exception and hide the real problem.
 		    Log.error(Geonet.SEARCH_LOGGER, "Error logging search: "+e.getMessage());
             e.printStackTrace(); //fixme should be removed after control.
-		}finally {
+		}
+        finally {
 			try {
 				if (dbms != null) srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-			} catch (Exception e) {
-		    Log.error(Geonet.SEARCH_LOGGER, "There may have been an error logging the search: "+e.getMessage());
+			}
+            catch (Exception e) {
+		        Log.error(Geonet.SEARCH_LOGGER, "There may have been an error logging the search: "+e.getMessage());
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	/** Returns a dictionary containing field/text for the given query
+	/**
+     * Returns a dictionary containing field/text for the given query.
 	 *  
 	 * @param query The query to process to extract terms and 
 	 * @return a Hashtable whose key is the field and the value is the text
@@ -136,7 +155,7 @@ public class SearcherLogger {
 			return null;
 		}
 		Vector<QueryInfo> result = new Vector<QueryInfo>();
-		BooleanClause[] clauses = null;
+		BooleanClause[] clauses;
 		QueryInfo qInfo = null;
 		if (query instanceof BooleanQuery) {
 			BooleanQuery bq = (BooleanQuery) query;
@@ -145,67 +164,68 @@ public class SearcherLogger {
 			for (BooleanClause clause : clauses) {
 				result.addAll(extractQueryTerms(clause.getQuery()));
 			}
-		} else if (query instanceof TermQuery) {
-			qInfo = new QueryInfo(((TermQuery)query).getTerm().field(),
-					((TermQuery)query).getTerm().text(),
-					QueryInfo.TERM_QUERY);
-			
-		} else if (query instanceof FuzzyQuery) {
-			qInfo = new QueryInfo(((FuzzyQuery)query).getTerm().field(),
-					((FuzzyQuery)query).getTerm().text(),
-					QueryInfo.FUZZY_QUERY);
+		}
+        else if (query instanceof TermQuery) {
+			qInfo = new QueryInfo(((TermQuery)query).getTerm().field(), ((TermQuery)query).getTerm().text(),
+                    QueryInfo.TERM_QUERY);
+		}
+        else if (query instanceof FuzzyQuery) {
+			qInfo = new QueryInfo(((FuzzyQuery)query).getTerm().field(), ((FuzzyQuery)query).getTerm().text(),
+                    QueryInfo.FUZZY_QUERY);
 			qInfo.setSimilarity(((FuzzyQuery)query).getMinSimilarity());
-		} else if (query instanceof PrefixQuery) {
-			qInfo = new QueryInfo(((PrefixQuery)query).getPrefix().field(),
-					((PrefixQuery)query).getPrefix().text(),
-					QueryInfo.PREFIX_QUERY);
-		} else if (query instanceof MatchAllDocsQuery) {
+		}
+        else if (query instanceof PrefixQuery) {
+			qInfo = new QueryInfo(((PrefixQuery)query).getPrefix().field(), ((PrefixQuery)query).getPrefix().text(),
+                    QueryInfo.PREFIX_QUERY);
+		}
+        else if (query instanceof MatchAllDocsQuery) {
 			// extract all terms for this query (text and field)
-			HashSet<Term> terms = new HashSet<Term>();
-			((MatchAllDocsQuery)query).extractTerms(terms);
+			Set<Term> terms = new HashSet<Term>();
+			query.extractTerms(terms);
 			// one should consider that all terms refer to the same field, or not ?
 			String fields = concatTermsField(terms.toArray(new Term[terms.size()]), null);
 			String texts = concatTermsText(new Term[terms.size()], null);
-			qInfo = new QueryInfo(fields,
-					texts,
-					QueryInfo.MATCH_ALL_DOCS_QUERY);
-		} else if (query instanceof WildcardQuery) {
-			qInfo = new QueryInfo(((WildcardQuery)query).getTerm().field(),
-					((WildcardQuery)query).getTerm().text(),
-					QueryInfo.WILDCARD_QUERY);
-		} else if (query instanceof PhraseQuery) {
+			qInfo = new QueryInfo(fields, texts, QueryInfo.MATCH_ALL_DOCS_QUERY);
+		}
+        else if (query instanceof WildcardQuery) {
+			qInfo = new QueryInfo(((WildcardQuery)query).getTerm().field(), ((WildcardQuery)query).getTerm().text(),
+                    QueryInfo.WILDCARD_QUERY);
+		}
+        else if (query instanceof PhraseQuery) {
 			// extract all terms for this query (text and field)
 			Term[] terms = ((PhraseQuery)query).getTerms();
 			String fields = concatTermsField(terms, null);
 			String texts = concatTermsText(terms, null);
-			qInfo = new QueryInfo(fields,
-					texts,
-					QueryInfo.PHRASE_QUERY);
-		} else if (query instanceof TermRangeQuery) {
+			qInfo = new QueryInfo(fields, texts, QueryInfo.PHRASE_QUERY);
+		}
+        else if (query instanceof TermRangeQuery) {
 			qInfo = new QueryInfo(QueryInfo.RANGE_QUERY);
 			qInfo.setLowerText(((TermRangeQuery)query).getLowerTerm());
 			qInfo.setUpperText(((TermRangeQuery)query).getUpperTerm());
 			// we consider that all terms are comming from the same field for this query
 			qInfo.setField(((TermRangeQuery)query).getField());
-		} else if (query instanceof NumericRangeQuery) {
+		}
+        else if (query instanceof NumericRangeQuery) {
 			qInfo = new QueryInfo(QueryInfo.NUMERIC_RANGE_QUERY);
 			qInfo.setLowerText(((NumericRangeQuery<?>)query).getMin().toString());
 			qInfo.setUpperText(((NumericRangeQuery<?>)query).getMax().toString());
 			qInfo.setField(((NumericRangeQuery<?>)query).getField());
-		} else {
+		}
+        else {
 			Log.warning(Geonet.SEARCH_LOGGER, "unknown queryInfo type: " + query.getClass().getName());
 		}
 
 		if (qInfo != null && !this.luceneTermsToExclude.contains(qInfo.getField())) {
 			result.add(qInfo);
-		} else if (qInfo != null) {
+		}
+        else if (qInfo != null) {
     		//Log.debug(Geonet.SEARCH_LOGGER, "excluding this term from log: " + qInfo.getField() + " - " + qInfo.getText());
         }
 		return result;
 	}
 	
 	/**
-	 * concatenates the given terms' text into a single String, with the given separator
+	 * Concatenates the given terms' text into a single String, with the given separator.
 	 * 
 	 * @param terms the set of terms to concatenate
 	 * @param separator the separator to use to separate text elements (use ',' if sep is null)
@@ -214,10 +234,9 @@ public class SearcherLogger {
 	private String concatTermsText(Term[] terms, String separator) {
 		if (terms == null || separator == null) return null;
 
-		String sep = separator == null ? "," : separator;
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 		for (Term t : terms) {
-			sb.append(t.text()).append(sep);
+			sb.append(t.text()).append(separator);
 		}
 		if (sb.length() > 0) {
 			sb.deleteCharAt(sb.length()-1);
@@ -226,7 +245,7 @@ public class SearcherLogger {
 	}
 	
 	/**
-	 * concatenates the given terms' fields into a single String, with the given separator
+	 * Concatenates the given terms' fields into a single String, with the given separator.
 	 * 
 	 * @param terms the set of terms to concatenate
 	 * @param separator the separator to use to separate text elements  (use ',' if sep is null)
@@ -235,10 +254,9 @@ public class SearcherLogger {
 	private String concatTermsField(Term[] terms, String separator) {
 		if (terms == null || separator == null) return null;
 
-		String sep = separator == null ? "," : separator;
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 		for (Term t : terms) {
-			sb.append(t.field()).append(sep);
+			sb.append(t.field()).append(separator);
 		}
 		if (sb.length() > 0) {
 			sb.deleteCharAt(sb.length()-1);
@@ -247,11 +265,12 @@ public class SearcherLogger {
 	}
 	
 	/**
-	 * Concatenates the given sortFields into a single string of the form
+	 * Concatenates the given sortFields into a single string of the form.
 	 * The concatenation will lead to a string:
 	 * <field> ASC|DESC,<field> ASC|DESC,...
 	 * where <field> is the sort field name and ASC means ascending sort; DESC means descending sort
 	 * (reverse sort)
+     *
 	 * @param sortFields the array of fields to concatenate
 	 * @return a string containing fields concatenated.
 	 */
@@ -271,4 +290,3 @@ public class SearcherLogger {
 		return sb.toString();
 	}
 }
-
