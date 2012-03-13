@@ -914,8 +914,16 @@
           <xsl:otherwise>
             <!-- codelist in view mode -->
             <xsl:if test="normalize-space($value)!=''">
-              <b><xsl:value-of select="$codelist/entry[code = $value]/label"/></b>
-              <xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
+              <xsl:variable name="label" select="$codelist/entry[code = $value]/label"/>
+              <xsl:choose>
+                <xsl:when test="normalize-space($label)!=''">
+                  <b><xsl:value-of select="$label"/></b>
+                  <xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <b><xsl:value-of select="$value"/></b>
+                </xsl:otherwise>
+              </xsl:choose>
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
