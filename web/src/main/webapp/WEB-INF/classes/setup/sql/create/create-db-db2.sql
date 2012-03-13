@@ -68,6 +68,7 @@ CREATE TABLE IsoLanguages
   (
     id    int not null,
     code  varchar(3)   not null,
+    shortcode varchar(2),
     primary key(id),
     unique(code)
   );
