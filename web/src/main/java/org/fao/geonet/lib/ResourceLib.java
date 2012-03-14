@@ -32,7 +32,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 
 import java.io.File;
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utility class to deal with data and removed directory.
@@ -124,7 +124,7 @@ public class ResourceLib {
 
 		AccessManager accessMan = gc.getAccessManager();
 
-		HashSet hsOper = accessMan.getOperations(context, id, context
+		Set hsOper = accessMan.getOperations(context, id, context
 				.getIpAddress());
 
 		if (!hsOper.contains(operation))
