@@ -112,7 +112,7 @@ class Z3950Searcher extends MetaSearcher
 
 		// --  process params if we don't have a fully specified zquery 
 		if (query == null) { 
-			request.addContent(Lib.db.select(dbms, "Regions", "region"));
+			request.addContent(RegionsData.getRegions(dbms));
 
 			Element xmlQuery = _searchMan.transform(_styleSheetName, request);
 

@@ -57,7 +57,7 @@ public class DbLib {
 
 	// -----------------------------------------------------------------------------
 
-	public Element select(Dbms dbms, String table, String name, String where)
+	private Element select(Dbms dbms, String table, String name, String where)
 			throws SQLException {
 		String query = "SELECT * FROM " + table;
 
