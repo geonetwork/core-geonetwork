@@ -1288,6 +1288,8 @@ public class SearchManager {
 		if (!rebuild) {
 			try {
                 _indexReader = new LuceneIndexReaderFactory(_luceneDir);
+                // reason for calling this is a side-effect, probably the call to maybeReopen() inside there
+                _indexReader.getReader(null);
                 badIndex = false;
             }
             catch (AssertionError e) {
