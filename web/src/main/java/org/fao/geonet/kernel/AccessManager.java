@@ -110,7 +110,7 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	private Set<String> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
+	public Set<String> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
 		return getOperations(context, mdId, ip, null);
 	}
 
