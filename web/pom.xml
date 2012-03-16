@@ -29,7 +29,14 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
-    
+
+      <!-- rewrite url servletfilter -->
+      <dependency>
+          <groupId>org.tuckey</groupId>
+          <artifactId>urlrewritefilter</artifactId>
+          <version>3.2.0</version>
+      </dependency>
+
     <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
