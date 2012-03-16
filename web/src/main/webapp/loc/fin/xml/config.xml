@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Sivusto</site>
+	<name>Nimi</name>
+	<organ>Organisaatio</organ>
+	
+	<server>Palvelin</server>
+	<host>Host-palvelin</host>
+	<port>Portti</port>
+	
+	<intranet>Intranet</intranet>
+	<network>Verkko</network>
+	<netmask>Verkkomaski</netmask>
+	
+	<z3950>Z39.50-palvelin</z3950>
+	<enable>Ota käyttöön</enable>
+
+	<oai>OAI-palvelun tarjoaja</oai>
+		<datesearch>Päivämäärän haku</datesearch>
+		<datesearchopt>
+			<dsopt label="Ajallinen kattavuus">1</dsopt>
+			<dsopt label="Muokkauspäivä">2</dsopt>
+		</datesearchopt>
+	
+		<tokentimeout>Enimmäiskesto</tokentimeout>
+		<cachesize>Välimuistin koko</cachesize>
+
+	<xlinkResolver>XLink-elementtien muodostaminen</xlinkResolver>
+
+    <inspire>Inspire</inspire>
+
+    <multilingual>Monikielinen asetukset</multilingual>
+    <autoDetectEnable>Ota automaattinen havaita etsittäväks kieltä</autoDetectEnable>
+    <requestedlanguageonly>Etsi vain pyydetystä kielestä</requestedlanguageonly>
+    <requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
+    <requestedlanguageignored>Ohita pyydetyt kieli haku</requestedlanguageignored>
+		
+	<downloadservice>Latauspalvelu</downloadservice>
+	<leave>Käytä metatiedoissa olevaa linkkiä</leave>
+	<simple>Käytä Geonetworkin latauspalvelua (resources.get)</simple>
+	<withdisclaimer>Käytä GeoNetworkin palvelua, jossa voidaan määrittää käyttöehdot(file.disclaimer)</withdisclaimer>
+
+	<selectionmanager>Metatietohaun tulokset</selectionmanager>
+	<maxrecords>Tulosten enimmäismäärä</maxrecords>
+
+	<indexoptimizer>Lucene-indeksin optimointi</indexoptimizer>
+		<at>Suorita</at>
+		<atSpec>(kellonaika muodossa hh:mm esim. 23:15)</atSpec>
+		<interval>Optimointi suoritetaan:</interval>
+		<hourintervals>
+			<hour label="joka tunti (ei suositella)">1</hour>
+			<hour label="joka kolmas tunti">3</hour>
+			<hour label="joka kuudes tunti">6</hour>
+			<hour label="kaksi kertaa vuorokaudessa">12</hour>
+			<hour label="kerran vuorokaudessa">24</hour>
+			<hour label="kerran kahdessa vuorokaudessa">48</hour>
+			<hour label="kerran kolmessa vuorokaudessa">72</hour>
+			<hour label="kerran neljässä vuorokaudessa">96</hour>
+		</hourintervals>
+		<hours>
+			<hour label="0">0</hour>
+			<hour label="1">1</hour>
+			<hour label="2">2</hour>
+			<hour label="3">3</hour>
+			<hour label="4">4</hour>
+			<hour label="5">5</hour>
+			<hour label="6">6</hour>
+			<hour label="7">7</hour>
+			<hour label="8">8</hour>
+			<hour label="9">9</hour>
+			<hour label="10">10</hour>
+			<hour label="11">11</hour>
+			<hour label="12">12</hour>
+			<hour label="13">13</hour>
+			<hour label="14">14</hour>
+			<hour label="15">15</hour>
+			<hour label="16">16</hour>
+			<hour label="17">17</hour>
+			<hour label="18">18</hour>
+			<hour label="19">19</hour>
+			<hour label="20">20</hour>
+			<hour label="21">21</hour>
+			<hour label="22">22</hour>
+			<hour label="23">23</hour>
+		</hours>
+		<minutes>
+			<minute label="0">0</minute>
+			<minute label="15">15</minute>
+			<minute label="30">30</minute>
+			<minute label="45">45</minute>
+		</minutes>
+	
+	<csw>CSW ISO -profiili</csw>
+	<contactId>Yhteystaho</contactId>
+	<title>Otsikko</title>
+	<abstract>Tiivistelmä</abstract>
+	<fees>Hinnat</fees>
+	<accessConstraints>Saatavuusrajoitteet</accessConstraints>
+    <cswMetadataPublic>Lisättävä metatieto on julkinen.</cswMetadataPublic>
+    
+	<clickablehyperlinks>Linkkejä voi klikata</clickablehyperlinks>
+
+	<localrating>Arvostelu on mahdollista.</localrating>
+		
+	<proxy>Proxy</proxy>
+	<use>Käytä</use>
+	<username>Käyttäjätunnus</username>
+	
+	<feedback>Palaute</feedback>
+	<email>Sähköpostiosoite</email>
+	<smtpHost>Sähköpostipalvelin (SMTP)</smtpHost>
+	<smtpPort>Sähköpostipalvelimen portti (SMTP)</smtpPort>
+
+	<userSelfRegistration>Käyttäjä voi rekisteröityä itse</userSelfRegistration>
+	
+	<removedMetadata>Poistetut metatiedot</removedMetadata>
+	<dir>Hakemisto</dir>
+		
+	<authentication>Autentikointi</authentication>
+	
+	<loginuses>Kirjautuminen</loginuses>
+	<otherlogins>Salli muiden käyttäjien kirjautua</otherlogins>
+
+	<geonetworkdb>GeoNetwork-autentikointi</geonetworkdb>
+	
+	<metadataPrivs>Metadata privileges</metadataPrivs>
+	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+	<ldap>LDAP</ldap>
+	<defProfile>Default profile</defProfile>
+	<login>Login</login>
+	<userDN>User DN</userDN>
+	<distNames>Distinguished names</distNames>
+	<baseDN>Base</baseDN>
+	<usersDN>Users</usersDN>
+	<userAttribs>User's attributes</userAttribs>
+	<password>Password</password>
+	<profile>Profile</profile>
+
+	<shib>Shibboleth</shib>
+	<path>Osoite</path>
+	<attributes>Shibboleth-attribuuttien tunnistus</attributes>
+	<surname>Sukunimi</surname>
+	<firstname>Etunimi</firstname>
+		
+	<!-- Buttons -->
+	
+	<save>Tallenna</save>
+	<refresh>Tyhjennä</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Kentälle '{NAME}' on annettava arvo.</cannotBeEmpty>
+			<invalidMinSize>Kentän '{NAME}' arvon pitää olla vähintään {VALUE} merkkiä pitkä.</invalidMinSize>
+			<invalidMaxSize>Kentän '{NAME}' arvo saa olla enintään {VALUE} merkkiä pitkä.</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Kentän '{NAME}' arvon täytyy olla kokonaisluku.</notInt>
+			<invalidMinValue>Kentän '{NAME}' arvon pitää olla vähintään {VALUE}.</invalidMinValue>
+			<invalidMaxValue>Kentän '{NAME}' arvo saa olla enintään {VALUE}.</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Kentän '{NAME}' arvon pitää alkaa kirjaimella ja siinä saa olla ainoastaan kirjaimia tai numeroita.</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Kentän '{NAME}' arvo ei ole validi host-palvelimen nimi.</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Kentän '{NAME}' arvo ei ole validi www-osoite.</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>Kentän '{NAME}' arvo ei ole validi IP-osoite.</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Järjestelmäasetuksia ei voida näyttää.</cannotGet>
+	<cannotSave>Järjestelmäasetuksia ei voida tallentaa.</cannotSave>
+	<saveOk>Järjestelmäasetukset tallennettu.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Sivuston nimi identifioi kyseisen palvelun.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			Palvelimen <b>ip-osoite</b> ja <b>porttia</b> käytetään luotaessa www-osoitteita GeoNetowrk-palvelimelle, esimerkiksi luotaessa osoitteita metatietoihin ja vastatessa CSW-rajapintapyyntöön. Metatiedon sisällä tulisi käyttää GAST-työkaulua.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			<b>Verkko-osoitetta</b> ja <b>maskia</b> käytetään GeoNetworkin sisäisissä linkityksissä.
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			Jos Z39.50-protokolla otetaan käyttöön, käynnistettäessä GeoNetwork käynnistetään myös ISO Z39.50-palvelinkomponentti. <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
+		</tip>
+		
+		<tip id="z3950.port">
+			Muuta Z39.50-porttia. <b>Muutoksen voimaantulo vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
+		</tip>
+	
+		<!-- oai  -->
+		
+		<tip id="oai.mdmode">
+			Jos alku- ja loppupäivää muutetaan, se vaikuttaa OAI:n toimintaan. Jos valitaan ajallinen kattavuus, metatiedoista haetaan ajallisen kattavuuden päiväys. Jos valitaan muokkauspäivä, metatiedoista haetaaan metatietojen viimeisin päivitysajankohta.   <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
+		</tip>
+		
+		<tip id="oai.tokentimeout">
+			Sekuntteina aika, jonka OAI-tulokset säilyvät välimuistissa ja niitä voidaan selailla.lease note. <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
+		</tip>
+		
+		<tip id="oai.cachesize">
+			Välimuistiin tallennettujen tulosten määrä.
+		</tip>
+		
+		<!-- CSW -->
+		<tip id="csw.enable">
+			Jos CSW-protokolla otetaan käyttöön, palvelusta voidaan hakea metatietoja muihin palveluihin. <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
+		</tip>
+		<tip id="csw.contactId">
+			Muuta palvelun yhteystietoja CSW-palvelupyyntöjä varten.
+		</tip>
+		<tip id="csw.title">Otsikko</tip>
+		<tip id="csw.abstract">Tiivistelmä</tip>
+		<tip id="csw.fees">Hinnat</tip>
+		<tip id="csw.accessConstraints">Saatavuusrajoitteet</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			Jos otettu käyttöön, Paikkatietohakemiston metatietoihin tallennetut www-osoitteet näytetään linkkeinä.
+		</tip>
+
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Jos otettu käyttöön, Paikkatietohakemiston metatietoja voidaan arvostella.
+		</tip>
+		
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			Jos proxy-palvelin otetaan käyttöön, palvelu käyttää proxy-parametreja ottaessa yhteyden muihin palvelimiin, esim. hakiessaan metatietoja muilta palvelimilta.
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			Ylläpitäjän sähköpostiosoite.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			Palvelussa käytetyt sähköpostipalvelin ja sen käyttämä portti.
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Hakemisto, johon poistetut metatiedot tallennetaan.
+		</tip>
+
+		<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			Jos itserekisteröityminen otetaan käyttöön, käyttäjät voivat rekisteröityä itse. Käyttäjälle lähetetään käyttäjätunnus ja salasana sähköpostitse.
+		</tip>
+
+		<!-- Download service -->
+		
+		<tip id="downloadservice.simple">
+				Jos metatietojen protokollaksi on valittu "Käytä Geonetworkin latauspalvelua (resources.get)",  käyttäjä voi ladata aineiston Paikkatietohakemistosta. 
+		</tip>
+		<tip id="downloadservice.withdisclaimer">
+				Jos metatietojen protokollaksi on valittu "Käytä GeoNetworkin palvelua, jossa voidaan määrittää käyttöehdot(file.disclaimer)",  käyttäjä voi ladata aineiston Paikkatietohakemistosta hyväksyttyään käyttöehdot. 
+		</tip>
+		<tip id="downloadservice.leave">
+				Jos metatietojen protokollaksi on valittu "Käytä metatiedoissa olevaa linkkiä",  Paikkatietohakemistossa ei ole latauspalvelua, mutta käyttäjä voi käyttää metatietojen tuottajan tarjoamaa linkkiä.
+		</tip>
+
+		<!-- xlinkResolver -->
+
+		<tip id="xlinkResolver.enable">
+			Jos otettu käyttöön, XLink-linkit metatieto-osioihin lasketaan. 
+		</tip>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            Jos asetettu, haku kieli tunnistetaan automaattisesti. Huomaa, että tämä ei toimi kovin hyvin lyhyiden hakutermejä.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Vain palauttaa hakutulokset pyydetyt kielellä.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Palauta hakutulokset pyydetyt kielen päälle.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Ohita pyydetään kieli hakutuloksia.
+        </tip>
+
+    </tips>
+    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	
+</strings>
+
