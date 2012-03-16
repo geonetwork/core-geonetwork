@@ -991,7 +991,7 @@ INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
 INSERT INTO Settings VALUES (921,920,'maxthreads','1');
 
 INSERT INTO Settings VALUES (950,1,'autodetect',NULL);
-INSERT INTO Settings VALUES (951,950,'enable','true');
+INSERT INTO Settings VALUES (951,950,'enable','false');
 INSERT INTO Settings VALUES (952,1,'requestedLanguage',NULL);
 INSERT INTO Settings VALUES (953,952,'only','false');
 INSERT INTO Settings VALUES (954,952,'sorted','true');
