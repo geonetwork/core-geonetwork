@@ -3,8 +3,8 @@
      <!-- into text or attributes where ${property} is the substitution pattern -->
      <!-- The properties can reference other properties -->
      <properties>
-         <fr>fr</fr>
-         <lang>${fr}</lang>
+         <fre>fre</fre>
+         <lang>${fre}</lang>
          <host>localhost</host>
          <aparam>default</aparam>
      </properties>

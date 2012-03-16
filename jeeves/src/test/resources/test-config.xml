@@ -2,7 +2,7 @@
 <geonet>
 
 	<default>
-		<language>en</language>
+		<language>eng</language>
 
 		<gui removeAtt="somedata">
 			<xml name="strings" file="xml/strings.xml" />

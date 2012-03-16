@@ -23,6 +23,11 @@
 
 package jeeves.resources.dbms;
 
+import jeeves.constants.Jeeves;
+import jeeves.utils.Log;
+import org.jdom.Element;
+
+import javax.sql.DataSource;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Date;
@@ -37,13 +42,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-
-import javax.sql.DataSource;
-
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
-
-import org.jdom.Element;
 
 //=============================================================================
 

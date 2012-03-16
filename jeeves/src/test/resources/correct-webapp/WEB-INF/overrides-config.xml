@@ -57,6 +57,6 @@
          <removeXML xpath="default/gui/xml[@name = countries2]"/>
      </file>
      <file name="config2.xml">
-         <replaceText xpath="default/language">de</replaceText>
+         <replaceText xpath="default/language">ger</replaceText>
      </file>
  </overrides>

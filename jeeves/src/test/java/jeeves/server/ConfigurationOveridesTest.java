@@ -1,8 +1,11 @@
 package jeeves.server;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import jeeves.utils.Xml;
+import org.apache.log4j.Level;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,12 +14,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
-import jeeves.utils.Xml;
-
-import org.apache.log4j.Level;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ConfigurationOveridesTest {
     final ClassLoader classLoader = getClass().getClassLoader();
@@ -37,7 +36,7 @@ public class ConfigurationOveridesTest {
         assertEquals(6, Xml.selectElement(config,"properties").getChildren().size());
         assertEquals(10, Xml.selectElement(config,"file[@name = 'config.xml']").getChildren().size());
         assertEquals(1, Xml.selectNodes(config,"file[@name = 'config3.xml']").size());
-        assertEquals("fr", Xml.selectElement(config,"properties/*[1]").getName());
+        assertEquals("fre", Xml.selectElement(config,"properties/*[1]").getName());
         assertEquals("removeXML", Xml.selectElement(config,"file[1]/*[1]").getName());
         assertEquals("overridden", Xml.selectString(config,"properties/aparam"));
     }
@@ -49,8 +48,8 @@ public class ConfigurationOveridesTest {
         ConfigurationOverrides.updateWithOverrides("config.xml", null, appPath, config);
         ConfigurationOverrides.updateWithOverrides("config2.xml", null, appPath, config2);
 
-        assertLang("fr",config);
-        assertLang("de", config2);
+        assertLang("fre",config);
+        assertLang("ger", config2);
 
         assertEquals("xml/europeanCountries.xml", Xml.selectString(config,"default/gui/xml[@name = 'countries']/@file"));
         assertEquals("xml/other.xml", Xml.selectString(config2,"default/gui/xml[@name = 'countries']/@file"));
@@ -104,7 +103,7 @@ public class ConfigurationOveridesTest {
         ConfigurationOverrides.updateWithOverrides("config.xml", null, falseAppPath, config);
         
 
-        assertLang("en",config);
+        assertLang("eng",config);
 
         assertEquals(Xml.selectString(unchanged,"default/gui/xml[@name = 'countries']/@file"), Xml.selectString(config,"default/gui/xml[@name = 'countries']/@file"));
     }
