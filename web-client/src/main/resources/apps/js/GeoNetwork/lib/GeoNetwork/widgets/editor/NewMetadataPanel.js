@@ -156,7 +156,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             allowBlank: false,
             valueField: 'id',
             displayField: 'name',
-            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>',
+            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode()) + ']}</div></tpl>',
             listeners: {
                 select: function(field, record, idx){
                     this.selectedGroup = record.get('id');

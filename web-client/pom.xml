@@ -298,6 +298,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/CodeListStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/GroupStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/HarvesterStore.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/LanguageStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataCSWResultsStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataRelationStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataResultsStore.js</include>

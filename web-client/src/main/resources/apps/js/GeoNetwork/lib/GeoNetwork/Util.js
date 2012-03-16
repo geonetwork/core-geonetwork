@@ -48,10 +48,13 @@ GeoNetwork.Util = {
      */
     setLang: function(lang, baseUrl){
         lang = lang || GeoNetwork.Util.defaultLocale;
-        OpenLayers.Lang.setCode(lang);
+        // translate to ISO2 language code
+        var openlayerLang = this.getISO2LangCode(lang);
+
+        OpenLayers.Lang.setCode(openlayerLang);
         var s = document.createElement("script");
         s.type = 'text/javascript';
-        s.src = baseUrl + "/js/ext/src/locale/ext-lang-" + lang + ".js";
+        s.src = baseUrl + "/js/ext/src/locale/ext-lang-" + openlayerLang + ".js";
         document.getElementsByTagName("head")[0].appendChild(s);
     },
     /**
@@ -60,11 +63,11 @@ GeoNetwork.Util = {
     getCatalogueLang: function(lang){
         var i;
         for (i = 0; i < GeoNetwork.Util.locales.length; i++) {
-            if (GeoNetwork.Util.locales[i][0] === lang) {
-                return GeoNetwork.Util.locales[i][0];
+            if (GeoNetwork.Util.locales[i][2] === lang) {
+                return GeoNetwork.Util.locales[i][2];
             }
         }
-        return GeoNetwork.Util.defaultLocale;
+        return 'eng';
     },
     getISO3LangCode: function(lang){
         var i;
@@ -74,6 +77,15 @@ GeoNetwork.Util = {
             }
         }
         return 'eng';
+    },
+    getISO2LangCode: function(lang){
+        var i;
+        for (i = 0; i < GeoNetwork.Util.locales.length; i++) {
+            if (GeoNetwork.Util.locales[i][2] === lang) {
+                return GeoNetwork.Util.locales[i][0];
+            }
+        }
+        return 'en';
     },
     getParameters: function(url){
         var parameters = OpenLayers.Util.getParameters(url);

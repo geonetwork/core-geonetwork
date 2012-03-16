@@ -82,7 +82,7 @@ GeoNetwork.util.SearchFormTools = {
             fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent, mapPanelOptions, withRelation));
         }
         
-        fields.push(GeoNetwork.util.SearchFormTools.getOptions());
+        fields.push(GeoNetwork.util.SearchFormTools.getOptions(services));
         return fields;
     },
     /** api:method[getAdvancedFormFields]
@@ -217,7 +217,7 @@ GeoNetwork.util.SearchFormTools = {
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField();
         var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories, null, true);
         
-        var options = GeoNetwork.util.SearchFormTools.getOptions();
+        var options = GeoNetwork.util.SearchFormTools.getOptions(services);
         
         fields.push(fullTextField, advancedTextField, titleField, abstractField, themekeyField, orgNameField, 
                         geoFields, types, mapTypes, denominatorField, when, 
@@ -282,12 +282,14 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  Create option fields
      */
-    getOptions: function(hitsPerPageOptions){
+    getOptions: function(services, hitsPerPageOptions){
         var hitsPerPage = hitsPerPageOptions ||
         [['10'], ['20'], ['50'], ['100']];
         
         /* Extra option */
         var sortByFields = GeoNetwork.util.SearchFormTools.getSortByCombo();
+
+        var requestedLanguageField = GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages);
 
         var hitsPerPageField = new Ext.form.ComboBox({
             id: 'E_hitsperpage',
@@ -313,11 +315,38 @@ GeoNetwork.util.SearchFormTools = {
             defaults: {
                 width: 160
             },
-            items: [sortByFields, hitsPerPageField]
+            items: [requestedLanguageField, sortByFields, hitsPerPageField]
         });
         
         return options;
     },
+
+    /** api:method[getRequestedLanguageCombo]
+     *
+     *  Return a combo box with languages
+     */
+    getRequestedLanguageCombo: function(url) {
+        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+
+        var languageStore = GeoNetwork.data.LanguageStore(url,lang ),
+            tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
+        languageStore.load();
+
+        var config = {
+            name: 'E_requestedLanguage',
+            mode: 'local',
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('language'),
+            store: languageStore,
+            value: lang,
+            valueField: 'code',
+            displayField: 'name',
+            tpl: tpl
+        };
+
+        return new Ext.form.ComboBox(config);
+    },
+
     /** api:method[getSortByCombo]
      *  
      *  Return a combo box with sort options
@@ -466,8 +495,10 @@ GeoNetwork.util.SearchFormTools = {
      *  Create a combo for group field
      */
     getGroupField: function(url, multi){
+        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+
         var groupStore = GeoNetwork.data.GroupStore(url),
-            tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>';
+            tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
         groupStore.load();
         var config = {
                 name: 'E_group',
@@ -483,7 +514,7 @@ GeoNetwork.util.SearchFormTools = {
             Ext.apply(config, {
                 valueDelimiter: ' or ',
                 stackItems: true,
-                displayFieldTpl: '{[values.label.' + OpenLayers.Lang.getCode() + ']}'});
+                displayFieldTpl: '{[values.label.' + lang + ']}'});
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {
             return new Ext.form.ComboBox(config);
@@ -524,13 +555,15 @@ GeoNetwork.util.SearchFormTools = {
      *
      */
     getCategoryField: function(url, imgUrl, multi){
+        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+
         var store = GeoNetwork.data.CategoryStore(url);
         
         store.load();
         
         var tpl = (imgUrl ?
-                '<tpl for="."><div class="x-combo-list-item"><img src="' + imgUrl + '{name}.png"/>{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>':
-                '<tpl for="."><div class="x-combo-list-item">{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>');
+                '<tpl for="."><div class="x-combo-list-item"><img src="' + imgUrl + '{name}.png"/>{[values.label.' + lang + ']}</div></tpl>':
+                '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>');
         
         var config = {
             name: 'E_category',
@@ -544,8 +577,8 @@ GeoNetwork.util.SearchFormTools = {
         };
         if (multi) {
             var displaytpl = (imgUrl ?
-                    '<img src="' + imgUrl + '{name}.png"/>{[values.label.' + OpenLayers.Lang.getCode() + ']}':
-                    '{[values.label.' + OpenLayers.Lang.getCode() + ']}');
+                    '<img src="' + imgUrl + '{name}.png"/>{[values.label.' + lang + ']}':
+                    '{[values.label.' + lang + ']}');
             Ext.apply(config, {
                 valueDelimiter: ' or ',
                 stackItems: true,
@@ -928,10 +961,12 @@ GeoNetwork.util.SearchFormTools = {
      *
      */
     getStatusField: function(url, multi){
+        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+
         var store = GeoNetwork.data.StatusStore(url);
         store.load();
         
-        var tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + OpenLayers.Lang.getCode() + ']}</div></tpl>';
+        var tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
         
         var config = {
                 id: 'E__status',
@@ -948,7 +983,7 @@ GeoNetwork.util.SearchFormTools = {
         if (multi) {
             Ext.apply(config, {
                 valueDelimiter: ' or ',
-                displayFieldTpl: '{[values.label.' + OpenLayers.Lang.getCode() + ']}'
+                displayFieldTpl: '{[values.label.' + lang + ']}'
                 });
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {

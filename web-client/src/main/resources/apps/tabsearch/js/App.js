@@ -78,11 +78,11 @@ GeoNetwork.app = function(){
                 triggerAction: 'all',
                 width: 80,
                 store: new Ext.data.ArrayStore({
-                    idIndex: 0,
-                    fields: ['id', 'name'],
+                    idIndex: 2,
+                    fields: ['id', 'name', 'id2'],
                     data: GeoNetwork.Util.locales
                 }),
-                valueField: 'id',
+                valueField: 'id2',
                 displayField: 'name',
                 value: lang,
                 listeners: {
@@ -1102,7 +1102,7 @@ GeoNetwork.app = function(){
 };
 
 Ext.onReady(function () {
-    var lang = /hl=([a-z]{2})/.exec(location.href);
+    var lang = /hl=([a-z]{3})/.exec(location.href);
     GeoNetwork.Util.setLang(lang && lang[1], '..');
 
     Ext.QuickTips.init();
