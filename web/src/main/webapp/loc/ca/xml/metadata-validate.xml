@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<strings>
-	<heading>Validació de metadades</heading>
-	<message>Metadates validades amb èxit</message>
-	<schemaTronError>tanmatiex, hi ha errors de validació contra les regles de l'Schematron</schemaTronError>
-  <schemaTronValid>La validació contra les regles de l'Schematron ha estat correcte</schemaTronValid>
-  <schemaTronReport>L'informe de l'Schematron està disponible aquí</schemaTronReport>
-</strings>
