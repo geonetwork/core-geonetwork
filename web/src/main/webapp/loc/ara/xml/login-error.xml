@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Login Error</heading>
+	<message>The username or the password is wrong.<br/>Press the 'back' button and try again.</message>
+	<button>Back</button>
+</strings>
