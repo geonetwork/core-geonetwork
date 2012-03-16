@@ -106,7 +106,33 @@
 			</xsl:if>
 			
 			<!-- Options panel in advanced search -->
-			<div id="advoptions.table" style="display:none; margin-top:5px; margin-bottom:5px"> 
+			<div id="advoptions.table" style="display:none; margin-top:5px; margin-bottom:5px">
+
+                <xsl:if test="/root/gui/env/requestedLanguage/ignored = 'false'">
+                <!-- language - - - - - - - - - - - - - - - - - - - - -->
+                <div class="row" >
+                    <span class="labelField">Language</span>
+                    <select class="content" name="requestedLanguage" id="requestedLanguage" style="width: 150px"
+                            onchange="$('requestedLanguage_simple').value = this.options[this.selectedIndex].value">
+                        <option value="">
+                            <xsl:value-of select="/root/gui/strings/anyLanguage"/>
+                        </option>
+
+                        <xsl:for-each select="/root/gui/isolanguages/record">
+                            <xsl:sort select="label/child::*[name() = $lang]" order="ascending"/>
+                            <option>
+                                <xsl:if test="code = $lang">
+                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                </xsl:if>
+                                <xsl:attribute name="value">
+                                    <xsl:value-of select="code"/>
+                                </xsl:attribute>
+                                <xsl:value-of select="label/child::*[name() = $lang]"/>
+                            </option>
+                        </xsl:for-each>
+                    </select>
+                </div>
+                </xsl:if>
 			
 				<!-- sort by - - - - - - - - - - - - - - - - - - - - -->		
 				<div class="row">

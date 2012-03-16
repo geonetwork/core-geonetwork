@@ -36,6 +36,20 @@
 	
 	<!-- ============================================================================================= -->
 
+    <xsl:template match="isolanguages">
+        <xsl:copy>
+            <xsl:for-each select="record">
+                <xsl:sort select="name" order="ascending"/>
+                <isolanguage id="{id}">
+                    <xsl:copy-of select="code"/>
+                    <xsl:copy-of select="label"/>
+                </isolanguage>
+            </xsl:for-each>
+        </xsl:copy>
+    </xsl:template>
+	
+	<!-- ============================================================================================= -->
+
 	<xsl:template match="categories">
 		<xsl:copy>
 			<xsl:for-each select="record">

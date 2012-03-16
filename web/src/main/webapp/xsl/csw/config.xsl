@@ -15,7 +15,7 @@
 
 	<xsl:template mode="script" match="/">      
 		<script type="text/javascript" language="JavaScript1.2">
-            var actualCswLang = "en";
+            var actualCswLang = "eng";
 
             function saveCapabilitiesInfo() {
                 // Store actual values

@@ -8,15 +8,17 @@
 	<xsl:variable name="langs">
 		<langs>
 			<!-- TODO : add a master lang param to be able to compare to other lang than en <en master="true"/> -->
-			<fr />
-			<es />
-			<cn />
-			<ar />
-            <de />
-			<ru />
-			<nl />
-			<pt />
-			<ca />
+            <fre/>
+            <spa/>
+            <chi/>
+            <ara/>
+            <ger/>
+            <rus/>
+            <dut/>
+            <por/>
+            <cat/>
+            <fin/>
+            <nor/>
 		</langs>
 	</xsl:variable>
 
@@ -29,7 +31,7 @@
 		    <warning>WARNING: This will not produce sub-child elements. It will only produce correct 
 		    localized file for the first level of element with no attribute or with an id, value or type attribute.</warning>
 		    <strings file="strings.xml">
-	           <xsl:variable name="master" select="//strings.en"/>
+	           <xsl:variable name="master" select="//strings.eng"/>
 	
 				<xsl:for-each select="exslt:node-set($langs)/langs/*">
 						    
@@ -46,7 +48,7 @@
 				</xsl:for-each>
 			</strings> 
 			<about file="about.xml">
-	           <xsl:variable name="master" select="//about.en"/>
+	           <xsl:variable name="master" select="//about.eng"/>
     
                 <xsl:for-each select="exslt:node-set($langs)/langs/*">
                             
@@ -64,7 +66,7 @@
                 </xsl:for-each>
     		</about>
 			<config file="config.xml">
-                <xsl:variable name="master" select="//config.en"/>
+                <xsl:variable name="master" select="//config.eng"/>
     
                 <xsl:for-each select="exslt:node-set($langs)/langs/*">
                             
@@ -82,7 +84,7 @@
                 </xsl:for-each>
     			</config>
 			<harvesting file="harvesting.xml">
-                <xsl:variable name="master" select="//harvesting.en"/>
+                <xsl:variable name="master" select="//harvesting.eng"/>
     
                 <xsl:for-each select="exslt:node-set($langs)/langs/*">
                             
