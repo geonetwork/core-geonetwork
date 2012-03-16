@@ -947,7 +947,8 @@
 	</xsl:template>
 
 	<!-- Attributes 
-	 * gmd:PT_Locale/@id is set by update-fixed-info using first 2 letters.
+	  * deprecated: gmd:PT_Locale/@id is set by update-fixed-info using first 2 letters.
+      * gmd:PT_Locale/@id is set by update-fixed-info with 639-2 iso code
 	-->
 	<xsl:template mode="iso19139" match="gmd:PT_Locale/@id"
 		priority="2">
@@ -3978,7 +3979,7 @@
 				<xsl:variable name="tmpFreeText">
 					<xsl:call-template name="PT_FreeText_Tree" />
 				</xsl:variable>
-				
+								
 				<xsl:variable name="ptFreeTextTree" select="exslt:node-set($tmpFreeText)" />
 
 				<xsl:variable name="mainLang" 
@@ -4165,7 +4166,7 @@
 					<xsl:with-param name="langId" select="substring($langId,2)" />
 				</xsl:call-template>
 			</xsl:variable>
-			
+
 			<xsl:variable name="ref" select="$currentNode/../geonet:element/@ref" />
 			<xsl:variable name="min" select="$currentNode/../geonet:element/@min" />
 			<xsl:variable name="guiLang" select="/root/gui/language" />

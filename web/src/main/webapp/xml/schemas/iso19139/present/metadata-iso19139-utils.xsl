@@ -51,33 +51,18 @@
     <xsl:template name="getLangId">
         <xsl:param name="langGui"/>
         <xsl:param name="md"/>
-        
-        <!-- Mapping gui language to iso3code -->
-        <xsl:variable name="lang">
-            <xsl:choose>
-                <xsl:when test="$langGui='ar'">ara</xsl:when>
-                <xsl:when test="$langGui='ca'">cat</xsl:when>
-                <xsl:when test="$langGui='cn'">chi</xsl:when>
-                <xsl:when test="$langGui='de'">ger</xsl:when>
-                <xsl:when test="$langGui='es'">spa</xsl:when>
-                <xsl:when test="$langGui='fi'">fin</xsl:when>
-                <xsl:when test="$langGui='fr'">fre</xsl:when><!-- TODO : sometimes fra is used in metadata record -->
-                <xsl:when test="$langGui='nl'">dut</xsl:when>
-                <xsl:when test="$langGui='no'">nor</xsl:when>
-                <xsl:when test="$langGui='ru'">rus</xsl:when>
-                <xsl:when test="$langGui='pt'">por</xsl:when>
-                <xsl:otherwise>eng</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        
+
         <xsl:call-template name="getLangIdFromMetadata">
-            <xsl:with-param name="lang" select="$lang"/>
+            <xsl:with-param name="lang" select="$langGui"/>
             <xsl:with-param name="md" select="$md"/>
         </xsl:call-template>
     </xsl:template>        
 
-    <!-- Get lang #id in metadata PT_Locale section,  if not return the 2 first letters 
-        of the lang iso3code in uper case. -->
+    <!-- Get lang #id in metadata PT_Locale section,  deprecated: if not return the 2 first letters
+        of the lang iso3code in uper case.
+
+         if not return the lang iso3code in uper case.
+        -->
     <xsl:template name="getLangIdFromMetadata">
         <xsl:param name="md"/>
         <xsl:param name="lang"/>
@@ -89,7 +74,7 @@
                         select="$md/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]/@id"
                     />
             </xsl:when>
-            <xsl:otherwise>#<xsl:value-of select="upper-case(substring($lang, 1, 2))"/></xsl:otherwise>            
+            <xsl:otherwise>#<xsl:value-of select="upper-case($lang)"/></xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     

@@ -287,7 +287,7 @@
 	-->
 	<xsl:template match="gmd:PT_Locale">
 		<xsl:variable name="id" select="upper-case(
-			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2))"/>
+			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
 
 		<xsl:choose>
 			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">

@@ -19,7 +19,7 @@
 	<!-- ========================================================================================= -->
 	
 	<xsl:template match="/">
-		<xsl:variable name="langCode" select="java:twoCharLangCode(string(dc:language))"/>
+		<xsl:variable name="langCode" select="string(dc:language)"/>
 		<Document locale="{$langCode}">
 
 			<!-- locale information -->	

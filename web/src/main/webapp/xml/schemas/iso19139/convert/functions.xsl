@@ -107,7 +107,7 @@
                 <xsl:otherwise><xsl:value-of select="$defaultLang"/></xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:value-of select="java:twoCharLangCode(normalize-space(string($tmp)))"></xsl:value-of>
+        <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
     </xsl:template>
 
 	<xsl:variable name="UPPER">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>

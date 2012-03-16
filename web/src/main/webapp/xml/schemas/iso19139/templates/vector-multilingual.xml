@@ -71,23 +71,23 @@
         <gco:CharacterString>1.0</gco:CharacterString>
     </gmd:metadataStandardVersion>
     <gmd:locale>
-        <gmd:PT_Locale id="FR">
+        <gmd:PT_Locale id="#FRE">
             <gmd:languageCode>
-                <gmd:LanguageCode codeList="#FR" codeListValue="fre"/>
+                <gmd:LanguageCode codeList="" codeListValue="fre"/>
             </gmd:languageCode>
             <gmd:characterEncoding/>
         </gmd:PT_Locale>
     </gmd:locale>
     <gmd:locale>
-        <gmd:PT_Locale id="GE">
+        <gmd:PT_Locale id="#GER">
             <gmd:languageCode>
-                <gmd:LanguageCode codeList="#DE" codeListValue="ger"/>
+                <gmd:LanguageCode codeList="" codeListValue="ger"/>
             </gmd:languageCode>
             <gmd:characterEncoding/>
         </gmd:PT_Locale>
     </gmd:locale>
     <gmd:locale>
-        <gmd:PT_Locale id="CH">
+        <gmd:PT_Locale id="#CHI">
             <gmd:languageCode>
                 <gmd:LanguageCode codeList="" codeListValue="chi"/>
             </gmd:languageCode>
@@ -97,7 +97,7 @@
         </gmd:PT_Locale>
     </gmd:locale>
     <gmd:locale>
-        <gmd:PT_Locale id="AR">
+        <gmd:PT_Locale id="#ARA">
             <gmd:languageCode>
                 <gmd:LanguageCode codeList="" codeListValue="ara"/>
             </gmd:languageCode>
@@ -107,7 +107,7 @@
         </gmd:PT_Locale>
     </gmd:locale>
     <gmd:locale>
-        <gmd:PT_Locale id="SP">
+        <gmd:PT_Locale id="#SPA">
             <gmd:languageCode>
                 <gmd:LanguageCode codeList="" codeListValue="spa"/>
             </gmd:languageCode>
@@ -117,7 +117,7 @@
         </gmd:PT_Locale>
     </gmd:locale>
     <gmd:locale>
-        <gmd:PT_Locale id="RU">
+        <gmd:PT_Locale id="#RUS">
             <gmd:languageCode>
                 <gmd:LanguageCode codeList="" codeListValue="rus"/>
             </gmd:languageCode>
@@ -145,22 +145,22 @@
                         <gco:CharacterString>Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
                         <gmd:PT_FreeText>
                             <gmd:textGroup>
-                                <gmd:LocalisedCharacterString locale="#FR">Modèle de données vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
                             </gmd:textGroup>
                             <gmd:textGroup>
-                                <gmd:LocalisedCharacterString locale="#GE">Vorlage für die Vektor-Daten in ISO19139 (mehrsprachig)</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#GER">Vorlage für die Vektor-Daten in ISO19139 (mehrsprachig)</gmd:LocalisedCharacterString>
                             </gmd:textGroup>
                             <gmd:textGroup>
-                                <gmd:LocalisedCharacterString locale="#SP">De plantilla para el vector de datos en ISO19139 (multilingüe)</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#SPA">De plantilla para el vector de datos en ISO19139 (multilingüe)</gmd:LocalisedCharacterString>
                             </gmd:textGroup>
                             <gmd:textGroup>
-                                <gmd:LocalisedCharacterString locale="#RU">Шаблон для векторных данных в ISO19139 (многоязычное)</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#RUS">Шаблон для векторных данных в ISO19139 (многоязычное)</gmd:LocalisedCharacterString>
                             </gmd:textGroup>
                             <gmd:textGroup>
-                                <gmd:LocalisedCharacterString locale="#AR">نموذج البيانات الموجهة في ISO19139 (متعددة اللغات)</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#ARA">نموذج البيانات الموجهة في ISO19139 (متعددة اللغات)</gmd:LocalisedCharacterString>
                             </gmd:textGroup>
                             <gmd:textGroup>
-                                <gmd:LocalisedCharacterString locale="#CH">模板矢量数据ISO19139（多种语言）</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#CHI">模板矢量数据ISO19139（多种语言）</gmd:LocalisedCharacterString>
                             </gmd:textGroup>
                         </gmd:PT_FreeText>
                     </gmd:title>
