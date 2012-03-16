@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <heading>Registration was successful</heading>
+    <message>Your registration was successful, please check your username and password in your e-mail. Thanks.</message>
+    <errorEmailAddressAlreadyRegistered>
+		<p>Sorry, registration has <font class="error">FAILED</font> because you are already a registered user.</p>
+    <p>If you have forgotten your password, please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    <p>A reset password option will be available soon.</p>
+    </errorEmailAddressAlreadyRegistered>
+    <errorEmailToAddressFailed>
+		<p>Sorry, registration has <font class="error">FAILED</font> because we could not send an email to the address you gave us.</p>
+		<p>Please check your details and try registering again.</p>
+    </errorEmailToAddressFailed>
+    <errorProfileRequestFailed>
+		<p>Your request for Editor access could not be delivered.</p>
+		<p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
+</strings>
