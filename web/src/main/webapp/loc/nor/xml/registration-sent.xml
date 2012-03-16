@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <heading>Registrasjon var vellykket</heading>
+    <message>REgistrering var vellykket. Brukernavn og passord er send pr epost.</message>
+    <errorEmailAddressAlreadyRegistered>
+		<p>Registrering <font class="error">FEILET</font> fordi du allerede er registrert.</p>
+    <p>Dersom du har glemt passordet, kontakt administrator p�  <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    <p>En "nullstill passord" funksjon blir gjort tilgjengelig senere.  Hvis det haster m� � logge inn, og du ikke f�r kontakt med administrator, kan du lage et nytt, nesten likt, brukernavn i mellomtiden.</p>
+    </errorEmailAddressAlreadyRegistered>
+    <errorEmailToAddressFailed>
+		<p>Registrering <font class="error">FEILET</font> fordi det ikke kunne sendes epost til adressen du oppga.</p>
+		<p>Sjekk de oppgitte detaljene og fors�k p� nytt.</p>
+    </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
+</strings>
