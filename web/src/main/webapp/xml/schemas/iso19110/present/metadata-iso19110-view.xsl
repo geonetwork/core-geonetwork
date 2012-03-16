@@ -72,7 +72,7 @@
                     </xsl:with-param>
                     <xsl:with-param name="content">
                         <xsl:apply-templates mode="block"
-                                             select="gfc:featureType/gfc:FC_FeatureType"/>
+                                             select="//gfc:FC_FeatureType"/>
                     </xsl:with-param>
                 </xsl:call-template>
             </xsl:with-param>

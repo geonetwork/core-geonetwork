@@ -11,12 +11,12 @@
 	<!-- =================================================================-->
 	
 	<xsl:template match="/root">
-		 <xsl:apply-templates select="gfc:FC_FeatureCatalogue"/>
+		<xsl:apply-templates select="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType"/>
 	</xsl:template>
 
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:FC_FeatureCatalogue">
+	<xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType[not(parent::node())]">
 		 <xsl:copy>
 		 	<xsl:attribute name="uuid"><xsl:value-of select="/root/env/uuid"/></xsl:attribute>
 		 	<xsl:apply-templates select="@*[name(.) != 'uuid']|node()"/>

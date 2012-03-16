@@ -4,7 +4,7 @@
     xmlns:gfc="http://www.isotc211.org/2005/gfc"
     xmlns:gco="http://www.isotc211.org/2005/gco">
 
-	<xsl:template match="gfc:FC_FeatureCatalogue">
+    <xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType">
          <uuid><xsl:value-of select="@uuid"/></uuid>
 	</xsl:template>
 
