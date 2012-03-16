@@ -5,90 +5,106 @@
 		<service name="test.i18n">
 			<output sheet="test-i18n.xsl">
 				<!-- strings.xml -->
-				<xml name="strings.en" file="loc/en/xml/strings.xml"
+				<xml name="strings.eng" file="loc/eng/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.fr" file="loc/fr/xml/strings.xml"
+				<xml name="strings.fre" file="loc/fre/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.es" file="loc/es/xml/strings.xml"
+				<xml name="strings.spa" file="loc/spa/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.cn" file="loc/cn/xml/strings.xml"
+				<xml name="strings.chi" file="loc/chi/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.ar" file="loc/ar/xml/strings.xml"
+				<xml name="strings.ara" file="loc/ara/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.de" file="loc/de/xml/strings.xml"
+				<xml name="strings.ger" file="loc/ger/xml/strings.xml"
                     localized="false" />
-				<xml name="strings.ru" file="loc/ru/xml/strings.xml"
+				<xml name="strings.rus" file="loc/rus/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.nl" file="loc/nl/xml/strings.xml"
+				<xml name="strings.dut" file="loc/dut/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.pt" file="loc/pt/xml/strings.xml"
+				<xml name="strings.por" file="loc/por/xml/strings.xml"
 					localized="false" />
-					<xml name="strings.ca" file="loc/ca/xml/strings.xml"
-					localized="false" />					
-				<!-- about.xml -->
-				<xml name="about.en" file="loc/en/xml/about.xml"
+				<xml name="strings.cat" file="loc/cat/xml/strings.xml"
 					localized="false" />
-				<xml name="about.fr" file="loc/fr/xml/about.xml"
+                <xml name="strings.fin" file="loc/fin/xml/strings.xml"
+                     localized="false" />
+                <xml name="strings.nor" file="loc/nor/xml/strings.xml"
+                     localized="false" />
+                <!-- about.xml -->
+				<xml name="about.eng" file="loc/eng/xml/about.xml"
 					localized="false" />
-				<xml name="about.es" file="loc/es/xml/about.xml"
+				<xml name="about.fre" file="loc/fre/xml/about.xml"
 					localized="false" />
-				<xml name="about.cn" file="loc/cn/xml/about.xml"
+				<xml name="about.spa" file="loc/fre/xml/about.xml"
 					localized="false" />
-				<xml name="about.ar" file="loc/ar/xml/about.xml"
+				<xml name="about.chi" file="loc/chi/xml/about.xml"
 					localized="false" />
-				<xml name="about.de" file="loc/de/xml/about.xml"
+				<xml name="about.ara" file="loc/ara/xml/about.xml"
+					localized="false" />
+				<xml name="about.ger" file="loc/ger/xml/about.xml"
                     localized="false" />
-				<xml name="about.ru" file="loc/ru/xml/about.xml"
+				<xml name="about.rus" file="loc/rus/xml/about.xml"
 					localized="false" />
-				<xml name="about.nl" file="loc/nl/xml/about.xml"
+				<xml name="about.dut" file="loc/dut/xml/about.xml"
 					localized="false" />
-				<xml name="about.pt" file="loc/pt/xml/about.xml"
+				<xml name="about.por" file="loc/por/xml/about.xml"
 					localized="false" />
-				<xml name="about.ca" file="loc/ca/xml/about.xml"
-					localized="false" />					
-				<!-- config.xml -->
-				<xml name="config.en" file="loc/en/xml/config.xml"
+				<xml name="about.cat" file="loc/cat/xml/about.xml"
 					localized="false" />
-				<xml name="config.fr" file="loc/fr/xml/config.xml"
+                <xml name="about.fin" file="loc/fin/xml/about.xml"
+                     localized="false" />
+                <xml name="about.nor" file="loc/nor/xml/about.xml"
+                     localized="false" />
+                <!-- config.xml -->
+				<xml name="config.eng" file="loc/eng/xml/config.xml"
 					localized="false" />
-				<xml name="config.es" file="loc/es/xml/config.xml"
+				<xml name="config.fre" file="loc/fre/xml/config.xml"
 					localized="false" />
-				<xml name="config.cn" file="loc/cn/xml/config.xml"
+				<xml name="config.spa" file="loc/fre/xml/config.xml"
 					localized="false" />
-				<xml name="config.ar" file="loc/ar/xml/config.xml"
+				<xml name="config.chi" file="loc/chi/xml/config.xml"
 					localized="false" />
-				<xml name="config.de" file="loc/de/xml/config.xml"
+				<xml name="config.ara" file="loc/ara/xml/config.xml"
+					localized="false" />
+				<xml name="config.ger" file="loc/ger/xml/config.xml"
                     localized="false" />
-				<xml name="config.ru" file="loc/ru/xml/config.xml"
+				<xml name="config.rus" file="loc/rus/xml/config.xml"
 					localized="false" />
-				<xml name="config.nl" file="loc/nl/xml/config.xml"
+				<xml name="config.dut" file="loc/dut/xml/config.xml"
 					localized="false" />
-				<xml name="config.pt" file="loc/pt/xml/config.xml"
+				<xml name="config.por" file="loc/por/xml/config.xml"
 					localized="false" />
-				<xml name="config.ca" file="loc/ca/xml/config.xml"
-					localized="false" />					
-				<!-- harvesting.xml -->
-				<xml name="harvesting.en"
-					file="loc/en/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.fr"
-					file="loc/fr/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.es"
-					file="loc/es/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.cn"
-					file="loc/cn/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ar"
-					file="loc/ar/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.de"
-                    file="loc/de/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ru"
-					file="loc/ru/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.nl"
-					file="loc/nl/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.pt"
-					file="loc/pt/xml/harvesting.xml" localized="false" />	
-				<xml name="harvesting.ca"
-					file="loc/ca/xml/harvesting.xml" localized="false" />					
-				<!-- TODO : add other loc files -->
+				<xml name="config.cat" file="loc/cat/xml/config.xml"
+					localized="false" />
+                <xml name="config.fin" file="loc/fin/xml/config.xml"
+                     localized="false" />
+                <xml name="config.nor" file="loc/nor/xml/config.xml"
+                     localized="false" />
+                <!-- harvesting.xml -->
+				<xml name="harvesting.eng"
+					file="loc/eng/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.fre"
+					file="loc/fre/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.spa"
+					file="loc/spa/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.chi"
+					file="loc/chi/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ara"
+					file="loc/ara/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ger"
+                    file="loc/ger/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.rus"
+					file="loc/rus/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.dut"
+					file="loc/dut/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.por"
+					file="loc/por/xml/harvesting.xml" localized="false" />	
+				<xml name="harvesting.cat"
+					file="loc/cat/xml/harvesting.xml" localized="false" />
+                <xml name="harvesting.fin"
+                     file="loc/fin/xml/harvesting.xml" localized="false" />
+                <xml name="harvesting.nor"
+                     file="loc/nor/xml/harvesting.xml" localized="false" />
+                <!-- TODO : add other loc files -->
 			</output>
 		</service>
 
@@ -97,90 +113,106 @@
 			<output sheet="test-i18n-xml.xsl"
 				contentType="text/xml; charset=UTF-8">
 				<!-- strings.xml -->
-				<xml name="strings.en" file="loc/en/xml/strings.xml"
+				<xml name="strings.eng" file="loc/eng/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.fr" file="loc/fr/xml/strings.xml"
+				<xml name="strings.fre" file="loc/fre/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.es" file="loc/es/xml/strings.xml"
+				<xml name="strings.spa" file="loc/spa/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.cn" file="loc/cn/xml/strings.xml"
+				<xml name="strings.chi" file="loc/chi/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.ar" file="loc/ar/xml/strings.xml"
+				<xml name="strings.ara" file="loc/ara/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.de" file="loc/de/xml/strings.xml"
+				<xml name="strings.ger" file="loc/ger/xml/strings.xml"
                     localized="false" />
-				<xml name="strings.ru" file="loc/ru/xml/strings.xml"
+				<xml name="strings.rus" file="loc/rus/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.nl" file="loc/nl/xml/strings.xml"
+				<xml name="strings.dut" file="loc/dut/xml/strings.xml"
 					localized="false" />
-				<xml name="strings.pt" file="loc/pt/xml/strings.xml"
+				<xml name="strings.por" file="loc/por/xml/strings.xml"
 					localized="false" />	
-				<xml name="strings.ca" file="loc/ca/xml/strings.xml"
-					localized="false" />					
-				<!-- about.xml -->
-				<xml name="about.en" file="loc/en/xml/about.xml"
+				<xml name="strings.cat" file="loc/cat/xml/strings.xml"
 					localized="false" />
-				<xml name="about.fr" file="loc/fr/xml/about.xml"
+                <xml name="strings.fin" file="loc/fin/xml/strings.xml"
+                     localized="false" />
+                <xml name="strings.nor" file="loc/nor/xml/strings.xml"
+                     localized="false" />
+                <!-- about.xml -->
+				<xml name="about.eng" file="loc/eng/xml/about.xml"
 					localized="false" />
-				<xml name="about.es" file="loc/es/xml/about.xml"
+				<xml name="about.fre" file="loc/fre/xml/about.xml"
 					localized="false" />
-				<xml name="about.cn" file="loc/cn/xml/about.xml"
+				<xml name="about.spa" file="loc/spa/xml/about.xml"
 					localized="false" />
-				<xml name="about.ar" file="loc/ar/xml/about.xml"
+				<xml name="about.chi" file="loc/chi/xml/about.xml"
 					localized="false" />
-				<xml name="about.de" file="loc/de/xml/about.xml"
+				<xml name="about.ara" file="loc/ara/xml/about.xml"
+					localized="false" />
+				<xml name="about.ger" file="loc/ger/xml/about.xml"
                     localized="false" />
-				<xml name="about.ru" file="loc/ru/xml/about.xml"
+				<xml name="about.rus" file="loc/rus/xml/about.xml"
 					localized="false" />
-				<xml name="about.nl" file="loc/nl/xml/about.xml"
+				<xml name="about.dut" file="loc/dut/xml/about.xml"
 					localized="false" />
-				<xml name="about.pt" file="loc/pt/xml/about.xml"
+				<xml name="about.por" file="loc/por/xml/about.xml"
 					localized="false" />
-				<xml name="about.ca" file="loc/ca/xml/about.xml"
-					localized="false" />					
+				<xml name="about.cat" file="loc/cat/xml/about.xml"
+					localized="false" />
+                <xml name="about.fin" file="loc/fin/xml/about.xml"
+                     localized="false" />
+                <xml name="about.nor" file="loc/nor/xml/about.xml"
+                     localized="false" />
 				<!-- config.xml -->
-				<xml name="config.en" file="loc/en/xml/config.xml"
+				<xml name="config.eng" file="loc/eng/xml/config.xml"
 					localized="false" />
-				<xml name="config.fr" file="loc/fr/xml/config.xml"
+				<xml name="config.fre" file="loc/fre/xml/config.xml"
 					localized="false" />
-				<xml name="config.es" file="loc/es/xml/config.xml"
+				<xml name="config.spa" file="loc/spa/xml/config.xml"
 					localized="false" />
-				<xml name="config.cn" file="loc/cn/xml/config.xml"
+				<xml name="config.chi" file="loc/chi/xml/config.xml"
 					localized="false" />
-				<xml name="config.ar" file="loc/ar/xml/config.xml"
+				<xml name="config.ara" file="loc/ara/xml/config.xml"
 					localized="false" />
-				<xml name="config.de" file="loc/de/xml/config.xml"
+				<xml name="config.ger" file="loc/ger/xml/config.xml"
                     localized="false" />
-				<xml name="config.ru" file="loc/ru/xml/config.xml"
+				<xml name="config.rus" file="loc/rus/xml/config.xml"
 					localized="false" />
-				<xml name="config.nl" file="loc/nl/xml/config.xml"
+				<xml name="config.dut" file="loc/dut/xml/config.xml"
 					localized="false" />
-				<xml name="config.pt" file="loc/pt/xml/config.xml"
+				<xml name="config.por" file="loc/por/xml/config.xml"
 					localized="false" />
-				<xml name="config.ca" file="loc/ca/xml/config.xml"
-					localized="false" />					
+				<xml name="config.cat" file="loc/cat/xml/config.xml"
+					localized="false" />
+                <xml name="config.fin" file="loc/fin/xml/config.xml"
+                     localized="false" />
+                <xml name="config.nor" file="loc/nor/xml/config.xml"
+                     localized="false" />
 				<!-- harvesting.xml -->
-				<xml name="harvesting.en"
-					file="loc/en/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.fr"
-					file="loc/fr/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.es"
-					file="loc/es/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.cn"
-					file="loc/cn/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ar"
-					file="loc/ar/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.de"
-                    file="loc/de/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ru"
-					file="loc/ru/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.nl"
-					file="loc/nl/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.pt"
-					file="loc/pt/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ca"
-					file="loc/ca/xml/harvesting.xml" localized="false" />					
-				<!-- TODO : add other loc files -->
+				<xml name="harvesting.eng"
+					file="loc/eng/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.fre"
+					file="loc/fre/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.spa"
+					file="loc/spa/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.chi"
+					file="loc/chi/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ara"
+					file="loc/ara/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ger"
+                    file="loc/ger/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.rus"
+					file="loc/rus/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.dut"
+					file="loc/dut/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.por"
+					file="loc/por/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.cat"
+					file="loc/cat/xml/harvesting.xml" localized="false" />
+                <xml name="harvesting.fin"
+                     file="loc/fin/xml/harvesting.xml" localized="false" />
+                <xml name="harvesting.nor"
+                     file="loc/nor/xml/harvesting.xml" localized="false" />
+                <!-- TODO : add other loc files -->
 			</output>
 		</service>
 		<service name="test.csw">

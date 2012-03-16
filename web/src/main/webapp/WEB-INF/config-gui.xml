@@ -27,18 +27,18 @@
  <!-- Comment out languages to hide them
  from language selector. -->
  <languages>
-  <!--<ar/>-->
-  <ca/>
-  <cn/>
-  <de/>
-  <en/>
-  <es/>
-  <fr/>
-  <nl/>
-  <pt/>
-  <ru/>
-  <no/>
-  <fi/>
+     <ara/>
+     <cat/>
+     <chi/>
+     <dut/>
+     <eng/>
+     <fin/>
+     <fre/>
+     <ger/>
+     <nor/>
+     <por/>
+     <rus/>
+     <spa/>
  </languages>
  
  

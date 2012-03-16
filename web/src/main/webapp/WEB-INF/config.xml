@@ -18,13 +18,15 @@
 				 the appHandler org.fao.geonet.Geonetwork
 				 -->
 		<startupErrorService>main.error</startupErrorService>
-		<language>en</language>
+		<language>eng</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
 			<xml name="countries" file="xml/countries.xml" />
+
+             <call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
 			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
@@ -280,11 +282,11 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
-				<user>www-data</user>
-				<password>www-data</password>
+				<user>postgres</user>
+				<password>postgres</password>
 				<!-- we use org.postgis.DriverWrapper in place of
 				     org.postgresql.Driver to support both postgresql and postgis -->
-			  <driver>org.postgis.DriverWrapper</driver>
+			  <driver>org.postgresql.Driver</driver>
 				<!-- 					
 					jdbc:postgresql:database
 					jdbc:postgresql://host/database
@@ -296,7 +298,7 @@
 					jdbc:postgresql_postGIS://host:port/database
 					
 				-->
-			  <url>jdbc:postgresql_postGIS://localhost:5432/geonetwork</url>
+			  <url>jdbc:postgresql://localhost:5432/geonetwork-lang</url>
 				<poolSize>10</poolSize>
         <validationQuery>SELECT 1</validationQuery>
 			</config>
@@ -334,8 +336,11 @@
 
 		<!-- this must be a directory in web/geonetwork because html is served -->
 		<param name="htmlCacheDir" value="htmlCache" />
-		
-		<param name="schemaPluginsDir" value="schemaPlugins" />
+
+        <!-- language profiles for automatic language detection -->
+        <param name="languageProfilesDir" value="resources/language-profiles" />
+
+        <param name="schemaPluginsDir" value="schemaPlugins" />
 
 		<param name="licenseDir" value="WEB-INF/licenses" />
 	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
@@ -1452,6 +1457,9 @@
             <class name=".services.config.SetSequentialExecution" />
         </service>
 
+        <service name="isolanguages">
+            <class name="org.fao.geonet.guiservices.isolanguages.Get" />
+        </service>
 	</services>
 
 	<!-- ====================================================================== -->

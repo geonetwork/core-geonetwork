@@ -18,17 +18,19 @@
   </create>
   <data>
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-en-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fr-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-de-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-es-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ru-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-pt-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-cn-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-nl-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-no-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ar-"/><!-- Draft to be improved-->
-    <!--<file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vi-"/> Draft to be improved-->
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-eng-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fre-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ger-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-spa-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-cat-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-rus-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-por-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-chi-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-dut-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-nor-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fin-"/>
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ara-"/><!-- Draft to be improved-->
+    <!--<file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vie-"/> Draft to be improved-->
     <!-- ca missing from 2.6.x -->
     <!-- tr missing from 2.6.x -->
   </data>

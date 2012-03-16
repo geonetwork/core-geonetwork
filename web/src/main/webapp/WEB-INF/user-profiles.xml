@@ -503,6 +503,8 @@
    <allow service="contacts.getRole"/>
 	  
 	  <allow service="subtemplate"/>
+
+      <allow service="isolanguages" />
 	</profile>
 
 	<!-- ====================================================================== -->
