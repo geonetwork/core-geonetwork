@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Metadatensätze nicht gefunden</notfound>
+	<notowner>Bei folgenden Metadatensätzen konnten die Privilegien nicht verändert werden. Sie haben nicht die nötigen Rechte.</notowner>
+	<updated>Update der Privilegien bei folgenden Metadatensätzen erfolgreich</updated>
+	<resultstitle>Ergebnisse des Privilegien-Updates</resultstitle>
+</strings>

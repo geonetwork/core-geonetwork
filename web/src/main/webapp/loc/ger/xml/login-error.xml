@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Login Fehler</heading>
+	<message>Der Benutzername oder das Passwort ist falsch.<br/>Drücken Sie den 'Zurück'-Button und versuchen Sie es erneut.</message>
+	<button>Zurück</button>
+</strings>
