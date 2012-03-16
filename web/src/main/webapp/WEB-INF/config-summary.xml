@@ -21,7 +21,7 @@
 				order="name" type="string" max="10" />
 			<item name="spatialRepresentation" plural="spatialRepresentations"
 				indexKey="spatialRepresentation" type="string" order="freq" max="10" />
-			<item name="organizationName" plural="organizationNames"
+			<item name="organisationName" plural="organisationNames"
 				indexKey="orgName" order="freq" type="string" max="10" />
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"
 				order="freq" type="string" max="10" />
