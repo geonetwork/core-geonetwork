@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>No s'han trobat metadades</notfound>
+	<notowner>Hi ha metadades que no han actualitzat els privilegis donat que no en sou el propietari</notowner>
+	<updated>Metadades que han actualitzat els seus privilegis</updated>
+	<resultstitle>Resultat d'actualitzar els privilegis</resultstitle>
+</strings>

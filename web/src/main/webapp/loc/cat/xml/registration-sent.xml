@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <heading>La inscripció ha estat vàlida</heading>
+    <message>La vostra inscripció ha estat realitzada amb èxit. Si us plau, verifiqueu el vostre usuari i contrasenya en el correu. Gràcies.</message>
+    <errorEmailAddressAlreadyRegistered>
+		<p>Ho sentim, la inscripció ha <font class="error">FALLAT</font> donat que ja sou un usuari registrat.</p>
+    <p>Si heu oblidat la contrasenya, si us plau, contacteu amb el centre de suport a <a href="mailto:yourname@yoursite.org?subject=Forgotten password">otcsl.sig@diba.cat</a> o bé al telèfon: 934 022 222</p>
+    <p>En breu hi haurà una opció per fer un reset de la contrasenya. Si necessiteu fer logon urgentment i no podeu contactar amb el centre de suport, registreu-vos usant un nom d'usuari diferent.</p>
+    </errorEmailAddressAlreadyRegistered>
+    <errorEmailToAddressFailed>
+		<p>Ho sentim, la inscripció ha <font class="error">FALLAT</font> donat que no podem enviar-vos un correu a l'adreça que ens heu facilitat.</p>
+		<p>Si us plau, examineu els detalls i intenteu fer la inscripció una altra vegada.</p>
+    </errorEmailToAddressFailed>
+		<errorProfileRequestFailed>
+    <p>Your request for Editor access could not be delivered.</p>
+    <p>Please contact the helpdesk at <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a> or ph: xxx-xxxxxxxx</p>
+    </errorProfileRequestFailed>
+</strings>
