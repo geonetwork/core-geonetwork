@@ -36,7 +36,7 @@ The XSLT2 distribution also features several next generation features,
 such as validating multiple documents. See the source code for details.
 
 Schematron assertions can be written in any language, of course; the file
-sch-messages-en.xhtml contains the diagnostics messages from the XSLT2 skeleton
+sch-messages-eng.xhtml contains the diagnostics messages from the XSLT2 skeleton
 in English, and this can be used as template to localize the skeleton's
 error messages. Note that typically programming errors in Schematron are XPath
 errors, which requires localized messages from the XSLT engine.
