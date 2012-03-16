@@ -107,6 +107,7 @@ function resetSimpleSearch()
 		// Now set the special form fields to their defaults
 		resetWherePars();
 	
+    setParam(form['requestedLanguage_simple'],      Env.lang);
     setParam(form['sortBy'],      'relevance');
     setParam(form['sortOrder'],   '');
     setParam(form['hitsPerPage_simple'], '10');
@@ -308,6 +309,8 @@ function resetAdvancedSearch()
 	setBoolParam(form['radfrom0'],true);
 	form['radfrom1'].disable();
 	form['radfromext1'].disable();
+
+    setParam(form['requestedLanguage'],      Env.lang);
  	setParam(form['sortBy'],      'relevance');
   setParam(form['hitsPerPage'], '10');
   setParam(form['output'],      'full');

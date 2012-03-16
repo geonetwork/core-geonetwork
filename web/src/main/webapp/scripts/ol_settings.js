@@ -10,8 +10,36 @@ mapfish.SERVER_BASE_URL = Env.url + '/'; //'../../';
 // Remove pink background when a tile fails to load
 OpenLayers.Util.onImageLoadErrorColor = "transparent";
 
+/**
+ * Translates 639-2 code (Env.lang) to Openlayers lang code (usually 639-1 code)
+ *
+ */
+function getOpenlayersLangCode() {
+    switch(Env.lang) {
+        case"dut":a="nl";
+            break;
+        case"eng":a="en";
+            break;
+        case"fre":a="fr";
+            break;
+        case"ger":a="de";
+            break;
+        case"spa":a="es";
+            break;
+        case"rus":a="ru";
+            break;
+        case"por":a="pt";
+            break;
+        case"chi":a="cn";
+            break;
+        default:a="en"
+    }
+
+    return a;
+}
+
 if (Env.lang) {
-    OpenLayers.Lang.setCode(Env.lang);
+    OpenLayers.Lang.setCode(getOpenlayersLangCode());
     var s = document.createElement("script");
     s.type = 'text/javascript';
     s.src = Env.url + "/scripts/ext/locale/ext-lang-"+Env.lang+".js";
@@ -33,3 +61,7 @@ OpenLayers.Util.onImageLoadError = function() {
         this.style.display = "none";
     }
 };
+
+
+
+

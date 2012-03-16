@@ -25,7 +25,7 @@ GeoNetwork.OGCUtil.getProtocolVersion = function() {
 
 
 GeoNetwork.OGCUtil.getLanguage = function() {
-    var language;
+    /*var language;
     switch(Env.lang) {
         case 'nl': language = 'dut'; break;
         case 'en': language = 'eng'; break;
@@ -38,7 +38,10 @@ GeoNetwork.OGCUtil.getLanguage = function() {
 
         default: language = 'eng';
     }
-    return language;
+    return language;*/
+
+    // Now Env.lang contains 639-2 iso code
+    return Env.lang;
 };
 
 
