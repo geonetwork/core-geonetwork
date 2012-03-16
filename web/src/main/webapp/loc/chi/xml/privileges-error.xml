@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>权限错误</heading>
+	<message>你没有执行该操作的权限</message>
+	<button>回退</button>
+</strings>

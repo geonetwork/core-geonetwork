@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<delUserConf>要从数据库中删除用户吗？</delUserConf>
+	<delUserCsw>This user is your CSW ISO Profile contact, do you want to continue?</delUserCsw>
+</strings>
