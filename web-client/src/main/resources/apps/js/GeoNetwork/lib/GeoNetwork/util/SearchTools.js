@@ -95,7 +95,8 @@ GeoNetwork.util.SearchTools = {
                     
                     if (isCatalogueSStore) {
 	                    var summary = currentRecords.summary;
-	                    if (summary && summary.count > 0 && summaryStore) {
+                        // added check for summary.keywords.keyword otherwise if result has no keywords the loadData on store fails
+                        if (summary && summary.count > 0 && summary.keywords.keyword && summaryStore) {
 	                        summaryStore.loadData(summary);
 	                    }
                     }
