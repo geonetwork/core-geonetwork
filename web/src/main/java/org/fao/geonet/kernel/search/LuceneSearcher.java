@@ -23,9 +23,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.cybozu.labs.langdetect.Detector;
-import com.cybozu.labs.langdetect.DetectorFactory;
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
@@ -83,8 +80,8 @@ import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.util.JODAISODate;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 import java.io.File;
@@ -372,49 +369,41 @@ public class LuceneSearcher extends MetaSearcher {
             boolean detected = false;
             // autodetection is enabled
             if(settingInfo.getAutoDetect()) {
-                Log.debug(Geonet.LUCENE, "auto-detecting request language");
-                
-                String javaVersion = System.getProperty("java.version");
-                // java < 1.6 not supported
-                if(StringUtils.isNotEmpty(javaVersion) && javaVersion.startsWith("1.5")) {
-                    Log.warning(Geonet.LUCENE, "you are running on Java " + javaVersion + ", auto-detecting languages is disabled. Upgrade to at least 1.6.");
-                }
-                else {
+                Log.debug(Geonet.LUCENE, "auto-detecting request language is enabled");
                     try {
-                        Detector detector = DetectorFactory.create();
                         String test = request.getChildText("any");
                         if(StringUtils.isNotEmpty(test)) {
-                            detector.append(test);
-                            String l = detector.detect();
-                            Log.debug(Geonet.LUCENE, "automatic language detection: '" + request.getChildText("any") + "' is in language " + l);
-                            
-                            _language = l;
+                        String detectedLanguage = LanguageDetector.getInstance().detect(test);
+                        Log.debug(Geonet.LUCENE, "automatic language detection: '" + request.getChildText("any") + "' is in language " + detectedLanguage);
+                        _language = detectedLanguage;
                             detected = true;
                         }
                     }
-                    catch (LangDetectException x) {
+                catch (Exception x) {
                         Log.error(Geonet.LUCENE, "Error auto-detecting language: " + x.getMessage());
                         x.printStackTrace();
                     }
                 }
+            else {
+                Log.debug(Geonet.LUCENE, "auto-detecting request language is disabled");
             }
             // autodetection is disabled or detection failed
             if(!detected) {
                 Log.debug(Geonet.LUCENE, "autodetection is disabled or detection failed");
-                
+
                 // servicecontext available
                 if (srvContext != null) {
                     Log.debug(Geonet.LUCENE, "taking language from servicecontext");                    
-                    _language = XslUtil.twoCharLangCode(srvContext.getLanguage());
+                    _language = srvContext.getLanguage();
                 }
                 // no servicecontext available
                 else {
                     Log.debug(Geonet.LUCENE, "taking GeoNetwork default language");
-                    _language = XslUtil.twoCharLangCode(Geonet.DEFAULT_LANGUAGE); // TODO : set default not language in config
+                    _language = Geonet.DEFAULT_LANGUAGE; // TODO : set default not language in config
                 }
             }
         }
-        Log.debug(Geonet.LUCENE, "*** determined language is: " + _language);        
+        Log.debug(Geonet.LUCENE, "determined language is: " + _language);
     }
 
     /**
@@ -1465,7 +1454,6 @@ public class LuceneSearcher extends MetaSearcher {
      */
     private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, List<String> fieldnames) throws Exception {
         MapFieldSelector selector = new MapFieldSelector(fieldnames);
-
         IndexReader reader;
         LuceneIndexReaderFactory factory = null;
         SearchManager searchmanager = null;

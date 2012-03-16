@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -57,7 +58,8 @@ public class GetKeywordById implements Service {
 		String sThesaurusName = Util.getParam(params, "thesaurus");
 		String uri = Util.getParam(params, "id");
 		String lang = Util.getParam(params, "lang", context.getLanguage());
-		
+        String langForThesaurus = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(lang);
+        
 		boolean multiple = Util.getParam(params, "multiple", false);
 		
 		KeywordsSearcher searcher = null;
@@ -70,7 +72,7 @@ public class GetKeywordById implements Service {
 		searcher = new KeywordsSearcher(thesaurusMan);
 		KeywordBean kb = null;
 		if (!multiple) {
-			kb = searcher.searchById(uri, sThesaurusName, lang);
+			kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
 			if (kb == null)
 				return new Element ("<null/>");
 			else
@@ -80,7 +82,7 @@ public class GetKeywordById implements Service {
 			List<KeywordBean> kbList = new ArrayList<KeywordBean>();
 			for (int i = 0; i < url.length; i++) {
 				String currentUri = url[i];
-				kb = searcher.searchById(currentUri, sThesaurusName, lang);
+				kb = searcher.searchById(currentUri, sThesaurusName, langForThesaurus);
 				if (kb == null) {
 					return new Element ("<null/>");
 				} else {

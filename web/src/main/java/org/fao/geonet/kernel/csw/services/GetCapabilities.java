@@ -34,7 +34,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
-import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
@@ -117,16 +116,13 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             if (inspireEnabled){
                 String isoLangParamValue = request.getAttributeValue("language");
 
-                Map<String, String> langs = Lib.local.getLanguagesInspire(dbms);
+                List<String> langs = Lib.local.getLanguagesInspire(dbms);
 
                 if (isoLangParamValue != null) {
                     // Retrieve GN language id from Iso language id
-                    if (langs.containsValue(isoLangParamValue)) {
-                        for(String k : langs.keySet()) {
-                            if (langs.get(k).equals(isoLangParamValue)) {
-                                currentLanguage = k;
-                            }
-                        }
+                    if (langs.contains(isoLangParamValue)) {
+                        currentLanguage = isoLangParamValue;
+
                     }
                 }
 
@@ -326,26 +322,26 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 	
 	//---------------------------------------------------------------------------
 	
-    private void setInspireLanguages (Element capabilities, Map<String, String> languages, String currLang, String defaultLang) {
+    private void setInspireLanguages (Element capabilities, List<String> languages, String currLang, String defaultLang) {
         Element inspireExtCapabilities = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS)
                 .getChild("ExtendedCapabilities", Csw.NAMESPACE_INSPIRE_DS);
 
 
         Element inspireLanguages = inspireExtCapabilities.getChild("SupportedLanguages", Csw.NAMESPACE_INSPIRE_COM);
 
-        if (defaultLang == null) defaultLang = "en";
+        if (defaultLang == null) defaultLang = "eng";
 
         try {
             // Add DefaultLanguage
-            for(String key : languages.keySet()) {
+            for(String lang : languages) {
                 Element defaultLanguage;
                 Element language;
 
-                if (key.equalsIgnoreCase(defaultLang)) {
+                if (lang.equalsIgnoreCase(defaultLang)) {
                     defaultLanguage = new Element("DefaultLanguage", Csw.NAMESPACE_INSPIRE_COM);
                     language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
 
-                    language.setText(languages.get(key));
+                    language.setText(lang);
                     defaultLanguage.getChildren().add(language);
                     inspireLanguages.getChildren().add(defaultLanguage);
 
@@ -354,15 +350,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             }
 
             // Add list of supported languages
-            for(String key : languages.keySet()) {
+            for(String lang : languages) {
                 Element supportedLanguage;
                 Element language;
 
-                if (!(key.equalsIgnoreCase(defaultLang))) {
+                if (!(lang.equalsIgnoreCase(defaultLang))) {
                     supportedLanguage = new Element("SupportedLanguage", Csw.NAMESPACE_INSPIRE_COM);
                     language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
 
-                    language.setText(languages.get(key));
+                    language.setText(lang);
                     supportedLanguage.getChildren().add(language);
                     inspireLanguages.getChildren().add(supportedLanguage);
                 }
@@ -372,11 +368,11 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
             // Current language
             HashMap<String, String> vars = new HashMap<String, String>();
-            if (languages.containsKey(currLang)) {
-                vars.put("$INSPIRE_LOCALE", languages.get(currLang));
+            if (languages.contains(currLang)) {
+                vars.put("$INSPIRE_LOCALE", currLang);
 
             } else {      
-                vars.put("$INSPIRE_LOCALE", languages.get(defaultLang));
+                vars.put("$INSPIRE_LOCALE", defaultLang);
             }
 
             Lib.element.substitute(capabilities, vars);

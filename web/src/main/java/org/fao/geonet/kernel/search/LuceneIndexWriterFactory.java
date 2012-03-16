@@ -101,19 +101,17 @@ public class LuceneIndexWriterFactory {
         }
     }
     public synchronized void createDefaultLocale() throws IOException {
-        File enLocale = new File(_luceneDir, "en");
+        File enLocale = new File(_luceneDir, Geonet.DEFAULT_LANGUAGE);
         enLocale.mkdirs();
         IndexWriter writer = new IndexWriter(FSDirectory.open(enLocale), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
         writer.close();
     }
 
     static String normalize( String locale ) {
-        if (locale == null) {
-            return "none";
+        if(locale == null) {
+            locale = "none";
         }
-        String trimmed = locale.trim().toLowerCase();
-        int max = Math.min(2, trimmed.length());
-        return trimmed.substring(0, max);
+        return locale;
     }
 
     // ------------------- Private methods ------------------- //

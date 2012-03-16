@@ -35,6 +35,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class EditElement implements Service {
 		String id 		= Util.getParam(params, Params.ID, "");
 		String uri 		= Util.getParam(params, Params.URI, "");
 		String mode	 	= Util.getParam(params, Params.MODE, "");
-		String lang 	= context.getLanguage();
+		String lang 	= IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(context.getLanguage());
 		
 		String modeType 	= "add";
 		

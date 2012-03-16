@@ -42,14 +42,14 @@ public class LocalLib
 	//--- API methods
 	//---
 	//-----------------------------------------------------------------------------
-    public Map<String, String> getLanguagesInspire(Dbms dbms) throws SQLException
+    public List<String> getLanguagesInspire(Dbms dbms) throws SQLException
 	{
-		Map<String, String> hm = new HashMap<String, String>();
+		List<String> hm = new ArrayList<String>();
 
 		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isInspire='y'").getChildren())
 		{
 			Element lang = (Element) obj;
-			hm.put(lang.getChildText("id"), lang.getChildText("isocode"));
+            hm.add(lang.getChildText("id"));
 		}
 
 		return hm;

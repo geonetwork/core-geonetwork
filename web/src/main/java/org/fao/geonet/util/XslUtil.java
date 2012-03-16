@@ -223,27 +223,5 @@ public final class XslUtil
         
         return "";
     }
-    /**
-     * the basic way that {@linkplain #twoCharLangCode} works is by taking the first two letters of the
-     * language code.  However since there are multiple ways to map certain language or some time that method does not
-     * work this mapping contains the exceptions.
-     */
-    private static final Map<String,String> LANG_CODE_EXCEPTION_MAPPING;
-    static {
-        Map<String, String> hm = new HashMap<String, String>();
-        hm.put("ger", "de");
-        hm.put("ge", "de");
 
-        LANG_CODE_EXCEPTION_MAPPING = Collections.unmodifiableMap(hm);
-    }
-
-    public static String twoCharLangCode(String langCode) {
-        if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
-
-        String exception = LANG_CODE_EXCEPTION_MAPPING.get(langCode);
-
-        if(exception!=null) return exception;
-
-        return langCode.substring(0,2).toLowerCase();
-    }
 }

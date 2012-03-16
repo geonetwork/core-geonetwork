@@ -2945,8 +2945,8 @@ public class DataManager {
                 query += "shortcode = ? OR ";
             }
             query = query.substring(0, query.lastIndexOf("OR"));
-            System.out.println("***** iso 6391 to 6392 query: " + query);
-            List<Element> records = dbms.select(query, iso639_1_set).getChildren();
+            @SuppressWarnings(value = "unchecked")
+            List<Element> records = dbms.select(query, iso639_1_set.toArray()).getChildren();
             for(Element record : records) {
                 result.put(record.getChildText("shortcode"), record.getChildText("code"));
             }

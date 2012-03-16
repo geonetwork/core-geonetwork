@@ -28,6 +28,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.config.AccessDeniedException;
@@ -195,7 +196,7 @@ public class KeywordsSearcher {
 		    }
             // Keyword to look for
             if (!sKeyword.equals("")) {
-                String lang = srvContext.getLanguage();
+                String lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(srvContext.getLanguage());
                 createQuery(lang, sKeyword, pTypeSearch);
             }
             search(listThesauri);
@@ -363,7 +364,7 @@ public class KeywordsSearcher {
 		String id = Util.getParam(params, "id");
 		String sThesaurusName = Util.getParam(params, "thesaurus");
 
-        String _lang = srvContext.getLanguage();
+        String _lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(srvContext.getLanguage());
 
 		searchBN(id, sThesaurusName, request, _lang);
 	}

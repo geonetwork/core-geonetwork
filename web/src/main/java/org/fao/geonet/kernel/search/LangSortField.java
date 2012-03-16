@@ -8,7 +8,6 @@ import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.SortField;
-import org.fao.geonet.util.XslUtil;
 
 import java.io.IOException;
 
@@ -44,7 +43,7 @@ public class LangSortField extends SortField {
 
         public LangFieldComparator( String currentLocale, int numHits ) {
             this.values = new byte[numHits];
-            langCodeValue.put(XslUtil.twoCharLangCode(currentLocale), (byte) 1);
+            langCodeValue.put(currentLocale, (byte) 1);
             langCodeValue.put(null, (byte) 255);
             nextVal = (byte) 2;
         }
@@ -79,7 +78,7 @@ public class LangSortField extends SortField {
         }
 
         private byte intValue( String locale ) {
-            byte val = langCodeValue.get(XslUtil.twoCharLangCode(locale));
+            byte val = langCodeValue.get(locale);
             if (val == MapDefaults.defaultByte()) {
                 val = nextVal;
                 nextVal++;

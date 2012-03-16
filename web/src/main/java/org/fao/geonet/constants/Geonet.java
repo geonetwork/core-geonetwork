@@ -34,7 +34,8 @@ import org.jdom.Namespace;
  */
 public class Geonet {
 	public static final String CONTEXT_NAME = "contextName";
-	public static final String DEFAULT_LANGUAGE = "en";
+    // TODO make this configurable
+	public static final String DEFAULT_LANGUAGE = "eng";
 	public static final Namespace XSD_NAMESPACE = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	public static final Namespace XSI_NAMESPACE = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 	public static final Namespace OASIS_CATALOG_NAMESPACE = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
@@ -383,6 +384,7 @@ public class Geonet {
 		public static final String FAST = "fast";
 		public static final String BUILD_SUMMARY = "buildSummary";
 		public static final String SUMMARY_ONLY = "summaryOnly";
+        public static final String REQUESTED_LANGUAGE = "requestedLanguage";
 
         /**
          * TODO javadoc.
@@ -455,6 +457,10 @@ public class Geonet {
 	public class Config {
 		public static final String HTMLCACHE_DIR    = "htmlCacheDir";
 		public static final String LUCENE_DIR       = "luceneDir";
+        /**
+         * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
+         */
+        public static final String LANGUAGE_PROFILES_DIR = "languageProfilesDir";
 		public static final String MAX_SUMMARY_KEYS = "maxSummaryKeys";
 		public static final String SCHEMA_MAPPINGS  = "schemaMappings";
 		public static final String LICENSE_DIR      = "licenseDir";
@@ -502,6 +508,7 @@ public class Geonet {
 	//
 	//--- logging
     //
+    public static final String LANGUAGEDETECTOR = "LanguageDetector";
 	public static final String GEONETWORK   = "geonetwork";
 	public static final String HARVEST_MAN  = GEONETWORK + ".harvest-man";
 	public static final String HARVESTER    = GEONETWORK + ".harvester";

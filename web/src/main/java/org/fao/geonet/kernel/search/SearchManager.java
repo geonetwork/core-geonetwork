@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.cybozu.labs.langdetect.DetectorFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
@@ -161,11 +160,6 @@ public class SearchManager {
     public SettingInfo get_settingInfo() {
         return _settingInfo;
     }
-
-    /**
-     * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
-     */
-    private static final String LANGUAGE_PROFILES_DIR_PATH = "resources/language-profiles";
 
     public void setInspireEnabled(boolean inspireEnabled) {
         this._inspireEnabled = inspireEnabled;
@@ -338,9 +332,9 @@ public class SearchManager {
                 Log.debug(Geonet.LUCENE, "loading stopwords");
                 for(File stopwordsFile : _stopwordsDir.listFiles()) {
                     String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                    // TODO check for valid ISO 639-1 codes could be better than this
-                    if(language.length() != 2) {
-                        Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-1 language as filename: " + language);
+                    // TODO check for valid ISO 639-2 codes could be better than this
+                    if(language.length() != 3) {
+                        Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-2 language as filename: " + language);
                     }
                     // look up stopwords for that language
                     Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
@@ -417,11 +411,6 @@ public class SearchManager {
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
         _stopwordsDir = new File(appPath + STOPWORDS_DIR_PATH);
-
-        /**
-         * Initialize language detector. NOTE this can only be invoked once without causing a exception.
-         */
-        DetectorFactory.loadProfile(appPath + LANGUAGE_PROFILES_DIR_PATH);
 
         _inspireEnabled = si.getInspireEnabled();
         createAnalyzer();

@@ -124,6 +124,9 @@ public class Info implements Service
 			else if (type.equals("regions"))
 				result.addContent(Lib.local.retrieve(dbms, "Regions"));
 
+            else if (type.equals("isolanguages"))
+                result.addContent(Lib.local.retrieve(dbms, "IsoLanguages"));
+
 			else if (type.equals("sources"))
 				result.addContent(getSources(dbms, sm));
 

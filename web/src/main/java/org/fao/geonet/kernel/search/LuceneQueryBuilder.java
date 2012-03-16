@@ -41,7 +41,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.util.XslUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1273,12 +1272,11 @@ public class LuceneQueryBuilder {
             booleanQuery.add(query, BooleanClause.Occur.SHOULD);
         }
 
-        String twoCharLang = XslUtil.twoCharLangCode(langCode);
         if(requestedLanguageOnly) {
-            booleanQuery.add(new TermQuery(new Term("_locale", twoCharLang)), BooleanClause.Occur.MUST);
+            booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.MUST);
         }
         else {
-            booleanQuery.add(new TermQuery(new Term("_locale", twoCharLang)), BooleanClause.Occur.SHOULD);
+            booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.SHOULD);
         }
 
         return booleanQuery;

@@ -23,19 +23,10 @@
 
 package org.fao.geonet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
-
-import jeeves.constants.Jeeves;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -49,14 +40,18 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlResolver;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.XmlSerializerDb;
+import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;	
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
@@ -68,9 +63,6 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.XmlSerializerDb;
-import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.logos.Logos;
@@ -89,22 +81,25 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.feature.type.AttributeDescriptor;
-
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
-
 import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 
-//=============================================================================
-
-/** This is the main class. It handles http connections and inits the system
+/**
+ * This is the main class, it handles http connections and inits the system.
   */
-
-public class Geonetwork implements ApplicationHandler
-{
+public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
 	private String 				path;				
 	private SearchManager 		searchMan;
@@ -115,7 +110,6 @@ public class Geonetwork implements ApplicationHandler
 	private Element dbConfiguration;
 
 	private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
-
 	private static final String       IDS_ATTRIBUTE_NAME        = "id";
 
 	//---------------------------------------------------------------------------
@@ -132,12 +126,11 @@ public class Geonetwork implements ApplicationHandler
 	//---
 	//---------------------------------------------------------------------------
 
-	/** Inits the engine, loading all needed data
+	/**
+     * Inits the engine, loading all needed data.
 	  */
-
-	@SuppressWarnings("unchecked")
-	public Object start(Element config, ServiceContext context) throws Exception
-	{
+	@SuppressWarnings(value = "unchecked")
+	public Object start(Element config, ServiceContext context) throws Exception {
 		logger = context.getLogger();
 
 		path    = context.getAppPath();
@@ -172,7 +165,8 @@ public class Geonetwork implements ApplicationHandler
 				.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 		String htmlCacheDir = handlerConfig
 				.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
-		
+        String languageProfilesDir = handlerConfig
+                .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
 		
 		JeevesJCS.setConfigFilename(path+"WEB-INF/classes/cache.ccf");
 		// force caches to be config'd so shutdown hook works correctly
@@ -346,6 +340,17 @@ public class Geonetwork implements ApplicationHandler
 
 		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, path);
 
+
+        /**
+         * Initialize iso languages mapper
+         */
+        IsoLanguagesMapper.init(dbms);
+        
+        /**
+         * Initialize language detector
+         */
+        LanguageDetector.init(path + languageProfilesDir, context, dataMan);
+
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
 
@@ -427,6 +432,13 @@ public class Geonetwork implements ApplicationHandler
 		return gnContext;
 	}
 
+    /**
+     *
+     * @param webappName
+     * @param handlerConfig
+     * @param dataDir
+     * @return
+     */
     private String locateThesaurusDir(String webappName, ServiceConfig handlerConfig, String dataDir) {
         String defaultThesaurusDir = handlerConfig.getValue(Geonet.Config.CODELIST_DIR, null);
         String thesaurusSystemDir = System.getProperty(webappName + ".codeList.dir");
@@ -439,6 +451,12 @@ public class Geonetwork implements ApplicationHandler
         return thesauriDir;
     }
 
+    /**
+     *
+     * @param webappName
+     * @param handlerConfig
+     * @return
+     */
     private String locateLuceneDir(String webappName, ServiceConfig handlerConfig) {
         // Lucene
         String luceneSystemDir = System.getProperty(webappName + ".lucene.dir");
@@ -451,6 +469,12 @@ public class Geonetwork implements ApplicationHandler
         return luceneDir;
     }
 
+    /**
+     *
+     * @param webappName
+     * @param handlerConfig
+     * @return
+     */
     private String locateDataDir(String webappName, ServiceConfig handlerConfig) {
         // Data directory
         String defaultDataDir = handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
@@ -478,8 +502,7 @@ public class Geonetwork implements ApplicationHandler
 
 
     /**
-	 * Check if data directory is empty or not. If empty,
-	 * add mandatory elements (codelist).
+	 * Checks if data directory is empty or not. If empty, add mandatory elements (codelist).
 	 *  
 	 * @param dataSystemDir
 	 * @param defaultDataDir 
@@ -503,8 +526,7 @@ public class Geonetwork implements ApplicationHandler
 	}
 
     /**
-     * Parse a version number removing extra "-*" element and returning an integer. "2.7.0-SNAPSHOT"
-     * is returned as 270.
+     * Parses a version number removing extra "-*" element and returning an integer. "2.7.0-SNAPSHOT" is returned as 270.
      * 
      * @param number The version number to parse
      * @return The version number as an integer
@@ -520,11 +542,12 @@ public class Geonetwork implements ApplicationHandler
     }
     
 	/**
-	 * Check if current database is running same version as the web application.
+	 * Checks if current database is running same version as the web application.
 	 * If not, apply migration SQL script :
 	 *  resources/sql/migration/{version}-to-{version}-{dbtype}.sql.
 	 * eg. 2.4.3-to-2.5.0-default.sql
 	 *
+     * @param servletContext
      * @param dbms
      * @param settingMan
      * @param webappVersion
@@ -570,11 +593,13 @@ public class Geonetwork implements ApplicationHandler
 			boolean anyMigrationError = false;
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
+            @SuppressWarnings(value = "unchecked")
 	        List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
             for(Element version : versions) {
                 int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
                 if (versionNumber > from && versionNumber <= to) {
                     logger.info("       - running tasks for " + versionNumber + "...");
+                    @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
                         String filePath = path + file.getAttributeValue("path");
@@ -666,6 +691,7 @@ public class Geonetwork implements ApplicationHandler
 		if (!Lib.db.touch(dbms)) {
 			logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
 
+            @SuppressWarnings(value = "unchecked")
 			List<Element> createConfiguration = dbConfiguration.getChild("create").getChildren();
 			for(Element file : createConfiguration) {
 			    String filePath = path + file.getAttributeValue("path");
@@ -676,6 +702,7 @@ public class Geonetwork implements ApplicationHandler
     			Lib.db.createSchema(servletContext, dbms, path, filePath, filePrefix);
 			}
 			
+            @SuppressWarnings(value = "unchecked")
 	        List<Element> dataConfiguration = dbConfiguration.getChild("data").getChildren();
 	        for(Element file : dataConfiguration) {
                 String filePath = path + file.getAttributeValue("path");
@@ -699,8 +726,10 @@ public class Geonetwork implements ApplicationHandler
 	/**
 	 * Copy the default dummy logo to the logo folder based on uuid
      *
+     * @param servletContext
      * @param dbms
 * @param nodeUuid
+* @param appPath
 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws SQLException
@@ -719,6 +748,8 @@ public class Geonetwork implements ApplicationHandler
      * Creates a default site logo, only if the logo image doesn't exists
      *
      * @param nodeUuid
+     * @param servletContext
+     * @param appPath
      */
     private void createSiteLogo(String nodeUuid, ServletContext servletContext, String appPath) {
         try {
@@ -767,7 +798,6 @@ public class Geonetwork implements ApplicationHandler
 		System.setProperty("mime-mappings", mimeProp);
 		logger.info("mime-mappings property set to "+mimeProp);
 
-		return;
 	}
 		
 		
@@ -777,8 +807,7 @@ public class Geonetwork implements ApplicationHandler
 	//---
 	//---------------------------------------------------------------------------
 
-	public void stop()
-	{
+	public void stop() {
 		logger.info("Stopping geonetwork...");
 		
         logger.info("shutting down CSW HarvestResponse executionService");
@@ -850,5 +879,3 @@ public class Geonetwork implements ApplicationHandler
 	}
 
 }
-
-//=============================================================================
