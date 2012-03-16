@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Login Fout</heading>
+	<message>De gebruikersnaam of het wachtwoord is fout.<br/>Probeer opnieuw door op de 'Terug' knop te klikken.</message>
+	<button>Terug</button>
+</strings>

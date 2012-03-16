@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Fout bij toegang tot het bestand</heading>
+	<message>Het bestand kan niet worden gevonden of benaderd. Het kan verwijderd zijn of u hebt geen toegangsrechten om het te benaderen.</message>
+	<button>Terug</button>
+</strings>

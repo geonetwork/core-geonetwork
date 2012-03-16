@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<delUserConf>Verwijder deze gebruiker uit de databank?</delUserConf>
+    <delUserCsw>Deze gebruiker is uw CSW ISO Profiel contact, weet u zeker dat u door wilt gaan?</delUserCsw>
+</strings>
