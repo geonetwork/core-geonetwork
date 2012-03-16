@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Registos de metadados não encontrados</notfound>
+	<notowner>Registos de metadados que não podiam ser apagado por causa de falta duma autorização</notowner>
+	<updated>Registos de metadados foram apagados</updated>
+</strings>
