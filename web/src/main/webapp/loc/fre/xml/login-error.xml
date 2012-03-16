@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+	<heading>Erreur de connexion</heading>
+	<message>Le nom d'utilisateur ou le mot de pass est incorrect.<br/>Appuyer sur 'retour' et ré-essayer.</message>
+	<button>Retour</button>
+</strings>
