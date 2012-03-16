@@ -1,5 +1,5 @@
 <test>
-	<request url="/en/xml.harvesting.add">
+	<request url="/eng/xml.harvesting.add">
 		<params type="geonetwork">
 			<site>
 				<name>${name}</name>

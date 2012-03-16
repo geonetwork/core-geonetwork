@@ -1,5 +1,5 @@
 <test>
-    <request url="/en/xml.harvesting.remove">
+    <request url="/eng/xml.harvesting.remove">
         <params>
             <id>${id}</id>
         </params>

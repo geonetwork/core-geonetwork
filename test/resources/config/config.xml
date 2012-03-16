@@ -13,7 +13,7 @@
 
 	<default>
 		<service>main.home</service>
-		<language>en</language>
+		<language>eng</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
 
@@ -136,6 +136,7 @@
 	<appHandler class="org.fao.geonet.Geonetwork">
 		<param name="luceneDir" value="WEB-INF/lucene" />
 		<param name="htmlCacheDir" value="htmlCache" />
+        <param name="languageProfilesDir" value="resources/language-profiles" />
 		<param name="schemaMappings" value="schema-mappings.xml" />
 		<param name="dataDir" value="../../data" />
 		<param name="licenseDir" value="WEB-INF/licenses" />

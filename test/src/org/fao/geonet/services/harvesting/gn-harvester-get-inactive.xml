@@ -1,5 +1,5 @@
 <test>
-    <request url="/en/xml.harvesting.get">
+    <request url="/eng/xml.harvesting.get">
         <params>
             <id>${id}</id>
         </params>
