@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Ошибка доступа</heading>
+	<message>Ресурс недоступен или не может быть найден. Он мог быть удален, или
+		у Вас не достаточно привилегий для доступа к нему.</message>
+	<button>Назад</button>
+</strings>
