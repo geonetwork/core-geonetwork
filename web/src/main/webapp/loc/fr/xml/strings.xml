@@ -270,7 +270,7 @@
 	<serviceCreate>Créer une métadonnée de service</serviceCreate>
 	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
-	<searchText js="true">Text search</searchText>
+	<searchText js="true">Recherche libre</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
 	<createRelation js="true">Créer la relation</createRelation>
 	<export>Exporter</export>

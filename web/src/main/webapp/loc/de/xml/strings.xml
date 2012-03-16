@@ -263,7 +263,7 @@
 	<serviceCreate>Create new service metadata</serviceCreate>
 	<parentSearch js="true">Search for a metadata record to set as parent of current record.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Related metadata selection</linkedMetadataSelectionWindowTitle>
-	<searchText js="true">Text search</searchText>
+	<searchText js="true">Alle Felder</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
 	<createRelation js="true">Create relation</createRelation>
 	<export>Export</export>
