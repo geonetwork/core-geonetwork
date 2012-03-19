@@ -500,8 +500,8 @@ GeoNetwork.app = function(){
             createMainTagCloud();
             createLatestUpdate();
         } else {
-            Ext.get('infoPanel').getUpdater().update({url:'home_en.html'});
-            Ext.get('helpPanel').getUpdater().update({url:'help_en.html'});
+            Ext.get('infoPanel').getUpdater().update({url:'home_eng.html'});
+            Ext.get('helpPanel').getUpdater().update({url:'help_eng.html'});
         }
     }
     /** private: methode[createInfoPanel]
@@ -661,7 +661,7 @@ GeoNetwork.app = function(){
             geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
-            var lang = GeoNetwork.Util.getCatalogueLang(urlParameters.hl || GeoNetwork.defaultLocale);
+            var lang = urlParameters.hl || GeoNetwork.defaultLocale;
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
             }

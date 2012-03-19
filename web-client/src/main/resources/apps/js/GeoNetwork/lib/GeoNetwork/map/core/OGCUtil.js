@@ -24,7 +24,7 @@ GeoNetwork.OGCUtil.getProtocolVersion = function() {
 };
 
 GeoNetwork.OGCUtil.getLanguage = function() {
-    return GeoNetwork.Util.getISO3LangCode(catalogue.lang); // FIXME : global
+    return catalogue.lang; // FIXME : global
 };
 /**
  * APIFunction: GeoNetwork.OGCUtil.ensureProperUrlEnd

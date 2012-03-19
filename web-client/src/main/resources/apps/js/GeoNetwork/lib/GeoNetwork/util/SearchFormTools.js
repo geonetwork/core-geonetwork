@@ -326,7 +326,7 @@ GeoNetwork.util.SearchFormTools = {
      *  Return a combo box with languages
      */
     getRequestedLanguageCombo: function(url) {
-        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+        var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var languageStore = GeoNetwork.data.LanguageStore(url,lang ),
             tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
@@ -495,7 +495,7 @@ GeoNetwork.util.SearchFormTools = {
      *  Create a combo for group field
      */
     getGroupField: function(url, multi){
-        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+        var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var groupStore = GeoNetwork.data.GroupStore(url),
             tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
@@ -555,7 +555,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      */
     getCategoryField: function(url, imgUrl, multi){
-        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+        var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var store = GeoNetwork.data.CategoryStore(url);
         
@@ -961,7 +961,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      */
     getStatusField: function(url, multi){
-        var lang = GeoNetwork.Util.getISO3LangCode(OpenLayers.Lang.getCode());
+        var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var store = GeoNetwork.data.StatusStore(url);
         store.load();

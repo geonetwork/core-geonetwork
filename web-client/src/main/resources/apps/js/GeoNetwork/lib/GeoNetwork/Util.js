@@ -25,7 +25,7 @@ Ext.namespace('GeoNetwork');
 GeoNetwork.Lang = {};
 
 GeoNetwork.Util = {
-    defaultLocale: 'en',
+    defaultLocale: 'eng',
     /**
      * Supported GeoNetwork GUI languages
      */
@@ -59,17 +59,9 @@ GeoNetwork.Util = {
     },
     /**
      * Return a valid language code if translation is available.
+     * Catalogue use ISO639-2 code.
      */
     getCatalogueLang: function(lang){
-        var i;
-        for (i = 0; i < GeoNetwork.Util.locales.length; i++) {
-            if (GeoNetwork.Util.locales[i][2] === lang) {
-                return GeoNetwork.Util.locales[i][2];
-            }
-        }
-        return 'eng';
-    },
-    getISO3LangCode: function(lang){
         var i;
         for (i = 0; i < GeoNetwork.Util.locales.length; i++) {
             if (GeoNetwork.Util.locales[i][0] === lang) {
@@ -78,6 +70,10 @@ GeoNetwork.Util = {
         }
         return 'eng';
     },
+    /**
+     * Return ISO2 language code (Used by OpenLayers lang and before GeoNetwork 2.7.0)
+     * for corresponding ISO639-2 language code.
+     */
     getISO2LangCode: function(lang){
         var i;
         for (i = 0; i < GeoNetwork.Util.locales.length; i++) {
