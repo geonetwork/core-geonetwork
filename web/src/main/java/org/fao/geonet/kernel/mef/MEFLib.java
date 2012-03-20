@@ -30,9 +30,11 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -219,18 +221,27 @@ public class MEFLib {
 	 * @param dbms
 	 * @param uuid
 	 * @return
-	 * @throws SQLException
-	 * @throws MetadataNotFoundEx
 	 */
-	static Element retrieveMetadata(Dbms dbms, String uuid)
-			throws SQLException, MetadataNotFoundEx {
-		List list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid)
-				.getChildren();
+	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid)
+			throws Exception {
+		List list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
+
 
 		if (list.size() == 0)
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
-		return (Element) list.get(0);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getDataManager();
+
+		Element record = (Element) list.get(0);
+		String id = record.getChildText("id");
+        record.removeChildren("data");
+        Element metadata = dm.getMetadata(context, id, false, false, false);
+        metadata.removeChild("info", Edit.NAMESPACE);
+        Element mdEl = new Element("data").setText(Xml.getString(metadata));
+        record.addContent(mdEl);
+
+        return record;
 	}
 
 	/**

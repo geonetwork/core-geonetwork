@@ -68,7 +68,7 @@ class MEFExporter {
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 
-		Element record = MEFLib.retrieveMetadata(dbms, uuid);
+		Element record = MEFLib.retrieveMetadata(context, dbms, uuid);
 
 		String id = record.getChildText("id");
 		String data = record.getChildText("data");

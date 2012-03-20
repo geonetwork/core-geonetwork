@@ -113,7 +113,7 @@ class MEF2Exporter {
 
 		MEFLib.createDir(zos, uuid + FS);
 
-		Element record = MEFLib.retrieveMetadata(dbms, uuid);
+		Element record = MEFLib.retrieveMetadata(context, dbms, uuid);
 
 		String id = record.getChildText("id");
 		String isTemp = record.getChildText("istemplate");
@@ -132,8 +132,8 @@ class MEF2Exporter {
 		// Always save metadata in iso 19139
 		if (schema.contains("iso19139") && !schema.equals("iso19139")) {
 			// ie. this is an ISO profil.
-		    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		    DataManager dm = gc.getDataManager();
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            DataManager dm = gc.getDataManager();
 		    MetadataSchema metadataSchema = dm.getSchema(schema);
 			String path = metadataSchema.getSchemaDir() + "/convert/to19139.xsl";
 
@@ -155,7 +155,7 @@ class MEF2Exporter {
 		// --- save Feature Catalog
 		String ftUUID = getFeatureCatalogID(context, dbms, uuid);
 		if (!ftUUID.equals("")) {
-			Element ft = MEFLib.retrieveMetadata(dbms, ftUUID);
+			Element ft = MEFLib.retrieveMetadata(context, dbms, ftUUID);
 			ByteArrayInputStream ftData = formatData(ft);
 			MEFLib.addFile(zos, uuid + FS + SCHEMA + FILE_METADATA, ftData);
 		}
