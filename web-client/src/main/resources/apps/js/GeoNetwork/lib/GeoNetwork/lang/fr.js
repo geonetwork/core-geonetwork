@@ -485,6 +485,7 @@ GeoNetwork.Lang.fr = {
     'privTplElTT': 'Gérer les privilèges sur la sélection.',
     'addTplElTT': "Ajouter un élément à partir d'un fragment d'XML. L'annuaire cible est basé sur le nom de la balise racine (eg. gmd:CI_ResponsibleParty).",
     'copyTplElTT': "Créer un nouvel élément dans l'annuaire à partir de l'élément sélectionné.",
-    'delTplElTT': 'Supprimer la sélection.'
+    'delTplElTT': 'Supprimer la sélection.',
+    'language': 'Langue'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

@@ -494,7 +494,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (request.responseXML) {
             var xml = request.responseXML.documentElement;
             Ext.each(properties, function(item, idx){
-                info[item] = xml.getElementsByTagName(item)[0].childNodes[0].nodeValue;
+                var children = xml.getElementsByTagName(item)[0];
+                if (children) {
+                    info[item] = children.childNodes[0].nodeValue;
+                }
             });
         }
         return info;

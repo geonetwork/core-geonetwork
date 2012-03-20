@@ -48,7 +48,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  Create a simple form
      */
-    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist, mapPanelOptions, withRelation){
+    getSimpleFormFields: function(services, layers, mapOptions, withTypes, activeMapControlExtent, typeCodelist, mapPanelOptions, withRelation, optionsConfig){
         var fields = [];
         if (services) {
             fields.push(new GeoNetwork.form.OpenSearchSuggestionTextField({
@@ -81,8 +81,7 @@ GeoNetwork.util.SearchFormTools = {
         if (layers) {
             fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent, mapPanelOptions, withRelation));
         }
-        
-        fields.push(GeoNetwork.util.SearchFormTools.getOptions(services));
+        fields.push(GeoNetwork.util.SearchFormTools.getOptions(services, optionsConfig));
         return fields;
     },
     /** api:method[getAdvancedFormFields]
@@ -276,22 +275,28 @@ GeoNetwork.util.SearchFormTools = {
     },
     /** api:method[getOptions]
      *  
-     *  :param hitsPerPageOptions: ``Array(String)``    List of options for hits per page field
+     *  :param : ``Object``    config:
+     *                                * hitsPerPage: List of options for hits per page field
+     *                                * withLanguage: With language filter field. Default is false.
      *  
      *  :return: An options fieldset
      *
      *  Create option fields
      */
-    getOptions: function(services, hitsPerPageOptions){
-        var hitsPerPage = hitsPerPageOptions ||
-        [['10'], ['20'], ['50'], ['100']];
+    getOptions: function(services, cfg){
+        var config = {};
+        Ext.applyIf(config, cfg);
+        var hitsPerPage = config.hitsPerPage ||
+                [['10'], ['20'], ['50'], ['100']],
+            items = [];
         
-        /* Extra option */
-        var sortByFields = GeoNetwork.util.SearchFormTools.getSortByCombo();
-
-        var requestedLanguageField = GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages);
-
-        var hitsPerPageField = new Ext.form.ComboBox({
+        if (config.withLanguage || true) {
+            items.push(GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages));
+        }
+        
+        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo());
+        
+        items.push(new Ext.form.ComboBox({
             id: 'E_hitsperpage',
             name: 'E_hitsperpage',
             mode: 'local',
@@ -306,7 +311,7 @@ GeoNetwork.util.SearchFormTools = {
             }),
             valueField: 'id',
             displayField: 'id'
-        });
+        }));
         var options = new Ext.form.FieldSet({
             title: OpenLayers.i18n('options'),
             autoWidth: true,
@@ -315,43 +320,46 @@ GeoNetwork.util.SearchFormTools = {
             defaults: {
                 width: 160
             },
-            items: [requestedLanguageField, sortByFields, hitsPerPageField]
+            items: items
         });
         
         return options;
     },
 
     /** api:method[getRequestedLanguageCombo]
-     *
+     *  
      *  Return a combo box with languages
      */
     getRequestedLanguageCombo: function(url) {
-        var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
-
-        var languageStore = GeoNetwork.data.LanguageStore(url,lang ),
-            tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
+        var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()),
+            languageStore = GeoNetwork.data.LanguageStore(url,lang),
+            tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>',
+            c = new Ext.form.ComboBox({
+	            name: 'E_requestedLanguage',
+	            mode: 'local',
+	            triggerAction: 'all',
+	            fieldLabel: OpenLayers.i18n('language'),
+	            store: languageStore,
+	            valueField: 'code',
+	            displayField: 'name',
+	            tpl: tpl
+	        });
+        
+        languageStore.on('load', function() {
+            c.setValue(lang);
+        });
         languageStore.load();
-
-        var config = {
-            name: 'E_requestedLanguage',
-            mode: 'local',
-            triggerAction: 'all',
-            fieldLabel: OpenLayers.i18n('language'),
-            store: languageStore,
-            value: lang,
-            valueField: 'code',
-            displayField: 'name',
-            tpl: tpl
-        };
-
-        return new Ext.form.ComboBox(config);
+        
+        return c;
     },
 
     /** api:method[getSortByCombo]
      *  
+     *  :param defaultValue: Default value for sorting. Default is relevance.
+     *  
      *  Return a combo box with sort options
      */
-    getSortByCombo: function(){
+    getSortByCombo: function(defaultValue){
         var sortByField = new Ext.form.TextField({
             name: 'E_sortBy',
             id: 'E_sortBy',
@@ -362,13 +370,12 @@ GeoNetwork.util.SearchFormTools = {
             id: 'sortOrder',
             inputType: 'hidden'
         });
-        
+        var store = GeoNetwork.util.SearchFormTools.getSortByStore();
         var combo = new Ext.form.ComboBox({
             mode: 'local',
             fieldLabel: OpenLayers.i18n('sortBy'),
             triggerAction: 'all',
-            value: 'relevance',
-            store: GeoNetwork.util.SearchFormTools.getSortByStore(),
+            store: store,
             valueField: 'id',
             displayField: 'name',
             listeners: {
@@ -380,13 +387,14 @@ GeoNetwork.util.SearchFormTools = {
                 }
             }
         });
+        combo.setValue(defaultValue || 'relevance#');
         return [sortByField, sortOrderField, combo];
     },
     /** api:method[getSortByStore]
      *  
      *  Return an ArrayStore of sort options
      */
-    getSortByStore: function(){
+    getSortByStore: function(defaultValue){
         return new Ext.data.ArrayStore({
             id: 0,
             fields: ['id', 'name'],
