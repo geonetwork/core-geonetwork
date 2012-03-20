@@ -1107,7 +1107,7 @@ public class SearchManager {
             documents.addContent(defaultLang);
         }
         catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage() + "\n\t Marking the metadata as _nonIndexed=true in index");
+            Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage() + "\n\t Marking the metadata as _indexingError=1 in index");
             Element xmlDoc = new Element("Document");
             SearchManager.addField(xmlDoc, "_indexingError", "1", true, true);
             SearchManager.addField(xmlDoc, "_indexingErrorMsg", e.getMessage(), true, false);
