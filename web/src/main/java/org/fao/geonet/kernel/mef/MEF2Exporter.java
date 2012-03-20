@@ -69,7 +69,7 @@ class MEF2Exporter {
 	 * @throws Exception
 	 */
 	public static String doExport(ServiceContext context, Set<String> uuids,
-			Format format, boolean skipUUID, String stylePath) throws Exception {
+			Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
@@ -80,7 +80,7 @@ class MEF2Exporter {
         for (Object uuid1 : uuids) {
             String uuid = (String) uuid1;
             createMetadataFolder(context, dbms, uuid, zos, skipUUID, stylePath,
-                    format);
+                    format, resolveXlink, removeXlinkAttribute);
         }
 
 		// --- cleanup and exit
@@ -109,11 +109,11 @@ class MEF2Exporter {
 	 */
 	private static void createMetadataFolder(ServiceContext context, Dbms dbms,
 			String uuid, ZipOutputStream zos, boolean skipUUID,
-			String stylePath, Format format) throws Exception {
+			String stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		MEFLib.createDir(zos, uuid + FS);
 
-		Element record = MEFLib.retrieveMetadata(context, dbms, uuid);
+		Element record = MEFLib.retrieveMetadata(context, dbms, uuid, resolveXlink, removeXlinkAttribute);
 
 		String id = record.getChildText("id");
 		String isTemp = record.getChildText("istemplate");
@@ -155,7 +155,7 @@ class MEF2Exporter {
 		// --- save Feature Catalog
 		String ftUUID = getFeatureCatalogID(context, dbms, uuid);
 		if (!ftUUID.equals("")) {
-			Element ft = MEFLib.retrieveMetadata(context, dbms, ftUUID);
+			Element ft = MEFLib.retrieveMetadata(context, dbms, ftUUID, resolveXlink, removeXlinkAttribute);
 			ByteArrayInputStream ftData = formatData(ft);
 			MEFLib.addFile(zos, uuid + FS + SCHEMA + FILE_METADATA, ftData);
 		}

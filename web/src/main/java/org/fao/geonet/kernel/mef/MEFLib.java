@@ -29,6 +29,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -163,18 +164,18 @@ public class MEFLib {
 	// --------------------------------------------------------------------------
 
 	public static String doExport(ServiceContext context, String uuid,
-			String format, boolean skipUUID) throws Exception {
+			String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 		return MEFExporter.doExport(context, uuid, Format.parse(format),
-				skipUUID);
+				skipUUID, resolveXlink, removeXlinkAttribute);
 	}
 
 	// --------------------------------------------------------------------------
 
 	public static String doMEF2Export(ServiceContext context,
-			Set<String> uuids, String format, boolean skipUUID, String stylePath)
+			Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
 		return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-				skipUUID, stylePath);
+				skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
 	}
 
 	// --------------------------------------------------------------------------
@@ -222,7 +223,7 @@ public class MEFLib {
 	 * @param uuid
 	 * @return
 	 */
-	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid)
+	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
 		List list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
 
@@ -236,7 +237,9 @@ public class MEFLib {
 		Element record = (Element) list.get(0);
 		String id = record.getChildText("id");
         record.removeChildren("data");
-        Element metadata = dm.getMetadata(context, id, false, false, false);
+        boolean forEditing = false;
+        boolean withEditorValidationErrors = false;
+        Element metadata = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
         metadata.removeChild("info", Edit.NAMESPACE);
         Element mdEl = new Element("data").setText(Xml.getString(metadata));
         record.addContent(mdEl);

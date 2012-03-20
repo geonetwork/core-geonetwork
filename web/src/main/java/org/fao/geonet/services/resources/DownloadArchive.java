@@ -247,7 +247,7 @@ public class DownloadArchive implements Service
 		//--- export the metadata as a partial mef/zip file and add that to the zip
 		//--- stream FIXME: some refactoring required here to avoid metadata 
 		//--- being read yet again(!) from the database by the MEF exporter
-		String outmef = MEFLib.doExport(context, info.uuid, MEFLib.Format.PARTIAL.toString(), false);
+		String outmef = MEFLib.doExport(context, info.uuid, MEFLib.Format.PARTIAL.toString(), false, true, true);
     in = new FileInputStream(outmef);
 		addFile(out, "metadata.zip", in);
     in.close();

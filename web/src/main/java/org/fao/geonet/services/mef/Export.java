@@ -90,7 +90,9 @@ public class Export implements Service {
 		String uuid = Util.getParam(params, "uuid", null);
 		String format = Util.getParam(params, "format", "full");
 		String version = Util.getParam(params, "version", null);
-		String skipUUID = Util.getParam(params, "skipUuid", "false");
+		boolean skipUUID = Boolean.parseBoolean(Util.getParam(params, "skipUuid", "false"));
+        boolean resolveXlink = Boolean.parseBoolean(Util.getParam(params, "resolveXlink", "true"));
+        boolean removeXlinkAttribute = Boolean.parseBoolean(Util.getParam(params, "removeXlinkAttribute", "true"));
 		String relatedMetadataRecord = Util
 				.getParam(params, "relation", "true");
 
@@ -115,8 +117,7 @@ public class Export implements Service {
 		// Uuid parameter MUST be set and add to selection manager before
 		// export.
 		if (version == null) {
-			file = MEFLib.doExport(context, uuid, format, skipUUID
-					.equals("true"));
+			file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute);
 		} else {
 			// MEF version 2 support multiple metadata record by file.
 
@@ -167,7 +168,7 @@ public class Export implements Service {
 					+ " records.");
 
 			file = MEFLib
-					.doMEF2Export(context, uuids, format, false, stylePath);
+					.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
 		}
 
 		// -- Reset selection manager

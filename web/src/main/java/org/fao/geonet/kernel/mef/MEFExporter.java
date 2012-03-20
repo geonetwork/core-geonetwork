@@ -64,11 +64,11 @@ class MEFExporter {
 	 * @throws Exception
 	 */
 	public static String doExport(ServiceContext context, String uuid,
-			Format format, boolean skipUUID) throws Exception {
+			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 
-		Element record = MEFLib.retrieveMetadata(context, dbms, uuid);
+		Element record = MEFLib.retrieveMetadata(context, dbms, uuid, resolveXlink, removeXlinkAttribute);
 
 		String id = record.getChildText("id");
 		String data = record.getChildText("data");

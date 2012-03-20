@@ -88,7 +88,7 @@ public class Delete implements Service
 		//--- backup metadata in 'removed' folder
 
 		if (info.template != MdInfo.Template.SUBTEMPLATE)
-			backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false));
+			backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false, true, false));
 
 		//-----------------------------------------------------------------------
 		//--- remove the metadata directory including the public and private directories.
