@@ -2,76 +2,76 @@
 <!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN" "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
 <!--
     Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/
-	
-	Used to maintain backwards compatibility for old GeoNetwork URLs that use a 2-letter language code.
-	
-	Permanent redirects are used (HTTP status 301). This signals that the redirect is permanent and people might update their bookmarks, and this changes 
-	the URL in the browser's address bar to the target URL.
-	
-	To return HTTP 200 and keep the old URL as is in the browser, change the rules below like this:
-	
-	    <rule>
-			<from>^(.*)/es/(.*)$</from>
-			<to last="true">$1/spa/$2</to>
-		</rule>
-	
+    
+    Used to maintain backwards compatibility for old GeoNetwork URLs that use a 2-letter language code.
+    
+    Permanent redirects are used (HTTP status 301). This signals that the redirect is permanent and people might update their bookmarks, and this changes 
+    the URL in the browser's address bar to the target URL.
+    
+    To return HTTP 200 and keep the old URL as is in the browser, change the rules below like this:
+    
+    <rule>
+    <from>^(.*)/es/(.*)$</from>
+    <to last="true">%{context-path}$1/spa/$2</to>
+    </rule>
+    
 -->
-<urlrewrite use-query-string="true">
-
+<urlrewrite use-query-string="true" use-context="false">
+    
     <rule>
         <from>^(.*)/ar/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/ara/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/ara/$2</to>
     </rule>
     <rule>
         <from>^(.*)/ca/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/cat/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/cat/$2</to>
     </rule>
     <rule>
         <from>^(.*)/cn/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/chi/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/chi/$2</to>
     </rule>
     <rule>
         <from>^(.*)/nl/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/dut/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/dut/$2</to>
     </rule>
     <rule>
         <from>^(.*)/fi/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/fin/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/fin/$2</to>
     </rule>
     <rule>
         <from>^(.*)/fr/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/fre/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/fre/$2</to>
     </rule>
     <rule>
         <from>^(.*)/de/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/ger/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/ger/$2</to>
     </rule>
     <rule>
         <from>^(.*)/no/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/nor/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/nor/$2</to>
     </rule>
     <rule>
         <from>^(.*)/pt/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/por/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/por/$2</to>
     </rule>
     <rule>
         <from>^(.*)/ru/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/rus/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/rus/$2</to>
     </rule>
     <rule>
         <from>^(.*)/es/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/spa/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/spa/$2</to>
     </rule>
     <rule>
         <from>^(.*)/en/(.*)$</from>
-        <to type="permanent-redirect" last="true">/geonetwork$1/eng/$2</to>
+        <to type="permanent-redirect" last="true">%{context-path}$1/eng/$2</to>
     </rule>
-
+    
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>
         <from>^(.*);jsessionid=.*(\?.*)$</from>
         <to>$1$2</to>
     </outbound-rule>
-
+    
 </urlrewrite>
