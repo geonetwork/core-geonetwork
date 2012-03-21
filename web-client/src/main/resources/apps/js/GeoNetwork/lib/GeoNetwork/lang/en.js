@@ -486,7 +486,8 @@ GeoNetwork.lang.en = {
     'privTplElTT': 'Manage privileges for the current selection.',
     'addTplElTT': 'Add an element from an XML fragment to a directory. The destination directory is based on the root element name (eg. gmd:CI_ResponsibleParty).',
     'copyTplElTT': 'Create a new entry in the directory from the current selection.',
-    'delTplElTT': 'Remove selected entry from the directory.'
+    'delTplElTT': 'Remove selected entry from the directory.',
+    'language': 'Language'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);
