@@ -12,7 +12,7 @@
     
     <rule>
     <from>^(.*)/es/(.*)$</from>
-    <to last="true">%{context-path}$1/spa/$2</to>
+    <to last="true">$1/spa/$2</to>
     </rule>
     
 -->
