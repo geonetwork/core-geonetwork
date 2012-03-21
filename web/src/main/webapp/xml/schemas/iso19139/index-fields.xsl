@@ -117,6 +117,8 @@
 				<!-- fields used to search for metadata in paper or digital format -->
 
 				<xsl:for-each select="gmd:presentationForm">
+					<Field name="presentationForm" string="{gmd:CI_PresentationFormCode/@codeListValue}" store="true" index="true"/>
+					
 					<xsl:if test="contains(gmd:CI_PresentationFormCode/@codeListValue, 'Digital')">
 						<Field name="digital" string="true" store="false" index="true"/>
 					</xsl:if>
@@ -317,7 +319,7 @@
 						</xsl:when>
 						<xsl:when test="string($fileDescr)='thumbnail'">
 							<!-- FIXME : relative path -->
-							<Field  name="image" string="{concat($fileDescr, '|', '../../srv/en/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+							<Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:if>
