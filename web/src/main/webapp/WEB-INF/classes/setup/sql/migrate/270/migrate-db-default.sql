@@ -62,46 +62,52 @@ INSERT INTO Settings VALUES (955,952,'ignored','false');
 DROP TABLE IndexLanguages;
 
 -- delete indexlanguages settings
-DELETE FROM Settings WHERE id = 800;
-DELETE FROM Settings WHERE id = 801;
+-- Remove third level settings
 DELETE FROM Settings WHERE id = 802;
 DELETE FROM Settings WHERE id = 803;
-DELETE FROM Settings WHERE id = 804;
 DELETE FROM Settings WHERE id = 805;
 DELETE FROM Settings WHERE id = 806;
-DELETE FROM Settings WHERE id = 807;
 DELETE FROM Settings WHERE id = 808;
 DELETE FROM Settings WHERE id = 809;
-DELETE FROM Settings WHERE id = 810;
 DELETE FROM Settings WHERE id = 811;
 DELETE FROM Settings WHERE id = 812;
-DELETE FROM Settings WHERE id = 813;
 DELETE FROM Settings WHERE id = 814;
 DELETE FROM Settings WHERE id = 815;
-DELETE FROM Settings WHERE id = 816;
 DELETE FROM Settings WHERE id = 817;
 DELETE FROM Settings WHERE id = 818;
-DELETE FROM Settings WHERE id = 819;
 DELETE FROM Settings WHERE id = 820;
 DELETE FROM Settings WHERE id = 821;
-DELETE FROM Settings WHERE id = 822;
 DELETE FROM Settings WHERE id = 823;
 DELETE FROM Settings WHERE id = 824;
-DELETE FROM Settings WHERE id = 825;
 DELETE FROM Settings WHERE id = 826;
 DELETE FROM Settings WHERE id = 827;
-DELETE FROM Settings WHERE id = 828;
 DELETE FROM Settings WHERE id = 829;
 DELETE FROM Settings WHERE id = 830;
-DELETE FROM Settings WHERE id = 831;
 DELETE FROM Settings WHERE id = 832;
 DELETE FROM Settings WHERE id = 833;
-DELETE FROM Settings WHERE id = 834;
 DELETE FROM Settings WHERE id = 835;
 DELETE FROM Settings WHERE id = 836;
-DELETE FROM Settings WHERE id = 837;
 DELETE FROM Settings WHERE id = 838;
 DELETE FROM Settings WHERE id = 839;
+
+-- Remove second level settings
+DELETE FROM Settings WHERE id = 801;
+DELETE FROM Settings WHERE id = 804;
+DELETE FROM Settings WHERE id = 807;
+DELETE FROM Settings WHERE id = 810;
+DELETE FROM Settings WHERE id = 813;
+DELETE FROM Settings WHERE id = 816;
+DELETE FROM Settings WHERE id = 819;
+DELETE FROM Settings WHERE id = 822;
+DELETE FROM Settings WHERE id = 825;
+DELETE FROM Settings WHERE id = 828;
+DELETE FROM Settings WHERE id = 831;
+DELETE FROM Settings WHERE id = 834;
+DELETE FROM Settings WHERE id = 837;
+
+-- Remove first level settings
+DELETE FROM Settings WHERE id = 800;
+
 
 ALTER TABLE Languages DROP COLUMN isocode;
 
@@ -118,17 +124,17 @@ DELETE FROM CswServerCapabilitiesInfo;
 DELETE FROM Languages;
 
 INSERT INTO Languages VALUES ('ara','العربية', 'n', 'n');
-INSERT INTO Languages VALUES ('cat','català', 'n', 'n');
+INSERT INTO Languages VALUES ('cat','Català', 'n', 'n');
 INSERT INTO Languages VALUES ('chi','中文', 'n', 'n');
 INSERT INTO Languages VALUES ('dut','Nederlands', 'y', 'n');
 INSERT INTO Languages VALUES ('eng','English', 'y', 'y');
-INSERT INTO Languages VALUES ('fin','suomi', 'y', 'n');
-INSERT INTO Languages VALUES ('fre','français', 'y', 'n');
+INSERT INTO Languages VALUES ('fin','Suomi', 'y', 'n');
+INSERT INTO Languages VALUES ('fre','Français', 'y', 'n');
 INSERT INTO Languages VALUES ('ger','Deutsch', 'y', 'n');
-INSERT INTO Languages VALUES ('nor','norsk', 'n', 'n');
-INSERT INTO Languages VALUES ('por','português', 'y', 'n');
+INSERT INTO Languages VALUES ('nor','Norsk', 'n', 'n');
+INSERT INTO Languages VALUES ('por','Português', 'y', 'n');
 INSERT INTO Languages VALUES ('rus','русский язык', 'n', 'n');
-INSERT INTO Languages VALUES ('spa','español', 'y', 'n');
+INSERT INTO Languages VALUES ('spa','Español', 'y', 'n');
 INSERT INTO Languages VALUES ('vie','Tiếng Việt', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
