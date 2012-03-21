@@ -839,9 +839,10 @@ public class SchemaManager {
 		String base = fromAppPath + name + FS + "loc";
 		Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
 
-		for (String fname : fnames) {	
-			Log.debug(Geonet.SCHEMA_MANAGER, "Searching for "+path+"/loc/"+defaultLang+"/"+fname);
-			if (new File(path+ FS +"loc"+ FS +defaultLang+ FS +fname).exists()) {
+		for (String fname : fnames) {
+			String filePath = path + FS + "loc" + FS + defaultLang + FS + fname;
+			Log.debug(Geonet.SCHEMA_MANAGER, "Searching for " + filePath);
+			if (new File(filePath).exists()) {
 				Element config = new Element("xml");
 				config.setAttribute("name",name);
 				config.setAttribute("base",base);
@@ -850,7 +851,7 @@ public class SchemaManager {
 				XmlFile xf = new XmlFile(config, defaultLang, true);
 				xfMap.put(fname, xf);
 			} else {
-				Log.debug(Geonet.SCHEMA_MANAGER, "Unable to load this file");
+				Log.warning(Geonet.SCHEMA_MANAGER, "Unable to load loc file: " + filePath);
 			}
 		}
 
