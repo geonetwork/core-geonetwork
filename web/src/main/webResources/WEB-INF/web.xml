@@ -53,14 +53,14 @@
         </init-param>
     </filter>
 
-    <!-- logo servlet -->
+    <!-- Resources servlet -->
     <filter>
-        <filter-name>logos</filter-name>
-        <filter-class>org.fao.geonet.logos.LogoFilter</filter-class>
+        <filter-name>resources</filter-name>
+        <filter-class>org.fao.geonet.resources.ResourceFilter</filter-class>
         <!-- Specified what overrides to use if the
         	(servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
         	system parameter is not specified.
-          -->
+        -->
         <init-param>
             <param-name>jeeves.configuration.overrides.file</param-name>
             <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
@@ -76,26 +76,38 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>logos</filter-name>
+        <filter-name>resources</filter-name>
         <url-pattern>/images/logos/*</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>logos</filter-name>
+        <filter-name>resources</filter-name>
         <url-pattern>/images/harvesting/*</url-pattern>
     </filter-mapping>
-
+    
+    <filter-mapping>
+        <filter-name>resources</filter-name>
+        <url-pattern>/htmlcache/*</url-pattern>
+    </filter-mapping>
+    
     <servlet>
         <servlet-name>gn-servlet</servlet-name>
         <servlet-class>jeeves.server.sources.http.JeevesServlet</servlet-class>
         <!-- Specified what overrides to use if the 
         	(servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file 
         	system parameter is not specified.
-          -->
+        -->
 		<init-param>
 			<param-name>jeeves.configuration.overrides.file</param-name>
 			<param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
 		</init-param>
+        
+        <!--
+            Specified what geonetwork data directory to use.
+            <init-param>
+            <param-name>geonetwork.dir</param-name>
+            <param-value>/app/geonetwork_data_dir</param-value>
+        </init-param>-->
         <load-on-startup>1</load-on-startup>
     </servlet>
 

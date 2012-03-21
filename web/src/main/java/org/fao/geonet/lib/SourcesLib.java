@@ -28,7 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 import javax.servlet.ServletContext;
@@ -94,7 +94,7 @@ public class SourcesLib
         Lib.net.setupProxy(context, req);
         req.setAddress("/"+ servlet + "/images/logos/" + logo);
 
-        File logoFile = new File(Logos.locateLogosDir(context));
+        File logoFile = new File(Resources.locateLogosDir(context));
 
         try
         {
@@ -108,7 +108,7 @@ public class SourcesLib
 
             logoFile.delete();
 
-            Logos.copyUnknownLogo(context, uuid);
+            Resources.copyUnknownLogo(context, uuid);
         }
     }
 }

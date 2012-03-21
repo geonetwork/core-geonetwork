@@ -480,7 +480,10 @@ public class Geonet {
 		public static final String USE_SUBVERSION  = "useSubversion";
 		public static final String SUBVERSION_PATH = "subversionPath";
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
-        
+		public static final String CONFIG_DIR = "configDir";
+		public static final String UPLOAD_DIR = "uploadDir";
+		public static final String RESOURCES_DIR = "resources";
+		public static final String SYSTEM_DATA_DIR = "geonetworkDataDir";
 	}
 
     /**
@@ -528,7 +531,7 @@ public class Geonet {
 	public static final String MEF          = GEONETWORK + ".mef";
 	public static final String CSW          = GEONETWORK + ".csw";
 	public static final String LDAP         = GEONETWORK + ".ldap";
-	public static final String LOGOS        =  GEONETWORK + ".logos";
+	public static final String RESOURCES        =  GEONETWORK + ".resources";
 	public static final String EDITOR				= GEONETWORK + ".editor";
 	public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
 	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
@@ -542,6 +545,7 @@ public class Geonet {
   // keys for logging search log
 	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
 	public static final String THREADPOOL = GEONETWORK + ".threadpool";
+	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
 
     /**
      * Services.

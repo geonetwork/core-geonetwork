@@ -49,14 +49,14 @@ public class Repositories
 
 	/** builds the repositories
 	  */
-	public static boolean build(String appPath, ServiceContext context) 
+	public static boolean build(String appPath, String configPath, ServiceContext context) 
 	{
 		try
 		{
 			//--- build repositories file from template repositories file
 
-			String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" +".tem";
-			String realRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml";
+			String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" + ".tem";
+			String realRepo = configPath + File.separator + "JZKitConfig.xml";
 
 			buildRepositoriesFile(tempRepo, realRepo);
 

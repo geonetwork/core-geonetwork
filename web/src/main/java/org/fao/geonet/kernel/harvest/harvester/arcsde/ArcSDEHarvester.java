@@ -37,7 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -109,7 +109,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			storeNode(dbms, params, "id:"+id);
 			
 			Lib.sources.update(dbms, params.uuid, params.name, true);
-			Logos.copyLogo(context, "harvesting/"+ params.icon, params.uuid);
+			Resources.copyLogo(context, "harvesting/"+ params.icon, params.uuid);
 		
 			return id;
 	//	}
@@ -150,7 +150,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
 	@Override
 	protected void doDestroy(Dbms dbms) throws SQLException {
-		File icon = new File(Logos.locateLogosDir(context), params.uuid +".gif");
+		File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 		icon.delete();
 		Lib.sources.delete(dbms, params.uuid);
 	}
@@ -366,7 +366,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		//--- could be half updated and so it could be in an inconsistent state
 
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
-		Logos.copyLogo(context, "harvesting/"+ copy.icon, copy.uuid);
+		Resources.copyLogo(context, "harvesting/"+ copy.icon, copy.uuid);
 
 		params = copy;
 	}

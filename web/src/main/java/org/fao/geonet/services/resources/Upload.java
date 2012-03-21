@@ -29,6 +29,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
@@ -129,17 +131,15 @@ public class Upload implements Service
 
 	
 		// move uploaded file to destination directory - have two goes
-		if (!oldFile.renameTo(newFile))
-		{
-			newFile.delete();
-			if (!oldFile.renameTo(newFile))
-			{
-				context.warning("Cannot move uploaded file");
-				context.warning(" (C) Source : "+oldFile.getAbsolutePath());
-				context.warning(" (C) Destin : "+newFile.getAbsolutePath());
-				oldFile.delete();
-				throw new Exception("Unable to move uploaded file to destination directory");
-			}
+		try {
+			FileUtils.moveFile(oldFile, newFile);
+		} catch (Exception e) {
+			oldFile.delete();
+			context.warning("Cannot move uploaded file");
+			context.warning(" (C) Source : "+oldFile.getAbsolutePath());
+			context.warning(" (C) Destin : "+newFile.getAbsolutePath());
+			oldFile.delete();
+			throw new Exception("Unable to move uploaded file to destination directory");
 		}
 
 		// log the upload

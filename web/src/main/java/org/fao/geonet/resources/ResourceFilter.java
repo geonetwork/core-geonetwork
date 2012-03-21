@@ -1,5 +1,6 @@
-package org.fao.geonet.logos;
+package org.fao.geonet.resources;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -17,19 +18,20 @@ import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 
 /**
- * Servlet for serving up logos.  This solves a largely historical issue because
+ * Servlet for serving up resources located in GeoNetwork data directory.  
+ * For example, this solves a largely historical issue because
  * logos are hardcoded across the application to be in /images/logos.  However this
- * is often not desirable.  They would be better to be in the datadirectory and thus
+ * is often not desirable.  They would be better to be in the data directory and thus
  * possibly outside of geonetwork (allowing easier upgrading of geonetwork etc...)
  *
  * User: jeichar
  * Date: 1/17/12
  * Time: 4:03 PM
  */
-public class LogoFilter implements Filter {
-    private static final int CONTEXT_PATH_PREFIX = "/images/".length();
+public class ResourceFilter implements Filter {
+    private static final int CONTEXT_PATH_PREFIX = "/".length();
     private static final int FIVE_DAYS = 60*60*24*5;
-    private String dataImagesDir;
+    private String resourcesDir;
     private byte[] defaultImage;
     private FilterConfig config;
     private byte[] favicon;
@@ -43,13 +45,13 @@ public class LogoFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if(isGet(request)) {
             synchronized(this) {
-                if(dataImagesDir == null) {
+                if(resourcesDir == null) {
                     initFields();
                 }
             }
             String servletPath = ((HttpServletRequest) request).getServletPath();
 
-            Log.info(Geonet.LOGOS, "Handling logos request: "+servletPath);
+            Log.info(Geonet.RESOURCES, "Handling resource request: " + servletPath);
             
             String filename = servletPath.substring(CONTEXT_PATH_PREFIX).replaceAll("/+", "/");
             int extIdx = filename.lastIndexOf('.');
@@ -60,6 +62,7 @@ public class LogoFilter implements Filter {
                 ext = "gif"; 
             }
             HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+            // TODO : other type of resources html
             httpServletResponse.setContentType("image/"+ext);
             httpServletResponse.addHeader("Cache-Control", "max-age="+FIVE_DAYS+", public");
             if(filename.equals("logos/favicon.gif")) {
@@ -67,14 +70,15 @@ public class LogoFilter implements Filter {
                 
                 response.getOutputStream().write(favicon);
             } else {
-                byte[] loadImage = Logos.loadImage(dataImagesDir, servletContext, appPath, filename, defaultImage);
-                if(loadImage == defaultImage) {
-                    Log.warning(Geonet.LOGOS, "Icon not found, default image returned: "+servletPath);
+                byte[] loadResource = Resources.loadResource(resourcesDir, servletContext, appPath, filename, defaultImage);
+                if(loadResource == defaultImage) {
+                	// Return HTTP 404 ? TODO
+                    Log.warning(Geonet.RESOURCES, "Resource not found, default resource returned: "+servletPath);
                     httpServletResponse.setContentType("image/gif");
                     httpServletResponse.setHeader("Cache-Control", "no-cache");
                 }
-                httpServletResponse.setContentLength(loadImage.length);
-                response.getOutputStream().write(loadImage);
+                httpServletResponse.setContentLength(loadResource.length);
+                response.getOutputStream().write(loadResource);
             }
 
         }
@@ -83,9 +87,10 @@ public class LogoFilter implements Filter {
     private void initFields() throws IOException {
         servletContext = config.getServletContext();
         appPath = servletContext.getContextPath();
-        dataImagesDir = Logos.locateDataImagesDir(config.getServletContext(), appPath);
-        defaultImage = Logos.loadImage(dataImagesDir, config.getServletContext(), appPath, "logos/dummy.gif", new byte[0]);
-        favicon = Logos.loadImage(dataImagesDir, config.getServletContext(), appPath, "logos/favicon.gif", defaultImage);
+        resourcesDir = System.getProperty(servletContext.getServletContextName() + ".resources.dir");
+
+        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0]);
+        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage);
     }
 
     private boolean isGet(ServletRequest request) {
@@ -95,7 +100,7 @@ public class LogoFilter implements Filter {
     public void destroy() {
         servletContext = null;
         appPath = null;
-        dataImagesDir = null;
+        resourcesDir = null;
         defaultImage = null;
         favicon = null;
     }

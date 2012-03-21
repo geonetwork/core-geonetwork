@@ -37,7 +37,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -235,7 +235,7 @@ class Harvester
 				else
 				{
 					sourceName = "(unknown)";
-					Logos.copyUnknownLogo(context, sourceUuid);
+					Resources.copyUnknownLogo(context, sourceUuid);
 				}
 
 				Lib.sources.update(dbms, sourceUuid, sourceName, false);

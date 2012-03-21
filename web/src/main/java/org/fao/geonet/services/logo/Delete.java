@@ -32,7 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 public class Delete implements Service {
@@ -45,7 +45,7 @@ public class Delete implements Service {
 			throws Exception {
        synchronized (this) {
             if(logoDirectory == null) {
-                logoDirectory = Logos.locateHarvesterLogosDir(context);
+                logoDirectory = Resources.locateHarvesterLogosDir(context);
             }
         }
 

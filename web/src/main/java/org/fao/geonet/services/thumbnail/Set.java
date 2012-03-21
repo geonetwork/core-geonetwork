@@ -29,6 +29,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import lizard.tiff.Tiff;
+
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -138,10 +140,12 @@ public class Set implements Service
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
 
-			if (!inFile.renameTo(outFile))
-			{
+			try {
+				FileUtils.moveFile(inFile, outFile);
+			} catch (Exception e) {
 				inFile.delete();
-				throw new Exception("unable to move uploaded thumbnail to destination directory");
+				throw new Exception(
+						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
 
 			dataMan.setThumbnail(context, id, type.equals("small"), file);
@@ -216,12 +220,14 @@ public class Set implements Service
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
 
-			if (!inFile.renameTo(outFile))
-			{
+			try {
+				FileUtils.moveFile(inFile, outFile);
+			} catch (Exception e) {
 				inFile.delete();
-				throw new Exception("unable to move uploaded thumbnail to destination directory");
+				throw new Exception(
+						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
-
+			
 			dataMan.setThumbnail(context, id, type.equals("small"), file);
 		}
 

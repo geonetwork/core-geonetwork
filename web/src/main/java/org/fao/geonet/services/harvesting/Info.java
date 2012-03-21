@@ -36,7 +36,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
@@ -141,7 +141,7 @@ public class Info implements Service
 
 	private Element getIcons(ServiceContext context)
 	{
-		Set<File> icons = Logos.listFiles(context, "harvesting", iconFilter);
+		Set<File> icons = Resources.listFiles(context, "harvesting", iconFilter);
 
 		Element result = new Element("icons");
 

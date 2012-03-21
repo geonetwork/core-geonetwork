@@ -376,9 +376,12 @@
         </tip>
 
     </tips>
-	
-	<data.dir>Data directory:</data.dir>
-  <codeList.dir>Thesaurus directory:</codeList.dir>
+	<data.dataDir>Data directory:</data.dataDir>
+	<data.resources>Resources directory:</data.resources>
+	<data.configDir>Configuration directory:</data.configDir>
+	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
+	<data.subversionPath>Subversion directory:</data.subversionPath>
+	<data.codeListDir>Thesaurus directory:</data.codeListDir>
 	<xslt.factory>XSLT factory:</xslt.factory>
 	<java.vm.name>JVM name:</java.vm.name>
 	<java.vm.vendor>JVM vendor:</java.vm.vendor>

@@ -390,8 +390,12 @@
 
     </tips>
 	
-	<data.dir>Répertoire des données :</data.dir>
-  <codeList.dir>Répertoire des thesaurus :</codeList.dir>
+	<data.dataDir>Répertoire des données :</data.dataDir>
+	<data.resources>Répertoire des ressources (eg. logos):</data.resources>
+	<data.configDir>Répertoire de la configuration locale :</data.configDir>
+	<data.schemaPluginsDir>Répertoire des standards :</data.schemaPluginsDir>
+	<data.subversionPath>Répertoire du dépôt de gestion des versions :</data.subversionPath>
+	<data.codeListDir>Répertoire des thesaurus :</data.codeListDir>
 	<xslt.factory>XSLT factory :</xslt.factory>
 	<java.vm.name>JVM nom :</java.vm.name>
 	<java.vm.vendor>JVM vendeur :</java.vm.vendor>
@@ -406,18 +410,18 @@
 	<index>Information sur l'index Lucene</index>
 	<main>Information sur le système</main>
 	<catalogue>Information sur le catalogue</catalogue>
-	<database>Database information</database>
-	<system>Configuration du catalogue</system>
+	<database>Information sur la base de données</database>
+	<system>Identification du catalogue</system>
 	<siteId>Identifiant du catalogue :</siteId>
 	<version>Version :</version>
 	<subVersion>Sous-version :</subVersion>
 	<index.lucene.config>Configuration Lucene :</index.lucene.config>
-	<db.url>Base de données / URL:</db.url>
-	<db.openattempt>Base de données / status :</db.openattempt>	
-  <db.numactive>Base de données / connexions utilisées :</db.numactive>	
-  <db.numidle>Base de données / connexions disponibles :</db.numidle>	
-  <db.maxactive>Base de données / nombre maximum de connexions :</db.maxactive>	
-  <db.statserror>Base de données / statistique :</db.statserror>
+	<db.url>URL de connexion :</db.url>
+	<db.openattempt>Status :</db.openattempt>	
+  <db.numactive>Connexions utilisées :</db.numactive>	
+  <db.numidle>Connexions disponibles :</db.numidle>	
+  <db.maxactive>Nombre maximum de connexions :</db.maxactive>	
+  <db.statserror>Statistique :</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 </strings>
 

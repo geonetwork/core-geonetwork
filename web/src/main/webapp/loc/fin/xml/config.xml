@@ -314,6 +314,12 @@
 
     </tips>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<data.dataDir>Data directory:</data.dataDir>
+	<data.resources>Resources directory:</data.resources>
+	<data.configDir>Configuration directory:</data.configDir>
+	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
+	<data.subversionPath>Subversion directory:</data.subversionPath>
+	<data.codeListDir>Thesaurus directory:</data.codeListDir>
 	
 </strings>
 

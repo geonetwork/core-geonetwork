@@ -44,7 +44,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 /**
@@ -64,10 +64,10 @@ public class Set implements Service {
             throws Exception {
         synchronized (this) {
             if(harvestingLogoDirectory == null) {
-                harvestingLogoDirectory = Logos.locateHarvesterLogosDir(context);
+                harvestingLogoDirectory = Resources.locateHarvesterLogosDir(context);
             }
             if(nodeLogoDirectory == null) {
-                nodeLogoDirectory = Logos.locateLogosDir(context);
+                nodeLogoDirectory = Resources.locateLogosDir(context);
             }
         }
         String file = Util.getParam(params, Params.FNAME);
@@ -88,27 +88,31 @@ public class Set implements Service {
         String nodeUuid = settingMan.getValue("system/site/siteId");
 
         try {
-
-            BufferedImage source = ImageIO.read(new File(
-                    harvestingLogoDirectory + file));
+        	String logoFilePath = harvestingLogoDirectory + File.separator + file;
+        	File logoFile = new File(logoFilePath);
+        	if (!logoFile.exists()) {
+        		logoFilePath = context.getAppPath() + "images" + File.separator + "harvesting" + File.separator + file;
+        		logoFile = new File(logoFilePath);
+        	}
+            BufferedImage source = ImageIO.read(logoFile);
 
             if ("1".equals(asFavicon)) {
-                createFavicon(source, nodeLogoDirectory + "/favicon.gif");
+                createFavicon(source, nodeLogoDirectory + File.separator + "favicon.gif");
             } else {
-                String logo = nodeLogoDirectory + nodeUuid + ".gif";
-                String defaultLogo = nodeLogoDirectory + "logo.gif";
+                String logo = nodeLogoDirectory + File.separator + nodeUuid + ".gif";
+                String defaultLogo = nodeLogoDirectory + File.separator + "logo.gif";
     
                 if (file.endsWith(".png")) {
                     ImageIO.write(source, "gif", new File(logo));
                     ImageIO.write(source, "gif", new File(defaultLogo));
                 } else {
-                    copyLogo(harvestingLogoDirectory + file, logo);
-                    copyLogo(harvestingLogoDirectory + file, defaultLogo);
+                    copyLogo(logoFilePath, logo);
+                    copyLogo(logoFilePath, defaultLogo);
                 }
             }
         } catch (Exception e) {
             throw new Exception(
-                    "Unable to move uploaded thumbnail to destination directory");
+                    "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
         }
 
         Element response = new Element("response");

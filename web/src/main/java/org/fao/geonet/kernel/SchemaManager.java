@@ -77,7 +77,9 @@ public class SchemaManager {
 	private String	 defaultSchema;
 	private String 	 FS         = File.separator;
 	private	String	 basePath;
-
+	private int numberOfSchemasAdded = 0;
+	private int numberOfCoreSchemasAdded = 0;
+	
 	private static final int MODE_NEEDLE = 0;
 	private static final int MODE_ROOT = 1;
 	private static final int MODE_NEEDLEWITHVALUE = 2;
@@ -100,16 +102,16 @@ public class SchemaManager {
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
-	/**
-     * Constructor.
-	 *
-	 * @param basePath the web app base path
-	 * @param sPDir
-     * @param defaultLang the default language (taken from context)
-	 * @param defaultSchema the default schema (taken from config.xml)
-     * @throws Exception
-	 */
-	private SchemaManager(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception {
+
+	/**	Constructor
+		*
+		* @param basePath the web app base path
+		* @param schemaPluginsCat the schema catalogue file
+		* @param sPDir the schema plugin directory
+		* @param defaultLang the default language (taken from context)
+		* @param defaultSchema the default schema (taken from config.xml)
+	  */
+	private SchemaManager(String basePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
 
 		hmSchemas .clear();
 
@@ -117,15 +119,15 @@ public class SchemaManager {
 		this.schemaPluginsDir  = sPDir;
 		this.defaultLang = defaultLang;
 		this.defaultSchema = defaultSchema;
-
-		schemaPluginsCat = basePath + Jeeves.Path.WEBINF + FS + Geonet.File.SCHEMA_PLUGINS_CATALOG;
-
+		this.schemaPluginsCat = schemaPluginsCat;
+		
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 
 		// -- add any of the fixed schemas supplied with GeoNetwork
 
 		String schemasDir = basePath + Geonet.Path.SCHEMAS;
 		String saSchemas[] = new File(schemasDir).list();
+		
 		if (saSchemas == null) {
 			throw new IllegalArgumentException("Cannot scan schemas directory : " +schemasDir);
 		} else {
@@ -133,18 +135,17 @@ public class SchemaManager {
 		}
 
 		// -- now check the plugin directory and add any schemas in there
-
-		schemasDir = basePath + this.schemaPluginsDir + FS;
-		saSchemas = new File(schemasDir).list();
+		saSchemas = new File(this.schemaPluginsDir).list();
 		if (saSchemas == null) {
 			Log.error(Geonet.SCHEMA_MANAGER, "Cannot scan plugin schemas directory : " +schemasDir);
 		} else {
-			processSchemas(schemaPluginsDir, schemasDir, saSchemas, true, schemaPluginCatRoot);
+			processSchemas(schemaPluginsDir + FS, schemaPluginsDir + FS, saSchemas, true, schemaPluginCatRoot);
 		}
 
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
 
 	}
+
 
     /**
      * Returns singleton instance.
@@ -156,9 +157,9 @@ public class SchemaManager {
      * @return
      * @throws Exception
      */
-	public synchronized static SchemaManager getInstance(String basePath, String sPDir, String defaultLang, String defaultSchema) throws Exception { 
+	public synchronized static SchemaManager getInstance(String basePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
 		if (schemaManager == null) {
-			schemaManager = new SchemaManager(basePath, sPDir, defaultLang, defaultSchema);
+			schemaManager = new SchemaManager(basePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema);
 		}
 		return schemaManager;
 	}
@@ -835,7 +836,7 @@ public class SchemaManager {
 		// -- add cached xml files (schema codelists and label files) 
 		// -- as Jeeves XmlFile objects (they need not exist)
 		
-		String base = fromAppPath + FS + name + FS + "loc";
+		String base = fromAppPath + name + FS + "loc";
 		Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
 
 		for (String fname : fnames) {	
@@ -886,7 +887,7 @@ public class SchemaManager {
 		// -- Add entry for presentation xslt to schemaPlugins catalog
 		// -- if this schema is a plugin schema
 		if (isPluginSchema) {
-			int baseNrInt = getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
+			int baseNrInt = numberOfCoreSchemasAdded + getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
 			if (baseNrInt != -1) {
 				createUriEntryInSchemaPluginCatalog(name, baseNrInt, schemaPluginCatRoot);		
 			}
@@ -913,7 +914,7 @@ public class SchemaManager {
      * @return
 	 */
 	private String buildSchemaPresentXslt(String name, String suffix) {
-		return "../" + schemaPluginsDir + "/" + name + "/present/metadata-" + name + suffix + ".xsl";
+		return "" + schemaPluginsDir + "/" + name + "/present/metadata-" + name + suffix + ".xsl";
 	}
 
 	/**
@@ -1126,8 +1127,6 @@ public class SchemaManager {
 	private int processSchemas(String fromAppPath, String schemasDir, String[] saSchemas, boolean isPluginSchema,
                                Element schemaPluginCatRoot) {
 
-		int numberOfSchemasAdded = 0;
-
 		for (int i=0; i<saSchemas.length; i++) {
 			if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
 			    File schemaDir = new File(schemasDir + saSchemas[i]);
@@ -1153,7 +1152,10 @@ public class SchemaManager {
     					} else {
 	 							stage = "adding the schema information";
     						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
-    						numberOfSchemasAdded++;
+    						numberOfSchemasAdded ++;
+    						if (!isPluginSchema) {
+    							numberOfCoreSchemasAdded ++;
+    						}
     					}
     				} catch (Exception e) {
     					Log.error(Geonet.SCHEMA_MANAGER, "Failed whilst "+stage+". Exception message if any is "+e.getMessage());

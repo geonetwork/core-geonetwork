@@ -11,6 +11,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jfree.chart.ChartFactory;
@@ -69,6 +70,7 @@ public class CatalogsPopularity implements Service {
 	//--------------------------------------------------------------------------
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		String message = "";
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
 		// gets the total popularity count (=100)
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -113,7 +115,8 @@ public class CatalogsPopularity implements Service {
 		chart.setBackgroundPaint(Color.decode("#E7EDF5"));
 		String chartFilename = "popubycatalog_" + System.currentTimeMillis() + ".png";
 		
-		File statFolder = new File(context.getAppPath() + File.separator + "images" + File.separator + "statTmp");
+		File statFolder = new File(gc.getHandlerConfig().getMandatoryValue(
+				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
 		if (!statFolder.exists()) {
 			statFolder.mkdirs();
 		}

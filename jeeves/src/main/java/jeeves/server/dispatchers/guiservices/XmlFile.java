@@ -88,8 +88,9 @@ public class XmlFile implements GuiService
 		
 		String appPath = context.getAppPath();
 		String xmlFilePath;
-
-		if (localized) xmlFilePath = appPath + base +"/"+ lang +"/"+ file;
+		String rootPath = base.startsWith("/") ? base : appPath + base;
+		
+		if (localized) xmlFilePath = rootPath +"/"+ lang +"/"+ file;
 		else xmlFilePath = appPath + file;
 
         ServletContext servletContext = null;
@@ -103,7 +104,7 @@ public class XmlFile implements GuiService
 			result = (Element)xmlCache.get().clone();
 		} catch (Exception e) {
 			e.printStackTrace();
-			String xmlDefaultLangFilePath = appPath + base +"/"+ defaultLang +"/"+ file;
+			String xmlDefaultLangFilePath = rootPath + "/" + defaultLang + "/" + file;
 			xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
 			result = (Element)xmlCache.get().clone();
 		}

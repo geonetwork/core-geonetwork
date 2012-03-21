@@ -825,6 +825,7 @@ class Harvester
 			return null;
 		} catch (IOException ioe){
 			log.info (" Unable to connect to '" + httpclient.toString() + "'");
+			log.info (ioe.getMessage());
 			return null;
 		} finally {
 		    // Release current connection to the connection pool once you are done

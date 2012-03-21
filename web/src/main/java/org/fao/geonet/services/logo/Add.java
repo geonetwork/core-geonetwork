@@ -31,8 +31,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.logos.Logos;
+import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 public class Add implements Service {
@@ -45,7 +46,7 @@ public class Add implements Service {
 			throws Exception {
 	    synchronized (this) {
 	        if(logoDirectory == null) {
-	            logoDirectory = Logos.locateHarvesterLogosDir(context);
+	            logoDirectory = Resources.locateHarvesterLogosDir(context);
 	        }
         }
 		String file = Util.getParam(params, Params.FNAME);
@@ -61,10 +62,12 @@ public class Add implements Service {
 		File inFile = new File(context.getUploadDir(), file);
 		File outFile = new File(logoDirectory, file);
 
-		if (!inFile.renameTo(outFile)) {
+		try {
+			FileUtils.moveFile(inFile, outFile);
+		} catch (Exception e) {
 			inFile.delete();
 			throw new Exception(
-					"Unable to move uploaded thumbnail to destination directory");
+					"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 		}
 
 		Element response = new Element("response");

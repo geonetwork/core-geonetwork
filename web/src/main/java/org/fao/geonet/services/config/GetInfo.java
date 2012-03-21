@@ -109,12 +109,12 @@ public class GetInfo implements Service {
      * @param dataDir
      */
     private void loadCatalogueInfo(GeonetContext gc) {
-
-        String dataDir = gc.getHandlerConfig().getMandatoryValue(Geonet.Config.DATA_DIR);
-
-        String codeListDir = gc.getHandlerConfig().getMandatoryValue(Geonet.Config.CODELIST_DIR);
-        catProperties.put("data.dir", dataDir);
-        catProperties.put("codeList.dir", codeListDir);
+    	ServiceConfig sc = gc.getHandlerConfig();
+    	String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR, 
+    			Geonet.Config.SCHEMAPLUGINS_DIR, Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR};
+    	for (String prop : props) {
+    		catProperties.put("data." + prop, sc.getValue(prop));
+		}
     }
 
 

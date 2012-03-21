@@ -4,8 +4,9 @@
 
 	<general>
 		<profiles>user-profiles.xml</profiles>
+		<!-- Size must be in megabyte (integer), 100MB by default -->
+		<maxUploadSize>100</maxUploadSize>
 		<uploadDir>./data/tmp</uploadDir>
-		<maxUploadSize>100</maxUploadSize> <!-- Size must be in megabyte (integer), 100MB by default -->
 		<debug>true</debug>
 	</general>
 
@@ -326,17 +327,6 @@
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-	  <param name="luceneDir" value="WEB-INF/lucene" />
-	  <param name="dataDir" value="WEB-INF/data" />
-      <!-- the root of the directory containing logos and harvesting images (and in future other images that are site dependent and should not be replaced when a new webapp is deployed) -->
-      <param name="dataImagesDir" value="images" />
-	  <!--
-	  Thesaurus directory. Default value is WEB-INF/data/codelist.
-	  <param name="codeListDir" value="WEB-INF/data/codelist" />-->
-
-		<!-- this must be a directory in web/geonetwork because html is served -->
-		<param name="htmlCacheDir" value="htmlCache" />
-
         <!-- language profiles for automatic language detection -->
         <param name="languageProfilesDir" value="resources/language-profiles" />
 
@@ -390,9 +380,6 @@
 		<param name="maxWritesInTransaction" value="1000" />
 
 		<param name="useSubversion" value="true"/>
-		<!-- if not specified then created as metadata_subversion dir in data dir 
-		<param name="subversionPath" value="/home/secretplace/metadata_subversion"/>
-		-->
 
 		<param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
 	</appHandler>
@@ -489,7 +476,7 @@
 		<service name="main.search.suggest">
 			<class name=".services.main.SearchSuggestion">
 				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
-				<param name="threshold" value="3" />
+				<param name="threshold" value="2" />
 				<!--
 				 Max number of term's values to look in the index. For large catalogue
 				 this value should be increased in order to get better results. If this

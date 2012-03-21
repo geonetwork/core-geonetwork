@@ -19,6 +19,8 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 
 import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -152,7 +154,8 @@ public class RequestsByDate implements Service {
 		String query = buildQuery();
 		Log.debug(Geonet.SEARCH_LOGGER,"query to get count by date:\n" + query);
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		
 		TimeSeries ts = new TimeSeries("By " + this.graphicType.toLowerCase(), this.chartClass);
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		List resultSet = dbms.select(query, this.dateFrom, this.dateTo).getChildren();
@@ -179,7 +182,6 @@ public class RequestsByDate implements Service {
         String xAxisLabel = this.getI18NValue("stat." + this.graphicType.toLowerCase());
         String yAxisLabel = this.getI18NValue("stat.numberOfSearch");
 
-        System.out.println("got labels: " + xAxisLabel + " " + yAxisLabel);
         JFreeChart chart = org.fao.geonet.services.statistics.ChartFactory.getTimeSeriesChart(
                 dataset,
                 xAxisLabel,
@@ -193,7 +195,8 @@ public class RequestsByDate implements Service {
 		// build tmp path from Jeeves context
 		String chartFilename = getFileName();
 
-		File statFolder = new File(appDir + File.separator + "images" + File.separator + "statTmp");
+		File statFolder = new File(gc.getHandlerConfig().getMandatoryValue(
+				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
 		if (!statFolder.exists()) {
 			statFolder.mkdirs();
 		}

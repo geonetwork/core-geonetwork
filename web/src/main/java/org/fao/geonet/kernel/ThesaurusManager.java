@@ -78,13 +78,22 @@ public class ThesaurusManager {
 	}
 	
 	/**
+	 * Build thesaurus file path according to thesaurus configuration (ie. codelist directory location).
+	 * If directory does not exist, it will create it.
+	 * 
 	 * @param fname
 	 * @param type
 	 * @param dname
-	 * @return
+	 * 
+	 * @return the thesaurus file path.
 	 */
 	public String buildThesaurusFilePath(String fname, String type, String dname) {
-		return thesauriDirectory+File.separator+type+File.separator+Geonet.CodeList.THESAURUS+File.separator+dname+File.separator+fname;
+		String dirPath = thesauriDirectory + File.separator + type + File.separator + Geonet.CodeList.THESAURUS + File.separator + dname;
+		File dir = new File(dirPath);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		return dirPath + File.separator + fname;
 	}	
 	
 	/**
@@ -219,12 +228,4 @@ public class ThesaurusManager {
 	public boolean existsThesaurus(String name) {
 		return (thesauriTable.get(name) != null);
 	}
-	// =============================================================================
-
-	public static void main(String[] args) throws Exception {
-	/*	ThesaurusManager tm = new ThesaurusManager("",
-				"E:\\workspace3.2\\TestSesame\\res\\codelist\\");*/
-	//	tm.getAllPrefLabel("adminstrativeAreaFrv0.1");
-	}
-
 }
