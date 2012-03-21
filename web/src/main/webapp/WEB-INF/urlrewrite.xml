@@ -16,7 +16,7 @@
 		</rule>
 	
 -->
-<urlrewrite>
+<urlrewrite use-query-string="true">
 
     <rule>
         <from>^(.*)/ar/(.*)$</from>
