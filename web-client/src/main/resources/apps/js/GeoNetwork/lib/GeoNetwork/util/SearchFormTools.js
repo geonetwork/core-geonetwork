@@ -290,7 +290,7 @@ GeoNetwork.util.SearchFormTools = {
                 [['10'], ['20'], ['50'], ['100']],
             items = [];
         
-        if (config.withLanguage || true) {
+        if (config.withLanguage) {
             items.push(GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages));
         }
         
