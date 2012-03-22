@@ -888,7 +888,8 @@ public class SchemaManager {
 		// -- Add entry for presentation xslt to schemaPlugins catalog
 		// -- if this schema is a plugin schema
 		if (isPluginSchema) {
-			int baseNrInt = numberOfCoreSchemasAdded + getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
+			int baseNrInt = getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
+			if (baseNrInt == 0) baseNrInt = numberOfCoreSchemasAdded; 
 			if (baseNrInt != -1) {
 				createUriEntryInSchemaPluginCatalog(name, baseNrInt, schemaPluginCatRoot);		
 			}
