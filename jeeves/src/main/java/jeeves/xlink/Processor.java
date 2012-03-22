@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import jeeves.JeevesJCS;
@@ -306,6 +308,7 @@ public final class Processor {
 		Log.debug(Log.XLINK_PROCESSOR, "local xlink search returned "+xlinks.size()+" elements");
 
 		// now all remote fragments have been added, process local xlinks (uncached)
+		Map<String,Element> localIds = new HashMap<String,Element>();
 		for (Attribute xlink : xlinks) {
 			Element element = xlink.getParent(); 
 			if (action.equals(ACTION_REMOVE)) {
@@ -313,9 +316,12 @@ public final class Processor {
 			} else {
 				String idSearch = xlink.getValue().substring(1);
 				Log.debug(Log.XLINK_PROCESSOR, "process local xlink '"+idSearch+"'");
-				Element localFragment = null;
+				Element localFragment = localIds.get(idSearch);
 				try {
-					localFragment = Xml.selectElement(md, "*//*[@id='" + idSearch + "']");
+					if (localFragment == null) {  
+						localFragment = Xml.selectElement(md, "*//*[@id='" + idSearch + "']");
+						localIds.put(idSearch,localFragment);
+					}
 					
 					// -- avoid recursivity if an xlink:href #ID is a descendant of the localFragment
 					
