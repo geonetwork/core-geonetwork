@@ -419,6 +419,9 @@ GeoNetwork.Lang.nl = {
     'xmlData': "XML",
     'minorEdit': "Kleine wijziging",
     'minorEditTT': "",
+
+    'create': 'Aanmaken',
+
 	// Shortcuts
     'runASearch': "Voer zoekopdracht uit",
     'focusOnAny': "Verplaats focus naar het volledige tekst zoekveld",

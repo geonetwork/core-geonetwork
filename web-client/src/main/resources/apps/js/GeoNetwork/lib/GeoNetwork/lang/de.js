@@ -433,7 +433,9 @@ GeoNetwork.Lang.de = {
     'SelectionWindowTitle': 'Select from directory',
     'found': 'Records found',
     'selected': 'Selected',
-    
+
+    'create': 'Create',
+
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Replace existing extent',
     'add-info-from-wmssetExtent': 'Set extent',

@@ -442,6 +442,8 @@ GeoNetwork.lang.en = {
     'SelectionWindowTitle': 'Select from directory',
     'found': 'Records found',
     'selected': 'Selected',
+
+    'create': 'Create',
     
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Replace existing extent',
