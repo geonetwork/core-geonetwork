@@ -1048,7 +1048,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      * 
      *  Initialize all calendar divs identified by class "cal".
      *
-     *  All calendars are composed of one div and 2 inputs;
+     *  All calendars are composed of one div and 1 or 2 inputs;
      *  one for the format, one for the value. According
      *  to the format, A DateTime or a DateField component
      *  are initialized.
@@ -1066,7 +1066,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             cal.id = id + 'Id'; // In order to get the input if a get by id is made
             // later (eg. gn_search.js).
             
-            if (cal.firstChild === null || cal.childNodes.length === 1) { // Check if
+            if (cal.firstChild === null || cal.childNodes.length === 0) { // Check if
                 // already
                 // initialized
                 // or not
