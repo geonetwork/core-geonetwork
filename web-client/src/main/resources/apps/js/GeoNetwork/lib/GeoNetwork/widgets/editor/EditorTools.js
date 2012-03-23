@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright (C) 2001-2011 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
@@ -272,16 +272,47 @@ function doRemoveElementAction(action, ref, parentref, id, min){
                 // in simple mode, returned snippets will be empty in all cases
                 // because a geonet:child alone is not take into account.
                 // No elements are suggested then and last element is removed.
-                if (bottomElement(thisElement) &&
-                document.mainForm.currTab.value != 'simple') {
-                    swapControls(thisElement, prevElement);
-                    thisElement.remove();
-                    thisElement = prevElement;
+                var originalElementType = id.split("_")[0];
+                var prevElementType = ((prevElement == null)?"":prevElement.id.split("_")[0]);
+                var nextElementType = ((nextElement == null)?"":nextElement.id.split("_")[0]);
+
+                if (bottomElement(thisElement)) {
+                    var doSwapControls = true;
+
+                    if (document.mainForm.currTab.value === 'simple') {
+                        // only swap if are the same element type in simple view
+                        doSwapControls = (originalElementType === prevElementType);
+                    }
+
+                    if (doSwapControls) {
+                        swapControls(thisElement, prevElement);
+                        thisElement.remove();
+                        thisElement = prevElement;
+
+                        // only call topControls if same type for originalElement and prevElement
+                        if (originalElementType === prevElementType) {
+                            if (topElement(thisElement)) topControls(thisElement, min);
+                        }
+                    } else {
+                        thisElement.remove();
+                        thisElement = nextElement;
+
+                        // only call topControls if same type for originalElement and nextElement
+                        if (originalElementType === nextElementType) {
+                            if (topElement(thisElement)) topControls(thisElement, min);
+                        }
+                    }
+
                 } else {
                     thisElement.remove();
                     thisElement = nextElement;
+
+                    // only  call topControls if same type for originalElement and nextElement
+                    if (originalElementType === nextElementType) {
+                        if (topElement(thisElement)) topControls(thisElement, min);
+                    }
                 }
-                if (topElement(thisElement)) topControls(thisElement, min);
+              
             } else { // last one, so replace with child-placeholder returned
                 if (orElement(thisElement)) {
                     thisElement.remove();
