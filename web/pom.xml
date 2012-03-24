@@ -770,7 +770,7 @@
               <type>jar</type>
             </overlay>
           </overlays>
-          <packagingExcludes>WEB-INF/metadata_subversion/**,WEB-INF/data/**</packagingExcludes>
+          <!-- <packagingExcludes>WEB-INF/data/metadata_subversion/**,WEB-INF/data/**</packagingExcludes> -->
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
