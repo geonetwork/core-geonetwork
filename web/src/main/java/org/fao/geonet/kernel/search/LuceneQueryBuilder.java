@@ -1259,17 +1259,17 @@ public class LuceneQueryBuilder {
      * @return
      */
     static Query addLocaleTerm( Query query, String langCode, boolean requestedLanguageOnly ) {
-
         if (langCode == null) {
             return query;
         }
+
         BooleanQuery booleanQuery;
         if (query instanceof BooleanQuery) {
             booleanQuery = (BooleanQuery) query;
         }
         else {
             booleanQuery = new BooleanQuery();
-            booleanQuery.add(query, BooleanClause.Occur.SHOULD);
+            booleanQuery.add(query, BooleanClause.Occur.MUST);
         }
 
         if(requestedLanguageOnly) {
@@ -1278,7 +1278,6 @@ public class LuceneQueryBuilder {
         else {
             booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.SHOULD);
         }
-
         return booleanQuery;
     }
 }
