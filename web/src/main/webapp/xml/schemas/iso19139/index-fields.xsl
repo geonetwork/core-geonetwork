@@ -45,9 +45,9 @@
         </xsl:variable>
 
 		<Document locale="{$isoLangId}">
-			<Field name="_locale" string="{$isoLangId}" store="true" index="true" token="false"/>
+			<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
-			<Field name="_docLocale" string="{$isoLangId}" store="true" index="true" token="false"/>
+			<Field name="_docLocale" string="{$isoLangId}" store="true" index="true"/>
 
 			<xsl:variable name="_defaultTitle">
 				<xsl:call-template name="defaultTitle">
@@ -55,7 +55,7 @@
 				</xsl:call-template>
 			</xsl:variable>
 			<!-- not tokenized title for sorting, needed for multilingual sorting -->
-			<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" token="false" />
+			<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true"/>
 
 			<xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
 		</Document>
