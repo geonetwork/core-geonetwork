@@ -6,10 +6,9 @@
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
-										xmlns:java="java:org.fao.geonet.util.XslUtil"
                                         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 
-	<xsl:include href="../iso19139/convert/functions.xsl"/>
+	<xsl:include href="convert/functions.xsl"/>
 	<xsl:include href="../../../xsl/utils-fn.xsl"/>
 	
 	<!-- This file defines what parts of the metadata are indexed by Lucene
@@ -544,34 +543,9 @@
 	
 	<xsl:template match="*" mode="codeList">
 		<xsl:apply-templates select="*" mode="codeList"/>
-		</xsl:template>
-	
-	<!-- ========================================================================================= -->
-	<!-- latlon coordinates indexed as numeric. -->
-	
-	<xsl:template match="*" mode="latLon">
-		<xsl:variable name="format" select="'##.00'"></xsl:variable>
-		
-		<xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
-			and number(gmd:southBoundLatitude/gco:Decimal)
-			and number(gmd:eastBoundLongitude/gco:Decimal)
-			and number(gmd:northBoundLatitude/gco:Decimal)
-			">
-			<Field name="westBL" string="{format-number(gmd:westBoundLongitude/gco:Decimal, $format)}" store="false" index="true"/>
-			<Field name="southBL" string="{format-number(gmd:southBoundLatitude/gco:Decimal, $format)}" store="false" index="true"/>
-			
-			<Field name="eastBL" string="{format-number(gmd:eastBoundLongitude/gco:Decimal, $format)}" store="false" index="true"/>
-			<Field name="northBL" string="{format-number(gmd:northBoundLatitude/gco:Decimal, $format)}" store="false" index="true"/>
-			
-			<Field name="geoBox" string="{concat(gmd:westBoundLongitude/gco:Decimal, '|', 
-				gmd:southBoundLatitude/gco:Decimal, '|', 
-				gmd:eastBoundLongitude/gco:Decimal, '|', 
-				gmd:northBoundLatitude/gco:Decimal
-				)}" store="true" index="false"/>
-		</xsl:if>
-		
 	</xsl:template>
-
+	
+	
 	<!-- ========================================================================================= -->
 
 	<!-- inspireThemes is a nodeset consisting of skos:Concept elements -->

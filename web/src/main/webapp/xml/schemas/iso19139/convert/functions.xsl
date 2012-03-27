@@ -4,13 +4,37 @@
                     xmlns:srv="http://www.isotc211.org/2005/srv"
                     xmlns:ADO="http://www.defence.gov.au/ADO_DM_MDP"
                     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-										xmlns:date="http://exslt.org/dates-and-times"
-                    xmlns:che="http://www.geocat.ch/2008/che"
+                    xmlns:date="http://exslt.org/dates-and-times"
                     xmlns:java="java:org.fao.geonet.util.XslUtil"
                     xmlns:joda="java:org.fao.geonet.util.JODAISODate"
                     xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
-                    exclude-result-prefixes="java">
-
+                    exclude-result-prefixes="#all">
+    
+    <!-- ========================================================================================= -->
+    <!-- latlon coordinates indexed as numeric. -->
+    
+    <xsl:template match="*" mode="latLon">
+        <xsl:variable name="format" select="'##.00'"></xsl:variable>
+        
+        <xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
+            and number(gmd:southBoundLatitude/gco:Decimal)
+            and number(gmd:eastBoundLongitude/gco:Decimal)
+            and number(gmd:northBoundLatitude/gco:Decimal)
+            ">
+            <Field name="westBL" string="{format-number(gmd:westBoundLongitude/gco:Decimal, $format)}" store="false" index="true"/>
+            <Field name="southBL" string="{format-number(gmd:southBoundLatitude/gco:Decimal, $format)}" store="false" index="true"/>
+            
+            <Field name="eastBL" string="{format-number(gmd:eastBoundLongitude/gco:Decimal, $format)}" store="false" index="true"/>
+            <Field name="northBL" string="{format-number(gmd:northBoundLatitude/gco:Decimal, $format)}" store="false" index="true"/>
+            
+            <Field name="geoBox" string="{concat(gmd:westBoundLongitude/gco:Decimal, '|', 
+                gmd:southBoundLatitude/gco:Decimal, '|', 
+                gmd:eastBoundLongitude/gco:Decimal, '|', 
+                gmd:northBoundLatitude/gco:Decimal
+                )}" store="true" index="false"/>
+        </xsl:if>
+        
+    </xsl:template>
 	<!-- ================================================================== -->
 
 	<xsl:template name="fixSingle">
@@ -95,7 +119,9 @@
 	</xsl:template>
 
     <!-- ================================================================== -->
-
+    <!-- iso3code of default index language -->
+    <xsl:variable name="defaultLang">eng</xsl:variable>
+    
     <xsl:template name="langId19139">
         <xsl:variable name="tmp">
             <xsl:choose>
@@ -110,25 +136,21 @@
         <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
     </xsl:template>
 
-	<xsl:variable name="UPPER">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
-	<xsl:variable name="LOWER">abcdefghijklmnopqrstuvwxyz</xsl:variable>
-    <!-- iso3code of default index language -->
-    <xsl:variable name="defaultLang">en</xsl:variable>
 
     <xsl:template name="defaultTitle">
         <xsl:param name="isoDocLangId"/>
         
-        <xsl:variable name="poundLangId" select="concat('#',translate($isoDocLangId,$LOWER, $UPPER))" />
+        <xsl:variable name="poundLangId" select="concat('#',upper-case($isoDocLangId))" />
 
         <xsl:choose>
         <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0]) != 0">
-            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0])"></xsl:value-of>
+            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0])"/>
         </xsl:when>
         <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title/gco:CharacterString[1]) != 0">
-            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title/gco:CharacterString[1])"></xsl:value-of>
+            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title/gco:CharacterString[1])"/>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:value-of select="string((/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString))"></xsl:value-of>
+            <xsl:value-of select="string((/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString))"/>
         </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
