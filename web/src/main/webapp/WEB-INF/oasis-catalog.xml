@@ -34,4 +34,7 @@
 	<uri    name="../../../xsl/utils-fn.xsl"
 					uri="../xsl/utils-fn.xsl"/>
 
+	<uri    name="iso19139/convert/functions.xsl"
+					uri="../xml/schemas/iso19139/convert/functions.xsl"/>
+
 </catalog>
