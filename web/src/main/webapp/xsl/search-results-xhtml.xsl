@@ -141,13 +141,13 @@
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.categories' and /root/gui/config/category">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.category.form','{/root/gui/strings/batchUpdateCategoriesTitle}',800)">
+									<button onclick="batchOperation('metadata.batch.category.form','{/root/gui/strings/batchUpdateCategoriesTitle}',300, null, 400)">
 										<xsl:value-of select="/root/gui/strings/updateCategories"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.privileges'">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.admin.form','{/root/gui/strings/batchUpdatePrivilegesTitle}',800)">
+									<button onclick="batchOperation('metadata.batch.admin.form','{/root/gui/strings/batchUpdatePrivilegesTitle}',800, null, 400)">
 										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 									</button>
 								</xsl:if>
@@ -171,7 +171,7 @@
 						</div>
 					 </xsl:if>
 					 <xsl:if test="$remote=true()">
-						<a href="#" onclick="runRemoteSearch('pdf');"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
+						<a href="#" onclick="runRemoteSearch('pd#840: Massive operation popup should have a scrollbarf');"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
 					 </xsl:if>
 						
 						<xsl:if test="/root/response/summary/@count > 1 and $remote=false()">

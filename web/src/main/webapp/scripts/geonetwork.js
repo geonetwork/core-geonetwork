@@ -252,7 +252,7 @@ function get_cookie ( cookie_name )
  * Batch Operations are called through this routine
  **********************************************************/
 
-	function batchOperation(service, title, width, message)
+	function batchOperation(service, title, width, message, height)
 	{
 
 		if (message != null) {
@@ -261,7 +261,7 @@ function get_cookie ( cookie_name )
 		}
 
 		var url = Env.locService +'/' + service;
-		Modalbox.show(url,{title: title, width: width, afterHide: function() {
+		Modalbox.show(url,{title: title, width: width, height: height, afterHide: function() {
                 if ($("simple_search_pnl").visible()) {
                     runSimpleSearch();
 
