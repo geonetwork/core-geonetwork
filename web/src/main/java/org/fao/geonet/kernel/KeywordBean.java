@@ -48,9 +48,11 @@ public class KeywordBean {
 	private boolean selected;
     private String thesaurusTitle;
 	private String thesaurusDate;
+	private String downloadUrl;
 
 	private static final Namespace NS_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 	private static final Namespace NS_GCO = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+	private static final Namespace NS_GMX = Namespace.getNamespace("gmx", "http://www.isotc211.org/2005/gmx");
 	
 	/**
      * TODO javadoc.
@@ -72,7 +74,7 @@ public class KeywordBean {
 	public KeywordBean(int id, String value, String definition, String code, 
 				String coordEast, String coordWest, 
 				String coordSouth, String coordNorth, 
-				String thesaurus, boolean selected, String lang, String thesaurusTitle, String thesaurusDate) {
+				String thesaurus, boolean selected, String lang, String thesaurusTitle, String thesaurusDate, String downloadUrl) {
 		super();
 		this.id = id;
 		this.value = value;
@@ -87,6 +89,7 @@ public class KeywordBean {
 		this.selected = selected;
         this.thesaurusTitle = thesaurusTitle;
         this.thesaurusDate = thesaurusDate;
+		this.downloadUrl = downloadUrl;
 	}
 
 	/**
@@ -98,13 +101,14 @@ public class KeywordBean {
 	 * @param thesaurus
 	 * @param selected
 	 */
-	public KeywordBean(int id, String value, String definition, String thesaurus, boolean selected) {
+	public KeywordBean(int id, String value, String definition, String thesaurus, boolean selected, String downloadUrl) {
 		super();
 		this.id = id;
 		this.value = value;
 		this.definition = definition;
 		this.thesaurus = thesaurus;
 		this.selected = selected;
+		this.downloadUrl = downloadUrl;
 	}
 	
 	/**
@@ -115,12 +119,13 @@ public class KeywordBean {
 	 * @param thesaurus
 	 * @param selected
 	 */
-	public KeywordBean(String value, String definition, String thesaurus, boolean selected) {
+	public KeywordBean(String value, String definition, String thesaurus, boolean selected, String downloadUrl) {
 		super();
 		this.value = value;
 		this.definition = definition;
 		this.thesaurus = thesaurus;
 		this.selected = selected;
+		this.downloadUrl = downloadUrl;
 	}
 
 	public String getDefinition() {
@@ -248,6 +253,10 @@ public class KeywordBean {
 		return thesaurus.substring(tmpDotIndex+1, thesaurus.indexOf(".",tmpDotIndex+1));
 	}
 	
+	public String getThesaurusType() {
+		return org.apache.commons.lang.StringUtils.substringBefore(thesaurus, ".");
+	}
+	
 	/**
 	 * Transforms a KeywordBean object into its iso19139 representation.
 	 * 
@@ -259,11 +268,14 @@ public class KeywordBean {
 	 *  		<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="TYPE"/>
 	 *  	</gmd:type>
 	 *  	<gmd:thesaurusName>
-	 *  		<gmd:CI_Citation>
+	 *  		<gmd:CI_Citation "id="geonetwork.thesaurus.register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6">
 	 *  			<gmd:title>
 	 *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
 	 *  			</gmd:title>
 	 *  			<gmd:date gco:nilReason="unknown"/>
+	 *				<gmd:otherCitationDetails>
+	 *					<gmx:FileName src="http://localhost:8080/geonetwork/srv/eng/metadata.show?uuid=bc44a748-f1a1-4775-9395-a4a6d8bb8df6">register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6</gmx:FileName>
+	 *				</gmd:otherCitationDetails>
 	 *  		</gmd:CI_Citation>
 	 *  	</gmd:thesaurusName>
 	 * </pre>
@@ -279,7 +291,7 @@ public class KeywordBean {
 		Element type = KeywordBean.createKeywordTypeElt(this);
 		
 		Element thesaurusName = KeywordBean.createThesaurusNameElt(this);
-		
+
 		el.addContent(cs);
 		
 		ele.addContent(el);
@@ -304,11 +316,14 @@ public class KeywordBean {
 	 *  		<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="TYPE"/>
 	 *  	</gmd:type>
 	 *  	<gmd:thesaurusName>
-	 *  		<gmd:CI_Citation>
+	 *  		<gmd:CI_Citation id="geonetwork.thesaurus.register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6">
 	 *  			<gmd:title>
 	 *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
 	 *  			</gmd:title>
 	 *  			<gmd:date gco:nilReason="unknown"/>
+	 *				<gmd:otherCitationDetails>
+	 *					<gmx:FileName src="http://localhost:8080/geonetwork/srv/eng/metadata.show?uuid=bc44a748-f1a1-4775-9395-a4a6d8bb8df6">register.theme.bc44a748-f1a1-4775-9395-a4a6d8bb8df6</gmx:FileName>
+	 *				</gmd:otherCitationDetails>
 	 *  		</gmd:CI_Citation>
 	 *  	</gmd:thesaurusName>
 	 *  </gmd:MD_Keywords>
@@ -375,6 +390,7 @@ public class KeywordBean {
 	private static Element createThesaurusNameElt (KeywordBean kb) {
 		Element thesaurusName = new Element("thesaurusName", NS_GMD);
 		Element citation = new Element("CI_Citation", NS_GMD);
+		citation.setAttribute("id","geonetwork.thesaurus."+kb.thesaurus);
 		Element title = new Element("title", NS_GMD);
 		Element cs = new Element("CharacterString", NS_GCO);
 		Element date = new Element("date", NS_GMD);
@@ -403,9 +419,15 @@ public class KeywordBean {
             date.setAttribute("nilReason", "unknown",NS_GCO);
         }
 
+				Element otherCit = new Element("otherCitationDetails", NS_GMD);
+				Element gmxFileName = new Element("FileName", NS_GMX).setText(kb.thesaurus);
+				gmxFileName.setAttribute("src", kb.downloadUrl);
+				otherCit.addContent(gmxFileName);
+
 		title.addContent((Content) cs.clone());
 		citation.addContent(0,title);
-		citation.addContent(1, date);
+		citation.addContent(1,date);
+		citation.addContent(2,otherCit);
 		thesaurusName.addContent(citation);
 		
 		return thesaurusName;

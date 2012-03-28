@@ -16,6 +16,9 @@
     <anyLanguage>任何语言</anyLanguage>
 
 
+	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+	<createThesaurus>Create/Update Thesaurus</createThesaurus>
+	<thesaurusType>Thesaurus Type</thesaurusType>
 	<editAttributes>Add more details</editAttributes>
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>

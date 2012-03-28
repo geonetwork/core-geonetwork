@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -116,7 +116,7 @@ public class KeywordsSearcher {
 					sUri = uri.toString();
 				}
 
-				KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate());
+				KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl());
 				idKeyword++;
 
 				return kb;
@@ -176,7 +176,7 @@ public class KeywordsSearcher {
 
 		    //	If no thesaurus search in all.
 		    if (bAll){
-			    Hashtable<String, Thesaurus> tt = _thesaurusManager.getThesauriTable();
+			    ConcurrentHashMap<String, Thesaurus> tt = _thesaurusManager.getThesauriMap();
 
 			    Enumeration<String> e = tt.keys();
 			    boolean add = true;
@@ -302,7 +302,7 @@ public class KeywordsSearcher {
                 }
 
                 KeywordBean kb = new KeywordBean(idKeyword, sValue, sDefinition, sUri, sEast, sWest, sSouth, sNorth, thesaurusName.getTextTrim(),
-                        false, _lang, thesaurus.getTitle(), thesaurus.getDate());
+                        false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl());
                 _results.add(kb);
                 idKeyword++;
             }
@@ -415,7 +415,7 @@ public class KeywordsSearcher {
 				sUri = uri.toString();
 			}
 
-			KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate());
+			KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl());
 			_results.add(kb);
 			idKeyword++;
 		}

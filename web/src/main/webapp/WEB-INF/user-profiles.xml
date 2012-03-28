@@ -89,6 +89,7 @@
 		<allow service="thesaurus.deleteelement"/>
 		<allow service="thesaurus.updateelement"/>
 	  <allow service="thesaurus.add"/>
+	  <allow service="thesaurus.add.register"/>
 	  <allow service="thesaurus.activate"/>
 
 		<allow service="config"/>
@@ -219,6 +220,7 @@
 
 		<allow service="metadata.duplicate.form"/>
 		<allow service="metadata.create.form"/>
+		<allow service="metadata.create.thesaurus.form"/>
 		<allow service="metadata.create"/>
 	  <allow service="metadata.create.new"/>
 		<allow service="metadata.create.edit"/>

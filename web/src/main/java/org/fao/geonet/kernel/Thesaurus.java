@@ -68,6 +68,8 @@ public class Thesaurus {
 
     private String date;
 
+    private String downloadUrl;
+
 	@SuppressWarnings("unused")
 	private String name;
 
@@ -89,12 +91,13 @@ public class Thesaurus {
 	 * @param type
 	 * @param dname
 	 */
-	public Thesaurus(String fname, String type, String dname, File thesaurusFile) {
+	public Thesaurus(String fname, String type, String dname, File thesaurusFile, String siteUrl) {
 		super();
 		this.fname = fname;
 		this.type = type;
 		this.dname = dname;
 		this.thesaurusFile = thesaurusFile; 
+		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
 		
         retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
 
@@ -132,6 +135,14 @@ public class Thesaurus {
 		return date;
 	}
 
+  public String getDownloadUrl() {
+		return downloadUrl;
+	}
+
+  public void retrieveThesaurusTitle() {
+    retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
+	}
+
 
 	/**
 	 * 
@@ -142,6 +153,14 @@ public class Thesaurus {
 	 */
 	public static String buildThesaurusKey(String fname, String type, String dname) {
 		return type + "." + dname + "." + fname.substring(0, fname.indexOf(".rdf"));
+	}
+
+	private String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
+		if (type.equals(Geonet.CodeList.REGISTER)) {
+			return siteUrl + "/?uuid="+fname.substring(0, fname.indexOf(".rdf"));
+		} else {
+			return siteUrl + "/thesaurus.download?ref="+this.buildThesaurusKey(fname, type, dname);
+		}
 	}
 
 	public LocalRepository getRepository() {
@@ -631,5 +650,16 @@ public class Thesaurus {
         }
         return thesaurusDate;
     }
+
+		/**
+		 * finalize method shuts down the local sesame repository just before an 
+		 * unused Thesaurus object is garbage collected - to save resources 
+		 *
+	   */
+		protected void finalize() {
+			if (repository != null) {
+				repository.shutDown();
+			}
+		}
 
 }

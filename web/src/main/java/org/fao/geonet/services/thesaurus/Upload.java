@@ -40,6 +40,7 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.lib.Lib;
@@ -231,6 +232,7 @@ public class Upload implements Service {
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+			DataManager dm = gc.getDataManager();
 
 			// copy to directory according to type
 			String path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
@@ -238,7 +240,7 @@ public class Upload implements Service {
 			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(
 					newFile));
 
-			Thesaurus gst = new Thesaurus(fname, type, dir, newFile);
+			Thesaurus gst = new Thesaurus(fname, type, dir, newFile, dm.getSiteURL());
 			thesaurusMan.addThesaurus(gst);
 		} else {
 			rdfFile.delete();

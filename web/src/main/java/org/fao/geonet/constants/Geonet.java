@@ -57,6 +57,7 @@ public class Geonet {
 		public static final String UPDATE_FIXED_INFO   = "update-fixed-info.xsl";
 		public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
 		public static final String EXTRACT_UUID        = "extract-uuid.xsl";
+		public static final String EXTRACT_SKOS_FROM_ISO19135 = "xml_iso19135ToSKOS.xsl";
 		public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
 		public static final String SET_UUID            = "set-uuid.xsl";
 		public static final String EXTRACT_THUMBNAILS  = "extract-thumbnails.xsl";
@@ -502,6 +503,7 @@ public class Geonet {
 	public class CodeList {
 		public static final String LOCAL              = "local";
 		public static final String EXTERNAL           = "external";
+		public static final String REGISTER           = "register";
 
 		public static final String THESAURUS          = "thesauri";
 		public static final String CONTACT            = "contactDirectories";

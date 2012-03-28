@@ -14,7 +14,7 @@
 				<div id="status" align="center">
 					<xsl:if test="/root/response/statusvalues/*">
 							
-							<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
+							<input name="id" type="hidden" value="{/root/response/id}"/>
 							<table>
 								<tr>
 									<th class="padded" align="center" colspan="2"><xsl:value-of select="/root/gui/strings/status"/></th>
@@ -59,7 +59,7 @@
 										<xsl:value-of select="/root/gui/strings/changeLogMessage"/>
 									</td>
 									<td align="left">
-										<textarea rows="8" cols="25" id="changeMessage" name="changeMessage"/>
+										<textarea rows="8" cols="25" id="changeMessage" name="changeMessage"><xsl:value-of select="/root/gui/strings/defaultStatusChangeMessage"/></textarea>
 									</td>
 								</tr>
 								<tr width="100%">

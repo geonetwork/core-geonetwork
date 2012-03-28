@@ -214,12 +214,6 @@ public class Geonetwork implements ApplicationHandler {
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
 		              	 settingMan); 
 
-		//------------------------------------------------------------------------
-		//--- Initialize thesaurus
-
-		logger.info("  - Thesaurus...");
-
-		thesaurusMan = ThesaurusManager.getInstance(path, thesauriDir);
 
 		//------------------------------------------------------------------------
 		//--- initialize Z39.50
@@ -272,6 +266,8 @@ public class Geonetwork implements ApplicationHandler {
 
 		String schemaPluginsDir = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMAPLUGINS_DIR);
 		String schemaCatalogueFile = systemDataDir + "config" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
+		logger.info("			- Schema plugins directory: "+schemaPluginsDir);
+		logger.info("			- Schema Catalog File     : "+schemaCatalogueFile);
 		SchemaManager schemaMan = SchemaManager.getInstance(path, schemaCatalogueFile, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
 
 		//------------------------------------------------------------------------
@@ -354,6 +350,13 @@ public class Geonetwork implements ApplicationHandler {
          * Initialize language detector
          */
         LanguageDetector.init(path + languageProfilesDir, context, dataMan);
+
+		//------------------------------------------------------------------------
+		//--- Initialize thesaurus
+
+		logger.info("  - Thesaurus...");
+
+		thesaurusMan = ThesaurusManager.getInstance(path, dataMan, context.getResourceManager(), thesauriDir);
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem

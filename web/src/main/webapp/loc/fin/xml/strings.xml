@@ -15,6 +15,9 @@
 
     <anyLanguage>mikä tahansa kieli</anyLanguage>
 
+		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+		<createThesaurus>Create/Update Thesaurus</createThesaurus>
+		<thesaurusType>Thesaurus Type</thesaurusType>
     <stat.byDay>by Day</stat.byDay>
     <stat.byMonth>by Month</stat.byMonth>
     <stat.byWeek>by Week</stat.byWeek>

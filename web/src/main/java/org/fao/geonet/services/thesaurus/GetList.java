@@ -25,7 +25,7 @@ package org.fao.geonet.services.thesaurus;
 
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -67,7 +67,7 @@ public class GetList implements Service {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		ThesaurusManager th = gc.getThesaurusManager();
-		Hashtable<String, Thesaurus> thTable = th.getThesauriTable();
+		ConcurrentHashMap<String, Thesaurus> thTable = th.getThesauriMap();
 		
 		response.addContent(buildResultfromThTable(thTable, dbms));
 		
@@ -80,7 +80,7 @@ public class GetList implements Service {
 	 * @return {@link Element}
 	 * @throws SQLException 
 	 */
-	private Element buildResultfromThTable(Hashtable<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
+	private Element buildResultfromThTable(ConcurrentHashMap<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
 		
 		Element elRoot = new Element("thesauri");
 		

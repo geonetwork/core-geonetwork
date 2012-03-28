@@ -24,13 +24,14 @@
 
 			function radioModalUpdate(div,service,modalbox,title)
       {
-				changeMessage = $('changeMessage').value;
-				if (isWhitespace(changeMessage)) {
-					changeMessage = 'No information';
-				}    
+				var pars = "";
+
+				var inputs = $(div).getElementsBySelector('input[type="hidden"],textarea,select');
+				inputs.each( function(s) {
+					pars += "&"+s.name+"="+s.value;
+				});
 
         var radio = $(div).getElementsBySelector('input[type="radio"]');
-				var pars = "&id="+$('metadataid').value+"&changeMessage="+changeMessage;
 				radio.each( function(s) {
 					if (s.checked) {
 						pars += "&"+s.name+"="+s.value;
@@ -133,6 +134,12 @@
 			function doOtherButton(url, title, width)
 			{
 				Modalbox.show(url,{title: title, width: width, height: 400});
+				return true;
+			}
+		
+			function doOtherButton(url, title, width, height)
+			{
+				Modalbox.show(url,{title: title, width: width, height: height});
 				return true;
 			}
 		

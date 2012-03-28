@@ -14,6 +14,9 @@
     <spa>Español</spa> <!-- Do not translate! -->
 
 	<!-- new strings - 2.7 -->
+		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+	<createThesaurus>Create/Update Thesaurus</createThesaurus>
+	<thesaurusType>Thesaurus Type</thesaurusType>
     <anyLanguage>на любом языке</anyLanguage>
 	<status>Status</status>
 	<changeLogMessage>Change Log Message</changeLogMessage>

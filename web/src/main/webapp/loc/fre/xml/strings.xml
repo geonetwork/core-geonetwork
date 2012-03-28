@@ -16,6 +16,9 @@
     <anyLanguage>n'importe quelle langue</anyLanguage>
 
 	<!-- new strings - 2.7 -->
+		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+	<createThesaurus>Create/Update Thesaurus</createThesaurus>
+	<thesaurusType>Thesaurus Type</thesaurusType>
 	<changeLogMessage>Information sur le changement d'état</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>

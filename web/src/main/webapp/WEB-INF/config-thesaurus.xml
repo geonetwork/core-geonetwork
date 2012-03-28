@@ -48,6 +48,10 @@
       <class name=".services.thesaurus.Add"/>
     </service>
 
+    <service name="thesaurus.add.register" type="xml">
+      <class name=".services.thesaurus.AddRegister"/>
+    </service>
+
     <service name="thesaurus.addelement">
       <class name=".services.thesaurus.AddElement"/>
     </service>

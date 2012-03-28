@@ -428,6 +428,14 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="metadata.create.thesaurus.form">
+			<output sheet="metadata-create-thesaurus.xsl">
+				<call name="thesaurusTypes" class=".services.thesaurus.GetList"/>
+			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.duplicate.form">
 			<output sheet="metadata-duplicate.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine"/>

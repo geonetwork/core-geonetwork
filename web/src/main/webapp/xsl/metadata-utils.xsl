@@ -157,6 +157,12 @@
 				<xsl:if test="contains(geonet:info/schema, 'iso19139')">
 				  <button onclick="load('{/root/gui/locService}/metadata.duplicate.form?uuid={$metadata/geonet:info/uuid}&amp;child=y')"><xsl:value-of select="/root/gui/strings/createChild"/></button>
 				</xsl:if>	
+
+				<!-- Create/Update thesaurus option only for iso19135 metadata -->
+				<xsl:variable name="createThesaurus" select="concat(/root/gui/strings/createThesaurus,': ',$ltitle)"/>
+				<xsl:if test="contains(geonet:info/schema, 'iso19135')">
+				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.create.thesaurus.form?uuid={$metadata/geonet:info/uuid}','{$createThesaurus}',600,150)"><xsl:value-of select="/root/gui/strings/createThesaurus"/></button>
+				</xsl:if>	
 			</div>
 		</xsl:if>
 	</xsl:template>
