@@ -128,13 +128,13 @@
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.categories' and /root/gui/config/category">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',800)">
+									<button onclick="massiveOperation('metadata.massive.category.form','{/root/gui/strings/massiveUpdateCategoriesTitle}',300, null, 400)">
 										<xsl:value-of select="/root/gui/strings/updateCategories"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.massive.update.privileges'">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="massiveOperation('metadata.massive.admin.form','{/root/gui/strings/massiveUpdatePrivilegesTitle}',800)">
+									<button onclick="massiveOperation('metadata.massive.admin.form','{/root/gui/strings/massiveUpdatePrivilegesTitle}',800, null, 400)">
 										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 									</button>
 								</xsl:if>
@@ -401,8 +401,8 @@
 			</div>
 			
 			<!-- some ownership info -->
-			<xsl:if test="$remote=false() and $metadata/geonet:info/isHarvested = 'n' and /root/gui/session/userId!=''">
-				<div class="ownership">
+			<xsl:if test="$remote=false() and /root/gui/session/userId!=''">
+                <div class="ownership">
 					<span class="owner"><xsl:value-of select="concat(/root/gui/strings/owner,': ',$metadata/geonet:info/ownername)"/></span>
 					&#160;
 					<xsl:choose>
