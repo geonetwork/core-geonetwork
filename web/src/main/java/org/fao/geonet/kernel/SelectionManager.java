@@ -1,12 +1,16 @@
 package org.fao.geonet.kernel;
 
+import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
@@ -234,8 +238,23 @@ public class SelectionManager {
 			selection.clear();
 
 		if (type.equals(SELECTION_METADATA)) {
-			Object searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-
+			Element request = (Element)session.getProperty(Geonet.Session.SEARCH_REQUEST);
+			Object searcher = null;
+			
+			// Run last search if xml.search or q service is used (ie. last searcher is not stored in current session).
+			if (request != null) {
+				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+				SearchManager searchMan = gc.getSearchmanager();
+				try {
+					searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+					ServiceConfig sc = new ServiceConfig();
+					((LuceneSearcher)searcher).search(context, request, sc);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+			}
 			if (searcher == null)
 				return;
 

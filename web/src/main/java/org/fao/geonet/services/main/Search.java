@@ -120,7 +120,7 @@ public class Search implements Service
 			searcher.search(context, elData, _config);
 		}
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-
+		session.removeProperty(Geonet.Session.SEARCH_REQUEST);
 		context.info("Getting summary");
 
 		return searcher.getSummary();

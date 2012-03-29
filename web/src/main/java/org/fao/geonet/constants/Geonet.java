@@ -154,6 +154,7 @@ public class Geonet {
 	public class Session {
 		public static final String MAIN_SEARCH				= "main.search";
 		public static final String SEARCH_RESULT			= "search.result";
+		public static final String SEARCH_REQUEST = "search.request";
 		public static final String LAST_SEARCH_RESULT = "last.search.result";
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
@@ -165,6 +166,7 @@ public class Geonet {
 		public static final String METADATA_ISO19110		= "metadata.iso19110";
 		public static final String FC_ISO19110		        = "fc.iso19110";
 		public static final String FILE_DISCLAIMER    = "file.disclaimer";
+
 	}
 
     /**
