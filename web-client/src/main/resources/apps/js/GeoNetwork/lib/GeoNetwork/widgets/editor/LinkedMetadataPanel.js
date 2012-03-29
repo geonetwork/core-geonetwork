@@ -166,6 +166,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
     
         this.parentAction = new Ext.Action({
                         text: OpenLayers.i18n('parentMd'),
+                        iconCls: 'cat-parent',
                         handler: function(){
                             this.switchToTab('metadata');
                         },
