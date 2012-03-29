@@ -322,13 +322,13 @@
     <!-- === iso19110 brief formatting === -->
     <!-- ===================================================================== -->
   
-    <xsl:template mode="superBrief" match="gfc:FC_FeatureCatalogue">
+    <xsl:template mode="superBrief" match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType">
       <xsl:variable name="uuid" select="geonet:info/uuid"/>
       <id><xsl:value-of select="geonet:info/id"/></id>
       <uuid><xsl:value-of select="$uuid"/></uuid>
-      <xsl:if test="gfc:name">
+      <xsl:if test="gfc:name|gfc:typeName">
         <title>
-          <xsl:value-of select="gfc:name/gco:CharacterString"/>
+          <xsl:value-of select="gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName"/>
         </title>
       </xsl:if>
     </xsl:template>
@@ -341,7 +341,7 @@
 
             <xsl:if test="gfc:name">
                 <title>
-                    <xsl:value-of select="gfc:name/gco:CharacterString"/>
+                    <xsl:value-of select="gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName"/>
                 </title>
             </xsl:if>
 

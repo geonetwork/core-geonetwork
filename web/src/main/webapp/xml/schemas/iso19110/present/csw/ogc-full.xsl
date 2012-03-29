@@ -5,7 +5,7 @@
 
 	<!-- ============================================================================= -->
 
-	<xsl:template match="gfc:FC_FeatureCatalogue|*[@gco:isoType='gfc:FC_FeatureCatalogue']">
+	<xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType|*[@gco:isoType='gfc:FC_FeatureCatalogue']">
 
 		<xsl:variable name="info" select="geonet:info"/>
 		<xsl:variable name="identification" select="."/>
@@ -18,7 +18,7 @@
 			</dc:identifier>
 
 			<!-- DataIdentification -->
-			<xsl:for-each select="gfc:name/gco:CharacterString">
+			<xsl:for-each select="gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
 				<dc:title>
 					<xsl:value-of select="."/>
 				</dc:title>
