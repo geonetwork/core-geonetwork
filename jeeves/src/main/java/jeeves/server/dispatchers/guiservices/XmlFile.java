@@ -88,7 +88,9 @@ public class XmlFile implements GuiService
 		
 		String appPath = context.getAppPath();
 		String xmlFilePath;
-		String rootPath = base.startsWith(appPath) ? base : appPath + base;
+
+        boolean isBaseAbsolutePath = (new File(base)).isAbsolute();
+        String rootPath = (isBaseAbsolutePath) ? base : appPath + base;
 
 		if (localized) xmlFilePath = rootPath + File.separator + lang +File.separator + file;
 		else xmlFilePath = appPath + file;
