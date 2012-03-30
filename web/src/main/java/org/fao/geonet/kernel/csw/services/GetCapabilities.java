@@ -270,8 +270,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		HashMap<String, String> vars = new HashMap<String, String>();
 
         vars.put("$PROTOCOL", sm.getValue("system/server/protocol"));
-		vars.put("$HOST",    sm.getValue("system/server/host"));
-		vars.put("$PORT",    sm.getValue("system/server/port"));
+        vars.put("$HOST", sm.getValue("system/server/host"));
+        String port = sm.getValue("system/server/port");
+        vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
         vars.put("$END-POINT", context.getService());
 
         String providerName = sm.getValue("system/site/organization");
