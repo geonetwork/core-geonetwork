@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.List;
@@ -228,7 +229,9 @@ public class Geonetwork implements ApplicationHandler {
 		ApplicationContext app_context = null;
 
 		// build Z3950 repositories file first from template
-		if (Repositories.build(path, handlerConfig.getMandatoryValue(Geonet.Config.CONFIG_DIR), context)) {
+		URL url = getClass().getClassLoader().getResource( Geonet.File.JZKITCONFIG_TEMPLATE );
+
+		if (Repositories.build(url, context)) {
 			logger.info("     Repositories file built from template.");
 
 			try {
@@ -251,8 +254,8 @@ public class Geonetwork implements ApplicationHandler {
 					Server.init(host, z3950port, path, context, app_context);
 				}	
 			} catch (Exception e) {
-				logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work. Error is:" 
-						+ e.getMessage());
+				logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work. Error is:" + e.getMessage());
+				e.printStackTrace();
 			}
 			
 		} else {

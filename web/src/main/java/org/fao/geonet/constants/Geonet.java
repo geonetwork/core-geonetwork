@@ -72,6 +72,7 @@ public class Geonet {
 		public static final String SCHEMA_OASIS        = "oasis-catalog.xml";
 		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
+		public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
 		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.

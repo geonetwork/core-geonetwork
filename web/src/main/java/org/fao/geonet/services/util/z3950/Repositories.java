@@ -26,7 +26,9 @@ package org.fao.geonet.services.util.z3950;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Document;
@@ -35,6 +37,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 //=============================================================================
@@ -45,18 +48,27 @@ import java.util.List;
 public class Repositories
 {
 
+	private static String configPath;
+
 	//--------------------------------------------------------------------------
 
-	/** builds the repositories
+	/** builds the repositories config file from template
 	  */
-	public static boolean build(String appPath, String configPath, ServiceContext context) 
+	public static boolean build(URL cfgUrl, ServiceContext context) 
 	{
+		if (cfgUrl == null) {
+			context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
+			return false;
+		} else {
+			configPath = cfgUrl.getFile();
+		}
+
 		try
 		{
 			//--- build repositories file from template repositories file
 
-			String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" + ".tem";
-			String realRepo = configPath + File.separator + "JZKitConfig.xml";
+			String realRepo = StringUtils.substringBefore(configPath,".tem");
+			String tempRepo = configPath;
 
 			buildRepositoriesFile(tempRepo, realRepo);
 
@@ -75,9 +87,9 @@ public class Repositories
 	/** clear the repositories template file - read the file and remove all
 	  * <Repository> entries except the GNSearchable one
 	  */
-	public static boolean clearTemplate(String appPath, ServiceContext context) 
+	public static boolean clearTemplate(ServiceContext context) 
 	{
-		String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" + ".tem"; 
+		String tempRepo = configPath; 
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
@@ -118,9 +130,9 @@ public class Repositories
 	/** Add a <Repository> element to the template file or replace one that
 	  * is already present
 	  */
-	public static boolean addRepo(String appPath, ServiceContext context, String code, Element repo) 
+	public static boolean addRepo(ServiceContext context, String code, Element repo) 
 	{
-		String tempRepo = appPath + Jeeves.Path.WEBINF + "classes/JZKitConfig.xml" + ".tem"; 
+		String tempRepo = configPath; 
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;

@@ -22,9 +22,9 @@
       <Archetype name="F">xml::f</Archetype>
     </RecordArchetypes>
     <Collections>
-      <Collection code="geonetwork" name="Local GeoNetwork" localId="geonetwork" profile="geo" />
+      <Collection code="geonetwork-local" name="Local GeoNetwork" localId="geonetwork" profile="geo" />
       <!-- collection that searches across all categories -->
-      <Collection code="applications" name="Local GeoNetwork - applications category" localId="applications" profile="geo" />
+      <Collection code="applications-local" name="Local GeoNetwork - applications category" localId="applications" profile="geo" />
       <!-- collection that searches across category applications -->
     </Collections>
   </Repository>
@@ -349,7 +349,7 @@
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
     <Collections>
-      <Collection code="geonetwork" name="AuScope Portal Feature Services Catalog" localId="geonetwork" profile="geo" />
+      <Collection code="geonetwork-auscope" name="AuScope Portal Feature Services Catalog" localId="geonetwork" profile="geo" />
     </Collections>
   </Repository>
   <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="771f6e6cfa174d548da04a3a4dc38ef5" serviceName="New Zealand Geospatial Office">
@@ -367,7 +367,7 @@
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
     <Collections>
-      <Collection code="geonetwork" name="New Zealand Geospatial Office" localId="geonetwork" profile="geo" />
+      <Collection code="geonetwork-nzgeo" name="New Zealand Geospatial Office" localId="geonetwork" profile="geo" />
     </Collections>
   </Repository>
   <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="cc68c094-36ea-11df-9735-ebfc367b61a6" serviceName="Australian Hydrographic Service - Product Metadata">
@@ -403,7 +403,7 @@
       <Archetype name="H">html::f</Archetype>
     </RecordArchetypes>
     <Collections>
-      <Collection code="geonetwork" name="Australian Institute of Marine Science" localId="geonetwork" profile="geo" />
+      <Collection code="geonetwork-aims" name="Australian Institute of Marine Science" localId="geonetwork" profile="geo" />
     </Collections>
   </Repository>
   <Repository className="org.jzkit.search.provider.z3950.Z3950Origin" code="ceb28b96-36ea-11df-9735-ebfc367b61a6" serviceName="DEWHA Discover Information Geographically (DIG)">

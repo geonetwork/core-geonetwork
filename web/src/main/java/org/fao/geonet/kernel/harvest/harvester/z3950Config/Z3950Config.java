@@ -101,7 +101,7 @@ public class Z3950Config
 	//--------------------------------------------------------------------------
 
 	private void clearZ3950Config() {
-		Repositories.clearTemplate(context.getAppPath(), context);
+		Repositories.clearTemplate(context);
 	}
 
 	//--------------------------------------------------------------------------
@@ -123,7 +123,7 @@ public class Z3950Config
 		if (new File(convert19119ToJZKitRepo).exists()) {
 			Element repoElem = Xml.transform(md, convert19119ToJZKitRepo);
 			if (repoElem.getName().equals("Repository")) {
-				Repositories.addRepo(context.getAppPath(), context, uuid, repoElem);
+				Repositories.addRepo(context, uuid, repoElem);
 				result.addedMetadata++;
 			} else {
 				result.incompatibleMetadata++;
