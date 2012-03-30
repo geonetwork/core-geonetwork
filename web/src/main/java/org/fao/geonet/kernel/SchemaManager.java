@@ -131,7 +131,7 @@ public class SchemaManager {
 		if (saSchemas == null) {
 			throw new IllegalArgumentException("Cannot scan schemas directory : " +schemasDir);
 		} else {
-			processSchemas(Geonet.Path.SCHEMAS, schemasDir, saSchemas, false, schemaPluginCatRoot);
+			processSchemas(schemasDir, saSchemas, false, schemaPluginCatRoot);
 		}
 
 		// -- now check the plugin directory and add any schemas in there
@@ -139,7 +139,7 @@ public class SchemaManager {
 		if (saSchemas == null) {
 			Log.error(Geonet.SCHEMA_MANAGER, "Cannot scan plugin schemas directory : " +schemasDir);
 		} else {
-			processSchemas(schemaPluginsDir + FS, schemaPluginsDir + FS, saSchemas, true, schemaPluginCatRoot);
+			processSchemas(schemaPluginsDir + FS, saSchemas, true, schemaPluginCatRoot);
 		}
 
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
@@ -745,7 +745,7 @@ public class SchemaManager {
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 
 		// -- create schema directory 
-		String schemasDir = basePath + schemaPluginsDir + FS;
+		String schemasDir = schemaPluginsDir + FS;
 		File dir = new File(schemasDir + name);
 		dir.mkdirs();
 
@@ -755,7 +755,7 @@ public class SchemaManager {
 			String[] saSchemas = new String[]{ name };
 
 			// -- add schema using the addSchema method
-			int added = processSchemas(schemaPluginsDir, schemasDir, saSchemas, true, schemaPluginCatRoot);
+			int added = processSchemas(schemasDir, saSchemas, true, schemaPluginCatRoot);
 			if (added == 0) throw new OperationAbortedEx("Failed to add schema "+name);
 
 			writeSchemaPluginCatalog(schemaPluginCatRoot);
@@ -1119,15 +1119,13 @@ public class SchemaManager {
 	/**
      * Processes schemas in either web/xml/schemas or schema plugin directory.
 	 *
-	 * @param fromAppPath web app path
 	 * @param schemasDir path name of directory containing schemas
 	 * @param saSchemas list of schemas in schemasDir to process
 	 * @param isPluginSchema boolean that is set to true if schema is plugin
      * @param schemaPluginCatRoot
      * @return
 	 */
-	private int processSchemas(String fromAppPath, String schemasDir, String[] saSchemas, boolean isPluginSchema,
-                               Element schemaPluginCatRoot) {
+	private int processSchemas(String schemasDir, String[] saSchemas, boolean isPluginSchema, Element schemaPluginCatRoot) {
 
 		for (int i=0; i<saSchemas.length; i++) {
 			if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
@@ -1153,7 +1151,7 @@ public class SchemaManager {
     						Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchemas[i]+" already exists - cannot add!");
     					} else {
 	 							stage = "adding the schema information";
-    						addSchema(fromAppPath, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
+    						addSchema(schemasDir, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
     						numberOfSchemasAdded ++;
     						if (!isPluginSchema) {
     							numberOfCoreSchemasAdded ++;
