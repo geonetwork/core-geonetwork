@@ -146,9 +146,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         String elementnameStrategy = getElementNameStrategy(query);
 
         // value csw:Record or gmd:MD_Metadata
-        // heikki: this is actually a List (in OGC 07-006), but OGC 07-045 states:
+        // heikki: this is actually a List (in OGC 07-006), though OGC 07-045 states:
         // "Because for this application profile it is not possible that a query includes more than one typename, .."
-        // So: a single String should be OK
+        // So: a single String should be OK. However to increase backwards-compatibility with existing clients sending
+        // a comma separated list (such as GN's own CSW Harvesting Client), the check assumes a comma-separated list,
+        // and checks whether its values are not other than csw:Record or gmd:MD_Metadata. If both are sent,
+        // gmd:MD_Metadata is preferred.
         String typeName = checkTypenames(query);
 
         // set of elementnames or null
@@ -497,9 +500,13 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * OGC 07-045 8.2.2.1.1:
      * Mandatory: Must support *one* of “csw:Record” or “gmd:MD_Metadata” in a query. Default value is “csw:Record”.
      *
+     * (note how OGC 07-045 mixes up a mandatory parameter that has a default value !!)
      *
-     * So: if typeNames is not present or empty, or does not contain exactly one of the values specified in OGC 07-045,
-     * an exception is thrown.
+     * We'll go for the default value option rather than the mandatory-ness. So: if typeNames is not present or empty,
+     * "csw:Record" is used.
+     *
+     * If the request does not contain exactly one (or comma-separated, both) of the values specified in OGC 07-045,
+     * an exception is thrown. If both are present "gmd:MD_Metadata" is preferred.
      *
      * @param query query element
      * @return typeName
@@ -512,18 +519,30 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         typeNames = query.getAttribute("typeNames");
         if(typeNames != null) {
             String typeNamesValue = typeNames.getValue();
+            // empty typenames element
             if(StringUtils.isEmpty(typeNamesValue)) {
-                throw new MissingParameterValueEx("typeNames");
+                return "csw:Record";
             }
-            else if(!(typeNamesValue.equals("csw:Record") || typeNamesValue.equals("gmd:MD_Metadata"))) {
+            // not empty: scan comma-separated string
+            Scanner commaSeparator = new Scanner(typeNamesValue);
+            commaSeparator.useDelimiter(",");
+            String result = "csw:Record";
+            while(commaSeparator.hasNext()) {
+                String typeName = commaSeparator.next();
+                typeName = typeName.trim();
+                Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
+                if(!(typeName.equals("csw:Record") || typeName.equals("gmd:MD_Metadata"))) {
                 throw new InvalidParameterValueEx("typeNames", "invalid value");
             }
-            else {
-                return typeNamesValue;
+                if(typeName.equals("gmd:MD_Metadata")) {
+                    return typeName;
             }
         }
+            return result;
+        }
+        // missing typeNames element
         else {
-            throw new MissingParameterValueEx("typeNames");
+            return "csw:Record";
         }
     }
 
