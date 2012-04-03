@@ -58,7 +58,7 @@ public class Resources {
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "logos"
 	 */
 	public static String locateLogosDir(ServletContext context, String appDir) {
-		String path = locateResourcesDir(context) + File.separator
+		String path = (context == null ? appDir : locateResourcesDir(context)) + File.separator
 				+ "images" + File.separator + "logos";
 		File file = new File(path);
 		if (!file.exists() && !file.mkdirs()) {
@@ -97,7 +97,7 @@ public class Resources {
 	 */
 	public static String locateHarvesterLogosDir(ServletContext context,
 			String appDir) {
-		String path = locateResourcesDir(context) + File.separator
+		String path = (context == null ? appDir : locateResourcesDir(context)) + File.separator
 				+ "images" + File.separator + "harvesting";
 		File file = new File(path);
 		if (!file.exists() && !file.mkdirs()) {
