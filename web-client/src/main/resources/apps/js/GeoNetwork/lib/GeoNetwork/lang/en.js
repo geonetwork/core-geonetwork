@@ -102,6 +102,7 @@ GeoNetwork.lang.en = {
     'layerInfoPanel.queryableField': "Queryable",
     'layerList': "Layer list",
     'baseLayerList': "Base layers",
+    'overlaysList': "Overlays",
     'metadataResults.buttonText': "Metadata results",
     'metadataResults.tooltipTitle': "Metadata results",
     'metadataResults.tooltipText': "Go to metadata results page",

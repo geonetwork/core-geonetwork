@@ -338,7 +338,7 @@ GeoNetwork.mapApp = function() {
                 GeoNetwork.WindowManager.showWindow("addwms");
             },
             iconCls: 'addLayer',
-            tooltip: "Add layer"
+            tooltip: OpenLayers.i18n("addWMSButtonText")
         });
 
         toctoolbar.push(action);
@@ -348,7 +348,7 @@ GeoNetwork.mapApp = function() {
                 removeLayerHandler(activeNode);
             },
             iconCls: 'deleteLayer',
-            tooltip: "Remove layer"
+            tooltip: OpenLayers.i18n("removeButtonText")
         });
         
         toctoolbar.push(action);
@@ -374,7 +374,7 @@ GeoNetwork.mapApp = function() {
                 metadataLayerHandler(activeNode);
                     },
             iconCls: 'wmsInfo',
-            tooltip: "WMS Information"
+            tooltip: OpenLayers.i18n("metadataButtonText")
         });
         
         toctoolbar.push(action);
@@ -902,9 +902,11 @@ GeoNetwork.mapApp = function() {
         // using OpenLayers.Format.JSON to create a nice formatted string of the
         // configuration for editing it in the UI
         var treeConfig = new OpenLayers.Format.JSON().write([{
-            nodeType: "gx_baselayercontainer"
+            nodeType: "gx_baselayercontainer",
+            text: OpenLayers.i18n('baseLayerList')
         }, {
             nodeType: "gx_overlaylayercontainer",
+            text: OpenLayers.i18n('overlaysList'),
             expanded: true,
             // render the nodes inside this container with a radio button,
             // and assign them the group "foo".
@@ -1007,7 +1009,7 @@ GeoNetwork.mapApp = function() {
             },scope:this},
             contextMenu:new Ext.menu.Menu({
                 items:[{
-                    text: "Add layer",
+                    text: OpenLayers.i18n("addWMSButtonText"),
                     id: "addMenu",
                     handler: function () {
                         GeoNetwork.WindowManager.showWindow("addwms");
@@ -1019,7 +1021,7 @@ GeoNetwork.mapApp = function() {
                     handler: removeLayerHandlerContextMenu
                 },
                 {
-                    text: "WMS information", //OpenLayers.i18n("metadataButtonText"),
+                    text: OpenLayers.i18n("metadataButtonText"),
                     id: "metadataMenu",
                     handler: metadataLayerHandlerContextMenu
                 }
