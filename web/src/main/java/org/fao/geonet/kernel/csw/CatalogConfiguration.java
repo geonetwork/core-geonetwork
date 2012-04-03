@@ -31,6 +31,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -64,7 +65,7 @@ public class CatalogConfiguration {
 
 	public static void loadCatalogConfig(String path, String configFile)
 			throws Exception {
-		configFile = path + "/WEB-INF/" + configFile;
+		configFile = path + File.separator + "WEB-INF" + File.separator + configFile;
 
 		Log.info(Geonet.CSW, "Loading : " + configFile);
 

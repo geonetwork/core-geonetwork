@@ -24,6 +24,7 @@
 package org.fao.geonet.lib;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -88,7 +89,7 @@ public class ServerLib
 	private String     appPath;
 	private Properties serverProps;
 
-	private static final String SERVER_PROPS = "/WEB-INF/server.prop";
+	private static final String SERVER_PROPS = File.separator + "WEB-INF" + File.separator + "server.prop";
 }
 
 //=============================================================================

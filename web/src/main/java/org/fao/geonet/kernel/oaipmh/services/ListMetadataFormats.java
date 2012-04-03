@@ -139,7 +139,7 @@ public class ListMetadataFormats implements OaiPmhService
 	//---
 	//---------------------------------------------------------------------------
 
-	private static final String DEFAULT_PREFIXES_FILE = "WEB-INF/config-oai-prefixes.xml";
+	private static final String DEFAULT_PREFIXES_FILE = "WEB-INF" + File.separator + "config-oai-prefixes.xml";
 }
 
 //=============================================================================

@@ -27,7 +27,7 @@ public class GeonetworkDataDirectory {
 	/**
 	 * The default GeoNetwork data directory location.
 	 */
-	private static final String GEONETWORK_DEFAULT_DATA_DIR = "WEB-INF/data/";
+	private static final String GEONETWORK_DEFAULT_DATA_DIR = "WEB-INF" + File.separator + "data"  + File.separator;
 	private static final String KEY_SUFFIX = ".dir";
 	public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
 
@@ -214,7 +214,7 @@ public class GeonetworkDataDirectory {
 
 		handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR,
 				handlerConfig.getValue(Geonet.Config.RESOURCES_DIR)
-						+ File.separator + "/htmlcache");
+						+ File.separator + "htmlcache");
 
 		handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, systemDataDir);
 
