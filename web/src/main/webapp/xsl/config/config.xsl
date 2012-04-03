@@ -88,7 +88,7 @@
         </div>
         <div align="left" style="{$style}">
             <input align="left" type="radio" id="requestedLanguage.only" value="only" name="requestedlanguage"/>
-            <label for="requestedlanguage.only">
+        	<label for="requestedLanguage.only">
                 <xsl:value-of select="/root/gui/config/requestedlanguageonly"/>
             </label>
             <div align="left" style="{$style}">
@@ -99,7 +99,7 @@
         </div>
         <div align="left" style="{$style}">
             <input align="left" type="radio" id="requestedLanguage.sorted" value="sorted" name="requestedlanguage"/>
-            <label for="requestedlanguage.sorted">
+            <label for="requestedLanguage.sorted">
                 <xsl:value-of select="/root/gui/config/requestedlanguagesorted"/>
             </label>
             <div align="left" style="{$style}">
@@ -110,7 +110,7 @@
         </div>
         <div align="left" style="{$style}">
             <input align="left" type="radio" id="requestedLanguage.ignored" value="ignored" name="requestedlanguage"/>
-            <label for="requestedlanguage.ignored">
+            <label for="requestedLanguage.ignored">
                 <xsl:value-of select="/root/gui/config/requestedlanguageignored"/>
             </label>
             <div align="left" style="{$style}">
