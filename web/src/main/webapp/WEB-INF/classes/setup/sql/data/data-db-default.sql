@@ -994,8 +994,8 @@ INSERT INTO Settings VALUES (950,1,'autodetect',NULL);
 INSERT INTO Settings VALUES (951,950,'enable','false');
 INSERT INTO Settings VALUES (952,1,'requestedLanguage',NULL);
 INSERT INTO Settings VALUES (953,952,'only','false');
-INSERT INTO Settings VALUES (954,952,'sorted','true');
-INSERT INTO Settings VALUES (955,952,'ignored','false');
+INSERT INTO Settings VALUES (954,952,'sorted','false');
+INSERT INTO Settings VALUES (955,952,'ignored','true');
 
 
 -- ======================================================================
