@@ -191,7 +191,7 @@ public class CatalogDispatcher
 
 	//---------------------------------------------------------------------------
 
-	private Map<String, String> extractParams(Element request)
+	public static Map<String, String> extractParams(Element request)
 	{
 		HashMap<String, String> hm = new HashMap<String, String>();
 

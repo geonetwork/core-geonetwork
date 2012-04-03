@@ -30,10 +30,13 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Accepts CSW Discovery operations.
@@ -72,12 +75,15 @@ public class CswDiscoveryDispatcher implements Service {
         String operation;
         // KVP encoding
         if(params.getName().equals("request")) {
-            operation = params.getChildText("request");
-						if (operation == null) {
-							Element info = new Element("info").setText("No 'request' parameter found");
-							response.addContent(info);
-							return response;
-						}
+			Map<String, String> hm = CatalogDispatcher.extractParams(params);
+			operation = hm.get("request");
+			// operation = params.getChildText("request");
+			if (operation == null) {
+				Element info = new Element("info")
+						.setText("No 'request' parameter found");
+				response.addContent(info);
+				return response;
+			}
         }
         // SOAP encoding
         else if(params.getName().equals("Envelope")) {
@@ -90,11 +96,9 @@ public class CswDiscoveryDispatcher implements Service {
         else {
             operation = params.getName();
         }
-        System.out.println("CSW operation: " + operation);
 
         if(!operation.equals("GetCapabilities") && !operation.equals("GetRecords") && !operation.equals("GetRecordById")
                 && !operation.equals("DescribeRecord") && !operation.equals("GetDomain")) {
-            System.out.println("Not a CSW Discovery operation: " + operation);
             Element info  = new Element("info").setText("Not a CSW Discovery operation: " + operation + ". Did you mean to use the CSW Publication service? Use service name /csw-publication");
 			response.addContent(info);
             return response;
