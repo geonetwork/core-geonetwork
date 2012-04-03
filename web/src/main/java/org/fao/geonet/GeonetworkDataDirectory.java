@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
-
-import javax.servlet.ServletContext;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
@@ -66,23 +63,24 @@ public class GeonetworkDataDirectory {
 	 * Determines the location of a property based on the
 	 * following lookup mechanism:
 	 * 
-	 * 1) Java environment variable 2) Servlet context variable 3) System
+	 * 1) Java environment variable 2) Servlet context variable 3) Config.xml appHandler parameter 4) System
 	 * variable
 	 * 
 	 * For each of these, the methods checks that 1) The path exists 2) Is a
 	 * directory 3) Is writable
 	 * 
 	 * Inspired by GeoServer mechanism.
-	 * 
+	 * @param handlerConfig TODO
 	 * @param servContext
 	 *            The servlet context.
+	 * 
 	 * @return String The absolute path to the data directory, or
 	 *         <code>null</code> if it could not be found.
 	 */
-	public static String lookupProperty(JeevesServlet jeevesServlet, String key) {
+	private static String lookupProperty(JeevesServlet jeevesServlet, ServiceConfig handlerConfig, String key) {
 
 		final String[] typeStrs = { "Java environment variable ",
-				"Servlet context parameter ", "System environment variable " };
+				"Servlet context parameter ", "Config.xml appHandler parameter", "System environment variable " };
 
 		String dataDirStr = null;
 		
@@ -99,9 +97,12 @@ public class GeonetworkDataDirectory {
 				value = System.getProperty(key);
 				break;
 			case 1:
-				value = jeevesServlet.getInitParameter(key);
+				value = jeevesServlet == null ? null : jeevesServlet.getInitParameter(key);
 				break;
 			case 2:
+				value = handlerConfig.getValue(key);
+				break;
+			case 3:
 //				Environment variable names used by the utilities in the Shell and Utilities 
 //				volume of IEEE Std 1003.1-2001 consist solely of uppercase letters, digits, and the '_' 
 //				Instead of looking for geonetwork.dir, get geonetwork_dir
@@ -129,12 +130,12 @@ public class GeonetworkDataDirectory {
 
 		// System property defined according to webapp name
 		systemDataDir = GeonetworkDataDirectory.lookupProperty(jeevesServlet,
-				webappName + KEY_SUFFIX);
+				handlerConfig, webappName + KEY_SUFFIX);
 
 		// GEONETWORK.dir is default
 		if (systemDataDir == null) {
 			systemDataDir = GeonetworkDataDirectory.lookupProperty(
-					jeevesServlet, GEONETWORK_DIR_KEY);
+					jeevesServlet, handlerConfig, GEONETWORK_DIR_KEY);
 		}
 		boolean useDefaultDataDir = false;
 		Log.warning(Geonet.DATA_DIRECTORY,
@@ -289,7 +290,7 @@ public class GeonetworkDataDirectory {
 			String systemDataDir, String key, String folder, String handlerKey) {
 		String envKey = webappName + key;
 		String dir = GeonetworkDataDirectory.lookupProperty(
-				jeevesServlet, envKey);
+				jeevesServlet, handlerConfig, envKey);
 		if (dir == null) {
 			dir = systemDataDir + folder;
 			System.setProperty(envKey, dir);
