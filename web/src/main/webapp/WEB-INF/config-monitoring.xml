@@ -1,0 +1,27 @@
+<config>
+    <monitors package="org.fao.geonet.monitor.health">
+        <!-- healthCheck must implement the HealthCheckFactory interface -->
+        <healthCheck class=".DatabaseHealthCheck"/>
+        <healthCheck class=".LuceneIndexHealthCheck"/>
+        <!-- CswGetRecords check is a slow check.
+             If too slow one might want to deactivate it
+             by commenting it out -->
+        <healthCheck class=".CswGetRecordsHealthCheck"/>
+        <healthCheck class=".CswGetCapabilitiesHealthCheck"/>
+    </monitors>
+    <monitors package="org.fao.geonet.monitor.harvest">
+        <counter class=".AbstractHarvesterErrorCounter"/>
+    </monitors>
+    <monitors package="jeeves.monitor.timer">
+        <!-- timer must implement the MetricsFactory<Timer> interface -->
+       <timer class=".ResourceManagerResourceIsOpenTimer"/>
+       <timer class=".ResourceManagerWaitForResourceTimer"/>
+       <timer class=".ServiceManagerGuiServicesTimer"/>
+       <timer class=".ServiceManagerServicesTimer"/>
+       <timer class=".ServiceManagerXslOutputTransformTimer"/>
+        <!-- Other monitor types are: counter, meter, histogram -->
+    </monitors>
+    <monitors package="jeeves.monitor.counter">
+       <counter class=".ResourceManagerOpenCounter"/>
+    </monitors>
+</config>

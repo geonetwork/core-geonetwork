@@ -169,6 +169,12 @@ public class Geonet {
 		public static final String FILE_DISCLAIMER    = "file.disclaimer";
 
 	}
+    
+    public class Settings {
+        public static final String SERVER_HOST = "system/server/host";
+        public static final String SERVER_PORT = "system/server/port";
+        public static final String SERVER_PROTOCOL = "system/server/protocol";
+    }
 
     /**
      * Resource names.

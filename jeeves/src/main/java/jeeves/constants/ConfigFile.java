@@ -32,7 +32,8 @@ public class ConfigFile
 {
 	public final class Child
 	{
-		/**
+
+        /**
 		 * Default constructor.
 		 * Builds a Child.
 		 */
@@ -45,6 +46,7 @@ public class ConfigFile
 		public static final String SERVICES    = "services";
 		public static final String SCHEDULES   = "schedules";
 		public static final String INCLUDE     = "include";
+        public static final String MONITORS    = "monitors";
 	}
 
 	//--------------------------------------------------------------------------
@@ -212,6 +214,35 @@ public class ConfigFile
 		   public static final String SCHEDULE = "schedule";
 		}
 	}
+    public class Monitors {
+        public final class Attr
+        {
+            /**
+             * Default constructor.
+             * Builds a Attr.
+             */
+            private Attr() {}
+
+            public static final String PACKAGE = "package";
+            public static final String CLASS = "class";
+        }
+
+        public final class Child
+        {
+            /**
+             * Default constructor.
+             * Builds a Child.
+             */
+            private Child() {}
+
+            public static final String SERVICE_CONTEXT_HEALTH_CHECK = "healthCheck";
+            public static final String SERVICE_CONTEXT_GAUGE = "gauge";
+            public static final String SERVICE_CONTEXT_TIMER = "timer";
+            public static final String SERVICE_CONTEXT_METER = "meter";
+            public static final String SERVICE_CONTEXT_HISTOGRAM = "histogram";
+            public static final String SERVICE_CONTEXT_COUNTER = "counter";
+        }
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -466,6 +497,7 @@ public class ConfigFile
 			public static final String CLASS    = "class";
 		}
 	}
+
 }
 
 //=============================================================================

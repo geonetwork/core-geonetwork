@@ -11,10 +11,32 @@
 
 			<xsl:with-param name="content">
 				<xsl:apply-templates mode="block" select="/root/info/*"/>
+
+                <fieldset style="text-align:left;">
+                    <legend>Monitoring</legend>
+                    <ul>
+                        <li>
+                            <a href="{/root/gui/url}/monitor/metrics?pretty=true">
+                                <label style="text-size:140%;font-weight:bold">Metrics</label>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{/root/gui/url}/monitor/healthcheck">
+                                <label style="text-size:140%;font-weight:bold">Health Check</label>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{/root/gui/url}/monitor/threads">
+                                <label style="text-size:140%;font-weight:bold">Threads</label>
+                            </a>
+                        </li>
+                    </ul>
+                </fieldset>
+
 			</xsl:with-param>
 			<xsl:with-param name="buttons"></xsl:with-param>
 		</xsl:call-template>
-	</xsl:template>
+    </xsl:template>
 	
 	<xsl:template mode="block" match="system|catalogue|main|index|database">
 		<fieldset style="text-align:left;">

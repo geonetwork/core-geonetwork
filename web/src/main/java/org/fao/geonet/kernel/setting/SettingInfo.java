@@ -68,9 +68,9 @@ public class SettingInfo
 
 	public String getSiteUrl()
 	{
-        String protocol = sm.getValue("system/server/protocol");
-		String host = sm.getValue("system/server/host");
-		String port = sm.getValue("system/server/port");
+        String protocol = sm.getValue(Geonet.Settings.SERVER_PROTOCOL);
+		String host = sm.getValue(Geonet.Settings.SERVER_HOST);
+		String port = sm.getValue(Geonet.Settings.SERVER_PORT);
 
 		StringBuffer sb = new StringBuffer(protocol + "://");
 

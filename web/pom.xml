@@ -331,6 +331,25 @@
       <artifactId>netcdf</artifactId>
       <version>4.0.patch</version>
     </dependency>
+
+      <!-- Monitoring libraries -->
+      <dependency>
+          <groupId>com.yammer.metrics</groupId>
+          <artifactId>metrics-core</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.yammer.metrics</groupId>
+          <artifactId>metrics-servlet</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.yammer.metrics</groupId>
+          <artifactId>metrics-web</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.yammer.metrics</groupId>
+          <artifactId>metrics-log4j</artifactId>
+      </dependency>
+
       <!-- language detection -->
       <dependency>
           <groupId>com.cybozu.labs</groupId>

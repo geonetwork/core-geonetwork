@@ -24,9 +24,17 @@
 package jeeves.server.resources;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.yammer.metrics.core.Counter;
+import com.yammer.metrics.core.Timer;
+import com.yammer.metrics.core.TimerContext;
+import jeeves.monitor.MonitorManager;
+import jeeves.monitor.counter.ResourceManagerOpenCounter;
+import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
+import jeeves.monitor.timer.ResourceManagerWaitForResourceTimer;
 import org.geotools.data.DataStore;
 
 import jeeves.utils.Log;
@@ -43,16 +51,22 @@ public class ResourceManager
 	private ProviderManager provManager;
 
 	private Hashtable<String, Object> htResources = new Hashtable<String, Object>(10, .75f);
+    private Counter openCounter;
+    private Timer resourceManagerWaitForResourceTimer;
+    private Timer resourceManagerResourceIsOpenTimer;
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public ResourceManager(ProviderManager pm)
+	public ResourceManager(MonitorManager monitorManager, ProviderManager pm)
 	{
 		provManager = pm;
+        this.openCounter = monitorManager.getCounter(ResourceManagerOpenCounter.class);
+        this.resourceManagerWaitForResourceTimer = monitorManager.getTimer(ResourceManagerWaitForResourceTimer.class);
+        this.resourceManagerResourceIsOpenTimer = monitorManager.getTimer(ResourceManagerResourceIsOpenTimer.class);
 	}
 
 	//--------------------------------------------------------------------------
@@ -79,11 +93,20 @@ public class ResourceManager
 			Log.debug  (Log.RESOURCES, "  Null resource, opening a new one from the resource provider.");
 			ResourceProvider provider = provManager.getProvider(name);
 
-			resource = provider.open();
+            TimerContext timingContext = resourceManagerWaitForResourceTimer.time();
+            try {
+			    resource = provider.open();
+            } finally {
+                timingContext.stop();
+            }
 
-			if (resource != null)
+
+
+			if (resource != null) {
 				htResources.put(resourceId, resource);
 				//htResources.put(provider.getName(), resource);
+                openMetrics(resource);
+            }
 		}
 		Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 		
@@ -105,7 +128,17 @@ public class ResourceManager
 		Log.debug (Log.RESOURCES, "DIRECT Open: " + name + " in thread: " + Thread.currentThread().getId());
 		ResourceProvider provider = provManager.getProvider(name);
 
-		Object resource = provider.open();
+		Object resource;
+        TimerContext timingContext = resourceManagerWaitForResourceTimer.time();
+        try {
+            resource = provider.open();
+        } finally {
+            timingContext.stop();
+        }
+
+        if(resource != null)
+            openMetrics(resource);
+
 		Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 		
 		return resource;
@@ -145,6 +178,7 @@ public class ResourceManager
 
 	public void close(String name, Object resource) throws Exception
 	{
+        closeMetrics(resource);
 		Log.debug (Log.RESOURCES, "Closing: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		if (htResources.get(resourceId) != null) {
@@ -162,6 +196,7 @@ public class ResourceManager
 
 	public void abort(String name, Object resource) throws Exception
 	{
+        closeMetrics(resource);
 		Log.debug (Log.RESOURCES, "Aborting: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		if (htResources.get(resourceId) != null) {
@@ -207,7 +242,8 @@ public class ResourceManager
 		for (Enumeration<String> e=htResources.keys(); e.hasMoreElements(); )
 		{
 			String name     = e.nextElement();
-			Object resource = htResources.get(name);
+            Object resource = htResources.get(name);
+            closeMetrics(resource);
 
 			ResourceProvider provider = provManager.getProvider(name.split(":")[0]);
 
@@ -227,6 +263,26 @@ public class ResourceManager
 		if (errorExc != null)
 			throw errorExc;
 	}
+
+    Map<Object, TimerContext> timerContexts = new HashMap<Object, TimerContext>();
+
+    private void openMetrics(Object resource) {
+        openCounter.inc();
+        timerContexts.put(resource, resourceManagerResourceIsOpenTimer.time());
+    }
+
+    private void closeMetrics(Object resource) {
+        openCounter.dec();
+        TimerContext context = timerContexts.get(resource);
+        if(context == null) {
+            Log.error(Log.DBMSPOOL, "A resource was closed that had not been marked as opened!");
+        } else {
+            context.stop();
+        }
+    }
+
+
+
 }
 
 //=============================================================================

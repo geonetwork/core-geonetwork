@@ -1,0 +1,3 @@
+The files in this directories need to have the configurations _added_ to the corresponding collectd configuration files.  
+
+Some of the lines in types.db might already be present in your collectd types.db file so check before adding

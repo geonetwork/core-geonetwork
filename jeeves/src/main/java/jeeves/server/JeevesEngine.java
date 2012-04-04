@@ -33,6 +33,7 @@ import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Activator;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
+import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.resources.ProviderManager;
@@ -92,8 +93,9 @@ public class JeevesEngine
 	private List<Element> appHandList = new ArrayList<Element>();
 	private Vector<ApplicationHandler> vAppHandlers = new Vector<ApplicationHandler>();
 	private Vector<Activator> vActivators = new Vector<Activator>();
+    private MonitorManager monitorManager;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
@@ -113,6 +115,7 @@ public class JeevesEngine
 
             ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servletContext, appPath);
 
+            monitorManager = new MonitorManager(servletContext);
 			this.appPath = appPath;
 
 			long start   = System.currentTimeMillis();
@@ -144,12 +147,14 @@ public class JeevesEngine
 
 			serviceMan.setAppPath(appPath);
 			serviceMan.setProviderMan(providerMan);
+			serviceMan.setMonitorMan(monitorManager);
 			serviceMan.setSerialFactory(serialFact);
 			serviceMan.setBaseUrl(baseUrl);
 			serviceMan.setServlet(servlet);
 
 			scheduleMan.setAppPath(appPath);
 			scheduleMan.setProviderMan(providerMan);
+			scheduleMan.setMonitorManager(monitorManager);
 			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
 
@@ -157,7 +162,7 @@ public class JeevesEngine
 
 			info("Initializing profiles...");
 			serviceMan.loadProfiles(servletContext, profilesFile);
-
+            
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
 
@@ -309,6 +314,13 @@ public class JeevesEngine
 
 		for(int i=0; i<schedList.size(); i++)
 			initSchedules(schedList.get(i));
+
+        //--- init monitoring
+
+        List<Element> monitorList = configRoot.getChildren(ConfigFile.Child.MONITORS);
+
+        for(int i=0; i<monitorList.size(); i++)
+            monitorManager.initMonitors(monitorList.get(i));
 
 		//--- recurse on includes
 
@@ -532,6 +544,7 @@ public class JeevesEngine
 				vAppHandlers.add(h);
 				serviceMan .registerContext(h.getContextName(), context);
 				scheduleMan.registerContext(h.getContextName(), context);
+                monitorManager.initMonitorsForApp(srvContext);
 
 				info("--- Handler started ---------------------------------------");
 			}
@@ -633,6 +646,14 @@ public class JeevesEngine
 		}
 	}
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- 'schedules' element
+    //---
+    //---------------------------------------------------------------------------
+
+    /** Setup schedules found in the 'schedules' element (config.xml)
+     */
 	//---------------------------------------------------------------------------
 	//---
 	//--- Destroy

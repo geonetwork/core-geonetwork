@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
+import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -62,7 +63,7 @@ import java.util.Map;
 
 public abstract class AbstractHarvester
 {
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---
 	//--- Static API methods
 	//---
@@ -127,7 +128,6 @@ public abstract class AbstractHarvester
 			ah.context    = context;
 			ah.settingMan = sm;
 			ah.dataMan    = dm;
-
 			return ah;
 		}
 		catch(Exception e)
@@ -279,6 +279,7 @@ public abstract class AbstractHarvester
 		}
 		catch(Throwable t)
 		{
+            context.getMonitorManager().getCounter(AbstractHarvesterErrorCounter.class).inc();
 			result = OperResult.ERROR;
 			logger.warning("Raised exception while harvesting from : "+ nodeName);
 			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
@@ -384,7 +385,7 @@ public abstract class AbstractHarvester
 
 	void harvest()
 	{
-		ResourceManager rm = new ResourceManager(context.getProviderManager());
+		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
 
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
 		
@@ -416,6 +417,7 @@ public abstract class AbstractHarvester
 		}
 		catch(Throwable t)
 		{
+
 			logger.warning("Raised exception while harvesting from : "+ nodeName);
 			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
 			logger.warning(" (C) Message : "+ t.getMessage());

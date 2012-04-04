@@ -176,8 +176,8 @@ public class Do implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		String baseUrl = gc.getSettingManager().getValue("system/server/protocol")
-				+ "://" + gc.getSettingManager().getValue("system/server/host")
+		String baseUrl = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL)
+				+ "://" + gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST)
 				+ ":" + gc.getSettingManager().getValue("system/server/port")
 				+ context.getBaseUrl()
 				+ "/srv/" + context.getLanguage() + "/";

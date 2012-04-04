@@ -1,0 +1,15 @@
+# Following normally _are_ part of default types.db
+memory			         value:GAUGE:0:281474976710656
+threads			         value:GAUGE:0:U
+response_time	         value:GAUGE:0:U
+
+# Following normally are _not_ part of default types.db
+gc                       value:GAUGE:0:U
+request_count_per_min    value:GAUGE:0:U
+request_count_per_5min   value:GAUGE:0:U
+database_connections     value:GAUGE:0:65535
+database_use_time	     value:GAUGE:0:U
+database_count_per_5min  value:GAUGE:0:U
+log_error_count          value:COUNTER:U:U
+error_count_per_min     value:GAUGE:0:U
+error_count_per_5min     value:GAUGE:0:U

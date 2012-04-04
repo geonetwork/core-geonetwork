@@ -24,7 +24,6 @@
 package org.fao.geonet;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,17 +36,18 @@ import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
+import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
+import jeeves.monitor.MonitorManager;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
 import jeeves.utils.ProxyInfo;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -223,13 +223,13 @@ public class Geonetwork implements ApplicationHandler {
 
 		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
 		String  z3950port      = settingMan.getValue("system/z3950/port");
-		String  host           = settingMan.getValue("system/server/host");
+		String  host           = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 
 		// null means not initialized
 		ApplicationContext app_context = null;
 
 		// build Z3950 repositories file first from template
-		URL url = getClass().getClassLoader().getResource( Geonet.File.JZKITCONFIG_TEMPLATE );
+		URL url = getClass().getClassLoader().getResource(Geonet.File.JZKITCONFIG_TEMPLATE);
 
 		if (Repositories.build(url, context)) {
 			logger.info("     Repositories file built from template.");
@@ -437,7 +437,6 @@ public class Geonetwork implements ApplicationHandler {
 			String  password       = settingMan.getValue("system/proxy/password");
 			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
 		}
-	
 
 		return gnContext;
 	}

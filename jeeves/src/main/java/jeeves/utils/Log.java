@@ -42,6 +42,7 @@ public final class Log
 	public static final String JEEVES  = "jeeves";
 
 	public static final String ENGINE = JEEVES + ".engine";
+	public static final String MONITOR = JEEVES + ".monitor";
 	public static final String APPHAND = JEEVES + ".apphand";
 	public static final String WEBAPP = JEEVES + ".webapp";
 	public static final String REQUEST = JEEVES + ".request";

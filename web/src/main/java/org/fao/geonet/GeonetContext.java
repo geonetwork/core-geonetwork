@@ -58,10 +58,10 @@ public class GeonetContext
 	/* package */ ApplicationContext app_context;
   /* package */ MetadataNotifierManager metadataNotifierMan;
 	/* package */ ThreadPool        threadPool;
-
 	Class statusActionsClass;
 
-	//---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
 	/*package*/ GeonetContext() {}
 	//---------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ public class GeonetContext
 	public OaiPmhDispatcher  getOaipmhDispatcher()  { return oaipmhDis;    }
 	public ApplicationContext  getApplicationContext() { return app_context; }
   public MetadataNotifierManager getMetadataNotifier() { return metadataNotifierMan; }
-	public ThreadPool        getThreadPool()        { return threadPool;   }
+    public ThreadPool        getThreadPool()        { return threadPool;   }
 
 	//---------------------------------------------------------------------------
 

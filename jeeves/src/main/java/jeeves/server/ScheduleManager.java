@@ -26,6 +26,7 @@ package jeeves.server;
 import jeeves.constants.ConfigFile;
 import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Schedule;
+import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
@@ -48,11 +49,12 @@ public class ScheduleManager extends Thread
 
 	private ProviderManager providMan;
 	private SerialFactory   serialFact;
+    private MonitorManager monitorManager;
 
 	private Vector<ScheduleInfo> vSchedules = new Vector<ScheduleInfo>();
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -83,7 +85,8 @@ public class ScheduleManager extends Thread
 
 	//--------------------------------------------------------------------------
 
-	public void setProviderMan  (ProviderManager p) { providMan  = p; }
+    public void setProviderMan  (ProviderManager p) { providMan  = p; }
+    public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 
 	public void setAppPath(String  path)  { appPath = path;  }
@@ -174,7 +177,7 @@ public class ScheduleManager extends Thread
 	{
 		//--- create the corresponding schedule context
 
-		ScheduleContext context = new ScheduleContext(si.name, providMan, serialFact, htContexts);
+		ScheduleContext context = new ScheduleContext(si.name, monitorManager, providMan, serialFact, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setAppPath(appPath);

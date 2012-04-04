@@ -24,6 +24,7 @@
 package jeeves.server.context;
 
 import jeeves.interfaces.Logger;
+import jeeves.monitor.MonitorManager;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.resources.ProviderManager;
@@ -66,6 +67,7 @@ public class ServiceContext extends BasicContext
 
     private UserSession    userSession;
 	private ProfileManager profilMan;
+
 	private InputMethod    input;
 	private OutputMethod   output;
 	private Map<String, String> headers;
@@ -85,9 +87,9 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
+	public ServiceContext(String service, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
 	{
-		super(pm, sf, contexts);
+		super(mm, pm, sf, contexts);
 
 		profilMan    = p;
 		setService(service);
@@ -173,6 +175,7 @@ public class ServiceContext extends BasicContext
 	public JeevesServlet getServlet() {
         return servlet;
     }
+
 }
 
 //=============================================================================

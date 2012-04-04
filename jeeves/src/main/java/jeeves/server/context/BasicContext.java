@@ -24,6 +24,7 @@
 package jeeves.server.context;
 
 import jeeves.interfaces.Logger;
+import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.SerialFactory;
@@ -46,17 +47,19 @@ public class BasicContext
 	private   String appPath;
 
 	private Hashtable<String, Object> htContexts;
+    private MonitorManager monitorManager;
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
+	public BasicContext(MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
 	{
-		resMan = new ResourceManager(pm);
+		resMan = new ResourceManager(mm, pm);
 
+        this.monitorManager = mm;
 		provMan    = pm;
 		serialFact = sf;
 		htContexts = contexts;
@@ -97,6 +100,12 @@ public class BasicContext
 	{
 		return provMan;
 	}
+
+    //--------------------------------------------------------------------------
+
+    public MonitorManager getMonitorManager() {
+        return monitorManager;
+    }
 
 	//--------------------------------------------------------------------------
 

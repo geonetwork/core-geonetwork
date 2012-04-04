@@ -23,6 +23,7 @@
 
 package jeeves.server.dispatchers;
 
+import com.yammer.metrics.core.TimerContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
@@ -30,6 +31,10 @@ import jeeves.exceptions.ServiceNotAllowedEx;
 import jeeves.exceptions.ServiceNotFoundEx;
 import jeeves.exceptions.ServiceNotMatchedEx;
 import jeeves.interfaces.Service;
+import jeeves.monitor.MonitorManager;
+import jeeves.monitor.timer.ServiceManagerGuiServicesTimer;
+import jeeves.monitor.timer.ServiceManagerServicesTimer;
+import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
 import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -73,22 +78,23 @@ public class ServiceManager
 	private Vector<ErrorPage> vErrorPipe = new Vector<ErrorPage>();
 	private Vector<GuiService> vDefaultGui = new Vector<GuiService>();
 
-	private ProviderManager providMan;
-	private ProfileManager  profilMan;
+    private ProviderManager providMan;
+    private ProfileManager  profilMan;
+    private MonitorManager monitorManager;
+
 	private SerialFactory   serialFact;
-
-	private String  appPath;
-	private String  baseUrl;
-	private String  uploadDir;
+    private String  appPath;
+    private String  baseUrl;
+    private String  uploadDir;
     private int     maxUploadSize;
-	private String  defaultLang;
-	private String  defaultContType;
-	private boolean defaultLocal;
-	private JeevesServlet servlet;
-	private boolean startupError = false;
-	private Map<String,String> startupErrors;
+    private String  defaultLang;
+    private String  defaultContType;
+    private boolean defaultLocal;
+    private JeevesServlet servlet;
+    private boolean startupError = false;
+    private Map<String,String> startupErrors;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
@@ -102,6 +108,7 @@ public class ServiceManager
 	public void setDefaultLocal   (boolean yesno) { defaultLocal   = yesno; }
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
+	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
@@ -319,7 +326,7 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name)
 	{
-		ServiceContext context = new ServiceContext(name, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, monitorManager, providMan, serialFact, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -342,7 +349,7 @@ public class ServiceManager
 	public void dispatch(ServiceRequest req, UserSession session)
 	{
 
-		ServiceContext context = new ServiceContext(req.getService(), providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage(req.getLanguage());
@@ -408,13 +415,18 @@ public class ServiceManager
 					throw new ServiceNotAllowedEx(srvName);
 				}
 
-				response = srvInfo.execServices(req.getParams(), context);
+                TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
+                try{
+				    response = srvInfo.execServices(req.getParams(), context);
+                } finally {
+                    timerContext.stop();
+                }
 
 				//---------------------------------------------------------------------
 				//--- handle forward
 
 				OutputPage outPage = srvInfo.findOutputPage(response);
-				String     forward = dispatchOutput(req, context, response, outPage, srvInfo.isCacheSet());
+				String forward = dispatchOutput(req, context, response, outPage, srvInfo.isCacheSet());
 
 				if (forward == null)
 				{
@@ -581,7 +593,7 @@ public class ServiceManager
 				else
 					req.beginStream("application/xml; charset=UTF-8", cache);
 
-				req.write(response);
+                req.write(response);
 			}
 		}
 
@@ -591,10 +603,16 @@ public class ServiceManager
 		{
 			// PDF Output
 			if (outPage.getContentType().equals("application/pdf") && !outPage.getStyleSheet().equals("")) {
-				
+
 				//--- build the xml data for the XSL/FO translation
 				String styleSheet = outPage.getStyleSheet();
-				Element guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
+                Element guiElem;
+                TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
+                try {
+				    guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
+                } finally {
+                    guiServicesTimerContext.stop();
+                }
 
 				addPrefixes(guiElem, context.getLanguage(), req.getService());
 
@@ -619,10 +637,16 @@ public class ServiceManager
 
 					try
 					{
-						//--- first we do the transformation
-						String file = Xml.transformFOP(uploadDir, rootElem, styleSheet);
-						response = BinaryFile.encode(200, file, "document.pdf", true);
-					}
+                        TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                        String file;
+                        try {
+                            //--- first we do the transformation
+                            file = Xml.transformFOP(uploadDir, rootElem, styleSheet);
+                        } finally {
+                            timerContext.stop();
+                        }
+                        response = BinaryFile.encode(200, file, "document.pdf", true);
+                    }
 					catch(Exception e)
 					{
 						error(" -> exception during XSL/FO transformation for : " +req.getService());
@@ -635,7 +659,7 @@ public class ServiceManager
 
 					info(" -> end transformation for : " +req.getService());
 				}
-				
+
 				
 			} 
 			String contentType = BinaryFile.getContentType(response);
@@ -680,9 +704,15 @@ public class ServiceManager
 			//--- build the xml data for the XSL translation
 
 			String  styleSheet = outPage.getStyleSheet();
-			Element guiElem    = outPage.invokeGuiServices(context, response, vDefaultGui);
+			Element guiElem;
+            TimerContext guiServicesTimerContext = monitorManager.getTimer(ServiceManagerGuiServicesTimer.class).time();
+            try {
+                guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
+            } finally {
+                guiServicesTimerContext.stop();
+            }
 
-			addPrefixes(guiElem, context.getLanguage(), req.getService());
+            addPrefixes(guiElem, context.getLanguage(), req.getService());
 
 			Element rootElem = new Element(Jeeves.Elem.ROOT)
 											.addContent(guiElem)
@@ -716,10 +746,13 @@ public class ServiceManager
 
 					try
 					{
-						//--- first we do the transformation
-
-						Xml.transform(rootElem, styleSheet, baos);
-
+                        TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                        try {
+                            //--- first we do the transformation
+                            Xml.transform(rootElem, styleSheet, baos);
+                        } finally {
+                            timerContext.stop();
+                        }
 						//--- then we set the content-type and output the result
 
 						req.beginStream(outPage.getContentType(), cache);
