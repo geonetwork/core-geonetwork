@@ -36,6 +36,9 @@
 
 				version = official version number of the schema
 
+				depends = names of other schemas that this schema depends on. This 
+				          schema will fail to load if these schemas are not present.
+
 				schemaLocation = official URL of XML schema definitions (XSD) for this
 				                 metadata schema
 
@@ -47,6 +50,7 @@
       <xs:element name="name"           type="xs:string" minOccurs="1"/>
       <xs:element name="id"             type="xs:string" minOccurs="1"/>
       <xs:element name="version"        type="xs:string" minOccurs="1"/>
+      <xs:element name="depends"        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="schemaLocation" type="xs:string" minOccurs="1"/>
       <xs:element name="autodetect"     type="gns:autodetectType" 
 																				minOccurs="1" maxOccurs="1"/>
