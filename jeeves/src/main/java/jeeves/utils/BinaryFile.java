@@ -82,24 +82,29 @@ public final class BinaryFile
 	// file is remote
 
 
-   static String readInput(String path) {
-    StringBuffer buffer = new StringBuffer();
-    try {
-			FileInputStream fis = new FileInputStream(path);
-			InputStreamReader isr = new InputStreamReader(fis,"UTF8");
-			Reader in = new BufferedReader(isr);
-			int ch;
-			int numRead = 0;
-			while (((ch = in.read()) > -1) && (numRead < 2000))  {
-				buffer.append((char)ch);
-				numRead++;
-			}
-			in.close();
-			return buffer.toString();
-    } catch (IOException e) {
-			e.printStackTrace();
-			return null;
-    }
+    static String readInput(String path) {
+        StringBuffer buffer = new StringBuffer();
+
+        Reader in = null;
+
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            InputStreamReader isr = new InputStreamReader(fis,"UTF8");
+            in = new BufferedReader(isr);
+            int ch;
+            int numRead = 0;
+            while (((ch = in.read()) > -1) && (numRead < 2000))  {
+                buffer.append((char)ch);
+                numRead++;
+            }
+
+            return buffer.toString();
+        } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
 	}	
 
 	//---------------------------------------------------------------------------
