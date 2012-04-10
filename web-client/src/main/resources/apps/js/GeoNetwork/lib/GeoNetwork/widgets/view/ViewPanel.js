@@ -24,11 +24,11 @@ Ext.namespace('GeoNetwork.view');
 
 /** api: (define)
  *  module = GeoNetwork.view
- *  class = ViewWindow
+ *  class = ViewPanel
  *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
  */
 /** api: constructor 
- *  .. class:: ViewWindow(config)
+ *  .. class:: ViewPanel(config)
  *
  *     Create a GeoNetwork metadata view window
  *     to display a metadata record. The metadata view use the view service.
@@ -216,6 +216,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     },
     onViewCheck: function(item, checked){
         if (checked) {
+            this.removeAll();
             this.currTab = item.value;
             this.load({
                 url: this.serviceUrl + '&currTab=' + this.currTab,
@@ -229,7 +230,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         // Clear tooltip cache
         this.cache = {};
         this.tooltips = [];
-        
+
         // Processing after content load
         this.updateViewMenu();
         
