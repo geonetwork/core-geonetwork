@@ -128,7 +128,8 @@ public class CswServer {
 		List<Element> outputSchemas = null;
         List<Element> typeNames = null;
         List<Element> outputFormats = null;
-
+        List<Element> constraintLanguages = null;
+        
         for (Element parameter : parameters) {
             String parameterName = parameter.getAttributeValue("name");
             log("Processing parameter: " + parameterName);
@@ -153,19 +154,40 @@ public class CswServer {
                 outputFormats = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
                 log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
             }
+            
+            if (parameterName != null &&
+                    parameterName.equalsIgnoreCase("CONSTRAINTLANGUAGE")) {
+                    constraintLanguages = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                    log("Found " + constraintLanguages.size() + " constraintLanguage for operation: " + name);
+            }
         }
 
-		if(outputSchemas != null) {
+        if(outputSchemas != null) {
             for (Element outputSchema : outputSchemas) {
                 String outputSchemaValue = outputSchema.getValue();
                 log("Adding outputSchema: " + outputSchemaValue + " to operation: " + name);
                 op.outputSchemaList.add(outputSchemaValue);
             }
-			op.choosePreferredOutputSchema();
-		}
-		else {
-			log("No outputSchema for operation: " + name);
-		}
+            op.choosePreferredOutputSchema();
+        }
+        else {
+        	log("No outputSchema for operation: " + name);
+        }
+
+        if(constraintLanguages != null) {
+            for (Element constraintLanguage : constraintLanguages) {
+                String constraintLanguageValue = constraintLanguage.getValue().toLowerCase();
+                log("Adding constraintLanguage : " + constraintLanguageValue + " to operation: " + name);
+                if ("cql".equals(constraintLanguageValue)){
+                    log(" Some implementation use CQL instead of CQL_TEXT for the CQL constraint language value.");
+                    constraintLanguageValue = "cql_text";
+                }
+                op.constraintLanguage.add(constraintLanguageValue);
+            }
+        }
+        else {
+            log("No constraintLanguage for operation: " + name);
+        }
 
         if(typeNames != null) {
             for (Element typeName : typeNames) {
@@ -181,18 +203,6 @@ public class CswServer {
 		}
 		else {
 			log("No typeNames for operation: " + name);
-		}
-
-        if(outputSchemas != null) {
-            for (Element outputSchema : outputSchemas) {
-                String outputSchemaValue = outputSchema.getValue();
-                log("Adding outputSchema: " + outputSchemaValue + " to operation: " + name);
-                op.outputSchemaList.add(outputSchemaValue);
-            }
-			op.choosePreferredOutputSchema();
-		}
-		else {
-			log("No outputSchema for operation: " + name);
 		}
 
         if(outputFormats != null) {

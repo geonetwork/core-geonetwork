@@ -48,6 +48,11 @@ public class CswOperation {
 	 */
     public List<String> outputFormatList = new ArrayList<String>();
 
+    /**
+     * The constraintLanguage as advertised in the CSW server's GetCapabilities response.
+     */
+    public List<String> constraintLanguage = new ArrayList<String>();
+    
 	/**
 	 * The preferred OutputSchema from the above.
 	 */

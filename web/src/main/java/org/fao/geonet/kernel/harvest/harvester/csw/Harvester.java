@@ -265,7 +265,7 @@ class Harvester
     private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
             throws Exception {
         // Use the preferred HTTP method and check one exist.
-		if (oper.getUrl != null && preferredMethod.equals("GET")) {
+		if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
 			request.setUrl(oper.getUrl);
             request.setServerVersion(server.getPreferredServerVersion());
             request.setOutputSchema(oper.preferredOutputSchema);
@@ -278,7 +278,7 @@ class Harvester
             }
             request.setOutputFormat(oper.preferredOutputFormat) ;
 
-		} else if (oper.postUrl != null && preferredMethod.equals("POST")) {
+		} else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
 			request.setUrl(oper.postUrl);
             request.setServerVersion(server.getPreferredServerVersion());
             request.setOutputSchema(oper.preferredOutputSchema);
@@ -292,20 +292,20 @@ class Harvester
             request.setOutputFormat(oper.preferredOutputFormat) ;
 
 		} else {
-			if (oper.getUrl != null) {
-				request.setUrl(oper.getUrl);
+		    if (oper.getUrl != null && oper.constraintLanguage.contains("cql_text")) {
+                request.setUrl(oper.getUrl);
                 request.setServerVersion(server.getPreferredServerVersion());
                 request.setOutputSchema(oper.preferredOutputSchema);
-				request.setConstraintLanguage(ConstraintLanguage.CQL);
-				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-				request.setConstraint(getCqlConstraint(s));
-				request.setMethod(CatalogRequest.Method.GET);
+                request.setConstraintLanguage(ConstraintLanguage.CQL);
+                request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+                request.setConstraint(getCqlConstraint(s));
+                request.setMethod(CatalogRequest.Method.GET);
                 for(String typeName: oper.typeNamesList) {
                     request.addTypeName(TypeName.getTypeName(typeName));
                 }
                 request.setOutputFormat(oper.preferredOutputFormat) ;
 
-			} else if (oper.postUrl != null) {
+            } else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
 				request.setUrl(oper.postUrl);
                 request.setServerVersion(server.getPreferredServerVersion());
                 request.setOutputSchema(oper.preferredOutputSchema);
@@ -320,7 +320,8 @@ class Harvester
                 request.setOutputFormat(oper.preferredOutputFormat) ;
 
 			} else {
-				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
+			    // TODO : add GET+FE and POST+CQL support
+				throw new OperationAbortedEx("No GET (using CQL) or POST (using FE) DCP available in this service.");
 			}
 		}
     }
