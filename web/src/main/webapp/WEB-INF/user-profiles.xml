@@ -143,6 +143,8 @@
 		<allow service="logo.add"/>
 		<allow service="logo.delete"/>
 		<allow service="logo.set"/>
+
+        <allow service="debug.openconnection.accessors"/>
 	</profile>
 
 	<!-- ====================================================================== -->

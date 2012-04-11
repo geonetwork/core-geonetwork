@@ -19,9 +19,19 @@
        <timer class=".ServiceManagerGuiServicesTimer"/>
        <timer class=".ServiceManagerServicesTimer"/>
        <timer class=".ServiceManagerXslOutputTransformTimer"/>
-        <!-- Other monitor types are: counter, meter, histogram -->
+        <!-- Other monitor types are: gauge, counter, meter, histogram -->
     </monitors>
     <monitors package="jeeves.monitor.counter">
        <counter class=".ResourceManagerOpenCounter"/>
     </monitors>
+    <monitors package="org.fao.geonet.monitor.gauge">
+       <gauge class=".ResourceManagerIdleConnectionsGauge"/>
+       <gauge class=".ResourceManagerOpenConnectionsGauge"/>
+       <gauge class=".ResourceManagerMaxConnectionsGauge"/>
+    </monitors>
+    <services package="org.fao.geonet">
+        <service name="debug.openconnection.accessors">
+            <class name=".services.debug.OpenConnectionRequestors"/>
+        </service>
+    </services>
 </config>

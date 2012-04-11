@@ -49,7 +49,7 @@ public interface ResourceProvider
 	public Map<String,String> getProps();
 
 	/** gets stats from the provider */
-	public Map<String,String> getStats() throws SQLException;
+	public Stats getStats() throws SQLException;
 
 	/** gets datastore from the provider */
 	public DataStore getDataStore();

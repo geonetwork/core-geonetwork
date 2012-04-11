@@ -23,22 +23,17 @@
 
 package jeeves.resources.dbms;
 
-import java.io.File;
-import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
+import jeeves.server.resources.Stats;
 import jeeves.utils.Log;
 
 import org.geotools.data.DataStore;
@@ -58,7 +53,6 @@ import org.jdom.Element;
  */
 
 public abstract class AbstractDbmsPool implements ResourceProvider {
-
 	public String name;
 	public String url;
 	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
@@ -98,7 +92,7 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	/**
 	 * Return statistics about the pool as a map.
 	 */
-	public abstract Map<String, String> getStats() throws SQLException;
+	public abstract Stats getStats() throws SQLException;
 
 	// --------------------------------------------------------------------------
 

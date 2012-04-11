@@ -34,6 +34,7 @@ import javax.naming.InitialContext;
 
 import jeeves.constants.Jeeves;
 
+import jeeves.server.resources.Stats;
 import org.jdom.Element;
 
 import org.geotools.jdbc.JDBCDataStore;
@@ -155,12 +156,8 @@ public class JNDIPool extends AbstractDbmsPool {
 
 	// --------------------------------------------------------------------------
 
-	public Map<String, String> getStats() throws SQLException {
-		Map<String, String> result = new HashMap<String, String>();
-		result.put("numactive",	unknownParam);
-		result.put("numidle",		unknownParam);
-		result.put("maxactive",	unknownParam);
-		return result;
+	public Stats getStats() throws SQLException {
+		return new Stats(null,null,null);
 	}
 
 	// --------------------------------------------------------------------------

@@ -24,7 +24,6 @@ package org.fao.geonet.services.config;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.transform.TransformerFactory;
@@ -33,6 +32,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.resources.Stats;
 import jeeves.utils.TransformerFactoryFactory;
 
 import org.apache.commons.io.FileUtils;
@@ -185,10 +185,10 @@ public class GetInfo implements Service {
 		}
 
 		try {
-			Map<String,String> dbStats = context.getResourceManager().getStats(Geonet.Res.MAIN_DB);
-			databaseProperties.put("db.numactive", dbStats.get("numactive"));
-			databaseProperties.put("db.numidle", dbStats.get("numidle"));
-			databaseProperties.put("db.maxactive", dbStats.get("maxactive"));
+			Stats dbStats = context.getResourceManager().getStats(Geonet.Res.MAIN_DB);
+			databaseProperties.put("db.numactive", Integer.toString(dbStats.numActive));
+			databaseProperties.put("db.numidle", Integer.toString(dbStats.numIdle));
+			databaseProperties.put("db.maxactive", Integer.toString(dbStats.maxActive));
 		} catch (Exception e) {
 			databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: "+e.getMessage());
 		}

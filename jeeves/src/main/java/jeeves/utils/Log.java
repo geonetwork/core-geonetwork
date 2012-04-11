@@ -56,19 +56,21 @@ public final class Log
 	public static final String TRANSFORMER_FACTORY = JEEVES
 			+ ".transformerFactory";
 
-    public final class Dbms
-	{
-		/**
-       * Default constructor.
-       * Builds a Log.Dbms.
-       */
-      private Dbms() {}
-      
-	   public static final String SELECT = DBMS  + ".select";
-		public static final String EXECUTE= DBMS  + ".execute";
-	}
+    public final class Dbms {
 
-	//---------------------------------------------------------------------------
+        /**
+         * Default constructor.
+         * Builds a Log.Dbms.
+         */
+        private Dbms() {
+        }
+
+        public static final String SELECT = DBMS + ".select";
+        public static final String EXECUTE = DBMS + ".execute";
+        public static final String RESOURCE_TRACKING = ".resourcetracking";
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

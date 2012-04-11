@@ -23,11 +23,12 @@
 
 package jeeves.server.resources;
 
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.yammer.metrics.core.Counter;
 import com.yammer.metrics.core.Timer;
 import com.yammer.metrics.core.TimerContext;
@@ -50,7 +51,22 @@ public class ResourceManager
 {
 	private ProviderManager provManager;
 
-	private Hashtable<String, Object> htResources = new Hashtable<String, Object>(10, .75f);
+    /**
+     * This collection tracks the threads that obtain a resource so that
+     * if a resource leak is detected the Exceptions can be used to
+     * identify the call sites of the non-closed resources.
+     *
+     * For performance this tracking is only done if the the
+     * Log.Dbms.RESOURCE_TRACKING is set to DEBUG.
+     *
+     * In practice the performance impact is not too severe so
+     * it can probably be left on even in production but the option
+     * exists if it is found to be a performance problem
+     */
+    private Multimap<Object, Exception> resourceAccessTracker = LinkedHashMultimap.create();
+    private Multimap<Object, Exception> directOpenResourceAccessTracker = LinkedHashMultimap.create();
+	private HashMap<String, Object> htResources = new HashMap<String, Object>(10, .75f);
+
     private Counter openCounter;
     private Timer resourceManagerWaitForResourceTimer;
     private Timer resourceManagerResourceIsOpenTimer;
@@ -82,11 +98,13 @@ public class ResourceManager
 	 *
 	 * @param name The name of the Resource Provider to query
 	 */
-	public Object open(String name) throws Exception
+	public synchronized Object open(String name) throws Exception
 	{
 
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug (Log.RESOURCES, "Opening: " + name + " in thread: " + Thread.currentThread().getId());
+
+
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		Object resource = htResources.get(resourceId);
 
@@ -112,7 +130,11 @@ public class ResourceManager
 		}
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug  (Log.RESOURCES, "  Returning: " + resource);
-		
+
+
+        resourceAccessTracker.put(resource, Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING)?new Exception():null);
+
+
 		return resource;
 	}
 
@@ -126,7 +148,7 @@ public class ResourceManager
 	 * @param name The name of the Resource Provider to query
 	 *    
 	 */
-	public Object openDirect(String name) throws Exception
+	public synchronized Object openDirect(String name) throws Exception
 	{
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug (Log.RESOURCES, "DIRECT Open: " + name + " in thread: " + Thread.currentThread().getId());
@@ -145,7 +167,9 @@ public class ResourceManager
 
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug  (Log.RESOURCES, "  Returning: " + resource);
-		
+
+        directOpenResourceAccessTracker.put(resource, Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING)?new Exception():null);
+
 		return resource;
 	}
 
@@ -153,7 +177,7 @@ public class ResourceManager
 	/** Gets properties from the named resource provider
 	  */
 
-	public Map<String,String> getProps(String name) throws Exception
+	public synchronized Map<String,String> getProps(String name) throws Exception
 	{
 		ResourceProvider provider = provManager.getProvider(name);
 		return provider.getProps();
@@ -163,15 +187,50 @@ public class ResourceManager
 	/** Gets statistics from the named resource provider
 	  */
 
-	public Map<String,String> getStats(String name) throws Exception
+	public synchronized Stats getStats(String name) throws Exception
 	{
 		ResourceProvider provider = provManager.getProvider(name);
 		return provider.getStats();
 	}
 
-	//--------------------------------------------------------------------------
+    /**
+     * Get a copy of the resources that were opened in 'direct' mode.  If
+     * Log.Dbms.RESOURCE_TRACKING is in debug mode there will be exceptions
+     * as the values of the returned Multimap.  This is for debugging only.
+     *
+     * The resource should not be used since they could be closed at anypoint.
+     *
+     * The exception are intended to give an idea of what opened the resources to
+     * track down resource links.
+     *
+     * NEVER use the resource obtained through this method.
+     *
+     */
+    public synchronized Multimap<Object, Exception> getDirectOpenResourceAccessTracker() {
+        return LinkedHashMultimap.create(directOpenResourceAccessTracker);
+    }
 
-	public DataStore getDataStore(String name) throws Exception
+
+    /**
+     * Get a copy of the resources that were opened in 'normal'/'tracked' mode.  If
+     * Log.Dbms.RESOURCE_TRACKING is in debug mode there will be exceptions
+     * as the values of the returned Multimap.  This is for debugging only.
+     *
+     * The resource should not be used since they could be closed at anypoint.
+     *
+     * The exception are intended to give an idea of what opened the resources to
+     * track down resource links.
+     *
+     * NEVER use the resource obtained through this method.
+     *
+     */
+    public synchronized Multimap<Object, Exception> getResourceAccessTracker() {
+        return LinkedHashMultimap.create(resourceAccessTracker);
+    }
+
+    //--------------------------------------------------------------------------
+
+	public synchronized DataStore getDataStore(String name) throws Exception
 	{
 		ResourceProvider provider = provManager.getProvider(name);
 		return provider.getDataStore();
@@ -181,9 +240,9 @@ public class ResourceManager
 	/** Closes a resource doing a commit
 	  */
 
-	public void close(String name, Object resource) throws Exception
+	public synchronized void close(String name, Object resource) throws Exception
 	{
-        closeMetrics(resource);
+        closeMetrics(resource); // This must be done before removing from htResource
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug (Log.RESOURCES, "Closing: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
@@ -201,10 +260,10 @@ public class ResourceManager
 	/** Closes a resource doing an abort
 	  */
 
-	public void abort(String name, Object resource) throws Exception
+	public synchronized void abort(String name, Object resource) throws Exception
 	{
-        closeMetrics(resource);
-        if(Log.isDebugEnabled(Log.RESOURCES))
+        closeMetrics(resource); // This must be done before removing from htResource
+        if(Log.isDebug(Log.RESOURCES))
             Log.debug (Log.RESOURCES, "Aborting: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		if (htResources.get(resourceId) != null) {
@@ -221,7 +280,7 @@ public class ResourceManager
 	/** Closes all resources doing a commit
 	  */
 
-	public void close() throws Exception
+	public synchronized void close() throws Exception
 	{
 		release(true);
 	}
@@ -230,7 +289,7 @@ public class ResourceManager
 	/** Closes all resources doing an abort
 	  */
 
-	public void abort() throws Exception
+	public synchronized void abort() throws Exception
 	{
 		release(false);
 	}
@@ -248,18 +307,15 @@ public class ResourceManager
 	{
 		Exception errorExc = null;
 		
-		for (Enumeration<String> e=htResources.keys(); e.hasMoreElements(); )
-		{
-			String name     = e.nextElement();
-            Object resource = htResources.get(name);
-            closeMetrics(resource);
+		for (Map.Entry<String, Object> entry : htResources.entrySet()) {
+            closeMetrics(entry.getValue()); // This must be done before removing from htResource
 
-			ResourceProvider provider = provManager.getProvider(name.split(":")[0]);
+			ResourceProvider provider = provManager.getProvider(entry.getKey().split(":")[0]);
 
 			try
 			{
-				if (commit)	provider.close(resource);
-					else 		provider.abort(resource);
+				if (commit)	provider.close(entry.getValue());
+					else 		provider.abort(entry.getValue());
 			}
 			catch (Exception ex)
 			{
@@ -267,7 +323,7 @@ public class ResourceManager
 			}
 		}
 
-		htResources = new Hashtable<String, Object>(10, .75f);
+		htResources.clear();
 
 		if (errorExc != null)
 			throw errorExc;
@@ -288,6 +344,9 @@ public class ResourceManager
         } else {
             context.stop();
         }
+
+        resourceAccessTracker.removeAll(resource);
+        directOpenResourceAccessTracker.removeAll(resource);
     }
 
 
