@@ -279,5 +279,7 @@
 		</metadata>
 	 </xsl:for-each>
 	</xsl:template>
-				
+
+	<xsl:template name="fgdc-std-javascript"/>
+
 </xsl:stylesheet>

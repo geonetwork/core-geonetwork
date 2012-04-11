@@ -2090,5 +2090,7 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template name="iso19115-javascript"/>
+
 </xsl:stylesheet>
 

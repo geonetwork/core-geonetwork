@@ -719,7 +719,7 @@ public class Geonetwork implements ApplicationHandler {
 		if (!catalogProp.equals("")) {
 			logger.info("Overriding "+Jeeves.XML_CATALOG_FILES+" property (was set to "+catalogProp+")");
 		} 
-		catalogProp = webapp + "oasis-catalog.xml;" + webapp + "schema-uri-catalog.xml;" + handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + File.separator + "schemaplugin-uri-catalog.xml";
+		catalogProp = webapp + "oasis-catalog.xml;" + handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + File.separator + "schemaplugin-uri-catalog.xml";
 		System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
 		logger.info(Jeeves.XML_CATALOG_FILES+" property set to "+catalogProp);
 

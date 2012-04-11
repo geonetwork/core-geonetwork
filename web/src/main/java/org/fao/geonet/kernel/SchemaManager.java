@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Document;
@@ -52,6 +53,7 @@ import org.jdom.filter.ElementFilter;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -64,7 +66,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * TODO javadoc.
+ * Class that handles all functions relating to metadata schemas. This 
+ * includes inserting/removing/updating metadata schemas for use in GeoNetwork
+ * as well as determining whether a metadata record belongs to any of the 
+ * metadata schemas known to GeoNetwork.
+ *
+ * The Schema class holds all information describing a schema in GeoNetwork. 
+ * The SchemaManager holds a map of Schema objects known to GeoNetwork. 
  *
  */
 public class SchemaManager {
@@ -123,23 +131,21 @@ public class SchemaManager {
 		
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 
-		// -- add any of the fixed schemas supplied with GeoNetwork
-
-		String schemasDir = basePath + Geonet.Path.SCHEMAS;
-		String saSchemas[] = new File(schemasDir).list();
-		
+		// -- check the plugin directory and add any schemas already in there
+		String[] saSchemas = new File(this.schemaPluginsDir).list();
 		if (saSchemas == null) {
-			throw new IllegalArgumentException("Cannot scan schemas directory : " +schemasDir);
+			Log.error(Geonet.SCHEMA_MANAGER, "Cannot scan plugin schemas directory : " +schemaPluginsDir);
 		} else {
-			processSchemas(schemasDir, saSchemas, false, schemaPluginCatRoot);
-		}
-
-		// -- now check the plugin directory and add any schemas in there
-		saSchemas = new File(this.schemaPluginsDir).list();
-		if (saSchemas == null) {
-			Log.error(Geonet.SCHEMA_MANAGER, "Cannot scan plugin schemas directory : " +schemasDir);
-		} else {
-			processSchemas(schemaPluginsDir + FS, saSchemas, true, schemaPluginCatRoot);
+			for (int i=0; i<saSchemas.length; i++) {
+				if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
+			    File schemaDir = new File(this.schemaPluginsDir + FS + saSchemas[i]);
+          if (schemaDir.isDirectory()) {
+						processSchema(schemaPluginsDir + FS, saSchemas[i], schemaPluginCatRoot);
+					}
+				}
+			}
+			// for each schema check that dependent schemas are already loaded 
+			checkDependencies(schemaPluginCatRoot);
 		}
 
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
@@ -179,26 +185,6 @@ public class SchemaManager {
 	//--- API methods
 	//---
 	//--------------------------------------------------------------------------
-
-	/**
-     * Returns a boolean indicating whether the schema is a plugin schema or not.
-	 *
-	 * @param name name of schema to check to see whether it is a plugin schema
-     * @return
-	 */
-	public boolean isPluginSchema(String name) {
-		beforeRead();
-		try {
-			Schema schema = hmSchemas.get(name);
-
-			if (schema == null)
-				throw new IllegalArgumentException("Schema not registered : " + name);
-
-			return schema.isPluginSchema();
-		} finally {
-			afterRead();
-		}
-	}
 
 	/**
      * Return the MetadataSchema objects
@@ -250,10 +236,20 @@ public class SchemaManager {
 
 		beforeWrite();
 		try {
-			// -- delete schema 
-			realDeletePluginSchema(name);
-			
+			// -- delete schema, trap any exception here as we need to say
+			// -- why the update failed
+			try { 
+				boolean doDependencies = false;
+				realDeletePluginSchema(name, doDependencies);
+			} catch (Exception e) {
+				String errStr = "Could not update schema "+name+", remove of outdated schema failed. Exception message if any is "+e.getMessage();
+				Log.error(Geonet.SCHEMA_MANAGER, errStr);
+				e.printStackTrace();
+				throw new OperationAbortedEx(errStr, e);
+			}
+
 			// -- add the new one
+			realAddPluginSchema(name, in);
 		} finally {
 			afterWrite();
 		}
@@ -501,14 +497,14 @@ public class SchemaManager {
      * Deletes the schema from the schema information hash tables.
 	 *
 	 * @param name the metadata schema we want to delete - can only be a plugin schema
-     * @return
      * @throws Exception
 	 */
-	public boolean deletePluginSchema(String name) throws Exception {
+	public void deletePluginSchema(String name) throws Exception {
 
 		beforeWrite();
 		try {
-			return realDeletePluginSchema(name);
+			boolean doDependencies = true;
+			realDeletePluginSchema(name, doDependencies);
 
 		} finally {
 			afterWrite();
@@ -725,19 +721,23 @@ public class SchemaManager {
      * Really delete the schema from the schema information hash tables.
 	 *
 	 * @param name the metadata schema we want to delete - can only be a plugin schema
-     * @return
-     * @throws Exception
+   * @throws Exception when something goes wrong
 	 */
-	private boolean realDeletePluginSchema(String name) throws Exception {
+	private void realDeletePluginSchema(String name, boolean doDependencies) throws Exception {
 
 		Schema schema = hmSchemas.get(name);
 		if (schema != null) {
-			if (schema.isPluginSchema()) {
-				removeSchemaInfo(name);
-				return true;
+			if (doDependencies) {
+				List<String> dependsOnMe = getSchemasThatDependOnMe(name);
+				if (dependsOnMe.size() > 0) {
+					String errStr = "Cannot remove schema "+name+" because the following schemas list it as a dependency: "+dependsOnMe;
+					Log.error(Geonet.SCHEMA_MANAGER, errStr);
+					throw new OperationAbortedEx(errStr);
+				}
 			}
+
+			removeSchemaInfo(name);
 		}
-		return false;
 	}
 
 	/**
@@ -751,23 +751,25 @@ public class SchemaManager {
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 
 		// -- create schema directory 
-		String schemasDir = schemaPluginsDir + FS;
-		File dir = new File(schemasDir + name);
+		File dir = new File(schemaPluginsDir, name);
 		dir.mkdirs();
 
 		try {
 			unpackSchemaZipArchive(dir, in);
 	
-			String[] saSchemas = new String[]{ name };
-
 			// -- add schema using the addSchema method
-			int added = processSchemas(schemasDir, saSchemas, true, schemaPluginCatRoot);
-			if (added == 0) throw new OperationAbortedEx("Failed to add schema "+name);
+			processSchema(schemaPluginsDir + FS, name, schemaPluginCatRoot); 
+
+			// -- check that dependent schemas are already loaded 
+			Schema schema = hmSchemas.get(name);
+			checkDepends(name, schema.getDependElements());
 
 			writeSchemaPluginCatalog(schemaPluginCatRoot);
 		} catch (Exception e) {
+			e.printStackTrace();
+			hmSchemas.remove(name);
 			deleteDir(dir);
-			throw e;
+			throw new OperationAbortedEx("Failed to add schema "+name+" : "+e.getMessage(), e);
 		}
 	}
 
@@ -823,7 +825,6 @@ public class SchemaManager {
 	 *
 	 * @param fromAppPath webapp path
 	 * @param name schema name
-	 * @param isPluginSchema boolean that is set to true if schema is plugin
 	 * @param schemaPluginCatRoot
      * @param xmlSchemaFile name of XML schema file (usually schema.xsd)
 	 * @param xmlSuggestFile name of schema suggestions file
@@ -833,7 +834,7 @@ public class SchemaManager {
 	 * @param conversionsFile name of XML conversions file
      * @throws Exception
 	 */
-	private void addSchema(String fromAppPath, String name, boolean isPluginSchema, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
+	private void addSchema(String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
 		String path = new File(xmlSchemaFile).getParent();
 
 		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
@@ -889,22 +890,26 @@ public class SchemaManager {
 									new SchemaSuggestions(xmlSuggestFile),
 									extractADElements(xmlIdFile),
 									xfMap,
-									isPluginSchema,
+									true, // all schemas are plugin schemas now
 									extractSchemaLocation(xmlIdFile),
-									extractConvElements(conversionsFile));
+									extractConvElements(conversionsFile),
+									extractDepends(xmlIdFile));
 
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
             Log.debug(Geonet.SCHEMA_MANAGER, "Property "+Jeeves.XML_CATALOG_FILES+" is "+System.getProperty(Jeeves.XML_CATALOG_FILES));
 
 		// -- Add entry for presentation xslt to schemaPlugins catalog
 		// -- if this schema is a plugin schema
-		if (isPluginSchema) {
-			int baseNrInt = getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
-			if (baseNrInt == 0) baseNrInt = numberOfCoreSchemasAdded; 
-			if (baseNrInt != -1) {
-				createUriEntryInSchemaPluginCatalog(name, baseNrInt, schemaPluginCatRoot);		
-			}
+		int baseNrInt = getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
+		if (baseNrInt == 0) baseNrInt = numberOfCoreSchemasAdded; 
+		if (baseNrInt != -1) {
+			createUriEntryInSchemaPluginCatalog(name, baseNrInt, schemaPluginCatRoot);		
 		}
+
+		// -- copy schema.xsd and schema directory from schema to 
+		// -- <web_app_dir>/xml/schemas/<schema_name>
+		copySchemaXSDsToWebApp(name, path);
+
 	}
 
 	/**
@@ -1076,10 +1081,12 @@ public class SchemaManager {
 	 * @param isPlugin true if schema is a plugin schema
 	 * @param schemaLocation namespaces and URLs of their xsds
 	 * @param convElems List of elements in conversion file
+	 * @param dependElems List of depend XML elements (as JDOM Elements) 
 	 */
 	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir,
                                SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap,
-                               boolean isPlugin, String schemaLocation, List<Element> convElems) {
+                               boolean isPlugin, String schemaLocation, List<Element> convElems,
+															 List<Element> dependElems) {
 		
 		Schema schema = new Schema();
 
@@ -1093,6 +1100,7 @@ public class SchemaManager {
 		schema.setPluginSchema(isPlugin);
 		schema.setSchemaLocation(schemaLocation);
 		schema.setConversionElements(convElems);
+		schema.setDependElements(dependElems);
 
 		hmSchemas.put(name, schema);
 	}
@@ -1107,20 +1115,22 @@ public class SchemaManager {
 	private void removeSchemaInfo(String name) throws Exception { 
 		Schema schema = hmSchemas.get(name);
 
-		removeSchemaDir(schema.getDir());
+		removeSchemaDir(schema.getDir(), name);
 		hmSchemas.remove(name);
 
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 		schemaPluginCatRoot = deleteSchemaFromPluginCatalog(name, schemaPluginCatRoot);
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
+
 	}
 
 	/**
-     * Deletes information into the schema directory.
+     * Deletes information in the schema directory and removes published schemas from the webapp.
 	 *
 	 * @param dir schema directory to remove
+	 * @param name of schema being removed  
   	 */
-	private void removeSchemaDir(String dir) { 
+	private void removeSchemaDir(String dir, String name) { 
 		// -- FIXME: get schema directory and zip it up into the deleted metadata 
 		// -- directory?
 
@@ -1129,59 +1139,144 @@ public class SchemaManager {
 		boolean deleteOp = deleteDir(new File(dir));
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
             Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
+
+		String pubSchemaDir = basePath + Geonet.Path.SCHEMAS + name; 
+		Log.debug(Geonet.SCHEMA_MANAGER, "Removing published schemas directory "+pubSchemaDir);
+		deleteOp = deleteDir(new File(pubSchemaDir));
+		Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
 	}
 
 	/**
      * Processes schemas in either web/xml/schemas or schema plugin directory.
 	 *
 	 * @param schemasDir path name of directory containing schemas
-	 * @param saSchemas list of schemas in schemasDir to process
-	 * @param isPluginSchema boolean that is set to true if schema is plugin
-     * @param schemaPluginCatRoot
+	 * @param saSchema schema in schemasDir to process
+     * @param schemaPluginCatRoot 
      * @return
 	 */
-	private int processSchemas(String schemasDir, String[] saSchemas, boolean isPluginSchema, Element schemaPluginCatRoot) {
+	private void processSchema(String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
 
-		for (int i=0; i<saSchemas.length; i++) {
-			if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
-			    File schemaDir = new File(schemasDir + saSchemas[i]);
-                if (schemaDir.isDirectory()) {
-    				Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchemas[i]);
-    				String schemaFile  = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA;
-    				String suggestFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
-    				String substitutesFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
-    				String idFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_ID;
-    				String oasisCatFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_OASIS;
-    				String conversionsFile = schemasDir + saSchemas[i] +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
+    Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchema);
+    String schemaFile  = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA;
+    String suggestFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
+    String substitutesFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
+    String idFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_ID;
+    String oasisCatFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_OASIS;
+    String conversionsFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
    
-	 					String stage = "";
-    				try {
-							// validate the schema-ident file before reading it
-	 						stage = "reading schema-ident file "+idFile;
-							Element root = Xml.loadFile(idFile);
-	 						stage = "validating schema-ident file "+idFile;
-							Xml.validate(new Document(root));
+	 	String stage = "";
+    try {
+			// validate the schema-ident file before reading it
+	 		stage = "reading schema-ident file "+idFile;
+			Element root = Xml.loadFile(idFile);
+	 		stage = "validating schema-ident file "+idFile;
+			Xml.validate(new Document(root));
 
-    					if (hmSchemas.containsKey(saSchemas[i])) { // exists so ignore it
-    						Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchemas[i]+" already exists - cannot add!");
-    					} else {
-	 							stage = "adding the schema information";
-    						addSchema(schemasDir, saSchemas[i], isPluginSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
-    						numberOfSchemasAdded ++;
-    						if (!isPluginSchema) {
-    							numberOfCoreSchemasAdded ++;
-    						}
-    					}
-    				} catch (Exception e) {
-    					Log.error(Geonet.SCHEMA_MANAGER, "Failed whilst "+stage+". Exception message if any is "+e.getMessage());
-							e.printStackTrace();
-    					continue; // skip this schema
-    				}
-          }
+    	if (hmSchemas.containsKey(saSchema)) { // exists so ignore it
+				Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchema+" already exists - cannot add!");
+			} else {
+	 			stage = "adding the schema information";
+    		addSchema(schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
+			}
+		} catch (Exception e) {
+			String errStr = "Failed whilst "+stage+". Exception message if any is "+e.getMessage();
+			Log.error(Geonet.SCHEMA_MANAGER, errStr);
+			e.printStackTrace();
+			throw new OperationAbortedEx(errStr, e);
+    }
+
+	}
+
+	/**
+   * Check dependencies for all schemas - remove those that fail.
+	 *
+	 * @param schemaPluginCatRoot 
+	 *
+	 */
+	private void checkDependencies(Element schemaPluginCatRoot) throws Exception {
+		List<String> removes = new ArrayList<String>();
+
+		// process each schema to see whether its dependencies are present
+		for (String schemaName : hmSchemas.keySet()) {
+			Schema schema = hmSchemas.get(schemaName);
+			try {
+				checkDepends(schemaName, schema.getDependElements());
+			} catch (Exception e) {
+				Log.error(Geonet.SCHEMA_MANAGER,"check dependencies failed: "+e.getMessage());
+				// add the schema to list for removal 
+				removes.add(schemaName);
 			}
 		}
 
-		return numberOfSchemasAdded;
+		// now remove any that failed the dependency test
+		for (String removeSchema : removes) {
+			hmSchemas.remove(removeSchema);
+			deleteSchemaFromPluginCatalog(removeSchema, schemaPluginCatRoot);
+		}
+
+	}
+
+	/**
+   * Get list of schemas that depend on supplied schema name.
+	 *
+	 * @param schemaName Schema being checked 
+   * @return List of schemas that depend on schemaName.
+	 */
+	public List<String> getSchemasThatDependOnMe(String schemaName) {
+		
+		List<String> myDepends = new ArrayList<String>();
+
+		// process each schema to see whether its dependencies are present
+		for (String schemaNameToTest : hmSchemas.keySet()) {
+			if (schemaNameToTest.equals(schemaName)) continue;
+
+			Schema schema = hmSchemas.get(schemaNameToTest);
+			List<Element> dependsList = schema.getDependElements();
+			for (Element depends : dependsList) {
+				if (depends.getText().equals(schemaName)) {
+					myDepends.add(schemaNameToTest);
+				}
+			}
+		}
+
+		return myDepends;
+	}
+
+	/**
+   * Check schema dependencies (depend elements).
+	 *
+	 * @param thisSchema Schema being checked 
+   * @param dependsList List of depend elements for schema.
+   * @throws Exception
+	 */
+	private void checkDepends(String thisSchema, List<Element> dependsList) throws Exception {
+		// process each dependency to see whether it is present
+		for (Element depends : dependsList) {
+			String schema = depends.getText();
+			if (schema.length() > 0) {
+				if (!hmSchemas.containsKey(schema)) { 
+					throw new IllegalArgumentException("Schema "+thisSchema+" depends on "+schema+", but that schema is not loaded");
+				}
+			}
+		}
+	}
+
+	/**
+   * Extract schema dependencies (depend elements).
+	 *
+	 * @param xmlIdFile name of schema XML identification file
+	 * @return depends elements as a List
+   * @throws Exception
+	 */
+	private List<Element> extractDepends(String xmlIdFile) throws Exception {
+		Element root = Xml.loadFile(xmlIdFile);
+
+		// get list of depends elements from schema-ident.xml
+		List<Element> dependsList = root.getChildren("depends", GEONET_SCHEMA_NS);
+		if (dependsList.size() == 0) {
+		 dependsList = root.getChildren("depends", GEONET_SCHEMA_PREFIX_NS);
+		}
+		return dependsList;
 	}
 
 	/**
@@ -1505,19 +1600,59 @@ public class SchemaManager {
      * Create a URL that can be used to point to a schema XSD delivered by GeoNetwork.
 	 *
 	 * @param context the ServiceContext used to get setting manager and appPath
-	 * @param schemaDir the schema directory
+	 * @param schemaName the name of the schema
      * @return
 	 */
-	public String getSchemaUrl(ServiceContext context, String schemaDir) {
+	private String getSchemaUrl(ServiceContext context, String schemaName) {
 		SettingInfo si = new SettingInfo(context);
 
-		schemaDir = schemaDir.replace('\\','/');
-		String appPath = context.getAppPath().replace('\\','/');
-		String relativePath = StringUtils.substringAfter(schemaDir,context.getAppPath()); 
+		String relativePath = Geonet.Path.SCHEMAS + schemaName; 
 		return si.getSiteUrl() + context.getBaseUrl() + "/" + relativePath;
 	}
 
 	public String getDefaultSchema() {
 		return defaultSchema;
 	}
+
+	/**
+     * Copy the schema.xsd file and the schema directory from the schema plugin directory to the webapp.
+	 *
+	 * @param name the name of the schema
+	 * @param schemaPluginDir the directory containing the schema plugin
+	 */
+	private void copySchemaXSDsToWebApp(String name, String schemaPluginDir) throws Exception {
+
+		FilenameFilter filter = new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".xsd") || name.endsWith(".XSD");
+			}
+		};
+
+		File webAppDir = new File(basePath + Geonet.Path.SCHEMAS);
+		webAppDir.mkdirs();
+
+		File webAppDirSchemaXSD = new File(webAppDir, name);
+		deleteDir(webAppDirSchemaXSD);
+		webAppDirSchemaXSD.mkdirs();
+
+		// copy all XSDs from schema plugin dir to webapp schema dir
+		File fileSchemaPluginDir = new File(schemaPluginDir);
+
+		String[] schemaFiles = fileSchemaPluginDir.list(filter);
+		if (schemaFiles.length > 0) {
+			for (String schemaFile : schemaFiles) {
+				FileCopyMgr.copyFiles(new File(schemaPluginDir, schemaFile), new File(webAppDirSchemaXSD, schemaFile));
+			}
+		} else {
+			Log.error(Geonet.SCHEMA_MANAGER, "Schema "+name+" does not have any XSD files!");
+		}
+
+		File fileSchemaDir = new File(schemaPluginDir,"schema");
+		if (fileSchemaDir.exists()) {
+			FileCopyMgr.copyFiles(fileSchemaDir, new File(webAppDirSchemaXSD, "schema"));
+		}
+
+	}
+
+
 }

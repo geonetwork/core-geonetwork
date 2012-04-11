@@ -142,5 +142,6 @@
 		</metadata>
 	 </xsl:for-each>
 	</xsl:template>
-				
+
+	<xsl:template name="dublin-core-javascript"/>
 </xsl:stylesheet>

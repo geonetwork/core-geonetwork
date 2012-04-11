@@ -649,5 +649,7 @@
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>
 	</xsl:template>
-    
+
+	<xsl:template name="iso19110-javascript"/>
+
 </xsl:stylesheet>

@@ -33,4 +33,6 @@
 		</xsl:call-template>
 	</xsl:template>
 
+	<xsl:template name="csw-record-javascript"/>
+
 </xsl:stylesheet>

@@ -37,6 +37,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
+import java.util.List;
+
 //=============================================================================
 
 public class Delete implements Service {
@@ -62,12 +64,23 @@ public class Delete implements Service {
 
 		Element response = new Element("response");
 		if (scm.existsSchema(schema)) {
-			if (scm.deletePluginSchema(schema)) {
-				response.setAttribute("status", "ok");
-				response.setAttribute("message", "Schema "+schema+" has been deleted");
-			} else {
+			List<String> dependsOnMe = scm.getSchemasThatDependOnMe(schema);
+			if (dependsOnMe.size() > 0) {
+				String errStr = "Cannot remove schema "+schema+" because the following schemas list it as a dependency: "+dependsOnMe;
+
+				context.error(errStr);
 				response.setAttribute("status", "error");
-				response.setAttribute("message", "Could not delete schema");
+				response.setAttribute("message", errStr);
+			} else {
+				try {
+					scm.deletePluginSchema(schema);
+					response.setAttribute("status", "ok");
+					response.setAttribute("message", "Schema "+schema+" deleted");
+				} catch (Exception e) {
+					e.printStackTrace();
+					response.setAttribute("status", "error");
+					response.setAttribute("message", "Could not delete schema, error if any was "+e.getMessage());
+				}
 			}
 		} else {
 			response.setAttribute("status", "error");

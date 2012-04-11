@@ -161,6 +161,7 @@ public class SchemaUtils {
      	response.setAttribute("status", "ok");
      	response.setAttribute("message", "Schema "+schema+" has been added/updated");
 		} catch (Exception e) {
+			e.printStackTrace();
      	throw new OperationAbortedEx("Schema add/update failed: "+e.getMessage());
 		}
 

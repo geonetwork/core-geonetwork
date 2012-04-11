@@ -213,4 +213,23 @@ public class Schema {
 		this.conversionElements = conversionElements; 
 	}
 
+	private List<Element> dependElements = new ArrayList<Element>();
+
+	/**
+	 * Get List of XML elements whose text values are the names of schemas that this schema depends upon.
+	 *
+   * @return
+   */
+	public List<Element> getDependElements() { return dependElements; }
+
+	/**
+	 * Set List of XML elements whose text values are the names of schemas that this schema depends upon.
+	 *
+	 * @param  dependList of JDOM elements
+	 *
+	 */
+	public void setDependElements(List<Element> dependElements) { 
+		this.dependElements = dependElements; 
+	}
+
 }

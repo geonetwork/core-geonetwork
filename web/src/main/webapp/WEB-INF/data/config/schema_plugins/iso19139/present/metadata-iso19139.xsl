@@ -4213,6 +4213,7 @@
 		<xsl:text>showCRSSelectionPanel</xsl:text>
 	</xsl:template>
   <xsl:template mode="addXMLFragment" match="*|@*"/>
-  
+
+	<xsl:template name="iso19139-javascript"/>
   
 </xsl:stylesheet>

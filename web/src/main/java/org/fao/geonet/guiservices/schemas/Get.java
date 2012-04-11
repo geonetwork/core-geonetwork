@@ -54,12 +54,7 @@ public class Get implements Service
 
 		for (String schema : schemaMan.getSchemas()) {
 			Element elem = new Element("name").setText(schema);
-			// is it a plugin schema?
-			if (schemaMan.isPluginSchema(schema)) {
-				elem.setAttribute("plugin","true");
-			} else {
-				elem.setAttribute("plugin","false");
-			}
+			elem.setAttribute("plugin","true"); // all schemas are plugins
 			// is it editable?
 			if (schemaMan.getSchema(schema).canEdit()) {
 				elem.setAttribute("edit","true");
