@@ -102,5 +102,33 @@ GeoNetwork.Util = {
     },
     getBaseUrl: function(url){
         return url.substring(0, url.indexOf('?') || url.indexOf('#') || url.length);
+    },
+
+    // TODO : add function to compute color map
+    defaultColorMap: [
+                       "#2205fd", 
+                       "#28bc03", 
+                       "#bc3303", 
+                       "#e4ff04", 
+                       "#ff04a0", 
+                       "#a6ff96", 
+                       "#408d5d", 
+                       "#7d253e", 
+                       "#2ce37e", 
+                       "#10008c", 
+                       "#ff9e05", 
+                       "#ff7b5d", 
+                       "#ff0000", 
+                       "#00FF00"],
+    /**
+     *  Return a random color map
+     */
+    generateColorMap: function (classes) {
+        var colors = [];
+        for (var i = 0; i < classes; i++) {
+            // http://paulirish.com/2009/random-hex-color-code-snippets/
+            colors[i] = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+        }
+        return colors;
     }
 };

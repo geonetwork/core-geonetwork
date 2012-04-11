@@ -133,7 +133,7 @@ GeoNetwork.Templates.LOGO = '<div class="md-logo"><img src="{[catalogue.URL]}/im
 GeoNetwork.Templates.SIMPLE = new Ext.XTemplate(
     '<ul>',
         '<tpl for=".">',
-            '<li class="md md-simple" title="{abstract}">',
+            '<li class="md md-simple" title="{abstract}" style="{featurecolorCSS}">',
                 '<table><tr><td style="width:30px;">',  // FIXME
                 GeoNetwork.Templates.LOGO,
                 '</td><td id="{uuid}">',
@@ -159,7 +159,7 @@ GeoNetwork.Templates.SIMPLE = new Ext.XTemplate(
 GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
         '<ul>',
             '<tpl for=".">',
-                '<li class="md md-thumbnail">',
+                '<li class="md md-thumbnail" style="{featurecolorCSS}">',
                 '<div class="md-wrap" id="{uuid}" title="{abstract}">',
                     GeoNetwork.Templates.TITLE,
                     '<div class="thumbnail">',
@@ -189,7 +189,7 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
 GeoNetwork.Templates.FULL = new Ext.XTemplate(
         '<ul>',
           '<tpl for=".">',
-            '<li class="md md-full">',
+            '<li class="md md-full" style="{featurecolorCSS}">',
                 '<table><tr>',
                 '<td class="left">',
                     GeoNetwork.Templates.LOGO,

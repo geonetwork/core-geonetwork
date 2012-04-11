@@ -78,27 +78,98 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     mapsProjection: "EPSG:4326",
     projectionFrom: undefined,
     projectionTo: undefined,
+    styleInitialized: false,
     
     /** api: property[mdSelectionUuids] 
      *  Current selection uuids
      */
     mdSelectionUuids: [],
     
-    /** api: property[layer_style] 
-     *  Layer style
-     */
-    layer_style: OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']),
-    
-    /** api: property[layer_style_hover] 
-     *  Hover layer style
-     */
-    layer_style_hover: OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']),
-    
     /** api: property[layer_style_selected] 
-     *  Selected layer style
+     *  Selected layer style. Unused
      */
     layer_style_selected: OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']),
     
+    defaultConfig: {
+        /** api: property[featurecolor] 
+         *  Color for record's bounding box. By default #ee9900.
+         *  
+         *  Example ::
+         *  
+         *    metadataResultsView = new GeoNetwork.MetadataResultsView({
+         *      catalogue: catalogue,
+         *      // Use a custom single color for bounding box
+         *      featurecolor: '#FFFFFF'
+         */
+        featurecolor: '#ee9900',
+        
+        /** api: property[colormap] 
+         *  Array of colors to be used for record's bounding box.
+         *  
+         *  Example for configuration of feature color, color map or custom layer style::
+         *  
+         *    metadataResultsView = new GeoNetwork.MetadataResultsView({
+         *            catalogue: catalogue,
+         *            displaySerieMembers: true,
+         *            autoScroll: true,
+         *            tpl: GeoNetwork.Templates.FULL
+         *            // Use a custom single color for bounding box
+         *            , featurecolor: '#FFFFFF'
+         *            // Use a random color map with 2 colors 
+         *             , colormap: GeoNetwork.Util.generateColorMap(5)
+         *            // Use a default color map with 10 colors
+         *            , colormap: GeoNetwork.Util.defaultColorMap
+         *            // Use a custom CSS rules
+         *            , featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
+         *            // Use a custom style
+         *            , layer_style:  new OpenLayers.Style({ 
+         *                           strokeOpacity: 1,
+         *                           strokeWidth: 4,
+         *                           strokeColor: "${featurecolor}",
+         *                           fillColor: "${featurecolor}",
+         *                           fillOpacity: 0.2
+         *                       })
+         *             , layer_style_hover:  new OpenLayers.Style({ 
+         *                 strokeOpacity: 1,
+         *                 strokeWidth: 10,
+         *                 strokeColor: "${featurecolor}",
+         *                 fillColor: "${featurecolor}",
+         *                 fillOpacity: 0
+         *             })
+         *     });
+         */
+        colormap: undefined,
+        
+        /** api: property[layer_style] 
+         *  Layer style which could reference colormap colors. Example::
+         *  
+         *    new OpenLayers.Style({ 
+         *          strokeOpacity: 1,
+         *          strokeWidth: 1,
+         *          strokeColor: "${color}",
+         *          fillColor: "${color}",
+         *          fillOpacity: 0
+         *      }),
+         */
+        layer_style:  new OpenLayers.Style({ 
+            strokeOpacity: 1,
+            strokeWidth: 1,
+            fillOpacity: 0,
+            strokeColor: '${featurecolor}',
+            fillColor: '${featurecolor}'
+        }),
+        
+        /** api: property[layer_style_hover] 
+         *  Hover layer style which could reference colormap colors.
+         */
+        layer_style_hover: new OpenLayers.Style({ 
+            strokeOpacity: 1,
+            strokeWidth: 3,
+            fillOpacity: 0.3,
+            strokeColor: '${featurecolor}',
+            fillColor: '${featurecolor}'
+        })
+    },
     /** api: property[features] 
      *  Current features used by first maps
      */
@@ -150,7 +221,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      */
     newMetadataWindow: undefined,
     plugins: [ // new Ext.DataView.DragSelector()
-]    ,
+    ],
     listeners: {
         /**
          * Zoom to feature
@@ -181,7 +252,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                             for (i = 0; i < l.features.length; i++) {
                                 if (uuid === l.features[i].attributes.id) {
                                     if (!this.hover_feature[j]) {
-                                        l.drawFeature(l.features[i], this.layer_style_hover);
+                                        l.drawFeature(l.features[i], 'hover');
                                         this.hover_feature[j] = l.features[i];
                                     }
                                     continue;
@@ -204,7 +275,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 for (i = 0; i < this.maps.length; i++) {
                     if (this.hover_feature[i]) {
                         var l = this.maps[i].layer;
-                        l.drawFeature(this.hover_feature[i], this.layer_style);
+                        l.drawFeature(this.hover_feature[i], 'default');
                         this.hover_feature[i] = null;
                         continue;
                     }
@@ -271,6 +342,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      */
     initComponent: function(){
         var i;
+        Ext.applyIf(this, this.defaultConfig);
+        
         // TODO : add utility to add/remove templates
         this.templates = this.templates || {
             SIMPLE: GeoNetwork.Templates.SIMPLE,
@@ -281,7 +354,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         GeoNetwork.MetadataResultsView.superclass.initComponent.call(this);
         
         this.setStore(this.catalogue.metadataStore);
-        this.initStyle();
         this.relatedTpl = new Ext.XTemplate(this.relatedTpl || GeoNetwork.Templates.Relation.SHORT);
         
         if (this.maps) {
@@ -309,9 +381,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  Set metadata view store.
      */
     setStore: function(store){
-        this.store = store;
+        // Unregister previous events
+        if (this.getStore()) {
+            this.getStore().un("load", this.resultsLoaded, this);
+            this.getStore().un("clear", this.destroyMetadataBbox, this);
+        }
         
         // Register events on metadata results store
+        this.store = store;
+        
         this.getStore().on({
             "load": this.resultsLoaded,
             "clear": this.destroyMetadataBbox,
@@ -351,9 +429,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  Add a Vector layer to the map
      */
     initMap: function(map){
+        if (!this.styleInitialized) {
+            this.initStyle();
+            this.styleInitialized = true;
+            // TODO : a map may be initialized twice by 2 differents results views
+        }
+        
         // TODO : Translate layer name based on a search name ?
         var l = new OpenLayers.Layer.Vector(OpenLayers.i18n("mdResultsLayer"), {
-            style: this.layer_style
+            styleMap: new OpenLayers.StyleMap({'default': this.layer_style, 'hover': this.layer_style_hover}),
         });
         this.addCurrentFeatures(l);
         map.layer = l;
@@ -404,14 +488,16 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  Define default layer styles
      */
     initStyle: function(){
-        this.layer_style.fillOpacity = 0;
-        this.layer_style.graphicOpacity = 1;
-        
-        this.layer_style_selected.fillOpacity = 0.1;
-        
-        this.layer_style_hover.fillOpacity = 0.3;
-        this.layer_style_hover.strokeWidth = 3;
-        
+        // A one colormap by default
+        if (!this.colormap) {
+            this.colormap = [this.featurecolor];
+        }
+        // Define a custom CSS rules if more than one color used
+        if (this.colormap.length > 1) {
+            this.featurecolorCSS = this.featurecolorCSS || "border-left-width: 3px;border-left-style: solid; border-left-color: ${featurecolor}";
+        } else {
+            this.featurecolorCSS = undefined;
+        }
     },
     /** private: method[destroyMetadataBbox]
      *
@@ -495,7 +581,16 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         }
         
         this.features = [];
-        Ext.each(records, function(r){
+        Ext.each(records, function(r, idx){
+            
+            var featurecolor = this.colormap && this.colormap[idx % this.colormap.length]; // is used below to set the color property of the record and the corresponding feature
+            r.set('featurecolor', featurecolor); // could be used in the Templates to set CSS properties
+            r.set('featurecolorCSS', this.featurecolorCSS ? OpenLayers.String.format(
+                this.featurecolorCSS, { 
+                    featurecolor: featurecolor
+                }
+            ) : '');
+                
             var bboxes = r.get('bbox');
             if (bboxes) {
                 var polygons = [];
@@ -520,7 +615,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     polygons.push(polygon.clone());
                 }
                 var multipolygon = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.MultiPolygon(polygons), {
-                    id: r.get('uuid')
+                    id: r.get('uuid'),
+                    featurecolor: featurecolor
                 });
                 this.features.push(multipolygon.clone());
             }

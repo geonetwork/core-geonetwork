@@ -52,7 +52,21 @@ GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 // Latest update info query
 GeoNetwork.Settings.latestQuery = "from=1&to=6&sortBy=changeDate&fast=index";
 GeoNetwork.Settings.latestTpl = GeoNetwork.Templates.THUMBNAIL;
-
+GeoNetwork.Settings.results = {
+        // Parameters to set bounding box highlighter colors
+        // Use a custom single color for bounding box
+        featurecolor: 'orange',
+        // Use a random color map with 2 colors 
+        //colormap: GeoNetwork.Util.generateColorMap(2),
+        // Use a default color map with 10 colors
+        //colormap: GeoNetwork.Util.defaultColorMap,
+        // Use a custom color map
+        //colormap: ['red', 'green', 'blue'],
+        colormap: undefined,
+        // Use a custom CSS rules
+        //featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
+        featurecolorCSS: undefined
+};
 GeoNetwork.MapModule = true;
 GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];
 GeoNetwork.WMSList = [['Geoserver', 'http://localhost/geoserver/wms?']];

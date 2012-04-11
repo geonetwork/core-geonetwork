@@ -466,7 +466,10 @@ GeoNetwork.app = function(){
             catalogue: catalogue,
             displaySerieMembers: true,
             autoScroll: true,
-            tpl: GeoNetwork.Templates.FULL
+            tpl: GeoNetwork.Templates.FULL,
+            featurecolor: GeoNetwork.Settings.results.featurecolor,
+            colormap: GeoNetwork.Settings.results.colormap,
+            featurecolorCSS: GeoNetwork.Settings.results.featurecolorCSS
         });
         
         catalogue.resultsView = metadataResultsView;
@@ -841,6 +844,7 @@ GeoNetwork.app = function(){
             Ext.getCmp('west').syncSize();
             Ext.getCmp('center').syncSize();
             Ext.ux.Lightbox.register('a[rel^=lightbox]');
+            
         },
         /**
          * Switch from one mode to another
