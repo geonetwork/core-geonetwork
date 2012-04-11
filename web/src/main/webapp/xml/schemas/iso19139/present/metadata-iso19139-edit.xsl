@@ -16,7 +16,7 @@
   <xsl:include href="metadata-iso19139-geo.xsl"/>
   <xsl:include href="metadata-iso19139-inspire.xsl"/>
   <xsl:include href="metadata-iso19139-view.xsl"/>
-  
+
   <!-- Use this mode on the root element to add hidden fields to the editor -->
   <xsl:template mode="schema-hidden-fields" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="2">
     <!-- The GetCapabilities URL -->
@@ -101,7 +101,7 @@
   <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:thesaurusName|
               *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
-              gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
+              gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
               gmd:metadataConstraints">
