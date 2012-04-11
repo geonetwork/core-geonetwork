@@ -263,7 +263,7 @@ public class ResourceManager
 	public synchronized void abort(String name, Object resource) throws Exception
 	{
         closeMetrics(resource); // This must be done before removing from htResource
-        if(Log.isDebug(Log.RESOURCES))
+        if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug (Log.RESOURCES, "Aborting: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		if (htResources.get(resourceId) != null) {
