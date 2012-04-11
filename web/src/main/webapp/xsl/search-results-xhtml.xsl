@@ -171,7 +171,7 @@
 						</div>
 					 </xsl:if>
 					 <xsl:if test="$remote=true()">
-						<a href="#" onclick="runRemoteSearch('pd#840: Massive operation popup should have a scrollbarf');"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
+						<a href="#" onclick="runRemoteSearch('pdf');"><img align="absmiddle" src="{/root/gui/url}/images/pdf.gif" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"/></a>
 					 </xsl:if>
 						
 						<xsl:if test="/root/response/summary/@count > 1 and $remote=false()">
