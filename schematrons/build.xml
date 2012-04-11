@@ -3,7 +3,7 @@
 
 	<property name="schematronDir" value="." description="Schematron directory" />
 	<property name="buildDir" value=".build" description="Build directory" />
-	<property name="schemaDir" value="../web/src/main/webapp/xml/schemas" description="Schemas directory" />
+	<property name="schemaDir" value="../web/src/main/webapp/WEB-INF/data/config/schema_plugins" description="Schemas directory" />
 	<property name="defaultLang" value="eng" />
 
 	<target name="clean">
