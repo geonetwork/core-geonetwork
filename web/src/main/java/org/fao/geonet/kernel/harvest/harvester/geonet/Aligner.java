@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
@@ -137,7 +136,7 @@ public class Aligner
 			{
 				String id = localUuids.getID(uuid);
 
-				log.debug("  - Removing old metadata with id:"+ id);
+                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id:"+ id);
 				dataMan.deleteMetadata(context, dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
@@ -152,7 +151,8 @@ public class Aligner
 
 			if (!dataMan.existsSchema(ri.schema))
 			{
-				log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid
+                if(log.isDebugEnabled())
+                    log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid
 						 	+", schema:"+ ri.schema);
 				result.unknownSchema++;
 			}
@@ -186,16 +186,16 @@ public class Aligner
 		if (params.xslfilter.contains("?")) {
 			String[] filterInfo = params.xslfilter.split("\\?");
 			processName = filterInfo[0];
-			log.debug("      - XSL Filter name:" + processName);
+            if(log.isDebugEnabled()) log.debug("      - XSL Filter name:" + processName);
 			if (filterInfo[1] != null) {
 				String[] filterKVP = filterInfo[1].split("&");
 				for (String kvp : filterKVP) {
 					String[] param = kvp.split("=");
 					if (param.length == 2) {
-						log.debug("        with param:" + param[0] + " = " + param[1]);
+                        if(log.isDebugEnabled()) log.debug("        with param:" + param[0] + " = " + param[1]);
 						processParams.put(param[0], param[1]);
 					} else {
-						log.debug("        no value for param: " + param[0]);
+                        if(log.isDebugEnabled()) log.debug("        no value for param: " + param[0]);
 					}
 				}
 			}
@@ -243,7 +243,7 @@ public class Aligner
 				{
                     if (id[index] == null) return;
 
-					log.debug("    - Adding remote public file with name:"+ file);
+                    if(log.isDebugEnabled()) log.debug("    - Adding remote public file with name:"+ file);
 					String pubDir = Lib.resource.getDir(context, "public", id[index]);
 
 					File outFile = new File(pubDir, file);
@@ -260,7 +260,8 @@ public class Aligner
 				public void handlePrivateFile(String file, String changeDate,
 						InputStream is, int index) throws IOException {
 				    if (params.mefFormatFull) {
-				        log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
+                        if(log.isDebugEnabled())
+                            log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
 	                    String dir = Lib.resource.getDir(context, "private", id[index]);
 	                    File outFile = new File(dir, file);
 	                    FileOutputStream os = new FileOutputStream(outFile);
@@ -273,7 +274,8 @@ public class Aligner
 		catch(Exception e)
 		{
 			//--- we ignore the exception here. Maybe the metadata has been removed just now
-			log.debug("  - Skipped unretrievable metadata (maybe has been removed) with uuid:"+ ri.uuid);
+            if(log.isDebugEnabled())
+                log.debug("  - Skipped unretrievable metadata (maybe has been removed) with uuid:"+ ri.uuid);
 			result.unretrievable++;
 			e.printStackTrace();
 		}
@@ -298,7 +300,7 @@ public class Aligner
 		if ("true".equals(isTemplate))	isTemplate = "y";
 			else 									isTemplate = "n";
 
-		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
+        if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
 
         // validate it here if requested
         if (params.validate) {
@@ -367,10 +369,10 @@ public class Aligner
 			String name = localCateg.getName(catId);
 
 			if (name == null)
-				log.debug("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
 			else
 			{
-				log.debug("    - Setting category : "+ name);
+                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -403,14 +405,14 @@ public class Aligner
 
 					if (remoteGroup.policy == Group.CopyPolicy.CREATE_AND_COPY)
 					{
-						log.debug("    - Creating local group : "+ remoteGroup.name);
+                        if(log.isDebugEnabled()) log.debug("    - Creating local group : "+ remoteGroup.name);
 						localGrpId = createGroup(remoteGroup.name);
 
 						if (localGrpId == null)
 							log.info("    - Specified group was not found remotely : "+ remoteGroup.name);
 						else
 						{
-							log.debug("    - Setting privileges for group : "+ remoteGroup.name);
+                            if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ remoteGroup.name);
 							addOperations(id, localGrpId, oper);
 						}
 					}
@@ -421,12 +423,12 @@ public class Aligner
 
 					if (remoteGroup.policy == Group.CopyPolicy.COPY_TO_INTRANET)
 					{
-						log.debug("    - Setting privileges for 'intranet' group");
+                        if(log.isDebugEnabled()) log.debug("    - Setting privileges for 'intranet' group");
 						addOperations(id, "0", oper);
 					}
 					else
 					{
-						log.debug("    - Setting privileges for group : "+ remoteGroup.name);
+                        if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ remoteGroup.name);
 						addOperations(id, localGrpId, oper);
 					}
 				}
@@ -468,13 +470,12 @@ public class Aligner
 			int opId = dataMan.getAccessManager().getPrivilegeId(opName);
 
 			//--- allow only: view, download, dynamic, featured
-			if (opId == 0 || opId == 1 || opId == 5 || opId == 6)
-			{
-				log.debug("       --> "+ opName);
+			if (opId == 0 || opId == 1 || opId == 5 || opId == 6) {
+                if(log.isDebugEnabled()) log.debug("       --> "+ opName);
 				dataMan.setOperation(context, dbms, id, groupId, opId +"");
-			}
-			else
-				log.debug("       --> "+ opName +" (skipped)");
+			} else {
+                if(log.isDebugEnabled()) log.debug("       --> "+ opName +" (skipped)");
+            }
 		}
 	}
 
@@ -509,10 +510,10 @@ public class Aligner
 		final Element publicFiles[] = { null };
 		final Element privateFiles[] = { null };
 
-		if (localUuids.getID(ri.uuid) == null)
-			log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
-		else
-		{
+		if (localUuids.getID(ri.uuid) == null) {
+            if(log.isDebugEnabled())
+                log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+        } else {
 			File mefFile = retrieveMEF(ri.uuid);
 
 			try
@@ -587,14 +588,16 @@ public class Aligner
 
 		if (!ri.isMoreRecentThan(date))
 		{
-			log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
+            if(log.isDebugEnabled())
+                log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
 			result.unchangedMetadata++;
 		}
 		else {
 			md = processMetadata(ri, md);
 	        
             // update metadata
-            log.debug("  - Updating local metadata with id="+ id);
+            if(log.isDebugEnabled())
+                log.debug("  - Updating local metadata with id="+ id);
 
             boolean validate = false;
             boolean ufo = params.mefFormatFull;
@@ -654,7 +657,7 @@ public class Aligner
 				Element processedMetadata = null;
 				try {
 					processedMetadata = Xml.transform(md, filePath, processParams);
-					log.debug("     metadata filtered.");
+                    if(log.isDebugEnabled()) log.debug("     metadata filtered.");
 					md = processedMetadata;
 				} catch (Exception e) {
 					log.warning("     processing error (" + params.xslfilter + "): " + e.getMessage());
@@ -672,7 +675,7 @@ public class Aligner
 									InputStream is, Element files) throws IOException
 	{
 		if (files == null)
-			log.debug("  - No file found in info.xml. Cannot update file:" + file);
+            if(log.isDebugEnabled()) log.debug("  - No file found in info.xml. Cannot update file:" + file);
 		else
 		{
 			removeOldFile(id, files, dir);
@@ -694,7 +697,7 @@ public class Aligner
 		else for (File file : files)
 			if (!existsFile(file.getName(), infoFiles))
 			{
-				log.debug("  - Removing old " + dir + " file with name="+ file.getName());
+                if(log.isDebugEnabled()) log.debug("  - Removing old " + dir + " file with name="+ file.getName());
 				file.delete();
 			}
 	}
@@ -730,7 +733,7 @@ public class Aligner
 
 		if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
 		{
-			log.debug("  - Adding remote " + dir + "  file with name:"+ file);
+            if(log.isDebugEnabled()) log.debug("  - Adding remote " + dir + "  file with name:"+ file);
 
 			FileOutputStream os = new FileOutputStream(locFile);
 			BinaryFile.copy(is, os, false, true);
@@ -738,7 +741,7 @@ public class Aligner
 		}
 		else
 		{
-			log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);
+            if(log.isDebugEnabled()) log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);
 		}
 	}
 

@@ -127,7 +127,8 @@ public class LuceneQueryBuilder {
      * @return Lucene query
      */
     public Query build(LuceneQueryInput luceneQueryInput) {
-        Log.debug(Geonet.SEARCH_ENGINE, "LuceneQueryBuilder: luceneQueryInput is: \n" + luceneQueryInput.toString());
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "LuceneQueryBuilder: luceneQueryInput is: \n" + luceneQueryInput.toString());
 
         // Remember which range fields have been processed
         Set<String> processedRangeFields = new HashSet<String>();
@@ -211,11 +212,13 @@ public class LuceneQueryBuilder {
         query = buildORQuery(searchCriteriaOR, query, similarity);
         query = buildANDQuery(searchCriteria, query, similarity, processedRangeFields);
         if(StringUtils.isNotEmpty(_language)) {
-            Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
+            if(Log.isDebugEnabled(Geonet.LUCENE))
+                Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
             return addLocaleTerm(query, _language, luceneQueryInput.isRequestedLanguageOnly());
         }
         else {
-            Log.debug(Geonet.LUCENE, "no language set, not adding locale query");
+            if(Log.isDebugEnabled(Geonet.LUCENE))
+                Log.debug(Geonet.LUCENE, "no language set, not adding locale query");
             return query;
         }
     }

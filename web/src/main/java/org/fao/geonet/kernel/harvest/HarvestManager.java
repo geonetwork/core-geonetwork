@@ -156,7 +156,8 @@ public class HarvestManager
 
 	public String add(Dbms dbms, Element node) throws JeevesException, SQLException
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
 
 		String type = node.getAttributeValue("type");
 
@@ -165,14 +166,16 @@ public class HarvestManager
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
-		Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
 
 		return ah.getID();
 	}
 
 	public String add2(Dbms dbms, Element node) throws JeevesException, SQLException
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
 
 		String type = node.getAttributeValue("type");
 
@@ -181,7 +184,8 @@ public class HarvestManager
 		ah.add(dbms, node);
 		hmHarvesters.put(ah.getID(), ah);
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
-		Log.debug(Geonet.HARVEST_MAN, "HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().uuid);
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().uuid);
 		return ah.getParams().uuid;
 	}
 
@@ -205,7 +209,8 @@ public class HarvestManager
 			}
 		}
 
-		Log.debug(Geonet.HARVEST_MAN, "Cloning harvesting node : \n"+ Xml.getString(node));
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Cloning harvesting node : \n"+ Xml.getString(node));
 
 		// now add a new harvester based on the settings in the old
 		return add(dbms, node);
@@ -215,7 +220,8 @@ public class HarvestManager
 
 	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
 
 		String id = node.getAttributeValue("id");
 
@@ -236,7 +242,8 @@ public class HarvestManager
 
 	public synchronized OperResult remove(Dbms dbms, String id) throws Exception
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
@@ -258,7 +265,8 @@ public class HarvestManager
 
 	public OperResult start(Dbms dbms, String id) throws SQLException
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Starting harvesting with id : "+ id);
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Starting harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
@@ -272,7 +280,8 @@ public class HarvestManager
 
 	public OperResult stop(Dbms dbms, String id) throws SQLException
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
@@ -285,7 +294,8 @@ public class HarvestManager
 	//---------------------------------------------------------------------------
 
 	public OperResult run(Dbms dbms, String id) throws SQLException {
-		Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
@@ -299,7 +309,8 @@ public class HarvestManager
 
 	public OperResult invoke(ResourceManager resourceManager, String id)
 	{
-		Log.debug(Geonet.HARVEST_MAN, "Invoking harvester with id : "+ id);
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Invoking harvester with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 

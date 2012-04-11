@@ -76,13 +76,15 @@ public class BatchDelete implements Service
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-		context.debug("Get selected metadata");
+        if(context.isDebug())
+            context.debug("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-			context.debug("Deleting metadata with uuid:"+ uuid);
+            if(context.isDebug())
+                context.debug("Deleting metadata with uuid:"+ uuid);
 
 			String id   = dataMan.getMetadataId(dbms, uuid);
 			//--- Metadata may have been deleted since selection
@@ -109,11 +111,13 @@ public class BatchDelete implements Service
 	
 					//--- delete metadata and return status
 					dataMan.deleteMetadata(context, dbms, id);
-					context.debug("  Metadata with id " + id + " deleted.");
+                    if(context.isDebug())
+                        context.debug("  Metadata with id " + id + " deleted.");
 					metadata.add(new Integer(id));
 				}
 			} else
-				context.debug("  Metadata not found in db:"+ uuid);
+            if(context.isDebug())
+                context.debug("  Metadata not found in db:"+ uuid);
 				// TODO : add to notFound set
 			}
 		}

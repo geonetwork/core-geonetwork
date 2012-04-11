@@ -8,7 +8,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -51,8 +50,8 @@ public class MostSearchedCategory implements Service {
         query += " group by termtext ";
         query += "having count(*) > 1 ";
         query += "order by cnt desc";
-		
-		Log.debug(Geonet.SEARCH_LOGGER, "query: " + query);
+
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER, "query: " + query);
 		Element response = null;
 		if (maxHits < 1) {
 			response = dbms.select(query);

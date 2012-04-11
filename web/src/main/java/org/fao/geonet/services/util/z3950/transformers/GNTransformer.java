@@ -51,7 +51,8 @@ public class GNTransformer extends FragmentTransformer {
 
 		try {
 			stylesheet = ctx.getResource(stylesheet).getFile().getAbsolutePath();
-			Log.debug(Geonet.SEARCH_ENGINE, "Stylesheet for "+from+" to "+to+" is "+stylesheet);
+            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "Stylesheet for "+from+" to "+to+" is "+stylesheet);
 		} catch (Exception e) {
 			Log.error(Geonet.SEARCH_ENGINE, "Problem with stylesheet: "+stylesheet);
 			e.printStackTrace();

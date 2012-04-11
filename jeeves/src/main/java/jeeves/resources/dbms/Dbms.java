@@ -88,8 +88,9 @@ public class Dbms
 		conn = dataSource.getConnection();
 
 		lastConnTime = System.currentTimeMillis();
-		
-		Log.debug(Log.RESOURCES, "Open connection: "+ conn.hashCode());
+
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug(Log.RESOURCES, "Open connection: "+ conn.hashCode());
 	}
 
 	//--------------------------------------------------------------------------
@@ -98,7 +99,8 @@ public class Dbms
 	public void disconnect()
 	{
 
-		Log.debug(Log.RESOURCES, "Close connection: "+ conn.hashCode());
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug(Log.RESOURCES, "Close connection: "+ conn.hashCode());
 		try {
 			if (!conn.isClosed())
 				conn.close();
@@ -192,11 +194,12 @@ public class Dbms
 
 	public Element selectFull(String query, Hashtable<String, String> formats, Object... args) throws SQLException
 	{
-		Log.debug(Log.Dbms.SELECT, "Query: "+ query);
-		Log.debug(Log.Dbms.SELECT, "Connection: "+ conn.hashCode());
-
-		if (args != null)
-			Log.debug(Log.Dbms.SELECT, "Args  : "+ getArgs(args));
+        if(Log.isDebugEnabled(Log.Dbms.SELECT)) {
+            Log.debug(Log.Dbms.SELECT, "Query: "+ query);
+		    Log.debug(Log.Dbms.SELECT, "Connection: "+ conn.hashCode());
+            if (args != null)
+                Log.debug(Log.Dbms.SELECT, "Args  : "+ getArgs(args));
+        }
 
 		PreparedStatement stmt = conn.prepareStatement(query);
 
@@ -212,7 +215,8 @@ public class Dbms
 
 			float time = end - start;
 
-			Log.debug(Log.Dbms.SELECT, "Found "+ result.getContentSize() +" records in "+time/1000+" secs");
+            if(Log.isDebugEnabled(Log.Dbms.SELECT))
+                Log.debug(Log.Dbms.SELECT, "Found "+ result.getContentSize() +" records in "+time/1000+" secs");
 
 			return result;
 		}
@@ -242,10 +246,12 @@ public class Dbms
 
 	public int execute(String query, Object... args) throws SQLException
 	{
-		Log.debug(Log.Dbms.EXECUTE, "Query    : "+ query);
+        if(Log.isDebugEnabled(Log.Dbms.EXECUTE)) {
+            Log.debug(Log.Dbms.EXECUTE, "Query    : "+ query);
 
-		if (args != null)
-			Log.debug(Log.Dbms.EXECUTE, "Args     : "+ getArgs(args));
+            if (args != null)
+                Log.debug(Log.Dbms.EXECUTE, "Args     : "+ getArgs(args));
+        }
 
 		PreparedStatement stmt = conn.prepareStatement(query);
 
@@ -261,7 +267,8 @@ public class Dbms
 
 			float time = end - start;
 
-			Log.debug(Log.Dbms.EXECUTE, "Affected "+ result +" records in "+ time/1000 +" secs");
+            if(Log.isDebugEnabled(Log.Dbms.EXECUTE))
+                Log.debug(Log.Dbms.EXECUTE, "Affected "+ result +" records in "+ time/1000 +" secs");
 
 			return result;
 		}

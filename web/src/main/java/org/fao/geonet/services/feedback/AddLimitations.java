@@ -158,7 +158,8 @@ public class AddLimitations implements Service
 		elBrief.setAttribute("currdate",now());
 		root.addContent(elBrief);
 		root.addContent(downloaded);
-		context.debug("Passed to metadata-license-annex.xsl:\n "+Xml.getString(root));
+        if(context.isDebug())
+            context.debug("Passed to metadata-license-annex.xsl:\n "+Xml.getString(root));
 
 		//--- create the license annex html using the info in root element and
 		//--- add it to response under license element

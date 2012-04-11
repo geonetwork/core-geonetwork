@@ -24,9 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadServerResponseEx;
 import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -41,10 +39,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 //=============================================================================
@@ -140,7 +135,7 @@ class Harvester
 		{
 			log.info("Searching on : "+ params.name);
 			Element response = request.execute(s.createRequest());
-			log.debug("Search results:\n"+ Xml.getString(response));
+            if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
 
 			return response;
 		}

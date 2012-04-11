@@ -330,7 +330,8 @@ public class ImportFromDir implements Service
 
 		for(int i=0; i<sites.length; i++)
 		{
-			context.debug("Scanning site : "+sites[i]);
+            if(context.isDebug())
+                context.debug("Scanning site : "+sites[i]);
 
 			File categs[] = sites[i].listFiles(filter);
 
@@ -339,7 +340,8 @@ public class ImportFromDir implements Service
 
 			for(int j=0; j<categs.length; j++)
 			{
-				context.debug("   Scanning category : "+categs[j]);
+                if(context.isDebug())
+                    context.debug("   Scanning category : "+categs[j]);
 
 				String catDir  = categs[j].getName();
 				File   files[] = categs[j].listFiles(mdFilter);

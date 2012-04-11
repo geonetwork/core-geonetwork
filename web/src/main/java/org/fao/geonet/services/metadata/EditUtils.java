@@ -258,7 +258,8 @@ class EditUtils {
                 }
 			}
             else if(xmlContent) {
-				Log.debug(Geonet.EDITOR, "replacing XML content");
+                if(Log.isDebugEnabled(Geonet.EDITOR))
+                    Log.debug(Geonet.EDITOR, "replacing XML content");
 				el.removeContent();
 				val = addNamespaceToFragment(val);
 				el.addContent(Xml.loadString(val, false));
@@ -331,7 +332,8 @@ class EditUtils {
 	protected static String addNamespaceToFragment(String fragment) {
         //add the gml namespace if its missing
         if (fragment.contains("<gml:") && !fragment.contains("xmlns:gml=\"")) {
-        	Log.debug(Geonet.EDITOR, "  Add missing GML namespace.");
+            if(Log.isDebugEnabled(Geonet.EDITOR))
+                Log.debug(Geonet.EDITOR, "  Add missing GML namespace.");
         	fragment = fragment.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
         }
 		return fragment;

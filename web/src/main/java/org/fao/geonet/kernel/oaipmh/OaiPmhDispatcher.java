@@ -148,7 +148,8 @@ public class OaiPmhDispatcher
 	{
 		String schema = context.getAppPath() + Geonet.SchemaPath.OAI_PMH;
 
-		context.debug("Validating against : "+ schema);
+        if(context.isDebug())
+            context.debug("Validating against : "+ schema);
 
 		try
 		{

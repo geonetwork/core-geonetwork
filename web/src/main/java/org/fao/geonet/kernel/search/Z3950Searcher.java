@@ -33,7 +33,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
@@ -107,7 +106,8 @@ class Z3950Searcher extends MetaSearcher
 	{
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
 		String query  = request.getChildText(Geonet.SearchResult.ZQUERY);
 
 		// --  process params if we don't have a fully specified zquery 
@@ -116,11 +116,13 @@ class Z3950Searcher extends MetaSearcher
 
 			Element xmlQuery = _searchMan.transform(_styleSheetName, request);
 
-			Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING XML QUERY:\n"+ Xml.getString(xmlQuery));
+            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING XML QUERY:\n"+ Xml.getString(xmlQuery));
 			query = newQuery(xmlQuery);
 		}
 
-		Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING QUERY: " + query);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "OUTGOING QUERY: " + query);
 
 		// get request parameters
 		Vector<String> servers = new Vector<String>();
@@ -157,7 +159,8 @@ class Z3950Searcher extends MetaSearcher
 		LandscapeSpecification landscape = new SimpleLandscapeSpecification( collection_ids );
 		ExplicitRecordFormatSpecification exp = null;
 
-		Log.debug(Geonet.SEARCH_ENGINE, "Starting remote search");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Starting remote search");
 
 		String query_id = null;
 
@@ -166,13 +169,15 @@ class Z3950Searcher extends MetaSearcher
 
 		this.status = res.getSearchStatus();
 		if ( res.getSearchStatus() == IRResultSetStatus.FAILURE ) {
-		 	Log.debug(Geonet.SEARCH_ENGINE, "failure during search");
+            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "failure during search");
 		} else {
 			this.zinfo = new ZSetInfo(query_id, qm, landscape);
 			this.size = res.total_hit_count;
 		}
 
-		Log.debug(Geonet.SEARCH_ENGINE, "Remote search completed. Status is : "+ getStatus());
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Remote search completed. Status is : "+ getStatus());
 		initSearchRange(srvContext);
 	}
 
@@ -208,7 +213,8 @@ class Z3950Searcher extends MetaSearcher
 	//-----------------------------------------------------------------------------
 
 	public List<Document> presentDocuments(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
-		Log.debug(Geonet.SEARCH_ENGINE, "Presenting Z39.50 record for request:\n" + Xml.getString(request));
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Presenting Z39.50 record for request:\n" + Xml.getString(request));
 		updateSearchRange(request);
 
 		// get results
@@ -290,7 +296,8 @@ class Z3950Searcher extends MetaSearcher
 					}
 
 					md.addContent(info);
-					Log.debug(Geonet.SEARCH_ENGINE, "Add info element of "+Xml.getString(info));
+                    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                        Log.debug(Geonet.SEARCH_ENGINE, "Add info element of "+Xml.getString(info));
 
 					response.add(jDoc);
 				} catch (Exception ex) {
@@ -395,7 +402,8 @@ class Z3950Searcher extends MetaSearcher
 
 	private Element makeSummary()
 	{
-		Log.debug(Geonet.SEARCH_ENGINE, "z3590 searcher: makeSummary with: size:" +  this.size + " status: "+this.status + "\n");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "z3590 searcher: makeSummary with: size:" +  this.size + " status: "+this.status + "\n");
 		Element summary = new Element("summary");
 		summary.setAttribute("count", getSize()+"");
 		summary.setAttribute("status", getStatus());

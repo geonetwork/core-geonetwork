@@ -122,7 +122,7 @@ public class Lib
 
 		MetaSearcher searcher = sm.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-		context.debug("Searching with params:\n"+ Xml.getString(params));
+        if(context.isDebug()) context.debug("Searching with params:\n"+ Xml.getString(params));
 
 		searcher.search(context, params, dummyConfig);
 

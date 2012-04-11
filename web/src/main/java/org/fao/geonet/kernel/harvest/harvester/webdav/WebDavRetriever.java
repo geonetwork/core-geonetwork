@@ -78,15 +78,15 @@ class WebDavRetriever implements RemoteRetriever {
 	//---------------------------------------------------------------------------
 
 	private WebdavResource open(String url) throws Exception {
-		log.debug("opening webdav resource with URL: " + url);
+        if(log.isDebugEnabled()) log.debug("opening webdav resource with URL: " + url);
 		if (!url.endsWith("/")) {
-			log.debug("URL " + url + "does not end in slash -- will be appended");
+            if(log.isDebugEnabled()) log.debug("URL " + url + "does not end in slash -- will be appended");
 			url += "/";
 		}
 		try {
-			log.debug("Connecting to webdav url for node : "+ params.name + " URL: " + params.url);
+            if(log.isDebugEnabled()) log.debug("Connecting to webdav url for node : "+ params.name + " URL: " + params.url);
 			WebdavResource wr = createResource(url);
-			log.debug("Connected to webdav resource at : "+ url);
+            if(log.isDebugEnabled()) log.debug("Connected to webdav resource at : "+ url);
 
 			//--- we are interested only in folders
 			// heikki: somehow this works fine here, but see retrieveFiles()
@@ -108,16 +108,16 @@ class WebDavRetriever implements RemoteRetriever {
 	//---------------------------------------------------------------------------
 
 	private WebdavResource createResource(String url) throws Exception {
-		log.debug("Creating WebdavResource");
+        if(log.isDebugEnabled()) log.debug("Creating WebdavResource");
 
 		HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
 
 		if(params.useAccount) {
-			log.debug("using account, username: " + params.username + " password: " + params.password);
+            if(log.isDebugEnabled()) log.debug("using account, username: " + params.username + " password: " + params.password);
 			http.setUserinfo(params.username, params.password);
 		}
 		else {
-			log.debug("not using account");
+            if(log.isDebugEnabled()) log.debug("not using account");
 		}
 
 		//--- setup proxy, if the case
@@ -130,18 +130,22 @@ class WebDavRetriever implements RemoteRetriever {
 		String  port    = sm.getValue("system/proxy/port");
 		
 		if (!enabled) {
-			log.debug("local proxy not enabled");
-			log.debug("returning a new WebdavResource");
-			log.debug("using http port: " + http.getPort() + " http uri: " + http.getURI());
+            if(log.isDebugEnabled()) {
+                log.debug("local proxy not enabled");
+                log.debug("returning a new WebdavResource");
+                log.debug("using http port: " + http.getPort() + " http uri: " + http.getURI());
+            }
             return new WebdavResource(http, 1);
 		}
 		else {
-			log.debug("local proxy enabled");			
+            if(log.isDebugEnabled()) log.debug("local proxy enabled");
 			if (!Lib.type.isInteger(port)) {
 				throw new Exception("Proxy port is not an integer : "+ port);
 			}
-			log.debug("returning a new WebdavResource");
-			log.debug("using http proxy port: " + port + " proxy host: " + host + " http uri: " + http.getURI());
+            if(log.isDebugEnabled()) {
+                log.debug("returning a new WebdavResource");
+			    log.debug("using http proxy port: " + port + " proxy host: " + host + " http uri: " + http.getURI());
+            }
 			return new WebdavResource(http, host, Integer.parseInt(port));
 		}
 	}
@@ -150,9 +154,9 @@ class WebDavRetriever implements RemoteRetriever {
 
 	private void retrieveFiles(WebdavResource wr) throws IOException {
 		String path = wr.getPath();
-		log.debug("Scanning resource : "+ path);
+        if(log.isDebugEnabled()) log.debug("Scanning resource : "+ path);
 		WebdavResource[] wa = wr.listWebdavResources();
-		log.debug("# " + wa.length + " webdav resources found in: " + wr.getPath());
+        if(log.isDebugEnabled()) log.debug("# " + wa.length + " webdav resources found in: " + wr.getPath());
 		if(wa.length > 0) {
 			int startSize = files.size();
 			for(WebdavResource w : wa) {
@@ -162,7 +166,7 @@ class WebDavRetriever implements RemoteRetriever {
 				// if(w.getIsCollection()) {
 				if(w.getPath().equals(wr.getPath()) && w.getDisplayName().length() > 0) {
 					if(params.recurse) {
-						log.debug(w.getPath() + " is a collection, processed recursively");
+                        if(log.isDebugEnabled()) log.debug(w.getPath() + " is a collection, processed recursively");
 						String url = w.getHttpURL().getURI();
 						url = url + w.getDisplayName()+ "/";
 						HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
@@ -170,27 +174,28 @@ class WebDavRetriever implements RemoteRetriever {
 						retrieveFiles(huh);						
 					}
 					else {
-						log.debug(w.getPath() + " is a collection. Ignoring because recursion is disabled.");
+                        if(log.isDebugEnabled())
+                            log.debug(w.getPath() + " is a collection. Ignoring because recursion is disabled.");
 					}
 				}
 				else {
-					log.debug(w.getName() + " is not a collection");
+                    if(log.isDebugEnabled()) log.debug(w.getName() + " is not a collection");
 					if (w.getName().toLowerCase().endsWith(".xml")) {
-						log.debug("found xml file ! " + w.getName().toLowerCase());
+                        if(log.isDebugEnabled()) log.debug("found xml file ! " + w.getName().toLowerCase());
 						files.add(new WebDavRemoteFile(w));
 					}
 					else {
-						log.debug(w.getName().toLowerCase() + " is not an xml file");
+                        if(log.isDebugEnabled()) log.debug(w.getName().toLowerCase() + " is not an xml file");
 					}					
 				}
 			}	
 			int endSize = files.size();
 			int added = endSize - startSize;
 			if (added == 0) {
-				log.debug("No xml files found in path : "+ path);
+                if(log.isDebugEnabled()) log.debug("No xml files found in path : "+ path);
 			}
 			else {
-				log.debug("Found "+ added +" xml file(s) in path : "+ path);
+                if(log.isDebugEnabled()) log.debug("Found "+ added +" xml file(s) in path : "+ path);
 			}			
 		}		
 	}

@@ -61,9 +61,11 @@ public class SearcherLogger {
 			this.isEnabled = true;
 		}
 
-		Log.debug(Geonet.SEARCH_LOGGER, new StringBuilder().append("SearcherLogger created. Spatial object logging ? ")
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
+            Log.debug(Geonet.SEARCH_LOGGER, new StringBuilder().append("SearcherLogger created. Spatial object logging ? ")
                 .append(logSpatial).append(". lucene terms to exclude from log: ")
                 .append(luceneTermsList).toString());
+        }
 	}
 
     /**
@@ -81,17 +83,19 @@ public class SearcherLogger {
 		}
 		Dbms dbms = null;
 		try{
-				Log.debug(Geonet.SEARCH_LOGGER,"Opening dbms...");
+            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                Log.debug(Geonet.SEARCH_LOGGER,"Opening dbms...");
     		dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
     		if (dbms == null) {
-    			Log.debug(Geonet.SEARCH_LOGGER,
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                    Log.debug(Geonet.SEARCH_LOGGER,
     					"Null Dbms object. cannot log search operation");
     			return;
     		}
     
     		if (query == null) {
-    			Log.debug(Geonet.SEARCH_LOGGER,
-    					"Null Query object. cannot log search operation");
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                    Log.debug(Geonet.SEARCH_LOGGER, "Null Query object. cannot log search operation");
     			return;
     		}
     	
@@ -114,7 +118,8 @@ public class SearcherLogger {
     		if (!queryRequest.storeToDb(dbms, srvContext.getSerialFactory())) {
     			Log.warning(Geonet.SEARCH_LOGGER, "unable to log query into database...");
     		} else {
-    			Log.debug(Geonet.SEARCH_LOGGER, "Query saved to database");
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                    Log.debug(Geonet.SEARCH_LOGGER, "Query saved to database");
     		}
     		
     		// debug only
@@ -219,7 +224,7 @@ public class SearcherLogger {
 			result.add(qInfo);
 		}
         else if (qInfo != null) {
-    		//Log.debug(Geonet.SEARCH_LOGGER, "excluding this term from log: " + qInfo.getField() + " - " + qInfo.getText());
+    		//if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER, "excluding this term from log: " + qInfo.getField() + " - " + qInfo.getText());
         }
 		return result;
 	}

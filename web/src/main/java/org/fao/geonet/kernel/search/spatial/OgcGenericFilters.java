@@ -75,12 +75,14 @@ public class OgcGenericFilters
         Name geometryColumn = featureSource.getSchema().getGeometryDescriptor().getName();
 				// -- parse Filter and report any validation issues
         String string = Xml.getString(filterExpr);
-				Log.debug(Geonet.SEARCH_ENGINE,"Filter string is :\n"+string);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE,"Filter string is :\n"+string);
 
         parser.setValidating(true);
         parser.setFailOnValidationError(false);
 
-       	Log.debug(Geonet.SEARCH_ENGINE,"Parsing filter"); 
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE,"Parsing filter");
         Filter fullFilter = (org.opengis.filter.Filter) parser
                 .parse(new StringReader(string));
         if( parser.getValidationErrors().size() > 0){
@@ -109,16 +111,19 @@ public class OgcGenericFilters
 				// -- default of WGS84 (long/lat ordering)
 		visitor = new ReprojectingFilterVisitor(filterFactory2, reprojectGeometryType(geometryColumn));
 		final Filter reprojectedFilter = (Filter) remappedFilter.accept(visitor, null);
-        Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+reprojectedFilter);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+reprojectedFilter);
 
 				// -- extract an envelope/bbox for the whole filter expression
         Envelope bounds = (Envelope) reprojectedFilter.accept(
                 ExtractBoundsFilterVisitor.BOUNDS_VISITOR,
                 DefaultGeographicCRS.WGS84);
-				Log.debug(Geonet.SEARCH_ENGINE,"Filter Envelope is "+bounds);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE,"Filter Envelope is "+bounds);
         
 		final Filter finalFilter = (Filter) reprojectedFilter.accept(new WithinUpdater(), null);
-        Log.debug(Geonet.SEARCH_ENGINE,"Adjusted within Filter is "+finalFilter);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE,"Adjusted within Filter is "+finalFilter);
 
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){

@@ -591,34 +591,39 @@ public class SchemaManager {
 			// -- first match wins
 			schema = compareElementsAndAttributes(md, MODE_ATTRIBUTEWITHVALUE);
 			if (schema != null) {
-				Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(attributes) examination");
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(attributes) examination");
 			}
 				
 			if (schema == null) {
 				schema = compareElementsAndAttributes(md, MODE_NEEDLEWITHVALUE);
 				if (schema != null) {
-					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(elements with value) examination");
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                        Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(elements with value) examination");
 				}
 			}
 
 			if (schema == null) {
 				schema  = compareElementsAndAttributes(md, MODE_NEEDLE);
 				if (schema != null) {
-					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(elements) examination");
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                        Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(elements) examination");
 				}
 			}
 		
 			if (schema == null) {
 				schema = compareElementsAndAttributes(md, MODE_ROOT);
 				if (schema != null) {
-					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(elements with root) examination");
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                        Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(elements with root) examination");
 				}
 			}
 
 			if (schema == null) {
 				schema = compareElementsAndAttributes(md, MODE_NAMESPACE);
 				if (schema != null) {
-					Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(namespaces) examination");
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                        Log.debug(Geonet.SCHEMA_MANAGER,"  => Found schema "+schema+" using AUTODETECT(namespaces) examination");
 				}
 			}
 
@@ -662,7 +667,8 @@ public class SchemaManager {
 			MetadataSchema mds = getSchema(schema);
 			if (mds != null) {
 				String primeNs = mds.getPrimeNS();
-				Log.debug(Geonet.SCHEMA_MANAGER,"  primeNs "+primeNs+" for schema "+schema);	
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER,"  primeNs "+primeNs+" for schema "+schema);
 				if (md.getNamespace().getURI().equals(primeNs)) result = true;
 			}
 		} catch (Exception e) {
@@ -798,10 +804,12 @@ public class SchemaManager {
 		while (entry != null) {
 
 			if (entry.isDirectory()) {
-				Log.debug(Geonet.SCHEMA_MANAGER, "Creating directory "+entry.getName());
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER, "Creating directory "+entry.getName());
 				(new File(dir, entry.getName())).mkdir();
 			} else {
-				Log.debug(Geonet.SCHEMA_MANAGER, "Creating file "+entry.getName());
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER, "Creating file "+entry.getName());
 				copyInputStream(zipStream, 
 					new BufferedOutputStream(new FileOutputStream(new File(dir, entry.getName()))));
 			}
@@ -841,13 +849,15 @@ public class SchemaManager {
 
 		for (String fname : fnames) {
 			String filePath = path + FS + "loc" + FS + defaultLang + FS + fname;
-			Log.debug(Geonet.SCHEMA_MANAGER, "Searching for " + filePath);
+            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                Log.debug(Geonet.SCHEMA_MANAGER, "Searching for " + filePath);
 			if (new File(filePath).exists()) {
 				Element config = new Element("xml");
 				config.setAttribute("name",name);
 				config.setAttribute("base",base);
 				config.setAttribute("file",fname);
-				Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
 				XmlFile xf = new XmlFile(config, defaultLang, true);
 				xfMap.put(fname, xf);
 			} else {
@@ -883,7 +893,8 @@ public class SchemaManager {
 									extractSchemaLocation(xmlIdFile),
 									extractConvElements(conversionsFile));
 
-		Log.debug(Geonet.SCHEMA_MANAGER, "Property "+Jeeves.XML_CATALOG_FILES+" is "+System.getProperty(Jeeves.XML_CATALOG_FILES));
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Property "+Jeeves.XML_CATALOG_FILES+" is "+System.getProperty(Jeeves.XML_CATALOG_FILES));
 
 		// -- Add entry for presentation xslt to schemaPlugins catalog
 		// -- if this schema is a plugin schema
@@ -942,7 +953,8 @@ public class SchemaManager {
         			else continue; // skip this
         
         		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
-        				Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
+                      if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                          Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
         				continue;
         			}
         
@@ -979,7 +991,8 @@ public class SchemaManager {
 			else continue; // skip this
 
 		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
-				Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
+              if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                  Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
 				continue;
 			}
 
@@ -1111,9 +1124,11 @@ public class SchemaManager {
 		// -- FIXME: get schema directory and zip it up into the deleted metadata 
 		// -- directory?
 
-		Log.debug(Geonet.SCHEMA_MANAGER, "Removing schema directory "+dir);
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Removing schema directory "+dir);
 		boolean deleteOp = deleteDir(new File(dir));
-		Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
 	}
 
 	/**
@@ -1220,7 +1235,8 @@ public class SchemaManager {
 	private List<Element> extractConvElements(String xmlConvFile) throws Exception {
 		List<Element> result = new ArrayList<Element>();
 		if (!(new File(xmlConvFile).exists())) {
-			Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
+            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
 		} else {
 			Element root = Xml.loadFile(xmlConvFile);
 			if (root.getName() != "conversions") throw new IllegalArgumentException("Schema conversions file "+xmlConvFile+" is invalid, no <conversions> root element");
@@ -1257,15 +1273,18 @@ public class SchemaManager {
 		Set<String> allSchemas = getSchemas();
 		List<String> matches = new ArrayList<String>();
 
-		 Log.debug(Geonet.SCHEMA_MANAGER, "Schema autodetection starting on "+md.getName()+" (Namespace: "+md.getNamespace()+") using mode: "+mode+"...");
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Schema autodetection starting on "+md.getName()+" (Namespace: "+md.getNamespace()+") using mode: "+mode+"...");
 		
-		for (String schemaName : allSchemas) {		
-			Log.debug(Geonet.SCHEMA_MANAGER, "	Doing schema "+schemaName);
+		for (String schemaName : allSchemas) {
+            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                Log.debug(Geonet.SCHEMA_MANAGER, "	Doing schema "+schemaName);
 			Schema schema = hmSchemas.get(schemaName);
 			List<Element> adElems = schema.getAutodetectElements();
  			
-			for (Element elem : adElems) {			
-				Log.debug(Geonet.SCHEMA_MANAGER, "		Checking autodetect element "+Xml.getString(elem)+" with name "+elem.getName());
+			for (Element elem : adElems) {
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER, "		Checking autodetect element "+Xml.getString(elem)+" with name "+elem.getName());
 
 				List<Element> elemKids = elem.getChildren();
 				boolean match = false;
@@ -1276,7 +1295,8 @@ public class SchemaManager {
 				if (mode==MODE_ATTRIBUTEWITHVALUE && elem.getName() == "attributes") {
 					List<Attribute> atts = elem.getAttributes();
 					for (Attribute searchAtt : atts) {
-						Log.debug(Geonet.SCHEMA_MANAGER, "				Finding attribute "+searchAtt.toString());
+                        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                            Log.debug(Geonet.SCHEMA_MANAGER, "				Finding attribute "+searchAtt.toString());
 
 						if (isMatchingAttributeInMetadata(searchAtt, md)) {
 							match = true;
@@ -1290,7 +1310,8 @@ public class SchemaManager {
 				} else if (mode==MODE_NAMESPACE && elem.getName() == "namespaces") {
 					List<Namespace> nss = elem.getAdditionalNamespaces();
 					for (Namespace ns : nss) {
-						Log.debug(Geonet.SCHEMA_MANAGER, "				Finding namespace "+ns.toString());
+                        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                            Log.debug(Geonet.SCHEMA_MANAGER, "				Finding namespace "+ns.toString());
 
 						if (isMatchingNamespaceInMetadata(ns, md)) {
 							match = true;
@@ -1304,7 +1325,8 @@ public class SchemaManager {
 
 						// --- is the kid the same as the root of the md
 						if (mode==MODE_ROOT && type != null && "root".equals(type.getValue())) {
-							Log.debug(Geonet.SCHEMA_MANAGER, "				Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
+                            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                                Log.debug(Geonet.SCHEMA_MANAGER, "				Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
 							if (kid.getName().equals(md.getName()) && 
 								kid.getNamespace().equals(md.getNamespace())) {
 									match = true;
@@ -1314,7 +1336,8 @@ public class SchemaManager {
 							}
 						// --- try and find the kid in the md (kid only, not value)
 						} else if (mode==MODE_NEEDLE && type != null  && "search".equals(type.getValue())) {
-							Log.debug(Geonet.SCHEMA_MANAGER, "				Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
+                            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                                Log.debug(Geonet.SCHEMA_MANAGER, "				Comparing "+Xml.getString(kid)+" with "+md.getName()+" with namespace "+md.getNamespace()+" : "+(kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
 
 							if (isMatchingElementInMetadata(kid, md, false)) {
 								match = true;
@@ -1357,8 +1380,9 @@ public class SchemaManager {
 	private boolean isMatchingAttributeInMetadata(Attribute needle, Element haystack) {
 		boolean returnVal = false;
 		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
-		
-		Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
+
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
 
 		while(haystackIterator.hasNext()){
 			Element tempElement = haystackIterator.next();
@@ -1380,7 +1404,8 @@ public class SchemaManager {
      * @return
  	 */
 	private boolean isMatchingNamespaceInMetadata(Namespace needle, Element haystack) {
-		Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
 
 		if (checkNamespacesOnElement(needle,haystack)) return true;
 
@@ -1424,14 +1449,16 @@ public class SchemaManager {
 		
 		String needleName = needle.getName();
 		Namespace needleNS = needle.getNamespace();
-		Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + Xml.getString(needle));
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+            Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + Xml.getString(needle));
 
 		while(haystackIterator.hasNext()){
 			Element tempElement = haystackIterator.next();
 			
 			if(tempElement.getName().equals(needleName) && tempElement.getNamespace().equals(needleNS)){
 				if (checkValue) {
-				    Log.debug(Geonet.SCHEMA_MANAGER, "  Searching value for element: " + tempElement.getName());
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                        Log.debug(Geonet.SCHEMA_MANAGER, "  Searching value for element: " + tempElement.getName());
 		            
 					String needleVal = needle.getValue();
 					String[] needleToken = needleVal.trim().split("\\|");
@@ -1441,7 +1468,8 @@ public class SchemaManager {
 	                    if(tempVal!=null && needleVal!=null){
 	                        returnVal = t.equals(tempVal.trim());
 	                        if (returnVal) {
-	                            Log.debug(Geonet.SCHEMA_MANAGER, "    Found value: " + t + " for needle: " + needleName);
+                                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                                    Log.debug(Geonet.SCHEMA_MANAGER, "    Found value: " + t + " for needle: " + needleName);
 	                            break;
 	                        }
 	                    }

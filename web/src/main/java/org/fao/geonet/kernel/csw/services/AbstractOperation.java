@@ -298,8 +298,9 @@ public abstract class AbstractOperation {
      * @throws CatalogException
      */
     private Element convertCQL(String cql) throws CatalogException  {
-    	
-    	Log.debug(Geonet.CSW, "Received CQL:\n"+ cql);
+
+        if(Log.isDebugEnabled(Geonet.CSW))
+            Log.debug(Geonet.CSW, "Received CQL:\n"+ cql);
     	
     	Filter filter;
 		try {
@@ -332,8 +333,9 @@ public abstract class AbstractOperation {
 			Log.error(Geonet.CSW, "Error loading xml filter as jdom Element ");
 			throw new NoApplicableCodeEx("Error loading xml filter as jdom Element " + e);
 		}
-		
-		Log.debug(Geonet.CSW, "Transformed CQL gives the following filter:\n"+Xml.getString(xmlFilter));
+
+        if(Log.isDebugEnabled(Geonet.CSW))
+            Log.debug(Geonet.CSW, "Transformed CQL gives the following filter:\n"+Xml.getString(xmlFilter));
          
     	return xmlFilter;
     }

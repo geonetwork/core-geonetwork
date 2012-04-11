@@ -348,7 +348,8 @@ public class CswServer {
 
 	private void log(String message) {
 		logs.add(message);
-		Log.debug(Geonet.HARVEST_MAN, message);
+        if (Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, message);
 	}
 
 	//---------------------------------------------------------------------------

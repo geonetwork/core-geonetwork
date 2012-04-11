@@ -480,7 +480,7 @@ public class ServiceManager
 		int     code  = getErrorCode(e);
 		boolean cache = (srvInfo == null) ? false : srvInfo.isCacheSet();
 
-		debug("Raised exception while executing service\n"+ Xml.getString(error));
+		if(isDebug()) debug("Raised exception while executing service\n"+ Xml.getString(error));
 
 		try
 		{
@@ -578,7 +578,7 @@ public class ServiceManager
 				info("     -> writing xml for : " +req.getService());
 
 				//--- this logging is usefull for xml services that are called by javascript code
-				debug("Service xml is :\n"+Xml.getString(response));
+                if(isDebug()) debug("Service xml is :\n"+Xml.getString(response));
 
 				InputMethod  in  = req.getInputMethod();
 				OutputMethod out = req.getOutputMethod();
@@ -908,14 +908,15 @@ public class ServiceManager
 		List<Element> paramsList = params.getChildren();
 
 		if (paramsList.size() == 0)
-			debug(" -> no input parameters");
+            if(isDebug()) debug(" -> no input parameters");
 		else
-			debug(" -> parameters are : \n"+ Xml.getString(params));
+            if(isDebug()) debug(" -> parameters are : \n"+ Xml.getString(params));
 	}
 
 	//---------------------------------------------------------------------------
 
-	private void debug  (String message) { Log.debug  (Log.SERVICE, message); }
+    private boolean isDebug() {return Log.isDebugEnabled(Log.SERVICE);}
+    private void debug  (String message) { Log.debug  (Log.SERVICE, message); }
 	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }

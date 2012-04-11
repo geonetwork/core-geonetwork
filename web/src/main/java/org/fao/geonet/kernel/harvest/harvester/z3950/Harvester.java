@@ -100,7 +100,7 @@ class Harvester {
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
-			log.debug("  - Removing old metadata before update with id: " + id);
+            if(log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
 			dataMan.deleteMetadataGroup(context, dbms, id);
 			serverResults.locallyRemoved++;
 		}
@@ -142,9 +142,9 @@ class Harvester {
 			if (s.getSize() == 0) {
 				throw new Exception("Bad luck, Search failed or returned 0 results");
 			}
-		} 
+		}
 
-		log.debug("Search returned "+s.getSize()+" hits");
+        if(log.isDebugEnabled()) log.debug("Search returned "+s.getSize()+" hits");
 
 		// -- process the hits in groups of groupSize
 		int numberOfHits = Math.min(Integer.parseInt(params.maximumHits),s.getSize());
@@ -154,10 +154,10 @@ class Harvester {
 		request.addContent(new Element("to"));
 
 		Element categories = Lib.local.retrieve(dbms, "Categories");
-		log.debug("categories "+Xml.getString(categories));
+        if(log.isDebugEnabled()) log.debug("categories "+Xml.getString(categories));
 
 		Element repositories = new Info().getZRepositories(context, settingMan);
-		log.debug("repos "+Xml.getString(repositories));
+        if(log.isDebugEnabled()) log.debug("repos "+Xml.getString(repositories));
 
 		// -- build a map of collection code versus repository name for 
 		// -- assigning the categories
@@ -206,7 +206,8 @@ class Harvester {
 			localCateg = new CategoryMapper(dbms);
 			localGroups = new GroupMapper(dbms);
 
-			log.debug("There are "+(list.size()-1)+" children in the results ("+lower+" to "+upper+")");
+            if(log.isDebugEnabled())
+                log.debug("There are "+(list.size()-1)+" children in the results ("+lower+" to "+upper+")");
 
 			boolean transformIt = false;
 			String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
@@ -236,7 +237,7 @@ class Harvester {
 				}
 				md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
 				String repoName = codes.get(colCode);
-				log.debug("Processing record from server "+repoName);
+                if(log.isDebugEnabled()) log.debug("Processing record from server "+repoName);
 				Z3950Result result = serverResults.getServerResult(repoName);
 				result.totalMetadata++;
 
@@ -249,9 +250,9 @@ class Harvester {
 				// transform using importxslt if not none
 				if (transformIt) {
 					try {
-						log.debug("Before transform: "+Xml.getString(md));
+                        if(log.isDebugEnabled()) log.debug("Before transform: "+Xml.getString(md));
 						md = Xml.transform(md, thisXslt);
-						log.debug("After transform: "+Xml.getString(md));
+                        if(log.isDebugEnabled()) log.debug("After transform: "+Xml.getString(md));
 					} catch (Exception e) {
 						System.out.println("Cannot transform XML, ignoring. Error was: "+e.getMessage());
 						result.badFormat++;
@@ -368,7 +369,7 @@ class Harvester {
 			String name = localCateg.getName(catId);
 
 			if (name == null) {
-				log.debug("    - Skipping removed category with id:" + catId);
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:" + catId);
 			} else {
 				dataMan.setCategory(context, dbms, id, catId);
 			}
@@ -377,7 +378,7 @@ class Harvester {
 		if (serverCategory != null) {
 			String catId = localCateg.getID(serverCategory);
 			if (catId == null) {
-				log.debug("    - Skipping removed category :" + serverCategory);
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed category :" + serverCategory);
 			} else {
 				dataMan.setCategory(context, dbms, id, catId);
 			}
@@ -397,8 +398,8 @@ class Harvester {
 			String name = localGroups.getName(priv.getGroupId());
 
 			if (name == null)
-				log.debug("    - Skipping removed group with id:"
-						+ priv.getGroupId());
+                if(log.isDebugEnabled())
+                    log.debug("    - Skipping removed group with id:" + priv.getGroupId());
 			else {
 				for (int opId : priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
@@ -407,7 +408,7 @@ class Harvester {
 					if (opId == 0 || opId == 5 || opId == 6) {
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId + "");
 					} else
-						log.debug("       --> " + name + " (skipped)");
+                    if(log.isDebugEnabled()) log.debug("       --> " + name + " (skipped)");
 				}
 			}
 		}

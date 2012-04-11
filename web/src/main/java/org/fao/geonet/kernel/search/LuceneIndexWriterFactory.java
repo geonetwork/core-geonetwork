@@ -129,9 +129,11 @@ public class LuceneIndexWriterFactory {
         return _writers.values();
     }
     private IndexWriter getWriter( String locale ) throws Exception {
-        Log.debug(Geonet.LUCENE, "getting writer for locale " + locale);
+        if(Log.isDebugEnabled(Geonet.LUCENE))
+            Log.debug(Geonet.LUCENE, "getting writer for locale " + locale);
         locale = normalize(locale);
-        Log.debug(Geonet.LUCENE, "normalized locale " + locale);
+        if(Log.isDebugEnabled(Geonet.LUCENE))
+            Log.debug(Geonet.LUCENE, "normalized locale " + locale);
         IndexWriter writer = _writers.get(locale);
         if (writer == null) {
             File indexDir = new File(_luceneDir, locale);

@@ -64,7 +64,8 @@ public class TableExport implements Service {
         String tableToExport = Util.getParam(params, "tableToExport");
 
         if (tableToExport == null ) {
-            Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: no table name received from the client.");
+            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: no table name received from the client.");
         }
         // file to write
 		File tableDumpFile = new File(appPath + File.separator + "images" + File.separator + "statTmp");
@@ -73,11 +74,13 @@ public class TableExport implements Service {
 		}
         String dumpFileName = tableToExport + "_" + context.getUserSession().getUserId() + ".csv";
         tableDumpFile = new File(tableDumpFile.getAbsolutePath(), dumpFileName);
-        Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: will dump CSV to file: " + tableDumpFile);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+            Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: will dump CSV to file: " + tableDumpFile);
 
         // sql stuff
         String query = "select * from " + tableToExport;
-        Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: query to get table:\n" + query);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+            Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: query to get table:\n" + query);
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         // use connection by hand, to allow us to control the resultset and avoid Java Heap Space Exception
         Connection con = dbms.getConnection();
@@ -97,7 +100,8 @@ public class TableExport implements Service {
             out.newLine();
         }
         StringBuilder line = null;
-        Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: headers written, writting data");
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+            Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: headers written, writting data");
         while (rs.next()) {
             line = new StringBuilder();
             for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
@@ -107,13 +111,13 @@ public class TableExport implements Service {
             out.write(line.toString());
             out.newLine();
         }
-        Log.debug(Geonet.SEARCH_LOGGER,"data written");
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"data written");
         rs.close();
         stmt.close();
         out.flush();
         out.close();
         //dbms.disconnect();
-        Log.debug(Geonet.SEARCH_LOGGER,"streams closed");
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"streams closed");
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		Element elFileUrl = new Element("fileURL").setText(context.getBaseUrl() +

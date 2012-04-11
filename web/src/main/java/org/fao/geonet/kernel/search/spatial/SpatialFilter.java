@@ -230,7 +230,8 @@ public abstract class SpatialFilter extends Filter
                 warned =true;
                 Log.warning(Geonet.SPATIAL, e.getMessage()+" errors are occuring with filter: "+getFilter());
             }
-            Log.debug(Geonet.SPATIAL, e.getMessage()+": occurred during a search: "+getFilter()+" on feature: "+feature.getDefaultGeometry());
+            if(Log.isDebugEnabled(Geonet.SPATIAL))
+                Log.debug(Geonet.SPATIAL, e.getMessage()+": occurred during a search: "+getFilter()+" on feature: "+feature.getDefaultGeometry());
             return false;
         }
     }

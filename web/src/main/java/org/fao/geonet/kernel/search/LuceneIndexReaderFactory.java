@@ -151,7 +151,8 @@ public class LuceneIndexReaderFactory {
                                             // and call releaseReader
                     }
                     subReaders.put(indexDirName, newReader);
-                    Log.debug(Geonet.SEARCH_ENGINE, "Thread " + Thread.currentThread().getId() + ": reopened IndexReader");
+                    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                        Log.debug(Geonet.SEARCH_ENGINE, "Thread " + Thread.currentThread().getId() + ": reopened IndexReader");
                 }
             }
         }

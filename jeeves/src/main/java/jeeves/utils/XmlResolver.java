@@ -56,7 +56,8 @@ public class XmlResolver extends XMLCatalogResolver {
     */
    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
 
-		Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: Before resolution: Type: "+type+" NamespaceURI :"+namespaceURI+" PublicId :"+publicId+" SystemId :"+systemId+" BaseURI:"+baseURI);
+       if(Log.isDebugEnabled(Log.XML_RESOLVER))
+           Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: Before resolution: Type: "+type+" NamespaceURI :"+namespaceURI+" PublicId :"+publicId+" SystemId :"+systemId+" BaseURI:"+baseURI);
 
 		LSInput result = super.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
 
@@ -66,7 +67,8 @@ public class XmlResolver extends XMLCatalogResolver {
 			baseURI  = result.getBaseURI();
 		}
 
-		Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: After resolution: PublicId :"+publicId+" SystemId :"+systemId+" BaseURI:"+baseURI);
+       if(Log.isDebugEnabled(Log.XML_RESOLVER))
+           Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: After resolution: PublicId :"+publicId+" SystemId :"+systemId+" BaseURI:"+baseURI);
 
 		URL externalRef = null;
 		try {
@@ -112,7 +114,8 @@ public class XmlResolver extends XMLCatalogResolver {
 				try {
 					elResult = xml.execute();
 					addXmlToCache(externalRef.toString(), elResult);
-					Log.debug(Log.XML_RESOLVER,"Retrieved: \n"+Xml.getString(elResult));
+                    if(Log.isDebugEnabled(Log.XML_RESOLVER))
+                        Log.debug(Log.XML_RESOLVER,"Retrieved: \n"+Xml.getString(elResult));
 				} catch (Exception e) {
 					Log.error(Log.XML_RESOLVER, "Request on "+externalRef+" failed.");
 					e.printStackTrace();

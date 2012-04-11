@@ -98,17 +98,17 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
     InternalModelRootNode result = null;
 
     // Walk the query tree.. validate each node.
-    log.debug("makeConformant profile:"+profile_code+" query:"+qm.toString());
+      if(log.isDebugEnabled()) log.debug("makeConformant profile:"+profile_code+" query:"+qm.toString());
 
     try {
       ProfileDBO p = configuration.lookupProfile(profile_code);
 
       if ( ( p == null ) && ( valid_attributes == null ) ) {
-        log.debug("No profile defined and no valid attributes list, unable to rewrite");
+          if(log.isDebugEnabled()) log.debug("No profile defined and no valid attributes list, unable to rewrite");
         result = qm.toInternalQueryModel(ctx);
       }
       else {
-        log.debug("Rewriting");
+          if(log.isDebugEnabled()) log.debug("Rewriting");
         result = (InternalModelRootNode) visit(qm.toInternalQueryModel(ctx), "bib-1", valid_attributes, service_specific_rewrite_rules, p);
       }
     }
@@ -119,7 +119,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
       throw new ProfileServiceException(ce.toString(),ERROR_CONFIG);
     }
 
-    // log.debug("makeConformant result="+result);
+    // if(log.isDebugEnabled()) log.debug("makeConformant result="+result);
     return result;
   }
 
@@ -132,7 +132,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
     if ( qn == null )
       throw new org.jzkit.search.util.QueryModel.InvalidQueryException("Query node was null, unable to rewrite");
 
-    log.debug("Rewrite: visit instance of "+qn.getClass().getName());
+      if(log.isDebugEnabled()) log.debug("Rewrite: visit instance of "+qn.getClass().getName());
 
     if ( qn instanceof InternalModelRootNode ) {
       InternalModelRootNode imrn = (InternalModelRootNode)qn;
@@ -140,7 +140,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
     }
     else if ( qn instanceof InternalModelNamespaceNode ) {
       InternalModelNamespaceNode imns = (InternalModelNamespaceNode)qn;
-      log.debug("child default attrset will be "+imns.getAttrset());
+        if(log.isDebugEnabled()) log.debug("child default attrset will be "+imns.getAttrset());
       return new InternalModelNamespaceNode(imns.getAttrset(), visit(imns.getChild(),
                                                                      imns.getAttrset(),
                                                                      valid_attributes,
@@ -202,19 +202,19 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
       // 1. extract and rewrite use attribute
       String attr_type = (String) i.next();
       AttrValue av = (AttrValue) q.getAttr(attr_type);
-      log.debug("Rewriting "+attr_type+"="+av);
+        if(log.isDebugEnabled()) log.debug("Rewriting "+attr_type+"="+av);
       AttributeSetDBO as = valid_attributes.get(attr_type);
 
       if ( as == null )
         throw new ProfileServiceException("No "+attr_type+" attr types allowed for target repository",4);
 
       AttrValue new_av = rewriteUntilValid(av,as.getAttrs(),service_specific_rewrite_rules,default_namespace);
-      log.debug("Setting attr "+attr_type+" to "+new_av);
+        if(log.isDebugEnabled()) log.debug("Setting attr "+attr_type+" to "+new_av);
       q.setAttr(attr_type, new_av);
 
     }
 
-    log.debug(q.getAttrs());
+      if(log.isDebugEnabled()) log.debug(q.getAttrs());
 
     return result;
   }
@@ -228,25 +228,26 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
     if ( av != null ) {
       String av_str_val = av.getWithDefaultNamespace(default_namespace);
       if ( explain_use_indexes.contains(av) ) {
-        log.debug("No need to rewrite, source index "+av+" is already allowed by target");
+          if(log.isDebugEnabled()) log.debug("No need to rewrite, source index "+av+" is already allowed by target");
       }
       else {
-        log.debug("Rewrite, source index "+av+" is disallowed, scanning server alternatives allowed="+explain_use_indexes);
+          if(log.isDebugEnabled())
+              log.debug("Rewrite, source index "+av+" is disallowed, scanning server alternatives allowed="+explain_use_indexes);
         boolean found = false;
         for ( java.util.Iterator i = service_specific_rewrite_rules.entrySet().iterator(); ( ( i.hasNext() ) && ( !found ) ); ) {
           Map.Entry e = (Map.Entry) i.next();
           if ( e.getKey().equals(av_str_val) ) {
             AttrValue new_av = (AttrValue) e.getValue();
-            log.debug("Possible rewrite: "+new_av);
+              if(log.isDebugEnabled()) log.debug("Possible rewrite: "+new_av);
             if ( explain_use_indexes.contains(new_av) ) {
-              log.debug("Matched, replacing");
+                if(log.isDebugEnabled()) log.debug("Matched, replacing");
               result = new_av;
               found=true;
             }
           }
         }
         if ( !found ) {
-          log.debug("Unable to rewrite query, exception");
+            if(log.isDebugEnabled()) log.debug("Unable to rewrite query, exception");
           throw new ProfileServiceException("Unable to rewrite access point '"+av_str_val+"' to comply with service explain record",ERROR_QUERY);
         }
       }
@@ -263,18 +264,18 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
                                              ProfileDBO p,
                                              String default_namespace) throws ProfileServiceException {
 
-    log.debug("rewriteUntilValid.... def ns = "+default_namespace);
+      if(log.isDebugEnabled()) log.debug("rewriteUntilValid.... def ns = "+default_namespace);
 
     QueryVerifyResult qvr = p.validate(q, default_namespace);
     // if ( p.isValid(q, default_namespace) )
     AttrPlusTermNode result = null;
 
     if ( qvr.queryIsValid() ) {
-      log.debug("Node is conformant to profile.... return it");
+        if(log.isDebugEnabled()) log.debug("Node is conformant to profile.... return it");
       result = q;
     }
     else {
-      log.debug("Node does not conform to profile ("+q.getAccessPoint()+" not allowed by profile "+p.getCode()+")");
+        if(log.isDebugEnabled()) log.debug("Node does not conform to profile ("+q.getAccessPoint()+" not allowed by profile "+p.getCode()+")");
       // Get failing attr from QVR, generate expansions, rewriteUntilValid each expansion.
       // What if failing attr was an AND..?.. Still had to be a component that failed. The Rule that returned false.
       String failing_attr_type = qvr.getFailingAttr();
@@ -283,7 +284,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
       if ( av != null ) {
         Set<AttrValue> possible_alternatives = lookupKnownAlternatives(av,default_namespace);
         if ( possible_alternatives != null ) {
-          log.debug("Check out alternatives for "+failing_attr_type+":"+possible_alternatives);
+            if(log.isDebugEnabled()) log.debug("Check out alternatives for "+failing_attr_type+":"+possible_alternatives);
           for ( Iterator i = possible_alternatives.iterator(); ( ( i.hasNext() ) && ( result == null ) ); ) {
             AttrValue target_av = (AttrValue)i.next();
             AttrPlusTermNode new_variant = q.cloneForAttrs();
@@ -293,11 +294,12 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
           }
         }
         else {
-          log.debug("No expansions available. Return null");
+            if(log.isDebugEnabled()) log.debug("No expansions available. Return null");
         }
       }
       else {
-        log.debug("Hmm.. It appears that we failed because a rule required an attr type which is not present in the query tree("+failing_attr_type+"). Perhaps we should add missing attrs ;)");
+          if(log.isDebugEnabled())
+              log.debug("Hmm.. It appears that we failed because a rule required an attr type which is not present in the query tree("+failing_attr_type+"). Perhaps we should add missing attrs ;)");
       }
     }
 
@@ -311,7 +313,8 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
       if ( namespace == null )
         namespace = default_namespace;
 
-      log.debug("Lookup mappings from namespace "+namespace+" attr value = "+av.getValue());
+        if(log.isDebugEnabled())
+            log.debug("Lookup mappings from namespace "+namespace+" attr value = "+av.getValue());
 
       CrosswalkDBO cw = configuration.lookupCrosswalk(namespace);
 

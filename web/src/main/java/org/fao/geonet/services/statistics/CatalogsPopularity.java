@@ -83,8 +83,8 @@ public class CatalogsPopularity implements Service {
 		}
 		
 		int cnt = Integer.parseInt(((Element)l.get(0)).getChildText("sumpop"));
-		
-		Log.debug(Geonet.SEARCH_LOGGER,"query to get popularity by group:\n" + query);
+
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"query to get popularity by group:\n" + query);
 		dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
 		DefaultPieDataset dataset = new DefaultPieDataset(); 

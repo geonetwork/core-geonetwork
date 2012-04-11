@@ -149,7 +149,8 @@ public class GetRelated implements Service {
                                 .addContent(new Element("response")
                                         .addContent(content)));
                     } catch (Exception e) {
-                        Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "
+                        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                            Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "
                                 + parentId + " record is not visible for user.");
                     }
                 }
@@ -235,8 +236,8 @@ public class GetRelated implements Service {
         SearchManager searchMan = gc.getSearchmanager();
 
         // perform the search
-        Log.debug(Geonet.SEARCH_ENGINE,
-                "Searching for: " + type);
+        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
         MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
                 Geonet.File.SEARCH_LUCENE);
 

@@ -108,9 +108,9 @@ public class AddDefault implements Service {
 				Element template = new Element("template");
 				template.setAttribute("name", templateName);
 
-				Log.debug(Geonet.DATA_MANAGER,
-						" - Adding template file (for schema " + schemaName
-								+ "): " + templateName);
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                    Log.debug(Geonet.DATA_MANAGER,
+						" - Adding template file (for schema " + schemaName + "): " + templateName);
 
 				try {
 					Element xml = Xml.loadFile(temp);

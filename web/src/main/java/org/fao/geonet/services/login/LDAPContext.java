@@ -168,16 +168,19 @@ class LDAPContext
 
 		if (values == null)
 		{
-			Log.debug(Geonet.LDAP, "Attribute '"+ name +"' does not exist");
+            if(Log.isDebugEnabled(Geonet.LDAP))
+                Log.debug(Geonet.LDAP, "Attribute '"+ name +"' does not exist");
 			return null;
 		}
 
 		Object obj = values.get(0);
 
 		if (obj != null)
-			Log.debug(Geonet.LDAP, "Attribute '"+ name +"' is of type : "+obj.getClass().getSimpleName());
+            if(Log.isDebugEnabled(Geonet.LDAP))
+                Log.debug(Geonet.LDAP, "Attribute '"+ name +"' is of type : "+obj.getClass().getSimpleName());
 		else
-			Log.debug(Geonet.LDAP, "Attribute '"+ name +"' is null");
+            if(Log.isDebugEnabled(Geonet.LDAP))
+                Log.debug(Geonet.LDAP, "Attribute '"+ name +"' is null");
 
 		return (obj == null) ? null : obj.toString();
 	}

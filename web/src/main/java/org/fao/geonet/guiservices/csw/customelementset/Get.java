@@ -80,7 +80,8 @@ public class Get implements Service {
 
         result.addContent(cswEnabledElement);
 
-        Log.debug(Geonet.CUSTOM_ELEMENTSET, "get customelementset:\n" + Xml.getString(result));
+        if(Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET))
+            Log.debug(Geonet.CUSTOM_ELEMENTSET, "get customelementset:\n" + Xml.getString(result));
 
         return result;
 	}

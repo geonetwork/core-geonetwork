@@ -149,7 +149,8 @@ public class LuceneConfig {
    * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
-		Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load(servletContext, luceneConfigXmlFile);
@@ -386,8 +387,8 @@ public class LuceneConfig {
 		if (children == null)
 			return; // No params
 
-		Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field
-				+ ", loading class " + clazz + " ...");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field + ", loading class " + clazz + " ...");
 
 		Object[] params = new Object[children.size()];
 		Class[] paramsClass = new Class[children.size()];
@@ -399,7 +400,8 @@ public class LuceneConfig {
 				String paramType = c.getAttributeValue("type");
 				String value = c.getAttributeValue("value");
 
-				Log.debug(Geonet.SEARCH_ENGINE, "    * Parameter: " + name
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE, "    * Parameter: " + name
 						+ ", type: " + paramType + ", value: " + value);
 
 				try {

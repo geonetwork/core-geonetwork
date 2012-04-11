@@ -30,7 +30,6 @@ import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
 import jeeves.server.UserSession;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,21 +37,17 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.AccessManager;
 
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.ISVNEditor;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.tmatesoft.svn.core.ISVNDirEntryHandler;
 import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.SVNPropertyValue;
 
 import org.jdom.Element;
 
@@ -170,7 +165,8 @@ public class SvnManager {
 			SvnUtils.modifyFileProps(editor, "/", props);
 			editor.closeDir();
 			SVNCommitInfo info = editor.closeEdit();
-			Log.debug(Geonet.SVN_MANAGER, "Committed "+dbUrl+" as property "+Params.Svn.DBURLPROP+":"+info);
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Committed "+dbUrl+" as property "+Params.Svn.DBURLPROP+":"+info);
 		} else {
 		// get database URL from root of repository and check against dbUrl
 		// if it doesn't match then stop
@@ -250,14 +246,16 @@ public class SvnManager {
 
 		if (!exists(id)) return; // not in repo so exit
 
-    Log.debug(Geonet.SVN_MANAGER, "History will be recorded on metadata "+id);
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, "History will be recorded on metadata "+id);
 
     Map<String,String> props = new HashMap<String,String>();
 		props = sessionToProps(context, props);
 
 		checkSvnTask(dbms, id, sessionToLogMessage(context), props);
-	
-    Log.debug(Geonet.SVN_MANAGER, "Changes to metadata "+id+" will be committed/aborted with the database channel "+dbms);
+
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, "Changes to metadata "+id+" will be committed/aborted with the database channel "+dbms);
 		return;
 	}	
 
@@ -296,7 +294,8 @@ public class SvnManager {
 		if (exists(id)) return; // already in repo so exit
 
     String logMessage = sessionToLogMessage(context)+" adding directory for metadata "+id;
-    Log.debug(Geonet.SVN_MANAGER, logMessage);
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, logMessage);
 
     ISVNEditor editor = getEditor(logMessage);
 
@@ -304,9 +303,10 @@ public class SvnManager {
     	// Create an id/ directory item in the repository
 			editor.openRoot(-1);
       SvnUtils.addDir(editor, id);
-      Log.debug(Geonet.SVN_MANAGER, "Directory for metadata "+id+" was added");
-			editor.closeDir();
-			editor.closeEdit();
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, "Directory for metadata "+id+" was added");
+        editor.closeDir();
+        editor.closeEdit();
 			// Add the id/metadata.xml item to the repository
     	logMessage = sessionToLogMessage(context)+" adding initial version of metadata "+id;
     	editor = getEditor(logMessage);
@@ -315,10 +315,12 @@ public class SvnManager {
 												id+"/metadata.xml", 
 												Xml.getString(md).getBytes());
 
-   		Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was added");
-			editor.closeDir();
-			SVNCommitInfo commitInfo = editor.closeEdit();
-   		Log.debug(Geonet.SVN_MANAGER, "Commit returned "+commitInfo);
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was added");
+        editor.closeDir();
+        SVNCommitInfo commitInfo = editor.closeEdit();
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, "Commit returned "+commitInfo);
     } catch (SVNException svne) {
       editor.abortEdit();
       svne.printStackTrace();
@@ -338,14 +340,16 @@ public class SvnManager {
 		if (!exists(id)) return; // not in repo so exit
 
     String logMessage = sessionToLogMessage(context)+" deleting directory for metadata "+id;
-    Log.debug(Geonet.SVN_MANAGER, logMessage);
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, logMessage);
 
 		ISVNEditor editor = getEditor(logMessage);
 
     try {
       SvnUtils.deleteDir(editor, id);
 			SVNCommitInfo commitInfo = editor.closeEdit();
-      Log.debug(Geonet.SVN_MANAGER, "Directory for metadata "+id+" deleted: " + commitInfo);
+        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+            Log.debug(Geonet.SVN_MANAGER, "Directory for metadata "+id+" deleted: " + commitInfo);
     } catch (SVNException svne) {
       editor.abortEdit(); // abort the update on the XML in the repository
       svne.printStackTrace();
@@ -389,9 +393,10 @@ public class SvnManager {
 				}
 				editor.closeDir(); // close the root directory.
 				SVNCommitInfo commitInfo = editor.closeEdit();
-       	Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids "+task.ids);
+                if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                    Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids "+task.ids);
 			} catch (Exception e) {
-       	Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids "+task.ids);
+       	        Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids "+task.ids);
 				e.printStackTrace();
 				if (editor != null) {
 					try {
@@ -532,13 +537,15 @@ public class SvnManager {
 												id+"/categories.xml", 
 												Xml.getString(categsPrevVersion).getBytes(), 
 												Xml.getString(categs).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Categories of metadata "+id+" updated");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Categories of metadata "+id+" updated");
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/categories.xml", 
 												Xml.getString(categs).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Categories of metadata "+id+" added");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Categories of metadata "+id+" added");
 
 		}
 	}
@@ -565,13 +572,15 @@ public class SvnManager {
 												id+"/status.xml", 
 												Xml.getString(statusPrevVersion).getBytes(), 
 												Xml.getString(status).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Status of metadata "+id+" was updated");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Status of metadata "+id+" was updated");
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/status.xml", 
 												Xml.getString(status).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Status of metadata "+id+" was added");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Status of metadata "+id+" was added");
 
 		}
 	}
@@ -597,7 +606,8 @@ public class SvnManager {
 												Xml.getString(mdPrevVersion).getBytes(), 
 												Xml.getString(md).getBytes());
 
-   		Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was updated");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was updated");
 		} else {
 			throw new IllegalArgumentException("Initial version of metadata "+id+" was not in the repository");
 		}
@@ -627,13 +637,15 @@ public class SvnManager {
 												id+"/owner.xml", 
 												Xml.getString(ownerPrevVersion).getBytes(), 
 												Xml.getString(owner).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata "+id+" was updated");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata "+id+" was updated");
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/owner.xml", 
 												Xml.getString(owner).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata "+id+" was added");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata "+id+" was added");
 
 		}
 	}
@@ -668,13 +680,15 @@ public class SvnManager {
 												Xml.getString(privsPrevVersion).getBytes(), 
 												Xml.getString(privs).getBytes());
 
-    	Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata "+id+" were updated");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata "+id+" were updated");
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/privileges.xml", 
 												Xml.getString(privs).getBytes());
-    	Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata "+id+" were added");
+            if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata "+id+" were added");
 		}
 	}	
 

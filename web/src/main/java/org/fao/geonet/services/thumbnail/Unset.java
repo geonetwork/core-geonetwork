@@ -102,7 +102,8 @@ public class Unset implements Service
 				context.error("Error while deleting thumbnail: " + file);
 			}
 		} else {
-			context.debug("Thumbnail does not exist: " + file);
+            if(context.isDebug())
+			    context.debug("Thumbnail does not exist: " + file);
 		}
 		
 		//-----------------------------------------------------------------------

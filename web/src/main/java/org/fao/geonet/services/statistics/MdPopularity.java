@@ -43,7 +43,8 @@ public class MdPopularity implements Service {
      */
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		Log.debug(Geonet.SEARCH_LOGGER, "query to get MD popularity: " + query);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+            Log.debug(Geonet.SEARCH_LOGGER, "query to get MD popularity: " + query);
 		Element response = dbms.select(query);
 		Element elLimit = new Element("limit").setText("" + limit);
 		response.addContent(elLimit);

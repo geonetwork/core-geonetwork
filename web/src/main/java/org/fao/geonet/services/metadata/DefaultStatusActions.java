@@ -145,7 +145,8 @@ public class DefaultStatusActions implements StatusActions {
 
 			//--- if the status is already set to value of status then do nothing
 			if (status.equals(currentStatus)) {
-				context.debug("Metadata "+mid+" already has status "+mid);
+                if(context.isDebug())
+                    context.debug("Metadata "+mid+" already has status "+mid);
 				unchanged.add(mid);
 			}
 

@@ -85,12 +85,14 @@ public class ResourceManager
 	public Object open(String name) throws Exception
 	{
 
-		Log.debug (Log.RESOURCES, "Opening: " + name + " in thread: " + Thread.currentThread().getId());
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug (Log.RESOURCES, "Opening: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		Object resource = htResources.get(resourceId);
 
 		if (resource == null) {
-			Log.debug  (Log.RESOURCES, "  Null resource, opening a new one from the resource provider.");
+            if(Log.isDebugEnabled(Log.RESOURCES))
+                Log.debug  (Log.RESOURCES, "  Null resource, opening a new one from the resource provider.");
 			ResourceProvider provider = provManager.getProvider(name);
 
             TimerContext timingContext = resourceManagerWaitForResourceTimer.time();
@@ -108,7 +110,8 @@ public class ResourceManager
                 openMetrics(resource);
             }
 		}
-		Log.debug  (Log.RESOURCES, "  Returning: " + resource);
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 		
 		return resource;
 	}
@@ -125,7 +128,8 @@ public class ResourceManager
 	 */
 	public Object openDirect(String name) throws Exception
 	{
-		Log.debug (Log.RESOURCES, "DIRECT Open: " + name + " in thread: " + Thread.currentThread().getId());
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug (Log.RESOURCES, "DIRECT Open: " + name + " in thread: " + Thread.currentThread().getId());
 		ResourceProvider provider = provManager.getProvider(name);
 
 		Object resource;
@@ -139,7 +143,8 @@ public class ResourceManager
         if(resource != null)
             openMetrics(resource);
 
-		Log.debug  (Log.RESOURCES, "  Returning: " + resource);
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 		
 		return resource;
 	}
@@ -179,12 +184,14 @@ public class ResourceManager
 	public void close(String name, Object resource) throws Exception
 	{
         closeMetrics(resource);
-		Log.debug (Log.RESOURCES, "Closing: " + name + " in thread: " + Thread.currentThread().getId());
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug (Log.RESOURCES, "Closing: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		if (htResources.get(resourceId) != null) {
 			htResources.remove(resourceId);
 		} else {
-			Log.debug (Log.RESOURCES, "Cannot find resource: " + name + ":" + Thread.currentThread().getId() + " in resources table (this may not be an error)");
+            if(Log.isDebugEnabled(Log.RESOURCES))
+                Log.debug (Log.RESOURCES, "Cannot find resource: " + name + ":" + Thread.currentThread().getId() + " in resources table (this may not be an error)");
 		}
 		ResourceProvider provider = provManager.getProvider(name);
 		provider.close(resource);
@@ -197,12 +204,14 @@ public class ResourceManager
 	public void abort(String name, Object resource) throws Exception
 	{
         closeMetrics(resource);
-		Log.debug (Log.RESOURCES, "Aborting: " + name + " in thread: " + Thread.currentThread().getId());
+        if(Log.isDebugEnabled(Log.RESOURCES))
+            Log.debug (Log.RESOURCES, "Aborting: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
 		if (htResources.get(resourceId) != null) {
 			htResources.remove(resourceId);
 		} else {
-			Log.debug (Log.RESOURCES, "Cannot find resource: " + name + ":" + Thread.currentThread().getId() + " in resources table (this may not be an error)");
+            if(Log.isDebugEnabled(Log.RESOURCES))
+                Log.debug (Log.RESOURCES, "Cannot find resource: " + name + ":" + Thread.currentThread().getId() + " in resources table (this may not be an error)");
 		}
 		ResourceProvider provider = provManager.getProvider(name);
 		provider.abort(resource);

@@ -311,7 +311,7 @@ class Harvester
      */
 	
 	public void deleteOrphanedMetadata(Set<String> updatedMetadata) throws Exception {
-		log.debug("  - Removing orphaned metadata records and fragments after update");
+        if(log.isDebugEnabled()) log.debug("  - Removing orphaned metadata records and fragments after update");
 		
 		for (String uuid : localUuids.getUUIDs()) {
 			String isTemplate = localUuids.getTemplate(uuid);

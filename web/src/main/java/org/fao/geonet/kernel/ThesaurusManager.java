@@ -30,10 +30,7 @@ import jeeves.server.resources.ResourceManager;
 import org.apache.commons.lang.StringUtils;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.oaipmh.Lib;
-import org.fao.geonet.util.ISODate;
 
 import org.jdom.Element;
 
@@ -49,9 +46,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -193,7 +187,8 @@ public class ThesaurusManager {
 
 						Thesaurus gst = null;
 						if (root.equals(Geonet.CodeList.REGISTER)) {
-							Log.debug(Geonet.THESAURUS_MAN, "Creating thesaurus : "+ aRdfDataFile);
+                            if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                                Log.debug(Geonet.THESAURUS_MAN, "Creating thesaurus : "+ aRdfDataFile);
 
 							File outputRdf = new File(thesauriDirectory, aRdfDataFile);
 							String uuid = StringUtils.substringBefore(aRdfDataFile,".rdf");
@@ -261,8 +256,9 @@ public class ThesaurusManager {
 	public void addThesaurus(Thesaurus gst) throws Exception {
 
 		String thesaurusName = gst.getKey();
-		
-		Log.debug(Geonet.THESAURUS_MAN, "Adding thesaurus : "+ thesaurusName);
+
+        if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+            Log.debug(Geonet.THESAURUS_MAN, "Adding thesaurus : "+ thesaurusName);
 
 		if (existsThesaurus(thesaurusName)) {
 			throw new Exception ("A thesaurus exists with code " + thesaurusName);
@@ -365,11 +361,13 @@ public class ThesaurusManager {
 			if (thesauriMap.replace(theKey, gst) == null) {
 				createThesaurusRepository(gst);
 				thesauriMap.put(theKey, gst);
-				Log.debug(Geonet.THESAURUS_MAN, "Created thesaurus "+theKey+" from register "+uuid);
+                if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                    Log.debug(Geonet.THESAURUS_MAN, "Created thesaurus "+theKey+" from register "+uuid);
 			} else {
 				service.removeRepository(theKey);
 				createThesaurusRepository(gst);
-				Log.debug(Geonet.THESAURUS_MAN, "Rebuilt thesaurus "+theKey+" from register "+uuid);
+                if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                    Log.debug(Geonet.THESAURUS_MAN, "Rebuilt thesaurus "+theKey+" from register "+uuid);
 			}
 		}
 

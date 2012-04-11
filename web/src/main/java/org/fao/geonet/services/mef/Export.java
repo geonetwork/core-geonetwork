@@ -197,8 +197,8 @@ public class Export implements Service {
 	 */
 	private Set<String> getUuidsToExport(String uuid, ServiceContext context,
 			Element request) throws Exception {
-		Log.debug(Geonet.MEF, "Creating searcher to run request: "
-				+ Xml.getString(request));
+        if(Log.isDebugEnabled(Geonet.MEF))
+            Log.debug(Geonet.MEF, "Creating searcher to run request: " + Xml.getString(request));
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -213,8 +213,8 @@ public class Export implements Service {
 
 		// If element type found, then get their uuid
 		if (searcher.getSize() != 0) {
-			Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: "
-					+ uuid);
+            if(Log.isDebugEnabled(Geonet.MEF))
+                Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: " + uuid);
 			Element elt = searcher.present(context, request, _config);
 			// Get ISO records only
 			List<Element> isoElt = elt.getChildren();
@@ -224,7 +224,7 @@ public class Export implements Service {
 				if (!md.getName().equals("summary")) {
 					String mdUuid = md.getChild(Edit.RootChild.INFO,
 							Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
-					Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
+                    if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
 					uuids.add(mdUuid);
 				}
 			}

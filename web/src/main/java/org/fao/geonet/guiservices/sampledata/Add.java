@@ -84,8 +84,8 @@ public class Add implements Service {
 				continue;
 			}
 
-			Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: "
-					+ schemaDir);
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: " + schemaDir);
 			File sampleDataFiles[] = new File(schemaDir).listFiles();
 			List<File> sampleDataFilesList = new ArrayList<File>();
 
@@ -97,8 +97,8 @@ public class Add implements Service {
 
 			for (File file : sampleDataFilesList) {
 				try {
-					Log.debug(Geonet.DATA_MANAGER, "Loading sample data: "
-							+ file);
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                        Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
 					MEFLib.doImport(params, context, file, "");
 					dbms.commit();
 				}

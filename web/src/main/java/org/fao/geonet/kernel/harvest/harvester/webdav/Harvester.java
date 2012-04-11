@@ -24,7 +24,6 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
@@ -75,7 +74,7 @@ class Harvester {
 	//---------------------------------------------------------------------------
 
 	public WebDavResult harvest() throws Exception {
-		log.debug("Retrieving remote metadata information for : "+ params.name);
+        if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
 		
 		RemoteRetriever rr = null;		
 		if(params.subtype.equals("webdav"))
@@ -86,7 +85,7 @@ class Harvester {
 		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
 		rr.init(log, context, params);
 		List<RemoteFile> files = rr.retrieve();
-		log.debug("Remote files found : "+ files.size());
+        if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
 		align(files);
 		rr.destroy();
 		return result;
@@ -113,7 +112,7 @@ class Harvester {
 			if (!exists(files, uri)) {
 				// only one metadata record created per uri by this harvester 
 				String id = localUris.getRecords(uri).get(0).id;
-				log.debug("  - Removing old metadata with local id:"+ id);
+                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadataGroup(context, dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
@@ -161,7 +160,7 @@ class Harvester {
 		String schema = dataMan.autodetectSchema(md);
 		String uuid   = UUID.randomUUID().toString();
 
-		log.debug("  - Setting uuid for metadata with remote path : "+ rf.getPath());
+        if(log.isDebugEnabled()) log.debug("  - Setting uuid for metadata with remote path : "+ rf.getPath());
 
 		//--- set uuid inside metadata and get new xml
 		try {
@@ -171,7 +170,7 @@ class Harvester {
 			return;
 		}
 
-		log.debug("  - Adding metadata with remote path : "+ rf.getPath());
+        if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote path : "+ rf.getPath());
 
 		//
         // insert metadata
@@ -200,9 +199,9 @@ class Harvester {
 
 	private Element retrieveMetadata(RemoteFile rf) {
 		try {
-			log.debug("Getting remote file : "+ rf.getPath());
+            if(log.isDebugEnabled()) log.debug("Getting remote file : "+ rf.getPath());
 			Element md = rf.getMetadata(schemaMan);
-			log.debug("Record got:\n"+ Xml.getString(md));
+            if(log.isDebugEnabled()) log.debug("Record got:\n"+ Xml.getString(md));
 
 			String schema = dataMan.autodetectSchema(md);
 			if (!params.validate || validates(schema, md)) {
@@ -249,10 +248,10 @@ class Harvester {
 			String name = localCateg.getName(catId);
 
 			if (name == null) {
-				log.debug("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
 			}
 			else {
-				log.debug("    - Setting category : "+ name);
+                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -266,19 +265,19 @@ class Harvester {
 		for (Privileges priv : params.getPrivileges()) {
 			String name = localGroups.getName(priv.getGroupId());
 			if (name == null) {
-				log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
 			}
 			else {
-				log.debug("    - Setting privileges for group : "+ name);
+                if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
 				for (int opId: priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6) {
-						log.debug("       --> "+ name);
+                        if(log.isDebugEnabled()) log.debug("       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else {
-						log.debug("       --> "+ name +" (skipped)");
+                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
 					}
 				}
 			}
@@ -293,11 +292,11 @@ class Harvester {
 
 	private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
 		if (!rf.isMoreRecentThan(record.changeDate)) {
-			log.debug("  - Metadata XML not changed for path : "+ rf.getPath());
+            if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for path : "+ rf.getPath());
 			result.unchanged++;
 		}
 		else {
-			log.debug("  - Updating local metadata for path : "+ rf.getPath());
+            if(log.isDebugEnabled()) log.debug("  - Updating local metadata for path : "+ rf.getPath());
 			Element md = retrieveMetadata(rf);
 			if (md == null) {
 				return;

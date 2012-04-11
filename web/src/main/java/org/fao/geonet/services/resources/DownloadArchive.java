@@ -189,14 +189,16 @@ public class DownloadArchive implements Service
 			Element details = BinaryFile.encode(200, file.getAbsolutePath(), false);
 			String remoteURL = details.getAttributeValue("remotepath");
 			if (remoteURL != null) {
-				context.debug("Downloading "+remoteURL+" to archive "+zFile.getName());
+                if(context.isDebug())
+                    context.debug("Downloading "+remoteURL+" to archive "+zFile.getName());
 				fileInfo.setAttribute("size","unknown");
 				fileInfo.setAttribute("datemodified","unknown");
 				fileInfo.setAttribute("name",remoteURL);
 				notifyAndLog(doNotify, id, info.uuid, access, username, remoteURL+" (local config: "+file.getAbsolutePath()+")", context);
 				fname = details.getAttributeValue("remotefile");
 			} else {
-				context.debug("Writing "+fname+" to archive "+zFile.getName());
+                if(context.isDebug())
+                    context.debug("Writing "+fname+" to archive "+zFile.getName());
 				fileInfo.setAttribute("size",file.length()+"");
 				fileInfo.setAttribute("name",fname);
 				Date date = new Date(file.lastModified());
@@ -227,7 +229,8 @@ public class DownloadArchive implements Service
 		root.addContent(downloaded);
 		root.addContent(entered);
 		root.addContent(userDetails);
-		context.debug("Passed to metadata-license-annex.xsl:\n "+Xml.getString(root));
+        if(context.isDebug())
+            context.debug("Passed to metadata-license-annex.xsl:\n "+Xml.getString(root));
 
 		//--- create the license annex html file using the info in root element and
 		//--- add it to the zip stream
@@ -270,17 +273,20 @@ public class DownloadArchive implements Service
 		Element license = Xml.selectElement(root, "metadata/*/licenseLink");
 		if (license != null) {
 			String licenseURL = license.getText();
-			context.debug("license URL = " + licenseURL);
+            if(context.isDebug())
+                context.debug("license URL = " + licenseURL);
 
 			String licenseFilesPath = getLicenseFilesPath(licenseURL, context);
-			context.debug(" licenseFilesPath = " + licenseFilesPath);
+            if(context.isDebug())
+                context.debug(" licenseFilesPath = " + licenseFilesPath);
 
 			if (licenseFilesPath != null) {
 				File licenseFilesDir = new File(licenseFilesPath);
 				File[] licenseFiles = licenseFilesDir.listFiles();
 				if (licenseFiles == null) return;
 				for (File licenseFile : licenseFiles) {
-					context.debug("adding " + licenseFile.getAbsolutePath() + " to zip file");
+                    if(context.isDebug())
+                        context.debug("adding " + licenseFile.getAbsolutePath() + " to zip file");
 					InputStream in = new FileInputStream(licenseFile);
 					addFile(out, licenseFile.getName(), in);
 				}
@@ -298,16 +304,19 @@ public class DownloadArchive implements Service
 		//--- Get license files subdirectory for license
 		URL url = new URL(licenseURL);
 		String licenseFilesPath = url.getHost() + url.getPath();
-		context.debug("licenseFilesPath= " + licenseFilesPath);
+        if(context.isDebug())
+            context.debug("licenseFilesPath= " + licenseFilesPath);
 
 		//--- Get local mirror directory for license files
 		String path    = context.getAppPath();
-		context.debug("path= " + path);
+        if(context.isDebug())
+            context.debug("path= " + path);
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ServiceConfig configHandler = gc.getHandlerConfig();
 		String licenseDir = configHandler.getValue(Geonet.Config.LICENSE_DIR);
-		context.debug("licenseDir= " + licenseDir);
+        if(context.isDebug())
+            context.debug("licenseDir= " + licenseDir);
 		if (licenseDir == null) return null;
 
 		File directory = new File(licenseDir);
@@ -369,9 +378,9 @@ public class DownloadArchive implements Service
 			context.info("DOWNLOADED:"+theFile+","+id+","+uuid+","+context.getIpAddress()+","+username);
 
 			if (host.trim().length() == 0 || from.trim().length() == 0) {
-				context.debug("Skipping email notification");
+                if(context.isDebug()) context.debug("Skipping email notification");
 			} else {
-				context.debug("Sending email notification for file : "+ theFile);
+                if(context.isDebug()) context.debug("Sending email notification for file : "+ theFile);
 
 					// send emails about downloaded file to groups with notify privilege
 				StringBuffer query = new StringBuffer();

@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -198,7 +197,7 @@ class Harvester
 			{
 				String id = localUuids.getID(uuid);
 
-				log.debug("  - Removing old metadata with local id:"+ id);
+                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadataGroup(context, dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
@@ -249,7 +248,7 @@ class Harvester
 
 		String schema = dataMan.autodetectSchema(md);
 
-		log.debug("  - Adding metadata with remote id : "+ ri.id);
+        if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote id : "+ ri.id);
 
         //
         // insert metadata
@@ -279,7 +278,7 @@ class Harvester
 	{
 		try
 		{
-			log.debug("  - Getting remote metadata with id : "+ ri.id);
+            if(log.isDebugEnabled()) log.debug("  - Getting remote metadata with id : "+ ri.id);
 
 			GetRecordRequest req = new GetRecordRequest();
 			req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
@@ -291,11 +290,11 @@ class Harvester
 
 			Element md = res.getRecord().getMetadata();
 
-			log.debug("    - Record got:\n"+ Xml.getString(md));
+            if(log.isDebugEnabled()) log.debug("    - Record got:\n"+ Xml.getString(md));
 
 			if (isOaiDc(md))
 			{
-				log.debug("    - Converting oai_dc to dublin core");
+                if(log.isDebugEnabled()) log.debug("    - Converting oai_dc to dublin core");
 				md = toDublinCore(md);
 
 				if (md == null)
@@ -386,10 +385,10 @@ class Harvester
 			String name = localCateg.getName(catId);
 
 			if (name == null)
-				log.debug("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
 			else
 			{
-				log.debug("    - Setting category : "+ name);
+                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -406,10 +405,10 @@ class Harvester
 			String name = localGroups.getName(priv.getGroupId());
 
 			if (name == null)
-				log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+                if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
 			else
 			{
-				log.debug("    - Setting privileges for group : "+ name);
+                if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
 
 				for (int opId: priv.getOperations())
 				{
@@ -418,11 +417,11 @@ class Harvester
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6)
 					{
-						log.debug("       --> "+ name);
+                        if(log.isDebugEnabled()) log.debug("       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else
-						log.debug("       --> "+ name +" (skipped)");
+                    if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
 				}
 			}
 		}
@@ -440,12 +439,12 @@ class Harvester
 
 		if (!ri.isMoreRecentThan(date))
 		{
-			log.debug("  - Metadata XML not changed for remote id : "+ ri.id);
+            if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for remote id : "+ ri.id);
 			result.unchanged++;
 		}
 		else
 		{
-			log.debug("  - Updating local metadata for remote id : "+ ri.id);
+            if(log.isDebugEnabled()) log.debug("  - Updating local metadata for remote id : "+ ri.id);
 
 			Element md = retrieveMetadata(t, ri);
 

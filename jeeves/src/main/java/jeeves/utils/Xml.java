@@ -422,10 +422,10 @@ public final class Xml
   	public Source resolve(String href, String base) throws TransformerException {
 		 Resolver resolver = ResolverWrapper.getInstance();
 		 CatalogResolver catResolver = resolver.getCatalogResolver();
-		 Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
+          if(Log.isDebugEnabled(Log.XML_RESOLVER)) Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
      Source s = catResolver.resolve(href, base);
 		 if (s != null) {
-		 	Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
+             if(Log.isDebugEnabled(Log.XML_RESOLVER)) Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
 		 }
 		 return s;
 		}

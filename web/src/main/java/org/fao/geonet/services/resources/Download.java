@@ -114,10 +114,12 @@ public class Download implements Service
 			String fromDescr = "GeoNetwork administrator";
 
 			if (host.trim().length() == 0 || from.trim().length() == 0)
-				context.debug("Skipping email notification");
+                if(context.isDebug())
+                    context.debug("Skipping email notification");
 			else
 			{
-				context.debug("Sending email notification for file : "+ file);
+                if(context.isDebug())
+                    context.debug("Sending email notification for file : "+ file);
 
 				// send emails about downloaded file to groups with notify privilege
 

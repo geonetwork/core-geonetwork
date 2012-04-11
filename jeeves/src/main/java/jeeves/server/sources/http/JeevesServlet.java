@@ -128,21 +128,24 @@ public class JeevesServlet extends HttpServlet
 
 		Log.info (Log.REQUEST, "==========================================================");
 		Log.info (Log.REQUEST, "HTML Request (from "+ ip +") : "+ req.getRequestURI());
-		Log.debug(Log.REQUEST, "Method       : "+ req.getMethod());
-		Log.debug(Log.REQUEST, "Content type : "+ req.getContentType());
-//		Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
-//		Log.debug(Log.REQUEST, "Char encoding: "+ req.getCharacterEncoding());
-		Log.debug(Log.REQUEST, "Accept       : "+ req.getHeader("Accept"));
-//		Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
-//		Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
-
+        if(Log.isDebugEnabled(Log.REQUEST)) {
+            Log.debug(Log.REQUEST, "Method       : "+ req.getMethod());
+            Log.debug(Log.REQUEST, "Content type : "+ req.getContentType());
+    //		Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
+    //		Log.debug(Log.REQUEST, "Char encoding: "+ req.getCharacterEncoding());
+            Log.debug(Log.REQUEST, "Accept       : "+ req.getHeader("Accept"));
+    //		Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
+    //		Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
+        }
 //		for (Enumeration e = req.getHeaderNames(); e.hasMoreElements();) {
 //			String theHeader = (String)e.nextElement();
+//        if(Log.isDebugEnabled(Log.REQUEST)) {
 //			Log.debug(Log.REQUEST, "Got header: "+theHeader);	
 //			Log.debug(Log.REQUEST, "With value: "+req.getHeader(theHeader));
+//        }
 //		}
 		HttpSession httpSession = req.getSession();
-		Log.debug(Log.REQUEST, "Session id is "+httpSession.getId());
+        if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session id is "+httpSession.getId());
 		UserSession session     = (UserSession) httpSession.getAttribute("session");
 
 		//------------------------------------------------------------------------
@@ -155,7 +158,7 @@ public class JeevesServlet extends HttpServlet
 			session = new UserSession();
 
 			httpSession.setAttribute("session", session);
-			Log.debug(Log.REQUEST, "Session created for client : " + ip);
+            if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session created for client : " + ip);
 		}
 
 		//------------------------------------------------------------------------

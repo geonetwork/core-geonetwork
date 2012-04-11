@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.mef;
 import jeeves.exceptions.BadFormatEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.UserSession;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -101,14 +100,15 @@ public class Importer {
 
 			public void handleMetadata(Element metadata, int index)
 					throws Exception {
-				Log.debug(Geonet.MEF, "Collecting metadata:\n"
-						+ Xml.getString(metadata));
+                if(Log.isDebugEnabled(Geonet.MEF))
+                    Log.debug(Geonet.MEF, "Collecting metadata:\n" + Xml.getString(metadata));
 				md.add(index, metadata);
 			}
 
 			public void handleMetadataFiles(File[] Files, int index)
 					throws Exception {
-				Log.debug(Geonet.MEF, "Multiple metadata files");
+                if(Log.isDebugEnabled(Geonet.MEF))
+                    Log.debug(Geonet.MEF, "Multiple metadata files");
 
 				Element metadataValidForImport = null;
 
@@ -126,17 +126,21 @@ public class Importer {
                             // If schema is preferred local node schema
                             // load that file.
                             if (metadataSchema.equals(preferredSchema)) {
-                                Log.debug(Geonet.MEF, "Found metadata file "
+                                if(Log.isDebugEnabled(Geonet.MEF)) {
+                                    Log.debug(Geonet.MEF, "Found metadata file "
                                         + file.getName()
                                         + " with preferred schema ("
                                         + preferredSchema + ").");
+                                }
                                 handleMetadata(metadata, index);
                                 return;
                             }
                             else {
-                                Log.debug(Geonet.MEF, "Found metadata file "
+                                if(Log.isDebugEnabled(Geonet.MEF)) {
+                                    Log.debug(Geonet.MEF, "Found metadata file "
                                         + file.getName() + " with known schema ("
                                         + metadataSchema + ").");
+                                }
                                 metadataValidForImport = metadata;
                             }
                         } catch (NoSchemaMatchesException e) {
@@ -161,8 +165,8 @@ public class Importer {
 			public void handleFeatureCat(Element featureCat, int index)
 					throws Exception {
 				if (featureCat != null) {
-					Log.debug(Geonet.MEF, "Collecting feature catalog:\n"
-							+ Xml.getString(featureCat));
+                    if(Log.isDebugEnabled(Geonet.MEF))
+                        Log.debug(Geonet.MEF, "Collecting feature catalog:\n" + Xml.getString(featureCat));
 				}
 				fc.add(index, featureCat);
 			}
@@ -253,8 +257,8 @@ public class Importer {
 							.equals("on");
 
 				} else {
-					Log.debug(Geonet.MEF, "Collecting info file:\n"
-							+ Xml.getString(info));
+                    if(Log.isDebugEnabled(Geonet.MEF))
+                        Log.debug(Geonet.MEF, "Collecting info file:\n" + Xml.getString(info));
 					
 					categs = info.getChild("categories");
 					privileges = info.getChild("privileges");
@@ -268,7 +272,8 @@ public class Importer {
 					boolean assign = Util.getParam(params, "assign", "off")
 							.equals("on");
 					if (assign) {
-						Log.debug(Geonet.MEF, "Assign to local catalog");
+                        if(Log.isDebugEnabled(Geonet.MEF))
+                            Log.debug(Geonet.MEF, "Assign to local catalog");
 						source = gc.getSiteId();
 					} else {	
 						// --- If siteId is not set, set to current node
@@ -276,8 +281,9 @@ public class Importer {
 								.getSiteId());
 						sourceName = general.getChildText("siteName");
 						localId = general.getChildText("localId");
-						
-						Log.debug(Geonet.MEF, "Assign to catalog: " + source);
+
+                        if(Log.isDebugEnabled(Geonet.MEF))
+                            Log.debug(Geonet.MEF, "Assign to catalog: " + source);
 					}
 					isTemplate = general.getChildText("isTemplate").equals(
 							"true") ? "y" : "n";
@@ -312,7 +318,8 @@ public class Importer {
                     String fcId = dm.insertMetadata(context, dbms, "iso19110", fc.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
                             userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
-					Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
+                    if(Log.isDebugEnabled(Geonet.MEF))
+                        Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
 
 					// Create database relation between metadata and feature
 					// catalog
@@ -365,7 +372,7 @@ public class Importer {
 
 			public void handlePublicFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {
-				Log.debug(Geonet.MEF, "Adding public file with name=" + file);
+                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "Adding public file with name=" + file);
 				saveFile(context, id.get(index), "public", file, changeDate, is);
 			}
 
@@ -373,7 +380,7 @@ public class Importer {
 
 			public void handlePrivateFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {
-				Log.debug(Geonet.MEF, "Adding private file with name=" + file);
+                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "Adding private file with name=" + file);
 				saveFile(context, id.get(index), "private", file, changeDate,
 						is);
 			}
@@ -425,7 +432,8 @@ public class Importer {
                 // user has privileges to replace the existing metadata
                 if(dm.getAccessManager().canEdit(context, dm.getMetadataId(dbms, uuid))) {
                     dm.deleteMetadata(context, dbms, dm.getMetadataId(dbms, uuid));
-                    Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
+                    if(Log.isDebugEnabled(Geonet.MEF))
+                        Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                 }
                 // user does not hav privileges to replace the existing metadata
                 else {
@@ -439,7 +447,8 @@ public class Importer {
 
 
 
-		Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
+        if(Log.isDebugEnabled(Geonet.MEF))
+            Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
 		
 		// Try to insert record with localId provided, if not use a new id.
 		boolean insertedWithLocalId = false;
@@ -453,7 +462,8 @@ public class Importer {
 				// purpose is just to allow the reuse of the same local id when
 				// reimporting a metadata. 
 				if (!dm.existsMetadata(dbms, iLocalId)) {
-					Log.debug(Geonet.MEF, "Using given localId: " + localId);
+                    if(Log.isDebugEnabled(Geonet.MEF))
+                        Log.debug(Geonet.MEF, "Using given localId: " + localId);
 
                     //
                     // insert metadata
@@ -468,7 +478,8 @@ public class Importer {
 					insertedWithLocalId = true;
 				}
 			} catch (NumberFormatException e) {
-				Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
+                if(Log.isDebugEnabled(Geonet.MEF))
+                    Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
 			}
 		} 
 		
@@ -521,12 +532,12 @@ public class Importer {
             String catId = mapLocalEntity(locCats, catName);
 
             if (catId == null) {
-                Log.debug(Geonet.MEF, " - Skipping non-existent category : "
-                        + catName);
+                if(Log.isDebugEnabled(Geonet.MEF))
+                    Log.debug(Geonet.MEF, " - Skipping non-existent category : " + catName);
             }
             else {
                 // --- metadata category exists locally
-                Log.debug(Geonet.MEF, " - Setting category : " + catName);
+                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, " - Setting category : " + catName);
                 dm.setCategory(context, dbms, id, catId);
             }
         }
@@ -554,16 +565,16 @@ public class Importer {
 			String grpId = mapLocalEntity(locGrps, grpName);
 
 			if (grpId == null)
-				Log.debug(Geonet.MEF, " - Skipping non-existent group : "
-						+ grpName);
+                if(Log.isDebugEnabled(Geonet.MEF))
+                    Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
 			else {
 				// --- metadata group exists locally
 
-				Log.debug(Geonet.MEF, " - Setting privileges for group : "
-						+ grpName);
+                    if(Log.isDebugEnabled(Geonet.MEF))
+                        Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
 				addOperations(context, dm, dbms, group, id, grpId);
 				if (groupOwner) {
-					Log.debug(Geonet.MEF, grpName + " set as group Owner ");
+                    if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, grpName + " set as group Owner ");
 					dm.setGroupOwner(dbms, id, grpId);
 				}
 			}
@@ -592,12 +603,12 @@ public class Importer {
             int opId = dm.getAccessManager().getPrivilegeId(opName);
 
             if (opId == -1) {
-                Log.debug(Geonet.MEF, "   Skipping --> " + opName);
+                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "   Skipping --> " + opName);
             }
             else {
                 // --- operation exists locally
 
-                Log.debug(Geonet.MEF, "   Adding --> " + opName);
+                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "   Adding --> " + opName);
                 dm.setOperation(context, dbms, id, grpId, opId + "");
             }
         }

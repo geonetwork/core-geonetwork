@@ -63,8 +63,8 @@ public class GetKeywords implements Service {
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
-			
-			Log.debug("KeywordsManager","Creating new keywords searcher");
+
+            if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
 			searcher = new KeywordsSearcher(thesaurusMan);
 			searcher.search(context, params);
 			searcher.sortResults("label");

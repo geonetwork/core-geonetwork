@@ -71,12 +71,12 @@ public class ThreadPool {
         } else {
             this.task = task;
             if(delayBeforeStart < 1) {
-                if (Log.isDebug(Geonet.THREADPOOL)) {
+                if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
                     Log.debug(Geonet.THREADPOOL, "Adding task to threadpool:"+toString());
                 }
                 threadPool.execute(task);
             } else {
-                if (Log.isDebug(Geonet.THREADPOOL)) {
+                if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
                     Log.debug(Geonet.THREADPOOL,
                             "Scheduling task to be executed in threadpool in "+delayBeforeStart+" "+unit+": "+toString());
                 }
@@ -115,7 +115,7 @@ public class ThreadPool {
 
         public void run() {
             threadPool.execute(task);
-            if (Log.isDebug(Geonet.THREADPOOL)) {
+            if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
                 Log.debug(Geonet.THREADPOOL, "Adding task to threadpool after being scheduled: "+toString());
             }
 

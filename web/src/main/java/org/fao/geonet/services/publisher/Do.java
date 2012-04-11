@@ -135,13 +135,15 @@ public class Do implements Service {
 		}
 
 		// Read configuration and register node
-		Log.debug(MODULE, "Start node registration");
+        if(Log.isDebugEnabled(MODULE))
+            Log.debug(MODULE, "Start node registration");
 		Collection<Element> nodes = geoserverConfig.getChildren("node");
 		for (Element node : nodes) {
 			// TODO : check mandatory values and reject node when relevant
 			String id = node.getChildText("id");
 			String name = node.getChildText("name");
-			Log.debug(MODULE, "  Register node:" + name);
+            if(Log.isDebugEnabled(MODULE))
+                Log.debug(MODULE, "  Register node:" + name);
 			String url = node.getChildText("adminUrl");
 			String namespacePrefix = node.getChildText("namespacePrefix");
 			String namespaceUrl = node.getChildText("namespaceUrl");
@@ -154,7 +156,8 @@ public class Do implements Service {
 			if (g != null)
 				geoserverNodes.put(id, g);
 		}
-		Log.debug(MODULE, "End node registration.");
+        if(Log.isDebugEnabled(MODULE))
+            Log.debug(MODULE, "End node registration.");
 	}
 
 	/**

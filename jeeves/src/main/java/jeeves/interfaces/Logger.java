@@ -27,6 +27,7 @@ package jeeves.interfaces;
 
 public interface Logger
 {
+    public boolean isDebugEnabled();
 	public void debug  (String message);
 	public void info   (String message);
 	public void warning(String message);

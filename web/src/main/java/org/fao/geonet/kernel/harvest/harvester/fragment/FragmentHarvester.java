@@ -363,7 +363,7 @@ public class FragmentHarvester {
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
 		
-//		log.debug("  - Adding metadata fragment with " + uuid + " schema is set to " + schema + " XML is "+ Xml.getString(md));
+//		if(log.isDebugEnabled()) log.debug("  - Adding metadata fragment with " + uuid + " schema is set to " + schema + " XML is "+ Xml.getString(md));
 		
         //
         // insert metadata
@@ -405,7 +405,8 @@ public class FragmentHarvester {
 		}
 
 		// find all elements that have an attribute id with the matchId
-		log.debug("Attempting to search metadata for "+matchId);
+        if(log.isDebugEnabled())
+            log.debug("Attempting to search metadata for "+matchId);
 		List elems = Xml.selectNodes(template,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 		// for each of these elements...
@@ -457,7 +458,7 @@ public class FragmentHarvester {
 		Element md = (Element) fragment.getChildren().get(0);
 		
 		if (params.createSubtemplates) {
-			// log.debug("Element found "+Xml.getString(elem));
+			// if(log.isDebugEnabled()) log.debug("Element found "+Xml.getString(elem));
 			
 			// Add an xlink to the subtemplate created for this fragment to the referencing element
 			reference.setAttribute("uuidref", uuid);
@@ -465,7 +466,7 @@ public class FragmentHarvester {
 			reference.setAttribute("show", "replace", xlink);
 			if (title != null) reference.setAttribute("title", title, xlink);
 		} else {
-			// log.debug("Element found "+Xml.getString(elem));
+			// if(log.isDebugEnabled()) log.debug("Element found "+Xml.getString(elem));
 			// Replace the referencing element with the fragment
 			Element parent = reference.getParentElement(); 
 			Element newMd = (Element)md.clone();
@@ -487,7 +488,8 @@ public class FragmentHarvester {
      */
 	private void updateMetadata(String recUuid, String id, Element template) throws Exception, SQLException {
 		// now update existing record with the filled in template
-		log.debug("	- Attempting to update metadata record "+id+" with links");
+        if(log.isDebugEnabled())
+            log.debug("	- Attempting to update metadata record "+id+" with links");
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
 		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
@@ -525,7 +527,8 @@ public class FragmentHarvester {
      */
 	private void createMetadata(String recUuid, Element template) throws Exception, SQLException {
 		// now add any record built from template with linked in fragments
-		log.debug("	- Attempting to insert metadata record with link");
+        if(log.isDebugEnabled())
+            log.debug("	- Attempting to insert metadata record with link");
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
 		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
@@ -540,16 +543,18 @@ public class FragmentHarvester {
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
-		
-		log.debug("	- Set privileges, category, template and harvested");
+
+        if(log.isDebugEnabled())
+            log.debug("	- Set privileges, category, template and harvested");
 		addPrivileges(id);
 		dataMan.setCategory (context, dbms, id, params.isoCategory);
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
 		dataMan.indexMetadataGroup(dbms, id);
-		
-		log.debug("	- Commit "+id);
+
+        if(log.isDebugEnabled())
+            log.debug("	- Commit "+id);
 		dbms.commit();
 		harvestSummary.recordsBuilt++;
 	}
@@ -566,7 +571,8 @@ public class FragmentHarvester {
 			String name = localCateg.getName (catId);
 
 			if (name == null) {
-				log.debug ("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled())
+                    log.debug ("    - Skipping removed category with id:"+ catId);
 			} else {
 				dataMan.setCategory (context, dbms, id, catId);
 			}
@@ -585,7 +591,8 @@ public class FragmentHarvester {
 			String name = localGroups.getName( priv.getGroupId ());
 
 			if (name == null) {
-				log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
+                if(log.isDebugEnabled())
+                    log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
 			} else {
 				for (int opId: priv.getOperations ()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
@@ -594,7 +601,7 @@ public class FragmentHarvester {
 					if (opId == 0 || opId == 5 || opId == 6) {
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					} else {
-						log.debug("       --> "+ name +" (skipped)");
+                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
 					}
 				}
 			}

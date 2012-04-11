@@ -75,8 +75,9 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 	
 	public AbstractResponse execute(AbstractRequest request,
 			ServiceContext context) throws Exception {
-		
-		Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " execute: ");
+
+        if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+            Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " execute: ");
 		
 		TokenListRequest  req = (TokenListRequest)  request;
 
@@ -93,7 +94,8 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 
 		if ( strToken == null )
 		{
-			Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " : new request (no resumptionToken)");
+            if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+                Log.debug(Geonet.OAI_HARVESTER,"OAI " +this.getClass().getSimpleName()+ " : new request (no resumptionToken)");
 			Element params = new Element("request");
 
 			ISODate from   = req.getFrom();
@@ -151,7 +153,8 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 		{
 			//result = (SearchResult) session.getProperty(Lib.SESSION_OBJECT);
 			token = cache.getResumptionToken( GeonetworkResumptionToken.buildKey(req)  );
-			Log.debug(Geonet.OAI_HARVESTER,"OAI ListRecords : using ResumptionToken :"+GeonetworkResumptionToken.buildKey(req));
+            if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+                Log.debug(Geonet.OAI_HARVESTER,"OAI ListRecords : using ResumptionToken :"+GeonetworkResumptionToken.buildKey(req));
 			
 			if (token  == null)
 				throw new BadResumptionTokenException("No session for token : "+ GeonetworkResumptionToken.buildKey(req));

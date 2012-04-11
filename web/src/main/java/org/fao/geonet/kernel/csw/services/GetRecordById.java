@@ -122,10 +122,12 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                 String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 
                 if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-                    Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint): " + cswServiceSpecificContraint);
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint): " + cswServiceSpecificContraint);
 
                     cswServiceSpecificContraint = cswServiceSpecificContraint + " +_uuid: " + uuid;
-                    Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
 
                     Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
 
@@ -133,7 +135,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                             ElementSetName.BRIEF,  filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
 
 
-                   Log.debug(Geonet.CSW_SEARCH, "GetRecordById cswServiceSpecificContraint result: " + Xml.getString(results.two()));
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH, "GetRecordById cswServiceSpecificContraint result: " + Xml.getString(results.two()));
 
                     int numOfResults = Integer.parseInt(results.two().getAttributeValue("numberOfRecordsMatched"));
 

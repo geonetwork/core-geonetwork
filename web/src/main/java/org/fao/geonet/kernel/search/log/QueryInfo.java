@@ -172,7 +172,8 @@ public class QueryInfo {
 	 */
 	public boolean storeToDb(Dbms dbms, SerialFactory sf, int requestId) {
 		if (dbms == null || dbms.isClosed()) {
-			Log.debug(Geonet.SEARCH_LOGGER, "null or closed dbms object");
+            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                Log.debug(Geonet.SEARCH_LOGGER, "null or closed dbms object");
 			return false;
 		}
 		try {
@@ -192,7 +193,8 @@ public class QueryInfo {
 					this.getLowerText(),
 					this.getUpperText(),
 					this.getInclusive() ? "y": "n");
-			Log.debug(Geonet.SEARCH_LOGGER, "Returned " + res + " for queryInfo: " + toString());
+            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                Log.debug(Geonet.SEARCH_LOGGER, "Returned " + res + " for queryInfo: " + toString());
 		} catch (SQLException sqle) {
 			dbms.abort();
 			Log.warning(Geonet.SEARCH_LOGGER, "an error occuring during QueryInfo database storage. Aborting :" + 

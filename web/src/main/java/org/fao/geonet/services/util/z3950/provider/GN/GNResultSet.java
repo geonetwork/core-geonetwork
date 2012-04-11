@@ -78,14 +78,15 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                                        Geonet.File.SEARCH_Z3950_SERVER);
 
                } catch (Exception e) {
-                       Log.debug(Geonet.Z3950_SERVER, "error constructing GNresult set: "
-                                       + e);
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
+                       Log.debug(Geonet.Z3950_SERVER, "error constructing GNresult set: " + e);
                        e.printStackTrace();
                }
        }
 
        public int evaluate(int timeout) {
                try {
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "INCOMING XML QUERY:\n" + query);
 
                        Element request = new Element("request");
@@ -127,6 +128,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
        public InformationFragment[] getFragment(int startingFragment, int count,
                        RecordFormatSpecification spec) throws IRResultSetException {
+           if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                Log.debug(Geonet.Z3950_SERVER, "Request for fragment start:"
                                + startingFragment + ", count:" + count);
 
@@ -144,12 +146,14 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        request.addContent(new Element("to").setText(to + ""));
                        ServiceConfig config = new ServiceConfig();
 
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Search request:\n"
                                        + Xml.getString(request));
                        // get result set
                        Element result = this.metasearcher.present(this.srvxtx, request,
                                        config);
 
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Search result:\n"
                                        + Xml.getString(result));
 
@@ -157,6 +161,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        result.removeChildren("summary");
                        List list = result.getChildren();
 
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Set name asked:" + spec);
 
                        // save other records to fragment
@@ -164,6 +169,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                                Element md = (Element) list.get(0);
                                md.detach();
 
+                           if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                                Log.debug(Geonet.Z3950_SERVER, "Returning fragment:\n"
                                                + Xml.getString(md));
 
@@ -184,7 +190,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
                        }
                        this.srvxtx.getResourceManager().close();
-                       Log.debug(Geonet.Z3950_SERVER, "Fragment returned");
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "Fragment returned");
                } catch (Throwable e) {
                        try {
                                this.srvxtx.getResourceManager().abort();
@@ -192,6 +198,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                                e2.printStackTrace();
                        }
 
+                   if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Exception: "+e.getClass().getName()+" "+e);
                        //e.printStackTrace();
                }

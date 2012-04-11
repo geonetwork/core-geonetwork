@@ -168,7 +168,7 @@ class Harvester
 		{
 			log.info("Searching on : "+ params.name);
 			Element response = request.execute(s.createRequest());
-			log.debug("Search results:\n"+ Xml.getString(response));
+            if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
 
 			return response;
 		}

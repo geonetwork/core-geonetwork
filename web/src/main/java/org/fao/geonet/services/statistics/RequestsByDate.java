@@ -8,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.List;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -23,7 +21,6 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -152,7 +149,7 @@ public class RequestsByDate implements Service {
 			this.chartClass = Day.class;
 		// query to values according to type,
 		String query = buildQuery();
-		Log.debug(Geonet.SEARCH_LOGGER,"query to get count by date:\n" + query);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"query to get count by date:\n" + query);
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
@@ -367,16 +364,17 @@ public class RequestsByDate implements Service {
      * @return the value for the given key, or the key itself if value not found
      */
     private String getI18NValue(String key) {
-        Log.debug(Geonet.SEARCH_LOGGER,"searching for key: " + key);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"searching for key: " + key);
         if (this.i18nStrings == null) {
-            Log.debug(Geonet.SEARCH_LOGGER,"I18N file is null, returning key as value: " + key);
+            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                Log.debug(Geonet.SEARCH_LOGGER,"I18N file is null, returning key as value: " + key);
             return key;
         }
         return this.i18nStrings.getChildText(key) == null ? key : this.i18nStrings.getChildText(key);
     }
 
     private Element loadStrings(String filePath) {
-        Log.debug(Geonet.SEARCH_LOGGER,"loading file: " + filePath);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"loading file: " + filePath);
         File f = new File(filePath);
         Element xmlDoc = null;
         Element ret = null;
@@ -385,7 +383,8 @@ public class RequestsByDate implements Service {
             try {
                 xmlDoc = Xml.loadFile(f);
             } catch (Exception ex) {
-        		Log.debug(Geonet.SEARCH_LOGGER,"Cannot load file: " + filePath + ": " + ex.getMessage());
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                    Log.debug(Geonet.SEARCH_LOGGER,"Cannot load file: " + filePath + ": " + ex.getMessage());
                 return ret;
             }
             ret = xmlDoc;

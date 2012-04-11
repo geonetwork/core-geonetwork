@@ -172,7 +172,8 @@ public class SearchManager {
      * @return
      */
     private static Analyzer createGeoNetworkAnalyzer(Set<String> stopwords) {
-        Log.debug(Geonet.SEARCH_ENGINE, "Creating GeoNetworkAnalyzer");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Creating GeoNetworkAnalyzer");
         return new GeoNetworkAnalyzer(stopwords);
     }
 
@@ -204,7 +205,8 @@ public class SearchManager {
     public static PerFieldAnalyzerWrapper getAnalyzer(String language) {
         PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)analyzerMap.get(language); 
         if(analyzer != null) {
-            Log.debug(Geonet.LUCENE, "returning analyzer for language " + language);
+            if(Log.isDebugEnabled(Geonet.LUCENE))
+                Log.debug(Geonet.LUCENE, "returning analyzer for language " + language);
             return analyzer;
         }
         else {
@@ -218,7 +220,8 @@ public class SearchManager {
      *
 	 */
 	private static void initHardCodedAnalyzers() {
-        Log.debug(Geonet.SEARCH_ENGINE, "initializing hardcoded analyzers");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "initializing hardcoded analyzers");
         // no default analyzer instantiated: create one
         if(_defaultAnalyzer == null) {
             // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
@@ -228,7 +231,8 @@ public class SearchManager {
             Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() + ", not using any stopwords.");
         }
         else {
-            Log.debug(Geonet.LUCENE, "loading stopwords");
+            if(Log.isDebugEnabled(Geonet.LUCENE))
+                Log.debug(Geonet.LUCENE, "loading stopwords");
             for(File stopwordsFile : _stopwordsDir.listFiles()) {
                 String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
                 if(language.length() != 2) {
@@ -237,12 +241,14 @@ public class SearchManager {
                 // look up stopwords for that language
                 Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
                 if(stopwordsForLanguage != null) {
-                    Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                    if(Log.isDebugEnabled(Geonet.LUCENE))
+                        Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
                     Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage);
                     analyzerMap.put(language, languageAnalyzer);
                 }
                 else {
-                    Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                    if(Log.isDebugEnabled(Geonet.LUCENE))
+                        Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
                 }
             }
         }        
@@ -259,7 +265,8 @@ public class SearchManager {
     private Analyzer createAnalyzerFromLuceneConfig(String analyzerClassName, String field, Set<String> stopwords) {
         Analyzer analyzer = null;
         try {
-            Log.debug(Geonet.SEARCH_ENGINE, "Creating analyzer defined in Lucene config:" + analyzerClassName);
+            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "Creating analyzer defined in Lucene config:" + analyzerClassName);
             // GNA analyzer
             if(analyzerClassName.equals("org.fao.geonet.kernel.search.GeoNetworkAnalyzer")) {
                 analyzer = SearchManager.createGeoNetworkAnalyzer(stopwords);
@@ -271,7 +278,8 @@ public class SearchManager {
                     Class[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
                     Object[] inParamsArray = _luceneConfig.getAnalyzerParameter((field==null?"":field) + analyzerClassName);
                     try {
-                        Log.debug(Geonet.SEARCH_ENGINE, " Creating analyzer with parameter");
+                        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                            Log.debug(Geonet.SEARCH_ENGINE, " Creating analyzer with parameter");
                         Constructor<? extends Analyzer> c = analyzerClass.getConstructor(clTypesArray);
                         analyzer = c.newInstance(inParamsArray);
                     }
@@ -314,9 +322,11 @@ public class SearchManager {
 	 * If an error occurs instantiating an analyzer, GeoNetworkAnalyzer is used.
 	 */
 	public void createAnalyzer() {
-		Log.debug(Geonet.SEARCH_ENGINE, "createAnalyzer start");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "createAnalyzer start");
 		String defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
-        Log.debug(Geonet.SEARCH_ENGINE, "defaultAnalyzer defined in Lucene config: " + defaultAnalyzerClass);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "defaultAnalyzer defined in Lucene config: " + defaultAnalyzerClass);
         // there is no default analyzer defined in lucene config
 		if (defaultAnalyzerClass == null) {
             // create default (hardcoded) analyzer
@@ -329,7 +339,8 @@ public class SearchManager {
                 Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() + ", not using any stopwords.");
             }
             else {
-                Log.debug(Geonet.LUCENE, "loading stopwords");
+                if(Log.isDebugEnabled(Geonet.LUCENE))
+                    Log.debug(Geonet.LUCENE, "loading stopwords");
                 for(File stopwordsFile : _stopwordsDir.listFiles()) {
                     String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
                     // TODO check for valid ISO 639-2 codes could be better than this
@@ -339,7 +350,8 @@ public class SearchManager {
                     // look up stopwords for that language
                     Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
                     if(stopwordsForLanguage != null) {
-                        Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                        if(Log.isDebugEnabled(Geonet.LUCENE))
+                            Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
 
                         // create the default analyzer according to Lucene config
                         Analyzer a = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, stopwordsForLanguage);
@@ -348,7 +360,8 @@ public class SearchManager {
                         for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
                             String field = e.getKey();
                             String aClassName = e.getValue();
-                            Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
+                            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                                Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
                             Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field ,stopwordsForLanguage);
                             languageAnalyzer.addAnalyzer(field, analyzer);
                         }
@@ -356,7 +369,8 @@ public class SearchManager {
                         
                     }
                     else {
-                        Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                        if(Log.isDebugEnabled(Geonet.LUCENE))
+                            Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
                     }
                 }
             }            
@@ -368,7 +382,8 @@ public class SearchManager {
 			for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
 				String field = e.getKey();
 				String aClassName = e.getValue();
-				Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
                 Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field, null);
                 _analyzer.addAnalyzer(field, analyzer);
 			}
@@ -466,7 +481,8 @@ public class SearchManager {
                 Class[] clTypesArray = _luceneConfig.getDocumentBoostParameterClass();
                 Object[] inParamsArray = _luceneConfig.getDocumentBoostParameter();
                 try {
-                    Log.debug(Geonet.SEARCH_ENGINE, " Creating document boost object with parameter");
+                    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                        Log.debug(Geonet.SEARCH_ENGINE, " Creating document boost object with parameter");
                     Constructor<? extends DocumentBoosting> c = clazz.getConstructor(clTypesArray);
                     _documentBoostClass = c.newInstance(inParamsArray);
                 }
@@ -663,17 +679,20 @@ public class SearchManager {
 	 */
 	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                       String title) throws Exception {
-		Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
 		_indexWriter.openWriter();
 		try {
             List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
             for( Pair<String, Document> document : docs ) {
                 _indexWriter.addDocument(document.one(), document.two());
-                Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
+                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                    Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
             }
 		}
         finally {
-			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
 			_indexWriter.closeWriter();
 		}
 		_spatial.writer().index(schemaDir, id, metadata);
@@ -685,7 +704,8 @@ public class SearchManager {
      * @throws Exception
      */
 	public void startIndexGroup() throws Exception {
-		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from startIndexGroup");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from startIndexGroup");
 		_indexWriter.openWriter();
 	}
 
@@ -716,7 +736,8 @@ public class SearchManager {
      * @throws Exception
      */
 	public void endIndexGroup() throws Exception {
-		Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from endIndexGroup");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from endIndexGroup");
 		_indexWriter.closeWriter();
 	}
 
@@ -729,7 +750,8 @@ public class SearchManager {
      */
 	public void deleteGroup(String fld, String txt) throws Exception {
 		// possibly remove old document
-		Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
 		_indexWriter.deleteDocuments(new Term(fld, txt));
 
 		_spatial.writer().delete(txt);
@@ -752,10 +774,12 @@ public class SearchManager {
                                                            List<Element> moreFields, String isTemplate, String title,
                                                            boolean group) throws Exception {
 
-		Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
 		if (group) deleteGroup("_id", id);
 		else delete("_id", id);
-		Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
 
 		Element xmlDoc;
 
@@ -774,13 +798,13 @@ public class SearchManager {
 			SearchManager.addField(xmlDoc, LuceneIndexField.ANY, sb.toString(), true, true);
 		}
         else {
-			Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n"
-					+ Xml.getString(metadata));
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
 
             xmlDoc = getIndexFields(schemaDir, metadata);
 
-			Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n"
-					+ Xml.getString(xmlDoc));
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
 		}
 
         @SuppressWarnings(value = "unchecked")
@@ -800,8 +824,9 @@ public class SearchManager {
                 locale = Geonet.DEFAULT_LANGUAGE;
             }
             documents.add(Pair.read(locale, newDocument(doc)));
-        }		
-		Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
+        }
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
         return documents;
 	}
 
@@ -894,13 +919,15 @@ public class SearchManager {
      */
 	public void delete(String fld, String txt) throws Exception {
 		// possibly remove old document
-		Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from delete");
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from delete");
 		_indexWriter.openWriter();
 		try {
 			_indexWriter.deleteDocuments(new Term(fld, txt));
 		}
         finally {
-			Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
 			_indexWriter.closeWriter();
 		}
 		_spatial.writer().delete(txt);
@@ -928,7 +955,8 @@ public class SearchManager {
 				Document doc = reader.document(i, idXLinkSelector);
 				String id = doc.get("_id");
 				String hasxlinks = doc.get("_hasxlinks");
-				Log.debug(Geonet.INDEX_ENGINE, "Got id "+id+" : '"+hasxlinks+"'");
+                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                    Log.debug(Geonet.INDEX_ENGINE, "Got id "+id+" : '"+hasxlinks+"'");
 				if (id == null) {
 					Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
 					continue;
@@ -1398,7 +1426,8 @@ public class SearchManager {
                     // Boost a particular field according to Lucene config. 
                     Float boost = _luceneConfig.getFieldBoost(name);
                     if (boost != null) {
-                        Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost);
+                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                            Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost);
                         f.setBoost(boost);
                     }
                     doc.add(f);
@@ -1414,7 +1443,8 @@ public class SearchManager {
         if (_documentBoostClass != null) {
             Float f = (_documentBoostClass).getBoost(doc);
             if (f != null) {
-                Log.debug(Geonet.INDEX_ENGINE, "Boosting document with boost factor: " + f);
+                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                    Log.debug(Geonet.INDEX_ENGINE, "Boosting document with boost factor: " + f);
                 doc.setBoost(f);
             }
         }
@@ -1437,7 +1467,8 @@ public class SearchManager {
 		// string = cleanNumericField(string);
 		NumericField field = new NumericField(name, fieldConfig.getPrecisionStep(), store, index);
 		// TODO : reuse the numeric field for better performance
-		Log.debug(Geonet.INDEX_ENGINE, "Indexing numeric field: " + name + " with value: " + string );
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing numeric field: " + name + " with value: " + string );
 		try {
 			String paramType = fieldConfig.getType();
 			if ("double".equals(paramType)) {

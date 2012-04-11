@@ -182,7 +182,8 @@ public class CatalogDispatcher
 				request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
 			}
 
-			context.debug("Adapted GET request is:\n"+Xml.getString(request));
+            if(context.isDebug())
+                context.debug("Adapted GET request is:\n"+Xml.getString(request));
 			context.info("Dispatching operation : "+ operation);
 
 			return cs.execute(request, context);

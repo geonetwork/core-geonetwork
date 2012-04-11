@@ -53,7 +53,8 @@ public class GeonetworkDataDirectory {
 	 */
 	public GeonetworkDataDirectory(String webappName, String path,
 			ServiceConfig handlerConfig, JeevesServlet jeevesServlet) {
-		Log.debug(Geonet.DATA_DIRECTORY,
+        if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
+            Log.debug(Geonet.DATA_DIRECTORY,
 				"Check and create if needed GeoNetwork data directory");
 		this.jeevesServlet = jeevesServlet;
 		setDataDirectory(webappName, path, handlerConfig);
@@ -83,8 +84,9 @@ public class GeonetworkDataDirectory {
 				"Servlet context parameter ", "Config.xml appHandler parameter", "System environment variable " };
 
 		String dataDirStr = null;
-		
-		Log.debug(Geonet.DATA_DIRECTORY, "lookupProperty " + key);
+
+        if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
+            Log.debug(Geonet.DATA_DIRECTORY, "lookupProperty " + key);
 		
 		// Loop over variable access methods
 		for (int j = 0; j < typeStrs.length && dataDirStr == null; j++) {
@@ -113,7 +115,8 @@ public class GeonetworkDataDirectory {
 			if (value == null || value.equalsIgnoreCase("")) {
 				continue;
 			}
-			Log.debug(Geonet.DATA_DIRECTORY, " Found " + typeStr + "for " + key
+            if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
+                Log.debug(Geonet.DATA_DIRECTORY, " Found " + typeStr + "for " + key
 					+ " with value " + value);
 			
 			dataDirStr = value;

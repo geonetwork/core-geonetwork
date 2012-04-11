@@ -49,7 +49,7 @@ public class GNSearchable implements Searchable {
        
        
        public GNSearchable() {
-               Log.debug(Geonet.Z3950_SERVER, "creating GNSearchable");
+           if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "creating GNSearchable");
        }
        
        public void close() {
@@ -72,7 +72,7 @@ public class GNSearchable implements Searchable {
 
        public IRResultSet evaluate(IRQuery q, Object userInfo, Observer[] observers) {
 
-               Log.debug(Geonet.Z3950_SERVER, "evaluating...");
+           if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "evaluating...");
                
                ContextContainer cnt = (ContextContainer)ctx.getBean("ContextGateway");
                

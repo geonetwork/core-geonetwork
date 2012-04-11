@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -136,7 +135,8 @@ public class Aligner
 			{
 				String id = localUuids.getID(uuid);
 
-				log.debug("  - Removing old metadata with local id:"+ id);
+                if(log.isDebugEnabled())
+                    log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadata(context, dbms, id);
 				dbms.commit();
 				result.locallyRemoved++;
@@ -177,13 +177,15 @@ public class Aligner
 
 		if (schema == null)
 		{
-			log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid);
+            if(log.isDebugEnabled())
+                log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid);
 			result.unknownSchema++;
 
 			return;
 		}
 
-		log.debug("  - Adding metadata with remote uuid:"+ ri.uuid + " schema:" + schema);
+        if(log.isDebugEnabled())
+            log.debug("  - Adding metadata with remote uuid:"+ ri.uuid + " schema:" + schema);
 
         //
         // insert metadata
@@ -218,10 +220,12 @@ public class Aligner
 			String name = localCateg.getName(catId);
 
 			if (name == null)
-				log.debug("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled())
+                    log.debug("    - Skipping removed category with id:"+ catId);
 			else
 			{
-				log.debug("    - Setting category : "+ name);
+                if(log.isDebugEnabled())
+                    log.debug("    - Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -238,10 +242,12 @@ public class Aligner
 			String name = localGroups.getName(priv.getGroupId());
 
 			if (name == null)
-				log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
+                if(log.isDebugEnabled())
+                    log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
 			else
 			{
-				log.debug("    - Setting privileges for group : "+ name);
+                if(log.isDebugEnabled())
+                    log.debug("    - Setting privileges for group : "+ name);
 
 				for (int opId: priv.getOperations())
 				{
@@ -250,11 +256,13 @@ public class Aligner
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6)
 					{
-						log.debug("       --> "+ name);
+                        if(log.isDebugEnabled())
+                            log.debug("       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else
-						log.debug("       --> "+ name +" (skipped)");
+                    if(log.isDebugEnabled())
+                        log.debug("       --> "+ name +" (skipped)");
 				}
 			}
 		}
@@ -271,17 +279,20 @@ public class Aligner
 		String date = localUuids.getChangeDate(ri.uuid);
 
 		if (date == null)
-			log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+            if(log.isDebugEnabled())
+                log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
 		else
 		{
 			if (!ri.isMoreRecentThan(date))
 			{
-				log.debug("  - Metadata XML not changed for uuid:"+ ri.uuid);
+                if(log.isDebugEnabled())
+                    log.debug("  - Metadata XML not changed for uuid:"+ ri.uuid);
 				result.unchangedMetadata++;
 			}
 			else
 			{
-				log.debug("  - Updating local metadata for uuid:"+ ri.uuid);
+                if(log.isDebugEnabled())
+                    log.debug("  - Updating local metadata for uuid:"+ ri.uuid);
 
 				Element md = retrieveMetadata(ri.uuid);
 
@@ -348,9 +359,11 @@ public class Aligner
 
 		try
 		{
-			log.debug("Getting record from : "+ request.getHost() +" (uuid:"+ uuid +")");
+            if(log.isDebugEnabled())
+                log.debug("Getting record from : "+ request.getHost() +" (uuid:"+ uuid +")");
 			Element response = request.execute();
-			log.debug("Record got:\n"+Xml.getString(response));
+            if(log.isDebugEnabled())
+                log.debug("Record got:\n"+Xml.getString(response));
 
 			List list = response.getChildren();
 

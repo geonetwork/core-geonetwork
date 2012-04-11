@@ -103,10 +103,12 @@ public class EditLib {
      * @throws Exception
      */
 	public void addEditingInfo(String schema, Element md, int id, int parent) throws Exception {
-		Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + jeeves.utils.Xml.getString(md));
+        if(Log.isDebugEnabled(Geonet.EDITOR))
+            Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + jeeves.utils.Xml.getString(md));
 		enumerateTree(md,id,parent);
 		expandTree(scm.getSchema(schema), md);
-		Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
+        if(Log.isDebugEnabled(Geonet.EDITOR))
+            Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
 	}
 
     /**
@@ -245,19 +247,22 @@ public class EditLib {
      * @throws Exception
      */
 	public Element addElement(String schema, Element el, String qname) throws Exception {
-		Log.debug(Geonet.EDITORADDELEMENT,"#### in addElement()"); 
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - parent = " + el.getName());
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - child qname = " + qname); 
-
+        if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)){
+            Log.debug(Geonet.EDITORADDELEMENT,"#### in addElement()");
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - parent = " + el.getName());
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - child qname = " + qname);
+        }
 		String name   = getUnqualifiedName(qname);
 		String ns     = getNamespace(qname, el, scm.getSchema(schema));
 		String prefix = getPrefix(qname);
-		String parentName = getParentNameFromChild(el); 
+		String parentName = getParentNameFromChild(el);
 
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - parent name for type retrieval = " + parentName); 
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - child name = " + name);
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - child namespace = " + ns);
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - child prefix = " + prefix);
+        if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - parent name for type retrieval = " + parentName);
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - child name = " + name);
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - child namespace = " + ns);
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - child prefix = " + prefix);
+        }
 		List childS = el.getChildren();
 		if (childS.size() > 0) {
 			Element elChildS = (Element)childS.get(0);
@@ -271,11 +276,13 @@ public class EditLib {
 
 		String typeName = mdSchema.getElementType(el.getQualifiedName(),parentName);
 
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - type name = " + typeName); 
+        if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT))
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - type name = " + typeName);
 
  		MetadataType type = mdSchema.getTypeInfo(typeName);
 
-		Log.debug(Geonet.EDITORADDELEMENT,"#### - metadata tpe = " + type); 
+        if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT))
+            Log.debug(Geonet.EDITORADDELEMENT,"#### - metadata tpe = " + type);
 
 		//--- collect all children, adding the new one at the end of the others
 
@@ -284,10 +291,12 @@ public class EditLib {
 		for(int i=0; i<type.getElementCount(); i++) {
 			List<Element> list = getChildren(el, type.getElementAt(i));
 
-            Log.debug(Geonet.EDITORADDELEMENT,"####   - child of type " + type.getElementAt(i) + " list size = " + list.size());
+            if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT))
+                Log.debug(Geonet.EDITORADDELEMENT,"####   - child of type " + type.getElementAt(i) + " list size = " + list.size());
             for (Element aChild : list) {
                 children.add(aChild);
-                Log.debug(Geonet.EDITORADDELEMENT, "####		- add child " + aChild.toString());
+                if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT))
+                    Log.debug(Geonet.EDITORADDELEMENT, "####		- add child " + aChild.toString());
             }
 
 			if (qname.equals(type.getElementAt(i)))
@@ -324,8 +333,9 @@ public class EditLib {
         MetadataSchema mdSchema = scm.getSchema(schema);
         String parentName = getParentNameFromChild(el);
         Element fragElt;
-        
-        Log.debug(Geonet.EDITORADDELEMENT, "Add XML fragment for element name:" + qname + ", parent: " + parentName);
+
+        if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT))
+            Log.debug(Geonet.EDITORADDELEMENT, "Add XML fragment for element name:" + qname + ", parent: " + parentName);
         
         try {
             fragElt = Xml.loadString(fragment, false);
@@ -417,7 +427,8 @@ public class EditLib {
      * @throws Exception
      */
 	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element md) throws Exception {
-		Log.debug(Geonet.EDITOR,"#### entering fillElement()"); 
+        if(Log.isDebugEnabled(Geonet.EDITOR))
+            Log.debug(Geonet.EDITOR,"#### entering fillElement()");
 		String parentName = parent.getQualifiedName();
 		fillElement(schema,sugg,parentName,md);
 	}
@@ -432,12 +443,15 @@ public class EditLib {
      * @throws Exception
      */
 	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element md) throws Exception {
-		Log.debug(Geonet.EDITOR,"#### entering fillElement()"); 
+        if(Log.isDebugEnabled(Geonet.EDITOR))
+            Log.debug(Geonet.EDITOR,"#### entering fillElement()");
 		String elemName = md.getQualifiedName();
-		
-		Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName); 
-		Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName); 
-		Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName)); 
+
+        if(Log.isDebugEnabled(Geonet.EDITOR)) {
+            Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName);
+            Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName);
+            Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName));
+        }
 
 		if (schema.isSimpleElement(elemName,parentName))
 			return;
@@ -445,12 +459,14 @@ public class EditLib {
 		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName,parentName));
 		boolean useSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
 
-		Log.debug(Geonet.EDITOR,"#### - type:"); 
-		Log.debug(Geonet.EDITOR,"####   - name = " + type.getName()); 
-		Log.debug(Geonet.EDITOR,"####   - # attributes = " + type.getAttributeCount()); 
-		Log.debug(Geonet.EDITOR,"####   - # elements = " + type.getElementCount()); 
-		Log.debug(Geonet.EDITOR,"####   - # isOrType = " + type.isOrType()); 
-		Log.debug(Geonet.EDITOR,"####   - type = " + type); 
+        if(Log.isDebugEnabled(Geonet.EDITOR)) {
+            Log.debug(Geonet.EDITOR,"#### - type:");
+            Log.debug(Geonet.EDITOR,"####   - name = " + type.getName());
+            Log.debug(Geonet.EDITOR,"####   - # attributes = " + type.getAttributeCount());
+            Log.debug(Geonet.EDITOR,"####   - # elements = " + type.getElementCount());
+            Log.debug(Geonet.EDITOR,"####   - # isOrType = " + type.isOrType());
+            Log.debug(Geonet.EDITOR,"####   - type = " + type);
+        }
 
 		//-----------------------------------------------------------------------
 		//--- handle attributes
@@ -459,16 +475,19 @@ public class EditLib {
 		{
 			MetadataAttribute attr = type.getAttributeAt(i);
 
-			Log.debug(Geonet.EDITOR,"####   - " + i + " attribute = " + attr.name); 
-			Log.debug(Geonet.EDITOR,"####     - required = " + attr.required); 
-			Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
+            if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                Log.debug(Geonet.EDITOR,"####   - " + i + " attribute = " + attr.name);
+                Log.debug(Geonet.EDITOR,"####     - required = " + attr.required);
+                Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
+            }
 			if (attr.required || sugg.isSuggested(elemName, attr.name))
 			{
 				String value = "";
 
 				if (attr.defValue != null) {
 					value = attr.defValue;
-					Log.debug(Geonet.EDITOR,"####     - value = " + attr.defValue); 
+                    if(Log.isDebugEnabled(Geonet.EDITOR))
+                        Log.debug(Geonet.EDITOR,"####     - value = " + attr.defValue);
 				}
 
 				String uname = getUnqualifiedName(attr.name);
@@ -490,11 +509,13 @@ public class EditLib {
 				String childName = type.getElementAt(i);
 				boolean hasSuggestion = sugg.hasSuggestion(childName, type.getElementList());
 
-				Log.debug(Geonet.EDITOR,"####   - " + i + " element = " + childName); 
-				Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, childName));
-				Log.debug(Geonet.EDITOR,"####     - has suggestion = "+hasSuggestion );
-				
-				if (minCard > 0 || sugg.isSuggested(elemName, childName)) {
+                if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                    Log.debug(Geonet.EDITOR,"####   - " + i + " element = " + childName);
+                    Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, childName));
+                    Log.debug(Geonet.EDITOR,"####     - has suggestion = "+hasSuggestion );
+                }
+
+                if (minCard > 0 || sugg.isSuggested(elemName, childName)) {
 					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName,elemName));
 
 					//--- There can be 'or' elements with other 'or' elements inside them.
@@ -516,9 +537,12 @@ public class EditLib {
 					} else {
 						if (elemType.isOrType()) {
 							if (elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
-								Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
-							} else 
-								Log.debug(Geonet.EDITOR,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
+                                if(Log.isDebugEnabled(Geonet.EDITOR))
+                                    Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
+							} else {
+                                if(Log.isDebugEnabled(Geonet.EDITOR))
+                                    Log.debug(Geonet.EDITOR,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
+                            }
 						}
 					}
 				}
@@ -527,11 +551,14 @@ public class EditLib {
 		else if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
 			// Here we could probably expand element having one and only one suggestion for 
 			// an or element - then we force to expand that only one suggestion ? 
-			Log.debug(Geonet.EDITOR,"####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
+            if(Log.isDebugEnabled(Geonet.EDITOR))
+                Log.debug(Geonet.EDITOR,"####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
 			Element child = new Element("CharacterString", "gco", "http://www.isotc211.org/2005/gco");
 			md.addContent(child);
-		} else
-			Log.debug(Geonet.EDITOR,"####   - WARNING : requested expansion of an OR element : " +md.getName());
+		} else {
+            if(Log.isDebugEnabled(Geonet.EDITOR))
+                Log.debug(Geonet.EDITOR,"####   - WARNING : requested expansion of an OR element : " +md.getName());
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -568,7 +595,8 @@ public class EditLib {
 		MetadataType containerType = mdSchema.getTypeInfo(chName);
 		for (int k=0;k<containerType.getElementCount();k++) {	
 			String elemName = containerType.getElementAt(k);
-			Log.debug(Geonet.EDITOR,"		-- Searching for child "+elemName);
+            if(Log.isDebugEnabled(Geonet.EDITOR))
+                Log.debug(Geonet.EDITOR,"		-- Searching for child "+elemName);
 			List<Element> elems;
 			if (elemName.contains(Edit.RootChild.GROUP)||
 					elemName.contains(Edit.RootChild.SEQUENCE)||
@@ -805,45 +833,55 @@ public class EditLib {
      * @throws Exception
      */
 	public void expandElement(MetadataSchema schema, Element md) throws Exception {
-		Log.debug(Geonet.EDITOREXPANDELEMENT,"entering expandElement()"); 
+        if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
+            Log.debug(Geonet.EDITOREXPANDELEMENT,"entering expandElement()");
 
 		String elemName = md.getQualifiedName();
 		String parentName = getParentNameFromChild(md);
 
-		Log.debug(Geonet.EDITOREXPANDELEMENT,"elemName = " + elemName); 
-		Log.debug(Geonet.EDITOREXPANDELEMENT,"parentName = " + parentName); 
+        if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT)) {
+            Log.debug(Geonet.EDITOREXPANDELEMENT,"elemName = " + elemName);
+            Log.debug(Geonet.EDITOREXPANDELEMENT,"parentName = " + parentName);
+        }
 
 		String elemType = schema.getElementType(elemName,parentName);
-		Log.debug(Geonet.EDITOREXPANDELEMENT,"elemType = " + elemType); 
+        if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
+            Log.debug(Geonet.EDITOREXPANDELEMENT,"elemType = " + elemType);
 
 		Element elem = md.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
 		addValues(schema, elem, elemName, parentName);
 
 		if (schema.isSimpleElement(elemName,parentName))
 		{
-			Log.debug(Geonet.EDITOREXPANDELEMENT,"is simple element"); 
+            if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
+                Log.debug(Geonet.EDITOREXPANDELEMENT,"is simple element");
 			return;
 		}
 		MetadataType type = schema.getTypeInfo(elemType);
-		Log.debug(Geonet.EDITOREXPANDELEMENT,"Type = "+type);
+        if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
+            Log.debug(Geonet.EDITOREXPANDELEMENT,"Type = "+type);
 
 		for (int i=0; i<type.getElementCount(); i++) {
 			String childQName = type.getElementAt(i);
 
-			Log.debug(Geonet.EDITOREXPANDELEMENT,"- childName = " + childQName); 
+            if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
+                Log.debug(Geonet.EDITOREXPANDELEMENT,"- childName = " + childQName);
 			if (childQName == null) continue; // schema extensions cause null types; just skip
 
 			String childName   = getUnqualifiedName(childQName);
 			String childPrefix = getPrefix(childQName);
 			String childNS     = getNamespace(childQName, md, schema);
 
-			Log.debug(Geonet.EDITOREXPANDELEMENT,"- name      = " + childName); 
-			Log.debug(Geonet.EDITOREXPANDELEMENT,"- prefix    = " + childPrefix); 
-			Log.debug(Geonet.EDITOREXPANDELEMENT,"- namespace = " + childNS); 
+            if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT)) {
+                Log.debug(Geonet.EDITOREXPANDELEMENT,"- name      = " + childName);
+                Log.debug(Geonet.EDITOREXPANDELEMENT,"- prefix    = " + childPrefix);
+                Log.debug(Geonet.EDITOREXPANDELEMENT,"- namespace = " + childNS);
+            }
 
 			List list = md.getChildren(childName, Namespace.getNamespace(childNS));
 			if (list.size() == 0 && !(type.isOrType())) {
-				Log.debug(Geonet.EDITOREXPANDELEMENT,"- no children of this type already present"); 
+                if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
+                    Log.debug(Geonet.EDITOREXPANDELEMENT,"- no children of this type already present");
 
 				Element newElem = createElement(schema, elemName, childQName, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i));
 
@@ -855,9 +893,11 @@ public class EditLib {
 					insertLast(md, prevName, prevNS, newElem);
 				}
 			} else {
-				Log.debug(Geonet.EDITOREXPANDELEMENT,"- " + list.size() + " children of this type already present"); 
-				Log.debug(Geonet.EDITOREXPANDELEMENT,"- min cardinality = " + type.getMinCardinAt(i)); 
-				Log.debug(Geonet.EDITOREXPANDELEMENT,"- max cardinality = " + type.getMaxCardinAt(i)); 
+                if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT)){
+                    Log.debug(Geonet.EDITOREXPANDELEMENT,"- " + list.size() + " children of this type already present");
+                    Log.debug(Geonet.EDITOREXPANDELEMENT,"- min cardinality = " + type.getMinCardinAt(i));
+                    Log.debug(Geonet.EDITOREXPANDELEMENT,"- max cardinality = " + type.getMaxCardinAt(i));
+                }
 
 
 				for (int j=0; j<list.size(); j++) {
@@ -1217,7 +1257,8 @@ public class EditLib {
 				// (eg. like schema-substitute) in order to define the default substitute to use
 				// for a type. TODO
 				if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
-					Log.debug(Geonet.EDITOR,"OR element having gco:CharacterString substitute and no suggestion: " + qname);
+                    if(Log.isDebugEnabled(Geonet.EDITOR))
+                        Log.debug(Geonet.EDITOR,"OR element having gco:CharacterString substitute and no suggestion: " + qname);
 
 					Element newElem = createElement(schema, qname,
 							"gco:CharacterString",

@@ -61,7 +61,8 @@ public class MetadataNotifierManager {
      * @throws MetadataNotifierException
      */
     public void updateMetadataBatch(Dbms dbms, GeonetContext gc) throws MetadataNotifierException {
-        Log.debug("MetadataNotifierManager", "updateMetadata unregistered");
+        if(Log.isDebugEnabled("MetadataNotifierManager"))
+            Log.debug("MetadataNotifierManager", "updateMetadata unregistered");
 
         loadNotifiers(dbms);
 
@@ -178,7 +179,8 @@ public class MetadataNotifierManager {
         public void run() {
             try {
                 String metadataString = Xml.getString(ISO19139);
-                Log.debug("MetadataNotifierManager", "updateMetadata before (uuid): " + uuid);
+                if(Log.isDebugEnabled("MetadataNotifierManager"))
+                    Log.debug("MetadataNotifierManager", "updateMetadata before (uuid): " + uuid);
 
                 loadNotifiers(dbms);
 
@@ -191,7 +193,8 @@ public class MetadataNotifierManager {
                     // Catch individual errors
                     try {
                         client.webUpdate(notifierUrl, username, password, metadataString, uuid, gc);
-                        Log.debug("MetadataNotifierManager", "updateMetadata (uuid): " + uuid);
+                        if(Log.isDebugEnabled("MetadataNotifierManager"))
+                            Log.debug("MetadataNotifierManager", "updateMetadata (uuid): " + uuid);
 
                         // mark metadata as notified for current notifier service
                         dataMan.setMetadataNotified(id, uuid, notifierId, false, dbms);
@@ -244,9 +247,11 @@ public class MetadataNotifierManager {
                     String password = service.getChild("password").getText();
 
                     try {
-                        Log.debug("MetadataNotifierManager", "deleteMetadata before (uuid): " + uuid);
+                        if(Log.isDebugEnabled("MetadataNotifierManager"))
+                            Log.debug("MetadataNotifierManager", "deleteMetadata before (uuid): " + uuid);
                         client.webDelete(notifierUrl, username, password, uuid, gc);
-                        Log.debug("MetadataNotifierManager", "deleteMetadata (uuid): " + uuid);
+                        if(Log.isDebugEnabled("MetadataNotifierManager"))
+                            Log.debug("MetadataNotifierManager", "deleteMetadata (uuid): " + uuid);
 
                         System.out.println("deleteMetadata (id): " + id + " notifier id: " + notifierId);
 

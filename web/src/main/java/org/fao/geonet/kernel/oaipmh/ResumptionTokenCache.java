@@ -42,7 +42,8 @@ public class ResumptionTokenCache extends Thread {
 	public ResumptionTokenCache(SettingManager sm) {
 		
 		this.settingMan=sm;
-		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::init timout:"+getTimeout());
+        if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+            Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::init timout:"+getTimeout());
 		
 		map = Collections.synchronizedMap( new HashMap<String,GeonetworkResumptionToken>()  );
 
@@ -72,14 +73,15 @@ public class ResumptionTokenCache extends Thread {
 		for (String key : map.keySet() ) {
 			if ( map.get(key).getExpirDate().getSeconds() < (now.getTime()/1000)  ) {
 				map.remove(key);
-				Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::expunge removing:"+key);
+                if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+                    Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::expunge removing:"+key);
 			}
 		}
 	}
 	
 	// remove oldest token from cache
 	private void removeLast() {
-		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::removeLast" );
+        if(Log.isDebugEnabled(Geonet.OAI_HARVESTER)) Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::removeLast" );
 
 		
 		long oldest=Long.MAX_VALUE;
@@ -94,7 +96,8 @@ public class ResumptionTokenCache extends Thread {
 		}
 		
 		map.remove(oldkey);
-		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::removeLast removing:"+oldkey);
+        if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+            Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::removeLast removing:"+oldkey);
 
 		
 	}
@@ -104,7 +107,8 @@ public class ResumptionTokenCache extends Thread {
 		return map.get(str);
 	}
 	public synchronized void storeResumptionToken(GeonetworkResumptionToken resumptionToken) {
-		Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::store "+resumptionToken.getKey() + " size: "+map.size() );
+        if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
+            Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::store "+resumptionToken.getKey() + " size: "+map.size() );
 		
 		if ( map.size() == getCachemaxsize() ) {
 			removeLast();

@@ -28,7 +28,8 @@ public class StopwordFileParser {
         if (filepath.endsWith("README.txt")) {
             return null;
         }
-        Log.debug(Geonet.INDEX_ENGINE, "StopwordParser parsing file: " + filepath);
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "StopwordParser parsing file: " + filepath);
         Set<String> stopwords = null;
         try {
             File file = new File(filepath);
@@ -59,10 +60,12 @@ public class StopwordFileParser {
             x.printStackTrace();
         }
         if (stopwords != null) {
-            Log.debug(Geonet.INDEX_ENGINE, "Added # " + stopwords.size() + " stopwords");
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                Log.debug(Geonet.INDEX_ENGINE, "Added # " + stopwords.size() + " stopwords");
         }
         else {
-            Log.debug(Geonet.INDEX_ENGINE, "Added 0 stopwords");
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                Log.debug(Geonet.INDEX_ENGINE, "Added 0 stopwords");
         }
         return stopwords;
     }

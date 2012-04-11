@@ -513,7 +513,8 @@ public class GeoServerRest {
 					body, null, "text/xml", true);
 
 		} catch (Exception e) {
-			Log.debug("GeoServerRest", "Failed to create style for layer: "
+            if(Log.isDebugEnabled("GeoServerRest"))
+                Log.debug("GeoServerRest", "Failed to create style for layer: "
 					+ layer + ", error is: " + e.getMessage());
 		}
 
@@ -616,9 +617,11 @@ public class GeoServerRest {
 		response = "";
 		final HttpClient c = httpClientFactory.newHttpClient();
 		String url = this.restUrl + urlParams;
-		Log.debug(LOGGER_NAME, "url:" + url);
-		Log.debug(LOGGER_NAME, "method:" + method);
-		Log.debug(LOGGER_NAME, "postData:" + postData);
+        if(Log.isDebugEnabled(LOGGER_NAME)) {
+            Log.debug(LOGGER_NAME, "url:" + url);
+            Log.debug(LOGGER_NAME, "method:" + method);
+            Log.debug(LOGGER_NAME, "postData:" + postData);
+        }
 
 		HttpMethod m;
 		if (method.equals(METHOD_PUT)) {
@@ -651,7 +654,7 @@ public class GeoServerRest {
 		m.setDoAuthentication(true);
 
 		status = c.executeMethod(m);
-		Log.debug(LOGGER_NAME, "status:" + status);
+        if(Log.isDebugEnabled(LOGGER_NAME)) Log.debug(LOGGER_NAME, "status:" + status);
 		if (saveResponse)
 			this.response = m.getResponseBodyAsString();
 

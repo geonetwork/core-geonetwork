@@ -124,7 +124,8 @@ class Harvester
 		
 		Element capabil = req.execute();
 
-		log.debug("Capabilities:\n"+Xml.getString(capabil));
+        if(log.isDebugEnabled())
+            log.debug("Capabilities:\n"+Xml.getString(capabil));
         
 		if (capabil.getName().equals("ExceptionReport"))
 			CatalogException.unmarshal(capabil);
@@ -191,8 +192,10 @@ class Harvester
             request.setStartPosition(start +"");
 		    doSearch(request, start, 1);
         } catch(Exception ex) {
-            log.debug(ex.getMessage());
-            log.debug("Changing to CSW harvester to use " + (PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET"));
+            if(log.isDebugEnabled()) {
+                log.debug(ex.getMessage());
+                log.debug("Changing to CSW harvester to use " + (PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET"));
+            }
 
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET");
         }
@@ -202,8 +205,9 @@ class Harvester
 		while (true)
 		{
 			request.setStartPosition(start +"");
-			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);			
-			log.debug("Number of child elements in response: " + response.getChildren().size());
+			Element response = doSearch(request, start, GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE);
+            if(log.isDebugEnabled())
+                log.debug("Number of child elements in response: " + response.getChildren().size());
 
 			Element results  = response.getChild("SearchResults", Csw.NAMESPACE_CSW);
 			// heikki: some providers forget to update their CSW namespace to the CSW 2.0.2 specification
@@ -236,8 +240,10 @@ class Harvester
 
 			int recCount = getRecordCount(results);
 
-			log.debug("Records declared in response : "+ recCount);
-			log.debug("Records found in response    : "+ counter);
+            if(log.isDebugEnabled()) {
+                log.debug("Records declared in response : "+ recCount);
+			    log.debug("Records found in response    : "+ counter);
+            }
 
 			if (start+GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE > recCount)
 				break;
@@ -466,8 +472,10 @@ class Harvester
 		{
 			log.info("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
 			Element response = request.execute();
-			log.debug("Sent request "+request.getSentData());
-			log.debug("Search results:\n"+Xml.getString(response));
+            if(log.isDebugEnabled()) {
+                log.debug("Sent request "+request.getSentData());
+                log.debug("Search results:\n"+Xml.getString(response));
+            }
 
 			return response;
 		}
@@ -498,7 +506,8 @@ class Harvester
 	private RecordInfo getRecordInfo(Element record)
 	{
 		String name = record.getName();
-    log.debug("getRecordInfo (name): " + name);
+        if(log.isDebugEnabled())
+            log.debug("getRecordInfo (name): " + name);
 
 		// get schema
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -507,7 +516,8 @@ class Harvester
 		// get uuid and date modified
 		try {
 			String schema = dm.autodetectSchema(record);
-    	log.debug("getRecordInfo (schema): " + schema);
+            if(log.isDebugEnabled())
+                log.debug("getRecordInfo (schema): " + schema);
 
 			String identif  = dm.extractUUID(schema, record); 
 			if (identif.length() == 0) {
@@ -517,7 +527,8 @@ class Harvester
 
 			String modified = dm.extractDateModified(schema, record); 
 			if (modified.length() == 0) modified = null;
-			log.debug("getRecordInfo: adding "+identif+" with modification date "+modified);
+            if(log.isDebugEnabled())
+                log.debug("getRecordInfo: adding "+identif+" with modification date "+modified);
       return new RecordInfo(identif, modified);
 		} catch (Exception e) {
       log.warning("Skipped record not in supported format : "+ name);

@@ -65,8 +65,8 @@ class WAFRetriever implements RemoteRetriever {
 	//---------------------------------------------------------------------------
 
 	private void retrieveFiles(String wafurl) throws IOException {
-		
-		log.debug("Scanning resource : "+ wafurl);
+
+        if(log.isDebugEnabled()) log.debug("Scanning resource : "+ wafurl);
 		
         Document doc = Jsoup.parse(new URL(wafurl),3000);
         Elements links = doc.select("a[href]");

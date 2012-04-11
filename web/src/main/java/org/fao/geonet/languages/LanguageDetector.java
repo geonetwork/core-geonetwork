@@ -106,7 +106,8 @@ public class LanguageDetector {
             detectedLanguage = detectedLanguage.substring(0, 2);
         }
         String iso639_2 = IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(detectedLanguage);
-        Log.debug(Geonet.LANGUAGEDETECTOR, "detected language: " + iso639_2);
+        if(Log.isDebugEnabled(Geonet.LANGUAGEDETECTOR))
+            Log.debug(Geonet.LANGUAGEDETECTOR, "detected language: " + iso639_2);
         return iso639_2;
     }
 

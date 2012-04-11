@@ -271,10 +271,12 @@ public class SearchController {
         res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
 
         if(res != null) {
-            Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
         }
         else {
-            Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
         }
 		return res;
 	}
@@ -434,7 +436,8 @@ public class SearchController {
                 strategy = DEFAULT_ELEMENTNAMES_STRATEGY;
             }
 
-            Log.debug(Geonet.CSW_SEARCH, "SearchController dealing with # " + elementNames.size() + " elementNames using strategy " + strategy);
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController dealing with # " + elementNames.size() + " elementNames using strategy " + strategy);
 
             MetadataSchema mds = schemaManager.getSchema(schema);
             List<Namespace> namespaces = mds.getSchemaNS();
@@ -448,7 +451,8 @@ public class SearchController {
             boolean metadataContainsAllRequestedElementNames = true;
             List<Element> nodes = new ArrayList<Element>();
             for(String elementName : elementNames) {
-                Log.debug(Geonet.CSW_SEARCH, "SearchController dealing with elementName: " + elementName);
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "SearchController dealing with elementName: " + elementName);
                 try {
                     //
                     // OGC 07-006:
@@ -469,27 +473,31 @@ public class SearchController {
                     if(elementName.startsWith("/")) {
                         // use it as the xpath as is;
                         xpath = elementName;
-                        Log.debug(Geonet.CSW_SEARCH, "elementname start with root: " + elementName);
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH, "elementname start with root: " + elementName);
                     }
                     // case 2: elementname does not start with /
                     else {
                         // case 2a: elementname starts with one of the supported typeNames (csw:Record or gmd:MD_Metadata)
                         // TODO do not hardcode namespace prefixes
                         if(elementName.startsWith("csw:Record") || elementName.startsWith("gmd:MD_Metadata")) {
-                            Log.debug(Geonet.CSW_SEARCH, "elementname starts with one of the supported typeNames : " + elementName);
+                            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                                Log.debug(Geonet.CSW_SEARCH, "elementname starts with one of the supported typeNames : " + elementName);
                             // prepend /
                             xpath = "/" + elementName;
                         }
                         // case 2b: elementname does not start with one of the supported typeNames
                         else {
-                            Log.debug(Geonet.CSW_SEARCH, "elementname does not start with one of the supported typeNames : " + elementName);
+                            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                                Log.debug(Geonet.CSW_SEARCH, "elementname does not start with one of the supported typeNames : " + elementName);
                             // prepend with /typeName/
                                 xpath = "/" + typeName + "//" + elementName ;
                         }
                     }
                     List<Element> elementsMatching = (List<Element>)Xml.selectDocumentNodes(result, xpath, namespaces);
                     if(strategy.equals("context")) {
-                        Log.debug(Geonet.CSW_SEARCH, "strategy is context, constructing context to root");
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH, "strategy is context, constructing context to root");
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
                         for(Iterator<Element> i = elementsMatching.iterator(); i.hasNext();) {
                             Element match = i.next();
@@ -508,7 +516,8 @@ public class SearchController {
                     }
                     nodes.addAll(elementsMatching);
 
-                    Log.debug(Geonet.CSW_SEARCH, "elemName " + elementName + " matched # " + nodes.size() + " nodes");
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH, "elemName " + elementName + " matched # " + nodes.size() + " nodes");
 
                     if(nodes.size() == 0) {
                         metadataContainsAllRequestedElementNames = false;
@@ -523,22 +532,27 @@ public class SearchController {
             }
 
             if(metadataContainsAllRequestedElementNames == true) {
-                Log.debug(Geonet.CSW_SEARCH, "metadata containa all requested elementnames: included in response");
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "metadata containa all requested elementnames: included in response");
 
                 if(strategy.equals("context") || strategy.equals("geonetwork26")) {
-                    Log.debug(Geonet.CSW_SEARCH, "adding only the matching fragments to result");
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH, "adding only the matching fragments to result");
                     for(Element node: nodes) {
-                        Log.debug(Geonet.CSW_SEARCH, "adding node:\n" + Xml.getString(node));
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH, "adding node:\n" + Xml.getString(node));
                         matchingMetadata.addContent((Content)node.clone());
                     }
                 }
                 else {
-                    Log.debug(Geonet.CSW_SEARCH, "adding the complete metadata to results");
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH, "adding the complete metadata to results");
                     if(strategy.equals("csw202")) {
                         GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                         DataManager dataManager = geonetContext.getDataManager();
                         boolean valid = dataManager.validate(result);
-                        Log.debug(Geonet.CSW_SEARCH, "strategy csw202: only valid metadata is returned. This one is valid? " + valid);
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH, "strategy csw202: only valid metadata is returned. This one is valid? " + valid);
 
                         if(!valid) {
                             return null;
@@ -553,12 +567,14 @@ public class SearchController {
                 result = matchingMetadata;
             }
             else {
-                Log.debug(Geonet.CSW_SEARCH, "metadata does not contain all requested elementnames: not included in response");
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "metadata does not contain all requested elementnames: not included in response");
                 return null;
             }
         }
         else {
-            Log.debug(Geonet.CSW_SEARCH, "No ElementNames to apply");
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "No ElementNames to apply");
         }
         return result;
     }

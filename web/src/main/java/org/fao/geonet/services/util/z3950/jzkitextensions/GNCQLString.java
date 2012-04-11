@@ -67,7 +67,7 @@ public class GNCQLString implements QueryModel, java.io.Serializable {
       this.the_cql_string = the_cql_string;
       CQLParser parser = new CQLParser();
       cql_root = parser.parse(the_cql_string);
-      log.debug("Parsed CQL");
+      if(log.isDebugEnabled()) log.debug("Parsed CQL");
     }
     catch (  org.z3950.zing.cql.CQLParseException cqle ) {
       log.warn("Problem parsing CQL",cqle);
@@ -109,7 +109,7 @@ public class GNCQLString implements QueryModel, java.io.Serializable {
       }
     }
     else if ( cql_node instanceof CQLTermNode ) {
-      log.debug("Warning: We should properly translate the CQLTermNode");
+        if(log.isDebugEnabled()) log.debug("Warning: We should properly translate the CQLTermNode");
       CQLTermNode  cql_term_node = (CQLTermNode) cql_node;
       AttrPlusTermNode aptn = new AttrPlusTermNode();
 
@@ -134,11 +134,11 @@ public class GNCQLString implements QueryModel, java.io.Serializable {
 	  String qualifier = cql_term_node.getQualifier();
 
       if ( ( qualifier != null ) && ( qualifier.length() > 0 ) ) {
-        log.debug("Using supplied qualifier : "+qualifier);
+          if(log.isDebugEnabled()) log.debug("Using supplied qualifier : "+qualifier);
         aptn.setAttr(AttrPlusTermNode.ACCESS_POINT_ATTR,process(qualifier));
       }
       else {
-        log.debug("Using default qualifier");
+          if(log.isDebugEnabled()) log.debug("Using default qualifier");
 
 aptn.setAttr(AttrPlusTermNode.ACCESS_POINT_ATTR,process(default_qualifier));
       }

@@ -136,9 +136,11 @@ public class CatalogSearcher {
                                                   Element filterExpr, String filterVersion, String typeName,
                                                   Sort sort, ResultType resultType, int startPosition, int maxRecords,
                                                   int maxHitsInSummary, String cswServiceSpecificContraint) throws CatalogException {
-        Log.debug(Geonet.CSW_SEARCH, "CatalogSearch search");
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "CatalogSearch search");
 		Element luceneExpr = filterToLucene(context, filterExpr);
-		Log.debug(Geonet.CSW_SEARCH, "after filter2lucene:\n"+ Xml.getString(luceneExpr));
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "after filter2lucene:\n"+ Xml.getString(luceneExpr));
 
         // OGC 07-045:
         // If typeName equals to “csw:Record” no ISO metadata profile specific queryables must be used. The handling of
@@ -157,12 +159,14 @@ public class CatalogSearcher {
 			remapFields(luceneExpr);
 		}
 
-		Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n"+ Xml.getString(luceneExpr));
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n"+ Xml.getString(luceneExpr));
 
 		try {
 			if (luceneExpr != null) {
 				convertPhrases(luceneExpr);
-				Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n"+ Xml.getString(luceneExpr));
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n"+ Xml.getString(luceneExpr));
 			}
 
             return performSearch(context,
@@ -208,7 +212,8 @@ public class CatalogSearcher {
 
 		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
 
-		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
 
 		// --- retrieve results
 		List<String> response = new ArrayList<String>();
@@ -375,9 +380,11 @@ public class CatalogSearcher {
                                                           int maxHitsInSummary, String cswServiceSpecificContraint)
             throws Exception {
 
-        Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
         if (filterExpr != null) {
-            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
         }
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -391,7 +398,8 @@ public class CatalogSearcher {
 		if (sessionQueryReprentation == null ||
 		        !requestQueryReprentation.equals(sessionQueryReprentation) ||
 		        !sm.isUpToDateReader(_reader)) {
-			Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
 			synchronized(this) {
 				if (_reader != null) {
                     sm.releaseIndexReader(_reader);
@@ -401,10 +409,12 @@ public class CatalogSearcher {
 		}
 
 		if (luceneExpr != null) {
-			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
         }
         else {
-            Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
         }
         // TODO do not just use context getlanguage ?
 
@@ -448,7 +458,8 @@ public class CatalogSearcher {
         }
 
 		// --- proper search
-		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
 		// TODO Handle NPE creating spatial filter (due to constraint
         Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
@@ -483,7 +494,8 @@ public class CatalogSearcher {
 		Element summary = searchResults.two();
 
 		numHits = Integer.parseInt(summary.getAttributeValue("count"));
-		Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
 		
 		// --- retrieve results
 
@@ -580,7 +592,8 @@ public class CatalogSearcher {
 
             for (String fieldName : SECURITY_FIELDS){
                 if (bc.getQuery().toString().contains(fieldName + ":")) {
-                    Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
                     it.remove();
 
                     break;

@@ -109,7 +109,8 @@ public class GetRandom implements Service
 				searchRequest.addContent(new Element("eastBL").setText(_eastBL));
 				searchRequest.addContent(new Element("westBL").setText(_westBL));
 	
-				Log.debug(Geonet.SEARCH_ENGINE, "RANDOM SEARCH CRITERIA:\n"+ Xml.getString(searchRequest));
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+				    Log.debug(Geonet.SEARCH_ENGINE, "RANDOM SEARCH CRITERIA:\n"+ Xml.getString(searchRequest));
 				
 				searcher.search(context, searchRequest, _config);
 	

@@ -195,8 +195,8 @@ class Harvester
         		"&VERSION=" + params.ogctype.substring(3) +
         		"&REQUEST=" + GETCAPABILITIES
         		;
-		
-		log.debug("GetCapabilities document: " + this.capabilitiesUrl);
+
+        if(log.isDebugEnabled()) log.debug("GetCapabilities document: " + this.capabilitiesUrl);
 		
         XmlRequest req = new XmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
@@ -211,7 +211,7 @@ class Harvester
 		{
 			String id = localUuids.getID (uuid);
 
-			log.debug ("  - Removing old metadata before update with id: " + id);
+            if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
 
 			// Remove thumbnails
 			unsetThumbnail (id);
@@ -270,7 +270,7 @@ class Harvester
 							+ params.ogctype.substring(0,3)
 							+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
 
-		log.debug ("  - XSLT transformation using " + styleSheet);
+         if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using " + styleSheet);
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("lang", params.lang);
@@ -393,7 +393,7 @@ class Harvester
            */
 		
 		if (root != null) {
-			log.debug("  - add SV_CoupledResource and OperatesOnUuid");
+            if(log.isDebugEnabled()) log.debug("  - add SV_CoupledResource and OperatesOnUuid");
 			
 			Element couplingType = root.getChild("couplingType", srv);
 			int coupledResourceIdx = root.indexOf(couplingType);
@@ -613,7 +613,7 @@ class Harvester
 				param.put("topic", params.topic);
 				
 				xml = Xml.transform (capa, styleSheet, param);
-				log.debug("  - Layer loaded using GetCapabilities document.");
+                if(log.isDebugEnabled()) log.debug("  - Layer loaded using GetCapabilities document.");
 				
 			} catch (Exception e) {
 				log.warning("  - Failed to do XSLT transformation on Layer element : " + e.getMessage());
@@ -639,14 +639,14 @@ class Harvester
 			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms);
 			
 			int iId = Integer.parseInt(reg.id);
-			log.debug("    - Layer loaded in DB.");
-			
-			log.debug("    - Set Privileges and category.");
+            if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
+
+            if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
 			addPrivileges(reg.id);
 			if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
 				dataMan.setCategory (context, dbms, reg.id, params.datasetCategory);
-			
-			log.debug("    - Set Harvested.");
+
+            if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
 			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
 			
 			dbms.commit();
@@ -697,14 +697,15 @@ class Harvester
      *                   
      */
 	private void loadThumbnail (WxSLayerRegistry layer){
-		log.debug("  - Creating thumbnail for layer metadata: " + layer.name + " id: " + layer.id);
+        if(log.isDebugEnabled())
+            log.debug("  - Creating thumbnail for layer metadata: " + layer.name + " id: " + layer.id);
 		Set s = new org.fao.geonet.services.thumbnail.Set ();
 		
 		try {
 			String filename = getMapThumbnail(layer);
 			
 			if (filename != null) {
-				log.debug("  - File: " + filename);
+                if(log.isDebugEnabled()) log.debug("  - File: " + filename);
 				
 				Element par = new Element ("request");
 				par.addContent(new Element ("id").setText(layer.id));
@@ -744,7 +745,7 @@ class Harvester
      *                   
      */
 	private void unsetThumbnail (String id){
-		log.debug("  - Removing thumbnail for layer metadata: " + id);
+        if(log.isDebugEnabled()) log.debug("  - Removing thumbnail for layer metadata: " + id);
 
 		try {
 			String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
@@ -796,8 +797,8 @@ class Harvester
 		
 		HttpClient httpclient = new HttpClient ();
         GetMethod req = new GetMethod (url);
-		
-		log.debug ("Retrieving remote document: " + url);
+
+        if(log.isDebugEnabled()) log.debug ("Retrieving remote document: " + url);
 
 		// set proxy from settings manager
 		Lib.net.setupProxy(context, httpclient);
@@ -805,7 +806,7 @@ class Harvester
 		try {
 		    // Connect
 			int result = httpclient.executeMethod (req);
-		    log.debug("   Get " + result);
+            if(log.isDebugEnabled()) log.debug("   Get " + result);
 
 			if (result == 200) {
 			    // Save image document to temp directory
@@ -849,7 +850,7 @@ class Harvester
 			String name = localCateg.getName (catId);
 
 			if (name == null)
-				log.debug ("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
 			else {
 				dataMan.setCategory (context, dbms, id, catId);
 			}
@@ -869,7 +870,7 @@ class Harvester
 			String name = localGroups.getName( priv.getGroupId ());
 
 			if (name == null)
-				log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
+                if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
 			else
 			{
 				for (int opId: priv.getOperations ())
@@ -882,7 +883,7 @@ class Harvester
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else
-						log.debug("       --> "+ name +" (skipped)");
+                    if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
 				}
 			}
 		}

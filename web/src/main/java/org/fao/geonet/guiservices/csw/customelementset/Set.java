@@ -75,7 +75,8 @@ public class Set implements Service {
      * @throws Exception
      */
     private void saveCustomElementSets(Element params, GeonetContext gc, Dbms dbms) throws Exception {
-        Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Xml.getString(params));
+        if (Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET))
+            Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Xml.getString(params));
 
         CustomElementSet customElementSet = new CustomElementSet();
         List<Element> xpaths = params.getChildren("xpath");

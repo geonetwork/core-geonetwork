@@ -296,11 +296,13 @@ public final class ServiceRequestFactory
 					long   size = item.getSize();
 
 
-					Log.debug(Log.REQUEST, "Uploading file "+file+" type: "+type+" size: "+size);
+                    if(Log.isDebugEnabled(Log.REQUEST))
+                        Log.debug(Log.REQUEST, "Uploading file "+file+" type: "+type+" size: "+size);
 					//--- remove path information from file (some browsers put it, like IE)
 
 					file = simplifyName(file);
-					Log.debug(Log.REQUEST, "File is called "+file+" after simplification");
+                    if(Log.isDebugEnabled(Log.REQUEST))
+                        Log.debug(Log.REQUEST, "File is called "+file+" after simplification");
 
 					//--- we could get troubles if 2 users upload files with the same name
 					item.write(new File(uploadDir, file));
@@ -313,7 +315,8 @@ public final class ServiceRequestFactory
 					if (type != null)
 						elem.setAttribute("content-type", type);
 
-					Log.debug(Log.REQUEST,"Adding to parameters: "+Xml.getString(elem));
+                    if(Log.isDebugEnabled(Log.REQUEST))
+                        Log.debug(Log.REQUEST,"Adding to parameters: "+Xml.getString(elem));
 					params.addContent(elem);
 				}
 			}

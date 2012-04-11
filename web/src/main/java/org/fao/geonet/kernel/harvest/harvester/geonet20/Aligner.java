@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
@@ -88,7 +87,7 @@ public class Aligner
 			{
 				String id = localUuids.getID(uuid);
 
-				log.debug("  - Removing old metadata with id="+ id);
+                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id="+ id);
 				dataMan.deleteMetadata(context, dbms, id);
 				dbms.commit();
 				this.result.locallyRemoved++;
@@ -109,10 +108,10 @@ public class Aligner
 
                 this.result.totalMetadata++;
 
-                log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
+                if(log.isDebugEnabled()) log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
 
                 if (!dataMan.existsSchema(schema)) {
-                    log.debug("  - Skipping unsupported schema : " + schema);
+                    if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
                     this.result.schemaSkipped++;
                 }
                 else {
@@ -157,7 +156,7 @@ public class Aligner
 		String createDate = info.getChildText("createDate");
 		String changeDate = info.getChildText("changeDate");
 
-		log.debug("  - Adding metadata with remote id="+ remoteId);
+        if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote id="+ remoteId);
 
 		Element md = getRemoteMetadata(req, remoteId);
 
@@ -203,7 +202,7 @@ public class Aligner
             if (catId != null) {
                 //--- remote category exists locally
 
-                log.debug("    - Setting category : " + catName);
+                if(log.isDebugEnabled()) log.debug("    - Setting category : " + catName);
                 dataMan.setCategory(context, dbms, id, catId);
             }
         }
@@ -255,12 +254,12 @@ public class Aligner
 
 		if (!updateCondition(date, changeDate))
 		{
-			log.debug("  - XML not changed to local metadata with id="+ id);
+            if(log.isDebugEnabled()) log.debug("  - XML not changed to local metadata with id="+ id);
 			result.unchangedMetadata++;
 		}
 		else
 		{
-			log.debug("  - Updating local metadata with id="+ id);
+            if(log.isDebugEnabled()) log.debug("  - Updating local metadata with id="+ id);
 
 			Element md = getRemoteMetadata(req, remoteId);
 
@@ -298,7 +297,7 @@ public class Aligner
             String catName = el.getChildText("name");
 
             if (!existsCategory(catList, catName)) {
-                log.debug("  - Unsetting category : " + catName);
+                if(log.isDebugEnabled()) log.debug("  - Unsetting category : " + catName);
                 dataMan.unsetCategory(context, dbms, id, catId);
             }
         }
@@ -314,7 +313,7 @@ public class Aligner
             //--- it is not necessary to query the db. Anyway...
             {
                 if (!dataMan.isCategorySet(dbms, id, catId)) {
-                    log.debug("  - Setting category : " + catName);
+                    if(log.isDebugEnabled()) log.debug("  - Setting category : " + catName);
                     dataMan.setCategory(context, dbms, id, catId);
                 }
             }

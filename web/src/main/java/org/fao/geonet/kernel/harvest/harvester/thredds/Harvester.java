@@ -254,7 +254,7 @@ class Harvester
 		for (String localUri : localUris.getUris()) {
 			if (!harvestUris.contains(localUri)) {
 				for (RecordInfo record: localUris.getRecords(localUri)) {
-					log.debug ("  - Removing deleted metadata with id: " + record.id);
+                    if(log.isDebugEnabled()) log.debug ("  - Removing deleted metadata with id: " + record.id);
 					dataMan.deleteMetadata (context, dbms, record.id);
 		
 					if (record.isTemplate.equals("s")) {
@@ -359,8 +359,8 @@ class Harvester
 			param.put("desc",			Xml.getString(cata));
 			param.put("props",		catalog.getProperties().toString());
 			param.put("serverops",		"");
-	
-			log.debug ("  - XSLT transformation using "+serviceStyleSheet);
+
+            if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using "+serviceStyleSheet);
 			Element md = Xml.transform (cata, serviceStyleSheet, param);
 	
 			//--- TODO: Add links to services provided by the thredds catalog - but 
@@ -647,7 +647,7 @@ class Harvester
 				dsMetadata.addContent(ncml);
 			}
 
-			log.debug("Thredds metadata and ncml is:"+Xml.getString(dsMetadata));
+            if(log.isDebugEnabled()) log.debug("Thredds metadata and ncml is:"+Xml.getString(dsMetadata));
 
 			//--- Create fragments using provided stylesheet
 
@@ -656,7 +656,7 @@ class Harvester
 			String stylesheet = ds.hasNestedDatasets() ? params.collectionFragmentStylesheet : params.atomicFragmentStylesheet;
 
 			Element fragments = Xml.transform(dsMetadata, fragmentStylesheetDirectory + "/" + stylesheet);
-			log.debug("Fragments generated for dataset:"+Xml.getString(fragments));
+            if(log.isDebugEnabled()) log.debug("Fragments generated for dataset:"+Xml.getString(fragments));
 			
 			//--- remove any previously harvested metadata/sub-templates
 			deleteExistingMetadata(getUri(ds));
@@ -809,12 +809,12 @@ class Harvester
 						if (mdCon != null) {
 							List<Attribute> ga = ncD.getGlobalAttributes(); 
 							for (Attribute att : ga ) {
-								log.debug("Attribute found "+att.toString());
+                                if(log.isDebugEnabled()) log.debug("Attribute found "+att.toString());
 								//--- TODO: Attach the attributes to the metadata node
 								//--- for conversion into the ISO record by an xslt
 							}
 						} else {
-							log.debug("No global attribute with metadata conventions found");	
+                            if(log.isDebugEnabled()) log.debug("No global attribute with metadata conventions found");
 						}
 						ncD.close();
 					} catch (Exception e) {
@@ -841,7 +841,7 @@ class Harvester
 							addKeywordsAndDataParams(coords, md);
 							foundNetcdfInfo = true;
 						} else {
-							log.debug("Coordinate system convention is not recognized");	
+                            if(log.isDebugEnabled()) log.debug("Coordinate system convention is not recognized");
 						}
 						ncDI.close();
 					} catch (Exception e) {
@@ -1053,18 +1053,18 @@ class Harvester
 			URL url = new URL(href);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			Object o = conn.getContent();
-			log.debug("Opened "+href+" and got class "+o.getClass().getName());
+            if(log.isDebugEnabled()) log.debug("Opened "+href+" and got class "+o.getClass().getName());
 			StringBuffer version = new StringBuffer();
 			String inputLine;
 			DataInputStream dis = new DataInputStream(conn.getInputStream());
 			while ((inputLine = dis.readLine()) != null) {
 					version.append(inputLine+"\n");	
 			}
-			result = version.toString();  
-			log.debug("Read from URL:\n"+result);
+			result = version.toString();
+            if(log.isDebugEnabled()) log.debug("Read from URL:\n"+result);
 			dis.close();
 		} catch (Exception e) {
-		log.debug("Caught exception "+e+" whilst attempting to query URL "+href);
+            if(log.isDebugEnabled()) log.debug("Caught exception "+e+" whilst attempting to query URL "+href);
 			e.printStackTrace();
 		} finally {
 			return result;
@@ -1086,7 +1086,7 @@ class Harvester
 			ThreddsService ts = services.get(sUrl);
 			InvService serv = ts.service;
 
-			log.debug("Processing Thredds service: "+serv.toString());
+            if(log.isDebugEnabled()) log.debug("Processing Thredds service: "+serv.toString());
 
 			String sUuid = Util.scramble(sUrl);
 			ts.uuid = sUuid;
@@ -1095,8 +1095,8 @@ class Harvester
 			//--- OGCWxS service metadata creator
 			
 			//---	pass info to stylesheet which will create a 19119 record
-			
-			log.debug("  - XSLT transformation using "+serviceStyleSheet);
+
+            if(log.isDebugEnabled()) log.debug("  - XSLT transformation using "+serviceStyleSheet);
 
 			Map<String, String> param = new HashMap<String, String>();
 			param.put("lang",		params.lang);
@@ -1235,7 +1235,7 @@ class Harvester
 		Element co 		= root.getChild("containsOperations", srv);
 
 		if (root != null) {
-			log.debug("  - add operatesOn with uuid and other attributes");
+            if(log.isDebugEnabled()) log.debug("  - add operatesOn with uuid and other attributes");
 			
 			for (String dsUuid : datasets.keySet()) {
 				Element op = new Element ("operatesOn", srv);
@@ -1283,7 +1283,7 @@ class Harvester
 			String name = localCateg.getName (catId);
 
 			if (name == null) {
-				log.debug ("    - Skipping removed category with id:"+ catId);
+                if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
 			} else {
 				dataMan.setCategory (context, dbms, id, catId);
 			}
@@ -1303,7 +1303,7 @@ class Harvester
 			String name = localGroups.getName( priv.getGroupId ());
 
 			if (name == null) {
-				log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
+                if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
 			} else {
 				for (int opId: priv.getOperations ()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
@@ -1312,7 +1312,7 @@ class Harvester
 					if (opId == 0 || opId == 5 || opId == 6) {
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					} else {
-						log.debug("       --> "+ name +" (skipped)");
+                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
 					}
 				}
 			}

@@ -39,7 +39,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -291,7 +290,7 @@ public class Geonet20Harvester extends AbstractHarvester
 
 			Element searchResult = req.execute(s.createRequest());
 
-			log.debug("Obtained:\n"+Xml.getString(searchResult));
+            if(log.isDebugEnabled()) log.debug("Obtained:\n"+Xml.getString(searchResult));
 
 			//--- site alignment
 			AlignerResult ar = aligner.align(searchResult, s.siteId);

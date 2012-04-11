@@ -46,17 +46,20 @@ public class MetadataNotifierControl {
     }
 
     public void runOnce() throws Exception {
-        Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce start");
+        if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce start");
         
         ResourceManager rm = srvContext.getResourceManager();
-        Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
+        if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
         final MetadataNotifierTask updateTask = new MetadataNotifierTask(
                 rm, gc);
 
         @SuppressWarnings("unused")
         final ScheduledFuture<?> updateTaskHandle = scheduler.schedule(
                 updateTask, 20, TimeUnit.SECONDS);
-        Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce finish");
+        if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce finish");
     }
 
     public void shutDown() throws Exception {

@@ -183,7 +183,8 @@ public class Thesaurus {
      */
 	public QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
             QueryEvaluationException, AccessDeniedException {
-        Log.debug(Geonet.THESAURUS, "Query : " + query);
+        if(Log.isDebugEnabled(Geonet.THESAURUS))
+            Log.debug(Geonet.THESAURUS, "Query : " + query);
 
         //printResultsTable(resultsTable);
 		return repository.performTableQuery(QueryLanguage.SERQL, query);

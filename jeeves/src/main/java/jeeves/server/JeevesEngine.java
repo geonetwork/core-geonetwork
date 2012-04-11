@@ -750,7 +750,6 @@ public class JeevesEngine
 	//---
 	//---------------------------------------------------------------------------
 
-	private void debug  (String message) { Log.debug  (Log.ENGINE, message); }
 	private void info   (String message) { Log.info   (Log.ENGINE, message); }
 	private void warning(String message) { Log.warning(Log.ENGINE, message); }
 	private void error  (String message) { Log.error  (Log.ENGINE, message); }

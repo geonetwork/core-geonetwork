@@ -109,6 +109,7 @@ public class BasicContext
 
 	//--------------------------------------------------------------------------
 
+    public boolean isDebug() {return logger.isDebugEnabled();}
 	public void debug  (String message) { logger.debug  (message); }
 	public void info   (String message) { logger.info   (message); }
 	public void warning(String message) { logger.warning(message); }

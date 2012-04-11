@@ -221,7 +221,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             //String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
             String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw202_apiso100/csw/2.0.2/CSW-discovery.xsd";
 
-            Log.debug(Geonet.CSW, "Validating request against " + schema);
+            if(Log.isDebugEnabled(Geonet.CSW))
+                Log.debug(Geonet.CSW, "Validating request against " + schema);
             try {
                 Xml.validate(schema, request);
             }
@@ -514,7 +515,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @throws InvalidParameterValueEx if typeNames does not have one of the mandated values
      */
     private String checkTypenames(Element query) throws MissingParameterValueEx, InvalidParameterValueEx {
-        Log.debug(Geonet.CSW_SEARCH, "checking typenames in query:\n" + Xml.getString(query));
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "checking typenames in query:\n" + Xml.getString(query));
         Attribute typeNames = query.getAttribute("typeNames", query.getNamespace());
         typeNames = query.getAttribute("typeNames");
         if(typeNames != null) {
@@ -530,7 +532,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             while(commaSeparator.hasNext()) {
                 String typeName = commaSeparator.next();
                 typeName = typeName.trim();
-                Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
                 if(!(typeName.equals("csw:Record") || typeName.equals("gmd:MD_Metadata"))) {
                 throw new InvalidParameterValueEx("typeNames", "invalid value");
             }
@@ -556,7 +559,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return elementnames strategy
      */
     private String getElementNameStrategy(Element query) {
-        Log.debug(Geonet.CSW_SEARCH, "getting elementnameStrategy from query:\n" + Xml.getString(query));
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "getting elementnameStrategy from query:\n" + Xml.getString(query));
         Attribute elementNameStrategyA = query.getAttribute("elementnameStrategy");
         // default
         String elementNameStrategy = "relaxed";
@@ -572,7 +576,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             // use default
             elementNameStrategy = "relaxed";
         }
-        Log.debug(Geonet.CSW_SEARCH, "elementNameStrategy: " + elementNameStrategy);
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "elementNameStrategy: " + elementNameStrategy);
         return elementNameStrategy;
     }
 
@@ -723,7 +728,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return set of elementname values
      */
     private Set<String> getElementNames(Element query) {
-        Log.debug(Geonet.CSW, "GetRecords getElementNames");
+        if(Log.isDebugEnabled(Geonet.CSW))
+            Log.debug(Geonet.CSW, "GetRecords getElementNames");
         Set<String> elementNames = null;
 	    if (query != null) {
             List<Element> elementList = query.getChildren("ElementName", query.getNamespace());
@@ -737,11 +743,13 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
         if(elementNames != null) {
             for(String elementName : elementNames) {
-                Log.debug(Geonet.CSW, "ElementName: " + elementName);
+                if(Log.isDebugEnabled(Geonet.CSW))
+                    Log.debug(Geonet.CSW, "ElementName: " + elementName);
             }
         }
         else {
-            Log.debug(Geonet.CSW, "No ElementNames found in request");
+            if(Log.isDebugEnabled(Geonet.CSW))
+                Log.debug(Geonet.CSW, "No ElementNames found in request");
         }
         // TODO end if(isDebugEnabled)
 	    return elementNames;
@@ -777,11 +785,13 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
         if(typeNames != null) {
             for(String typeName : typeNames) {
-                Log.debug(Geonet.CSW, "TypeName: " + typeName);
+                if(Log.isDebugEnabled(Geonet.CSW))
+                    Log.debug(Geonet.CSW, "TypeName: " + typeName);
             }
         }
         else {
-            Log.debug(Geonet.CSW, "No TypeNames found in request");
+            if(Log.isDebugEnabled(Geonet.CSW))
+                Log.debug(Geonet.CSW, "No TypeNames found in request");
         }
         // TODO end if(isDebugEnabled)
         return typeNames;

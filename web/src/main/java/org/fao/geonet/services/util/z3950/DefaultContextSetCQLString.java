@@ -91,7 +91,7 @@ public class DefaultContextSetCQLString extends GNCQLString {
 
                if (!processed) {
                        // add default context sets
-                       Log.debug(Geonet.SRU_SEARCH," adding default context sets..");
+                       if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH," adding default context sets..");
                        visitNode(result,null,null) ;
                        processed=true;
                }
@@ -102,8 +102,8 @@ public class DefaultContextSetCQLString extends GNCQLString {
        protected void processCQLTermNode(AttrPlusTermNode aptn, CQLTermNode  cql_term_node) {
        
                super.processCQLTermNode(aptn,cql_term_node);
-               
-               Log.debug(Geonet.SRU_SEARCH,"Processing attrplustermnode:"+aptn);
+
+           if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing attrplustermnode:"+aptn);
                // Look up conversion information for source node
 
                // set default relation context set
@@ -112,6 +112,7 @@ public class DefaultContextSetCQLString extends GNCQLString {
 
                        if ( relation !=null && (relation.getNamespaceIdentifier() == null || force_def  )) {
                                relation.setNamespaceIdentifier(this.default_rel_namespace);
+                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
                                Log.debug(Geonet.SRU_SEARCH,"Processing relation :"+relation);
                        }
                }
@@ -124,7 +125,8 @@ public class DefaultContextSetCQLString extends GNCQLString {
 
                        if ( qualifier != null && ( qualifier.getNamespaceIdentifier() == null || force_def )) {
                                qualifier.setNamespaceIdentifier(this.default_attr_namespace);
-                               Log.debug(Geonet.SRU_SEARCH,"Processing AccessPoint :"+qualifier);                                     
+                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
+                               Log.debug(Geonet.SRU_SEARCH,"Processing AccessPoint :"+qualifier);
                        
                        }
 
@@ -132,6 +134,7 @@ public class DefaultContextSetCQLString extends GNCQLString {
                        if (  qualifier != null &&
                                        qualifier.getNamespaceIdentifier().equalsIgnoreCase("srw") &&
                                        qualifier.getValue().equalsIgnoreCase("serverChoice")) {
+                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
                                Log.debug(Geonet.SRU_SEARCH,"Setting srw context set to cql for serverChoice");
                                qualifier.setNamespaceIdentifier("cql");
                        }
@@ -145,6 +148,7 @@ public class DefaultContextSetCQLString extends GNCQLString {
 
                        if ( structure !=null && (structure.getNamespaceIdentifier() == null || force_def  )) {
                                structure.setNamespaceIdentifier(this.default_struct_namespace);
+                           if(Log.isDebugEnabled(Geonet.SRU_SEARCH))
                                Log.debug(Geonet.SRU_SEARCH,"Processing structure :"+structure);
                        }
                }
@@ -154,22 +158,22 @@ public class DefaultContextSetCQLString extends GNCQLString {
 
        /*
        public void visitNode(QueryNode node, String source_ns, String target_ns) {
-               Log.debug(Geonet.SRU_SEARCH,"visitNode");
+               if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"visitNode");
 
                if ( node instanceof InternalModelRootNode ) {
-                       Log.debug(Geonet.SRU_SEARCH,"Processing root");
+                       if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing root");
                        // No special "Root" Node in cql
                        visitNode(((InternalModelRootNode)node).getChild(), source_ns, target_ns);
                }
                else if ( node instanceof InternalModelNamespaceNode ) {
-                       Log.debug(Geonet.SRU_SEARCH,"Processing namespace: "+node);
+                       if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing namespace: "+node);
                        InternalModelNamespaceNode ns_node = (InternalModelNamespaceNode)node;
                        
                                visitNode(ns_node.getChild(), ns_node.getAttrset(), target_ns);
        
                }
                else if ( node instanceof ComplexNode ) {
-                       Log.debug(Geonet.SRU_SEARCH,"Processing complex");
+                       if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"Processing complex");
                        visitNode ( ((ComplexNode)node).getLHS(), source_ns, target_ns ) ;
                        visitNode ( ((ComplexNode)node).getRHS(), source_ns, target_ns );
 
@@ -183,7 +187,7 @@ public class DefaultContextSetCQLString extends GNCQLString {
                        
                }
 
-               Log.debug(Geonet.SRU_SEARCH,"visitNode");
+               if(Log.isDebugEnabled(Geonet.SRU_SEARCH)) Log.debug(Geonet.SRU_SEARCH,"visitNode");
 
        }
        */

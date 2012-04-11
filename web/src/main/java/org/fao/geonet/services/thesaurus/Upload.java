@@ -87,7 +87,7 @@ public class Upload implements Service {
 		long end = System.currentTimeMillis();
 		long duration = (end - start) / 1000;
 
-		Log.debug("Thesaurus", "Uploaded in " + duration + " s.");
+        if(Log.isDebugEnabled("Thesaurus")) Log.debug("Thesaurus", "Uploaded in " + duration + " s.");
 
 		Element response = new Element("response");
 		response.setAttribute("time", duration + "");
@@ -120,7 +120,7 @@ public class Upload implements Service {
 
 			// -- get the rdf file from the net
 			if (!"".equals(url)) {
-				Log.debug("Thesaurus", "Uploading thesaurus: " + url);
+                if(Log.isDebugEnabled("Thesaurus")) Log.debug("Thesaurus", "Uploading thesaurus: " + url);
 
 				URI uri = new URI(url);
 				rdfFile = File.createTempFile("thesaurus", ".rdf");
@@ -140,8 +140,8 @@ public class Upload implements Service {
 					fname += ".rdf"; 
 				}
 			} else {
-				Log.debug("Thesaurus",
-						"No URL or file name provided for thesaurus upload.");
+                if(Log.isDebugEnabled("Thesaurus"))
+                    Log.debug("Thesaurus", "No URL or file name provided for thesaurus upload.");
 			}
 		} else {
 	                fname = param.getTextTrim();
@@ -186,15 +186,15 @@ public class Upload implements Service {
 				.toLowerCase();
 		if (extension.equals(".rdf") || extension.equals(".xml")) {
 
-			Log.debug("Thesaurus", "Uploading thesaurus: " + fname);
+            if(Log.isDebugEnabled("Thesaurus")) Log.debug("Thesaurus", "Uploading thesaurus: " + fname);
 			
 			// Rename .xml to .rdf for all thesaurus
 			fname = fname.substring(0, extensionIdx) + ".rdf";
 			eTSResult = UploadThesaurus(rdfFile, style, context, fname, type,
 					dir);
 		} else {
-			Log.debug("Thesaurus", "Incorrect extension for thesaurus named: "
-					+ fname);
+            if(Log.isDebugEnabled("Thesaurus"))
+                Log.debug("Thesaurus", "Incorrect extension for thesaurus named: " + fname);
 			throw new Exception("Incorrect extension for thesaurus named: "
 					+ fname);
 		}

@@ -116,7 +116,8 @@ public class SRUSearch implements Service
 
 	public void init(String appPath, ServiceConfig config) throws Exception
 	{
-		Log.debug(Geonet.SRU,"SRUsearch::init");
+        if(Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU,"SRUsearch::init");
 
 		_config = config;
 
@@ -145,7 +146,8 @@ public class SRUSearch implements Service
 
 		Hashtable<String, String> myparams = parseArgs(params.getChildren());
 
-		Log.debug(Geonet.SRU,"SRUsearch::exec op:"+myparams.get("operation")+" version "+myparams.get("version"));
+        if(Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU,"SRUsearch::exec op:"+myparams.get("operation")+" version "+myparams.get("version"));
 
 
 		// default op is explain 
@@ -186,7 +188,8 @@ public class SRUSearch implements Service
 	 */
 	private Element processScan(Hashtable<String,String> params, ServiceContext context) throws Exception {
 
-		Log.debug(Geonet.SRU,"processScan");
+        if(Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU,"processScan");
 
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 
@@ -201,7 +204,8 @@ public class SRUSearch implements Service
 
 	private Element processExplain(Hashtable<String,String> params, ServiceContext context) throws Exception {
 
-		Log.debug(Geonet.SRU,"processExplain");
+        if(Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU,"processExplain");
 
 		// has to be called first. Other methods
 		//checkMandatoryParams(params, mandatoryEXPL);
@@ -280,7 +284,8 @@ public class SRUSearch implements Service
 
 	private Element processSearchRetrieve(Hashtable<String,String> params, ServiceContext context) throws Exception {
 
-		Log.debug(Geonet.SRU,"processSearchRetrieve");
+        if(Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU,"processSearchRetrieve");
 
 		//checkMandatoryParams(params, mandatorySR);
 
@@ -313,7 +318,8 @@ public class SRUSearch implements Service
 			ExplicitRecordFormatSpecification display_spec = new ExplicitRecordFormatSpecification("xml","","f");
 
 
-			Log.debug(Geonet.SRU,"getting reference to search session factory");
+            if(Log.isDebugEnabled(Geonet.SRU))
+                Log.debug(Geonet.SRU,"getting reference to search session factory");
 
 
 			// TODO: would be nice to move this to init method but I dont know where to get the context from there..
@@ -330,7 +336,8 @@ public class SRUSearch implements Service
 			SearchSessionFactory search_session_factory = getSearchSession(context);
 
 
-			Log.debug(Geonet.SRU,"Calling search_session_factory.getResultsPageFor");
+            if(Log.isDebugEnabled(Geonet.SRU))
+                Log.debug(Geonet.SRU,"Calling search_session_factory.getResultsPageFor");
 			StatelessSearchResultsPageDTO result = search_session_factory.getResultsPageFor(null,
 					model,
 					landscape,
@@ -339,7 +346,8 @@ public class SRUSearch implements Service
 					request_spec,
 					display_spec,
 					null);
-			Log.debug(Geonet.SRU,"Call to getResultsPageFor completed : "+result);
+            if(Log.isDebugEnabled(Geonet.SRU))
+                Log.debug(Geonet.SRU,"Call to getResultsPageFor completed : "+result);
 
 			Element myresponse = new Element("sruresponse");
 			response.addContent(myresponse);

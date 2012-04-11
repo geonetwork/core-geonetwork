@@ -24,7 +24,6 @@
 package org.fao.geonet.lib;
 
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -125,7 +124,8 @@ public class DbLib {
 	 */
 	public void removeObjects(ServletContext servletContext, Dbms dbms, String appPath, String filePath, String filePrefix)
 			throws FileNotFoundException, IOException {
-		Log.debug(Geonet.DB, "Removing database objects");
+        if(Log.isDebugEnabled(Geonet.DB))
+            Log.debug(Geonet.DB, "Removing database objects");
 		List<String> schema = loadSchemaFile(servletContext, dbms, appPath, filePath, filePrefix);
 
 		// --- step 1 : collect objects to remove
@@ -147,7 +147,8 @@ public class DbLib {
 
 			for (Iterator<ObjectInfo> i = objects.iterator(); i.hasNext();) {
 				ObjectInfo oi = i.next();
-				Log.debug(Geonet.DB, "  * Dropping " + oi.name);
+                if(Log.isDebugEnabled(Geonet.DB))
+                    Log.debug(Geonet.DB, "  * Dropping " + oi.name);
 				String query = "DROP " + oi.type + " " + oi.name;
 
 				if (safeExecute(dbms, query)) {
@@ -177,14 +178,16 @@ public class DbLib {
      * @param dbms
      */
 	public void createSchema(ServletContext servletContext, Dbms dbms, String appPath, String filePath, String filePrefix) throws Exception {
-		Log.debug(Geonet.DB, "Creating database schema");
+        if(Log.isDebugEnabled(Geonet.DB))
+            Log.debug(Geonet.DB, "Creating database schema");
 
 		List<String> schema = loadSchemaFile(servletContext, dbms, appPath, filePath, filePrefix);
 		runSQL(dbms, schema);
 	}
 
 	public void insertData(ServletContext servletContext, Dbms dbms, String appPath, String filePath, String filePrefix) throws Exception {
-		Log.debug(Geonet.DB, "Filling database tables");
+        if(Log.isDebugEnabled(Geonet.DB))
+            Log.debug(Geonet.DB, "Filling database tables");
 
 		List<String> data = loadSqlDataFile(servletContext, dbms, appPath, filePath, filePrefix);
 		runSQL(dbms, data);
@@ -220,7 +223,8 @@ public class DbLib {
 
 					sql = sql.substring(0, sql.length() - 1);
 
-					Log.debug(Geonet.DB, "Executing " + sql);
+                    if(Log.isDebugEnabled(Geonet.DB))
+                        Log.debug(Geonet.DB, "Executing " + sql);
 					
 					try {
 						if (sql.trim().startsWith("SELECT")) {
@@ -260,7 +264,8 @@ public class DbLib {
 
 			return true;
 		} catch (SQLException e) {
-			Log.debug(Geonet.DB, "Safe execute error: " + query + ", error is:" + e.getMessage());
+            if(Log.isDebugEnabled(Geonet.DB))
+                Log.debug(Geonet.DB, "Safe execute error: " + query + ", error is:" + e.getMessage());
 			dbms.abort();
 			return false;
 		}
@@ -283,8 +288,9 @@ public class DbLib {
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms schema to load
 		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
-		
-		Log.debug(Geonet.DB, "  Loading script:" + file);
+
+        if(Log.isDebugEnabled(Geonet.DB))
+            Log.debug(Geonet.DB, "  Loading script:" + file);
 
 		// --- load the dbms schema
 		return Lib.text.load(servletContext, appPath, file);
@@ -309,7 +315,8 @@ public class DbLib {
 		if (defaultFile.exists())
 			return defaultFilePath;
 		else
-			Log.debug(Geonet.DB, "  No default SQL script found: " + defaultFilePath);
+        if(Log.isDebugEnabled(Geonet.DB))
+            Log.debug(Geonet.DB, "  No default SQL script found: " + defaultFilePath);
 
 		return "";
 	}

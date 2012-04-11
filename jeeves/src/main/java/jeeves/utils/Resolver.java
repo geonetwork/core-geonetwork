@@ -69,7 +69,7 @@ public final class Resolver implements ProxyInfoObserver
 		catMan.setCatalogClassName("org.apache.xml.resolver.Catalog");
 		String catFiles = System.getProperty(Jeeves.XML_CATALOG_FILES);
 		if (catFiles == null) catFiles="";
-		Log.debug(Log.JEEVES,"Using oasis catalog files "+catFiles);
+        if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using oasis catalog files "+catFiles);
 		catMan.setCatalogFiles(catFiles);
 		catMan.setIgnoreMissingProperties(true);
 		catMan.setPreferPublic(true);
@@ -84,7 +84,7 @@ public final class Resolver implements ProxyInfoObserver
 			Log.error(Log.JEEVES, "Failed to parse "+Jeeves.XML_CATALOG_VERBOSITY+" "+catVerbosity);
 			nfe.printStackTrace();
 		}
-		Log.debug(Log.JEEVES,"Using catalog resolver verbosity "+iCatVerb);
+        if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using catalog resolver verbosity "+iCatVerb);
 		catMan.setVerbosity(iCatVerb);
 
 		catResolver = new CatalogResolver(catMan);
