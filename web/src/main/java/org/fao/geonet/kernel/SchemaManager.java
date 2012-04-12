@@ -626,9 +626,11 @@ public class SchemaManager {
 			// -- If nothing has matched by this point choose defaultSchema supplied
 			// -- as argument to this method as long as its reasonable
 			if (schema == null && defaultSchema != null) {
-				if (checkNamespace(md, defaultSchema)) {
-					Log.warning(Geonet.SCHEMA_MANAGER, "  Autodetecting schema failed for "+md.getName()+" in namespace "+md.getNamespace()+". Using default schema: " + defaultSchema);
-					schema = defaultSchema;
+				String defaultSchemaOrDependencySchema = checkNamespace(md, defaultSchema);
+				if (defaultSchemaOrDependencySchema != null) {
+					Log.warning(Geonet.SCHEMA_MANAGER, "  Autodetecting schema failed for " + md.getName() + " in namespace " + md.getNamespace()
+							+ ". Using default schema or one of its dependency: " + defaultSchemaOrDependencySchema);
+					schema = defaultSchemaOrDependencySchema;
 				}
 			}
 
@@ -656,8 +658,8 @@ public class SchemaManager {
 	 * @param schema the name of the metadata schema we want to test
      * @return
 	 */
-	private boolean checkNamespace(Element md, String schema) {
-		boolean result = false;
+	private String checkNamespace(Element md, String schema) {
+		String result = null;
 
 		try {
 			MetadataSchema mds = getSchema(schema);
@@ -665,7 +667,20 @@ public class SchemaManager {
 				String primeNs = mds.getPrimeNS();
                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER,"  primeNs "+primeNs+" for schema "+schema);
-				if (md.getNamespace().getURI().equals(primeNs)) result = true;
+				if (md.getNamespace().getURI().equals(primeNs)) {
+					result = schema;
+				} else {
+					// Check if the metadata could match a schema dependency 
+					// (If preferredSchema is an ISO profil a fragment or subtemplate
+					// may match ISO core schema and should not be rejected).
+					Schema sch = hmSchemas.get(schema);
+					List<Element> dependsList = sch.getDependElements();
+					for (Element depends : dependsList) {
+						if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+		                    Log.debug(Geonet.SCHEMA_MANAGER,"  checkNamespace for dependency: " + depends.getText());
+						return checkNamespace(md, depends.getText());
+					}
+				}
 			}
 		} catch (Exception e) {
 			Log.warning(Geonet.SCHEMA_MANAGER, "Schema "+schema+" not registered?");
