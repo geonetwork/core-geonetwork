@@ -1,3 +1,8 @@
+ALTER TABLE "Settings" ALTER COLUMN "value" varchar(max);
+ALTER TABLE "Metadata" ALTER COLUMN "data" XML;
+ALTER TABLE "MetadataNotifications" ALTER COLUMN "errormsg" varchar(max);
+ALTER TABLE "CswServerCapabilitiesInfo" ALTER COLUMN "label" varchar(max);
+
 CREATE TABLE HarvestHistory
   (
     id             int not null,
@@ -6,8 +11,8 @@ CREATE TABLE HarvestHistory
         harvesterName  varchar(128),
         harvesterType  varchar(128),
     deleted        char(1) default 'n' not null,
-    info           text,
-    params         text,
+    info           XML,
+    params         XML,
 
     primary key(id)
 

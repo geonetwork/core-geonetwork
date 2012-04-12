@@ -37,7 +37,7 @@ CREATE TABLE Settings
     id        int,
     parentId  int,
     name      varchar(64)    not null,
-    value     text,
+    value     varchar(max),
 
     primary key(id),
 
@@ -236,7 +236,7 @@ CREATE TABLE Metadata
     isHarvested  char(1)        default 'n' not null,
     createDate   varchar(30)    not null,
     changeDate   varchar(30)    not null,
-    data         text       not null,
+    data         XML       not null,
     source       varchar(250)   not null,
     title        varchar(255),
     root         varchar(255),
@@ -373,7 +373,7 @@ CREATE TABLE MetadataNotifications
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
-    errormsg           text,
+    errormsg           varchar(max),
 
     primary key(metadataId,notifierId),
 
@@ -387,7 +387,7 @@ CREATE TABLE CswServerCapabilitiesInfo
     idField   int,
     langId    varchar(5)    not null,
     field     varchar(32)   not null,
-    label     text,
+    label     varchar(max),
 
     primary key(idField),
 
@@ -453,8 +453,8 @@ CREATE TABLE HarvestHistory
 		harvesterName  varchar(128),
 		harvesterType  varchar(128),
     deleted        char(1) default 'n' not null,
-    info           text,
-    params         text,
+    info           XML,
+    params         XML,
 
     primary key(id)
 
