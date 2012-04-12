@@ -8,6 +8,7 @@
              by commenting it out -->
         <healthCheck class=".CswGetRecordsHealthCheck"/>
         <healthCheck class=".CswGetCapabilitiesHealthCheck"/>
+        <healthCheck class=".NoIndexErrorsHealthCheck"/>
     </monitors>
     <monitors package="org.fao.geonet.monitor.harvest">
         <counter class=".AbstractHarvesterErrorCounter"/>
