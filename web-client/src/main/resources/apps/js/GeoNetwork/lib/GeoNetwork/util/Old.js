@@ -80,14 +80,12 @@ function checkBoxModalUpdate(div, service, modalbox, title){
 }
 
 function radioModalUpdate(div, service, modalbox, title) {
-    changeMessage = Ext.getDom('changeMessage').value;
-    if (Ext.isEmpty(changeMessage)) {
-        changeMessage = OpenLayers.i18n('noInfo');
-    }
-
-    var radios = Ext.DomQuery.select('input[type="radio"]');
-    var pars = "?id=" + Ext.getDom('metadataid').value + "&changeMessage="
-            + changeMessage;
+    var pars = '?';
+    var inputs = Ext.DomQuery.select('input[type="hidden"],textarea,select', div);
+    Ext.each(inputs, function(s) {
+        pars += "&" + s.name + "=" + s.value;
+    });
+    var radios = Ext.DomQuery.select('input[type="radio"]', div);
     Ext.each(radios, function(s){
         if (s.checked) {
             pars += "&" + s.name + "=" + s.value;
