@@ -26,6 +26,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -52,7 +53,7 @@ public class SaveDisplayOrder implements Service {
             // the request params come in as e.g. <displayorder-30749>5</displayorder-30749> where
             // the part after the dash is the metadata id.
             String id = param.getName().substring(param.getName().indexOf('-') + 1);
-            if ("".equals(id)) {    // In some cases, GUI sends <_/> parameters,
+            if (StringUtils.isNotEmpty(id)) {    // In some cases, GUI sends <_/> parameters,
                 // If id is not an integer, exception will occur later.
 	            String displayPosition = param.getText();
 	            dm.updateDisplayOrder(dbms, id, displayPosition);
