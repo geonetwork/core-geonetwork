@@ -109,7 +109,8 @@
 
 
         <span class="madeBy">
-          <xsl:value-of select="/root/gui/strings/changeDate"/><xsl:value-of select="substring-before(gmd:dateStamp, 'T')"/>
+          <xsl:value-of select="/root/gui/strings/changeDate"/><xsl:value-of select="substring-before(gmd:dateStamp, 'T')"/> | 
+          <xsl:value-of select="/root/gui/strings/uuid"/><xsl:value-of select="gmd:fileIdentifier"/>
         </span>
 
       </xsl:with-param>
