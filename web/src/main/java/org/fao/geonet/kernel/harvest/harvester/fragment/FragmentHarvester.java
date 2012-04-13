@@ -505,6 +505,7 @@ public class FragmentHarvester {
 		String title = fragment.getAttributeValue("title");
 		String uuid = fragment.getAttributeValue("uuid");
 		String schema = fragment.getAttributeValue("schema");
+		boolean addUuid = fragment.getAttributeValue("addUuidAsId","false").equals("true");
 		
 		if (schema==null) return;  //skip fragments with unknown schema
 		
@@ -525,8 +526,9 @@ public class FragmentHarvester {
 			Element parent = reference.getParentElement(); 
 			Element newMd = (Element)md.clone();
 			// add the fragment uuid as an id attribute so that any xlinks local to 
-			// the document that use the uuid will resolve
-			// newMd.setAttribute("id", uuid);  // or not because urns contain colons
+			// the document that use the uuid will resolve - do this if the fragment
+			// has an attribute addUuidAsId="true"
+			if (addUuid) newMd.setAttribute("id", uuid);
 			parent.setContent(parent.indexOf(reference),newMd);
 		}
 	}
