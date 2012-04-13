@@ -804,13 +804,17 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Display a metadata record in a Ext.Panel or a Ext.Window.
      *  Defined GeoNetwork.defaultViewMode variable to change default view mode. 
      *  If not set, simple mode is used.
+     *  
+     *  Define metadataShowFn in order to override metadata show default behavior::
+     *  
+     *    this.metadataShowFn(uuid, record, url, maximized, width, height);
      */
     metadataShow: function(uuid, maximized, width, height){
-    	// UUID may contains special character like #
-    	var url = this.services.mdView + '?uuid=' + escape(uuid);
+        // UUID may contains special character like #
+        var url = this.services.mdView + '?uuid=' + escape(uuid);
         var bd = Ext.getBody();
         
-        if (this.resultsView) {
+        if (this.resultsView) { 
             var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid));
             
             // No current search available with this record information
@@ -821,23 +825,23 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 record = store.getAt(store.find('uuid', uuid));
             }
             
-            var win = new GeoNetwork.view.ViewWindow({
-                serviceUrl: url,
-                lang: this.lang,
-                currTab: GeoNetwork.defaultViewMode || 'simple',
-                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
-                catalogue: this,
-                maximized: maximized || false,
-                metadataUuid: uuid,
-                record: record,
-                resultsView: this.resultsView
-                });
-            win.show(this.resultsView);
-            win.alignTo(bd, 'tr-tr');
-        } else {
-            // Not really used - use old service
-            window.open(this.services.mdShow + '?uuid=' + uuid,
-                this.windowName, this.windowOption);
+            if (this.metadataShowFn) {
+                this.metadataShowFn(uuid, record, url, maximized, width, height);
+            } else {
+                var win = new GeoNetwork.view.ViewWindow({
+                    serviceUrl: url,
+                    lang: this.lang,
+                    currTab: GeoNetwork.defaultViewMode || 'simple',
+                    printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                    catalogue: this,
+                    maximized: maximized || false,
+                    metadataUuid: uuid,
+                    record: record,
+                    resultsView: this.resultsView
+                    });
+                win.show(this.resultsView);
+                win.alignTo(bd, 'tr-tr');
+            }
         }
     },
      metadataShowById: function(id, maximized, width, height){

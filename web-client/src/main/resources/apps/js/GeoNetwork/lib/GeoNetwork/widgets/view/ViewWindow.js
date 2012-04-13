@@ -80,6 +80,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     resultsView: undefined,
     actionMenu: undefined,
     tipTpl: undefined,
+    panel: undefined,
     metadataSchema: undefined,
     cache: {},
     tooltips: [],
@@ -90,6 +91,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     /** private: method[initComponent] 
      *  Initializes the metadata view window.
      */
+    getPanel: function() {
+        return this.panel;
+    },
     initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
@@ -105,8 +109,9 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
         this.setTitle(this.record ? this.record.get('title') : '');
-        this.add(new GeoNetwork.view.ViewPanel({
-        	serviceUrl: this.serviceUrl,
+        
+        this.panel = new GeoNetwork.view.ViewPanel({
+            serviceUrl: this.serviceUrl,
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
@@ -117,7 +122,8 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             border: false,
             frame: false,
             autoScroll: true
-        }));
+        });
+        this.add(this.panel);
         
         this.on('beforeshow', function(el) {
             el.setSize(

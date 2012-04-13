@@ -220,7 +220,9 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             this.currTab = item.value;
             this.load({
                 url: this.serviceUrl + '&currTab=' + this.currTab,
-                callback: this.afterMetadataLoad,
+                callback: function () {
+                    this.fireEvent('aftermetadataload', this);
+                },
                 scope: this
             });
         }
@@ -354,13 +356,27 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         this.add(new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl + '&currTab=' + this.currTab,
-                callback: this.afterMetadataLoad,
+                callback: function() {
+                    this.fireEvent('aftermetadataload', this);
+                },
                 scope: this
             },
             border: false,
             frame: false,
             autoScroll: true
         }));
+        
+
+        this.addEvents(
+                /** private: event[search]
+                 *  Fires search.
+                 */
+                "aftermetadataload"
+            );
+        this.on({
+            "aftermetadataload": this.afterMetadataLoad,
+            scope: this
+        });
     }
 });
 
