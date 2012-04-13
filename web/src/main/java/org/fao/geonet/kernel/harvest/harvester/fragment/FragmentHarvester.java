@@ -158,6 +158,20 @@ public class FragmentHarvester {
 				metadataTemplateNamespaces.add(ns);
 				metadataTemplateNamespaces.addAll(metadataTemplate.getAdditionalNamespaces());
 			}
+
+			// --- Build a list of all id attributes in metadata document so
+			// --- that we can remove any that are left over afterwards
+			new Document(metadataTemplate);
+			List elems = Xml.selectNodes(metadataTemplate, "//*[@id]", metadataTemplateNamespaces);
+			for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+				Object ob = iter.next();
+				if (ob instanceof Element) {
+					Element elem = (Element)ob;
+					String idValue = elem.getAttributeValue("id");
+					templateIdAtts.add(idValue);
+				}
+			}
+
 		} catch (Exception e) {
 			log.error("Thrown Exception " + e + " opening template with id: " + params.templateId);
 			e.printStackTrace();
@@ -175,9 +189,11 @@ public class FragmentHarvester {
 		List<Element> fragments = rec.getChildren();
 		
 		Element recordMetadata = null;
+		Set<String> recordMetadataRefs = new HashSet<String>();
 		
 		if (metadataTemplate != null) {
 			recordMetadata = (Element)metadataTemplate.clone();
+			recordMetadataRefs.addAll(templateIdAtts);
 			
 			//Jaxen requires element to be associated with a
 			//document to correctly interpret XPath expressions 
@@ -192,10 +208,14 @@ public class FragmentHarvester {
 			}
 				
 			if (recordMetadata != null) {
-				updateMetadataReferences(recordMetadata, fragment);
+				updateMetadataReferences(recordMetadata, recordMetadataRefs, fragment);
 			}
 		}
-		
+	
+		if (recordMetadata != null) {
+			cleanupRecord(recordMetadata, recordMetadataRefs);
+		}
+
 		harvestSummary.fragmentsReturned += fragments.size();
 
 		if (recordMetadata != null) {
@@ -208,8 +228,10 @@ public class FragmentHarvester {
 			
 			String id = dataMan.getMetadataId(dbms, recUuid);
 			if (id == null) {
+				log.debug("Adding metadata "+recUuid);
 				createMetadata(recUuid, recordMetadata);
 			} else {
+				log.debug("Updating metadata "+recUuid+" with id : " + id);
 				updateMetadata(recUuid, id, recordMetadata);
 			}
 		}
@@ -393,10 +415,11 @@ public class FragmentHarvester {
      * sub-template created for it 
      *   
      * @param template		template to update
+     * @param templateRefs names of id attributes in template
      * @param fragment		fragment referenced
      * 
      */
-	private void updateMetadataReferences(Element template, Element fragment) throws Exception {
+	private void updateMetadataReferences(Element template, Set<String> templateRefs, Element fragment) throws Exception {
 		String matchId = fragment.getAttributeValue("id");
 
 		if (matchId == null || matchId.equals("")) {
@@ -416,27 +439,58 @@ public class FragmentHarvester {
 				Element elem = (Element)ob;
 
 	 	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
- 				Element parent = elem.getParentElement();
- 				int insertionIndex = parent.indexOf(elem);
-	 	    List<Element> children = fragment.getChildren();
+ 					Element parent = elem.getParentElement();
+ 					int insertionIndex = parent.indexOf(elem);
+	 	    	List<Element> children = fragment.getChildren();
 	 	    	
-	 			for (Element child: children) {
-	 				//insert a copy of the referencing element 
-	 				Element copy = (Element)elem.clone();
-	 				parent.addContent(insertionIndex++, copy);
-	 				//link the copy to or replace the copy with this xml fragment as requested 
-	 				updateTemplateReference(copy, child); 
-	 			}
-	 			
-	 			//remove the original reference
-	 			parent.removeContent(elem);
+	 				for (Element child: children) {
+	 					//insert a copy of the referencing element 
+	 					Element copy = (Element)elem.clone();
+	 					parent.addContent(insertionIndex++, copy);
+	 					//link the copy to or replace the copy with this xml fragment as requested 
+	 					updateTemplateReference(copy, child); 
+	 				}
+	 				
+	 				//remove the original reference
+	 				parent.removeContent(elem);
 		    } else {
 		    	updateTemplateReference(elem, fragment);
 		    }
 			}
 		}
 		
-		if (elems.size() > 0) harvestSummary.fragmentsMatched++;
+		if (elems.size() > 0) {
+			harvestSummary.fragmentsMatched++;
+			templateRefs.remove(matchId);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/** 
+     * Cleanup unused references in the metadata record created from the template. 
+     *   
+     * @param record		metadata record to remove unused elements with id attributes from
+     * @param recordRefs names of id attributes not filled in 
+     * 
+     */
+	private void cleanupRecord(Element record, Set<String> recordRefs) throws Exception {
+		log.debug("Cleaning up record with ids "+recordRefs);
+
+		for (String matchId : recordRefs) {
+      if(log.isDebugEnabled())
+            log.debug("Attempting to search metadata for "+matchId);
+			List elems = Xml.selectNodes(record,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+
+			// for each of these elements remove it as no fragment has matched it
+			for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+				Object ob = iter.next();
+				if (ob instanceof Element) {
+					Element elem = (Element)ob;
+ 					Element parent = elem.getParentElement();
+	 				parent.removeContent(elem);
+				}
+			}
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -472,7 +526,7 @@ public class FragmentHarvester {
 			Element newMd = (Element)md.clone();
 			// add the fragment uuid as an id attribute so that any xlinks local to 
 			// the document that use the uuid will resolve
-			newMd.setAttribute("id",uuid); 
+			// newMd.setAttribute("id", uuid);  // or not because urns contain colons
 			parent.setContent(parent.indexOf(reference),newMd);
 		}
 	}
@@ -615,6 +669,7 @@ public class FragmentHarvester {
 	private FragmentParams params;
 	private String metadataGetService;
 	private List metadataTemplateNamespaces = new ArrayList();;
+	private Set<String>  templateIdAtts = new HashSet<String>();;
 	private Element metadataTemplate;
 	private String harvestUri;
 	private CategoryMapper localCateg;
