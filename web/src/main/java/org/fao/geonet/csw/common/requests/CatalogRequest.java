@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -145,15 +146,32 @@ public abstract class CatalogRequest
 	}
 
 	//---------------------------------------------------------------------------
-
+	/**
+	 * Set request URL host, port, address and path.
+	 * If URL contains query string parameters, those parameters are
+	 * preserved (and {@link CatalogRequest#excludedParameters} are
+	 * excluded). A complete GetCapabilities URL may be used for initialization.
+	 */
 	public void setUrl(URL url)
 	{
 		this.host    = url.getHost();
 		this.port    = url.getPort();
-		this.address = url.getPath();
-
-		if (this.port == -1)
+		this.address = url.toString();
+		this.path = url.getPath();
+		
+		alGetParams = new ArrayList<NameValuePair>();
+		String query = url.getQuery();
+		String[] params = query.split("&");
+		for (String param : params) {
+			String[] kvp = param.split("=");
+			if (!excludedParameters.contains(kvp[1].toLowerCase())) {
+				this.alGetParams.add(new NameValuePair(kvp[0], kvp[1]));
+			}
+		}
+		
+		if (this.port == -1) {
 			this.port = 80;
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -456,9 +474,12 @@ public abstract class CatalogRequest
 
 		if (method == Method.GET)
 		{
-			alGetParams = new ArrayList<NameValuePair>();
+			if (alGetParams == null) {
+				alGetParams = new ArrayList<NameValuePair>();
+			}
 			setupGetParams();
 			httpMethod = new GetMethod();
+			httpMethod.setPath(path);
 			httpMethod.setQueryString(alGetParams.toArray(new NameValuePair[1]));
 			System.out.println("GET params:"+httpMethod.getQueryString());
 			if (useSOAP)
@@ -468,7 +489,6 @@ public abstract class CatalogRequest
 		{
 			Element    params = getPostParams();
 			PostMethod post   = new PostMethod();
-
 			if (!useSOAP)
 			{
 				postData = Xml.getString(new Document(params));
@@ -481,11 +501,11 @@ public abstract class CatalogRequest
 			}
 			System.out.println("POST params:"+Xml.getString(params));
 			httpMethod = post;
+			httpMethod.setPath(address);
 		}
  
 //		httpMethod.setFollowRedirects(true);
-		httpMethod.setPath(address);
-
+		
 		if (useAuthent)
 		{
 			Credentials cred = new UsernamePasswordCredentials(username, password);
@@ -576,9 +596,18 @@ public abstract class CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	private String  host;
 	private int     port;
 	private String  address;
+	private String  path;
 	private String  loginAddr;
 	private Method  method;
 	private boolean useSOAP;
@@ -592,7 +621,10 @@ public abstract class CatalogRequest
 	private HttpClient client = new HttpClient();
 
     private ArrayList<NameValuePair> alGetParams;
-
+    
+    // Parameters to not take into account in GetRequest
+	private static final List<String> excludedParameters = Arrays.asList("request", "version", "service");
+	
 	//--- transient vars
 
 	private String sentData;

@@ -27,12 +27,12 @@ public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
                 String port = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
                 final String baseUrl = context.getBaseUrl();
                 try {
-                    GetCapabilitiesRequest getRecords = new GetCapabilitiesRequest();
+                    GetCapabilitiesRequest getCapabilities = new GetCapabilitiesRequest();
 
-                    getRecords.setHost(host);
-                    getRecords.setPort(port == null ? 80 : Integer.parseInt(port));
-                    getRecords.setAddress(baseUrl + "/srv/eng/csw");
-                    Element result = getRecords.execute();
+                    getCapabilities.setHost(host);
+                    getCapabilities.setPort(port == null ? 80 : Integer.parseInt(port));
+                    getCapabilities.setAddress(baseUrl + "/srv/eng/csw");
+                    Element result = getCapabilities.execute();
                     if (result.getChild("ServiceIdentification", Csw.NAMESPACE_OWS) == null)
                         return Result.unhealthy("Capabilities did not have a 'ServiceIdentification' element as expected.  Xml: " + Xml.getString(result));
                     return Result.healthy();

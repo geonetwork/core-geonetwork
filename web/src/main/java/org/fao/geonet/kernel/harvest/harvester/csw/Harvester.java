@@ -115,7 +115,13 @@ class Harvester
 		if (!Lib.net.isUrlValid(params.capabUrl))
 			throw new BadParameterEx("Capabilities URL", params.capabUrl);
 
-		XmlRequest req = new XmlRequest(new URL(params.capabUrl));
+		XmlRequest req;
+		// Support both full GetCapbilities URL or CSW entry point
+		if (params.capabUrl.contains("GetCapabilities")) {
+			req = new XmlRequest(new URL(params.capabUrl));
+		} else {
+			req = new XmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
+		}
 
 		Lib.net.setupProxy(context, req);
 
@@ -550,6 +556,7 @@ class Harvester
 	public static final String PREFERRED_HTTP_METHOD = CatalogRequest.Method.GET.toString();
 	private static int GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE = 20;
 	private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
+	private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
 	private Logger         log;
 	private Dbms           dbms;
 	private CswParams      params;
