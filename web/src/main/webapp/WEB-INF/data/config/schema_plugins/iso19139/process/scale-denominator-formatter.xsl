@@ -7,10 +7,10 @@
   
   <!-- i18n information -->
   <xsl:variable name="scale-denominator-loc">
-    <msg id="a" xml:lang="en">The following values are not recommended for scale denominator: </msg>
-    <msg id="b" xml:lang="en">. Run this task to try to fix it(them).</msg>
-    <msg id="a" xml:lang="fr">Les valeurs suivantes ne sont pas recommandées pour le dénominateur de l'échelle : </msg>
-    <msg id="b" xml:lang="fr">). Exécuter cette action pour le corriger.</msg>
+    <msg id="a" xml:lang="eng">The following values are not recommended for scale denominator: </msg>
+    <msg id="b" xml:lang="eng">. Run this task to try to fix it(them).</msg>
+    <msg id="a" xml:lang="fre">Les valeurs suivantes ne sont pas recommandées pour le dénominateur de l'échelle : </msg>
+    <msg id="b" xml:lang="fre">). Exécuter cette action pour le corriger.</msg>
   </xsl:variable>
 
   <xsl:template name="list-scale-denominator-formatter">

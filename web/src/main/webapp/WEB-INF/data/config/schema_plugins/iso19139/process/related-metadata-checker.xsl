@@ -9,10 +9,10 @@
   
   <!-- i18n information -->
   <xsl:variable name="related-metadata-checker-loc">
-    <msg id="a" xml:lang="en"> not found (</msg>
-    <msg id="b" xml:lang="en">). Run this task to remove it.</msg>
-    <msg id="a" xml:lang="fr"> non trouvé (</msg>
-    <msg id="b" xml:lang="fr">). Si l'erreur persiste, corriger le lien manuellement ou exécuter cette action pour le supprimer.</msg>
+    <msg id="a" xml:lang="eng"> not found (</msg>
+    <msg id="b" xml:lang="eng">). Run this task to remove it.</msg>
+    <msg id="a" xml:lang="fre"> non trouvé (</msg>
+    <msg id="b" xml:lang="fre">). Si l'erreur persiste, corriger le lien manuellement ou exécuter cette action pour le supprimer.</msg>
   </xsl:variable>
 
   <xsl:template name="list-related-metadata-checker">

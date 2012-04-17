@@ -12,8 +12,8 @@
   
   <!-- i18n information -->
   <xsl:variable name="inspire-conformity-loc">
-    <msg id="a" xml:lang="en"> INSPIRE theme(s) found. Run this task to add an INSPIRE conformity section.</msg>
-    <msg id="a" xml:lang="fr"> thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une section conformité INSPIRE.</msg>
+    <msg id="a" xml:lang="eng"> INSPIRE theme(s) found. Run this task to add an INSPIRE conformity section.</msg>
+    <msg id="a" xml:lang="fre"> thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une section conformité INSPIRE.</msg>
   </xsl:variable>
   
   <!-- TODO : retrieve local copy -->

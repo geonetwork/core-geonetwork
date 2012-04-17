@@ -19,10 +19,10 @@
 
   <!-- i18n information -->
   <xsl:variable name="wxs-info-loc">
-    <msg id="a" xml:lang="en">OGC WMS or WFS service </msg>
-    <msg id="b" xml:lang="en"> is described in online resource section. Run this process to add operations information</msg>
-    <msg id="a" xml:lang="fr">Le service WMS ou WFS </msg>
-    <msg id="b" xml:lang="fr"> est décrit dans la section resource en ligne. Exécuter cette action pour ajouter ou remplacer les informations relatives aux opérations</msg>
+    <msg id="a" xml:lang="eng">OGC WMS or WFS service </msg>
+    <msg id="b" xml:lang="eng"> is described in online resource section. Run this process to add operations information</msg>
+    <msg id="a" xml:lang="fre">Le service WMS ou WFS </msg>
+    <msg id="b" xml:lang="fre"> est décrit dans la section resource en ligne. Exécuter cette action pour ajouter ou remplacer les informations relatives aux opérations</msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->

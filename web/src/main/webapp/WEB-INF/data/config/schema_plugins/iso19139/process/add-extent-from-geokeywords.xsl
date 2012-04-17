@@ -8,10 +8,10 @@
 
   <!-- i18n information -->
   <xsl:variable name="add-extent-loc">
-    <msg id="a" xml:lang="en">Keyword field contains place keywords (ie. </msg>
-    <msg id="b" xml:lang="en">). Try to compute metadata extent using thesaurus.</msg>
-    <msg id="a" xml:lang="fr">Certains mots clés sont de type géographique (ie. </msg>
-    <msg id="b" xml:lang="fr">). Exécuter cette action pour essayer de calculer l'emprise à partir des thésaurus.</msg>
+    <msg id="a" xml:lang="eng">Keyword field contains place keywords (ie. </msg>
+    <msg id="b" xml:lang="eng">). Try to compute metadata extent using thesaurus.</msg>
+    <msg id="a" xml:lang="fre">Certains mots clés sont de type géographique (ie. </msg>
+    <msg id="b" xml:lang="fre">). Exécuter cette action pour essayer de calculer l'emprise à partir des thésaurus.</msg>
   </xsl:variable>
 
   <!-- GeoNetwork base url -->

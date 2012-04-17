@@ -6,7 +6,7 @@
   version="2.0" exclude-result-prefixes="exslt">
   
   <!-- Language of the GUI -->
-  <xsl:param name="guiLang" select="'en'"/>
+  <xsl:param name="guiLang" select="'eng'"/>
   <xsl:param name="baseUrl" select="''"/>
   
   <!-- Search for any of the searchStrings provided -->

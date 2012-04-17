@@ -9,10 +9,10 @@
   
   <!-- i18n information -->
   <xsl:variable name="linked-data-checker-loc">
-    <msg id="a" xml:lang="en"> return an error (</msg>
-    <msg id="b" xml:lang="en">). Run this task to remove it.</msg>
-    <msg id="a" xml:lang="fr"> a retourné une erreur (</msg>
-    <msg id="b" xml:lang="fr">). Si l'erreur persiste, corriger le lien manuellement ou exécuter cette action pour le supprimer.</msg>
+    <msg id="a" xml:lang="eng"> return an error (</msg>
+    <msg id="b" xml:lang="eng">). Run this task to remove it.</msg>
+    <msg id="a" xml:lang="fre"> a retourné une erreur (</msg>
+    <msg id="b" xml:lang="fre">). Si l'erreur persiste, corriger le lien manuellement ou exécuter cette action pour le supprimer.</msg>
   </xsl:variable>
 
   <xsl:template name="list-linked-data-checker">

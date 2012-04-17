@@ -25,7 +25,7 @@
     <xsl:import href="process-utility.xsl"/>
     
     <xsl:variable name="inspire-th"
-        select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.data.dir')), '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
+        select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '/external/thesauri/theme/inspire-theme.rdf'))"/>
     
     <xsl:variable name="itheme-topiccat-map">
         <!-- <entry>
@@ -168,9 +168,9 @@
     
     <!-- i18n information -->
     <xsl:variable name="itheme-topiccat-loc">
-        <msg id="a" xml:lang="en"> INSPIRE Themes and/or topic categories found with missing matching items. Run this suggestion to add all corresponding
+        <msg id="a" xml:lang="eng"> INSPIRE Themes and/or topic categories found with missing matching items. Run this suggestion to add all corresponding
         values.</msg>
-        <msg id="a" xml:lang="fr"> thèmes INSPIRE et/ou des catégories ont été trouvés avec des correspondances manquantes. Lancer ce processus pour ajouter les correspondances.</msg>
+        <msg id="a" xml:lang="fre"> Thèmes INSPIRE et/ou des catégories ont été trouvés avec des correspondances manquantes. Lancer ce processus pour ajouter les correspondances.</msg>
     </xsl:variable>
     
     
@@ -182,7 +182,6 @@
         for that process -->
     <xsl:template name="analyze-inspire-themes-and-topiccategory">
         <xsl:param name="root"/>
-        
         <xsl:variable name="lang" select="if (normalize-space($root//gmd:MD_Metadata/gmd:language/gco:CharacterString
             |$root//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue)='') 
             then 'en' 
@@ -190,17 +189,17 @@
             substring($root//gmd:MD_Metadata/gmd:language/gco:CharacterString
             |$root//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue, 1, 2)
             "/>
-        
         <xsl:variable name="mappingAvailable">
             <!-- For all theme in metadata language -->
             <xsl:for-each select="$inspire-th//skos:Concept[skos:prefLabel/@xml:lang = normalize-space($lang)]">
                 <xsl:variable name="themeLabel" select="skos:prefLabel[@xml:lang = normalize-space($lang)]"/>
+                
                 <!-- if in metadata -->
                 <xsl:if test="$root//gmd:keyword[gco:CharacterString = $themeLabel]">
                     <xsl:variable name="themeId" select="@rdf:about"/>
                     <!-- and corresponding topic cat does not exist in metadata -->
                     <xsl:for-each select="$itheme-topiccat-map/entry[itheme=$themeId]/topiccat">
-                        <xsl:variable name="tcId" select="."/>                        
+                        <xsl:variable name="tcId" select="."/>
                         <xsl:if test="count($root//gmd:topicCategory[gmd:MD_TopicCategoryCode = normalize-space($tcId)]) != 1">
                         YES
                         </xsl:if>
@@ -260,7 +259,7 @@
             <xsl:variable name="existingInspireThemes" select="gmd:descriptiveKeywords[contains(*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE')]"/>
 
             <!-- Default language is english if not set 
-                else use the 2 first letter of the language code (skos xml:lang attribute is ISO 2 letter code)
+                else use the 2 first letter of the language code (skos xml:lang attribute is ISO 2 letters code)
             -->
             <xsl:variable name="lang" select="if (normalize-space(//gmd:MD_Metadata/gmd:language/gco:CharacterString
                 |//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue)='') 
@@ -353,7 +352,7 @@
                         <xsl:variable name="themeId" select="@rdf:about"/>
                         <!-- and corresponding topic cat does not exist in metadata -->
                         <xsl:for-each select="$itheme-topiccat-map/entry[itheme=$themeId]/topiccat">
-                            <xsl:variable name="tcId" select="."/>                        
+                            <xsl:variable name="tcId" select="."/>
                             <xsl:if test="count($ident//gmd:topicCategory[gmd:MD_TopicCategoryCode = normalize-space($tcId)]) != 1">
                                 <elem><xsl:value-of select="$tcId"/></elem>
                             </xsl:if>

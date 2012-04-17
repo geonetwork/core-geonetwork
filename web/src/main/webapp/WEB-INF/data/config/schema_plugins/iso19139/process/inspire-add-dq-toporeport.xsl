@@ -14,9 +14,9 @@
 
   <!-- i18n information -->
   <xsl:variable name="inspire-add-dq-toporeport-loc">
-    <msg id="a" xml:lang="en"> INSPIRE theme(s) found. Run this task to add a topological
+    <msg id="a" xml:lang="eng"> INSPIRE theme(s) found. Run this task to add a topological
       consistency section.</msg>
-    <msg id="a" xml:lang="fr"> thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une
+    <msg id="a" xml:lang="fre"> thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une
       section sur la cohérence topologique.</msg>
   </xsl:variable>
 

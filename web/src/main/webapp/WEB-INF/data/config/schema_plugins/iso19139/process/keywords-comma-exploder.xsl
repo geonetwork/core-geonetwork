@@ -7,12 +7,12 @@
 
   <!-- i18n information -->
   <xsl:variable name="keyword-comma-loc">
-    <msg id="a" xml:lang="en">Keyword field contains "," (ie. </msg>
-    <msg id="b" xml:lang="en">). Run this task to explode that keywords.</msg>
-    <msg id="a" xml:lang="fr">Un mot clé contient le caractère "," (ie. </msg>
-    <msg id="b" xml:lang="fr">). Exécuter cette action pour le corriger.</msg>
-    <msg id="c" xml:lang="en"> and </msg>
-    <msg id="c" xml:lang="fr"> et </msg>
+    <msg id="a" xml:lang="eng">Keyword field contains "," (ie. </msg>
+    <msg id="b" xml:lang="eng">). Run this task to explode that keywords.</msg>
+    <msg id="a" xml:lang="fre">Un mot clé contient le caractère "," (ie. </msg>
+    <msg id="b" xml:lang="fre">). Exécuter cette action pour le corriger.</msg>
+    <msg id="c" xml:lang="eng"> and </msg>
+    <msg id="c" xml:lang="fre"> et </msg>
   </xsl:variable>
 
   <xsl:template name="list-keywords-comma-exploder">
