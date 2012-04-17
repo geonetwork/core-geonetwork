@@ -35,13 +35,35 @@ public class MonitorManager {
     private final Map<Class<MetricsFactory<Histogram>>, Histogram> serviceContextHistogram = new HashMap<Class<MetricsFactory<Histogram>>, Histogram>();
     private final Map<Class<MetricsFactory<Meter>>, Meter> serviceContextMeter = new HashMap<Class<MetricsFactory<Meter>>, Meter>();
 
-    private final HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();
-    private final MetricsRegistry metricsRegistry = new MetricsRegistry();
+    private final HealthCheckRegistry healthCheckRegistry;
+    private final MetricsRegistry metricsRegistry;
     public MonitorManager(ServletContext context) {
         if (context != null) {
-            context.setAttribute(HEALTH_CHECK_REGISTRY, healthCheckRegistry);
-            context.setAttribute(METRICS_REGISTRY, metricsRegistry);
+            HealthCheckRegistry tmpHealthCheckRegistry = null;
+            MetricsRegistry tmpMetricsRegistry = null;
+            if (context != null) {
+                tmpHealthCheckRegistry = (HealthCheckRegistry) context.getAttribute(HEALTH_CHECK_REGISTRY);
+                tmpMetricsRegistry = (MetricsRegistry) context.getAttribute(METRICS_REGISTRY);
+            }
+
+            if (tmpHealthCheckRegistry == null) {
+                tmpHealthCheckRegistry = new HealthCheckRegistry();
+            }
+
+            if (tmpMetricsRegistry == null) {
+                tmpMetricsRegistry = new MetricsRegistry();
+            }
+
+            healthCheckRegistry = tmpHealthCheckRegistry;
+            context.setAttribute(HEALTH_CHECK_REGISTRY, tmpHealthCheckRegistry);
+
+            metricsRegistry = tmpMetricsRegistry;
+            context.setAttribute(METRICS_REGISTRY, tmpMetricsRegistry);
+        } else {
+            healthCheckRegistry = new HealthCheckRegistry();
+            metricsRegistry = new MetricsRegistry();
         }
+
         LogManager.getRootLogger().addAppender(new InstrumentedAppender(metricsRegistry));
     }
 
