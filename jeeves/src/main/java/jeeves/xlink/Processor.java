@@ -362,7 +362,10 @@ public final class Processor {
         // Don't process XLink for operatesOn
         List<String> excludedXlinkElements = new ArrayList<String>();
         excludedXlinkElements.add("operatesOn");
-
+        excludedXlinkElements.add("featureCatalogueCitation");
+        excludedXlinkElements.add("Anchor");
+        // TODO: Add configuration file
+        
         if (excludedXlinkElements.contains(element.getName())) {
            return;
         }
