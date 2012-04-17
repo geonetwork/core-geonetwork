@@ -21,7 +21,7 @@
   </xsl:variable>
 
   <xsl:variable name="inspire-thesaurus-dq-topo"
-    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.data.dir')), '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
+    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '/external/thesauri/theme/inspire-theme.rdf'))"/>
 
   <xsl:template name="list-inspire-add-dq-toporeport">
     <suggestion process="inspire-add-dq-toporeport"/>

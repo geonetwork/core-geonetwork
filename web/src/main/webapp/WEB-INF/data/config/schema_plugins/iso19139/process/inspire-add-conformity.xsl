@@ -18,7 +18,7 @@
   
   <!-- TODO : retrieve local copy -->
   <xsl:variable name="inspire-thesaurus"
-    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.data.dir')), '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
+    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '/external/thesauri/theme/inspire-theme.rdf'))"/>
   <!--<xsl:variable name="inspire-thesaurus"
     select="document('http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/inspire-theme.rdf')"/>-->
   
