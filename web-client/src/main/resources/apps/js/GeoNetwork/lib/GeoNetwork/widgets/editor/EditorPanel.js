@@ -41,7 +41,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     editUrl: undefined,
     updateUrl: undefined,
     frame: false,
-    editorToolBar: undefined,
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
     defaultConfig: {
@@ -840,7 +839,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Call URL and replace editor content with the response
      */
     loadUrl: function(action, validate, cb, noPostParams){
-        
+        this.toolbar && this.toolbar.setDisabled(true);
         if (document.mainForm) {
             if (typeof validate !== 'undefined') {
                 document.mainForm.showvalidationerrors.value = "true";
@@ -863,6 +862,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     closeCallback: function(){
         this.onEditorClosed();
         this.ownerCt.hide();
+        this.toolbar && this.toolbar.setDisabled(false);
         //Ext.Msg.alert('Editor', 'Finish editing', function () {this.hide()}, this);
     },
     /**
@@ -880,6 +880,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         } else {
             this.getError(response);
         }
+        this.toolbar && this.toolbar.setDisabled(false);
     },
     /**
      * Hack to get error message inside HTML pages
