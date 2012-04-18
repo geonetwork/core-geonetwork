@@ -164,8 +164,8 @@ public abstract class CatalogRequest
 		String[] params = query.split("&");
 		for (String param : params) {
 			String[] kvp = param.split("=");
-			if (!excludedParameters.contains(kvp[1].toLowerCase())) {
-				this.alGetParams.add(new NameValuePair(kvp[0], kvp[1]));
+			if (!excludedParameters.contains(kvp[0].toLowerCase())) {
+				this.alGetParams.add(new NameValuePair(kvp[0], kvp.length == 1 ? kvp[1] : ""));
 			}
 		}
 		
@@ -623,7 +623,7 @@ public abstract class CatalogRequest
     private ArrayList<NameValuePair> alGetParams;
     
     // Parameters to not take into account in GetRequest
-	private static final List<String> excludedParameters = Arrays.asList("request", "version", "service");
+	private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
 	
 	//--- transient vars
 
