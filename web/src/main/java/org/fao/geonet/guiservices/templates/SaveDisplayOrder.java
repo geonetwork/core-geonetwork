@@ -53,11 +53,11 @@ public class SaveDisplayOrder implements Service {
             // the request params come in as e.g. <displayorder-30749>5</displayorder-30749> where
             // the part after the dash is the metadata id.
             String id = param.getName().substring(param.getName().indexOf('-') + 1);
-            if (StringUtils.isNotEmpty(id)) {    // In some cases, GUI sends <_/> parameters,
+            if (StringUtils.isNotEmpty(id) && !"_".equals(id)) {    // In Chrome with POST method, Ajax.Request sends <_/> parameters,
                 // If id is not an integer, exception will occur later.
-	            String displayPosition = param.getText();
-	            dm.updateDisplayOrder(dbms, id, displayPosition);
-	            dbms.commit();
+                String displayPosition = param.getText();
+                dm.updateDisplayOrder(dbms, id, displayPosition);
+                dbms.commit();
             }
         }
         return null;

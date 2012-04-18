@@ -199,7 +199,7 @@
 				$('waiting').style.display = 'block';
 				copyArrayToForm();
 				var myAjax = new Ajax.Request(
-				getGNServiceURL('{/root/gui/locService}/metadata.templates.displayorder.save'), 
+				getGNServiceURL('metadata.templates.displayorder.save'), 
 					{
 						method: 'post',
 						parameters: $('templateorderform').serialize(), 
