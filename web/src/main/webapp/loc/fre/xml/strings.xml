@@ -546,7 +546,7 @@
 	<kind>Type</kind>
 	<kindChoice value="company">Entreprise privée</kindChoice>
 	<kindChoice value="consultant">Consultant indépendant</kindChoice>
-	<kindChoice value="gov">Gouvernement</kindChoice>
+  <kindChoice value="gov">Gouvernement ou administration publique</kindChoice>
 	<kindChoice value="int-org">Organisation Internationale</kindChoice>
 	<kindChoice value="ngo">ONG</kindChoice>
 	<kindChoice value="other">Autre</kindChoice>
@@ -689,7 +689,7 @@
 	<profileChoice value="Editor">Editeur</profileChoice>
 	<profileChoice value="RegisteredUser">Invité</profileChoice>
 	<profileChoice value="Reviewer">Relecteur</profileChoice>
-	<profileChoice value="UserAdmin">Administrateur d'utilisateur</profileChoice>
+	<profileChoice value="UserAdmin">Administrateur d'utilisateurs</profileChoice>
 	<progress>Avancement</progress>
 	<progressChoice value="complete">terminé</progressChoice>
 	<progressChoice value="in-work">en cours</progressChoice>
@@ -772,7 +772,7 @@
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats de la recherche</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>
-	<Reviewer>Relécteur</Reviewer>
+	<Reviewer>Relecteur</Reviewer>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
 	<save>Sauver</save>
@@ -862,7 +862,7 @@
 	<updateUserAccount>Mettre à jour le compte utilisateur</updateUserAccount>
 	<upload js="true">Téléchargement </upload>
 	<user>Utilisateur</user>
-	<UserAdmin>Administrateur d'utilisateur</UserAdmin>
+	<UserAdmin>Administrateur d'utilisateurs</UserAdmin>
 	<userAtLeastOneGroup js="true">Vous devez saisir au moins un groupe.</userAtLeastOneGroup>	
 	<userDefined>- Personnalisée -</userDefined>
 	<userInfo>Modifier les informations utilisateurs</userInfo>
