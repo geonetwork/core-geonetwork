@@ -160,17 +160,18 @@ public abstract class CatalogRequest
 		this.address = url.toString();
 		this.path = url.getPath();
 		
-		alGetParams = new ArrayList<NameValuePair>();
+		alSetupGetParams = new ArrayList<NameValuePair>();
 		String query = url.getQuery();
-        if (StringUtils.isNotEmpty(query)) {
-            String[] params = query.split("&");
-            for (String param : params) {
-                String[] kvp = param.split("=");
-                if (!excludedParameters.contains(kvp[0].toLowerCase())) {
-                    this.alGetParams.add(new NameValuePair(kvp[0], kvp.length == 1 ? kvp[1] : ""));
-                }
-            }
-        }
+
+		if (StringUtils.isNotEmpty(query)) {
+			String[] params = query.split("&");
+			for (String param : params) {
+				String[] kvp = param.split("=");
+				if (!excludedParameters.contains(kvp[0].toLowerCase())) {
+					this.alSetupGetParams.add(new NameValuePair(kvp[0], kvp[1]));
+				}
+			}
+		}
 
 		if (this.port == -1) {
 			this.port = 80;
@@ -477,9 +478,12 @@ public abstract class CatalogRequest
 
 		if (method == Method.GET)
 		{
-			if (alGetParams == null) {
-				alGetParams = new ArrayList<NameValuePair>();
+			alGetParams = new ArrayList<NameValuePair>();
+			
+			if (alSetupGetParams.size() != 0) {
+				alGetParams.addAll(alSetupGetParams);
 			}
+			
 			setupGetParams();
 			httpMethod = new GetMethod();
 			httpMethod.setPath(path);
@@ -624,7 +628,8 @@ public abstract class CatalogRequest
 	private HttpClient client = new HttpClient();
 
     private ArrayList<NameValuePair> alGetParams;
-    
+    private ArrayList<NameValuePair> alSetupGetParams;
+
     // Parameters to not take into account in GetRequest
 	private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
 	
