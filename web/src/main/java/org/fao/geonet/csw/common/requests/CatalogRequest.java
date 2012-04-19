@@ -40,6 +40,7 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
@@ -161,14 +162,16 @@ public abstract class CatalogRequest
 		
 		alGetParams = new ArrayList<NameValuePair>();
 		String query = url.getQuery();
-		String[] params = query.split("&");
-		for (String param : params) {
-			String[] kvp = param.split("=");
-			if (!excludedParameters.contains(kvp[0].toLowerCase())) {
-				this.alGetParams.add(new NameValuePair(kvp[0], kvp.length == 1 ? kvp[1] : ""));
-			}
-		}
-		
+        if (StringUtils.isNotEmpty(query)) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                String[] kvp = param.split("=");
+                if (!excludedParameters.contains(kvp[0].toLowerCase())) {
+                    this.alGetParams.add(new NameValuePair(kvp[0], kvp.length == 1 ? kvp[1] : ""));
+                }
+            }
+        }
+
 		if (this.port == -1) {
 			this.port = 80;
 		}
