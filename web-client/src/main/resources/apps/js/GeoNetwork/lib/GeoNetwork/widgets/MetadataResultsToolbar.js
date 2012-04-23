@@ -402,6 +402,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         var selectAllInPageAction = new Ext.Action({
             text: OpenLayers.i18n('allInPage'),
             handler: function(){
+                this.catalogue.metadataSelectNone();
                 /* Select currently selected nodes assuming catalogue action will work fine */
                 this.metadataResultsView.selectAllInPage();
             },
