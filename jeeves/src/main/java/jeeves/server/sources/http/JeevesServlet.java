@@ -64,9 +64,16 @@ public class JeevesServlet extends HttpServlet
 		String baseUrl    = "";
 		
     try {
+			// 2.5 servlet spec or later (eg. tomcat 6 and later)
       baseUrl = getServletContext().getContextPath();
     } catch (java.lang.NoSuchMethodError ex) {
-      baseUrl = getServletContext().getServletContextName();
+			// 2.4 or earlier servlet spec (eg. tomcat 5.5)
+			try { 
+				String resource = getServletContext().getResource("/").getPath(); 
+				baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1); 
+			} catch (java.net.MalformedURLException e) { // unlikely
+				baseUrl = getServletContext().getServletContextName(); 
+			}
     }
 		
 		if (!appPath.endsWith(File.separator))
