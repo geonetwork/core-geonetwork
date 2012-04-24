@@ -318,6 +318,9 @@ public class Transaction extends AbstractOperation implements CatalogService
             if (id == null)
                 return totalUpdated;
 
+            if (!gc.getAccessManager().canEdit(context, id))
+                throw new NoApplicableCodeEx("User not allowed to update this metadata("+id+").");
+
             String changeDate = null;
 
             boolean validate = false;
