@@ -127,7 +127,7 @@
       <xsl:choose>
         <!-- not active -->
         <xsl:when test="$currTab!=$tab">
-          <a href="#">
+          <a href="javascript:void(0);">
             <xsl:value-of select="$text"/>
           </a>
         </xsl:when>
