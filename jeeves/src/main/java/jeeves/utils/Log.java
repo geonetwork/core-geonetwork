@@ -67,7 +67,7 @@ public final class Log
 
         public static final String SELECT = DBMS + ".select";
         public static final String EXECUTE = DBMS + ".execute";
-        public static final String RESOURCE_TRACKING = ".resourcetracking";
+        public static final String RESOURCE_TRACKING = DBMS + ".resourcetracking";
     }
 
     //---------------------------------------------------------------------------
