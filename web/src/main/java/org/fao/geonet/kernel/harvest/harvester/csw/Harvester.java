@@ -358,8 +358,8 @@ class Harvester
 		buildFilterQueryable(queriables, "dc:title", s.title);
 		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
 		buildFilterQueryable(queriables, "dc:subject", s.subject);
-		buildFilterQueryable(queriables, "dc:denominator", s.minscale, org.opengis.filter.PropertyIsGreaterThanOrEqualTo.NAME);
-		buildFilterQueryable(queriables, "dc:denominator", s.maxscale, org.opengis.filter.PropertyIsLessThanOrEqualTo.NAME);
+		buildFilterQueryable(queriables, "dc:denominator", s.minscale, "PropertyIsGreaterThanOrEqualTo");
+		buildFilterQueryable(queriables, "dc:denominator", s.maxscale, "PropertyIsLessThanOrEqualTo");
 
 		//--- build filter expression
 
@@ -386,9 +386,9 @@ class Harvester
 	//---------------------------------------------------------------------------
 	private void buildFilterQueryable(List<Element> queryables, String name, String value) {
 		if (value.contains("%")) { 
-			buildFilterQueryable(queryables, name, value, org.opengis.filter.PropertyIsLike.NAME);
+			buildFilterQueryable(queryables, name, value, "PropertyIsLike");
 		} else {
-			buildFilterQueryable(queryables, name, value, org.opengis.filter.PropertyIsEqualTo.NAME);
+			buildFilterQueryable(queryables, name, value, "PropertyIsEqualTo");
 		}
 	}
 	private void buildFilterQueryable(List<Element> queryables, String name, String value, String operator)
@@ -399,7 +399,7 @@ class Harvester
 		// add Like operator
 		Element prop;
 		
-		if (operator.equals(org.opengis.filter.PropertyIsLike.NAME)) {
+		if (operator.equals("PropertyIsLike")) {
 			prop = new Element(operator, Csw.NAMESPACE_OGC);
 			prop.setAttribute("wildcard", "%");
 			prop.setAttribute("singleChar", "_");
