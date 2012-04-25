@@ -106,8 +106,8 @@ public class CswHarvester extends AbstractHarvester
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Resources.copyLogo(context, "harvesting/"+ params.icon, params.uuid);
-
+		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+		
 		return id;
 	}
 
@@ -135,7 +135,7 @@ public class CswHarvester extends AbstractHarvester
 		//--- could be half updated and so it could be in an inconsistent state
 
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
-		Resources.copyLogo(context, "harvesting/"+ copy.icon, copy.uuid);
+		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
 	}

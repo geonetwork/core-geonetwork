@@ -105,8 +105,8 @@ public class OaiPmhHarvester extends AbstractHarvester
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Resources.copyLogo(context, "harvesting/"+ params.icon, params.uuid);
-
+		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+		
 		return id;
 	}
 

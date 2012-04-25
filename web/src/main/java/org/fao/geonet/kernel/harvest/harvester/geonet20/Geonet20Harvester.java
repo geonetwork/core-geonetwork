@@ -110,8 +110,8 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Resources.copyLogo(context, "harvesting/gn20.gif", params.uuid);
-
+		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "gn20.gif", params.uuid);
+        
 		return id;
 	}
 
