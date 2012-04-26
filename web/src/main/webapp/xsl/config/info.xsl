@@ -30,6 +30,11 @@
                                 <label style="text-size:140%;font-weight:bold">Threads</label>
                             </a>
                         </li>
+                        <li>
+                            <a href="{/root/gui/locService}/debug.openconnection.accessors">
+                                <label style="text-size:140%;font-weight:bold">Open Connections</label>
+                            </a>
+                        </li>
                     </ul>
                 </fieldset>
 
