@@ -58,7 +58,7 @@ table.related * li {
 
 .md-view * a {
   text-decoration : none;
-  color : #0076A1
+  color : #0076A1;
 }
 .md-view * a:hover {
   text-decoration : underline;
@@ -223,8 +223,8 @@ Display hyperlink as text next to element
 /* Icons */
 .md-mn {
   background-repeat : no-repeat;
-  padding-left : 20px;
-  font-size : 120%;
+  padding-left: 20px;
+  padding-bottom: 3px;
 }
 .md-mn-view {
   background-image : url(../images/default/page_go.png) !important;
