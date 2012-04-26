@@ -112,7 +112,7 @@ public class Z3950Config
 
 		request.clearParams();
 		request.addParam("uuid",   uuid);
-		request.setAddress(context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/" + Geonet.Service.XML_METADATA_GET);
+		request.setAddress(context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/eng/" + Geonet.Service.XML_METADATA_GET);
 		Element md = request.execute();
 
 		// detect the schema

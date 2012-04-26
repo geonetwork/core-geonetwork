@@ -82,7 +82,7 @@ class Harvester
 		{
 			log.info("Login into : "+ params.name);
 
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
+			req.setAddress("/"+ params.servlet +"/srv/eng/"+ Geonet.Service.XML_LOGIN);
 			req.addParam("username", params.username);
 			req.addParam("password", params.password);
 
@@ -96,7 +96,7 @@ class Harvester
 
 		log.info("Retrieving information from : "+ params.host);
 
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
+		req.setAddress("/"+ params.servlet +"/srv/eng/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "sources");
 		req.addParam("type", "groups");
@@ -162,8 +162,8 @@ class Harvester
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
-
+		request.setAddress("/"+ params.servlet +"/srv/eng/"+ Geonet.Service.XML_SEARCH);
+		
 		try
 		{
 			log.info("Searching on : "+ params.name);

@@ -196,7 +196,7 @@ class Harvester
 
 		SettingInfo si = new SettingInfo(context);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+		metadataGetService = siteUrl + "/srv/eng/xml.metadata.get";
 
 		
 		//--- Create fragment harvester for atomic datasets if required
@@ -1240,7 +1240,7 @@ class Harvester
 			for (String dsUuid : datasets.keySet()) {
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", dsUuid);
-				op.setAttribute("href", context.getBaseUrl() + "/srv/en/metadata.show?uuid=" + dsUuid, xlink);
+				op.setAttribute("href", context.getBaseUrl() + "/srv/eng/metadata.show?uuid=" + dsUuid, xlink);
 				op.setAttribute("title", datasets.get(dsUuid), xlink);
 				root.addContent(op);
 			}

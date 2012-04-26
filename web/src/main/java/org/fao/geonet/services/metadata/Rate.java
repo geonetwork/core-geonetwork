@@ -161,7 +161,7 @@ public class Rate implements Service
 
 		Lib.net.setupProxy(context, req);
 
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_METADATA_RATE);
+		req.setAddress("/"+ params.servlet +"/srv/eng/"+ Geonet.Service.XML_METADATA_RATE);
 		req.clearParams();
 		req.addParam("uuid",   uuid);
 		req.addParam("rating", rating);
