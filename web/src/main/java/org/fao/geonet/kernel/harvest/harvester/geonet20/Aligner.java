@@ -352,7 +352,7 @@ public class Aligner
      */
 	private Element getRemoteMetadata(XmlRequest req, String id) throws Exception
 	{
-		req.setAddress("/"+ params.servlet +"/srv/eng/"+ Geonet.Service.XML_METADATA_GET);
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_METADATA_GET);
 		req.clearParams();
 		req.addParam("id", id);
 

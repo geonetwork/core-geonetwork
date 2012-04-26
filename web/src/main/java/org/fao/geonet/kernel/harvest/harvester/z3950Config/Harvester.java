@@ -129,7 +129,7 @@ class Harvester
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress(context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/eng/" + Geonet.Service.XML_SEARCH);
+		request.setAddress(context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/" + Geonet.Service.XML_SEARCH);
 
 		try
 		{
