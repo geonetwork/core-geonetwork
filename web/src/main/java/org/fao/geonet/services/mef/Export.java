@@ -131,8 +131,9 @@ public class Export implements Service {
 					Element childRequest = new Element("request");
 					childRequest.addContent(new Element("parentUuid")
 							.setText(_uuid));
+					childRequest.addContent(new Element("to").setText("1000"));
 
-					// Get children to export
+					// Get children to export - It could be better to use GetRelated service TODO
 					Set<String> childs = getUuidsToExport(_uuid, context,
 							childRequest);
 					if (childs.size() != 0) {
