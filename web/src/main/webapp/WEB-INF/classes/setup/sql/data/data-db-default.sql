@@ -940,6 +940,11 @@ INSERT INTO Settings VALUES (176,173,'firstname','Shib-InetOrgPerson-givenName')
 INSERT INTO Settings VALUES (177,173,'profile','Shib-EP-Entitlement');
 INSERT INTO Settings VALUES (178,173,'group',NULL);
 INSERT INTO Settings VALUES (179,170,'defaultGroup', NULL);
+INSERT INTO Settings VALUES (180,173,'organizationName',NULL);
+INSERT INTO Settings VALUES (181,173,'postalAddress',NULL);
+INSERT INTO Settings VALUES (182,173,'phone',NULL);
+INSERT INTO Settings VALUES (183,173,'email',NULL);
+INSERT INTO Settings VALUES (184,173,'fullName',NULL);
 INSERT INTO Settings VALUES (190,1,'userSelfRegistration',NULL);
 INSERT INTO Settings VALUES (191,190,'enable','false');
 INSERT INTO Settings VALUES (200,1,'clickablehyperlinks',NULL);
