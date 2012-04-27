@@ -152,7 +152,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
 
     getThesaurusCombo: function() {
         var Thesaurus = Ext.data.Record.create([
-            {name: 'filename'},
+            {name: 'title'},
             {name: 'value', mapping: 'key'}
         ]);
         
@@ -164,7 +164,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             reader: new Ext.data.XmlReader({
                 record: 'thesaurus'
             }, Thesaurus),
-            fields: ['filename', 'id']
+            fields: ['title', 'id']
         });
 
         // add the "any thesaurus" record
@@ -183,7 +183,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             store: app.keyword.thesaurusStore,
             triggerAction: 'all',
             mode: 'local',
-            displayField: 'filename',
+            displayField: 'title',
             valueField: 'value',
             listWidth: 250,
             listeners: {
