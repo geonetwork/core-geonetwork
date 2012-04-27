@@ -37,6 +37,13 @@ INSERT INTO Settings VALUES (920,1,'threadedindexing',NULL);
 INSERT INTO Settings VALUES (921,920,'maxthreads','1');
 INSERT INTO Settings VALUES (17,10,'svnUuid','');
 
+-- add extra placeholders for shibboleth attributes
+
+INSERT INTO Settings VALUES (180,173,'organizationName',NULL);
+INSERT INTO Settings VALUES (181,173,'postalAddress',NULL);
+INSERT INTO Settings VALUES (182,173,'phone',NULL);
+INSERT INTO Settings VALUES (183,173,'email',NULL);
+INSERT INTO Settings VALUES (184,173,'fullName',NULL);
 
 -- add requestedlanguage and autodetect settings
 
