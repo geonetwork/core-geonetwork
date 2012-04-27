@@ -25,10 +25,11 @@ package jeeves.server.resources;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.yammer.metrics.core.Counter;
 import com.yammer.metrics.core.Timer;
 import com.yammer.metrics.core.TimerContext;
@@ -63,8 +64,10 @@ public class ResourceManager
      * it can probably be left on even in production but the option
      * exists if it is found to be a performance problem
      */
-    private Multimap<Object, Exception> resourceAccessTracker = LinkedHashMultimap.create();
-    private Multimap<Object, Exception> directOpenResourceAccessTracker = LinkedHashMultimap.create();
+    private static final Multimap<Object, Exception> RESOURCE_ACCESS_TRACKER = LinkedHashMultimap.create();
+    private static final Multimap<Object, Exception> DIRECT_OPEN_RESOURCE_ACCESS_TRACKER = LinkedHashMultimap.create();
+    private static final Lock TRACKER_LOCK = new ReentrantLock(false);
+
 	private HashMap<String, Object> htResources = new HashMap<String, Object>(10, .75f);
 
     private Counter openCounter;
@@ -131,11 +134,19 @@ public class ResourceManager
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 
+        boolean debugEnabled = Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING);
+        if(debugEnabled) {
+            try {
+                TRACKER_LOCK.lock();
+                RESOURCE_ACCESS_TRACKER.put(resource, new Exception());
+            } finally {
+                TRACKER_LOCK.unlock();
+            }
+        }
 
-        resourceAccessTracker.put(resource, Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING)?new Exception():null);
 
 
-		return resource;
+        return resource;
 	}
 
 	/** 
@@ -168,9 +179,17 @@ public class ResourceManager
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 
-        directOpenResourceAccessTracker.put(resource, Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING)?new Exception():null);
+        boolean debugEnabled = Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING);
+        if(debugEnabled) {
+            try {
+                TRACKER_LOCK.lock();
+                DIRECT_OPEN_RESOURCE_ACCESS_TRACKER.put(resource, new Exception());
+            } finally {
+                TRACKER_LOCK.unlock();
+            }
+        }
 
-		return resource;
+        return resource;
 	}
 
 	//--------------------------------------------------------------------------
@@ -206,8 +225,13 @@ public class ResourceManager
      * NEVER use the resource obtained through this method.
      *
      */
-    public synchronized Multimap<Object, Exception> getDirectOpenResourceAccessTracker() {
-        return LinkedHashMultimap.create(directOpenResourceAccessTracker);
+    public Multimap<Object, Exception> getDirectOpenResourceAccessTracker() {
+        try {
+            TRACKER_LOCK.lock();
+            return LinkedHashMultimap.create(DIRECT_OPEN_RESOURCE_ACCESS_TRACKER);
+        } finally {
+            TRACKER_LOCK.unlock();
+        }
     }
 
 
@@ -224,8 +248,13 @@ public class ResourceManager
      * NEVER use the resource obtained through this method.
      *
      */
-    public synchronized Multimap<Object, Exception> getResourceAccessTracker() {
-        return LinkedHashMultimap.create(resourceAccessTracker);
+    public Multimap<Object, Exception> getResourceAccessTracker() {
+        try {
+            TRACKER_LOCK.lock();
+            return LinkedHashMultimap.create(RESOURCE_ACCESS_TRACKER);
+        } finally {
+            TRACKER_LOCK.unlock();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -345,8 +374,13 @@ public class ResourceManager
             context.stop();
         }
 
-        resourceAccessTracker.removeAll(resource);
-        directOpenResourceAccessTracker.removeAll(resource);
+        try {
+            TRACKER_LOCK.lock();
+            RESOURCE_ACCESS_TRACKER.removeAll(resource);
+            DIRECT_OPEN_RESOURCE_ACCESS_TRACKER.removeAll(resource);
+        } finally {
+            TRACKER_LOCK.unlock();
+        }
     }
 
 
