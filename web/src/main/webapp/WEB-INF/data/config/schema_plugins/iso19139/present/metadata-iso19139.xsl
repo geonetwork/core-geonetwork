@@ -621,6 +621,33 @@
     </xsl:call-template>
   </xsl:template>
   
+  <!-- Add exception to display downloadable thesaurus differently -->
+  <xsl:template mode="iso19139" match="gmd:otherCitationDetails[gmx:FileName and contains(../@id,'geonetwork.thesaurus')]" priority="2">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+
+    <xsl:variable name="label" select="/root/gui/strings/thesaurus/thesaurus"/>
+    <xsl:variable name="ref" select="gmx:FileName/geonet:element/@ref"/>
+
+    <xsl:call-template name="simpleElementGui">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit" select="false()"/>
+      <xsl:with-param name="title" select="$label"/>
+      <xsl:with-param name="text">
+				<xsl:choose>
+					<xsl:when test="$edit">
+            <input id="_{$ref}" class="md" type="hidden" name="_{$ref}" value="{gmx:FileName}" size="40" />
+            <input id="_{$ref}_src" class="md" type="hidden" name="_{$ref}_src" value="{gmx:FileName/@src}" size="40" />
+						<xsl:value-of select="gmx:FileName/@src"/>
+					</xsl:when>
+					<xsl:otherwise>
+        		<a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+    
   
   <!-- Add exception to update-fixed-info to avoid URL creation for downloadable resources -->
   <xsl:template mode="iso19139" match="gmd:contactInstructions[gmx:FileName]" priority="2">
@@ -1072,8 +1099,33 @@
 							</xsl:if>
 							<xsl:text>.</xsl:text>
 						</xsl:variable>
-						<!-- Clean new lines which may be added by formatting. -->
-						<xsl:value-of select="normalize-space($value)"/>
+						<table width="100%">
+							<tr>
+								<td colspan="2">
+									<!-- Clean new lines which may be added by formatting. -->
+									<xsl:value-of select="normalize-space($value)"/>
+								</td>
+							</tr>
+							<xsl:for-each select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:otherCitationDetails/gmx:FileName">
+								<tr>
+									<td width="20%">
+										<xsl:value-of select="/root/gui/strings/thesaurus/thesaurus"/>
+									</td>
+									<td>
+										<a href="{@src}">
+											<xsl:choose>
+												<xsl:when test="normalize-space()!=''">
+													<xsl:value-of select="text()"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="@src"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</a>
+									</td>
+								</tr>
+							</xsl:for-each>
+						</table>
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:otherwise>
