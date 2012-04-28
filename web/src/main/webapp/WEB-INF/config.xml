@@ -330,8 +330,6 @@
         <!-- language profiles for automatic language detection -->
         <param name="languageProfilesDir" value="resources/language-profiles" />
 
-        <param name="schemaPluginsDir" value="schemaPlugins" />
-
 		<param name="licenseDir" value="WEB-INF/licenses" />
 	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
     <param name="guiConfig" value="WEB-INF/config-gui.xml" />        
