@@ -368,7 +368,22 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 text: OpenLayers.i18n('printSel'),
                 iconCls: 'md-mn-pdf',
                 handler: function(){
-                    this.catalogue.pdfExport();
+                    var sortField;
+                    var sortFieldOrder;
+
+                    var sortByEl = Ext.getCmp('E_sortBy');
+
+                    if (sortByEl) {
+                        sortField =  sortByEl.getValue();
+
+                        var sortByOrderEl = Ext.getCmp('sortOrder');
+                        if (sortByOrderEl) {
+                            sortFieldOrder = sortByOrderEl.getValue();
+                        }
+
+                    }
+
+                    this.catalogue.pdfExport(sortField, sortFieldOrder);
                 },
                 scope: this
             });

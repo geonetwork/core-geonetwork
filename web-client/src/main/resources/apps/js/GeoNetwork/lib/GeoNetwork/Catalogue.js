@@ -792,11 +792,23 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         location.replace(this.services.mef);
     },
     /**	api: method[pdfExport]
+     * :param sortField: ``String`` sort field name
+     * :param sortOrder: ``String`` sort order
      *
      *	Export current selection in PDF format.
      */
-    pdfExport: function(){
-        location.replace(this.services.pdf);
+    pdfExport: function(sortField, sortOrder){
+        var pdfExportUrl = this.services.pdf;
+
+        if (sortField != undefined) {
+            pdfExportUrl = pdfExportUrl + "?sortBy=" + sortField;
+
+            if (sortOrder != undefined) {
+                pdfExportUrl = pdfExportUrl + "&sortOrder=" + sortOrder;
+            }
+        }
+
+        location.replace(pdfExportUrl);
     },
     /** api: method[metadataShow]
      *  :param uuid: ``String`` uuid of the metadata to dislay

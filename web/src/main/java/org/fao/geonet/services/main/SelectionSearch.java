@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
@@ -83,8 +84,15 @@ public class SelectionSearch implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session) ;
 
-		// TODO : Get the sortBy params in order to apply on new result list.
-		
+		// Get the sortBy params in order to apply on new result list.
+        if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_BY)) ) {
+            params.addContent(new Element(Geonet.SearchResult.SORT_BY).setText(params.getChildText(Geonet.SearchResult.SORT_BY)));
+        }
+
+        if (StringUtils.isNotEmpty(params.getChildText(Geonet.SearchResult.SORT_ORDER))) {
+            params.addContent(new Element(Geonet.SearchResult.SORT_ORDER).setText(params.getChildText(Geonet.SearchResult.SORT_ORDER)));
+        }
+        
 		if (sm != null) {
 			String uuids= "";
 			boolean first = true;
