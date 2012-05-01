@@ -49,8 +49,12 @@ function runPdfSearch(onSelection) {
 
 	if (onSelection) {
 		var serviceUrl = getGNServiceURL('pdf.selection.search');
+
+        serviceUrl = serviceUrl + "?" + fetchParam('sortBy');
+        serviceUrl = serviceUrl + fetchParam('sortOrder');
+
 		if ($("advanced_search_pnl").visible()) {
-			serviceUrl = serviceUrl + "?" + fetchParam('template');
+			serviceUrl = serviceUrl + "&" + fetchParam('template');
 		}
 
 		location.replace (serviceUrl);
