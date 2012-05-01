@@ -23,7 +23,8 @@
         <!-- Other monitor types are: gauge, counter, meter, histogram -->
     </monitors>
     <monitors package="jeeves.monitor.counter">
-       <counter class=".ResourceManagerOpenCounter"/>
+    	<!-- The following doesn't exist, it is a potential example -->
+       <!-- <counter class=".ResourceManagerOpenCounter"/> -->
     </monitors>
     <monitors package="org.fao.geonet.monitor.gauge">
        <gauge class=".ResourceManagerIdleConnectionsGauge"/>

@@ -1,21 +1,39 @@
 package jeeves.monitor;
 
-import com.yammer.metrics.core.*;
-import com.yammer.metrics.log4j.InstrumentedAppender;
-import jeeves.constants.ConfigFile;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import org.apache.log4j.LogManager;
-import org.jdom.Element;
+import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_COUNTER;
+import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_GAUGE;
+import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_HEALTH_CHECK;
+import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_HISTOGRAM;
+import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_METER;
+import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_TIMER;
 
-import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static jeeves.constants.ConfigFile.Monitors.Child.*;
+import javax.servlet.ServletContext;
+
+import jeeves.constants.ConfigFile;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Util;
+
+import org.apache.log4j.LogManager;
+import org.jdom.Element;
+
+import com.yammer.metrics.core.Counter;
+import com.yammer.metrics.core.DummyCounter;
+import com.yammer.metrics.core.DummyHistogram;
+import com.yammer.metrics.core.DummyMeter;
+import com.yammer.metrics.core.DummyTimer;
+import com.yammer.metrics.core.Gauge;
+import com.yammer.metrics.core.HealthCheckRegistry;
+import com.yammer.metrics.core.Histogram;
+import com.yammer.metrics.core.Meter;
+import com.yammer.metrics.core.MetricsRegistry;
+import com.yammer.metrics.core.Timer;
+import com.yammer.metrics.log4j.InstrumentedAppender;
 
 /**
  * Contains references to the monitor factories to start for each App
@@ -28,6 +46,7 @@ public class MonitorManager {
     public static final String HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry";
     public static final String METRICS_REGISTRY = "com.yammer.metrics.reporting.MetricsServlet.registry";
 
+    ResourceTracker resourceTracker = new ResourceTracker();
     private final List<HealthCheckFactory> serviceContextHealthChecks = new LinkedList<HealthCheckFactory>();
     private final Map<Class<MetricsFactory<Gauge<?>>>, Gauge<?>> serviceContextGauges = new HashMap<Class<MetricsFactory<Gauge<?>>>, Gauge<?>>();
     private final Map<Class<MetricsFactory<Timer>>, Timer> serviceContextTimers = new HashMap<Class<MetricsFactory<Timer>>, Timer>();
@@ -212,4 +231,8 @@ public class MonitorManager {
             return instance;
         }
     }
+
+	public ResourceTracker getResourceTracker() {
+		return resourceTracker;
+	}
 }

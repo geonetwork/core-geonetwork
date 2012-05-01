@@ -25,21 +25,18 @@ package jeeves.server.resources;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import com.yammer.metrics.core.Counter;
-import com.yammer.metrics.core.Timer;
-import com.yammer.metrics.core.TimerContext;
 import jeeves.monitor.MonitorManager;
-import jeeves.monitor.counter.ResourceManagerOpenCounter;
+import jeeves.monitor.ResourceTracker;
 import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
 import jeeves.monitor.timer.ResourceManagerWaitForResourceTimer;
+import jeeves.utils.Log;
+
 import org.geotools.data.DataStore;
 
-import jeeves.utils.Log;
+import com.google.common.collect.Multimap;
+import com.yammer.metrics.core.Timer;
+import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
 
@@ -52,27 +49,12 @@ public class ResourceManager
 {
 	private ProviderManager provManager;
 
-    /**
-     * This collection tracks the threads that obtain a resource so that
-     * if a resource leak is detected the Exceptions can be used to
-     * identify the call sites of the non-closed resources.
-     *
-     * For performance this tracking is only done if the the
-     * Log.Dbms.RESOURCE_TRACKING is set to DEBUG.
-     *
-     * In practice the performance impact is not too severe so
-     * it can probably be left on even in production but the option
-     * exists if it is found to be a performance problem
-     */
-    private static final Multimap<Object, Exception> RESOURCE_ACCESS_TRACKER = LinkedHashMultimap.create();
-    private static final Multimap<Object, Exception> DIRECT_OPEN_RESOURCE_ACCESS_TRACKER = LinkedHashMultimap.create();
-    private static final Lock TRACKER_LOCK = new ReentrantLock(false);
-
 	private HashMap<String, Object> htResources = new HashMap<String, Object>(10, .75f);
 
-    private Counter openCounter;
     private Timer resourceManagerWaitForResourceTimer;
     private Timer resourceManagerResourceIsOpenTimer;
+
+	private ResourceTracker resourceTracker;
 
     //--------------------------------------------------------------------------
 	//---
@@ -83,9 +65,9 @@ public class ResourceManager
 	public ResourceManager(MonitorManager monitorManager, ProviderManager pm)
 	{
 		provManager = pm;
-        this.openCounter = monitorManager.getCounter(ResourceManagerOpenCounter.class);
         this.resourceManagerWaitForResourceTimer = monitorManager.getTimer(ResourceManagerWaitForResourceTimer.class);
         this.resourceManagerResourceIsOpenTimer = monitorManager.getTimer(ResourceManagerResourceIsOpenTimer.class);
+        this.resourceTracker = monitorManager.getResourceTracker();
 	}
 
 	//--------------------------------------------------------------------------
@@ -134,18 +116,7 @@ public class ResourceManager
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 
-        boolean debugEnabled = Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING);
-        if(debugEnabled) {
-            try {
-                TRACKER_LOCK.lock();
-                RESOURCE_ACCESS_TRACKER.put(resource, new Exception());
-            } finally {
-                TRACKER_LOCK.unlock();
-            }
-        }
-
-
-
+        resourceTracker.openResource(resource);
         return resource;
 	}
 
@@ -179,15 +150,7 @@ public class ResourceManager
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug  (Log.RESOURCES, "  Returning: " + resource);
 
-        boolean debugEnabled = Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING);
-        if(debugEnabled) {
-            try {
-                TRACKER_LOCK.lock();
-                DIRECT_OPEN_RESOURCE_ACCESS_TRACKER.put(resource, new Exception());
-            } finally {
-                TRACKER_LOCK.unlock();
-            }
-        }
+        resourceTracker.openDirectResource(resource);
 
         return resource;
 	}
@@ -226,12 +189,7 @@ public class ResourceManager
      *
      */
     public Multimap<Object, Exception> getDirectOpenResourceAccessTracker() {
-        try {
-            TRACKER_LOCK.lock();
-            return LinkedHashMultimap.create(DIRECT_OPEN_RESOURCE_ACCESS_TRACKER);
-        } finally {
-            TRACKER_LOCK.unlock();
-        }
+        return resourceTracker.getDirectOpenResources();
     }
 
 
@@ -249,12 +207,7 @@ public class ResourceManager
      *
      */
     public Multimap<Object, Exception> getResourceAccessTracker() {
-        try {
-            TRACKER_LOCK.lock();
-            return LinkedHashMultimap.create(RESOURCE_ACCESS_TRACKER);
-        } finally {
-            TRACKER_LOCK.unlock();
-        }
+        return resourceTracker.getOpenResources();
     }
 
     //--------------------------------------------------------------------------
@@ -361,12 +314,10 @@ public class ResourceManager
     Map<Object, TimerContext> timerContexts = new HashMap<Object, TimerContext>();
 
     private void openMetrics(Object resource) {
-        openCounter.inc();
         timerContexts.put(resource, resourceManagerResourceIsOpenTimer.time());
     }
 
     private void closeMetrics(Object resource) {
-        openCounter.dec();
         TimerContext context = timerContexts.get(resource);
         if(context == null) {
             Log.error(Log.DBMSPOOL, "A resource was closed that had not been marked as opened!");
@@ -374,13 +325,7 @@ public class ResourceManager
             context.stop();
         }
 
-        try {
-            TRACKER_LOCK.lock();
-            RESOURCE_ACCESS_TRACKER.removeAll(resource);
-            DIRECT_OPEN_RESOURCE_ACCESS_TRACKER.removeAll(resource);
-        } finally {
-            TRACKER_LOCK.unlock();
-        }
+        resourceTracker.removeAll(resource);
     }
 
 
