@@ -1358,4 +1358,6 @@
     <custom-elementset-revert>Para reverter para a ElementSetName default = respostas completas, apagar todos os elementos desta lista.</custom-elementset-revert>
     <custom-elementset-add>Adicionar elemento</custom-elementset-add>
     <wmslayers>WMS layers</wmslayers>
+    <formatter.admin>Metadata Formatter Admin</formatter.admin>
+    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 </strings>

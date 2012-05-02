@@ -1358,4 +1358,6 @@ ISO 19115 не позволяет иметь более одного.
     <custom-elementset-add>Добавить элемент</custom-elementset-add>
 
     <wmslayers>WMS layers</wmslayers>
+    <formatter.admin>Metadata Formatter Admin</formatter.admin>
+    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 </strings>

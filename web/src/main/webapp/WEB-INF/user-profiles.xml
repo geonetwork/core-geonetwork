@@ -171,8 +171,17 @@
 		<allow service="xml.usergroups.list"/>
 		
 		<allow service="metadata.batch.processing"/>
-		
-	</profile>
+
+        <!-- Allow a user to specify a XSL -->
+        <allow service="metadata.formatter.register"/>
+        <allow service="metadata.formatter.remove"/>
+        <allow service="metadata.formatter.download"/>
+        <allow service="metadata.formatter.admin"/>
+        <allow service="metadata.formatter.update"/>
+        <allow service="metadata.formatter.files"/>
+        <allow service="metadata.formatter.edit"/>
+
+    </profile>
 
 	<!-- ====================================================================== -->
 
@@ -509,7 +518,13 @@
 	  <allow service="subtemplate"/>
 
       <allow service="isolanguages" />
-	</profile>
+
+      <!-- Metadata formatter -->
+      <allow service="metadata.formatter.html"/>
+      <allow service="metadata.formatter.xml"/>
+      <allow service="metadata.formatter.resource"/>
+      <allow service="metadata.formatter.list"/>
+    </profile>
 
 	<!-- ====================================================================== -->
 </profiles>

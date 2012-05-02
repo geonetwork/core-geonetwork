@@ -1351,4 +1351,6 @@
     <custom-elementset-add>Añadir elemento</custom-elementset-add>
 
     <wmslayers>Capas WMS</wmslayers>
+    <formatter.admin>Metadata Formatter Admin</formatter.admin>
+    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 </strings>

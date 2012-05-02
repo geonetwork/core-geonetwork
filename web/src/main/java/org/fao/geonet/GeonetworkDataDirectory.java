@@ -25,7 +25,7 @@ public class GeonetworkDataDirectory {
 	 * The default GeoNetwork data directory location.
 	 */
 	private static final String GEONETWORK_DEFAULT_DATA_DIR = "WEB-INF" + File.separator + "data"  + File.separator;
-	private static final String KEY_SUFFIX = ".dir";
+	public static final String KEY_SUFFIX = ".dir";
 	public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
 
 	private String systemDataDir;

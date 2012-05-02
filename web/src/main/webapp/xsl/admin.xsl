@@ -357,6 +357,12 @@
 							<xsl:with-param name="icon">color_swatch.png</xsl:with-param>
 						</xsl:call-template>
 
+						<xsl:call-template name="addrow">
+							<xsl:with-param name="service" select="'metadata.formatter.admin'"/>
+							<xsl:with-param name="title" select="/root/gui/strings/formatter.admin"/>
+							<xsl:with-param name="desc" select="/root/gui/strings/formatter.admin.des"/>
+						</xsl:call-template>
+
 						<xsl:if test="string(/root/gui/env/searchStats/enable)='true'">
 							<xsl:call-template name="addrow">
 								<xsl:with-param name="service" select="'stat.main'"/>

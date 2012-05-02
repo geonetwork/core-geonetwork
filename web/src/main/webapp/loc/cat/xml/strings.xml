@@ -1265,4 +1265,6 @@
     <custom-elementset-add>Afegeix element</custom-elementset-add>
 
     <wmslayers>Capes WMS</wmslayers>
+    <formatter.admin>Metadata Formatter Admin</formatter.admin>
+    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 </strings>

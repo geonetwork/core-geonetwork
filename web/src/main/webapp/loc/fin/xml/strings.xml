@@ -1275,4 +1275,6 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
     <custom-elementset-add>Lisää elementti.</custom-elementset-add>
 
     <wmslayers>WMS-karttatasot</wmslayers>
+    <formatter.admin>Metadata Formatter Admin</formatter.admin>
+    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 </strings>

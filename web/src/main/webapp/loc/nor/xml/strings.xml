@@ -1266,4 +1266,6 @@
     <custom-elementset-add>Legg til element</custom-elementset-add>
 
     <wmslayers>WMS layers</wmslayers>
+    <formatter.admin>Metadata Formatter Admin</formatter.admin>
+    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 </strings>
