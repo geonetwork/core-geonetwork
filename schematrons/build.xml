@@ -195,8 +195,13 @@
 			<property name="rules" value="${rules}" />
 			<property name="schema" value="${schema}" />
 		</ant>
-        <ant target="publish-loc-file">
+		<ant target="publish-loc-file">
 			<property name="lang" value="fin" />
+			<property name="rules" value="${rules}" />
+			<property name="schema" value="${schema}" />
+		</ant>
+		<ant target="publish-loc-file">
+			<property name="lang" value="ita" />
 			<property name="rules" value="${rules}" />
 			<property name="schema" value="${schema}" />
 		</ant>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Record di Metadati non trovati</notfound>
+	<notowner>I Record di Metadati non possono essere cancellati perchè non ne sei il proprietario</notowner>
+	<updated>Record di Metadati cancellati</updated>
+</strings>

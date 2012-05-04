@@ -24,6 +24,8 @@ function getOpenlayersLangCode() {
             break;
         case"ger":a="de";
             break;
+        case"ita":a="it";
+            break;
         case"spa":a="es";
             break;
         case"rus":a="ru";

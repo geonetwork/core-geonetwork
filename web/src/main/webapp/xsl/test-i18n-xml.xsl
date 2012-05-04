@@ -13,6 +13,7 @@
             <chi/>
             <ara/>
             <ger/>
+            <ita/>
             <rus/>
             <dut/>
             <por/>

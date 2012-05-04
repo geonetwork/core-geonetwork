@@ -16,7 +16,9 @@
 				<xml name="strings.ara" file="loc/ara/xml/strings.xml"
 					localized="false" />
 				<xml name="strings.ger" file="loc/ger/xml/strings.xml"
-                    localized="false" />
+					localized="false" />
+				<xml name="strings.ita" file="loc/ita/xml/strings.xml"
+					localized="false" />
 				<xml name="strings.rus" file="loc/rus/xml/strings.xml"
 					localized="false" />
 				<xml name="strings.dut" file="loc/dut/xml/strings.xml"
@@ -41,7 +43,9 @@
 				<xml name="about.ara" file="loc/ara/xml/about.xml"
 					localized="false" />
 				<xml name="about.ger" file="loc/ger/xml/about.xml"
-                    localized="false" />
+					localized="false" />
+				<xml name="about.ita" file="loc/ita/xml/about.xml"
+					localized="false" />
 				<xml name="about.rus" file="loc/rus/xml/about.xml"
 					localized="false" />
 				<xml name="about.dut" file="loc/dut/xml/about.xml"
@@ -66,7 +70,9 @@
 				<xml name="config.ara" file="loc/ara/xml/config.xml"
 					localized="false" />
 				<xml name="config.ger" file="loc/ger/xml/config.xml"
-                    localized="false" />
+					localized="false" />
+				<xml name="config.ita" file="loc/ita/xml/config.xml"
+					localized="false" />
 				<xml name="config.rus" file="loc/rus/xml/config.xml"
 					localized="false" />
 				<xml name="config.dut" file="loc/dut/xml/config.xml"
@@ -91,7 +97,9 @@
 				<xml name="harvesting.ara"
 					file="loc/ara/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.ger"
-                    file="loc/ger/xml/harvesting.xml" localized="false" />
+					file="loc/ger/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ita"
+					file="loc/ita/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.rus"
 					file="loc/rus/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.dut"
@@ -124,7 +132,9 @@
 				<xml name="strings.ara" file="loc/ara/xml/strings.xml"
 					localized="false" />
 				<xml name="strings.ger" file="loc/ger/xml/strings.xml"
-                    localized="false" />
+					localized="false" />
+				<xml name="strings.ita" file="loc/ita/xml/strings.xml"
+					localized="false" />
 				<xml name="strings.rus" file="loc/rus/xml/strings.xml"
 					localized="false" />
 				<xml name="strings.dut" file="loc/dut/xml/strings.xml"
@@ -149,7 +159,9 @@
 				<xml name="about.ara" file="loc/ara/xml/about.xml"
 					localized="false" />
 				<xml name="about.ger" file="loc/ger/xml/about.xml"
-                    localized="false" />
+					localized="false" />
+				<xml name="about.ita" file="loc/ita/xml/about.xml"
+					localized="false" />
 				<xml name="about.rus" file="loc/rus/xml/about.xml"
 					localized="false" />
 				<xml name="about.dut" file="loc/dut/xml/about.xml"
@@ -174,7 +186,9 @@
 				<xml name="config.ara" file="loc/ara/xml/config.xml"
 					localized="false" />
 				<xml name="config.ger" file="loc/ger/xml/config.xml"
-                    localized="false" />
+					localized="false" />
+				<xml name="config.ita" file="loc/ita/xml/config.xml"
+					localized="false" />
 				<xml name="config.rus" file="loc/rus/xml/config.xml"
 					localized="false" />
 				<xml name="config.dut" file="loc/dut/xml/config.xml"
@@ -199,7 +213,9 @@
 				<xml name="harvesting.ara"
 					file="loc/ara/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.ger"
-                    file="loc/ger/xml/harvesting.xml" localized="false" />
+					file="loc/ger/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.ita"
+					file="loc/ita/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.rus"
 					file="loc/rus/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.dut"

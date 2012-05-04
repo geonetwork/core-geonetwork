@@ -37,6 +37,7 @@ GeoNetwork.Util = {
             ['en', 'English', 'eng'], 
             ['es', 'Español', 'spa'], 
             ['fr', 'Français', 'fre'], 
+            ['it', 'Italiano', 'ita'], 
             ['nl', 'Nederlands', 'dut'], 
             ['no', 'Norsk', 'nor'],
             ['pt', 'Рortuguês', 'por'], 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Errore nei privilegi</heading>
+	<message>Non si possiedono i privilegi necessari per effettuare questa operazione.</message>
+	<button>Indietro</button>
+</strings>

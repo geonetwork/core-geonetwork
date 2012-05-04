@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <xml_fgdc-std>Save this metadata as an fgdc XML file</xml_fgdc-std>
+  <xml_fgdc-stdTooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_fgdc-stdTooai_dc>
+</strings>

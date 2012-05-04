@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Errore di login</heading>
+	<message>L'utente o la password sono errate.<br/>Premi tasto 'indietro' e riprova.</message>
+	<button>indietro</button>
+</strings>

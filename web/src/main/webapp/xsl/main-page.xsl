@@ -75,6 +75,7 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/no.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/it.js"></script>
 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"></script>
 
