@@ -228,7 +228,7 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             store: GeoNetwork.editor.keyword.thesaurusStore,
             triggerAction: 'all',
             mode: 'local',
-            displayField: 'filename',
+            displayField: 'title',
             valueField: 'id',
             listWidth: 250,
             listeners: {
