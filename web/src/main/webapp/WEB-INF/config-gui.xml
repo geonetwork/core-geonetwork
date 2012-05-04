@@ -8,20 +8,26 @@
   
   <!-- Client configuration in order to redirect to default UI 
     (ie. main.home service) or to another custom client.
+    
+    For widget mode:
+    * parameters attribute is appended to URL. Use it to define a default map extent for example or change default language.
+    * createParameter attribute is appended to URL when the application is called from the administration > New metadata menu.
+    * stateId attribute is the identifier of the search form (if stateful) in the application. It is used to build quick links section in the administration.
   -->
   <client type="redirect" 
       widget="false" 
       url="main.home"
       parameters=""
+      stateId=""
       createParameter=""/>
 
   <!-- Default main.home client interface -->
   <!--<client type="redirect" url="main.home"/>-->
   <!-- Widget experimental client -->
-  <!--<client type="redirect" widget="true" url="../../apps/search/" createParameter="#create"/>-->
-  <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="extent=-5.1,41,9.7,51" createParameter="#create"/>-->
+  <!--<client type="redirect" widget="true" url="../../apps/search/" createParameter="#create" stateId="s"/>-->
+  <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="extent=-5.1,41,9.7,51" createParameter="#create" stateId="s"/>-->
   <!-- Widget with a custom extent in debug mode in french --> 
-  <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fr" createParameter="#create"/>-->
+  <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fr" createParameter="#create" stateId="s"/>-->
   
   
  <!-- Comment out languages to hide them

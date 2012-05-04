@@ -126,7 +126,7 @@
 						</xsl:call-template>
 
 						<xsl:choose>
-							<xsl:when test="/root/gui/config/client/@widget='true'">
+						  <xsl:when test="/root/gui/config/client/@widget='true' and /root/gui/config/client/@stateId!=''">
 								
 								<xsl:call-template name="addrow">
 									<xsl:with-param name="service" select="'metadata.create.form'"/>
@@ -135,22 +135,22 @@
 									<xsl:with-param name="content">
 										<ul>
 											<li>
-												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;_owner=', /root/gui/session/userId)}">
+											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E__owner=', /root/gui/session/userId)}">
 													<xsl:value-of select="/root/gui/strings/mymetadata"/>
 												</a>
 											</li>
 											<li>
-												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;advanced&amp;siteId=', /root/gui/env/site/siteId)}">
+											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E_siteId=', /root/gui/env/site/siteId)}">
 													<xsl:value-of select="/root/gui/strings/catalogueRecords"/>
 												</a>
 											</li>
 											<li>
-												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;_isHarvested=y')}">
+											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E__isHarvested=y')}">
 													<xsl:value-of select="/root/gui/strings/harvestedRecords"/>
 												</a>
 											</li>
 											<li>
-												<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;search&amp;advanced&amp;template=y')}">
+											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E_template=y')}">
 													<xsl:value-of select="/root/gui/strings/catalogueTemplates"/>
 												</a>
 											</li>
