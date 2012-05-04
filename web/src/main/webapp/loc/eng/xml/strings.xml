@@ -1171,6 +1171,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
