@@ -330,6 +330,17 @@ public class XmlRequest
 			client.executeMethod(httpMethod);
 			data = httpMethod.getResponseBody();
 
+			// HttpClient is unable to automatically handle redirects of entity
+			// enclosing methods such as POST and PUT.
+			// Get the location header and run the request against it.
+			String redirectLocation;
+			Header locationHeader = httpMethod.getResponseHeader("location");
+			if (locationHeader != null) {
+			    redirectLocation = locationHeader.getValue();
+			    httpMethod.setPath(redirectLocation);
+			    client.executeMethod(httpMethod);
+			    data = httpMethod.getResponseBody();
+			}
 			return Xml.loadStream(new ByteArrayInputStream(data));
 		}
 
