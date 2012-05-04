@@ -24,9 +24,9 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('runSearch'),
         fn: function(){
-            var e = Ext.getCmp('searchBt');
+            var e = Ext.getCmp('searchForm');
             e.getEl().fadeIn();
-            e.fireEvent('click');
+            e.fireEvent('search');
         }
     }, {
         key: Ext.EventObject.LEFT,
@@ -84,9 +84,9 @@ function initShortcut(){
         shift: true,
         label: OpenLayers.i18n('resetSearchForm'),
         fn: function(){
-            var e = Ext.getCmp('resetBt');
+            var e = Ext.getCmp('searchForm');
             e.getEl().fadeIn();
-            e.fireEvent('click');
+            e.fireEvent('reset');
         }
     }, {
         key: "v",
@@ -189,7 +189,7 @@ function initShortcut(){
     var formMap = new Ext.KeyMap("searchForm", [{
         key: [10, 13],
         fn: function(){
-            Ext.getCmp('searchBt').fireEvent('click');
+            Ext.getCmp('searchForm').fireEvent('search');
         }
     }]);
     

@@ -229,6 +229,7 @@ GeoNetwork.lang.en = {
     'privilegesTT': 'Manage record privileges for Internet and all catalogue groups.',
     'categories': 'Categories',
     'otherActions': 'Other actions',
+    'permalinkInfo': 'Paste link in email or IM',
     'view': 'View',
     'zoomTo': 'Zoom to',
     'saveXml': 'Save as XML',

@@ -566,12 +566,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Initialize results and summary stores.
      */
     search: function(formOrParams, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async){
-    	
-    	var isCatalogueMdStore = this.metadataStore === metadataStore;
-    	if (isCatalogueMdStore) {
-    		this.updateStatus(OpenLayers.i18n('searching'));
-    	}
-    	
+        
+        var isCatalogueMdStore = this.metadataStore === metadataStore;
+        if (isCatalogueMdStore) {
+            this.updateStatus(OpenLayers.i18n('searching'));
+        }
+        
         if (updateStore !== false) {
             updateStore = true;
         }

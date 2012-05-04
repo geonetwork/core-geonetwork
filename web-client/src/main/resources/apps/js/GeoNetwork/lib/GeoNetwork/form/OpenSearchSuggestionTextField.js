@@ -77,6 +77,16 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
         minChars: 2,
         loadingText: '...',
         hideTrigger: true,
+        /** api: config[field] 
+         *  ``String`` Optional, GeoNetwork Lucene field to query.
+         *  Default any (ie. full text search).
+         */
+        field: 'any',
+        /** api: config[fieldName] 
+         *  ``String`` Optional, Field name.
+         *
+         */
+        name: 'E_any',
         /**
          * Don't set to true if Lucene field is not analyzed with an Analyzer using a lowerCaseFilter.
          */
@@ -86,24 +96,12 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
      * ``String`` OpenSearch suggestion service URL.
      */
     url: undefined,
-
-    /** api: config[field] 
-     *  ``String`` Optional, GeoNetwork Lucene field to query.
-     *  Default any (ie. full text search).
-     */
-    field: 'any',
     
     /** api: config[fieldLabel] 
      *  ``String`` Optional, Field label.
      *
      */
     fieldLabel: undefined,
-    
-    /** api: config[fieldName] 
-     *  ``String`` Optional, Field name.
-     *
-     */
-    name: 'E_any',
     
     displayField: 'value',
     
@@ -126,7 +124,7 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
         Ext.applyIf(this, this.defaultConfig);
         
 
-        this.id = 'E_' + this.field; // FIXME : can't use Ext.getCmp(id) to retrieve the component ?
+        this.id = this.name; // FIXME : You may have 2 or more cmp with same name in the app ?
         GeoNetwork.form.OpenSearchSuggestionTextField.superclass.initComponent.call(this);
         
         if (!this.tpl) {

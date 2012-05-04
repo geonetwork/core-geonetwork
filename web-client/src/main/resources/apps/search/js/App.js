@@ -31,19 +31,9 @@ GeoNetwork.app = function(){
     /**
      * An interactive map panel for data visualization
      */
-    var iMap;
-    
-    var searchForm;
-    
-    var resultsPanel;
-    
-    var metadataResultsView;
-    
-    var tBar, bBar;
-    
-    var mainTagCloudViewPanel, tagCloudViewPanel, infoPanel;
-    
-    var visualizationModeInitialized = false;
+    var iMap, searchForm, resultsPanel, metadataResultsView, tBar, bBar,
+        mainTagCloudViewPanel, tagCloudViewPanel, infoPanel,
+        visualizationModeInitialized = false;
     
     // private function:
     /**
@@ -299,8 +289,7 @@ GeoNetwork.app = function(){
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
                                 metadataTypeField, validField, statusField, ownerField, isHarvestedField);
-        var adv = {
-            xtype: 'fieldset',
+        var adv = new Ext.form.FieldSet({
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
             autoWidth: true,
@@ -311,7 +300,7 @@ GeoNetwork.app = function(){
                 width: 160
             },
             items: advancedCriteria
-        };
+        });
         
         var formItems = [];
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
@@ -339,54 +328,29 @@ GeoNetwork.app = function(){
         });
         
         
-        return new Ext.FormPanel({
+        return new GeoNetwork.SearchFormPanel({
             id: 'searchForm',
+            stateId: 's',
             border: false,
-            //autoShow : true,
+            searchCb: function(){
+                if (metadataResultsView && Ext.getCmp('geometryMap')) {
+                   metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
+                }
+                var any = Ext.get('E_any');
+                if (any) {
+                    if (any.getValue() === OpenLayers.i18n('fullTextSearch')) {
+                        any.setValue('');
+                    }
+                }
+                
+                catalogue.startRecord = 1; // Reset start record
+                search();
+            },
             padding: 5,
-            //autoHeight : true,
             defaults: {
                 width : 180
             },
-            listeners: {
-                afterrender: function(){
-                }
-            },
-            items: formItems,
-            buttons: [{
-                tooltip: OpenLayers.i18n('resetSearchForm'),
-                // iconCls: 'md-mn-reset',
-                id: 'resetBt',
-                icon: '../images/default/cross.png',
-                listeners: {
-                    click: function(){
-                        Ext.getCmp('searchForm').getForm().reset();
-                    }
-                }
-            }, {
-                text: OpenLayers.i18n('search'),
-                id: 'searchBt',
-                icon: '../js/GeoNetwork/resources/images/default/find.png',
-                // FIXME : iconCls : 'md-mn-find',
-                iconAlign: 'right',
-                listeners: {
-                    click: function(){
-                    
-                        if (Ext.getCmp('geometryMap')) {
-                           metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
-                        }
-                        var any = Ext.get('E_any');
-                        if (any) {
-                            if (any.getValue() === OpenLayers.i18n('fullTextSearch')) {
-                                any.setValue('');
-                            }
-                        }
-                        
-                        catalogue.startRecord = 1; // Reset start record
-                        search();
-                    }
-                }
-            }]
+            items: formItems
         });
     }
     
@@ -461,7 +425,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createResultsPanel(){
+    function createResultsPanel(permalinkProvider){
         metadataResultsView = new GeoNetwork.MetadataResultsView({
             catalogue: catalogue,
             displaySerieMembers: true,
@@ -478,7 +442,8 @@ GeoNetwork.app = function(){
             catalogue: catalogue,
             searchBtCmp: Ext.getCmp('searchBt'),
             sortByCmp: Ext.getCmp('E_sortBy'),
-            metadataResultsView: metadataResultsView
+            metadataResultsView: metadataResultsView,
+            permalinkProvider: permalinkProvider
         });
         
         bBar = createBBar();
@@ -690,7 +655,19 @@ GeoNetwork.app = function(){
                 metadataEditFn: edit
             });
             
+            // Extra stuffs
+            infoPanel = createInfoPanel();
+            helpPanel = createHelpPanel();
+            tagCloudViewPanel = createTagCloud();
+            
+            // set a permalink provider
+            permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+            Ext.state.Manager.setProvider(permalinkProvider);
+            
             createHeader();
+
+            // Search result
+            resultsPanel = createResultsPanel(permalinkProvider);
             
             // Search form
             searchForm = createSearchForm();
@@ -701,13 +678,6 @@ GeoNetwork.app = function(){
             createLoginForm();
             edit();
             
-            // Search result
-            resultsPanel = createResultsPanel();
-            
-            // Extra stuffs
-            infoPanel = createInfoPanel();
-            helpPanel = createHelpPanel();
-            tagCloudViewPanel = createTagCloud();
             
             // Register events on the catalogue
             
@@ -762,14 +732,6 @@ GeoNetwork.app = function(){
             if (urlParameters.mode) {
                 app.switchMode(urlParameters.mode, false);
             }
-            
-            /* Init form field URL according to URL parameters */
-            GeoNetwork.util.SearchTools.populateFormFromParams(searchForm, urlParameters);
-
-            /* Trigger search if search is in URL parameters */
-            if (urlParameters.search !== undefined) {
-                Ext.getCmp('searchBt').fireEvent('click');
-            }
             if (urlParameters.edit !== undefined && urlParameters.edit !== '') {
                 catalogue.metadataEdit(urlParameters.edit);
             }
@@ -798,10 +760,17 @@ GeoNetwork.app = function(){
             Ext.each(events, function (e) {
                 catalogue.on(e, function(){
                     if (searching === true) {
-                        Ext.getCmp('searchBt').fireEvent('click');
+                        searchForm.fireEvent('search');
                     }
                 });
             });
+
+            // Hack to run search after all app is rendered within a sec ...
+            // It could have been better to trigger event in SearchFormPanel#applyState
+            // FIXME
+            if (urlParameters.s_search !== undefined) {
+                setTimeout(function(){searchForm.fireEvent('search');}, 500);
+            }
         },
         getIMap: function(){
             // init map if not yet initialized

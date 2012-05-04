@@ -274,15 +274,27 @@ GeoNetwork.util.INSPIRESearchFormTools = {
     /** api:method[getINSPIREFields]
      *  :param services: Catalogue service URLs (eg. catalogue.services).
      *  :param multi: Create fields with multiselection combobox.
+     *  :param config: Configure fields to be displayed (withAnnex, withServiceType, 
+     *  withDataService, withTheme, withRelated).
      *  :return: An INSPIRE form
      * 
      *  Create an INSPIRE form with annexes, themes and related checkbox fields.
      */
-    getINSPIREFields : function (services, multi) {
-        return [this.getAnnexField(multi),
+    getINSPIREFields : function (services, multi, config) {
+        if (!config){
+            return [this.getAnnexField(multi),
                         this.getServiceTypeField(multi),
                         this.getClassificationDataServicesField(services, multi),
                         this.getThemesField(services, multi), 
                         this.getRelatedField()];
+        } else {
+            var f = [];
+            config.withAnnex && f.push(this.getAnnexField(multi));
+            config.withServiceType && f.push(this.getServiceTypeField(multi));
+            config.withDataService && f.push(this.getClassificationDataServicesField(services, multi));
+            config.withTheme && f.push(this.getThemesField(services, multi));
+            config.withRelated && f.push(this.getRelatedField());
+            return f;
+        }
     }
 };

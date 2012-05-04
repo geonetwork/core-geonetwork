@@ -1338,10 +1338,11 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * Adds an existing value to the SuperBoxSelect component.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name setValue
-     * @param {String|Array} value An array of item values, or a String value containing a delimited list of item values. (The list should be delimited with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter) 
+     * @param {String|Array} value An array of item values, or a String value containing a delimited list of item values. (The list should be delimited with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter)
+     * @param {boolean} forceCreate Add the record even if in remote mode
      */
-    addValue : function(value){
-        
+    addValue : function(value, forceCreate){
+
         if(Ext.isEmpty(value)){
             return;
         }
@@ -1356,15 +1357,23 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             var record = this.findRecord(this.valueField, val);
             if(record){
                 this.addRecord(record);
+            }else if(forceCreate){
+                // Add the record
+                var data = {id: val};
+                data[this.displayField] = val;
+                record = new Ext.data.Record(data, val);
+                this.store.add([record]);
+                this.addRecord(record);
             }else if(this.mode === 'remote'){
-                this.remoteLookup.push(val);                
+                // Do not use join query on items this.remoteLookup.push(val);
+                this.doQuery(val, true, true, false);
             }
         },this);
         
-        if(this.mode === 'remote'){
-            var q = this.remoteLookup.join(this.queryValuesDelimiter); 
-            this.doQuery(q,false, true); //3rd param to specify a values query
-        }
+//        if(this.mode === 'remote'){
+//            var q = this.remoteLookup.join(this.queryValuesDelimiter); 
+//            this.doQuery(q,false, true); //3rd param to specify a values query
+//        }
     },
     /**
      * Sets the value of the SuperBoxSelect component.
@@ -1372,15 +1381,15 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * @name setValue
      * @param {String|Array} value An array of item values, or a String value containing a delimited list of item values. (The list should be delimited with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter) 
      */
-    setValue : function(value){
+    setValue : function(value, forceCreate){
         if(!this.rendered){
             this.value = value;
             return;
         }
+
         this.removeAllItems().resetStore();
         this.remoteLookup = [];
-        this.addValue(value);
-                
+        this.addValue(value, forceCreate);
     },
     /**
      * Sets the value of the SuperBoxSelect component, adding new items that don't exist in the data store if the {@link #Ext.ux.form.SuperBoxSelect-allowAddNewData} config is set to true.
@@ -1399,7 +1408,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             data = [data];
         }
         this.remoteLookup = [];
-        
+
         if(this.allowAddNewData && this.mode === 'remote'){ // no need to query
             Ext.each(data, function(d){
             	var r = this.findRecord(this.valueField, d[this.valueField]) || this.createRecord(d);
@@ -1512,7 +1521,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         }
         return true; 
     },
-    doQuery : function(q, forceAll,valuesQuery, forcedAdd){
+    doQuery : function(q, forceAll,valuesQuery, forcedAdd, sync){
         q = Ext.isEmpty(q) ? '' : q;
         if(this.queryFilterRe){
             this.filteredQueryData = '';
@@ -1568,7 +1577,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         //accomodating for bug in Ext 3.0.0 where options.params are empty
         var q = options.params[this.queryParam] || store.baseParams[this.queryParam] || "",
             isValuesQuery = options.params[this.queryValuesIndicator] || store.baseParams[this.queryValuesIndicator];
-        
+
         if(this.removeValuesFromStore){
             this.store.each(function(record) {
                 if(this.usedRecords.containsKey(record.get(this.valueField))){
@@ -1660,7 +1669,7 @@ Ext.ux.form.SuperBoxSelectItem = function(config){
  */
 Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.Component, {
     initComponent : function(){
-        Ext.ux.form.SuperBoxSelectItem.superclass.initComponent.call(this); 
+        Ext.ux.form.SuperBoxSelectItem.superclass.initComponent.call(this);
     },
     onElClick : function(e){
         var o = this.owner;
@@ -1722,7 +1731,6 @@ Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.C
         this.lnk.un('blur', this.onLnkBlur, this);
     },
     onRender : function(ct, position){
-        
         Ext.ux.form.SuperBoxSelectItem.superclass.onRender.call(this, ct, position);
         
         var el = this.el;

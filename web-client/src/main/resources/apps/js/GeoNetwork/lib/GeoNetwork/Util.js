@@ -43,9 +43,11 @@ GeoNetwork.Util = {
             ['pt', 'Рortuguês', 'por'], 
             ['ru', 'Русский', 'rus']
     ],
-    
-    /**
-     * Set OpenLayers lang and load ext required lang files
+    /** api: method[setLang] 
+     *  :param lang: String ISO 3 letters code
+     *  :param baseUrl: String Base URL use to load Ext loc files
+     *
+     *  Set OpenLayers lang and load ext required lang files
      */
     setLang: function(lang, baseUrl){
         lang = lang || GeoNetwork.Util.defaultLocale;
@@ -58,9 +60,12 @@ GeoNetwork.Util = {
         s.src = baseUrl + "/js/ext/src/locale/ext-lang-" + openlayerLang + ".js";
         document.getElementsByTagName("head")[0].appendChild(s);
     },
-    /**
-     * Return a valid language code if translation is available.
-     * Catalogue use ISO639-2 code.
+    /** api: method[setLang] 
+     *  :param lang: String ISO 3 letters code
+     *  
+     *  
+     *  Return a valid language code if translation is available.
+     *  Catalogue use ISO639-2 code.
      */
     getCatalogueLang: function(lang){
         var i;
@@ -71,9 +76,11 @@ GeoNetwork.Util = {
         }
         return 'eng';
     },
-    /**
-     * Return ISO2 language code (Used by OpenLayers lang and before GeoNetwork 2.7.0)
-     * for corresponding ISO639-2 language code.
+    /** api: method[setLang] 
+     *  :param lang: String ISO 3 letters code
+     *  
+     *  Return ISO2 language code (Used by OpenLayers lang and before GeoNetwork 2.7.0)
+     *  for corresponding ISO639-2 language code.
      */
     getISO2LangCode: function(lang){
         var i;
@@ -84,6 +91,11 @@ GeoNetwork.Util = {
         }
         return 'en';
     },
+    /** api: method[getParameters] 
+     *  :param url: String URL to parse
+     *  
+     *  Get list of URL parameters including anchor
+     */
     getParameters: function(url){
         var parameters = OpenLayers.Util.getParameters(url);
         if (OpenLayers.String.contains(url, '#')) {
@@ -121,15 +133,70 @@ GeoNetwork.Util = {
                        "#ff7b5d", 
                        "#ff0000", 
                        "#00FF00"],
-    /**
-     *  Return a random color map
-     */
-    generateColorMap: function (classes) {
+   /** api: method[generateColorMap] 
+    *  :param classes: integer Number of classes
+    *  
+    *   Return a random color map
+    */
+   generateColorMap: function (classes) {
         var colors = [];
         for (var i = 0; i < classes; i++) {
             // http://paulirish.com/2009/random-hex-color-code-snippets/
             colors[i] = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
         }
         return colors;
+    },
+    /** api: method[buildPermalinkMenu] 
+     *  :param l: String or Function If String the link is added as is, if a function
+     *  the function is called on 'show' event
+     *  :param scope: Object The scope on which the l function is called.
+     *  
+     *  Create a permalink menu which is updated on show.
+     *  
+     *  TODO : maybe move on widget package - this is GUI related?
+     *  
+     *   Return Ext.menu.Menu
+     */
+    buildPermalinkMenu: function (l, scope) {
+        var menu = new Ext.menu.Menu();
+        var permalinkMenu = new Ext.menu.TextItem({text: '<input/><br/><a>&nbsp;</a>'});
+        menu.add(
+                '<b class="menu-title">' + OpenLayers.i18n('permalinkInfo') + '</b>',
+                permalinkMenu
+            );
+        // update link when item is displayed
+        var updatePermalink = function() {
+            var link = l;
+            if (typeof(l) == 'function') {
+                link = l.apply(scope);
+            }
+            var id = 'permalink-' + permalinkMenu.getId();
+            permalinkMenu.update('<input id="' + id + '" value="' + link + '"/>'
+                + '</br>'
+                + '<a href="' + link + '">Link</a>', 
+                true, 
+                // Select permalink input for user to easily copy/paste link
+                function() {
+                    // On IE8, select() on an element scroll to top of page, why ?
+                    if (!Ext.isIE8) {
+                        // update callback is not really called after update
+                        // so add a short timeout TODO
+                        setTimeout(function(){
+                            var e = Ext.get(id);
+                            if (e) {
+                                e.dom.select();
+                            }
+                        }, 100);
+                    }
+            });
+            
+        };
+        // onstatechange does not work because the menu item may be not be rendered
+        //this.permalinkProvider.on('statechange', onStatechange, this.permalinkMenu);
+        menu.on('show', updatePermalink, scope);
+        return new Ext.Button({
+            iconCls: 'linkIcon',
+            menu: menu
+        });
     }
 };

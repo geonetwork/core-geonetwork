@@ -255,6 +255,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/data/WMSCapabilitiesStore.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/data/WMSDescribeLayerReader.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/data/WMSDescribeLayerStore.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/state/PermalinkProvider.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/widgets/Action.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/widgets/MapPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoExt/lib/GeoExt/widgets/LegendImage.js</include>
@@ -329,7 +330,8 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/TagCloudView.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/Templates.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js</include>
-
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js</include>
+                
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewPanel.js</include>
 

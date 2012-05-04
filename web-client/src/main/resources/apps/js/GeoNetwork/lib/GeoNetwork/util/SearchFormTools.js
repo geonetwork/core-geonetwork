@@ -242,19 +242,11 @@ GeoNetwork.util.SearchFormTools = {
     getSimpleMap: function(layers, mapOptions, activeMapControlExtent, panelConfig, withRelation){
         var fields = [], mapLayers = [], i;
         
-        var geomField = new Ext.form.TextField({
-            name: 'E_geometry',
-            id: 'geometry',
-            inputType: 'hidden'
-        });
-        
         for (i = 0; i < layers.length; i++) {
             mapLayers.push(layers[i].clone());
-            //mapLayers.push(new OpenLayers.Layer.WMS(layers[i][0], layers[i][1], layers[i][2], layers[i][3]));
         }
         var geomWithMapField = {
             xtype: 'gn_geometrymapfield',
-            geometryFieldId: 'geometry',
             id: 'geometryMap',
             layers: mapLayers,
             mapOptions: mapOptions,
@@ -266,7 +258,7 @@ GeoNetwork.util.SearchFormTools = {
             Ext.applyIf(geomWithMapField, panelConfig);
         }
         
-        fields.push(geomField, geomWithMapField);
+        fields.push(geomWithMapField);
         if (withRelation) {
             fields.push(GeoNetwork.util.SearchFormTools.getRelationField());
         }
@@ -360,16 +352,6 @@ GeoNetwork.util.SearchFormTools = {
      *  Return a combo box with sort options
      */
     getSortByCombo: function(defaultValue){
-        var sortByField = new Ext.form.TextField({
-            name: 'E_sortBy',
-            id: 'E_sortBy',
-            inputType: 'hidden'
-        });
-        var sortOrderField = new Ext.form.TextField({
-            name: 'E_sortOrder',
-            id: 'sortOrder',
-            inputType: 'hidden'
-        });
         var store = GeoNetwork.util.SearchFormTools.getSortByStore();
         var combo = new Ext.form.ComboBox({
             mode: 'local',
@@ -386,6 +368,18 @@ GeoNetwork.util.SearchFormTools = {
                    sortOrderField.setValue(tokens[1]);
                 }
             }
+        });
+        var sortByField = new Ext.form.TextField({
+            name: 'E_sortBy',
+            id: 'E_sortBy',
+            inputType: 'hidden',
+            linkedCombo: combo
+        });
+        var sortOrderField = new Ext.form.TextField({
+            name: 'E_sortOrder',
+            id: 'sortOrder',
+            inputType: 'hidden',
+            linkedCombo: combo
         });
         combo.setValue(defaultValue || 'relevance#');
         return [sortByField, sortOrderField, combo];
@@ -404,7 +398,7 @@ GeoNetwork.util.SearchFormTools = {
                     ['rating#', OpenLayers.i18n('rating')], 
                     ['popularity#', OpenLayers.i18n('popularity')], 
                     ['denominator#', OpenLayers.i18n('scaleDesc')], 
-                    ['denominator#revers', OpenLayers.i18n('scaleAsc')]]
+                    ['denominator#reverse', OpenLayers.i18n('scaleAsc')]]
         });
     },
     /** api:method[getFullTextField]
@@ -585,7 +579,7 @@ GeoNetwork.util.SearchFormTools = {
         };
         if (multi) {
             var displaytpl = (imgUrl ?
-                    '<img src="' + imgUrl + '{name}.png"/>{[values.label.' + lang + ']}':
+                    '<img src="' + imgUrl + '{name}.png"/>{[values.label.' + lang + ' || values]}':
                     '{[values.label.' + lang + ']}');
             Ext.apply(config, {
                 valueDelimiter: ' or ',
@@ -879,6 +873,7 @@ GeoNetwork.util.SearchFormTools = {
            hidden: true
         });
         
+        // TODO : restore slider state
         var slider = new Ext.slider.MultiSlider({
             disabled: disabled ? true : false,
             width: width,
@@ -897,6 +892,7 @@ GeoNetwork.util.SearchFormTools = {
         
         var scaleCk = new Ext.form.Checkbox({
             fieldLabel: OpenLayers.i18n('scale'),
+            name: 'scaleOn',
             value: disabled ? true : false,
             handler: function (ch, checked){
                 slider.setDisabled(!checked);
@@ -1024,7 +1020,8 @@ GeoNetwork.util.SearchFormTools = {
         
         if (multi) {
             Ext.apply(config, {
-                valueDelimiter: ' or '
+                valueDelimiter: ' or ',
+                allowAddNewData: true
                 });
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {

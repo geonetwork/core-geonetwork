@@ -74,11 +74,13 @@ Ext.namespace('GeoNetwork.form');
  *   * Add list of well know region to quickly zoom to an AOI or a Gazetter service like GeoNames.org ?
  */
 GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
+    // TODO : Add capablitiy to change layer_style and drawing layer_style 
     layer_style: OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']),
 
     /** api: config[geometryFieldId] 
      *  ``String`` Identifier of an Ext.form.TextField to update
-     *  with the WKT representation of the map extent.
+     *  with the WKT representation of the map extent. If undefined,
+     *  a hidden text field is created to store the geometry.
      */
     geometryFieldId : undefined,
 
@@ -273,6 +275,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         id : 'geometryMap', // FIXME : This is hardcoded 
         width: 290,
         height: 180,
+        stateful: false,
         border : false,
         activated : false,
         restrictToMapExtent : false,
@@ -301,10 +304,30 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         this.map.addControl(new OpenLayers.Control.MousePosition());
         
         this.tbar = this.createNavBar();
-        this.geometryField = Ext.getCmp(this.geometryFieldId);
+        
+        // Use an existing geometry fields or create a new hidden one
+        if (this.geometryFieldId) {
+            this.geometryField = Ext.getCmp(this.geometryFieldId);
+        } else {
+            var gmf = this;
+            this.geometryField = new Ext.form.TextField({
+                name: 'E_geometry',
+                inputType: 'hidden',
+                listeners: {
+                    valid: function(cpt){
+                        // Init extent box in map only if vector layer not
+                        // yet initialized (eg. on startup when state is restored).
+                        if (cpt.getValue() !== '' && this.extentBox.getOrCreateLayer().features.length === 0) {
+                            this.extentBox.updateFieldsWKT(cpt.getValue());
+                        }
+                    },
+                    scope: gmf
+                }
+            });
+        }
         
         GeoNetwork.form.GeometryMapField.superclass.initComponent.call(this);
-        
+        this.add(this.geometryField);
         this.createExtentControl();
         // FIXME : can't trigger this after map rendered by MapPanel. Workaround used, this.setExtent
 //        this.on('afterlayout', function(el){
@@ -334,6 +357,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                     + bounds[0] + ' ' + bounds[1] + '))';
 
             this.geometryField.setValue(wkt);
+            this.geometryField.fireEvent('change');
         }
     }
 });

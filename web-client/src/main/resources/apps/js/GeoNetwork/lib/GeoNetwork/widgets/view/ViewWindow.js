@@ -71,7 +71,11 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         maximizable: true,
         maximized: false,
         collapsible: true,
-        collapsed: false
+        collapsed: false,
+        /** api: config[permalink]
+         *  Define if permalink button should be displayed or not. Default is true.
+         */
+        permalink: true
     },
     serviceUrl: undefined,
     catalogue: undefined,
@@ -101,7 +105,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             id: 'newwindow',
             qtip: OpenLayers.i18n('newWindow'),
             handler: function(e, toolEl, panel, tc){
-                window.open(GeoNetwork.Util.getBaseUrl(location.href) + "#uuid=" + this.metadataUuid);
+                window.open(GeoNetwork.Util.getBaseUrl(location.href) + "?uuid=" + this.metadataUuid);
                 this.hide();
             },
             scope: this
@@ -121,7 +125,8 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             resultsView: this.resultsView,
             border: false,
             frame: false,
-            autoScroll: true
+            autoScroll: true,
+            permalink: this.permalink
         });
         this.add(this.panel);
         

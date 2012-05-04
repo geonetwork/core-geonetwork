@@ -135,7 +135,6 @@ GeoNetwork.util.SearchTools = {
      *
      */
     doQueryFromForm: function(formId, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
-    
         var query = GeoNetwork.util.SearchTools.buildQueryFromForm(Ext.getCmp(formId), startRecord, GeoNetwork.util.SearchTools.sortBy, metadataStore.fast);
         GeoNetwork.util.SearchTools.doQuery(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
     },
@@ -168,7 +167,6 @@ GeoNetwork.util.SearchTools = {
     buildQueryFromForm: function(form, startRecord, sortBy, fast){
         var values = GeoNetwork.util.SearchTools.getFormValues(form);
         var filters = [];
-        
         GeoNetwork.util.SearchTools.addFiltersFromPropertyMap(values, filters, startRecord);
         
         
@@ -181,7 +179,6 @@ GeoNetwork.util.SearchTools = {
      *
      *  Populate form fields based on a list of parameters.
      *  Parameters name must be equal to field name.
-     *  Prefix E_ could be ommitted.
      *
      *  Search field may not be visible if in a collapsed fieldset (TODO)
      *  Test with radio, dates and geometry (TODO)
@@ -190,21 +187,49 @@ GeoNetwork.util.SearchTools = {
         form.cascade(function(cur){
             if (cur.getName) {
                 var name = cur.getName();
-                if (name.indexOf('_') !== -1) { // if URL field name contains prefix (eg. E_)
-                    name = name.substring(2);
-                    if (map[name]) {
-                        // Set form field value
-                        cur.setValue(map[name]);
-                        
-                        // register on store load event to set value after store loaded
-                        if (cur.getXType() === 'superboxselect') {
-                            cur.store.on('load', function (){
-                                cur.setValue(map[name]);
+                if (map[name]) {
+                    var value = map[name];
+                    if (cur.getXType() === 'superboxselect') {
+                        if(value.indexOf(' or ') !== -1) {
+                            value = value.split(' or ');
+                        }
+                        if (cur.mode === 'local') {
+                            // Wait the store to load to set the value (eg. categories, catalogues)
+                            cur.getStore().on('load', function() {
+                                cur.setValue(value);
                             });
+                            // and set the value too if the store is already loaded (eg. spatial rep.)
+                            cur.setValue(value);
+                            // The store should be loaded only once, so it should be fine.
+                        } else {
+                            // Force the value (ie. usually autocomplete combo)
+                            cur.setValue(value, true);
+                        }
+                    } else {
+                        // Hack to set sort order which is based on 
+                        // 2 inputs and one combo
+                        // FIXME
+                        if (name === 'E_sortBy') {
+                            var cb =  cur.linkedCombo;
+                            if (map['E_sortOrder']) {
+                                cb.setValue(value + '#' + map['E_sortOrder']);
+                            } else {
+                                var idx = cb.getStore().find('id', new RegExp(value + '*'));
+                                if (idx !== -1) {
+                                    cb.setValue(cb.getStore().getAt(idx).id);
+                                }
+                            }
+                        } else {
+                            cur.setValue(value);
                         }
                     }
-                } else if (map[name]) {
-                    cur.setValue(map[name]);
+                    
+                    // If form field is in a collapsed fieldset, expand it
+                    Ext.each(cur.findParentByType('fieldset'), function(f) {
+                        if (f.rendered && f.collapsed) {
+                            f.expand();
+                        }
+                    });
                 }
             }
         });
@@ -326,18 +351,13 @@ GeoNetwork.util.SearchTools = {
      *  According to field type, get form values.
      */
     getFormValues: function(form){
-        var result = form.getForm().getValues() || {};
-        
+        var result = {};
         form.cascade(function(cur){
-            if (cur.disabled !== true && cur.rendered) { // Check element is
+            if (cur.disabled !== true && !(cur.getName && cur.getName().startsWith('ext-comp'))) { // Check element is
                 // enabled
                 // and rendered (ie. visible, eg. field in a collapsed fieldset)
-                if (cur.isXType('boxselect')) {
-                    if (cur.getValue && cur.getValue()) {
-                        result[cur.getName()] = cur.getValue();
-                    }
-                } else if (cur.isXType('combo')) {
-                    if (cur.getValue && cur.getValue()) {
+                if (cur.isXType('boxselect') || cur.isXType('combo')) {
+                    if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue();
                     }
                 } else if (cur.isXType('fieldset')) {
@@ -359,9 +379,12 @@ GeoNetwork.util.SearchTools = {
                         result[cur.getName()] = cur.getValue().format('Y-m-d') +
                         (cur.postfix ? cur.postfix : '');
                     }
-                } else if (cur.getName) {
-                    if (cur.getValue && cur.getValue() !== "") {
+                } else if (cur.isXType('multislider')) {
+                } else {
+                    if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue();
+                    } else { 
+                        
                     }
                 }
             }

@@ -64,6 +64,10 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          */
         printDefaultForTabs: false,
         printMode: undefined,
+        /** api: config[permalink]
+         *  Define if permalink button should be displayed or not. Default is false.
+         */
+        permalink: false,
         /** api: config[relationTypes] 
          *  List of types of relation to be displayed in header. 
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
@@ -77,6 +81,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     record: undefined,
     resultsView: undefined,
     actionMenu: undefined,
+    permalinkMenu: undefined,
     tipTpl: undefined,
     metadataSchema: undefined,
     cache: {},
@@ -172,8 +177,8 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
                             	this.printMode = 'default';
                             }
                             e.on('click', function(){
-                                Ext.getCmp(cmpId).switchToTab(this);
-                            }, e.getAttribute('id'));
+                                Ext.getCmp(cmpId).switchToTab(this.getAttribute('id'));
+                            });
                         }
                     }
                 }
@@ -353,6 +358,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         GeoNetwork.view.ViewPanel.superclass.initComponent.call(this);
         this.metadataSchema = this.record ? this.record.get('schema') : '';
+        
         this.add(new Ext.Panel({
             autoLoad: {
                 url: this.serviceUrl + '&currTab=' + this.currTab,
@@ -366,7 +372,12 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             autoScroll: true
         }));
         
-
+        if (this.permalink) {
+            // TODO : Add viewpanel state (ie. size for window, tab)
+            var l = GeoNetwork.Util.getBaseUrl(location.href) + "?uuid=" + this.metadataUuid;
+            this.getTopToolbar().add(GeoNetwork.Util.buildPermalinkMenu(l));
+        }
+        
         this.addEvents(
                 /** private: event[search]
                  *  Fires search.

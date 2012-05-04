@@ -127,6 +127,9 @@ GeoNetwork.Control.ExtentBox = OpenLayers.Class(OpenLayers.Control, {
         this.updateFields(bounds);
         this.events.triggerEvent("finishBox", null);
     },
+    updateFieldsWKT: function(wkt) {
+        this.updateFields(OpenLayers.Geometry.fromWKT(wkt).getBounds());
+    },
     updateFields: function(bounds) {
         var polFeature = new OpenLayers.Feature.Vector(
             bounds.toGeometry(), null, this.vectorLayerStyle);
