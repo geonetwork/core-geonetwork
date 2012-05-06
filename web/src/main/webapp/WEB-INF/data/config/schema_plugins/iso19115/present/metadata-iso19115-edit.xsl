@@ -1698,8 +1698,7 @@
 	<!-- iso19115 brief formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<xsl:template match="iso19115Brief">
-	 <xsl:for-each select="/metadata/*[1]">
+	<xsl:template name="iso19115Brief">
 		<metadata>
 			<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
 			<xsl:variable name="id" select="geonet:info/id"/>
@@ -1883,7 +1882,6 @@
 
 			<xsl:copy-of select="geonet:info"/>
 		</metadata>
-	 </xsl:for-each>
 	</xsl:template>
 				
 	<!--

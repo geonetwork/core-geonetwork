@@ -319,8 +319,7 @@
     <!-- === iso19110 brief formatting === -->
     <!-- ===================================================================== -->
 
-    <xsl:template match="iso19110Brief">
-			<xsl:for-each select="/metadata/*[1]">
+    <xsl:template name="iso19110Brief">
         <metadata>
             <xsl:variable name="id" select="geonet:info/id"/>
             <xsl:variable name="uuid" select="geonet:info/uuid"/>
@@ -342,7 +341,6 @@
 				<category internal="true">featureCatalogue</category>
 			</geonet:info>
         </metadata>
-			</xsl:for-each>
     </xsl:template>
 
     <!-- ============================================================================= -->

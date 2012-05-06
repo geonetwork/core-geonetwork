@@ -2609,11 +2609,9 @@
   </xsl:template>    
   
   <xsl:template match="iso19139Brief">
-   <xsl:for-each select="/metadata/*[1]">
     <metadata>
      <xsl:call-template name="iso19139-brief"/>
     </metadata>
-   </xsl:for-each>
   </xsl:template>
 
   <xsl:template name="iso19139-brief">
@@ -2787,7 +2785,7 @@
         </keyword>
       </xsl:for-each>
     
-      <xsl:for-each select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+      <xsl:for-each select="gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
         <geoBox>
           <westBL><xsl:value-of select="gmd:westBoundLongitude"/></westBL>
           <eastBL><xsl:value-of select="gmd:eastBoundLongitude"/></eastBL>

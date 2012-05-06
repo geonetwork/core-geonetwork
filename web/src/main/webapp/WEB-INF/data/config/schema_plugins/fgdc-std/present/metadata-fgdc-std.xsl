@@ -183,8 +183,7 @@
 	<!-- fgdc-std brief formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<xsl:template match="fgdc-stdBrief">
-	 <xsl:for-each select="/metadata/*">
+	<xsl:template name="fgdc-stdBrief">
 		<metadata>
 			<xsl:copy-of select="idinfo/citation/citeinfo/title"/>
 			<xsl:copy-of select="idinfo/descript/abstract"/>
@@ -277,7 +276,6 @@
 			</xsl:if>
 			<xsl:copy-of select="geonet:info"/>
 		</metadata>
-	 </xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="fgdc-std-javascript"/>

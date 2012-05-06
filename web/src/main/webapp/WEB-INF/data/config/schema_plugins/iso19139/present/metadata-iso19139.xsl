@@ -3116,12 +3116,11 @@
 	<!-- === iso19139 brief formatting === -->
 	<!-- ===================================================================== -->
 	
-	<xsl:template match="iso19139Brief">
-	 <xsl:for-each select="/metadata/*[1]">
+	<xsl:template name="iso19139Brief">
 		<metadata>
 		  <xsl:choose>
 		    <xsl:when test="geonet:info/isTemplate='s'">
-		      <xsl:apply-templates mode="iso19139-subtemplate" select="."/>
+		      <xsl:call-template name="iso19139-subtemplate"/>
 		      <xsl:copy-of select="geonet:info" copy-namespaces="no"/>
 		    </xsl:when>
 		    <xsl:otherwise>
@@ -3129,7 +3128,6 @@
 		    </xsl:otherwise>
 		  </xsl:choose>
 		</metadata>
-	 </xsl:for-each>
 	</xsl:template>
   
   

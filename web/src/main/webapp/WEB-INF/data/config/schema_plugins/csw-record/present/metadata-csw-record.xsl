@@ -33,6 +33,12 @@
 		</xsl:call-template>
 	</xsl:template>
 
+	<!-- Brief template - csw-record just calls Brief from 
+	     dublin-core -->
+	<xsl:template name="csw-recordBrief">
+		<xsl:call-template name="dublin-coreBrief"/>
+	</xsl:template>
+
 	<xsl:template name="csw-record-javascript"/>
 
 </xsl:stylesheet>

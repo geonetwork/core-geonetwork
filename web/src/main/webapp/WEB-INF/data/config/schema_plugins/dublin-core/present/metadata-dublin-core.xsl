@@ -98,8 +98,7 @@
 	<!-- dublin-core brief formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-	<xsl:template match="dublin-coreBrief|csw-recordBrief">
-	 <xsl:for-each select="/metadata/*[1]">
+	<xsl:template name="dublin-coreBrief">
 		<metadata>
 			<xsl:if test="dc:title">
 				<title><xsl:value-of select="dc:title"/></title>
@@ -140,7 +139,6 @@
 		
 			<xsl:copy-of select="geonet:*"/>
 		</metadata>
-	 </xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="dublin-core-javascript"/>

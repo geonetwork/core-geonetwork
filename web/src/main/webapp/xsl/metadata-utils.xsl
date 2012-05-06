@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
+	xmlns:saxon="http://saxon.sf.net/"
+	extension-element-prefixes="saxon"
+	xmlns:exslt="http://exslt.org/common" 
+	exclude-result-prefixes="exslt saxon geonet">
 
 	<xsl:include href="blanks/metadata-schema01.xsl"/>
 	<xsl:include href="blanks/metadata-schema02.xsl"/>
@@ -42,32 +45,8 @@
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
 		
-			<!-- create XML fragment with name of schema Brief template to 
-					 select plus all info in /root and the metadata we are
-					 handling - 
-
-					 eg. 
-					 /iso19139Brief 
-					 /root
-					 /metadata
-
-					 The idea is that we get to dynamically call the template
-					 we want but all templates can still find gui info on /root
-					 Also no need to do a choose on $schema - makes it easier for
-					 plugin schemas to just work
-
-					 All schema definitions need to define the Brief template eg.
-					 iso19139Brief and unpack the metadata from /metadata -->
-			
-			<xsl:variable name="briefSchemaCallBack">
-				<xsl:element name="{concat($schema,'Brief')}"/>
-				<xsl:copy-of select="/root"/>
-				<xsl:element name="metadata">
-					<xsl:copy-of select="."/>
-				</xsl:element>
-			</xsl:variable>
-
-			<xsl:apply-templates select="exslt:node-set($briefSchemaCallBack/*[1])"/>
+		<xsl:variable name="briefSchemaCallBack" select="concat($schema,'Brief')"/>
+		<saxon:call-template name="{$briefSchemaCallBack}"/>
 	</xsl:template>
 
 	<!--
