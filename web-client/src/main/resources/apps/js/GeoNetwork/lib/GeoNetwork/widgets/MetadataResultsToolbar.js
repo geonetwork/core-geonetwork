@@ -63,6 +63,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  search form and trigger submit could be better.
      */
     searchBtCmp: undefined,
+    /** api: config[searchFormCmp] 
+     *  Search form component use to trigger search
+     *  when sort parameter change.
+     */
+    searchFormCmp: undefined,
     
     /** api: config[sortByCmp] 
      *  Sort by component to keep in synch with toolbar sort by combo.
@@ -161,7 +166,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                         Ext.getCmp('E_sortBy').setValue(tokens[0]);
                         Ext.getCmp('sortOrder').setValue(tokens[1]);
                     }
-                    if (this.searchBtCmp) {
+                    if (this.searchFormCmp) {
+                        this.searchFormCmp.fireEvent('search');
+                    } else if (this.searchBtCmp) {
                         this.searchBtCmp.fireEvent('click');
                     }
                 },

@@ -440,7 +440,7 @@ GeoNetwork.app = function(){
         
         tBar = new GeoNetwork.MetadataResultsToolbar({
             catalogue: catalogue,
-            searchBtCmp: Ext.getCmp('searchBt'),
+            searchFormCmp: Ext.getCmp('searchForm'),
             sortByCmp: Ext.getCmp('E_sortBy'),
             metadataResultsView: metadataResultsView,
             permalinkProvider: permalinkProvider
@@ -607,7 +607,7 @@ GeoNetwork.app = function(){
             });
             this.editorPanel.setContainer(this.editorWindow);
             this.editorPanel.on('editorClosed', function(){
-                Ext.getCmp('searchBt').fireEvent('click');
+            	Ext.getCmp('searchForm').fireEvent('search');
             });
         }
         
@@ -665,12 +665,12 @@ GeoNetwork.app = function(){
             Ext.state.Manager.setProvider(permalinkProvider);
             
             createHeader();
-
-            // Search result
-            resultsPanel = createResultsPanel(permalinkProvider);
             
             // Search form
             searchForm = createSearchForm();
+            
+            // Search result
+            resultsPanel = createResultsPanel(permalinkProvider);
             
             // Top navigation widgets
             createModeSwitcher();
