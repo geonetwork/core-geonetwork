@@ -355,7 +355,6 @@
 				<category internal="true">featureCatalogue</category>
 			</geonet:info>
         </metadata>
-			</xsl:for-each>
     </xsl:template>
 
     <!-- ============================================================================= -->
