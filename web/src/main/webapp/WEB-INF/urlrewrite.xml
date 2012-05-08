@@ -66,7 +66,46 @@
         <from>^(.*)/en/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/eng/$2</to>
     </rule>
-    
+
+    <!-- Rules for RESTful urls for metadata retrieve -->
+    <rule>
+        <note>
+            Retrieves mef format for a metadata.
+            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8.zip
+        </note>
+        <from>^/metadata/(.*)/(.*).zip$</from>
+        <to type="forward">/srv/$1/mef.export?uuid=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves xml format for a metadata.
+            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8.xml
+        </note>
+        <from>^/metadata/(.*)/(.*).xml$</from>
+        <to type="forward">/srv/$1/xml.metadata.get?uuid=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves pdf format for a metadata.
+            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8.pdf
+        </note>
+        <from>^/metadata/(.*)/(.*).pdf$</from>
+        <to type="forward">/srv/$1/pdf?uuid=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves html format for a metadata.
+            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8
+
+            Using type="forward" seem not fine with the redirect done in the home service to classic/widgets UI
+        </note>
+        <from>^/metadata/(.*)/(.*)$</from>
+        <to type="permanent-redirect">%{context-path}/srv/$1/home?uuid=$2</to>
+    </rule>
+
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>
