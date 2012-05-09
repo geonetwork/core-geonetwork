@@ -77,6 +77,7 @@
       <field name="_source" tagName="source"/>
       <field name="_edit" tagName="edit"/>
       <field name="title" tagName="title"/>
+      <field name="_defaultTitle" tagName="defaultTitle"/>
       <field name="abstract" tagName="abstract"/>
       <field name="keyword" tagName="keyword"/>
       <field name="parentUuid" tagName="parentId"/>

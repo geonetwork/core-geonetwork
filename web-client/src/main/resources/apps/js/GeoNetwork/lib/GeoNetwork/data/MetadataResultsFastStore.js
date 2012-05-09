@@ -44,6 +44,8 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
     function getTitle(v, record){
         if (record.title && record.title) {
             return record.title[0].value;
+        } else if (record.defaultTitle && record.defaultTitle) {
+            return record.defaultTitle[0].value;
         } else {
             return '';
         }
