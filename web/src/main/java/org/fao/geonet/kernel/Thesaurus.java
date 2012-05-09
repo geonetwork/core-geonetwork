@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.openrdf.model.BNode;
@@ -159,7 +160,7 @@ public class Thesaurus {
 		if (type.equals(Geonet.CodeList.REGISTER)) {
 			return siteUrl + "/?uuid="+fname.substring(0, fname.indexOf(".rdf"));
 		} else {
-			return siteUrl + "/thesaurus.download?ref="+this.buildThesaurusKey(fname, type, dname);
+			return siteUrl + "/thesaurus.download?ref="+Thesaurus.buildThesaurusKey(fname, type, dname);
 		}
 	}
 
@@ -228,6 +229,7 @@ public class Thesaurus {
 	public URI addElement(String code, String prefLab, String note, String lang) throws GraphException, IOException,
             AccessDeniedException {
 
+        lang = toiso639_1_Lang(lang);
 		Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
 		ValueFactory myFactory = myGraph.getValueFactory();
@@ -271,6 +273,7 @@ public class Thesaurus {
      */
 	public void addElement(String code, String prefLab, String note, String east, String west, String south,
                            String north, String lang) throws IOException, AccessDeniedException, GraphException {
+        lang = toiso639_1_Lang(lang);
 		Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
 		ValueFactory myFactory = myGraph.getValueFactory();
@@ -377,6 +380,7 @@ public class Thesaurus {
      */
 	public URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
             MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
+        lang = toiso639_1_Lang(lang);
 		// Get thesaurus graph
 		Graph myGraph = repository.getGraph();		
 		
@@ -429,6 +433,17 @@ public class Thesaurus {
 
 		return subject;
 	}
+
+    private String toiso639_1_Lang(String lang) {
+         if (lang != null && lang.length() > 2) {
+             try {
+                 lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(lang);
+             } catch (Exception e) {
+                 throw new RuntimeException(e);
+             }
+         }
+         return lang;
+     }
 
     /**
      * TODO javadoc.
