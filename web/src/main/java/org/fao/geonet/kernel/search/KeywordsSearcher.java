@@ -473,39 +473,45 @@ public class KeywordsSearcher {
 		//for (int i = from; i <= to; i++) {
 		for (int i = 0; i <= nbResults - 1; i++) {
 			KeywordBean kb = _results.get(i);
-			Element elKeyword = new Element("keyword");
-			Element elSelected = new Element("selected");
-			// TODO : Add Thesaurus name
-
-			if (kb.isSelected()) {
-				elSelected.addContent("true");
-			} else {
-				elSelected.addContent("false");
-			}
-			Element elId = new Element("id");
-			elId.addContent(Integer.toString(kb.getId()));
-			Element elValue = new Element("value");
-			elValue.addContent(kb.getValue());
-			Element elDefiniton = new Element("definition");
-			elDefiniton.addContent(kb.getDefinition());
-			Element elTh = new Element("thesaurus");
-			elTh.addContent(kb.getThesaurus());
-			Element elUri = new Element("uri");
-			elUri.addContent(kb.getCode());
-			
-			addBbox(kb, elKeyword);
-			
-			elKeyword.addContent(elSelected);
-			elKeyword.addContent(elId);
-			elKeyword.addContent(elValue);
-			elKeyword.addContent(elDefiniton);
-			elKeyword.addContent(elTh);
-			elKeyword.addContent(elUri);
-			elDescKeys.addContent(elKeyword);
+            toRawElement(elDescKeys, kb);
 		}
 
 		return elDescKeys;
 	}
+
+    public static Element toRawElement(Element elDescKeys, KeywordBean kb) {
+        Element elKeyword = new Element("keyword");
+        Element elSelected = new Element("selected");
+        // TODO : Add Thesaurus name
+
+        if (kb.isSelected()) {
+        	elSelected.addContent("true");
+        } else {
+        	elSelected.addContent("false");
+        }
+        Element elId = new Element("id");
+        elId.addContent(Integer.toString(kb.getId()));
+        Element elValue = new Element("value");
+        elValue.addContent(kb.getValue());
+        Element elDefiniton = new Element("definition");
+        elDefiniton.addContent(kb.getDefinition());
+        Element elTh = new Element("thesaurus");
+        elTh.addContent(kb.getThesaurus());
+        Element elUri = new Element("uri");
+        elUri.addContent(kb.getCode());
+        
+        addBbox(kb, elKeyword);
+        
+        elKeyword.addContent(elSelected);
+        elKeyword.addContent(elId);
+        elKeyword.addContent(elValue);
+        elKeyword.addContent(elDefiniton);
+        elKeyword.addContent(elTh);
+        elKeyword.addContent(elUri);
+        elDescKeys.addContent(elKeyword);
+        
+        return elDescKeys;
+    }
 
     /**
      * TODO javadoc.
@@ -570,7 +576,7 @@ public class KeywordsSearcher {
 	 * @param kb	The keyword to analyze.
 	 * @param elKeyword	The XML fragment to update.
 	 */
-	private void addBbox(KeywordBean kb, Element elKeyword) {
+	private static void addBbox(KeywordBean kb, Element elKeyword) {
 		if (kb.getCoordEast() != null && kb.getCoordWest() != null
 				&& kb.getCoordSouth() != null
 				&& kb.getCoordNorth() != null && !kb.getCoordEast().equals("") 

@@ -47,6 +47,10 @@ public class GetKeywordById implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
+	private enum Formats {
+	    iso,raw
+	}
+
 	// --------------------------------------------------------------------------
 	// ---
 	// --- Service
@@ -58,6 +62,7 @@ public class GetKeywordById implements Service {
 		String sThesaurusName = Util.getParam(params, "thesaurus");
 		String uri = Util.getParam(params, "id");
 		String lang = Util.getParam(params, "lang", context.getLanguage());
+        Formats format = Formats.valueOf(Util.getParam(params, "format", Formats.iso.toString()));
         String langForThesaurus = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(lang);
         
 		boolean multiple = Util.getParam(params, "multiple", false);
@@ -73,10 +78,17 @@ public class GetKeywordById implements Service {
 		KeywordBean kb = null;
 		if (!multiple) {
 			kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
-			if (kb == null)
-				return new Element ("<null/>");
-			else
-				return kb.getIso19139();
+			if (kb == null) {
+                switch (format) {
+        		    case iso: new Element ("<null/>");
+        		    case raw: new Element("descKeys");
+    		    }
+			} else {
+                switch (format) {
+        		    case iso: return kb.getIso19139();
+        		    case raw: return KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
+    		    }
+	        }
 		} else {
 			String[] url = uri.split(",");
 			List<KeywordBean> kbList = new ArrayList<KeywordBean>();
@@ -90,13 +102,21 @@ public class GetKeywordById implements Service {
 					kb = null;
 				}
 			}
-			Element complexeKeywordElt = KeywordBean.getComplexIso19139Elt(kbList);
-			
-			return (Element) complexeKeywordElt.detach();
-		}
-			
+			switch (format) {
+			case iso:
+			    Element complexeKeywordElt = KeywordBean.getComplexIso19139Elt(kbList);
+			    return (Element) complexeKeywordElt.detach();
+			case raw:
+			    Element root = new Element("descKeys");
+			    for (KeywordBean keywordBean : kbList) {
+                    root.addContent(KeywordsSearcher.toRawElement(root, keywordBean));
+                }
+			    return root;
+			}
 
-		
+		}
+
+        return new Element ("<null/>");
 	}
 }
 
