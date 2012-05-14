@@ -25,9 +25,36 @@
     <script type="text/javascript" src="{$widgetPath}/js/ext/adapter/ext/ext-base.js"/>
     <script type="text/javascript" src="{$widgetPath}/js/ext/ext-all-debug.js"/>
     <script type="text/javascript" src="{$widgetPath}/js/proj4js-compressed.js"/>
-    <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+    
+    <xsl:choose>
+      <xsl:when test="/root/request/debug">
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/Rating/RatingItem.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/FileUploadField/FileUploadField.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/DateTime/DateTime.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/RowExpander/RowExpander.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/MultiselectItemSelector-3.0/DDView.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"></script>
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/LightBox/lightbox.js"></script>
+        
+        <script type="text/javascript" src="{$widgetPath}/js/OpenLayers/OpenLayers.js"/>
+        <script type="text/javascript" src="{$widgetPath}/js/GeoExt/script/GeoExt.js"/>
+        <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork.js"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    
+    <!-- TODO : Here we load "search" app configuration. It may be another app which is used 
+    as default. This should be improved when moving admin to widgets. -->
+    <script type="text/javascript" src="{$widgetPath}/search/js/map/Settings.js"></script>
+    
     <script type="text/javascript" language="JavaScript">
       var catalogue;
+      OpenLayers.ImgPath = '<xsl:value-of select="$widgetPath"/>/js/OpenLayers/img/';
+      
       Ext.onReady(function(){
         Ext.QuickTips.init();
       
