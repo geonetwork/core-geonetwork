@@ -163,6 +163,12 @@
 										<xsl:value-of select="/root/gui/strings/startVersion"/>
 									</button>
 								</xsl:if>
+								<xsl:if test="/root/gui/services/service/@name='metadata.batch.extract.subtemplates'">
+								<!--xsl:text>&#160;</xsl:text-->
+									<button onclick="batchOperation('metadata.batch.extract.subtemplates.form','{/root/gui/strings/batchExtractSubtemplatesTitle}',800)">
+										<xsl:value-of select="/root/gui/strings/extractSubtemplates"/>
+									</button>
+								</xsl:if>
 							</xsl:if>
 							<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
 							<button onclick="runPdfSearch(true);" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"><xsl:value-of select="/root/gui/strings/printSelection"/></button>

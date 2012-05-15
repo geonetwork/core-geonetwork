@@ -34,7 +34,6 @@ public class Sha1Encoder
 	 */
 	public static String encodeString(String input)
 	{
-		System.out.println("Encoding "+input);
 		return Util.scramble(input);
 	}
 

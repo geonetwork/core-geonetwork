@@ -17,6 +17,18 @@
     <anyLanguage>jede Sprache</anyLanguage>
 
   <!-- new strings - 2.7 -->
+	<extractRegisterItems>Extract Register Items</extractRegisterItems>
+	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
+	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
+	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
+	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
+	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
+	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
+	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
+	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
+	<makeChanges>I really want to do this!</makeChanges>
+	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
+
 		<defaultStatusChangeMessage>Keine Information</defaultStatusChangeMessage>
 	<createThesaurus>Thesaurus erstellen/anpassen</createThesaurus>
 	<thesaurusType>Art des Thesaurus</thesaurusType>

@@ -319,6 +319,23 @@ function get_cookie ( cookie_name )
 	}
 
 /**********************************************************************
+ * Batch Extract Subtemplates stuff
+ **********************************************************************/
+
+	function checkBatchExtractSubtemplates(action,title) {
+		if ($('xpath').value == '') {
+			alert(translate("selectXPath"));
+			return false;
+		}
+		if ($('xpathTitle').value == '') {
+			alert(translate("selectExtractTitle"));
+			return false;
+		}
+		Modalbox.show(getGNServiceURL(action),{title: title, params: $('extractSubtemplatesForm').serialize(true), height: 400});
+
+	}
+
+/**********************************************************************
  * Batch Ownership Transfer stuff
  **********************************************************************/
 
