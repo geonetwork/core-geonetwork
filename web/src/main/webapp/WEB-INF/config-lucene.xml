@@ -43,11 +43,11 @@
     <!--  
       <boostQuery name="org.fao.geonet.kernel.search.function.RecencyBoostingQuery">
       <Param name="multiplier" type="double" value="2.0"/>
-            <Param name="maxDaysAgo" type="int" value="365"/>
-            <Param name="dayField" type="java.lang.String" value="_changeDate"/>
-        </boostQuery>-->
-
-
+      <Param name="maxDaysAgo" type="int" value="365"/>
+      <Param name="dayField" type="java.lang.String" value="_changeDate"/>
+      </boostQuery>
+     -->
+    
 
     <!-- 
       List of fields to dump when using q service. Fields must be stored in the index.
@@ -148,6 +148,7 @@
     <Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="hassource" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="hasfeaturecat" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    
     <!-- 
     <Field name="any" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     
@@ -157,12 +158,25 @@
     </Field>
     -->
     <Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-
+    <Field name="_cat" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    
 
     <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
     <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
   </fieldSpecificAnalyzer>
-
+  
+  <fieldSpecificSearchAnalyzer>
+    <!-- Define here analyzers to be overriden from fieldSpecificAnalyzer.
+      By default, indexing and searching per field analyzers are the same.
+      
+      In some case, an analyzer could be applied at indexing and another 
+      at searching time. For example when using a SynonymAnalyzer. When adding 
+      Londres, Londinium, Londona for London at indexing time, then there is no
+      need to add those synonyms for search if users search for Londres, it will match.
+      We only need synonym expansion during indexing or during searching, not both.
+    -->
+  </fieldSpecificSearchAnalyzer>
+  
   <!-- Document boosting configuration. 
     
     Document boosting allows to define custom boost factor for a document
@@ -180,6 +194,8 @@
   </fieldBoosting>
   
   It could be relevant to also remove some field from scoring using this:
+   * If not, user privileges will be take into account to compute the score.
+  -->
   <fieldBoosting>
     <Field name="_op0" boost="0.0F"/>
     <Field name="_op1" boost="0.0F"/>
@@ -188,9 +204,7 @@
     <Field name="_isTemplate" boost="0.0F"/>
     <Field name="_owner" boost="0.0F"/>
   </fieldBoosting>
-  If not, user privileges will be take into account to compute the score.
   
-  -->
   
   <!-- Boosting factor for document based on document values.
     Parameters:

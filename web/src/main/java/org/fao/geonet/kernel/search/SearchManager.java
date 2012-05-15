@@ -127,14 +127,19 @@ public class SearchManager {
 	private File _luceneDir;
     private SettingInfo _settingInfo;
     /**
-     * Used when adding documents to the Lucene index, and also to analyze query terms at search time.
+     * Used when adding documents to the Lucene index.
      */
 	private static PerFieldAnalyzerWrapper _analyzer;
+	/**
+     * Used when searching to analyze query terms.
+     */
+	private static PerFieldAnalyzerWrapper _searchAnalyzer;
 
     /**
      * Maps languages to Analyzer that contains GeoNetworkAnalyzers initialized with stopwords for this language.
      */
     private static Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
+    private static Map<String, Analyzer> searchAnalyzerMap = new HashMap<String, Analyzer>();
     
 	private static DocumentBoosting _documentBoostClass;
 	private String _luceneTermsToExclude;
@@ -201,17 +206,31 @@ public class SearchManager {
 	public static PerFieldAnalyzerWrapper getAnalyzer() {
 		return _analyzer;
 	}
-    
-    public static PerFieldAnalyzerWrapper getAnalyzer(String language) {
-        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)analyzerMap.get(language); 
-        if(analyzer != null) {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
-                Log.debug(Geonet.LUCENE, "returning analyzer for language " + language);
-            return analyzer;
+	public static PerFieldAnalyzerWrapper getSearchAnalyzer() {
+		return _searchAnalyzer;
+	}
+    /**
+     * Retrieve per field analyzer according to language and for searching or indexing time.
+     * 
+     * @param language Language for the analyzer.
+     * @param forSearching true to return searching time analyzer, false for indexing time analayzer.
+     * @return 
+     */
+    public static PerFieldAnalyzerWrapper getAnalyzer(String language, boolean forSearching) {
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
+            Log.debug(Geonet.LUCENE, "Get analyzer for searching: " + forSearching + " and language: " + language);
         }
-        else {
-            Log.info(Geonet.LUCENE, "did not find analyzer for language " + language + ", returning default analyzer");
-            return _analyzer;
+        
+        Map<String, Analyzer> map = forSearching ? searchAnalyzerMap : analyzerMap;
+        
+        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)map.get(language); 
+        if(analyzer != null) {
+            return analyzer;
+        } else {
+            if(Log.isDebugEnabled(Geonet.LUCENE)) {
+                Log.debug(Geonet.LUCENE, "Returning default analyzer.");
+            }
+            return forSearching ? _searchAnalyzer : _analyzer;
         }
     }
 
@@ -259,7 +278,7 @@ public class SearchManager {
      *
      * @param analyzerClassName Class name of analyzer to create
      * @param field The Lucene field this analyzer is created for
-     * @param stopwords
+     * @param stopwords Set stop words if analyzer class name equal org.fao.geonet.kernel.search.GeoNetworkAnalyzer.
      * @return
      */
     private Analyzer createAnalyzerFromLuceneConfig(String analyzerClassName, String field, Set<String> stopwords) {
@@ -340,7 +359,11 @@ public class SearchManager {
             }
             else {
                 if(Log.isDebugEnabled(Geonet.LUCENE))
-                    Log.debug(Geonet.LUCENE, "loading stopwords");
+                    Log.debug(Geonet.LUCENE, "Loading stopwords and creating per field anlayzer ...");
+                
+                // One per field analyzer is created for each stopword list available using GNA as default analyzer
+                // Configuration can't define different analyzer per language.
+                // TODO : http://trac.osgeo.org/geonetwork/ticket/900
                 for(File stopwordsFile : _stopwordsDir.listFiles()) {
                     String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
                     // TODO check for valid ISO 639-2 codes could be better than this
@@ -351,43 +374,80 @@ public class SearchManager {
                     Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
                     if(stopwordsForLanguage != null) {
                         if(Log.isDebugEnabled(Geonet.LUCENE))
-                            Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                            Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
 
-                        // create the default analyzer according to Lucene config
-                        Analyzer a = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, stopwordsForLanguage);
-                        PerFieldAnalyzerWrapper languageAnalyzer = new PerFieldAnalyzerWrapper(a);
-                        // now handle the exceptions to the default analyzer as defined in lucene config
-                        for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
-                            String field = e.getKey();
-                            String aClassName = e.getValue();
-                            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                                Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
-                            Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field ,stopwordsForLanguage);
-                            languageAnalyzer.addAnalyzer(field, analyzer);
-                        }
-                        analyzerMap.put(language, languageAnalyzer);
+                        // Configure per field analyzer and register them to language map of pfa
+                        // ... for indexing
+                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
+                                analyzerMap, language, stopwordsForLanguage);
                         
+                        // ... for searching
+                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
+                                searchAnalyzerMap, language, stopwordsForLanguage);
+
                     }
                     else {
                         if(Log.isDebugEnabled(Geonet.LUCENE))
-                            Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                            Log.debug(Geonet.LUCENE, "Failed to load any stopwords for language " + language);
                     }
                 }
-            }            
+            }
+            
+            // Configure default per field analyzer
+            _analyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
+                null, null, null);
+            
+            _searchAnalyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
+                null, null, null);
+        }
+    }
 
-            // create the default analyzer according to Lucene config
-            Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, null);
-			_analyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
-            // now handle the exceptions to the default analyzer as defined in lucene config
-			for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
-				String field = e.getKey();
-				String aClassName = e.getValue();
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
-                Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field, null);
-                _analyzer.addAnalyzer(field, analyzer);
-			}
+	/**
+	 * Create, configure and optionnaly register in a list a per field analyzer wrapper.
+	 * 
+	 * @param defaultAnalyzer The default analyzer to use
+	 * @param fieldAnalyzers	The list of extra analyzer per field
+	 * @param referenceMap	A map where to reference the per field analyzer
+	 * @param referenceKey	The reference key
+	 * @param stopwordsForLanguage	The stopwords to use (only for GNA)
+	 * 
+	 * @return The per field analyzer wrapper
+	 */
+	private PerFieldAnalyzerWrapper configurePerFieldAnalyzerWrapper(
+			String defaultAnalyzerClass, Map<String, String> fieldAnalyzers,
+			Map<String, Analyzer> referenceMap, String referenceKey,
+			Set<String> stopwordsForLanguage) {
+
+		// Create the default analyzer according to Lucene config
+		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+			Log.debug(Geonet.SEARCH_ENGINE, " Default analyzer class: " + defaultAnalyzerClass);
+		Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(
+				defaultAnalyzerClass, null, stopwordsForLanguage);
+		
+		
+		PerFieldAnalyzerWrapper pfa = new PerFieldAnalyzerWrapper(
+				defaultAnalyzer);
+		
+		
+		// now handle the exceptions for each field to the default analyzer as
+		// defined in lucene config
+		for (Entry<String, String> e : fieldAnalyzers.entrySet()) {
+			String field = e.getKey();
+			String aClassName = e.getValue();
+			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+				Log.debug(Geonet.SEARCH_ENGINE, " Add analyzer for field: "
+						+ field + "=" + aClassName);
+			Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName,
+					field, stopwordsForLanguage);
+			pfa.addAnalyzer(field, analyzer);
 		}
+		
+		// Register to a reference map if needed
+		if (referenceMap != null) {
+			referenceMap.put(referenceKey, pfa);
+		}
+		
+		return pfa;
 	}
 
     /**

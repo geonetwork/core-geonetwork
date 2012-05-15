@@ -112,6 +112,7 @@ public class LuceneConfig {
 
 	private String defaultAnalyzerClass;
 
+	private Map<String, String> fieldSpecificSearchAnalyzers = new HashMap<String, String>();
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
     private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
@@ -256,25 +257,13 @@ public class LuceneConfig {
 			}
 
 			// Fields specific analyzer
-			elem = luceneConfig.getChild("fieldSpecificAnalyzer");
 			fieldSpecificAnalyzers = new HashMap<String, String>();
-			for (Object o : elem.getChildren()) {
-				if (o instanceof Element) {
-					Element e = (Element) o;
-					String name = e.getAttributeValue("name");
-					String analyzer = e.getAttributeValue("analyzer");
-					if (name == null || analyzer == null) {
-						Log.warning(
-								Geonet.SEARCH_ENGINE,
-								"Field must have a name and an analyzer attribute, check Lucene configuration file.");
-					} else {
-						fieldSpecificAnalyzers.put(name, analyzer);
-						loadClassParameters(ANALYZER_CLASS, name, analyzer,
-								e.getChildren("Param"));
-					}
-				}
-			}
-
+			loadAnalyzerConfig("fieldSpecificAnalyzer", fieldSpecificAnalyzers);
+			
+			// Fields specific search analyzer (is a clone of fieldSpecificAnalyzers it not overridden)
+			fieldSpecificSearchAnalyzers = new HashMap<String, String>(fieldSpecificAnalyzers);
+			loadAnalyzerConfig("fieldSpecificSearchAnalyzer", fieldSpecificSearchAnalyzers);
+			
 			// Fields boosting
             elem = luceneConfig.getChild("fieldBoosting");
             fieldBoost = new HashMap<String, Float>();
@@ -372,6 +361,27 @@ public class LuceneConfig {
 			Log.error(Geonet.SEARCH_ENGINE,
 					"Failed to load Lucene configuration XML file. Error is: "
 							+ e.getMessage());
+		}
+	}
+
+	private void loadAnalyzerConfig(String configRootName, Map<String, String> fieldAnalyzer) {
+		Element elem;
+		elem = luceneConfig.getChild(configRootName);
+		for (Object o : elem.getChildren()) {
+			if (o instanceof Element) {
+				Element e = (Element) o;
+				String name = e.getAttributeValue("name");
+				String analyzer = e.getAttributeValue("analyzer");
+				if (name == null || analyzer == null) {
+					Log.warning(
+							Geonet.SEARCH_ENGINE,
+							"Field must have a name and an analyzer attribute, check Lucene configuration file.");
+				} else {
+					fieldAnalyzer.put(name, analyzer);
+					loadClassParameters(ANALYZER_CLASS, name, analyzer,
+							e.getChildren("Param"));
+				}
+			}
 		}
 	}
 
@@ -608,7 +618,15 @@ public class LuceneConfig {
 	public Map<String, String> getFieldSpecificAnalyzers() {
 		return this.fieldSpecificAnalyzers;
 	}
-
+	
+	/**
+	 * 
+	 * @return Each specific fields search analyzer.
+	 */
+	public Map<String, String> getFieldSpecificSearchAnalyzers() {
+		return this.fieldSpecificSearchAnalyzers;
+	}
+	
 	/**
      * 
      * @return Each fields boost factor.
@@ -653,6 +671,8 @@ public class LuceneConfig {
 		sb.append(" * Default analyzer: " + getDefaultAnalyzerClass() + "\n");
 		sb.append(" * Field analyzers: "
 				+ getFieldSpecificAnalyzers().toString() + "\n");
+		sb.append(" * Field search analyzers: "
+				+ getFieldSpecificSearchAnalyzers().toString() + "\n");
         sb.append(" * Field boost factor: "
                 + getFieldBoost().toString() + "\n");
         sb.append(" * Boost document class: " + getDocumentBoostClass() + "\n");
