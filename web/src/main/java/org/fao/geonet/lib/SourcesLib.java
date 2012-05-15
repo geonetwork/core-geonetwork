@@ -94,7 +94,7 @@ public class SourcesLib
         Lib.net.setupProxy(context, req);
         req.setAddress("/"+ servlet + "/images/logos/" + logo);
 
-        File logoFile = new File(Resources.locateLogosDir(context));
+        File logoFile = new File(Resources.locateLogosDir(context) + File.separator + logo);
 
         try
         {
