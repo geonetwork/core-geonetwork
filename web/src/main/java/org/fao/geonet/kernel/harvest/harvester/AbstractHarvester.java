@@ -187,7 +187,7 @@ public abstract class AbstractHarvester
     }
 
     private void doUnschedule() throws SchedulerException {
-        getScheduler().deleteJob(jobKey(id, HARVESTER_GROUP_NAME));
+        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
     }
 
     public static Scheduler getScheduler() throws SchedulerException {
@@ -199,7 +199,7 @@ public abstract class AbstractHarvester
 	 * @throws SchedulerException */
 
 	public void shutdown() throws SchedulerException {
-       getScheduler().deleteJob(jobKey(id, HARVESTER_GROUP_NAME));
+       getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
 	}
 	
     public static void shutdownScheduler() throws SchedulerException {
@@ -272,7 +272,7 @@ public abstract class AbstractHarvester
 		if (running)
 			return OperResult.ALREADY_RUNNING;
 
-        getScheduler().triggerJob(jobKey(id, HARVESTER_GROUP_NAME));
+        getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
 
 		return OperResult.OK;
 	}
