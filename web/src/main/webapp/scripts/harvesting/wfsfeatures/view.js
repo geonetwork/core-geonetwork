@@ -53,9 +53,6 @@ function init()
 		{ id:'wfsfeatures.url',    			type:'url' },
 		{ id:'wfsfeatures.username',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'wfsfeatures.password',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'wfsfeatures.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'wfsfeatures.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'wfsfeatures.every.mins',  type:'integer',  minValue:0, maxValue:59 },
 
 		//--- Must specify a feature based stylesheet if streaming features
 		

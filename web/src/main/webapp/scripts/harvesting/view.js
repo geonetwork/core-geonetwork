@@ -174,14 +174,22 @@ function refresh(node)
 
 //=====================================================================================
 
+function setNodeAt(id, cron) {
+    var nodeAt = $(id+".node.at");
+    var cron = new Cron(nodeAt.innerText);
+    nodeAt.innerText = cron.nodeAtSummary();
+    $(id+".node.atInterval").innerText = cron.nodeIntervalSummary();
+}
+//=====================================================================================
+
 function append(node)
 {
 	var id = node.getAttribute('id');
 	var xslRes  = rowTransf.transform(node);
 	gui.appendTableRow('table', xslRes);
 	
+	setNodeAt(id);
 	//--- add proper tooltips for both status and error columns
-	
 	setStatusTip(node);
 	setErrorTip (node);
 	return id;

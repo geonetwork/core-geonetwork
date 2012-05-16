@@ -46,8 +46,10 @@ var updateTemp =
 '    </searches>'+
     
 '    <options>'+
-'      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
+
+'      <every>{EVERY}</every>'+
+
 '    </options>'+
 
 '    <content>'+

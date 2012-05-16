@@ -22,8 +22,30 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.servlet.ServletContext;
+
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
@@ -31,6 +53,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -79,30 +102,8 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * Indexes metadata using Lucene.
@@ -150,16 +151,11 @@ public class SearchManager {
     private Spatial _spatial;
 	private LuceneIndexReaderFactory _indexReader;
 	private LuceneIndexWriterFactory _indexWriter;
-	private Timer _optimizerTimer = null;
-    /**
-     *  minutes between optimizations of the lucene index.
-     */
-	private int _optimizerInterval;
-	private Calendar _optimizerBeginAt;
-	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
     private boolean _inspireEnabled = false;
     private String _thesauriDir;
 	private boolean _logAsynch;
+	private final LuceneOptimizerManager _luceneOptimizerManager;
 
 
     public SettingInfo get_settingInfo() {
@@ -293,8 +289,9 @@ public class SearchManager {
             // non-GNA analyzer
             else {
                 try {
-                    Class<? extends Analyzer> analyzerClass = (Class<? extends Analyzer>) Class.forName(analyzerClassName);
-                    Class[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
+                    @SuppressWarnings("unchecked")
+					Class<? extends Analyzer> analyzerClass = (Class<? extends Analyzer>) Class.forName(analyzerClassName);
+                    Class<?>[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
                     Object[] inParamsArray = _luceneConfig.getAnalyzerParameter((field==null?"":field) + analyzerClassName);
                     try {
                         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -509,7 +506,6 @@ public class SearchManager {
         }
 
         _luceneDir.getParentFile().mkdirs();
-
         _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
      	 _logAsynch = logAsynch;
@@ -518,15 +514,8 @@ public class SearchManager {
 
 		initLucene();
 		initZ3950();
-
-		if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
-            _optimizerBeginAt  = si.getLuceneIndexOptimizerSchedulerAt();
-            _optimizerInterval = si.getLuceneIndexOptimizerSchedulerInterval();
-            scheduleOptimizerThread();
-        }
-        else {
-            Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
-        }
+		
+		_luceneOptimizerManager = new LuceneOptimizerManager(this, si);
 	}
 
     /**
@@ -538,7 +527,7 @@ public class SearchManager {
     	    try {
                 @SuppressWarnings(value = "unchecked")
     	        Class<? extends DocumentBoosting> clazz = (Class<? extends DocumentBoosting>) Class.forName(className);
-                Class[] clTypesArray = _luceneConfig.getDocumentBoostParameterClass();
+                Class<?>[] clTypesArray = _luceneConfig.getDocumentBoostParameterClass();
                 Object[] inParamsArray = _luceneConfig.getDocumentBoostParameter();
                 try {
                     if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -582,7 +571,7 @@ public class SearchManager {
 	public void end() throws Exception {
 		endZ3950();
 		_spatial.end();
-		_optimizerTimer.cancel();
+		_luceneOptimizerManager.cancel();
 	}
 
     /**
@@ -592,9 +581,7 @@ public class SearchManager {
      */
 	public synchronized void disableOptimizer() throws Exception {
         Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
-        if (_optimizerTimer != null) {
-            _optimizerTimer.cancel();
-        }
+		_luceneOptimizerManager.cancel();
     }
 
     /**
@@ -605,70 +592,7 @@ public class SearchManager {
      * @throws Exception
      */
 	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
-		if (_dateFormat.format(optimizerBeginAt.getTime()).equals(_dateFormat.format(_optimizerBeginAt.getTime())) &&
-                (optimizerInterval == _optimizerInterval)) {
-            return; // do nothing unless at and interval has changed
-        }
-		_optimizerInterval = optimizerInterval;
-		_optimizerBeginAt  = optimizerBeginAt;
-		if (_optimizerTimer != null) _optimizerTimer.cancel();
-		scheduleOptimizerThread();
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @throws Exception
-     */
-	private void scheduleOptimizerThread() throws Exception {
-		_optimizerTimer = new Timer(true);
-
-		// at _optimizerBeginAt and again at every _optimizerInterval minutes
-		Date beginAt = getBeginAt(_optimizerBeginAt);
-		_optimizerTimer.schedule(new OptimizeTask(), beginAt, _optimizerInterval * 60 * 1000);
-
-		Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index to run at "+_dateFormat.format(beginAt)+" and every "+_optimizerInterval+" minutes afterwards");
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param timeToStart
-     * @return
-     */
-	private Date getBeginAt(Calendar timeToStart) {
-		Calendar now = Calendar.getInstance();
-		Calendar ts  = Calendar.getInstance();
-
-		ts.set(Calendar.DAY_OF_MONTH,	now.get(Calendar.DAY_OF_MONTH));
-		ts.set(Calendar.MONTH,				now.get(Calendar.MONTH));
-		ts.set(Calendar.YEAR,					now.get(Calendar.YEAR));
-		ts.set(Calendar.HOUR,					timeToStart.get(Calendar.HOUR));
-		ts.set(Calendar.MINUTE,				timeToStart.get(Calendar.MINUTE));
-		ts.set(Calendar.SECOND,				timeToStart.get(Calendar.SECOND));
-
-		// if the starttime has already past then schedule for tommorrow
-		if (now.after(ts)) {
-            ts.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-		return ts.getTime();
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     */
-	class OptimizeTask extends TimerTask {
-		public void run() {
-			try {
-				_indexWriter.optimize();
-			}
-            catch (Exception e) {
-				Log.error(Geonet.INDEX_ENGINE, "Optimize task failed: "+e.getMessage());
-				e.printStackTrace();
-			}
-		}
+		_luceneOptimizerManager.reschedule(optimizerBeginAt, optimizerInterval);
 	}
 
     /**
@@ -1812,4 +1736,8 @@ public class SearchManager {
         return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, FeatureSource.class,
                 SpatialIndex.class);
     }
+
+	LuceneIndexWriterFactory getIndexWriter() {
+		return _indexWriter;
+	}
 }

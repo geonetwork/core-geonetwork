@@ -64,11 +64,7 @@ function init()
 		{ id:'gn.servlet',  type:'length',   minSize :1,  maxSize :200 },
 		//{ id:'gn.servlet',  type:'alphanum' }, // Does not work when servlet is mapped to root or subdirectory
 		{ id:'gn.username', type:'length',   minSize :0,  maxSize :200 },
-		{ id:'gn.password', type:'length',   minSize :0,  maxSize :200 },
-		
-		{ id:'gn.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'gn.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'gn.every.mins',  type:'integer',  minValue:0, maxValue:59 }
+		{ id:'gn.password', type:'length',   minSize :0,  maxSize :200 }
 	]);
 
 	shower = new Shower('gn.useAccount',  'gn.account');

@@ -138,6 +138,33 @@
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
 
+	<at>Ausführen um</at>
+    <atSpec>( Stunde : Minute z.B. 23:15 )</atSpec>
+    <interval>Wird ausgeführt</interval>
+    <hourintervals>
+        <hour label="stündlich">1</hour>
+        <hour label="alle 3 Stunden">3</hour>
+        <hour label="alle 6 Stunden">6</hour>
+        <hour label="alle 12 Stunden">12</hour>
+        <hour label="N/A">undefined</hour>
+    </hourintervals>
+    <hourintervals>
+        <hour label="stündlich">1</hour>
+        <hour label="alle 3 Stunden">3</hour>
+        <hour label="alle 6 Stunden">6</hour>
+        <hour label="alle 12 Stunden">12</hour>
+        <hour label="täglich">24</hour>
+    </hourintervals>
+    <dayofweek>
+        <day label="Montag">MON</day>
+        <day label="Dienstag">TUE</day>
+        <day label="Mittwoch">WED</day>
+        <day label="Donnerstag">THU</day>
+        <day label="Freitag">FRI</day>
+        <day label="Samstag">SAT</day>
+        <day label="Sonntag">SUN</day>
+    </dayofweek>
+    
 	<options>Optionen</options>
 	<everySpec>(Tage : Stunden : Minuten)</everySpec>
 	<oneRun>Nur einmalig</oneRun>

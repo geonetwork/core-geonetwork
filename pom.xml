@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -62,15 +63,15 @@
   <!-- TODO developer part-->
   <developers>
     <developer>
-      <name></name>
-      <id></id>
-      <organization></organization>
-      <organizationUrl></organizationUrl>
-      <email></email>
+      <name/>
+      <id/>
+      <organization/>
+      <organizationUrl/>
+      <email/>
       <roles>
-        <role></role>
+        <role/>
       </roles>
-      <timezone></timezone>
+      <timezone/>
     </developer>
   </developers>
   
@@ -121,8 +122,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.5</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.6</source>  <!-- The -source argument for the Java compiler. -->
+          <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
 					<excludes>
@@ -574,6 +575,11 @@
         <artifactId>jaxen</artifactId>
         <version>1.1.1</version>
       </dependency>
+      <dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>2.1.4</version>
+      </dependency>
 
       <!-- Security stuff -->
       <dependency>
@@ -821,8 +827,8 @@
     <module>jeeves</module> 
     <module>oaipmh</module>
     <module>sde</module>
-    <module>web</module>
     <module>web-client</module>
+    <module>web</module>
     <module>geoserver</module>
     <module>gast</module>
   </modules>

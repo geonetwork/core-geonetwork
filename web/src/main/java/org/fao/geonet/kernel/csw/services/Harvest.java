@@ -653,7 +653,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 		// run
         Element response = Util.exec(activeParams, context, new Util.Job() {
             
-            public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws SQLException {
+            public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception {
                 if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
                     Log.debug(Geonet.CSW_HARVEST, "doHarvest starting harvester job");
 					hm.start(dbms, id);

@@ -37,7 +37,9 @@ import java.util.Hashtable;
 
 public class ScheduleContext extends BasicContext
 {
-	//--------------------------------------------------------------------------
+	private String scheduleName;
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -48,7 +50,12 @@ public class ScheduleContext extends BasicContext
 		super(mm, pm, sf, contexts);
 
 		logger = Log.createLogger(Log.SCHEDULER +"."+ name);
+		this.scheduleName = name;
 	}
+
+    public String getScheduleName() {
+        return scheduleName;
+    }
 }
 
 //=============================================================================

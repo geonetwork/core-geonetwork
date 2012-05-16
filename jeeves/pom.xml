@@ -38,7 +38,11 @@
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
     </dependency>
-      <dependency>
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
     </dependency>

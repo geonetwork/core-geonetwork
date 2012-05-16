@@ -150,8 +150,10 @@ var updateTemp =
 '    </site>'+
     
 '    <options>'+
-'      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
+
+'      <every>{EVERY}</every>'+
+
 '      <lang>{LANG}</lang>'+
 '      <topic>{TOPIC}</topic>' +
 '      <createThumbnails>{CREATETHUMBNAILS}</createThumbnails>' +

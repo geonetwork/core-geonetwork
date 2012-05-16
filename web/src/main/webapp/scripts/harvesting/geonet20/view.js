@@ -53,11 +53,7 @@ function init()
 		{ id:'gn20.servlet',  type:'length',   minSize :1,  maxSize :200 },
 		// { id:'gn20.servlet',  type:'alphanum' }, // Does not work when servlet is mapped to root or subdirectory
 		{ id:'gn20.username', type:'length',   minSize :0,  maxSize :200 },
-		{ id:'gn20.password', type:'length',   minSize :0,  maxSize :200 },
-		
-		{ id:'gn20.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'gn20.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'gn20.every.mins',  type:'integer',  minValue:0, maxValue:59 }
+		{ id:'gn20.password', type:'length',   minSize :0,  maxSize :200 }
 	]);
 
 	shower = new Shower('gn20.useAccount',  'gn20.account');

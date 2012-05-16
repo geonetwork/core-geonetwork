@@ -51,11 +51,7 @@ function init()
 		{ id:'z3950Config.port',     type:'integer', minValue :80, maxValue :65535, empty:true },
 
 		{ id:'z3950Config.username', type:'length',   minSize :0,  maxSize :200 },
-		{ id:'z3950Config.password', type:'length',   minSize :0,  maxSize :200 },
-		
-		{ id:'z3950Config.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'z3950Config.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'z3950Config.every.mins',  type:'integer',  minValue:0, maxValue:59 }
+		{ id:'z3950Config.password', type:'length',   minSize :0,  maxSize :200 }
 	]);
 
 	gui.setupTooltips(loader.getNode('tips'));

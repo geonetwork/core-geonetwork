@@ -49,10 +49,6 @@ function init()
 		{ id:'arcsde.username', type:'length',   minSize :1,  maxSize :500 },
 		{ id:'arcsde.password', type:'length',   minSize :1,  maxSize :500 },
 		{ id:'arcsde.database', type:'length',   minSize :1,  maxSize :500 },
-		
-		{ id:'arcsde.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'arcsde.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'arcsde.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
 }
