@@ -89,7 +89,7 @@ this.setDataCommon = function(node)
     	if(cron.days[day]) {
         	checkbox.setAttribute('checked', 'true');
     	} else {
-    		x.removeAttribute('checked');
+            checkbox.removeAttribute('checked');
     	}
     }
 
