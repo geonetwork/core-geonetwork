@@ -165,7 +165,9 @@ function refresh(node)
 	var xslRes= rowTransf.transform(node);
 	
 	gui.replaceTableRow(id, xslRes);
-	
+
+    setNodeAt(id);
+
 	//--- add proper tooltips for both status and error columns
 	
 	setStatusTip(node);
