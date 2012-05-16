@@ -66,7 +66,7 @@ public class ThreadPool {
 	    runTask(task,0,TimeUnit.SECONDS);
 	}
     public void runTask( Runnable task, int delayBeforeStart, TimeUnit unit ) {
-        if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "false"))) {
+        if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "true"))) {
             task.run();
         } else {
             this.task = task;

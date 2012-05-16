@@ -825,8 +825,16 @@
     <module>web-client</module>
     <module>geoserver</module>
     <module>gast</module>
-    <!-- <module>web-itest</module> -->
   </modules>
+  
+  <profiles>
+    <profile>
+      <id>itests</id>
+      <modules>
+        <module>web-itest</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <distributionManagement>
     <snapshotRepository>

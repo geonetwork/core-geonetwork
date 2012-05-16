@@ -64,7 +64,7 @@ public class ResourceTracker {
      *
      */
     public void openDirectResource(Object resource) {
-    	open(resource, resourceAccessTracker);
+    	open(resource, directOpenResourceAccessTracker);
     }
     
     private LinkedHashMultimap<Object, Exception> get(Multimap<Object, Exception> tracker) {

@@ -228,7 +228,8 @@ public class ResourceManager
         if(Log.isDebugEnabled(Log.RESOURCES))
             Log.debug (Log.RESOURCES, "Closing: " + name + " in thread: " + Thread.currentThread().getId());
 		String resourceId = name + ":" + Thread.currentThread().getId();
-		if (htResources.get(resourceId) != null) {
+		Object cachedResource = htResources.get(resourceId);
+		if (cachedResource != null && cachedResource == resource) {
 			htResources.remove(resourceId);
 		} else {
             if(Log.isDebugEnabled(Log.RESOURCES))

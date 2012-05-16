@@ -65,14 +65,19 @@ public class MonitorSecurityFilter implements Filter {
     }
 
     private boolean isInWhileList(ServletRequest servletRequest) throws UnknownHostException {
-        InetAddress remoteHostAddress = InetAddress.getByName(servletRequest.getRemoteHost());
+        InetAddress[] remoteHostAddresses = InetAddress.getAllByName(servletRequest.getRemoteHost());
 
         for (String host : whiteList) {
-            InetAddress hostAddress = InetAddress.getByName(host);
+        	InetAddress[] acceptedAddresses = InetAddress.getAllByName(host);
 
-            if (remoteHostAddress.equals(hostAddress)) {
-                return true;
-            }
+        	for (InetAddress acceptedAddress : acceptedAddresses) {
+				for (InetAddress remoteHostAddress : remoteHostAddresses) {
+		            if (remoteHostAddress.equals(acceptedAddress)) {
+		                return true;
+		            }
+					
+				}
+			}
         }
         return false;
     }

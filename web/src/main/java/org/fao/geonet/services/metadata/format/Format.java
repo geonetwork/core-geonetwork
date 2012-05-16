@@ -41,6 +41,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.services.metadata.Show;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -85,7 +86,10 @@ public class Format extends AbstractFormatService {
         List<SchemaLocalization> localization = getLabels(context, lang);
         
         Element root = new Element("root");
-        String url = context.getBaseUrl();
+        
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        String url = new SettingInfo(gc.getSettingManager()).getSiteUrl() + context.getBaseUrl();
+
         root.addContent (new Element("url").setText(url));
         String locUrl = url+"/srv/"+context.getLanguage()+"/";
         root.addContent (new Element("locUrl").setText(locUrl));
