@@ -3091,13 +3091,13 @@ public class DataManager {
 		//--- then we must skip this phase
 
 		Namespace ns = md.getNamespace();
-    if (ns == Namespace.NO_NAMESPACE)  
-      return;
+    		if (ns == Namespace.NO_NAMESPACE)  
+      		return;
 
 		MetadataSchema mds = schemaMan.getSchema(schema);
 
 		//--- get the namespaces and add prefixes to any that are
-		//--- default ie. prefix is ''
+		//--- default (ie. prefix is '') if namespace match one of the schema
 		
 		ArrayList nsList = new ArrayList();
 		nsList.add(ns);
@@ -3107,7 +3107,7 @@ public class DataManager {
             if (aNs.getPrefix().equals("")) { // found default namespace
                 String prefix = mds.getPrefix(aNs.getURI());
                 if (prefix == null) {
-                    throw new IllegalArgumentException("No prefix - cannot find a namespace to set for element " + md.getQualifiedName() + " - namespace URI " + ns.getURI());
+                    Log.warning(Geonet.DATA_MANAGER, "Metadata record contains a default namespace " + aNs.getURI() + " (with no prefix) which does not match any " + schema + " schema's namespaces.");
                 }
                 ns = Namespace.getNamespace(prefix, aNs.getURI());
                 setNamespacePrefix(md, ns);
