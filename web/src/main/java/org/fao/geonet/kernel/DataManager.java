@@ -3089,16 +3089,14 @@ public class DataManager {
 	private void setNamespacePrefixUsingSchemas(String schema, Element md) throws Exception {
 		//--- if the metadata has no namespace or already has a namespace prefix
 		//--- then we must skip this phase
-
 		Namespace ns = md.getNamespace();
-    if (ns == Namespace.NO_NAMESPACE)  
-      return;
+		if (ns == Namespace.NO_NAMESPACE)  
+			return;
 
 		MetadataSchema mds = schemaMan.getSchema(schema);
-
-		//--- get the namespaces and add prefixes to any that are
-		//--- default ie. prefix is ''
 		
+		//--- get the namespaces and add prefixes to any that are
+		//--- default (ie. prefix is '') if namespace match one of the schema
 		ArrayList nsList = new ArrayList();
 		nsList.add(ns);
 		nsList.addAll(md.getAdditionalNamespaces());
@@ -3107,7 +3105,7 @@ public class DataManager {
             if (aNs.getPrefix().equals("")) { // found default namespace
                 String prefix = mds.getPrefix(aNs.getURI());
                 if (prefix == null) {
-                    throw new IllegalArgumentException("No prefix - cannot find a namespace to set for element " + md.getQualifiedName() + " - namespace URI " + ns.getURI());
+                    Log.warning(Geonet.DATA_MANAGER, "Metadata record contains a default namespace " + aNs.getURI() + " (with no prefix) which does not match any " + schema + " schema's namespaces.");
                 }
                 ns = Namespace.getNamespace(prefix, aNs.getURI());
                 setNamespacePrefix(md, ns);
