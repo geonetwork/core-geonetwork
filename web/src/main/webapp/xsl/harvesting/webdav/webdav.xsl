@@ -88,6 +88,17 @@
 			<xsl:with-param name="type">wd</xsl:with-param>
 		</xsl:call-template>
 
+        <table>
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+                <td class="padded"><input id="wd.validate" type="checkbox" value=""/></td>
+            </tr>
+
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/recurse"/></td>
+                <td class="padded"><input id="wd.recurse" type="checkbox" value=""/></td>
+            </tr>
+        </table>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
