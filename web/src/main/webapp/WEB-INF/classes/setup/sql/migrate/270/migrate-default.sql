@@ -129,9 +129,9 @@ UPDATE CategoriesDes SET langid='fin' WHERE langid='fi';
 UPDATE CategoriesDes SET langid='fre' WHERE langid='fr';
 UPDATE CategoriesDes SET langid='ger' WHERE langid='de';
 UPDATE CategoriesDes SET langid='nor' WHERE langid='no';
-UPDATE CategoriesDes SET langid='por' WHERE langid='po';
+UPDATE CategoriesDes SET langid='por' WHERE langid='pt';
 UPDATE CategoriesDes SET langid='rus' WHERE langid='ru';
-UPDATE CategoriesDes SET langid='spa' WHERE langid='sp';
+UPDATE CategoriesDes SET langid='spa' WHERE langid='es';
 UPDATE CategoriesDes SET langid='vie' WHERE langid='vi';
 
 UPDATE IsoLanguagesDes SET langid='ara' WHERE langid='ar';
@@ -143,9 +143,9 @@ UPDATE IsoLanguagesDes SET langid='fin' WHERE langid='fi';
 UPDATE IsoLanguagesDes SET langid='fre' WHERE langid='fr';
 UPDATE IsoLanguagesDes SET langid='ger' WHERE langid='de';
 UPDATE IsoLanguagesDes SET langid='nor' WHERE langid='no';
-UPDATE IsoLanguagesDes SET langid='por' WHERE langid='po';
+UPDATE IsoLanguagesDes SET langid='por' WHERE langid='pt';
 UPDATE IsoLanguagesDes SET langid='rus' WHERE langid='ru';
-UPDATE IsoLanguagesDes SET langid='spa' WHERE langid='sp';
+UPDATE IsoLanguagesDes SET langid='spa' WHERE langid='es';
 UPDATE IsoLanguagesDes SET langid='vie' WHERE langid='vi';
 
 UPDATE RegionsDes SET langid='ara' WHERE langid='ar';
@@ -157,9 +157,9 @@ UPDATE RegionsDes SET langid='fin' WHERE langid='fi';
 UPDATE RegionsDes SET langid='fre' WHERE langid='fr';
 UPDATE RegionsDes SET langid='ger' WHERE langid='de';
 UPDATE RegionsDes SET langid='nor' WHERE langid='no';
-UPDATE RegionsDes SET langid='por' WHERE langid='po';
+UPDATE RegionsDes SET langid='por' WHERE langid='pt';
 UPDATE RegionsDes SET langid='rus' WHERE langid='ru';
-UPDATE RegionsDes SET langid='spa' WHERE langid='sp';
+UPDATE RegionsDes SET langid='spa' WHERE langid='es';
 UPDATE RegionsDes SET langid='vie' WHERE langid='vi';
 
 
@@ -172,9 +172,9 @@ UPDATE GroupsDes SET langid='fin' WHERE langid='fi';
 UPDATE GroupsDes SET langid='fre' WHERE langid='fr';
 UPDATE GroupsDes SET langid='ger' WHERE langid='de';
 UPDATE GroupsDes SET langid='nor' WHERE langid='no';
-UPDATE GroupsDes SET langid='por' WHERE langid='po';
+UPDATE GroupsDes SET langid='por' WHERE langid='pt';
 UPDATE GroupsDes SET langid='rus' WHERE langid='ru';
-UPDATE GroupsDes SET langid='spa' WHERE langid='sp';
+UPDATE GroupsDes SET langid='spa' WHERE langid='es';
 UPDATE GroupsDes SET langid='vie' WHERE langid='vi';
 
 
@@ -187,9 +187,9 @@ UPDATE OperationsDes SET langid='fin' WHERE langid='fi';
 UPDATE OperationsDes SET langid='fre' WHERE langid='fr';
 UPDATE OperationsDes SET langid='ger' WHERE langid='de';
 UPDATE OperationsDes SET langid='nor' WHERE langid='no';
-UPDATE OperationsDes SET langid='por' WHERE langid='po';
+UPDATE OperationsDes SET langid='por' WHERE langid='pt';
 UPDATE OperationsDes SET langid='rus' WHERE langid='ru';
-UPDATE OperationsDes SET langid='spa' WHERE langid='sp';
+UPDATE OperationsDes SET langid='spa' WHERE langid='es';
 UPDATE OperationsDes SET langid='vie' WHERE langid='vi';
 
 
@@ -202,9 +202,9 @@ UPDATE StatusValuesDes SET langid='fin' WHERE langid='fi';
 UPDATE StatusValuesDes SET langid='fre' WHERE langid='fr';
 UPDATE StatusValuesDes SET langid='ger' WHERE langid='de';
 UPDATE StatusValuesDes SET langid='nor' WHERE langid='no';
-UPDATE StatusValuesDes SET langid='por' WHERE langid='po';
+UPDATE StatusValuesDes SET langid='por' WHERE langid='pt';
 UPDATE StatusValuesDes SET langid='rus' WHERE langid='ru';
-UPDATE StatusValuesDes SET langid='spa' WHERE langid='sp';
+UPDATE StatusValuesDes SET langid='spa' WHERE langid='es';
 UPDATE StatusValuesDes SET langid='vie' WHERE langid='vi';
 
 
@@ -217,9 +217,9 @@ UPDATE CswServerCapabilitiesInfo SET langid='fin' WHERE langid='fi';
 UPDATE CswServerCapabilitiesInfo SET langid='fre' WHERE langid='fr';
 UPDATE CswServerCapabilitiesInfo SET langid='ger' WHERE langid='de';
 UPDATE CswServerCapabilitiesInfo SET langid='nor' WHERE langid='no';
-UPDATE CswServerCapabilitiesInfo SET langid='por' WHERE langid='po';
+UPDATE CswServerCapabilitiesInfo SET langid='por' WHERE langid='pt';
 UPDATE CswServerCapabilitiesInfo SET langid='rus' WHERE langid='ru';
-UPDATE CswServerCapabilitiesInfo SET langid='spa' WHERE langid='sp';
+UPDATE CswServerCapabilitiesInfo SET langid='spa' WHERE langid='es';
 UPDATE CswServerCapabilitiesInfo SET langid='vie' WHERE langid='vi';
 
 
@@ -247,9 +247,9 @@ UPDATE IsoLanguages SET shortcode='fi' WHERE code='fin';
 UPDATE IsoLanguages SET shortcode='fr' WHERE code='fre';
 UPDATE IsoLanguages SET shortcode='de' WHERE code='ger';
 UPDATE IsoLanguages SET shortcode='no' WHERE code='nor';
-UPDATE IsoLanguages SET shortcode='po' WHERE code='por';
+UPDATE IsoLanguages SET shortcode='pt' WHERE code='por';
 UPDATE IsoLanguages SET shortcode='ru' WHERE code='rus';
-UPDATE IsoLanguages SET shortcode='sp' WHERE code='spa';
+UPDATE IsoLanguages SET shortcode='es' WHERE code='spa';
 UPDATE IsoLanguages SET shortcode='vi' WHERE code='vie';
 
 
