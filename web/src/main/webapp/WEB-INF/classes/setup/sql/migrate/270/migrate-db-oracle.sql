@@ -8,7 +8,7 @@ CREATE TABLE HarvestHistory
         harvesterType  varchar(128),
     deleted        char(1) default 'n' not null,
     info           varchar(2000),
-    params         long,
+    params         clob,
 
     primary key(id)
 
@@ -61,3 +61,8 @@ CREATE INDEX spatialIndexNDX1 ON spatialIndex(id);
 DELETE FROM user_sdo_geom_metadata WHERE TABLE_NAME = 'SPATIALINDEX';
 INSERT INTO user_sdo_geom_metadata (TABLE_NAME, COLUMN_NAME, DIMINFO, SRID) VALUES ( 'SPATIALINDEX', 'the_geom', SDO_DIM_ARRAY( SDO_DIM_ELEMENT('Longitude', -180, 180, 10), SDO_DIM_ELEMENT('Latitude', -90, 90, 10)), 8307);
 CREATE INDEX spatialIndexNDX2 on spatialIndex(the_geom) INDEXTYPE IS MDSYS.SPATIAL_INDEX;
+
+ALTER TABLE Settings MODIFY ( value CLOB );
+ALTER TABLE metadata MODIFY ( data CLOB );
+ALTER TABLE MetadataNotifications MODIFY ( errormsg CLOB );
+ALTER TABLE CswServerCapabilitiesInfo MODIFY ( label CLOB );
