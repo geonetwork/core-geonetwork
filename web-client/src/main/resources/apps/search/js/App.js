@@ -94,14 +94,14 @@ GeoNetwork.app = function(){
     function createLanguageSwitcher(lang){
         return new Ext.form.FormPanel({
             renderTo: 'lang-form',
-            width: 80,
+            width: 95,
             border: false,
             layout: 'hbox',
             hidden:  GeoNetwork.Util.locales.length === 1 ? true : false,
             items: [new Ext.form.ComboBox({
                 mode: 'local',
                 triggerAction: 'all',
-                width: 80,
+                width: 95,
                 store: new Ext.data.ArrayStore({
                     idIndex: 2,
                     fields: ['id', 'name', 'id2'],
