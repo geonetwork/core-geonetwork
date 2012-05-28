@@ -237,6 +237,24 @@
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+			<xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
+				<xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
+				<xsl:if test="$fileName != ''">
+					<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
+					<xsl:choose>
+						<xsl:when test="contains($fileName ,'://')">
+							<Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
+						</xsl:when>
+						<xsl:when test="string($fileDescr)='thumbnail'">
+							<!-- FIXME : relative path -->
+							<Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:if>
+			</xsl:for-each>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!--  Fields use to search on Service -->
 
 			<xsl:for-each select="srv:serviceType/gco:LocalName">
