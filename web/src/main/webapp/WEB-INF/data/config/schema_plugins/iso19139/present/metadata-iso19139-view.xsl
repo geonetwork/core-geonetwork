@@ -184,7 +184,7 @@
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple"
           select="
-          gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
+          gmd:CI_ResponsibleParty/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
           "/>
         
         <xsl:for-each select="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource">
