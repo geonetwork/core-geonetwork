@@ -65,9 +65,9 @@ Ext.namespace('GeoNetwork.data');
 GeoNetwork.data.MetadataResultsStore = function(){
 
     function getTitle(v, record){
-        if (record.title && record.title) {
+        if (record.title && record.title[0]) {
             return record.title[0].value;
-        } else if (record.defaultTitle && record.defaultTitle) {
+        } else if (record.defaultTitle && record.defaultTitle[0]) {
             return record.defaultTitle[0].value;
         } else {
             return '';
