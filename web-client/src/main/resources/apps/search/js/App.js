@@ -306,7 +306,7 @@ GeoNetwork.app = function(){
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
                     GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true, 
                     GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
-                    adv);
+                    adv, GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined));
         // Add advanced mode criteria to simple form - end
         
         

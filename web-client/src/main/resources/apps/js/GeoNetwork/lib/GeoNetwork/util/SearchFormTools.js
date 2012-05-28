@@ -81,7 +81,11 @@ GeoNetwork.util.SearchFormTools = {
         if (layers) {
             fields.push(GeoNetwork.util.SearchFormTools.getSimpleMap(layers, mapOptions, activeMapControlExtent, mapPanelOptions, withRelation));
         }
-        fields.push(GeoNetwork.util.SearchFormTools.getOptions(services, optionsConfig));
+
+        if (optionsConfig) {
+            fields.push(GeoNetwork.util.SearchFormTools.getOptions(services, optionsConfig));
+        }
+
         return fields;
     },
     /** api:method[getAdvancedFormFields]
