@@ -98,12 +98,6 @@ public class Export implements Service {
 
 		UserSession session = context.getUserSession();
 
-		// Use current selction if no uuid provided.
-		if (uuid != null) {
-			SelectionManager.getManager(session).addSelection(
-					SelectionManager.SELECTION_METADATA, uuid);
-		}
-
 		Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
 		SelectionManager selectionManger = SelectionManager.getManager(session);
 		Set<String> uuids = selectionManger
@@ -112,6 +106,17 @@ public class Export implements Service {
 				.synchronizedSet(new HashSet<String>(0));
 		Log.info(Geonet.MEF, "Current record(s) in selection: " + uuids.size());
 		uuidsBeforeExp.addAll(uuids);
+
+        // If provided uuid, export the metadata record only
+        if (uuid != null) {
+            SelectionManager.getManager(session).close(SelectionManager.SELECTION_METADATA);
+
+            SelectionManager.getManager(session).addSelection(
+                    SelectionManager.SELECTION_METADATA, uuid);
+
+            uuids = selectionManger
+                    .getSelection(SelectionManager.SELECTION_METADATA);
+        }
 
 		// MEF version 1 only support one metadata record by file.
 		// Uuid parameter MUST be set and add to selection manager before
