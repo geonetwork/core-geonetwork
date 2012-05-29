@@ -156,8 +156,8 @@
         <ows:Operation name="Transaction">
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT" />
-					<ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT"  />
+					<ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication" />
+					<ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
@@ -167,8 +167,8 @@
             </ows:Parameter>
 			<ows:DCP>
 				<ows:HTTP>
-					<ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT" />
-					<ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT"  />
+					<ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication" />
+					<ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication"  />
 				</ows:HTTP>
 			</ows:DCP>
 		</ows:Operation>
