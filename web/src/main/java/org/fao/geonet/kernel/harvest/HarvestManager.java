@@ -106,7 +106,7 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	protected void finalize()
+	public void shutdown() 
 	{
 		for (AbstractHarvester ah : hmHarvesters.values()) {
 	        try {
