@@ -108,6 +108,7 @@ public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
 	private String 				path;				
 	private SearchManager 		searchMan;
+	private HarvestManager 		harvestMan;
 	private ThesaurusManager 	thesaurusMan;
 	private MetadataNotifierControl metadataNotifierControl;
 	private ThreadPool        threadPool;
@@ -235,7 +236,7 @@ public class Geonetwork implements ApplicationHandler {
 			logger.info("     Repositories file built from template.");
 
 			try {
-				app_context = new  ClassPathXmlApplicationContext( handlerConfig.getMandatoryValue( Geonet.Config.JZKITCONFIG )   );
+				app_context = new  ClassPathXmlApplicationContext( Geonet.File.JZKITAPPLICATIONCONTEXT );
 
 				// to have access to the GN context in spring-managed objects
 				ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
@@ -366,7 +367,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Harvest manager...");
 
-		HarvestManager harvestMan = new HarvestManager(context, settingMan, dataMan);
+		harvestMan = new HarvestManager(context, settingMan, dataMan);
 		dataMan.setHarvestManager(harvestMan);
 
 		//------------------------------------------------------------------------
@@ -777,6 +778,10 @@ public class Geonetwork implements ApplicationHandler {
 			logger.error("  Message   : " +e.getMessage());
 			logger.error("  Stack     : " +Util.getStackTrace(e));
 		}
+
+			
+		logger.info("  - Harvest Manager...");
+		harvestMan.shutdown();
 
 		logger.info("  - Z39.50...");
 		Server.end();
