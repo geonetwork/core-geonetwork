@@ -75,6 +75,12 @@
                                              select="//gfc:FC_FeatureType"/>
                     </xsl:with-param>
                 </xsl:call-template>
+              
+              
+              <span class="madeBy">
+                <xsl:value-of select="/root/gui/strings/changeDate"/><xsl:value-of select="substring-before(gfc:versionDate, 'T')"/> | 
+                <xsl:value-of select="/root/gui/strings/uuid"/>&#160;<xsl:value-of select="@uuid"/>
+              </span>
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>

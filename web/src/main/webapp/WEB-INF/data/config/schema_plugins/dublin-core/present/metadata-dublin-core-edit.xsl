@@ -51,6 +51,10 @@
             </xsl:apply-templates>
           </xsl:with-param>
         </xsl:call-template>
+        
+        <span class="madeBy">
+          <xsl:value-of select="/root/gui/strings/uuid"/>&#160;<xsl:value-of select="dc:identifier"/>
+        </span>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
