@@ -115,7 +115,7 @@ public class JeevesEngine
 
             ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servletContext, appPath);
 
-            monitorManager = new MonitorManager(servletContext);
+            monitorManager = new MonitorManager(servletContext, baseUrl);
 			this.appPath = appPath;
 
 			long start   = System.currentTimeMillis();
@@ -665,6 +665,9 @@ public class JeevesEngine
 		try
 		{
 			info("=== Stopping system ========================================");
+
+			info("Shutting down monitor manager...");
+			monitorManager.shutdown();
 
 			info("Stopping schedule manager...");
 			scheduleMan.exit();
