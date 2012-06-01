@@ -28,8 +28,10 @@
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="load('{/root/gui/locService}/admin')"><xsl:value-of select="/root/gui/strings/back"/></button>
 				&#160;
-				<button class="content" onclick="load('{/root/gui/locService}/category.get')"><xsl:value-of select="/root/gui/strings/newCategory"/></button>
-			</xsl:with-param>
+                <xsl:if test="/root/gui/services/service/@name='category.update'">
+				    <button class="content" onclick="load('{/root/gui/locService}/category.get')"><xsl:value-of select="/root/gui/strings/newCategory"/></button>
+			    </xsl:if>
+            </xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -47,14 +49,18 @@
 				<xsl:sort select="name"/>
 				<tr>
 					<td class="padded bottom_border">
-					  <img class="category" src="../../images/category/{name}.png"/>
+					  <img class="category" src="{/root/gui/url}/images/category/{name}.png"/>
 					  <xsl:value-of select="name"/>
 					</td>
 					<td class="padded" width="150px">
+                        <xsl:if test="/root/gui/services/service/@name='category.update'">
 						<button class="content" onclick="load('{/root/gui/locService}/category.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
-						&#160;
+						</xsl:if>
+                        &#160;
+                        <xsl:if test="/root/gui/services/service/@name='category.remove'">
 						<button class="content" onclick="delete1('{/root/gui/locService}/category.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
-					</td>
+					    </xsl:if>
+                    </td>
 				</tr>
 			</xsl:for-each>
 		</table>
