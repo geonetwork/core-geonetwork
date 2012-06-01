@@ -37,6 +37,7 @@ import com.yammer.metrics.core.Meter;
 import com.yammer.metrics.core.MetricsRegistry;
 import com.yammer.metrics.core.Timer;
 import com.yammer.metrics.log4j.InstrumentedAppender;
+import com.yammer.metrics.reporting.JmxReporter;
 
 /**
  * Contains references to the monitor factories to start for each App
@@ -68,7 +69,12 @@ public class MonitorManager {
     private final HealthCheckRegistry expensiveHealthCheckRegistry;
 
     private final MetricsRegistry metricsRegistry;
-    public MonitorManager(ServletContext context) {
+    private final JmxReporter jmxReporter;
+
+    public MonitorManager(ServletContext context, String baseUrl) {
+
+        String webappName = baseUrl.substring(1);
+
         if (context != null) {
             HealthCheckRegistry tmpHealthCheckRegistry = lookUpHealthCheckRegistry(context,HEALTH_CHECK_REGISTRY);
             HealthCheckRegistry criticalTmpHealthCheckRegistry = lookUpHealthCheckRegistry(context,CRITICAL_HEALTH_CHECK_REGISTRY);
@@ -87,13 +93,22 @@ public class MonitorManager {
 
             metricsRegistry = tmpMetricsRegistry;
             context.setAttribute(METRICS_REGISTRY, tmpMetricsRegistry);
+
+
+            jmxReporter = new GeonetworkJmxReporter(metricsRegistry, webappName);
+            jmxReporter.start();
         } else {
             healthCheckRegistry = new HealthCheckRegistry();
             criticalHealthCheckRegistry = new HealthCheckRegistry();
             warningHealthCheckRegistry = new HealthCheckRegistry();
             expensiveHealthCheckRegistry = new HealthCheckRegistry();
             metricsRegistry = new MetricsRegistry();
+
+            jmxReporter = new GeonetworkJmxReporter(metricsRegistry, webappName);
+            jmxReporter.start();
+
         }
+
 
         LogManager.getRootLogger().addAppender(new InstrumentedAppender(metricsRegistry));
     }
@@ -271,7 +286,12 @@ public class MonitorManager {
         }
     }
 
-	public ResourceTracker getResourceTracker() {
-		return resourceTracker;
-	}
+    public ResourceTracker getResourceTracker() {
+        return resourceTracker;
+    }
+
+    public void shutdown() {
+        resourceTracker.clean();
+        jmxReporter.shutdown();
+    }
 }

@@ -90,4 +90,16 @@ public class ResourceTracker {
             trackerLock.unlock();
         }		
 	}
+	/**
+	 * remove all resources so there are no memory leaks if the servlet is unregistered
+	 */
+    public void clean() {
+        try {
+            trackerLock.lock();
+            resourceAccessTracker.clear();
+            directOpenResourceAccessTracker.clear();
+        } finally {
+            trackerLock.unlock();
+        }
+    }
 }
