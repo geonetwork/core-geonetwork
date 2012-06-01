@@ -1,9 +1,5 @@
 package org.fao.geonet.monitor.webapp;
 
-import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.MetricsRegistry;
-
-import javax.servlet.FilterConfig;
 import java.util.HashMap;
 import java.util.Map;
 

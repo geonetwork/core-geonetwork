@@ -1,14 +1,16 @@
 <config>
     <monitors package="org.fao.geonet.monitor.health">
-        <!-- healthCheck must implement the HealthCheckFactory interface -->
-        <healthCheck class=".DatabaseHealthCheck"/>
-        <healthCheck class=".LuceneIndexHealthCheck"/>
-        <!-- CswGetRecords check is a slow check.
-             If too slow one might want to deactivate it
-             by commenting it out -->
-        <healthCheck class=".CswGetRecordsHealthCheck"/>
-        <healthCheck class=".CswGetCapabilitiesHealthCheck"/>
-        <healthCheck class=".NoIndexErrorsHealthCheck"/>
+        <!-- *HealthCheck must implement the HealthCheckFactory interface -->
+        <!-- There are 3 types of healthChecks
+           criticalHealthCheck - healthChecks that must pass or the system is non-functional.  They must be quick checks so the monitor can call check often
+           warningHealthCheck - healthCheck that indicates something is wrong but the system can still function
+           expensiveHealthCheck - healthChecks that must pass or the system is non-functional but are expensive to compute so should be called infrequently by checker
+         -->
+        <criticalHealthCheck class=".DatabaseHealthCheck"/>
+        <criticalHealthCheck class=".LuceneIndexHealthCheck"/>
+        <criticalHealthCheck class=".CswGetCapabilitiesHealthCheck"/>
+        <warningHealthCheck class=".NoIndexErrorsHealthCheck"/>
+        <expensiveHealthCheck class=".CswGetRecordsHealthCheck"/>
     </monitors>
     <monitors package="org.fao.geonet.monitor.harvest">
         <counter class=".AbstractHarvesterErrorCounter"/>
