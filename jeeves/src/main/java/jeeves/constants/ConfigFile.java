@@ -235,7 +235,9 @@ public class ConfigFile
              */
             private Child() {}
 
-            public static final String SERVICE_CONTEXT_HEALTH_CHECK = "healthCheck";
+            public static final String CRITICAL_SERVICE_CONTEXT_HEALTH_CHECK = "criticalHealthCheck";
+            public static final String WARNING_SERVICE_CONTEXT_HEALTH_CHECK = "warningHealthCheck";
+            public static final String EXPENSIVE_SERVICE_CONTEXT_HEALTH_CHECK = "expensiveHealthCheck";
             public static final String SERVICE_CONTEXT_GAUGE = "gauge";
             public static final String SERVICE_CONTEXT_TIMER = "timer";
             public static final String SERVICE_CONTEXT_METER = "meter";

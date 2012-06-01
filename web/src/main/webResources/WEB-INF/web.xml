@@ -207,6 +207,30 @@
             <param-value>true</param-value>
         </init-param>
     </servlet>
+    <servlet>
+        <servlet-name>criticalHealthChecks</servlet-name>
+        <servlet-class>org.fao.geonet.monitor.webapp.GeonetworkHealthCheckServlet</servlet-class>
+        <init-param>
+            <param-name>REGISTRY_ATTRIBUTE_KEY</param-name>
+            <param-value>com.yammer.metrics.reporting.HealthCheckServlet.registry.critical</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>warningHealthChecks</servlet-name>
+        <servlet-class>org.fao.geonet.monitor.webapp.GeonetworkHealthCheckServlet</servlet-class>
+        <init-param>
+            <param-name>REGISTRY_ATTRIBUTE_KEY</param-name>
+            <param-value>com.yammer.metrics.reporting.HealthCheckServlet.registry.warning</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>expensiveHealthChecks</servlet-name>
+        <servlet-class>org.fao.geonet.monitor.webapp.GeonetworkHealthCheckServlet</servlet-class>
+        <init-param>
+            <param-name>REGISTRY_ATTRIBUTE_KEY</param-name>
+            <param-value>com.yammer.metrics.reporting.HealthCheckServlet.registry.expensive</param-value>
+        </init-param>
+    </servlet>
 
     <!-- Print servlet -->
     <servlet>
@@ -223,10 +247,21 @@
         <url-pattern>/pdf/*</url-pattern>
     </servlet-mapping>
 
-
     <servlet-mapping>
         <servlet-name>monitor</servlet-name>
         <url-pattern>/monitor/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>criticalHealthChecks</servlet-name>
+        <url-pattern>/criticalhealthcheck</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>warningHealthChecks</servlet-name>
+        <url-pattern>/warninghealthcheck</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>expensiveHealthChecks</servlet-name>
+        <url-pattern>/expensivehealthcheck</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

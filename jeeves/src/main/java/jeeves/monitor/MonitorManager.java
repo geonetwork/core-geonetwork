@@ -1,8 +1,10 @@
 package jeeves.monitor;
 
 import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_COUNTER;
+import static jeeves.constants.ConfigFile.Monitors.Child.CRITICAL_SERVICE_CONTEXT_HEALTH_CHECK;
+import static jeeves.constants.ConfigFile.Monitors.Child.WARNING_SERVICE_CONTEXT_HEALTH_CHECK;
+import static jeeves.constants.ConfigFile.Monitors.Child.EXPENSIVE_SERVICE_CONTEXT_HEALTH_CHECK;
 import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_GAUGE;
-import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_HEALTH_CHECK;
 import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_HISTOGRAM;
 import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_METER;
 import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_TIMER;
@@ -28,6 +30,7 @@ import com.yammer.metrics.core.DummyHistogram;
 import com.yammer.metrics.core.DummyMeter;
 import com.yammer.metrics.core.DummyTimer;
 import com.yammer.metrics.core.Gauge;
+import com.yammer.metrics.core.HealthCheck;
 import com.yammer.metrics.core.HealthCheckRegistry;
 import com.yammer.metrics.core.Histogram;
 import com.yammer.metrics.core.Meter;
@@ -44,10 +47,15 @@ import com.yammer.metrics.log4j.InstrumentedAppender;
  */
 public class MonitorManager {
     public static final String HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry";
+    public static final String CRITICAL_HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry.critical";
+    public static final String WARNING_HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry.warning";
+    public static final String EXPENSIVE_HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry.expensive";
     public static final String METRICS_REGISTRY = "com.yammer.metrics.reporting.MetricsServlet.registry";
 
     ResourceTracker resourceTracker = new ResourceTracker();
-    private final List<HealthCheckFactory> serviceContextHealthChecks = new LinkedList<HealthCheckFactory>();
+    private final List<HealthCheckFactory> criticalServiceContextHealthChecks = new LinkedList<HealthCheckFactory>();
+    private final List<HealthCheckFactory> warningServiceContextHealthChecks = new LinkedList<HealthCheckFactory>();
+    private final List<HealthCheckFactory> expensiveServiceContextHealthChecks = new LinkedList<HealthCheckFactory>();
     private final Map<Class<MetricsFactory<Gauge<?>>>, Gauge<?>> serviceContextGauges = new HashMap<Class<MetricsFactory<Gauge<?>>>, Gauge<?>>();
     private final Map<Class<MetricsFactory<Timer>>, Timer> serviceContextTimers = new HashMap<Class<MetricsFactory<Timer>>, Timer>();
     private final Map<Class<MetricsFactory<Counter>>, Counter> serviceContextCounters = new HashMap<Class<MetricsFactory<Counter>>, Counter>();
@@ -55,42 +63,55 @@ public class MonitorManager {
     private final Map<Class<MetricsFactory<Meter>>, Meter> serviceContextMeter = new HashMap<Class<MetricsFactory<Meter>>, Meter>();
 
     private final HealthCheckRegistry healthCheckRegistry;
+    private final HealthCheckRegistry criticalHealthCheckRegistry;
+    private final HealthCheckRegistry warningHealthCheckRegistry;
+    private final HealthCheckRegistry expensiveHealthCheckRegistry;
+
     private final MetricsRegistry metricsRegistry;
     public MonitorManager(ServletContext context) {
         if (context != null) {
-            HealthCheckRegistry tmpHealthCheckRegistry = null;
+            HealthCheckRegistry tmpHealthCheckRegistry = lookUpHealthCheckRegistry(context,HEALTH_CHECK_REGISTRY);
+            HealthCheckRegistry criticalTmpHealthCheckRegistry = lookUpHealthCheckRegistry(context,CRITICAL_HEALTH_CHECK_REGISTRY);
+            HealthCheckRegistry warningTmpHealthCheckRegistry = lookUpHealthCheckRegistry(context,WARNING_HEALTH_CHECK_REGISTRY);
+            HealthCheckRegistry expensiveTmpHealthCheckRegistry = lookUpHealthCheckRegistry(context,EXPENSIVE_HEALTH_CHECK_REGISTRY);
+
+            healthCheckRegistry = tmpHealthCheckRegistry;
+            criticalHealthCheckRegistry = criticalTmpHealthCheckRegistry;
+            warningHealthCheckRegistry = warningTmpHealthCheckRegistry;
+            expensiveHealthCheckRegistry = expensiveTmpHealthCheckRegistry;
+
             MetricsRegistry tmpMetricsRegistry = null;
-            if (context != null) {
-                tmpHealthCheckRegistry = (HealthCheckRegistry) context.getAttribute(HEALTH_CHECK_REGISTRY);
-                tmpMetricsRegistry = (MetricsRegistry) context.getAttribute(METRICS_REGISTRY);
-            }
-
-            if (tmpHealthCheckRegistry == null) {
-                tmpHealthCheckRegistry = new HealthCheckRegistry();
-            }
-
             if (tmpMetricsRegistry == null) {
                 tmpMetricsRegistry = new MetricsRegistry();
             }
-
-            healthCheckRegistry = tmpHealthCheckRegistry;
-            context.setAttribute(HEALTH_CHECK_REGISTRY, tmpHealthCheckRegistry);
 
             metricsRegistry = tmpMetricsRegistry;
             context.setAttribute(METRICS_REGISTRY, tmpMetricsRegistry);
         } else {
             healthCheckRegistry = new HealthCheckRegistry();
+            criticalHealthCheckRegistry = new HealthCheckRegistry();
+            warningHealthCheckRegistry = new HealthCheckRegistry();
+            expensiveHealthCheckRegistry = new HealthCheckRegistry();
             metricsRegistry = new MetricsRegistry();
         }
 
         LogManager.getRootLogger().addAppender(new InstrumentedAppender(metricsRegistry));
     }
 
-    public void initMonitorsForApp(ServiceContext context) {
-        for (HealthCheckFactory healthCheck : serviceContextHealthChecks) {
-            Log.info(Log.ENGINE, "Registering health check : "+healthCheck.getClass().getName());
-            healthCheckRegistry.register(healthCheck.create(context));
+    private HealthCheckRegistry lookUpHealthCheckRegistry(ServletContext context, String attributeKey) {
+        HealthCheckRegistry tmpHealthCheckRegistry = (HealthCheckRegistry) context.getAttribute(attributeKey);
+        if (tmpHealthCheckRegistry == null) {
+            tmpHealthCheckRegistry = new HealthCheckRegistry();
         }
+        context.setAttribute(attributeKey, tmpHealthCheckRegistry);
+        return tmpHealthCheckRegistry;
+    }
+
+    public void initMonitorsForApp(ServiceContext context) {
+        createHealthCheck(context, criticalServiceContextHealthChecks, criticalHealthCheckRegistry, "critical health check");
+        createHealthCheck(context, warningServiceContextHealthChecks, warningHealthCheckRegistry, "warning health check");
+        createHealthCheck(context, expensiveServiceContextHealthChecks, expensiveHealthCheckRegistry, "expensive health check");
+
         for (Class<MetricsFactory<Gauge<?>>> factoryClass : serviceContextGauges.keySet()) {
             Log.info(Log.ENGINE, "Instantiating : "+factoryClass.getName());
             Gauge<?> instance = create(factoryClass, context, SERVICE_CONTEXT_GAUGE);
@@ -118,6 +139,15 @@ public class MonitorManager {
         }
     }
 
+    private void createHealthCheck(ServiceContext context, List<HealthCheckFactory> checks, HealthCheckRegistry registry, String type) {
+        for (HealthCheckFactory healthCheck : checks) {
+            Log.info(Log.ENGINE, "Registering "+type+": "+healthCheck.getClass().getName());
+            HealthCheck check = healthCheck.create(context);
+            healthCheckRegistry.register(check);
+            registry.register(check);
+        }
+    }
+
     private <T> T create(Class<MetricsFactory<T>> factoryClass, ServiceContext context, String type) {
         try {
             MetricsFactory<T> instance = factoryClass.newInstance();
@@ -128,6 +158,7 @@ public class MonitorManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void initMonitors(Element monitors) {
         info("Initializing monitors...");
 
@@ -135,14 +166,9 @@ public class MonitorManager {
         String pack = monitors.getAttributeValue(ConfigFile.Monitors.Attr.PACKAGE);
 
         // --- scan serviceContextHealthCheck elements
-        for (Element check : (List<Element>) monitors.getChildren(SERVICE_CONTEXT_HEALTH_CHECK)) {
-            Class<HealthCheckFactory> hcClass = loadClass(check, pack, SERVICE_CONTEXT_HEALTH_CHECK);
-            try {
-                serviceContextHealthChecks.add(hcClass.newInstance());
-            } catch (Exception e) {
-                logReflectionError(e, hcClass.getName(), SERVICE_CONTEXT_HEALTH_CHECK);
-            }
-        }
+        initHealthChecks(monitors, pack, CRITICAL_SERVICE_CONTEXT_HEALTH_CHECK, criticalServiceContextHealthChecks);
+        initHealthChecks(monitors, pack, WARNING_SERVICE_CONTEXT_HEALTH_CHECK, warningServiceContextHealthChecks);
+        initHealthChecks(monitors, pack, EXPENSIVE_SERVICE_CONTEXT_HEALTH_CHECK, expensiveServiceContextHealthChecks);
 
         for (Element gauge : (List<Element>) monitors.getChildren(SERVICE_CONTEXT_GAUGE)) {
             serviceContextGauges.put(this.<MetricsFactory<Gauge<?>>>loadClass(gauge, pack, SERVICE_CONTEXT_GAUGE), null);
@@ -165,6 +191,19 @@ public class MonitorManager {
         }
         serviceContextMeter.remove(null);
     }
+
+    @SuppressWarnings("unchecked")
+    private void initHealthChecks(Element monitors, String pack, String tagName, List<HealthCheckFactory> checkCollection) {
+        for (Element check : (List<Element>) monitors.getChildren(tagName)) {
+            Class<HealthCheckFactory> hcClass = loadClass(check, pack, tagName);
+            try {
+                checkCollection.add(hcClass.newInstance());
+            } catch (Exception e) {
+                logReflectionError(e, hcClass.getName(), tagName);
+            }
+        }
+    }
+    @SuppressWarnings("unchecked")
     private <T> Class<T> loadClass(Element monitor, String pack, String type) {
 
         String name = monitor .getAttributeValue(ConfigFile.Monitors.Attr.CLASS);
