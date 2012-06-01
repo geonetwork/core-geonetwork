@@ -86,7 +86,7 @@ public class MonitorManager {
             warningHealthCheckRegistry = warningTmpHealthCheckRegistry;
             expensiveHealthCheckRegistry = expensiveTmpHealthCheckRegistry;
 
-            MetricsRegistry tmpMetricsRegistry = null;
+            MetricsRegistry tmpMetricsRegistry = (MetricsRegistry) context.getAttribute(METRICS_REGISTRY);
             if (tmpMetricsRegistry == null) {
                 tmpMetricsRegistry = new MetricsRegistry();
             }
