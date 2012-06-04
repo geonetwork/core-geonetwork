@@ -42,6 +42,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.Show;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -150,12 +151,15 @@ public class Format extends AbstractFormatService {
         return new Element("strings");
     }
 
-    private Element getResources(File formatDir, String lang) throws IOException, JDOMException {
+    private Element getResources(File formatDir, String lang) throws Exception {
         Element resources = new Element("loc");
         File baseLoc = new File(formatDir, "loc");
         File locDir = findLocDir(lang, baseLoc);
-        
-        resources.addContent(new Element("lang").setText(locDir.getName()));
+
+        resources.addContent(new Element("iso639_2").setAttribute("codeLength","3").setText(locDir.getName()));
+        String iso639_1 = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(locDir.getName());
+        resources.addContent(new Element("iso639_1").setAttribute("codeLength","2").setText(iso639_1 ));
+
         if(locDir.exists()) {
             Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
             for (File file : files) {
