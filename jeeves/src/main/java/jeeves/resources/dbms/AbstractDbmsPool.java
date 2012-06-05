@@ -31,6 +31,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
 import jeeves.server.resources.Stats;
@@ -205,6 +206,21 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 
 	public void removeListener(ResourceListener l) {
 		hsListeners.remove(l);
+	}
+
+	// --------------------------------------------------------------------------
+
+	protected int getPreparedStatementCacheSize(Element config) throws NumberFormatException {
+		int iMaxOpen = -1;
+		String maxOpenPreparedStatements = config.getChildText(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS);
+		if (maxOpenPreparedStatements != null) {
+			try {
+				iMaxOpen = new Integer(maxOpenPreparedStatements);
+			} catch (NumberFormatException nfe) {
+				throw new IllegalArgumentException(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS+" has non-integer value "+maxOpenPreparedStatements);
+			}
+		}
+		return iMaxOpen;
 	}
 
 	//---------------------------------------------------------------------------

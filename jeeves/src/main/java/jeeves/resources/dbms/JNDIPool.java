@@ -184,20 +184,6 @@ public class JNDIPool extends AbstractDbmsPool {
 		return sb.toString();
 	}
 
-	// --------------------------------------------------------------------------
-
-	private int getPreparedStatementCacheSize(Element config) throws NumberFormatException {
-		int iMaxOpen = -1;
-		String maxOpenPreparedStatements = config.getChildText(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS);
-		if (maxOpenPreparedStatements != null) {
-			try {
-				iMaxOpen = new Integer(maxOpenPreparedStatements);
-			} catch (NumberFormatException nfe) {
-				throw new IllegalArgumentException(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS+" has non-integer value "+maxOpenPreparedStatements);
-			}
-		}
-		return iMaxOpen;
-	}
 }
 // =============================================================================
 

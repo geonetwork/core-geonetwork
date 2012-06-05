@@ -120,6 +120,9 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		int maxWait = (maxw == null) ? Jeeves.Res.Pool.DEF_MAX_WAIT : Integer
 				.parseInt(maxw);
 
+		// set maximum number of prepared statements in pool cache
+		int iMaxOpen = getPreparedStatementCacheSize(config);
+
 		boolean testWhileIdle = false;
 		if (testWhileIdleStr != null) {
 			testWhileIdle = testWhileIdleStr.equals("true");
@@ -180,8 +183,15 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		// test all idle connections each run
 		basicDataSource.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
 
-		basicDataSource.setPoolPreparedStatements(true);
-		basicDataSource.setMaxOpenPreparedStatements(-1);
+		// set maximum number of prepared statements in pool cache, if not set
+		// then switch it off altogether
+		if (iMaxOpen != -1) {
+			basicDataSource.setPoolPreparedStatements(true);
+			basicDataSource.setMaxOpenPreparedStatements(iMaxOpen);
+		} else {
+			basicDataSource.setPoolPreparedStatements(false);
+			basicDataSource.setMaxOpenPreparedStatements(-1);
+		}
 
 		if (validationQuery != null && validationQuery.trim().length() > 0) {
 			basicDataSource.setValidationQuery(validationQuery);
@@ -194,6 +204,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		basicDataSource.setPassword(passwd);
 
 		basicDataSource.setInitialSize(poolSize);
+
 	}
 
 	// --------------------------------------------------------------------------
@@ -331,6 +342,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 			throw new Exception("Unknown database in url "+url);
 		}
 	}
+
 }
 
 // =============================================================================
