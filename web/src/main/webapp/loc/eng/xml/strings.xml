@@ -703,6 +703,7 @@
 	<profileChoice value="RegisteredUser">Registered user</profileChoice>
 	<profileChoice value="Reviewer">Content reviewer</profileChoice>
 	<profileChoice value="UserAdmin">User administrator</profileChoice>
+	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Progress</progress>
 	<progressChoice value="complete">complete</progressChoice>
 	<progressChoice value="in-work">in work</progressChoice>
@@ -1386,4 +1387,5 @@
     <wmslayers>WMS layers</wmslayers>
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<monitor>Monitor</monitor>
 </strings>
