@@ -609,6 +609,7 @@
 	<profileChoice value="RegisteredUser">Rekisteröitynyt käyttäjä</profileChoice>
 	<profileChoice value="Reviewer">Sisällön arvioija</profileChoice>
 	<profileChoice value="UserAdmin">Käyttäjien ylläpitäjä</profileChoice>
+	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Kehitysvaihe</progress>
 	<progressChoice value="complete">valmis</progressChoice>
 	<progressChoice value="in-work">kesken</progressChoice>
@@ -1290,4 +1291,5 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
     <wmslayers>WMS-karttatasot</wmslayers>
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<monitor>Monitor</monitor>
 </strings>

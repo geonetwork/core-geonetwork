@@ -105,6 +105,21 @@
         <url-pattern>/monitor/*</url-pattern>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>MonitorSecurityFilter</filter-name>
+        <url-pattern>/criticalhealthcheck</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>MonitorSecurityFilter</filter-name>
+        <url-pattern>/warninghealthcheck</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>MonitorSecurityFilter</filter-name>
+        <url-pattern>/expensivehealthcheck</url-pattern>
+    </filter-mapping>
+
 
     <filter-mapping>
         <filter-name>UrlRewriteFilter</filter-name>

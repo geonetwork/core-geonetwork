@@ -6,7 +6,7 @@
 	<!-- External system services are still missing-->
 	<!-- ====================================================================== -->
 
-	<profile name="Administrator" extends="UserAdmin">
+	<profile name="Administrator" extends="UserAdmin,Monitor">
 
 		<!-- Group maintenance services -->
 		<allow service="group.remove"/>
@@ -453,8 +453,8 @@
 
 		<!-- KML services -->
 		<allow service="google.kml"/>
-<!--		<allow service="search.kml"/>
-		<allow service="search.present.kml"/> -->
+    <!--		<allow service="search.kml"/> -->
+		<!--		<allow service="search.present.kml"/> -->
 
 		<!-- Allow GeoNetwork Mapping services -->
 		<allow service="xml.group.list"/>
@@ -528,6 +528,9 @@
       <allow service="metadata.formatter.list"/>
     </profile>
 
+    <!-- users that have access to monitor services only.  The access is controlled by  -->
+    <!-- org.fao.geonet.monitor.MonitorSecurityFilter since they are not Geonetwork servics -->
+    <profile name="Monitor" extends="RegisteredUser"/>
 	<!-- ====================================================================== -->
 </profiles>
 

@@ -703,6 +703,7 @@
 	<profileChoice value="RegisteredUser">Utente registrato</profileChoice>
 	<profileChoice value="Reviewer">Revisore</profileChoice>
 	<profileChoice value="UserAdmin">Utente amministratore</profileChoice>
+	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Procedere</progress>
 	<progressChoice value="complete">completato</progressChoice>
 	<progressChoice value="in-work">in lavorazione</progressChoice>
@@ -1386,4 +1387,5 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
     
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<monitor>Monitor</monitor>
 </strings>

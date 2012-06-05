@@ -702,6 +702,7 @@ ISO 19115 не позволяет иметь более одного.
 	<profileChoice value="RegisteredUser">Зарегистрированный пользователь</profileChoice>
 	<profileChoice value="Reviewer">Обозреватель содержимого</profileChoice>
 	<profileChoice value="UserAdmin">Администратор пользователей</profileChoice>
+	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Развитие</progress>
 	<progressChoice value="complete">завершено</progressChoice>
 	<progressChoice value="in-work">в разработке</progressChoice>
@@ -1373,4 +1374,5 @@ ISO 19115 не позволяет иметь более одного.
     <wmslayers>WMS layers</wmslayers>
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<monitor>Monitor</monitor>
 </strings>

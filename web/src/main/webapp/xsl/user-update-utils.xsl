@@ -113,6 +113,14 @@
 									<xsl:value-of select="/root/gui/strings/RegisteredUser"/>
 								</option>
 							</xsl:for-each>
+							<xsl:for-each select="/root/gui/profiles/Monitor">
+								<option value="{name(.)}">
+									<xsl:if test="/root/response/record/profile=name(.)">
+										<xsl:attribute name="selected"/>
+									</xsl:if>
+									<xsl:value-of select="/root/gui/strings/monitor"/>
+								</option>
+							</xsl:for-each>
 						</select>
 					</td>
 				</tr>

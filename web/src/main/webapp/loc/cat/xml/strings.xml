@@ -613,6 +613,7 @@
 	<profileChoice value="RegisteredUser">Usuari registrat</profileChoice>
 	<profileChoice value="Reviewer">Revisor de contingut</profileChoice>
 	<profileChoice value="UserAdmin">User Administrator</profileChoice>
+	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Progrés</progress>
 	<progressChoice value="complete">completa</progressChoice>
 	<progressChoice value="in-work">en curs</progressChoice>
@@ -1280,4 +1281,5 @@
     <wmslayers>Capes WMS</wmslayers>
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<monitor>Monitor</monitor>
 </strings>

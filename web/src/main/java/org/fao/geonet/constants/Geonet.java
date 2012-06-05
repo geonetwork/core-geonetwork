@@ -454,12 +454,13 @@ public class Geonet {
      * Container for profile names.
      */
 	public class Profile {
-		public static final String ADMINISTRATOR = "Administrator";
-		public static final String USER_ADMIN    = "UserAdmin";
-		public static final String REVIEWER      = "Reviewer";
-		public static final String EDITOR        = "Editor";
+		public static final String ADMINISTRATOR   = "Administrator";
+		public static final String USER_ADMIN      = "UserAdmin";
+		public static final String REVIEWER        = "Reviewer";
+		public static final String EDITOR          = "Editor";
 		public static final String REGISTERED_USER = "RegisteredUser";
-		public static final String GUEST         = "Guest";
+		public static final String GUEST           = "Guest";
+		public static final String MONITOR         = "Monitor";
 	}
 
     /**
