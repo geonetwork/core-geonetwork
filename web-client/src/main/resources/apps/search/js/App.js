@@ -285,10 +285,22 @@ GeoNetwork.app = function(){
             name: 'E__isHarvested',
             hidden: true
         });
+
+        var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
+
+        var inspire = new Ext.form.FieldSet({
+            title: OpenLayers.i18n('inspireSearchOptions'),
+            autoWidth: true,
+            hidden: hideInspirePanel,
+            collapsible: true,
+            collapsed: true,
+            items:  GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
+        });
+
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
-                                metadataTypeField, validField, statusField, ownerField, isHarvestedField);
+                                metadataTypeField, validField, statusField, ownerField, isHarvestedField, inspire);
         var adv = new Ext.form.FieldSet({
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
