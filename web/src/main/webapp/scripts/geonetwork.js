@@ -10,6 +10,35 @@ function translate(text) {
 	return translations[text] || text;
 };
 
+// the following is necessary to add a missing js function to 
+// IE9 so that extjs doesn't cause problems (in IE9)
+// - see http://stackoverflow.com/questions/5375616/extjs4-ie9-object-doesnt-support-property-or-method-createcontextualfragme
+// Note: meta tag in header.xsl is set to compatibility with IE9
+// June, 2012
+var Browser = {
+  Version: function() {
+    var version = 1000;
+    if (navigator.appVersion.indexOf("MSIE") != -1)
+      version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+    return version;
+  }
+};
+
+if (Browser.Version() >= 9) {
+	if (typeof Range.prototype.createContextualFragment == "undefined") {
+    Range.prototype.createContextualFragment = function (html) {
+        var doc = window.document;
+        var container = doc.createElement("div");
+        container.innerHTML = html;
+        var frag = doc.createDocumentFragment(), n;
+        while ((n = container.firstChild)) {
+            frag.appendChild(n);
+        }
+        return frag;
+    };
+	}
+}
+
 /**
  * Replaces parameters in a string (defined like $1, $2, ...) with the values provided in the params array
  *
@@ -261,7 +290,10 @@ function get_cookie ( cookie_name )
 		}
 
 		var url = Env.locService +'/' + service;
-		Modalbox.show(url,{title: title, width: width, height: height, afterHide: function() {
+		if (height === undefined) {
+			Modalbox.show(url,{title: title, width: width, afterHide: function() {
+
+						var url = Env.locService +'/' + service;
                 if ($("simple_search_pnl").visible()) {
                     runSimpleSearch();
 
@@ -275,6 +307,24 @@ function get_cookie ( cookie_name )
 		        runRssSearch();
 		
             }});
+		} else { 
+			Modalbox.show(url,{title: title, width: width, height: height, afterHide: function() {
+
+						var url = Env.locService +'/' + service;
+                if ($("simple_search_pnl").visible()) {
+                    runSimpleSearch();
+
+                } else if ($("advanced_search_pnl").visible()) {
+                    runAdvancedSearch();
+
+                } else {
+                  $('search-results-content').hide();
+                }
+		
+		        runRssSearch();
+		
+            }});
+		}
 	}
 
 /**********************************************************

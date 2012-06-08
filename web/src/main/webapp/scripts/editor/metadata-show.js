@@ -131,14 +131,9 @@
 				return false;
 			}
 		
-			function doOtherButton(url, title, width)
-			{
-				Modalbox.show(url,{title: title, width: width, height: 400});
-				return true;
-			}
-		
 			function doOtherButton(url, title, width, height)
 			{
+				if (height === undefined) height = 400;
 				Modalbox.show(url,{title: title, width: width, height: height});
 				return true;
 			}
