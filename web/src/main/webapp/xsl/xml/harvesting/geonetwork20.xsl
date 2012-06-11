@@ -12,8 +12,6 @@
 
 	<xsl:template match="*" mode="site">
 		<host><xsl:value-of    select="host/value" /></host>
-		<port><xsl:value-of    select="port/value" /></port>
-		<servlet><xsl:value-of select="servlet/value" /></servlet>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

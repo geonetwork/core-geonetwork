@@ -34,20 +34,10 @@
 			</tr>
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/host"/></td>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/url"/></td>
 				<td class="padded"><input id="gn.host" class="content" type="text" value="" size="30"/></td>
 			</tr>
 
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/port"/></td>
-				<td class="padded"><input id="gn.port" class="content" type="text" value="" size="30"/></td>
-			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/servlet"/></td>
-				<td class="padded"><input id="gn.servlet" class="content" type="text" value="" size="30"/></td>
-			</tr>
-		  
 		  <tr>
 		    <td class="padded"><xsl:value-of select="/root/gui/harvesting/createRemoteCategory"/></td>
 		    <td class="padded"><input id="gn.createRemoteCategory" type="checkbox"/></td>

@@ -22,14 +22,16 @@ gn.Model = function(xmlLoader)
 function retrieveSources(data, callBack)
 {
 	this.retrieveSourcesCB = callBack;
+
+    var url = data.HOST;
+	//var url = 'http://'+ data.HOST;
 	
-	var url = 'http://'+ data.HOST;
-	
-	if (data.PORT != '')
-		url += ':'+data.PORT;
+	//if (data.PORT != '')
+	//	url += ':'+data.PORT;
 		
-	url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
-	
+	//url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
+    url += '/srv/'+Env.lang+'/xml.info';
+
 	new InfoService(loader, 'sources', callBack, url);
 }
 
@@ -38,14 +40,16 @@ function retrieveSources(data, callBack)
 function retrieveGroups(data, callBack, username, password)
 {
 	this.retrieveGroupsCB = callBack;
+
+    var url = data.HOST;
+	//var url = 'http://'+ data.HOST;
 	
-	var url = 'http://'+ data.HOST;
-	
-	if (data.PORT != '')
-		url += ':'+data.PORT;
+	//if (data.PORT != '')
+	//	url += ':'+data.PORT;
 		
-	url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
-	
+	//url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
+    url += '/srv/'+Env.lang+'/xml.info';
+
 	new InfoService(loader, 'groups', callBack, url, username, password);
 }
 
@@ -120,8 +124,6 @@ var updateTemp =
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+
-'      <port>{PORT}</port>'+
-'      <servlet>{SERVLET}</servlet>'+
 '      <createRemoteCategory>{CREATE_REMOTE_CATEGORY}</createRemoteCategory>'+
 '      <mefFormatFull>{MEF_FULL}</mefFormatFull>'+
 '      <xslfilter>{XSLFILTER}</xslfilter>'+

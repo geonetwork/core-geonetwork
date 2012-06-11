@@ -138,22 +138,22 @@
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
 
-	<at>AusfŸhren um</at>
+	<at>Ausfï¿½hren um</at>
     <atSpec>( Stunde : Minute z.B. 23:15 )</atSpec>
-    <interval>Wird ausgefŸhrt</interval>
+    <interval>Wird ausgefï¿½hrt</interval>
     <hourintervals>
-        <hour label="stŸndlich">1</hour>
+        <hour label="stï¿½ndlich">1</hour>
         <hour label="alle 3 Stunden">3</hour>
         <hour label="alle 6 Stunden">6</hour>
         <hour label="alle 12 Stunden">12</hour>
         <hour label="N/A">undefined</hour>
     </hourintervals>
     <hourintervals>
-        <hour label="stŸndlich">1</hour>
+        <hour label="stï¿½ndlich">1</hour>
         <hour label="alle 3 Stunden">3</hour>
         <hour label="alle 6 Stunden">6</hour>
         <hour label="alle 12 Stunden">12</hour>
-        <hour label="tŠglich">24</hour>
+        <hour label="tï¿½glich">24</hour>
     </hourintervals>
     <dayofweek>
         <day label="Montag">MON</day>
@@ -382,7 +382,9 @@
 		</tip>
 		
 		<tip id="gn.host">
-			Der entfernte Knoten, mit dem Sie verbinden wollen
+            The given URL must point to a geonetwork server. The format of a
+            URL is like this:<br/>
+            http[s]://HOST[:port]/geonetwork
 		</tip>
 		
 		<tip id="gn.xslfilter">

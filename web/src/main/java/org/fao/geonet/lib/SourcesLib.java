@@ -25,17 +25,14 @@ package org.fao.geonet.lib;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
 import jeeves.utils.XmlRequest;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -103,6 +100,32 @@ public class SourcesLib
         catch (IOException e)
         {
             context.warning("Cannot retrieve logo file from : "+ host+":"+port);
+            context.warning("  (C) Logo  : "+ logo);
+            context.warning("  (C) Excep : "+ e.getMessage());
+
+            logoFile.delete();
+
+            Resources.copyUnknownLogo(context, uuid);
+        }
+    }
+
+    public void retrieveLogo(ServiceContext context, String url, String uuid) throws MalformedURLException
+    {
+        String logo = uuid +".gif";
+
+        XmlRequest req = new XmlRequest(new URL(url));
+        Lib.net.setupProxy(context, req);
+        req.setAddress(req.getAddress() + "/images/logos/" + logo);
+
+        File logoFile = new File(Resources.locateLogosDir(context) + File.separator + logo);
+
+        try
+        {
+            req.executeLarge(logoFile);
+        }
+        catch (IOException e)
+        {
+            context.warning("Cannot retrieve logo file from : "+url);
             context.warning("  (C) Logo  : "+ logo);
             context.warning("  (C) Excep : "+ e.getMessage());
 

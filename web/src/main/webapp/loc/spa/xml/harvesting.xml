@@ -140,8 +140,8 @@
 	<importxslt>Apply this XSLT to harvested records</importxslt>
 
     <at>Ejecutar a</at>
-    <atSpec>( hora del d’a : minutos ej. 23:15 )</atSpec>
-    <interval>Se ejecutar‡ cada</interval>
+    <atSpec>( hora del dï¿½a : minutos ej. 23:15 )</atSpec>
+    <interval>Se ejecutarï¿½ cada</interval>
     <hourintervals>
         <hour label="Each hour">1</hour>
         <hour label="3 hours">3</hour>
@@ -408,7 +408,8 @@
 		</tip>
 		
 		<tip id="gn.host">
-			El servidor remoto al que desea conectarse
+            La URL debe apuntar a un servidor de GeoNetwork. El formato de la URL es el siguiente:<br/>
+            http[s]://HOST[:port]/geonetwork
 		</tip>
 		
 		<tip id="gn.xslfilter">

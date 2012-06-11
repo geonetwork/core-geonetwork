@@ -48,9 +48,7 @@ function init()
 	[
 		{ id:'gn20.name',     type:'length',   minSize :1,  maxSize :200 },
 		{ id:'gn20.host',     type:'length',   minSize :1,  maxSize :200 },
-		{ id:'gn20.host',     type:'hostname' },
-		{ id:'gn20.port',     type:'integer',  minValue:80, maxValue:65535, empty:true },
-		{ id:'gn20.servlet',  type:'length',   minSize :1,  maxSize :200 },
+		{ id:'gn20.host',     type:'url' },
 		// { id:'gn20.servlet',  type:'alphanum' }, // Does not work when servlet is mapped to root or subdirectory
 		{ id:'gn20.username', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn20.password', type:'length',   minSize :0,  maxSize :200 }
@@ -67,9 +65,7 @@ function setEmpty()
 	
 	removeAllSearch();
 	
-	$('gn20.host')      .value = '';	
-	$('gn20.port')      .value = '';
-	$('gn20.servlet')   .value = '';
+	$('gn20.host')      .value = '';
 		
 	clearSiteId();
 	shower.update();
@@ -85,8 +81,6 @@ function setData(node)
 	var searches = node.getElementsByTagName('searches')[0];
 
 	hvutil.setOption(site, 'host',    'gn20.host');
-	hvutil.setOption(site, 'port',    'gn20.port');
-	hvutil.setOption(site, 'servlet', 'gn20.servlet');
 	
 	//--- add search entries
 
@@ -110,8 +104,6 @@ function getData()
 	var data = this.getDataCommon();
 	
 	data.HOST    = $F('gn20.host');
-	data.PORT    = $F('gn20.port');
-	data.SERVLET = $F('gn20.servlet');
 	
 	//--- retrieve search information
 	

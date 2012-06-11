@@ -153,8 +153,6 @@ public class Geonet20Harvester extends AbstractHarvester
 		GeonetParams params = (GeonetParams) p;
 
 		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
-		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
-		settingMan.add(dbms, "id:"+siteId, "servlet", params.servlet);
 
 		//--- store search nodes
 
@@ -182,7 +180,7 @@ public class Geonet20Harvester extends AbstractHarvester
 	{
 		super.addHarvestInfo(info, id, uuid);
 
-		String small = "http://"+ params.host +":"+ params.port +"/"+ params.servlet +
+		String small = params.host +
 							"/srv/en/resources.get2?access=public&uuid="+uuid+"&fname=";
 
 		info.addContent(new Element("smallThumbnail").setText(small));
@@ -253,7 +251,9 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		CategoryMapper localCateg = new CategoryMapper(dbms);
 
-        XmlRequest req = new XmlRequest(params.host, params.port);
+        XmlRequest req = new XmlRequest(params.host);
+
+        servletName = req.getAddress();
 
 		Lib.net.setupProxy(context, req);
 
@@ -265,7 +265,7 @@ public class Geonet20Harvester extends AbstractHarvester
 		{
 			log.info("Login into : "+ name);
 
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
+			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_LOGIN);
 			req.addParam("username", params.username);
 			req.addParam("password", params.password);
 
@@ -286,7 +286,7 @@ public class Geonet20Harvester extends AbstractHarvester
 		{
 			log.info("Searching on : "+ name +"/"+ s.siteId);
 
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
+			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 
 			Element searchResult = req.execute(s.createRequest());
 
@@ -306,7 +306,7 @@ public class Geonet20Harvester extends AbstractHarvester
 			log.info("Logout from : "+ name);
 
 			req.clearParams();
-			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
+			req.setAddress("/"+ params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
 		}
 
 		dbms.commit();
@@ -320,6 +320,8 @@ public class Geonet20Harvester extends AbstractHarvester
 
 	private GeonetParams params;
 	private GeonetResult result;
+
+    private String servletName;
 }
 
 //=============================================================================

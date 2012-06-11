@@ -41,6 +41,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.fao.oaipmh.util.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -65,10 +66,16 @@ public class Transport
 
 	//---------------------------------------------------------------------------
 
-	public Transport(String host, int port)
+
+    public Transport(String host, int port) { this(host, 80, "http"); }
+
+    //---------------------------------------------------------------------------
+
+	public Transport(String host, int port, String protocol)
 	{
 		this.host = host;
 		this.port = port;
+        this.protocol = protocol;
 
 		setMethod(Method.POST);
 		state.addCookie(cookie);
@@ -85,6 +92,7 @@ public class Transport
 
 	public String getHost()         { return host;         }
 	public int    getPort()         { return port;         }
+    public String getProtocol()     { return protocol;     }
 	public String getAddress()      { return address;      }
 	public Method getMethod()       { return method;       }
 	public String getSentData()     { return sentData;     }
@@ -127,7 +135,7 @@ public class Transport
 		address = url.getPath();
 
 		if (port == -1)
-			port = 80;
+			port = url.getDefaultPort();
 	}
 
 	//---------------------------------------------------------------------------
@@ -237,7 +245,7 @@ public class Transport
 
 	private Element doExecute(HttpMethodBase httpMethod) throws IOException, JDOMException
 	{
-		config.setHost(host, port, "http");
+		config.setHost(host, port, Protocol.getProtocol(protocol));
 
 		if (useProxy)
 			config.setProxy(proxyHost, proxyPort);
@@ -312,6 +320,7 @@ public class Transport
 
 	private String  host;
 	private int     port;
+    private String  protocol;
 	private String  address;
 	private Method  method;
 	private boolean serverAuthent;

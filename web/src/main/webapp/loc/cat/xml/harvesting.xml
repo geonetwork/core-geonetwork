@@ -404,7 +404,8 @@
 		</tip>
 		
 		<tip id="gn.host">
-			El servidor remot on desitja connectar-se
+            La URL ha d'apuntar a un servidor de GeoNetwork. El format de la URL és el següent:<br/>
+            http[s]://HOST[:port]/geonetwork
 		</tip>
 		
 		<tip id="gn.xslfilter">
