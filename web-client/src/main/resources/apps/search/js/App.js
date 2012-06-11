@@ -138,16 +138,13 @@ GeoNetwork.app = function(){
         // Store user info in cookie to be displayed if user reload the page
         // Register events to set cookie values
         catalogue.on('afterLogin', function(){
-            var cookie = Ext.state.Manager.getProvider();
             cookie.set('user', catalogue.identifiedUser);
         });
         catalogue.on('afterLogout', function(){
-            var cookie = Ext.state.Manager.getProvider();
             cookie.set('user', undefined);
         });
         
         // Refresh login form if needed
-        var cookie = Ext.state.Manager.getProvider();
         var user = cookie.get('user');
         if (user) {
             catalogue.identifiedUser = user;
@@ -313,7 +310,6 @@ GeoNetwork.app = function(){
             },
             items: advancedCriteria
         });
-        
         var formItems = [];
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
                     GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true, 
@@ -610,7 +606,8 @@ GeoNetwork.app = function(){
                 closeAction: 'hide',
                 collapsible: true,
                 collapsed: false,
-                maximizable: true,
+                // Unsuported. Needs some kind of component to store minimized windows
+                maximizable: false,
                 maximized: true,
                 resizable: true,
 //                constrain: true,
@@ -650,7 +647,11 @@ GeoNetwork.app = function(){
             cookie = new Ext.state.CookieProvider({
                 expires: new Date(new Date().getTime()+(1000*60*60*24*365))
             });
-            Ext.state.Manager.setProvider(cookie);
+            
+            // set a permalink provider which will be the main state provider.
+            permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+            
+            Ext.state.Manager.setProvider(permalinkProvider);
             
             // Create connexion to the catalogue
             catalogue = new GeoNetwork.Catalogue({
@@ -671,10 +672,6 @@ GeoNetwork.app = function(){
             infoPanel = createInfoPanel();
             helpPanel = createHelpPanel();
             tagCloudViewPanel = createTagCloud();
-            
-            // set a permalink provider
-            permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
-            Ext.state.Manager.setProvider(permalinkProvider);
             
             createHeader();
             
@@ -896,12 +893,12 @@ Ext.onReady(function(){
       Ext.get('loading').remove();
       Ext.get('loading-mask').fadeOut({remove:true});
     }, 250);
-
+    
     app = new GeoNetwork.app();
     app.init();
     catalogue = app.getCatalogue();
     
     /* Focus on full text search field */
     Ext.getDom('E_any').focus(true);
-    
+
 });
