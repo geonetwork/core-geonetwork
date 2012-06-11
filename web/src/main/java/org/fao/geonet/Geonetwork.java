@@ -348,7 +348,7 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize iso languages mapper
          */
-        IsoLanguagesMapper.init(dbms);
+        IsoLanguagesMapper.getInstance().init(dbms);
         
         /**
          * Initialize language detector

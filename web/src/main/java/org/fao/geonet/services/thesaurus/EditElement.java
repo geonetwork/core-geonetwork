@@ -35,6 +35,9 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordRelation;
+import org.fao.geonet.kernel.search.keyword.KeywordSort;
+import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
@@ -75,7 +78,7 @@ public class EditElement implements Service {
 				UserSession session = context.getUserSession();
 				KeywordsSearcher searcher = (KeywordsSearcher) session
 					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-				kb = searcher.existsResult(id);
+				kb = searcher.getKeywordFromResults(id);
 			}else{
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				ThesaurusManager thesaurusMan = gc.getThesaurusManager();
@@ -85,9 +88,8 @@ public class EditElement implements Service {
 				
 			}
 			// Add info needed by thesaurus.edit
-			elResp.addContent(new Element("prefLab").setText(kb.getValue()));
-			elResp.addContent(new Element("definition").setText(kb
-					.getDefinition()));
+			elResp.addContent(new Element("prefLab").setText(kb.getDefaultValue()));
+			elResp.addContent(new Element("definition").setText(kb.getDefaultDefinition()));
 
 			elResp.addContent(new Element("relCode").setText(kb.getRelativeCode()));
 			elResp.addContent(new Element("nsCode").setText(kb.getNameSpaceCode()));
@@ -110,24 +112,24 @@ public class EditElement implements Service {
 		
 		// Only if consult (ie. external thesaurus) search for related concept
 		if (mode.equals("consult")){
-			ArrayList<String> reqType = new ArrayList<String>();
-			reqType.add("broader");
-			reqType.add("narrower");
-			reqType.add("related");
+			ArrayList<KeywordRelation> reqType = new ArrayList<KeywordRelation>();
+			reqType.add(KeywordRelation.BROADER);
+			reqType.add(KeywordRelation.NARROWER);
+			reqType.add(KeywordRelation.RELATED);
 			
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 			KeywordsSearcher searcherBNR = new KeywordsSearcher(thesaurusMan);
 			
 			for (int i = 0; i <= reqType.size() - 1; i++) {
-				searcherBNR.searchBN(uri, ref, reqType.get(i), lang);
+				searcherBNR.searchForRelated(uri, ref, reqType.get(i), lang);
 			
-				searcherBNR.sortResults("label");
+				searcherBNR.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 				String type;
 				
-				if(reqType.get(i).equals("broader"))		// If looking for broader search concept in a narrower element
+				if(reqType.get(i) == KeywordRelation.BROADER)		// If looking for broader search concept in a narrower element
 					type = "narrower";
-				else if(reqType.get(i).equals("narrower"))
+				else if(reqType.get(i) == KeywordRelation.NARROWER)
 					type = "broader";
 				else 
 					type = "related";

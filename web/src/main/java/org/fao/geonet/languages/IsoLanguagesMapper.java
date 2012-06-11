@@ -41,10 +41,10 @@ public class IsoLanguagesMapper {
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
-    private static BiMap<String, String> isoLanguagesMap639 =  HashBiMap.create();
+    protected BiMap<String, String> isoLanguagesMap639 =  HashBiMap.create();
 
 
-    private IsoLanguagesMapper() {}
+    protected IsoLanguagesMapper() {}
 
     /**
      * TODO javadoc.
@@ -52,7 +52,7 @@ public class IsoLanguagesMapper {
      * @return instance
      * @throws Exception hmm
      */
-    public static synchronized IsoLanguagesMapper getInstance() throws Exception {
+    public static synchronized IsoLanguagesMapper getInstance() {
         if(instance == null) {
             instance = new IsoLanguagesMapper();
         }
@@ -76,11 +76,12 @@ public class IsoLanguagesMapper {
      * @param dbms
      * @throws Exception hmm
      */
-    public static void init(Dbms dbms) throws Exception {
+    public void init(Dbms dbms) throws Exception {
         String query = "SELECT code, shortcode FROM IsoLanguages";
-        List<Element> records = dbms.select(query).getChildren();
+        @SuppressWarnings("unchecked")
+		List<Element> records = dbms.select(query).getChildren();
         for(Element record : records) {
-            isoLanguagesMap639.put(record.getChildText("shortcode"), record.getChildText("code"));
+            isoLanguagesMap639.put(record.getChildText("shortcode").toLowerCase(), record.getChildText("code").toLowerCase());
         }
     }
 
@@ -92,7 +93,11 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_1_to_iso639_2(String iso639_1) {
-        return isoLanguagesMap639.get(iso639_1);
+        if(isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
+            return iso639_1.toLowerCase();
+        } else {
+            return isoLanguagesMap639.get(iso639_1.toLowerCase());
+        }
     }
 
     /**
@@ -102,7 +107,43 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_2_to_iso639_1(String iso639_2) {
-        return isoLanguagesMap639.inverse().get(iso639_2);
+        if(isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
+            return iso639_2.toLowerCase();
+        } else {
+            return isoLanguagesMap639.inverse().get(iso639_2.toLowerCase());
+        }
+    }
+
+    /**
+     * Convert the code to iso639_2 or return the default
+     * 
+     * @param iso639_1
+     * @param defaultLang
+     * @return
+     */
+    public String iso639_1_to_iso639_2(String iso639_1, String defaultLang) {
+        String result = iso639_1_to_iso639_2(iso639_1);
+        if(result == null) {
+            return defaultLang.toLowerCase();
+        } else {
+            return result;
+        }
+    }
+    
+    /**
+     * Convert the code to iso639_1 or return the default
+     * 
+     * @param iso639_2
+     * @param defaultLang
+     * @return
+     */
+    public String iso639_2_to_iso639_1(String iso639_2, String defaultLang) {
+        String result = iso639_2_to_iso639_1(iso639_2);
+        if(result == null) {
+            return defaultLang.toLowerCase();
+        } else {
+            return result;
+        }
     }
 
 }
