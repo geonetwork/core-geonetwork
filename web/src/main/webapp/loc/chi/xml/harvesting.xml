@@ -409,7 +409,8 @@
 		</tip>
 		
 		<tip id="gn.host">
-            La URL debe apuntar a un servidor de GeoNetwork. El formato de la URL es el siguiente:<br/>
+            The given URL must point to a geonetwork server. The format of a
+            URL is like this:<br/>
             http[s]://HOST[:port]/geonetwork
 		</tip>
 		
