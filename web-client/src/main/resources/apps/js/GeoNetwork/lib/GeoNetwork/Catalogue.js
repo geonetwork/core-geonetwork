@@ -517,7 +517,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (request.responseXML) {
             var xml = request.responseXML.documentElement;
             Ext.each(properties, function(item, idx){
-                info[item] = xml.getElementsByTagName(item)[0].childNodes[0].nodeValue;
+                var i = xml.getElementsByTagName(item)[0];
+                info[item] = i && i.childNodes[0] && i.childNodes[0].nodeValue;
             });
         }
         return info;
@@ -1220,11 +1221,22 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
     },
     /** private: method[modalAction]
-     *
+     *  
+     *  Create a modal window and load the URL content.
+     *  If no callback provided, default callback on error, close the window.
+     *  
+     *  TODO : retrieve error message on error (currently HTML services are
+     *  called with HTML response not easy to parse)
      */
     modalAction: function(title, url, cb){
         if (url) {
-            var win = new Ext.Window({
+            var app = this, win, defaultCb = function(el, success, response, options) {
+                if (!success){
+                    app.showError('Catalogue error', title);
+                    win.close();
+                }
+            };
+            win = new Ext.Window({
                 id: 'modalWindow',
                 layout: 'fit',
                 width: 700,
@@ -1237,7 +1249,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 items: new Ext.Panel({
                     autoLoad: {
                         url: url,
-                        callback: cb,
+                        callback: cb || defaultCb,
                         scope: win
                     },
                     border: false,
