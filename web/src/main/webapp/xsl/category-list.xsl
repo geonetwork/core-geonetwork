@@ -43,7 +43,9 @@
 		<table width="70%" class="text-aligned-left">
 			<tr>
 				<th class="padded bottom_border"><xsl:value-of select="/root/gui/strings/name"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
+				<xsl:if test="/root/gui/services/service/@name='category.update'">
+						<th class="padded"><xsl:value-of select="/root/gui/strings/operation"/></th>
+				</xsl:if>		
 			</tr>
 			<xsl:for-each select="/root/response/record">
 				<xsl:sort select="name"/>
@@ -54,11 +56,9 @@
 					</td>
 					<td class="padded" width="150px">
                         <xsl:if test="/root/gui/services/service/@name='category.update'">
-						<button class="content" onclick="load('{/root/gui/locService}/category.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
-                        </xsl:if>
-                        &#160;
-                        <xsl:if test="/root/gui/services/service/@name='category.remove'">
-						<button class="content" onclick="delete1('{/root/gui/locService}/category.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+							<button class="content" onclick="load('{/root/gui/locService}/category.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
+	                        &#160;
+	                        <button class="content" onclick="delete1('{/root/gui/locService}/category.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
                         </xsl:if>
                     </td>
 				</tr>
