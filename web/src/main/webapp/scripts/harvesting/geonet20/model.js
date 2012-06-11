@@ -32,8 +32,6 @@ var updateTemp =
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+
-'      <port>{PORT}</port>'+
-'      <servlet>{SERVLET}</servlet>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+

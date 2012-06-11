@@ -53,12 +53,12 @@
 				</td>
 			</tr>
 			<!-- TODO : Do we have to set up an account for WxS secured ? For BA support ?  -->
-			<tr style="display:none;">
+			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
 				<td class="padded"><input id="ogcwxs.useAccount" type="checkbox"/></td>
 			</tr>
 
-			<tr style="display:none;">
+			<tr>
 				<td/>
 				<td>
 					<table id="ogcwxs.account">

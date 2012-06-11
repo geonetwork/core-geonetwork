@@ -413,7 +413,9 @@
 		</tip>
 
 		<tip id="gn.host">
-			Удаленный узел для подключения.
+            The given URL must point to a geonetwork server. The format of a
+            URL is like this:<br/>
+            http[s]://HOST[:port]/geonetwork
 		</tip>
 		
 		<tip id="gn.xslfilter">

@@ -81,10 +81,7 @@ function retrieveSources()
 	
 	if (data.HOST == '')
 		alert(loader.getText('supplyHost'));
-		
-	else if (data.SERVLET == '')
-		alert(loader.getText('supplyServlet'));
-		
+
 	else
 		model.retrieveSources(data, ker.wrap(view, view.setSources));
 }
@@ -97,10 +94,7 @@ function retrieveGroups()
 	
 	if (data.HOST == '')
 		alert(loader.getText('supplyHost'));
-		
-	else if (data.SERVLET == '')
-		alert(loader.getText('supplyServlet'));
-		
+
 	else
 	{
 		var cb = ker.wrap(this, retrieveGroups_OK);

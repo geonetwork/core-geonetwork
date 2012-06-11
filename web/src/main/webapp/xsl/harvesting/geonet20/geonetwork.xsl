@@ -29,18 +29,8 @@
 			</tr>
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/host"/></td>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/url"/></td>
 				<td class="padded"><input id="gn20.host" class="content" type="text" value="" size="30"/></td>
-			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/port"/></td>
-				<td class="padded"><input id="gn20.port" class="content" type="text" value="" size="30"/></td>
-			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/servlet"/></td>
-				<td class="padded"><input id="gn20.servlet" class="content" type="text" value="" size="30"/></td>
 			</tr>
 
 			<tr>

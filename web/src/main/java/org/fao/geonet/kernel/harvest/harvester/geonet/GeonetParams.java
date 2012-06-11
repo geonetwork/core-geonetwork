@@ -25,10 +25,13 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.exceptions.BadInputEx;
 import jeeves.utils.Util;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 //=============================================================================
@@ -62,13 +65,12 @@ public class GeonetParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		host    = Util.getParam(site, "host",    "");
-		port    = Util.getParam(site, "port",    80);
-		servlet = Util.getParam(site, "servlet", "geonetwork");
+
 		createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
 		mefFormatFull = Util.getParam(site, "mefFormatFull", false);
 		xslfilter = Util.getParam(site, "xslfilter", "");
 
-		checkPort(port);
+		//checkPort(port);
 		addSearches(searches);
 		addCopyPolicy(policy);
 	}
@@ -88,13 +90,11 @@ public class GeonetParams extends AbstractParams
 		Element policy   = node.getChild("groupsCopyPolicy");
 
 		host    = Util.getParam(site, "host",    host);
-		port    = Util.getParam(site, "port",    port);
-		servlet = Util.getParam(site, "servlet", servlet);
         createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
-        
-		checkPort(port);
+
+		//checkPort(port);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -115,6 +115,18 @@ public class GeonetParams extends AbstractParams
 	public Iterable<Search> getSearches()        { return alSearches;   }
 	public Iterable<Group>  getGroupCopyPolicy() { return alCopyPolicy; }
 
+    public String getServletPath() {
+        if (StringUtils.isNotEmpty(host)) {
+            try {
+                return  new URL(host).getPath();
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return "";
+    }
+
 	//---------------------------------------------------------------------------
 
 	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
@@ -127,8 +139,6 @@ public class GeonetParams extends AbstractParams
 		copyTo(copy);
 
 		copy.host    = host;
-		copy.port    = port;
-		copy.servlet = servlet;
 		copy.createRemoteCategory = createRemoteCategory;
 		copy.mefFormatFull = mefFormatFull;
 		copy.xslfilter = xslfilter;
@@ -187,8 +197,6 @@ public class GeonetParams extends AbstractParams
 	//---------------------------------------------------------------------------
 
 	public String  host;
-	public int     port;
-	public String  servlet;
 	public boolean createRemoteCategory;
 	public boolean mefFormatFull;
 	

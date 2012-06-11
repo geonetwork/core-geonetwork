@@ -59,10 +59,7 @@ function init()
 	[
 		{ id:'gn.name',     type:'length',   minSize :1,  maxSize :200 },
 		{ id:'gn.host',     type:'length',   minSize :1,  maxSize :200 },
-		{ id:'gn.host',     type:'hostname' },
-		{ id:'gn.port',     type:'integer',  minValue:80, maxValue:65535, empty:true },
-		{ id:'gn.servlet',  type:'length',   minSize :1,  maxSize :200 },
-		//{ id:'gn.servlet',  type:'alphanum' }, // Does not work when servlet is mapped to root or subdirectory
+		{ id:'gn.host',     type:'url' },
 		{ id:'gn.username', type:'length',   minSize :0,  maxSize :200 },
 		{ id:'gn.password', type:'length',   minSize :0,  maxSize :200 }
 	]);
@@ -81,10 +78,8 @@ function setEmpty()
 	
 	removeAllSearch();
 	removeAllPolicyGroups();
-	
-	$('gn.host')      .value = '';	
-	$('gn.port')      .value = '';
-	$('gn.servlet')   .value = '';
+
+    $('gn.host')      .value = '';
 
     $('gn.createRemoteCategory').checked = false;
     $('gn.mefFormatFull').checked = false;
@@ -105,8 +100,6 @@ function setData(node)
 	var policies = node.getElementsByTagName('groupsCopyPolicy')[0];
 
 	hvutil.setOption(site, 'host',    'gn.host');
-	hvutil.setOption(site, 'port',    'gn.port');
-	hvutil.setOption(site, 'servlet', 'gn.servlet');
 	hvutil.setOption(site, 'createRemoteCategory', 'gn.createRemoteCategory');
 	hvutil.setOption(site, 'mefFormatFull', 'gn.mefFormatFull');
 	hvutil.setOption(site, 'xslfilter', 'gn.xslfilter');
@@ -147,10 +140,8 @@ function setData(node)
 function getData()
 {
 	var data = this.getDataCommon();
-	
+
 	data.HOST    = $F('gn.host');
-	data.PORT    = $F('gn.port');
-	data.SERVLET = $F('gn.servlet');	
 	data.CREATE_REMOTE_CATEGORY = $('gn.createRemoteCategory').checked;
 	data.MEF_FULL = $('gn.mefFormatFull').checked;
 	data.XSLFILTER = $F('gn.xslfilter');	
@@ -430,8 +421,6 @@ function getHostData()
 	var data = 
 	{
 		HOST       : $F('gn.host'),
-		PORT       : $F('gn.port'),
-		SERVLET    : $F('gn.servlet'),
 		USERNAME   : $F('gn.username'),
 		PASSWORD   : $F('gn.password'),
 		USE_ACCOUNT: $('gn.useAccount').checked,

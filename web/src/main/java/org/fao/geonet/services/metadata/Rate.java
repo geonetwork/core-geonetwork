@@ -45,6 +45,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.net.URL;
 import java.util.List;
 
 //=============================================================================
@@ -157,11 +158,11 @@ public class Rate implements Service
 	{
         if(context.isDebug()) context.debug("Rating remote metadata with uuid:"+ uuid);
 
-		XmlRequest req = new XmlRequest(params.host, params.port);
+		XmlRequest req = new XmlRequest(new URL(params.host));
 
 		Lib.net.setupProxy(context, req);
 
-		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_METADATA_RATE);
+		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_METADATA_RATE);
 		req.clearParams();
 		req.addParam("uuid",   uuid);
 		req.addParam("rating", rating);
