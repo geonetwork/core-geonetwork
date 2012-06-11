@@ -1336,7 +1336,7 @@
     <custom-elementset-add>Element hinzufügen</custom-elementset-add>
 
     <wmslayers>WMS layers</wmslayers>
-    <formatter.admin>Metadata Formatter Admin</formatter.admin>
-    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+    <formatter.admin>Benutzerdefinierte Stylsheets verwalten</formatter.admin>
+    <formatter.admin.des>Verwaltung für benutzerdefinierte Darstellung von Metadaten</formatter.admin.des>
 	<monitor>Monitor</monitor>
 </strings>
