@@ -76,7 +76,8 @@ public abstract class AbstractParams
 		username   = Util.getParam(account, "username", "");
 		password   = Util.getParam(account, "password", "");
 
-		every      = Util.getParam(opt, "every",      "0 0 0 ? * ?" );
+		every      = Util.getParam(opt, "every",      "0 0 0 * * ?" );
+		
 		oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
 		
 		getTrigger();

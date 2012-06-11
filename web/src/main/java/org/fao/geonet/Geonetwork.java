@@ -77,6 +77,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
@@ -521,12 +522,20 @@ public class Geonetwork implements ApplicationHandler {
 		) {
 			logger.info("      Webapp version = Database version, no migration task to apply.");
 		} else {
-			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-			String dbType = Lib.db.getDBType(dbms);
-			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
-			
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
+			
+            try {
+            	moveHarvesterSettings(dbms);
+            } catch (Exception e) {
+                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                e.printStackTrace();
+                anyMigrationError = true;
+            }
+
+			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+			String dbType = DatabaseType.lookup(dbms).toString();
+			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
             @SuppressWarnings(value = "unchecked")
@@ -538,17 +547,28 @@ public class Geonetwork implements ApplicationHandler {
                     @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
-                        String filePath = path + file.getAttributeValue("path");
-                        String filePrefix = file.getAttributeValue("filePrefix");
-                        anyMigrationAction = true;
-                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-                        try {
-                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-                        } catch (Exception e) {
-                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                            e.printStackTrace();
-                            anyMigrationError = true;
-                        }
+                    	if(file.getName().equals("java")) {
+	                        try {
+	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
+	                            task.update(dbms);
+	                        } catch (Exception e) {
+	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+	                            e.printStackTrace();
+	                            anyMigrationError = true;
+	                        }
+                    	} else {
+	                        String filePath = path + file.getAttributeValue("path");
+	                        String filePrefix = file.getAttributeValue("filePrefix");
+	                        anyMigrationAction = true;
+	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+	                        try {
+	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+	                        } catch (Exception e) {
+	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+	                            e.printStackTrace();
+	                            anyMigrationError = true;
+	                        }
+                    	}
                     }
                 }
             }
@@ -593,6 +613,33 @@ public class Geonetwork implements ApplicationHandler {
             }
 			// TODO : Maybe some migration stuff has to be done in Java ?
 		}
+	}
+
+	private void moveHarvesterSettings(Dbms dbms) throws SQLException {
+		final int MIN_HARVEST_ID = 100000;
+		String url = dbms.getURL();
+		Element result = dbms.select("select * from Settings where parentid = 2 and id < "+MIN_HARVEST_ID);
+		
+		if(result.getChildren().size() > 0) {
+			dbms.execute("SELECT * INTO Harvester FROM Settings WHERE parentid = 2");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+
+			dbms.execute("DELETE FROM Settings WHERE id IN (SELECT id FROM Harvester)");
+
+			dbms.execute("UPDATE Harvester SET id = id + "+MIN_HARVEST_ID);
+			dbms.execute("UPDATE Harvester SET parentid = parentid + "+MIN_HARVEST_ID+" where parentid != 2");
+
+			dbms.execute("INSERT INTO Settings SELECT * FROM Harvester");
+		}
+
 	}
 
 	/**

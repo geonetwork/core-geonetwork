@@ -1,4 +1,3 @@
-
 INSERT INTO Settings VALUES (23,20,'protocol','http');
 
 INSERT INTO Settings VALUES (88,80,'defaultGroup', NULL);

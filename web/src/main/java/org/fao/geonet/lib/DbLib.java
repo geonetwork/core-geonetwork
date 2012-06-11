@@ -91,29 +91,6 @@ public class DbLib {
 		}
 	}
 
-	public String getDBType(Dbms dbms) {
-		String url = dbms.getURL();
-		String file = "default";
-
-		if (url.startsWith("jdbc:oracle:")) {
-			file = "oracle";
-		} else if (url.startsWith("jdbc:mckoi:")) {
-			file = "mckoi";
-		} else if (url.startsWith("jdbc:db2:")) {
-			file = "db2";
-		} else if (url.startsWith("jdbc:mysql:")) {
-			file = "mysql";
-		} else if (url.startsWith("jdbc:postgresql:")) {
-			file = "postgres";
-		} else if (url.startsWith("jdbc:postgresql_postGIS:")) {
-			file = "postgis";
-    } else if (url.startsWith("jdbc:sqlserver:")) {
-			file = "sqlserver";
-		}
-
-		return file;
-	}
-
 	/**
 	 * Remove all objects in the database. Read the SQL file and check all
 	 * CREATE TABLE statements to collect the list of table to remove.
@@ -287,7 +264,7 @@ public class DbLib {
 																	// appPath
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms schema to load
-		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
+		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(dbms).toString());
 
         if(Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "  Loading script:" + file);
@@ -324,7 +301,7 @@ public class DbLib {
 	private List<String> loadSqlDataFile(ServletContext servletContext, Dbms dbms, String appPath, String filePath, String filePrefix)
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms data file to load
-		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
+		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(dbms).toString());
 		
 		// --- load the sql data
 		return Lib.text.load(servletContext, appPath, file, "UTF-8");
@@ -351,4 +328,5 @@ public class DbLib {
 		public String name;
 		public String type;
 	}
+
 }
