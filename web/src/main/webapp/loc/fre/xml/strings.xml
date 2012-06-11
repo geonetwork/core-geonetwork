@@ -1389,8 +1389,8 @@
     <custom-elementset-revert>Pour revenir à la valeur par défaut = ElementSetName des réponses complètes, supprimer tous les éléments de cette liste.</custom-elementset-revert>
     <custom-elementset-add>Ajouter un élément</custom-elementset-add>
 
-    <wmslayers>WMS layers</wmslayers>
-    <formatter.admin>Metadata Formatter Admin</formatter.admin>
-    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+    <wmslayers>Couches WMS</wmslayers>
+    <formatter.admin>Formatage de métadonnées</formatter.admin>
+    <formatter.admin.des>Interface d'administration pour les XSLT personnalisés</formatter.admin.des>
 	<monitor>Monitor</monitor>
 </strings>
