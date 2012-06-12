@@ -386,6 +386,8 @@
 	<categoryNameMandatory>Se debe rellenar el nombre de la categoría.</categoryNameMandatory>
 	<changeDate>Fecha de modificación de los metadatos</changeDate>
 	<checkusername>Check</checkusername>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>	
 	<choose>-Elegir-</choose>
 	<chooseFile>Seleccionar la ubicación del fichero a enviar</chooseFile>
 	<chooseLargeThumbnail>Elegir la ubicación del fichero thumbnail grande</chooseLargeThumbnail>
@@ -414,6 +416,10 @@
 	<createTip>Añadir un nuevo metadato usando esta plantilla</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Testear el interface CSW ISO del catálogo</cswTestDesc>
 	<dataQualityTab>Calidad de los datos</dataQualityTab>
@@ -735,6 +741,11 @@
     <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichero para la descarga (FTP)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichero para la descarga</protocolChoice>
+  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
+  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
+  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
 	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Dirección Web (URL)</protocolChoice>
@@ -1345,7 +1356,6 @@
 	<addremove>Agregar o quitar</addremove>
     <enabled>Habilitado</enabled>
     <notifications>Notificación a los objetivos a distancia</notifications>
-    <url>URL</url>
     
     <cswServer>CSW server</cswServer>
     <cswServerDes>CSW Server configuration</cswServerDes>

@@ -372,7 +372,6 @@ ISO 19115 не позволяет иметь более одного.
 	<bookmarkPermanent>Постоянная ссылка на это описание</bookmarkPermanent>
 	<bookmarkStumbleUpon>Закладка на StumbleUpon</bookmarkStumbleUpon>
 	<bounding>Ограничивающие координаты</bounding>
-	<bounding>Ограничивающий прямоугольник</bounding>
 	<boundingRelation value="encloses">заключено в</boundingRelation>
 	<boundingRelation value="equal">совпадает с</boundingRelation>
 	<boundingRelation value="fullyOutsideOf">целиком снаружи</boundingRelation>
@@ -391,6 +390,8 @@ ISO 19115 не позволяет иметь более одного.
 	<categoryNameMandatory>Название категории должно быть заполнено</categoryNameMandatory>
 	<changeDate>Дата изменения метаданных</changeDate>
 	<checkusername>Проверить</checkusername>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>	
 	<choose>- Выбрать -</choose>
 	<chooseFile>Укажите местоположение файла для загрузки</chooseFile>
 	<chooseLargeThumbnail>Укажите местоположение файла большого эскиза</chooseLargeThumbnail>
@@ -419,6 +420,10 @@ ISO 19115 не позволяет иметь более одного.
 	<createTip>Создать новые метаданные, используя данный шаблон</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Качество данных</dataQualityTab>
@@ -725,6 +730,11 @@ ISO 19115 не позволяет иметь более одного.
     <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
     <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
+  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
+  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
+  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
     <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">Сервис OGC-WCS Web Coverage Service (версия 1.1.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
@@ -1126,7 +1136,6 @@ ISO 19115 не позволяет иметь более одного.
 		<iso19139>Сохранить метаданные ISO19115/19139 в формате XML</iso19139>
 		<iso19139fra>Сохранить метаданные ISO19115/19139 Fra в формате XML</iso19139fra>
 	</savexml>
-  <url>URL</url>
   <thesaurus>
     <load>Загрузить из хранилища тезаурусов GeoNetwork </load>    	<addelement>Добавить элемент</addelement>
 		<admin>Управлять тезаурусом</admin>

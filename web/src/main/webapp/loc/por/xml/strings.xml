@@ -386,6 +386,8 @@
 	<categoryNameMandatory>É obrigatório de preencher nome de categoria.</categoryNameMandatory>
 	<changeDate>Metadata change date</changeDate>
 	<checkusername>Verificar</checkusername>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>	
 	<choose>-Escolher-</choose>
 	<chooseFile>Escolha o diretório do ficheiro que deve ser carregado</chooseFile>
 	<chooseLargeThumbnail>Escolha o diretório da imagem miniatura grande</chooseLargeThumbnail>
@@ -414,6 +416,10 @@
 	<createTip>Criar metadados novos deste molde</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>Teste CSW Perfil ISO teste</cswTest>
 	<cswTestDesc>Teste da interface para a interface do catalogo CSW Perfil ISO</cswTestDesc>
 	<dataQualityTab>Qualidade de dados</dataQualityTab>
@@ -721,6 +727,11 @@
     <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
     <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
+  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
+  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
+  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
     <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
@@ -1353,7 +1364,6 @@
 	<addremove>Adicionar / Remover</addremove>
     <enabled>habilitado</enabled>
     <notifications>Notificação para alvos remotos</notifications>
-    <url>URL</url>    
 
     <cswServer>CSW server</cswServer>
     <cswServerDes>CSW Server configuration</cswServerDes>

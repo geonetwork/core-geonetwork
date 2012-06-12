@@ -380,6 +380,8 @@
 	<categoryNameMandatory>Ein Kategoriename muss ausgefüllt werden.</categoryNameMandatory>
 	<changeDate>Änderungsdatum der Metadaten</changeDate>
 	<checkusername>Überpüfen</checkusername>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>	
 	<choose>-Auswählen-</choose>
 	<chooseFile>Auswahl des Verzeinisses der hochgeladenen Datei </chooseFile>
 	<chooseLargeThumbnail>Auswahl des Verzeinisses der hochgeladenen grossen Minaturansicht </chooseLargeThumbnail>
@@ -408,6 +410,10 @@
 	<createTip>Neue Metadaten mit dieser Vorlage erstellen</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profil Test</cswTest>
 	<cswTestDesc>Testumgebung für CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Datenqualität</dataQualityTab>
@@ -718,6 +724,38 @@
     <protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei (*.AXL)</protocolChoice>
     <protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
     <protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
+  <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
+  <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
+  <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
+  <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
+	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
+	  <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
+  <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
+  <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
+  <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
+  <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+  <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+  <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
+  <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
+  <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
+  <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
+  <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
+  <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
+  <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
+  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
+  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>	
 	<pubdate>Publikationsdatum</pubdate>
 	<publicationDate>Publikationsdatum</publicationDate>
 	<publisher>Herausgeber</publisher>
@@ -1087,7 +1125,6 @@
 		<iso19139>Speichert ISO19115/19139 Metadaten als XML</iso19139>
 		<iso19139fra>Speichert ISO19115/19139 Fra Metadata als XML</iso19139fra>
 	</savexml>
-  <url>URL</url>
   <thesaurus>
     <load>Aus dem GeoNetwork Thesaurusverzeichnis laden</load>    
 		<addelement>Element hinzufügen</addelement>
