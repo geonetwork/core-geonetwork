@@ -2,6 +2,8 @@ package org.fao.geonet;
 
 import java.sql.SQLException;
 
+import org.fao.geonet.kernel.setting.SettingManager;
+
 import jeeves.resources.dbms.Dbms;
 
 /**
@@ -10,5 +12,5 @@ import jeeves.resources.dbms.Dbms;
  * @author jeichar
  */
 public interface DatabaseMigrationTask {
-	void update(Dbms dbms) throws SQLException;
+	void update(SettingManager settings, Dbms dbms) throws SQLException;
 }

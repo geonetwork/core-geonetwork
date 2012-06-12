@@ -549,8 +549,9 @@ public class Geonetwork implements ApplicationHandler {
                     for(Element file : versionConfiguration) {
                     	if(file.getName().equals("java")) {
 	                        try {
+	                        	settingMan.refresh(dbms);
 	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
-	                            task.update(dbms);
+	                            task.update(settingMan, dbms);
 	                        } catch (Exception e) {
 	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
 	                            e.printStackTrace();
