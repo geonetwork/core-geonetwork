@@ -155,6 +155,16 @@ public class QueryBuilder<Q> {
         statement.append(" FROM ");
         statement.append(paths);
         statement.append(' ');
+
+        if(whereClause != null) {
+            String clause = whereClause.getClause();
+            if (!clause.trim().isEmpty()) {
+                statement.append("WHERE ");
+                statement.append(whereClause.getClause());
+                statement.append(' ');
+            }
+        }
+
         if (limit > -1) {
             statement.append("LIMIT ");
             statement.append(limit);
@@ -165,15 +175,7 @@ public class QueryBuilder<Q> {
             statement.append(offset);
             statement.append(' ');
         }
-
-        if(whereClause != null) {
-            String clause = whereClause.getClause();
-            if (!clause.trim().isEmpty()) {
-                statement.append("WHERE ");
-                statement.append(whereClause.getClause());
-                statement.append(' ');
-            }
-        }
+        
         if (namespaces.length() > 0) {
             statement.append("USING NAMESPACE ");
             statement.append(namespaces);

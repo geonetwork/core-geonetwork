@@ -79,7 +79,7 @@ public class GetKeywords implements Service {
 		}
 
 		// get the results
-		response.addContent(searcher.getResults());
+		response.addContent(searcher.getXmlResults());
 
 		
 		
