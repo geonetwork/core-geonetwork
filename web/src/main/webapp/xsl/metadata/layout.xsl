@@ -8,6 +8,7 @@
   xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:date="http://exslt.org/dates-and-times"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
+	xmlns:gmx="http://www.isotc211.org/2005/gmx"
   exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date xs">
 
   <xsl:import href="../text-utilities.xsl"/>
@@ -1215,7 +1216,8 @@
     <xsl:param name="id" select="generate-id(.)"/>
     <xsl:param name="visible" select="true()"/>
 
-    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
+    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0
+					and (name(.) != 'gmx:Anchor' and name(..) != 'gmx:Anchor')"/>
     <xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
 
     <tr id="{$id}">
@@ -1737,7 +1739,8 @@
     <xsl:variable name="edit" select="xs:boolean($edit)"/>
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
-    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
+    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0
+					and $name != 'gmx:Anchor'"/>
     <xsl:choose>
       <!-- list of values -->
       <xsl:when test="geonet:element/geonet:text">

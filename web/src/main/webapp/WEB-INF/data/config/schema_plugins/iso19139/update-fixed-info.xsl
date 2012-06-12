@@ -249,14 +249,6 @@
 
 	<!-- ================================================================= -->
 
-  <xsl:template match="gmx:FileName[contains(../../@id,'geonetwork.thesaurus.')]" priority="200">
-		<xsl:copy>
-    	<xsl:apply-templates select="node()|@*"/>
-		</xsl:copy>
-	</xsl:template>
-
-	<!-- ================================================================= -->
-
   <xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
     <xsl:copy>
 			<xsl:attribute name="src">
@@ -310,16 +302,6 @@
 				</gmd:PT_Locale>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
-
-	<!-- Replace gmx:Anchor element by a simple gco:CharacterString.
-		gmx:Anchor is usually used for linking element using xlink.
-		TODO : Currently gmx:Anchor is not supported
-	-->
-	<xsl:template match="gmx:Anchor">
-		<gco:CharacterString>
-			<xsl:value-of select="."/>
-		</gco:CharacterString>
 	</xsl:template>
 
 	<!-- ================================================================= -->

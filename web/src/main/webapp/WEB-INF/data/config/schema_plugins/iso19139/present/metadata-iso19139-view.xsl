@@ -237,6 +237,13 @@
       <xsl:with-param name="content">
         <xsl:for-each select="gmd:keyword">
           <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
+
+					<xsl:choose>
+						<xsl:when test="gmx:Anchor">
+							<a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
+						</xsl:when>
+						<xsl:otherwise>
+
           <xsl:call-template name="translatedString">
             <xsl:with-param name="schema" select="$schema"/>
             <xsl:with-param name="langId">
@@ -246,6 +253,10 @@
               </xsl:call-template>
             </xsl:with-param>
           </xsl:call-template>
+
+						</xsl:otherwise>
+					</xsl:choose>
+
         </xsl:for-each>
         <xsl:if test="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           (<xsl:value-of

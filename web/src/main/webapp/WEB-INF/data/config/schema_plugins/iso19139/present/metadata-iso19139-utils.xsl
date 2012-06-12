@@ -27,14 +27,14 @@
                     select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"
                 />
             </xsl:when>
-            <xsl:when test="not(gco:CharacterString) and not(gmx:MimeFileType)">
+            <xsl:when test="not(gco:CharacterString)">
                 <!-- If no CharacterString, try to use the first textGroup available -->
                 <xsl:value-of
                     select="gmd:PT_FreeText/gmd:textGroup[position()=1]/gmd:LocalisedCharacterString"
                 />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="gco:CharacterString|gmx:MimeFileType"/>
+                <xsl:value-of select="gco:CharacterString"/>
             </xsl:otherwise>
         </xsl:choose>
 
