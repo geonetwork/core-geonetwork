@@ -251,8 +251,21 @@
                 <xsl:with-param name="loctag2"
                     select="exslt:node-set(//*[name(.)=concat($file, '.ger')])/*/*" />
             </xsl:call-template>
-        </td> 
-		<td>
+        </td>
+        <td>
+            <xsl:call-template name="compare">
+                <xsl:with-param name="tag" select="$tag" />
+                <xsl:with-param name="string" select="$string" />
+                <xsl:with-param name="value" select="$value" />
+                <xsl:with-param name="type" select="$type" />
+                <xsl:with-param name="id" select="$id" />
+                <xsl:with-param name="loctag1"
+                                select="exslt:node-set(//*[name(.)=concat($file, '.ita')])/*" />
+                <xsl:with-param name="loctag2"
+                                select="exslt:node-set(//*[name(.)=concat($file, '.ita')])/*/*" />
+            </xsl:call-template>
+        </td>
+        <td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -397,4 +410,3 @@
 
 
 </xsl:stylesheet>
-
