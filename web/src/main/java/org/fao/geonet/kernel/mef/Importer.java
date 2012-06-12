@@ -564,10 +564,12 @@ public class Importer {
 			boolean groupOwner = group.getAttributeValue("groupOwner") != null;
 			String grpId = mapLocalEntity(locGrps, grpName);
 
-			if (grpId == null)
-                if(Log.isDebugEnabled(Geonet.MEF))
+
+			if (grpId == null) {
+                if(Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
-			else {
+                }
+			} else {
 				// --- metadata group exists locally
 
                     if(Log.isDebugEnabled(Geonet.MEF))
