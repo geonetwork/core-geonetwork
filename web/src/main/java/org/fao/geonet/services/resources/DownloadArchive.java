@@ -165,7 +165,7 @@ public class DownloadArchive implements Service
 		//--- get logged in user details & record in 'userdetails'
 		Element userDetails = new Element("userdetails");
 		if (!username.equals("internet")) {
-			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=" + userId);
+			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?", new Integer(userId));
 			if (elUser.getChild("record") != null) {
 				userDetails.addContent(elUser.getChild("record").cloneContent());
 			}
@@ -384,15 +384,15 @@ public class DownloadArchive implements Service
 			} else {
 				context.debug("Sending email notification for file : "+ theFile);
 
-					// send emails about downloaded file to groups with notify privilege
-				StringBuffer query = new StringBuffer();
-				query.append("SELECT g.id, g.name, g.email ");
-				query.append("FROM   OperationAllowed oa, Groups g ");
-				query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
-				query.append("AND    oa.metadataId = " + id + " ");
-				query.append("AND    oa.groupId = g.id");
+				// send emails about downloaded file to groups with notify privilege
+                StringBuffer query = new StringBuffer();
+                query.append("SELECT g.id, g.name, g.email ");
+                query.append("FROM   OperationAllowed oa, Groups g ");
+                query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
+                query.append("AND    oa.metadataId = ?");
+                query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString());
+				Element groups = dbms.select(query.toString(), new Integer(id));
 
 				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); ) {
 					Element group = (Element)i.next();

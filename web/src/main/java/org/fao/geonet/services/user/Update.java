@@ -103,8 +103,8 @@ public class Update implements Service
 			//
 			if (operation.equals("newuser") || operation.equals("editinfo")) {
 				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
-					Element bull = dbms.select("SELECT groupId from UserGroups WHERE userId="+myUserId);
-					java.util.List adminlist = bull.getChildren();
+                    Element bull = dbms.select("SELECT groupId from UserGroups WHERE userId=?", new Integer(myUserId));
+                    java.util.List adminlist = bull.getChildren();
 					for(int i=0; i<listGroups.size(); i++) {
 						String group = ((Element) listGroups.get(i)).getText();
 						Boolean found = false;

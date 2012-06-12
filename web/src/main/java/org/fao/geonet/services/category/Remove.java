@@ -59,13 +59,14 @@ public class Remove implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId="+id;
+        int iId = new Integer(id);
+        String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId=?";
 
-		List<Element> reindex = dbms.select(query).getChildren();
+        List<Element> reindex = dbms.select(query, iId).getChildren();
 
-		dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=" + id);
-		dbms.execute ("DELETE FROM CategoriesDes WHERE idDes="      + id);
-		dbms.execute ("DELETE FROM Categories    WHERE id="         + id);
+        dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=?",iId);
+        dbms.execute ("DELETE FROM CategoriesDes WHERE idDes=?",iId);
+        dbms.execute ("DELETE FROM Categories    WHERE id=?",iId);
 
 		//--- reindex affected metadata
 

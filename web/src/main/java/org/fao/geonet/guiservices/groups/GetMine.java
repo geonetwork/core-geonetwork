@@ -60,18 +60,17 @@ public class GetMine implements Service
 
 		//--- retrieve user groups
 
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile()))
-			return Lib.local.retrieve(dbms, "Groups", "id > 1");
-		else
-		{
-			String query = "SELECT groupId as id FROM UserGroups WHERE groupId > 1 "+
-								"AND userId=" + session.getUserId();
+        if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
+            return Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
+        } else {
+            String query = "SELECT groupId as id FROM UserGroups WHERE groupId > 1 "+
+                    "AND userId=?";
 
-			Set<String> ids = Lib.element.getIds(dbms.select(query));
-			Element groups = Lib.local.retrieve(dbms, "Groups", null, "id");
+            Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserIdAsInt()));
+            Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 
-			return Lib.element.pruneChildren(groups, ids);
-		}
+            return Lib.element.pruneChildren(groups, ids);
+        }
 	}
 }
 

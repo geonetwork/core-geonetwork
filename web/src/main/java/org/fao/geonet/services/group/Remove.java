@@ -58,16 +58,18 @@ public class Remove implements Service
 	{
 		String id = Util.getParam(params, Params.ID);
 
+        int iId = new Integer(id);
+
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		String query = "SELECT DISTINCT metadataId FROM OperationAllowed WHERE groupId="+id;
+		String query = "SELECT DISTINCT metadataId FROM OperationAllowed WHERE groupId=?";
 
-		List<Element> reindex = dbms.select(query).getChildren();
+		List<Element> reindex = dbms.select(query, iId).getChildren();
 
-		dbms.execute("DELETE FROM OperationAllowed WHERE groupId="+ id);
-		dbms.execute("DELETE FROM UserGroups       WHERE groupId="+ id);
-		dbms.execute("DELETE FROM GroupsDes        WHERE idDes="  + id);
-		dbms.execute("DELETE FROM Groups           WHERE id="     + id);
+		dbms.execute("DELETE FROM OperationAllowed WHERE groupId=?", iId);
+		dbms.execute("DELETE FROM UserGroups       WHERE groupId=?", iId);
+		dbms.execute("DELETE FROM GroupsDes        WHERE idDes=?"  , iId);
+		dbms.execute("DELETE FROM Groups           WHERE id=?"     , iId);
 
 		//--- reindex affected metadata
 

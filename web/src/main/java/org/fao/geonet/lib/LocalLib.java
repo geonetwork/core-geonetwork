@@ -156,31 +156,31 @@ public class LocalLib
 
 	//-----------------------------------------------------------------------------
 
-	public Element retrieve(Dbms dbms, String table) throws SQLException
-	{
-		return retrieve(dbms, table, null, null, null);
-	}
+    public Element retrieve(Dbms dbms, String table) throws SQLException
+    {
+        return retrieve(dbms, table, null, null, null, (Object[])null);
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public Element retrieve(Dbms dbms, String table, String where) throws SQLException
-	{
-		return retrieve(dbms, table, null, where, null);
-	}
+    public Element retrieveWhere(Dbms dbms, String table, String where, Object... args) throws SQLException
+    {
+        return retrieve(dbms, table, null, where, null, args);
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public Element retrieve(Dbms dbms, String table, String where, String orderBy) throws SQLException
-	{
-		return retrieve(dbms, table, null, where, orderBy);
-	}
+    public Element retrieveWhereOrderBy(Dbms dbms, String table, String where, String orderBy, Object... args) throws SQLException
+    {
+        return retrieve(dbms, table, null, where, orderBy, args);
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
-	{
-		return retrieve(dbms, table, id, null, null);
-	}
+    public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
+    {
+        return retrieve(dbms, table, id, null, null, new Integer(id));
+    }
 
 	//-----------------------------------------------------------------------------
 	//---
@@ -188,81 +188,84 @@ public class LocalLib
 	//---
 	//-----------------------------------------------------------------------------
 
-	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy)
-												throws SQLException
-	{
-		String query1 = "SELECT * FROM "+table;
-		String query2 = "SELECT * FROM "+table+"Des";
+    private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args)
+            throws SQLException
+    {
+        String query1 = "SELECT * FROM "+table;
+        String query2 = "SELECT * FROM "+table+"Des";
 
-		if (id == null)
-		{
-			if (where != null)
-				query1 += " WHERE "+ where;
-		}
-		else
-		{
-			query1 += " WHERE id="   +id;
-			query2 += " WHERE idDes="+id;
-		}
+        if (id == null)
+        {
+            if (where != null)
+                query1 += " WHERE "+ where;
+        }
+        else
+        {
+            query1 += " WHERE id=?";
+            query2 += " WHERE idDes=?";
+        }
 
-		if (orderBy != null)
-			query1 += " ORDER BY "+ orderBy;
+        if (orderBy != null)
+            query1 += " ORDER BY "+ orderBy;
 
-		Element result = dbms.select(query1);
+        Element result = dbms.select(query1, args);
 
-		List base = result.getChildren();
-		List des  = dbms.select(query2).getChildren();
+        List base = result.getChildren();
 
-		//--- preprocess data for faster access
+        List des;
+        if (id != null) des = dbms.select(query2, args).getChildren();
+        else des = dbms.select(query2).getChildren();
 
-		Map<String, List<String>> langData = new HashMap<String, List<String>>();
+        //--- preprocess data for faster access
 
-		for (Object o : des)
-		{
-			Element loc = (Element) o;
+        Map<String, List<String>> langData = new HashMap<String, List<String>>();
 
-			String iddes = loc.getChildText("iddes");
-			String lang  = loc.getChildText("langid");
-			String label = loc.getChildText("label");
+        for (Object o : des)
+        {
+            Element loc = (Element) o;
 
-			List<String> list = langData.get(iddes);
+            String iddes = loc.getChildText("iddes");
+            String lang  = loc.getChildText("langid");
+            String label = loc.getChildText("label");
 
-			if (list == null)
-			{
-				list = new ArrayList<String>();
-				langData.put(iddes, list);
-			}
+            List<String> list = langData.get(iddes);
 
-			list.add(lang);
-			list.add(label);
-		}
+            if (list == null)
+            {
+                list = new ArrayList<String>();
+                langData.put(iddes, list);
+            }
 
-		//--- fill results
+            list.add(lang);
+            list.add(label);
+        }
 
-		for (Object o : base)
-		{
-			Element record = (Element) o;
-			Element labels = new Element("label");
+        //--- fill results
 
-			record.addContent(labels);
+        for (Object o : base)
+        {
+            Element record = (Element) o;
+            Element labels = new Element("label");
 
-			id = record.getChildText("id");
+            record.addContent(labels);
 
-			List<String> list = langData.get(id);
-			if(list != null) {
-				for (int j=0; j<list.size(); j+=2) {
-					labels.addContent(new Element(list.get(j)).setText(list.get(j+1)));
-				}
-			}
-			else {
-				System.out.println("WARNING: CORRUPT DATA IN DATABASE: No localization found for record in table " + table + " with id: " + id + ", skipping it.");
+            id = record.getChildText("id");
 
-			}
+            List<String> list = langData.get(id);
+            if(list != null) {
+                for (int j=0; j<list.size(); j+=2) {
+                    labels.addContent(new Element(list.get(j)).setText(list.get(j+1)));
+                }
+            }
+            else {
+                System.out.println("WARNING: CORRUPT DATA IN DATABASE: No localization found for record in table " + table + " with id: " + id + ", skipping it.");
 
-		}
+            }
 
-		return result.setName(table.toLowerCase());
-	}
+        }
+
+        return result.setName(table.toLowerCase());
+    }
 }
 
 //=============================================================================

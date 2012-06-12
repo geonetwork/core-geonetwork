@@ -67,21 +67,24 @@ public class Remove implements Service
 			throw new IllegalArgumentException("You cannot delete yourself from the user database");
 		}
 
+        int iId = Integer.parseInt(id);
+
 		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
 				myProfile.equals("UserAdmin"))  {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 			if (myProfile.equals("UserAdmin")) {
-				java.util.List adminlist =dbms.select("SELECT groupId FROM UserGroups WHERE userId="+myUserId+" or userId = "+id+" group by groupId having count(*) > 1").getChildren();
-				if (adminlist.size() == 0) {
+                Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", new Integer(myUserId), iId);
+
+                if (admin.getChildren().size() == 0) {
 				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
 				}
 			}
 
-			dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
-			dbms.execute ("DELETE FROM Users      WHERE     id=" + id);
-		} else {
+            dbms.execute ("DELETE FROM UserGroups WHERE userId=?",iId);
+            dbms.execute ("DELETE FROM Users      WHERE     id=?",iId);
+        } else {
 			throw new IllegalArgumentException("You don't have rights to delete this user");
 		}
 

@@ -70,19 +70,20 @@ public class PwUpdate implements Service
 			throw new UserNotFoundEx(null);
 
 		
-		// check valid user 
-		Element elUser = dbms.select(	"SELECT * FROM Users " +
-												"WHERE id=" + userId);
+		// check valid user
+        int iUserId = Integer.parseInt(userId);
+        Element elUser = dbms.select(	"SELECT * FROM Users WHERE id=?",iUserId);
+
 		if (elUser.getChildren().size() == 0)
 			throw new UserNotFoundEx(userId);
 
 		// check old password
-		elUser = dbms.select(	"SELECT * FROM Users " +
-												"WHERE id=" + userId + " AND password='" + Util.scramble(password) + "'");
+        String query = "SELECT * FROM Users WHERE id=? AND password=?";
+        elUser = dbms.select(query, iUserId, Util.scramble(password));
+
 		if (elUser.getChildren().size() == 0) {
-			// Check old password hash method
-			elUser = dbms.select(	"SELECT * FROM Users " +
-					"WHERE id=" + userId + " AND password='" + Util.oldScramble(password) + "'");
+            // Check old password hash method
+            elUser = dbms.select(query, iUserId, Util.oldScramble(password));
 
 			if (elUser.getChildren().size() == 0)
 				throw new IllegalArgumentException("Old password is not correct");
