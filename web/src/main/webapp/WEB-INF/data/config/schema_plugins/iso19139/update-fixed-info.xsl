@@ -312,16 +312,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- Replace gmx:Anchor element by a simple gco:CharacterString.
-		gmx:Anchor is usually used for linking element using xlink.
-		TODO : Currently gmx:Anchor is not supported
-	-->
-	<xsl:template match="gmx:Anchor">
-		<gco:CharacterString>
-			<xsl:value-of select="."/>
-		</gco:CharacterString>
-	</xsl:template>
-
 	<!-- ================================================================= -->
 	<!-- copy everything else as is -->
 	

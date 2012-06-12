@@ -630,6 +630,33 @@
     </xsl:call-template>
   </xsl:template>
   
+  <!-- gmx:Anchor is a substitute of gco:CharacterString and 
+      could be use to create a hyperlink for an element.
+    -->
+  <xsl:template mode="iso19139"
+      match="*[gmx:Anchor]" priority="99">
+    <xsl:param name="schema" />
+    <xsl:param name="edit" />
+    
+    <xsl:apply-templates mode="complexElement" select=".">
+      <xsl:with-param name="schema"   select="$schema"/>
+      <xsl:with-param name="edit"     select="$edit"/>
+      <xsl:with-param name="content">
+        <xsl:choose>
+          <xsl:when test="$edit=true()">
+            <!-- existing content -->
+            <xsl:apply-templates mode="simpleElement" select="gmx:Anchor/.">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit"   select="$edit"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>    
+          </xsl:otherwise>
+         </xsl:choose>
+        </xsl:with-param>
+      </xsl:apply-templates>
+  </xsl:template>
   
   <!-- Add exception to update-fixed-info to avoid URL creation for downloadable resources -->
   <xsl:template mode="iso19139" match="gmd:contactInstructions[gmx:FileName]" priority="2">

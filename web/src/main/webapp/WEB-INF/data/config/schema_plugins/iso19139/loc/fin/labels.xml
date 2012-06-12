@@ -2854,4 +2854,19 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 			<option value="km">kilometriä</option>
 		</helper>
 	</element>
+	
+	<element name="gmx:Anchor">
+		<label>Anchor</label>
+		<description>Supports hyper-linking
+			capabilities and ensures a web-
+			like implementation of
+			CharacterStrings</description>
+	</element>
+	<element name="xlink:href">
+		<label>URL</label>
+		<description>Supplies the data that allows an
+			XLink application to find a remote
+			resource (or resource fragment)
+			[W3C XLINK]</description>
+	</element>
 </labels>
