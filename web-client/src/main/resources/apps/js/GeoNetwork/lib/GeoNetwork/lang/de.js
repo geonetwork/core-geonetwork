@@ -477,7 +477,29 @@ GeoNetwork.Lang.de = {
     'privTplElTT': 'Manage privileges for the current selection.',
     'addTplElTT': 'Add an element from an XML fragment to a directory. The destination directory is based on the root element name (eg. gmd:CI_ResponsibleParty).',
     'copyTplElTT': 'Create a new entry in the directory from the current selection.',
-    'delTplElTT': 'Remove selected entry from the directory.'
+    'delTplElTT': 'Remove selected entry from the directory.',
+	
+	//tabbed search
+	'Home': "Hause",
+	'Map': "Karte",
+	'Poweredby': "Bereitgestellt von",
+	'About': "Uber",
+	'org': "Organisation",
+	'keyword': "Stichwort",
+	'When': "Wenn",
+	'Where': "Wo",
+	'What': "Wass",
+	'advancedSearchOptions': "Erweiterte Suchoptionen",
+	'hitsPerPage': "Treffer pro Seite",
+	'Searchforspatialdataon': "Suche nach Geodaten auf",
+	'search': "Suchen",
+	'fullTextSearch': "Volltextsuche",
+	'reset': "reset",
+	'resetSearchForm': "Reset Suchformular",
+	'Advanced': "Erweiterte",
+	'newWindow': "neues Fenster",
+	'mdEditor': "Metadata editor",
+	'List': "Liste"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.Lang.de);

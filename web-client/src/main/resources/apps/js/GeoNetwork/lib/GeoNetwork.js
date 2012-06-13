@@ -81,6 +81,8 @@
             "GeoNetwork/Util.js",
             "GeoNetwork/lang/en.js",
             "GeoNetwork/lang/fr.js",
+			"GeoNetwork/lang/nl.js",
+			"GeoNetwork/lang/de.js",
             "GeoNetwork/Catalogue.js",
             "GeoNetwork/util/Old.js",
             "GeoNetwork/util/SearchTools.js",
