@@ -480,7 +480,29 @@ GeoNetwork.Lang.nl = {
     'privTplElTT': "Beheer rechten voor de huidige selectie.",
     'addTplElTT': "Voeg een element toe van een XML fragment aan een folder. De doelfolder is gebaseerd op de naam van het root element (eg. gmd:CI_ResponsibleParty).",
     'copyTplElTT': "Maak een nieuw element in de folder voor de huidige selectie.",
-    'delTplElTT': 'Verwijder geselecteerd element uit de folder.'
+    'delTplElTT': 'Verwijder geselecteerd element uit de folder.',
+	
+	//tabbed search
+	'Home': "Home",
+	'Map': "Kaart",
+	'Poweredby': "Door",
+	'About': "Over",
+	'org': "Organisatie",
+	'keyword': "zoekterm",
+	'When': "Wanneer",
+	'Where': "Waar",
+	'What': "Wat",
+	'advancedSearchOptions': "Geavanceerde zoek opties",
+	'hitsPerPage': "REsultaten per pagina",
+	'Searchforspatialdataon': "Zoek ruimtelijke data over",
+	'search': "zoeken",
+	'fullTextSearch': "Gehele tekst doorzoeken",
+	'reset': "reset",
+	'resetSearchForm': "Zoek formulier resetten",
+	'Advanced': "Geavanceerd",
+	'newWindow': "nieuw venster",
+	'mdEditor': "Metadata editor",
+	'List': "Lijst"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

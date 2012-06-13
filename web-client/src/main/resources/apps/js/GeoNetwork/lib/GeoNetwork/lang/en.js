@@ -491,7 +491,27 @@ GeoNetwork.lang.en = {
     'addTplElTT': 'Add an element from an XML fragment to a directory. The destination directory is based on the root element name (eg. gmd:CI_ResponsibleParty).',
     'copyTplElTT': 'Create a new entry in the directory from the current selection.',
     'delTplElTT': 'Remove selected entry from the directory.',
-    'language': 'Language'
+    'language': 'Language',
+	
+	//tabbed search
+	'Home': "Home",
+	'Map': "Map",
+	'Poweredby': "Powered by",
+	'About': "About",
+	'org': "Organisation",
+	'keyword': "keyword",
+	'when': "when",
+	'advancedSearchOptions': "Advanced Search Options",
+	'hitsPerPage': "Hits Per Page",
+	'Searchforspatialdataon': "Search on spatial data",
+	'search': "Search",
+	'fullTextSearch': "Entire text search",
+	'reset': "reset",
+	'resetSearchForm': "Reset search form",
+	'Advanced': "Advanced",
+	'newWindow': "New window",
+	'mdEditor': "Metadata editor",
+	'List': "List"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);

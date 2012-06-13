@@ -489,6 +489,27 @@ GeoNetwork.Lang.fr = {
     'addTplElTT': "Ajouter un élément à partir d'un fragment d'XML. L'annuaire cible est basé sur le nom de la balise racine (eg. gmd:CI_ResponsibleParty).",
     'copyTplElTT': "Créer un nouvel élément dans l'annuaire à partir de l'élément sélectionné.",
     'delTplElTT': 'Supprimer la sélection.',
-    'language': 'Langue'
+    'language': 'Langue',
+	//tabbed search
+	'Home': "Accueil",
+	'Map': "Carte",
+	'Poweredby': "généré par",
+	'About': "Sur",
+	'org': "Organisation",
+	'keyword': "mot-clé",
+	'When': "Quand",
+	'Where': "Ou",
+	'What': "Que",
+	'advancedSearchOptions': "Options de recherche avancées",
+	'hitsPerPage': "résultats par page",
+	'Searchforspatialdataon': "Rechercher des données spatiales sur les",
+	'search': "rechercher",
+	'fullTextSearch': "Recherche texte intégral",
+	'reset': "remettre",
+	'resetSearchForm': "réinitialiser le formulaire de recherche",
+	'Advanced': "Avancées",
+	'newWindow': "nouvelle fenêtre",
+	'mdEditor': "Editeur de métadonnées",
+	'List': "Liste"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);
