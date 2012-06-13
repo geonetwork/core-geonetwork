@@ -1074,7 +1074,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             return false;
         } else {
             // Reset user cookie information
-            var cookie = Ext.state.Manager.getProvider();
             if (cookie) {
                 cookie.set('user', undefined);
             }
