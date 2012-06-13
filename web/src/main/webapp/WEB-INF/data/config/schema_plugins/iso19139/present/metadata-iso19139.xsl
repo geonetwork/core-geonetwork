@@ -1142,6 +1142,7 @@
 									<xsl:copy-of select="$value"/>
 								</td>
 							</tr>
+							<xsl:variable name="thesaurusTitle" select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:title/*[1]"/>
 							<xsl:for-each select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/gmx:Anchor[starts-with(string(),'geonetwork.thesaurus')]">
 								<tr>
 									<td width="20%">
@@ -1150,6 +1151,9 @@
 									<td>
 										<a href="{@xlink:href}">
 											<xsl:choose>
+												<xsl:when test="normalize-space($thesaurusTitle)!=''">
+													<xsl:value-of select="$thesaurusTitle"/>
+												</xsl:when>
 												<xsl:when test="normalize-space()!=''">
 													<xsl:value-of select="text()"/>
 												</xsl:when>
