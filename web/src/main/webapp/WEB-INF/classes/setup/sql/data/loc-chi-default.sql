@@ -24,7 +24,6 @@ INSERT INTO GroupsDes VALUES (0,'chi','Intranet');
 INSERT INTO GroupsDes VALUES (1,'chi','All');
 INSERT INTO GroupsDes VALUES (2,'chi','Sample group');
 
-
 INSERT INTO IsoLanguagesDes VALUES (1,'chi','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'chi','Abkhazian');
 INSERT INTO IsoLanguagesDes VALUES (3,'chi','Achinese');

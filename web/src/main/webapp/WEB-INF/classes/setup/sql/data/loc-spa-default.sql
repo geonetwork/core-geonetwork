@@ -24,7 +24,6 @@ INSERT INTO GroupsDes VALUES (0,'spa','Intranet');
 INSERT INTO GroupsDes VALUES (1,'spa','Todos');
 INSERT INTO GroupsDes VALUES (2,'spa','Grupo de ejemplo');
 
-
 INSERT INTO IsoLanguagesDes VALUES (1,'spa','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'spa','Abkhazian');
 INSERT INTO IsoLanguagesDes VALUES (3,'spa','Achinese');
@@ -812,5 +811,4 @@ INSERT INTO RegionsDes VALUES (1024,'spa','Pacific, Southwest');
 INSERT INTO RegionsDes VALUES (1025,'spa','Pacific, Southeast');
 INSERT INTO RegionsDes VALUES (1026,'spa','Pacific, Antarctic');
 INSERT INTO RegionsDes VALUES (1220,'spa','All fishing areas');
-INSERT INTO RegionsDes VALUES (9999,'spa','World');
-						
+INSERT INTO RegionsDes VALUES (9999,'spa','World');						

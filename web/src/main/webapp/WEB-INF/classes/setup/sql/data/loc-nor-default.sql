@@ -6,7 +6,6 @@ INSERT INTO CswServerCapabilitiesInfo VALUES (34, 'nor', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (35, 'nor', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (36, 'nor', 'accessConstraints', '');
 
-
 INSERT INTO CategoriesDes VALUES (1,'nor','Kart og grafikk');
 INSERT INTO CategoriesDes VALUES (2,'nor','Datasett');
 INSERT INTO CategoriesDes VALUES (3,'nor','Interakive ressurser');
@@ -24,7 +23,6 @@ INSERT INTO GroupsDes VALUES (-1,'nor','Gjest');
 INSERT INTO GroupsDes VALUES (0,'nor','Intranett');
 INSERT INTO GroupsDes VALUES (1,'nor','Alle');
 INSERT INTO GroupsDes VALUES (2,'nor','Eksempelgruppe');
-
 
 INSERT INTO IsoLanguagesDes VALUES (1,'nor','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'nor','Abkhazian');

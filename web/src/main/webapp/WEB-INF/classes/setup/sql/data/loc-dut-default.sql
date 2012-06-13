@@ -24,7 +24,6 @@ INSERT INTO GroupsDes VALUES (0,'dut','Intranet');
 INSERT INTO GroupsDes VALUES (1,'dut','Iedereen');
 INSERT INTO GroupsDes VALUES (2,'dut','Voorbeeldgroep');
 
-
 INSERT INTO IsoLanguagesDes VALUES (1,'dut','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'dut','Abkhazian');
 INSERT INTO IsoLanguagesDes VALUES (3,'dut','Achinese');

@@ -509,10 +509,6 @@ INSERT INTO IsoLanguagesDes VALUES (482,'fre','Pas de contenu linguistique');
 INSERT INTO IsoLanguagesDes VALUES (483,'fre','N''ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'fre','Zaza; dimili; dimli; kirdki; kirmanjki');
 
--- ======================================================================
--- === Table: OperationsDes
--- ======================================================================
-
 INSERT INTO OperationsDes VALUES (0,'fre','Publier');
 INSERT INTO OperationsDes VALUES (1,'fre','Télécharger');
 INSERT INTO OperationsDes VALUES (2,'fre','Editer');

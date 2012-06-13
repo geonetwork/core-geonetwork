@@ -24,7 +24,6 @@ INSERT INTO GroupsDes VALUES (0,'ger','Intranet');
 INSERT INTO GroupsDes VALUES (1,'ger','Alle');
 INSERT INTO GroupsDes VALUES (2,'ger','Beispielgruppe');
 
-
 INSERT INTO IsoLanguagesDes VALUES (1,'ger','Danakil-Sprache');
 INSERT INTO IsoLanguagesDes VALUES (2,'ger','Abchasisch');
 INSERT INTO IsoLanguagesDes VALUES (3,'ger','Aceh-Sprache');

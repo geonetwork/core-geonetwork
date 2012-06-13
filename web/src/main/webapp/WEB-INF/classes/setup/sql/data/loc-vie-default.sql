@@ -509,7 +509,6 @@ INSERT INTO IsoLanguagesDes VALUES (482,'vie','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'vie','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'vie','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-
 INSERT INTO OperationsDes VALUES (0,'vie','Publish');
 INSERT INTO OperationsDes VALUES (1,'vie','Download');
 INSERT INTO OperationsDes VALUES (2,'vie','Editing');
