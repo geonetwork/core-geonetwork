@@ -2,6 +2,7 @@ Ext.namespace('GeoNetwork');
 
 var catalogue;
 var app;
+var cookie;
 
 GeoNetwork.app = function(){
     // private vars:
@@ -9,7 +10,6 @@ GeoNetwork.app = function(){
     var searching = false;
     var editorWindow;
     var editorPanel;
-    var cookie;
 
     /**
      * Application parameters are :
