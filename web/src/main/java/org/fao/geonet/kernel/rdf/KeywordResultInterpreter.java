@@ -45,7 +45,9 @@ class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
-            .setCoordWest(coordWest);
+            .setCoordWest(coordWest)
+						.setDownloadUrl(thesaurus.getDownloadUrl())
+						.setKeywordUrl(thesaurus.getKeywordUrl());
             
         for (String lang : this.languages) {
             String value = columnValue(resultsTable, columnNameMap, row, lang+Selectors.LABEL_POSTFIX);

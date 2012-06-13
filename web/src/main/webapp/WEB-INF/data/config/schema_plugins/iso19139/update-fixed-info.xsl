@@ -249,14 +249,6 @@
 
 	<!-- ================================================================= -->
 
-  <xsl:template match="gmx:FileName[contains(../../@id,'geonetwork.thesaurus.')]" priority="200">
-		<xsl:copy>
-    	<xsl:apply-templates select="node()|@*"/>
-		</xsl:copy>
-	</xsl:template>
-
-	<!-- ================================================================= -->
-
   <xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
     <xsl:copy>
 			<xsl:attribute name="src">

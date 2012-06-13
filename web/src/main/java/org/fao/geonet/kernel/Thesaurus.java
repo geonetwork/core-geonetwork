@@ -74,6 +74,8 @@ public class Thesaurus {
 
     private String downloadUrl;
 
+    private String keywordUrl;
+
 	@SuppressWarnings("unused")
 	private String name;
 
@@ -108,6 +110,7 @@ public class Thesaurus {
 		this.dname = dname;
 		this.thesaurusFile = thesaurusFile; 
 		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
+		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
 		
         retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
 	}
@@ -156,6 +159,10 @@ public class Thesaurus {
 		return downloadUrl;
 	}
 
+  public String getKeywordUrl() {
+		return keywordUrl;
+	}
+
   public void retrieveThesaurusTitle() {
     retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, false);
   }
@@ -178,6 +185,11 @@ public class Thesaurus {
 		} else {
 			return siteUrl + "/thesaurus.download?ref="+Thesaurus.buildThesaurusKey(fname, type, dname);
 		}
+	}
+
+	private String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
+		return siteUrl + "/xml.keyword.get?thesaurus="+Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id="; 
+		// needs to have term/concept id tacked onto the end
 	}
 
 	public LocalRepository getRepository() {
