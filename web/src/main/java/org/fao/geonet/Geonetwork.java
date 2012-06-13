@@ -526,7 +526,7 @@ public class Geonetwork implements ApplicationHandler {
 			boolean anyMigrationError = false;
 			
             try {
-            	moveHarvesterSettings(dbms);
+            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
             } catch (Exception e) {
                 logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
                 e.printStackTrace();
@@ -614,33 +614,6 @@ public class Geonetwork implements ApplicationHandler {
             }
 			// TODO : Maybe some migration stuff has to be done in Java ?
 		}
-	}
-
-	private void moveHarvesterSettings(Dbms dbms) throws SQLException {
-		final int MIN_HARVEST_ID = 100000;
-		String url = dbms.getURL();
-		Element result = dbms.select("select * from Settings where parentid = 2 and id < "+MIN_HARVEST_ID);
-		
-		if(result.getChildren().size() > 0) {
-			dbms.execute("SELECT * INTO Harvester FROM Settings WHERE parentid = 2");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-			dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
-
-			dbms.execute("DELETE FROM Settings WHERE id IN (SELECT id FROM Harvester)");
-
-			dbms.execute("UPDATE Harvester SET id = id + "+MIN_HARVEST_ID);
-			dbms.execute("UPDATE Harvester SET parentid = parentid + "+MIN_HARVEST_ID+" where parentid != 2");
-
-			dbms.execute("INSERT INTO Settings SELECT * FROM Harvester");
-		}
-
 	}
 
 	/**
