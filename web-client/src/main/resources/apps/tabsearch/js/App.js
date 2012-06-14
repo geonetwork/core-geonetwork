@@ -350,7 +350,7 @@ GeoNetwork.app = function(){
                     },
                     border:false,
                     items:[
-                        {html:'<h1>Search for spatial data on</h1>',margins:'5 10 5 10',border:false },
+                        {html:'<h1>'+OpenLayers.i18n('Searchforspatialdataon')+'</h1>',margins:'5 10 5 10',border:false },
                         new GeoNetwork.form.OpenSearchSuggestionTextField({
                            //hideLabel: true,
                            width: 285,
@@ -410,6 +410,7 @@ GeoNetwork.app = function(){
                         align: 'center'
                     },
                     id:'advSearch',
+                    autoScroll:true,
                     bodyStyle:{padding:'20px 0px 20px 0px'},
                     border:false,
                     height:60,
@@ -437,7 +438,7 @@ GeoNetwork.app = function(){
                     items:[
                         // What panel
                         {
-                            title:'What',
+                            title:OpenLayers.i18n('What'),
                             margins:'0 5 0 0',
                             layout:'form',
                             items:[
@@ -446,7 +447,7 @@ GeoNetwork.app = function(){
                         },
                         // Where panel
                         {
-                            title:'Where',
+                            title:OpenLayers.i18n('Where'),
                             margins:'0 5 0 5',
                             bodyStyle:'padding:0px',
                             layout:'form',
@@ -457,7 +458,7 @@ GeoNetwork.app = function(){
                         },
                         // When panel
                         {
-                            title:'When',
+                            title:OpenLayers.i18n('When'),
                             margins:'0 5 0 5',
                             defaultType: 'datefield',
                             layout:'form',
@@ -471,16 +472,7 @@ GeoNetwork.app = function(){
                             defaultType: 'datefield',
                             layout:'form',
                             items: GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
-                        }  /*,
-                        //Options
-                     {
-                            title:'Options',
-                            margins:'0 0 0 5',
-                            layout:'form',
-                            items:[
-                                GeoNetwork.util.SearchFormTools.getSortByCombo(),hitsPerPageField
-                            ]
-                        }*/
+                        }
 
                     ]
                 }
@@ -501,12 +493,7 @@ GeoNetwork.app = function(){
             resultsPanel.show();
         }
 
-        // Init map on first search to prevent error
-        // when user add WMS layer without initializing
-        // Visualization mode
-        //if (GeoNetwork.MapModule && !visualizationModeInitialized) {
-        //    initMap();
-        //}
+
     }
     /**
      * Bottom bar
@@ -594,8 +581,8 @@ GeoNetwork.app = function(){
             //createMainTagCloud();
             //createLatestUpdate();
         } else {
-            Ext.get('infoPanel').getUpdater().update({url:'home_en.html'});
-            Ext.get('helpPanel').getUpdater().update({url:'help_en.html'});
+            Ext.get('infoPanel').getUpdater().update({url:'home_eng.html'});
+            Ext.get('helpPanel').getUpdater().update({url:'help_eng.html'});
         }
     }
     /** private: methode[createInfoPanel]
@@ -756,7 +743,8 @@ GeoNetwork.app = function(){
             geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
-            var lang = GeoNetwork.Util.getCatalogueLang(urlParameters.hl || GeoNetwork.defaultLocale);
+            var lang = urlParameters.hl || GeoNetwork.defaultLocale;
+
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
             }
@@ -811,7 +799,7 @@ GeoNetwork.app = function(){
 
             // Initialize map viewer
             if (GeoNetwork.MapModule) {
-                initMap();                
+                initMap();
             }
 
 
@@ -858,7 +846,6 @@ GeoNetwork.app = function(){
                                         border: false,
                                         items: [
                                                     searchForm,
-                                                    //{id:'out',contentEl:'dvOut', border:false, style:{align:"center"}}
                                 ]
                                     },{
                                         border: false,
@@ -927,7 +914,7 @@ GeoNetwork.app = function(){
                         align:'left',
                         bodyStyle:{'text-align':'left', padding:'0px 3px'},
                         border:true,
-                        html:"<span class='madeBy'>"+ OpenLayers.i18n('Powered by') +" <a href='http://geonetwork-opensource.org/'><img style='width:80px' src='../images/default/gn-logo.png' title='GeoNetwork OpenSource' border='0' /></a></span></div>",
+                        html:"<span class='madeBy'>"+ OpenLayers.i18n('Poweredby') +" <a href='http://geonetwork-opensource.org/'><img style='width:80px' src='../images/default/gn-logo.png' title='GeoNetwork OpenSource' border='0' /></a></span></div>",
                         layout:'fit'
                  }
                 ]
@@ -1177,25 +1164,6 @@ Ext.onReady(function () {
 
 
     }
-
-     /*catalogue.on('afterLogin', function(){
-             tabPanel = Ext.getCmp("GNtabs");
-                   tabPanel.add({
-                        title: 'Admin',
-                        tabTip:'Administration',
-                        iconCls: 'tabs',
-                        id: 'adminPnl',
-                        closable:false,
-                        autoLoad:{
-                            url:catalogue.services.admin,
-                            scripts:true
-                        }
-                    }).show();
-        });*/
-
-    /* Focus on full text search field */
-    //Ext.getDom('E_any').focus(true);
-
 });
 
 function setTab(id){
