@@ -503,13 +503,13 @@ GeoNetwork.lang.en = {
 	'when': "when",
 	'advancedSearchOptions': "Advanced Search Options",
 	'hitsPerPage': "Hits Per Page",
-	'Searchforspatialdataon': "Search on spatial data",
-	'search': "Search",
-	'fullTextSearch': "Entire text search",
+	'Searchforspatialdataon': "Search for spatial data on",
+	'search': "search",
+	'fullTextSearch': "Full Text Search",
 	'reset': "reset",
-	'resetSearchForm': "Reset search form",
+	'resetSearchForm': "Reset Search Form",
 	'Advanced': "Advanced",
-	'newWindow': "New window",
+	'newWindow': "New Window",
 	'mdEditor': "Metadata editor",
 	'List': "List"
 };
