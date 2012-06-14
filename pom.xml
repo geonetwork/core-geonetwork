@@ -830,7 +830,6 @@
     <module>web-client</module>
     <module>web</module>
     <module>geoserver</module>
-    <module>gast</module>
   </modules>
   
   <profiles>
@@ -838,6 +837,16 @@
       <id>itests</id>
       <modules>
         <module>web-itest</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>gast</id>
+      <activation>
+        <file>
+          <exists>gast/pom.xml</exists>
+        </file>
+      <modules>
+        <module>gast</module>
       </modules>
     </profile>
   </profiles>
