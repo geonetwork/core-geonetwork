@@ -845,6 +845,7 @@
         <file>
           <exists>gast/pom.xml</exists>
         </file>
+      </activation>
       <modules>
         <module>gast</module>
       </modules>
