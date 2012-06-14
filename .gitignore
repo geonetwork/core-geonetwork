@@ -2,7 +2,6 @@ web/src/main/webapp/xml/schemas/*/loc/*/schematron*
 web/src/main/webapp/xml/schemas/*/schematron*
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
-web/src/main/webapp/WEB-INF/data/*
 web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
 web/logs/
 web/jcs_caching/

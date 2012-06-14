@@ -6,7 +6,6 @@ INSERT INTO CswServerCapabilitiesInfo VALUES (26, 'por', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (27, 'por', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (28, 'por', 'accessConstraints', '');
 
-
 INSERT INTO CategoriesDes VALUES (1,'por','Mapas & Graficos');
 INSERT INTO CategoriesDes VALUES (2,'por','Datasets');
 INSERT INTO CategoriesDes VALUES (3,'por','Fontes Interactivas');
@@ -24,7 +23,6 @@ INSERT INTO GroupsDes VALUES (-1,'por','Convidado');
 INSERT INTO GroupsDes VALUES (0,'por','Intranet');
 INSERT INTO GroupsDes VALUES (1,'por','Todos');
 INSERT INTO GroupsDes VALUES (2,'por','Grupo de Amostra');
-
 
 INSERT INTO IsoLanguagesDes VALUES (1,'por','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'por','Abkhazian');

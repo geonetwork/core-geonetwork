@@ -494,24 +494,24 @@ GeoNetwork.lang.en = {
     'language': 'Language',
 	
 	//tabbed search
-    'Home': "Home",
-    'Map': "Map",
-    'Poweredby': "Powered by",
-    'About': "About",
-    'org': "Organisation",
-    'keyword': "keyword",
-    'when': "when",
-    'advancedSearchOptions': "Advanced Search Options",
-    'hitsPerPage': "Hits Per Page",
-    'Searchforspatialdataon': "Search on spatial data",
-    'search': "Search",
-    'fullTextSearch': "Entire text search",
-    'reset': "reset",
-    'resetSearchForm': "Reset search form",
-    'Advanced': "Advanced",
-    'newWindow': "New window",
-    'mdEditor': "Metadata editor",
-    'List': "List"
+	'Home': "Home",
+	'Map': "Map",
+	'Poweredby': "Powered by",
+	'About': "About",
+	'org': "Organisation",
+	'keyword': "keyword",
+	'when': "when",
+	'advancedSearchOptions': "Advanced Search Options",
+	'hitsPerPage': "Hits Per Page",
+	'Searchforspatialdataon': "Search on spatial data",
+	'search': "Search",
+	'fullTextSearch': "Entire text search",
+	'reset': "reset",
+	'resetSearchForm': "Reset search form",
+	'Advanced': "Advanced",
+	'newWindow': "New window",
+	'mdEditor': "Metadata editor",
+	'List': "List"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);

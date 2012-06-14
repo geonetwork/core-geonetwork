@@ -6,9 +6,6 @@ INSERT INTO CswServerCapabilitiesInfo VALUES (42, 'ara', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (43, 'ara', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (44, 'ara', 'accessConstraints', '');
 
-
--- TODO : Needs more work
-
 INSERT INTO CategoriesDes VALUES (1,'ara','Maps & graphics');
 INSERT INTO CategoriesDes VALUES (2,'ara','Datasets');
 INSERT INTO CategoriesDes VALUES (3,'ara','Interactive resources');
@@ -26,7 +23,6 @@ INSERT INTO GroupsDes VALUES (-1,'ara','Guest');
 INSERT INTO GroupsDes VALUES (0,'ara','Intranet');
 INSERT INTO GroupsDes VALUES (1,'ara','All');
 INSERT INTO GroupsDes VALUES (2,'ara','Sample group');
-
 
 INSERT INTO IsoLanguagesDes VALUES (1,'ara','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'ara','Abkhazian');

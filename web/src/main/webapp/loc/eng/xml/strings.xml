@@ -31,7 +31,6 @@
 	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
-	<thesaurusType>Thesaurus Type</thesaurusType>
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
@@ -1365,7 +1364,6 @@
     <addremove>Add/Remove</addremove>
     <enabled>Enabled</enabled>
     <notifications>Notification to remote targets</notifications>
-    <url>URL</url>
     
     <cswServer>CSW server configuration</cswServer>
     <cswServerDes>Define CSW settings (title, access contraints, ...)</cswServerDes>

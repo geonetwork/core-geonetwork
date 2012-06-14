@@ -119,6 +119,17 @@ public class Export implements Service {
         }
 
 
+        // If provided uuid, export the metadata record only
+        if (uuid != null) {
+            SelectionManager.getManager(session).close(SelectionManager.SELECTION_METADATA);
+
+            SelectionManager.getManager(session).addSelection(
+                    SelectionManager.SELECTION_METADATA, uuid);
+
+            uuids = selectionManger
+                    .getSelection(SelectionManager.SELECTION_METADATA);
+        }
+
 		// MEF version 1 only support one metadata record by file.
 		// Uuid parameter MUST be set and add to selection manager before
 		// export.

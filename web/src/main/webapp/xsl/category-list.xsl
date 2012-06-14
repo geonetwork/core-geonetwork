@@ -56,10 +56,10 @@
 					</td>
 					<td class="padded" width="150px">
                         <xsl:if test="/root/gui/services/service/@name='category.update'">
-						<button class="content" onclick="load('{/root/gui/locService}/category.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
-						&#160;
-                        <button class="content" onclick="delete1('{/root/gui/locService}/category.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
-					    </xsl:if>
+							<button class="content" onclick="load('{/root/gui/locService}/category.get?id={id}')"><xsl:value-of select="/root/gui/strings/edit"/></button>
+	                        &#160;
+	                        <button class="content" onclick="delete1('{/root/gui/locService}/category.remove?id={id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
+                        </xsl:if>
                     </td>
 				</tr>
 			</xsl:for-each>

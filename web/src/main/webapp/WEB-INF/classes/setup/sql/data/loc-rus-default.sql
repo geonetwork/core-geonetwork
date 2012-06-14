@@ -24,7 +24,6 @@ INSERT INTO GroupsDes VALUES (0,'rus','Пример группы');
 INSERT INTO GroupsDes VALUES (1,'rus','Все');
 INSERT INTO GroupsDes VALUES (2,'rus','Пример группы');
 
-
 INSERT INTO IsoLanguagesDes VALUES (1,'rus','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'rus','Abkhazian');
 INSERT INTO IsoLanguagesDes VALUES (3,'rus','Achinese');

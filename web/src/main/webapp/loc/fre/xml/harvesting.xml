@@ -409,7 +409,7 @@
 		
 		<tip id="gn.host">
             L'URL doit indiquer un catalogue GeoNetwork. L'URL a la structure suivante:<br/>
-                       http[s]://HOST[:port]/geonetwork
+            http[s]://HOST[:port]/geonetwork
 		</tip>
 		
 		<tip id="gn.xslfilter">

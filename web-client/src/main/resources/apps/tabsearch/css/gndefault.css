@@ -164,9 +164,9 @@ ul.main {
     border-top : 1px solid rgba(0, 0, 0, 0.15);
 }
 #header {
-//border-bottom : 3px solid #0076A1;
-//height : 33px;
-    }
+  //border-bottom : 3px solid #0076A1;
+  //height : 33px;
+}
 
 #header .catLogo {
 //max-height : 31px;
@@ -178,9 +178,9 @@ ul.main {
 }
 
 #footer {
-    height : 20px;
-    /* bottom: 0px; */
-    text-align : center;
+  height : 20px;
+  /* bottom: 0px; */
+  text-align : center;
 }
 .right {
     text-align: right !important;
@@ -398,7 +398,7 @@ span.madeBy a {
     font-weight : bold;
 }
 .xmltagvalue {
-    font-weight : bold;
+  font-weight : bold;
 }
 .xmlns {
     color : #959532;
