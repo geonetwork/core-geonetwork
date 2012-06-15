@@ -408,6 +408,11 @@
           <version>${lucene.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-facet</artifactId>
+        <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
           <groupId>pcj</groupId>
           <artifactId>pcj</artifactId>
           <version>1.2</version>
@@ -863,6 +868,6 @@
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>2.7.4</geotools.version>
-    <lucene.version>3.0.2</lucene.version>
+    <lucene.version>3.4.0</lucene.version>
   </properties>
 </project>
