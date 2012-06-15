@@ -23,6 +23,12 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
@@ -31,6 +37,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.xlink.XLink;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -40,14 +48,11 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
 
 
 /**
@@ -104,7 +109,7 @@ class EditUtils {
 		//-----------------------------------------------------------------------
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
-		
+
 		if (!dataManager.existsMetadata(dbms, iLocalId))
 			throw new BadParameterEx("id", id);
 
@@ -141,6 +146,7 @@ class EditUtils {
 		//--- each change is a couple (pos, value)
 
 		Hashtable htChanges = new Hashtable(100);
+        Hashtable htHide    = new Hashtable(100);
 		List list = params.getChildren();
 		for(int i=0; i<list.size(); i++) {
 			Element el = (Element) list.get(i);
@@ -148,8 +154,16 @@ class EditUtils {
 			String sPos = el.getName();
 			String sVal = el.getText();
 
-			if (sPos.startsWith("_")) {
+			if (sPos.startsWith("_") && !sPos.startsWith("_d_")) {
 				htChanges.put(sPos.substring(1), sVal);
+            } else if (sPos.startsWith("hide_")) {
+
+                String ref = sPos.substring(5);
+                if(ref.startsWith("d_")) {
+                    ref = ref.substring(2);
+                }
+                htHide.put(ref, sVal);
+//              System.out.println(sPos.substring(5) + " - " + sVal); // DEBUG
             }
 		}
 
@@ -162,19 +176,23 @@ class EditUtils {
         boolean ufo = true;
         // whether to index on update
         boolean index = true;
-        
+        // does not need to process here.  AddXLink will handle 
+        // processing of reusable object
+        // mind you xml submission should probably change this.
+        boolean processReusableObject = false;
+
         boolean updateDateStamp = !minor.equals("true");
         String changeDate = null;
 		if (embedded) {
-            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges, version);
+            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges, htHide, version, context.getLanguage());
             if(updatedMetada != null) {
-                result = dataManager.updateMetadata(context, dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadata(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, processReusableObject);
             }
    		}
         else {
-            Element updatedMetada = applyChanges(dbms, id, htChanges, version);
+            Element updatedMetada = applyChanges(dbms, id, htChanges, htHide, version, context.getLanguage());
             if(updatedMetada != null) {
-			    result = dataManager.updateMetadata(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+			    result = dataManager.updateMetadata(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, processReusableObject);
             }
 		}
 		if (!result) {
@@ -188,12 +206,13 @@ class EditUtils {
      * @param dbms
      * @param id
      * @param changes
+     * @param htHide list of hidden elements
      * @param currVersion
      * @return
      * @throws Exception
      */
-    private Element applyChanges(Dbms dbms, String id, Hashtable changes, String currVersion) throws Exception {
-        Element md = xmlSerializer.select(dbms, "Metadata", id);
+    private Element applyChanges(Dbms dbms, String id, Hashtable changes, Hashtable htHide, String currVersion, String lang) throws Exception {
+        Element md = xmlSerializer.select(dbms, "Metadata", id, context);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {
@@ -211,13 +230,15 @@ class EditUtils {
 			return null;
         }
 
+        HashSet<Element> updatedXLinks = new HashSet<Element>();
+
 		//--- update elements
 		for(Enumeration e=changes.keys(); e.hasMoreElements();) {
 			String ref = ((String) e.nextElement()) .trim();
 			String val = ((String) changes.get(ref)).trim();
 			String attr= null;
 
-			if(updatedLocalizedTextElement(md, ref, val, editLib)) {
+			if(updatedLocalizedTextElement(md, ref, val, editLib, updatedXLinks) && updatedLocalizedURLElement(md, ref, val, editLib, updatedXLinks)) {
 			    continue;
 			}
 
@@ -234,6 +255,14 @@ class EditUtils {
 			Element el = editLib.findElement(md, ref);
 			if (el == null)
 				throw new IllegalStateException("Element not found at ref = " + ref);
+
+            Element xlinkParent = findXlinkParent(el);
+            if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
+                continue;
+            }
+            if( xlinkParent!=null ){
+                updatedXLinks.add(xlinkParent);
+            }
 
 			if (attr != null) {
                 // The following work-around decodes any attribute name that has a COLON in it
@@ -275,11 +304,120 @@ class EditUtils {
 				el.addContent(val);
 			}
 		}
+
+		applyHiddenElements(context, dataManager, editLib, dbms, md, id, htHide);
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
 
 		editLib.contractElements(md);
+
+        dataManager.updateXlinkObjects(dbms, id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
+
         return md;
+    }
+
+    public static void applyHiddenElements( ServiceContext context, DataManager dataManager, EditLib editLib, Dbms dbms, Element md, String id, Hashtable htHide ) throws Exception {
+        // Add Hiding info to MD tree
+        dataManager.addHidingInfo(context, md, id);
+
+        // Generate and manage XPath/levels for Elements to be hidden
+        Integer idInteger = new Integer(id);
+        String insertSQL = "INSERT INTO HiddenMetadataElements (metadataId, xPathExpr, level) VALUES (?, ?, ?)";
+        for (Enumeration e = htHide.keys(); e.hasMoreElements();)
+        {
+            String ref = ((String) e.nextElement()).trim();
+            String level = ((String) htHide.get(ref)).trim();
+            String xPathExpr = null;
+
+            // System.out.println("HIDING ref = " + ref + " - level = " + level); // DEBUG
+            Element el = editLib.findElement(md, ref);
+            if (el == null)
+            {
+                //elements may have been replaced
+                continue;
+            }
+
+            // Find possible existing Element-hiding info
+            Element hideElm = el.getChild("hide", Edit.NAMESPACE);
+            if (hideElm != null) {
+                // Delete possible existing XPath expressions/level for this Element
+                xPathExpr = editLib.getXPathExpr(md, ref);
+                if (xPathExpr == null)
+                {
+                    throw new IllegalStateException("Cannot create XPath expression for (already hidden) ref = " + ref);
+                }
+
+                // Delete existing hiding info
+                // System.out.println("HIDING ref = " + ref + " DELETE = " + xPathExpr); // DEBUG
+                dbms.execute("DELETE FROM HiddenMetadataElements WHERE metadataId = " + id + " AND xPathExpr = '" + xPathExpr + "'");
+            }
+
+            if ("no".equals(level))
+            {
+                // No hiding specified for this element, nothing to do
+                continue;
+            }
+
+            // We have hiding: create XPath Expr to element if not yet generated
+            if (xPathExpr == null) {
+                xPathExpr = editLib.getXPathExpr(md, ref);
+                if (xPathExpr == null)
+                {
+                    throw new IllegalStateException("Cannot create XPath expression for ref = " + ref);
+                }
+            }
+
+            // Save hiding info
+            // System.out.println("HIDING ref = " + ref + " UPDATE = " + xPathExpr); // DEBUG
+            dbms.execute(insertSQL, idInteger, xPathExpr, level);
+        }
+    }
+
+    public static boolean updatedLocalizedURLElement( Element md, String ref, String val, EditLib editLib, HashSet<Element> updatedXLinks ) {
+        if (ref.startsWith("url")) {
+            if (val.length() > 0) {
+                String[] ids = ref.split("_");
+                Element parent = editLib.findElement(md, ids[2]);
+
+                Element xlinkParent = findXlinkParent(parent);
+                if (xlinkParent != null && !ReusableObjManager.isValidated(xlinkParent)) {
+                    return true;
+                }
+                if (xlinkParent != null) {
+                    updatedXLinks.add(xlinkParent);
+                }
+
+                parent.setAttribute("type", "che:PT_FreeURL_PropertyType",
+                        Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+                Namespace che = Namespace.getNamespace("che", "http://www.geocat.ch/2008/che");
+                Element langElem = new Element("LocalisedURL", che);
+                langElem.setAttribute("locale", "#" + ids[1]);
+                langElem.setText(val);
+
+                Element freeURL = getOrAdd(parent, "PT_FreeURL", che);
+
+                Element urlGroup = new Element("URLGroup", che);
+                freeURL.addContent(urlGroup);
+                urlGroup.addContent(langElem);
+                Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                refElem.setAttribute(Edit.Element.Attr.REF, "");
+                urlGroup.addContent(refElem);
+                langElem.addContent((Element) refElem.clone());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static  Element findXlinkParent(Element el) { return findXlinkParent(el,null);}
+	public static  Element findXlinkParent(Element el, Element topXLink)
+    {
+        if (el==null) return topXLink;
+        if(el.getAttribute(XLink.HREF, XLink.NAMESPACE_XLINK)!=null){
+            return findXlinkParent(el.getParentElement(), el);
+        } else {
+            return findXlinkParent(el.getParentElement(), topXLink);
+        }
     }
 
     /**
@@ -290,12 +428,21 @@ class EditUtils {
      * @param val
      * @return
      */
-    protected static boolean updatedLocalizedTextElement(Element md, String ref, String val, EditLib editLib) {
+    protected static boolean updatedLocalizedTextElement(Element md, String ref, String val, EditLib editLib, HashSet<Element> updatedXLinks) {
         if (ref.startsWith("lang")) {
             if (val.length() > 0) {
                 String[] ids = ref.split("_");
                 // --- search element in current metadata record
                 Element parent = editLib.findElement(md, ids[2]);
+
+                Element xlinkParent = findXlinkParent(parent);
+                if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
+                    return true;
+                }
+                if( xlinkParent!=null ){
+                    updatedXLinks.add(xlinkParent);
+                }
+
 
                 // --- add required attribute
                 parent.setAttribute("type", "gmd:PT_FreeText_PropertyType", Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
@@ -303,7 +450,7 @@ class EditUtils {
                 // --- add new translation
                 Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
                 Element langElem = new Element("LocalisedCharacterString", gmd);
-                langElem.setAttribute("locale", "#" + ids[1]);
+                langElem.setAttribute("locale", "#" + ids[1].toUpperCase());
                 langElem.setText(val);
 
                 Element freeText = getOrAdd(parent, "PT_FreeText", gmd);

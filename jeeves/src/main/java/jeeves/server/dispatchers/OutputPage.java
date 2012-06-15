@@ -23,7 +23,12 @@
 
 package jeeves.server.dispatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jeeves.constants.ConfigFile;
 import jeeves.utils.Xml;
+
 import org.jdom.Element;
 
 //=============================================================================
@@ -35,13 +40,36 @@ public class OutputPage extends AbstractPage
 {
 	private String  forward;
 	private boolean isFile, isBLOB;
-
+	private List<String> preStyleSheets = new ArrayList<String>();
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
 	//--------------------------------------------------------------------------
 
+	/**
+	 * Gets the style sheets that will be applied <strong>BEFORE</strong> the
+	 * primary stylesheet.
+	 */
+	public List<String> getPreStyleSheets()
+    {
+        return preStyleSheets;
+    }
+
+	   /**
+     * Sets the style sheets that will be applied <strong>BEFORE</strong> the
+     * primary stylesheet.
+     */
+    public void setPreStyleSheets(List<Element> preStyleSheets)
+    {
+        this.preStyleSheets = new ArrayList<String>();
+        for (Element element : preStyleSheets) {
+            this.preStyleSheets.add(element.getAttributeValue(ConfigFile.Output.Attr.SHEET));
+        }
+    }
+	
+	
+	
 	/** If the output page is a forward returns the service, otherwise returns null
 	  */
 

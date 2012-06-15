@@ -126,11 +126,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     }
                 }
 
-
                 String defaultLanguage = Lib.local.getDefaultLanguage(dbms);
 
                 if (StringUtils.isEmpty(currentLanguage)) {
-                    currentLanguage = defaultLanguage;
+                	if(StringUtils.isEmpty(context.getLanguage())) {
+                		currentLanguage = defaultLanguage;
+                	} else {
+                		currentLanguage = context.getLanguage();
+                	}
                 }
 
                 setInspireLanguages(capabilities, langs, currentLanguage, defaultLanguage);

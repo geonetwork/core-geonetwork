@@ -27,11 +27,16 @@
 		<long>Web Access Folder/Web DAV server</long>
 	</info>
 	
-	<info type="csw">
-		<short>CSW/ISO 2.0</short>
-		<long>Catalogue Services for the Web ISO Profile 2.0</long>
-	</info>
-	
+    <info type="csw">
+        <short>CSW/ISO 2.0</short>
+        <long>Catalogue Services for the Web ISO Profile 2.0</long>
+    </info>
+    
+    <info type="cgp">
+        <short>CGP</short>
+        <long>GM03 Catalog Gateway Protocol (Swiss Topo)</long>
+    </info>
+
 	<info type="z3950">
 		<short>Z3950</short>
 		<long>Z3950 Remote search</long>
@@ -114,6 +119,7 @@
 	<useAccount>Use account</useAccount>
 	<username>Username</username>
 	<password>Password</password>
+    <outputSchema>Output schema</outputSchema>
 	
   <createRemoteCategory>Set categories if exist locally</createRemoteCategory>
   <mefFormatFull>Use full MEF format</mefFormatFull>
@@ -137,60 +143,6 @@
 	
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
-
-	<at>Run at</at>
-    <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-    <interval>Will run again every</interval>
-    <hourintervals>
-        <hour label="Each hour">1</hour>
-        <hour label="3 hours">3</hour>
-        <hour label="6 hours">6</hour>
-        <hour label="12 hours">12</hour>
-        <hour label="N/A">undefined</hour>
-    </hourintervals>
-    
-    <dayofweek>
-        <day label="Monday">MON</day>
-        <day label="Tuesday">TUE</day>
-        <day label="Wednesday">WED</day>
-        <day label="Thursday">THU</day>
-        <day label="Friday">FRI</day>
-        <day label="Saturday">SAT</day>
-        <day label="Sunday">SUN</day>
-    </dayofweek>
-    <hours>
-        <hour label="0">0</hour>
-        <hour label="1">1</hour>
-        <hour label="2">2</hour>
-        <hour label="3">3</hour>
-        <hour label="4">4</hour>
-        <hour label="5">5</hour>
-        <hour label="6">6</hour>
-        <hour label="7">7</hour>
-        <hour label="8">8</hour>
-        <hour label="9">9</hour>
-        <hour label="10">10</hour>
-        <hour label="11">11</hour>
-        <hour label="12">12</hour>
-        <hour label="13">13</hour>
-        <hour label="14">14</hour>
-        <hour label="15">15</hour>
-        <hour label="16">16</hour>
-        <hour label="17">17</hour>
-        <hour label="18">18</hour>
-        <hour label="19">19</hour>
-        <hour label="20">20</hour>
-        <hour label="21">21</hour>
-        <hour label="22">22</hour>
-        <hour label="23">23</hour>
-    </hours>
-    <minutes>
-        <minute label="00">0</minute>
-        <minute label="15">15</minute>
-        <minute label="30">30</minute>
-        <minute label="45">45</minute>
-    </minutes>
-
 
 	<options>Options</options>
 	<everySpec>(days : hours : minutes)</everySpec>
@@ -409,9 +361,7 @@
 		</tip>
 		
 		<tip id="gn.host">
-            The given URL must point to a geonetwork server. The format of a
-            URL is like this:<br/>
-            http[s]://HOST[:port]/geonetwork
+			The remote host you want to connect to
 		</tip>
 		
 		<tip id="gn.xslfilter">
@@ -588,6 +538,26 @@
 		<tip id="oai.prefix">
 			Choose the metadata format you want to harvest.
 		</tip>
+        <!-- CGP-GM03 harvesting type : dynamic search part -->
+        <tip id="cgp.url"> This URL must point to the remote CGP SOAP messaging handler </tip>
+
+        <tip id="cgp.addSearch"> Add one search on the remote server. If you don't add any search,
+            an unconstrained search is performed fetching all records from the remote catalogue. </tip>
+
+        <tip id="cgp.groups"> You can choose the privileges to associate to harvested metadata. </tip>
+
+        <tip id="cgp.addGroups"> Select one or more groups (using the <b>&lt;CTRL&gt;</b>
+            key) on the left panel and press this button. </tip>
+
+        <tip id="cgp.categories"> You can assign one or more categories to harvested metadata. Use
+            the <b>&lt;CTRL&gt;</b> key to select more than one category. </tip>
 	</tips>
+
+    <latNorth>North</latNorth>
+    <lonWest>West</lonWest>
+    <latSouth>South</latSouth>
+    <lonEast>East</lonEast>
+    <extent>Extent</extent>
+
 </strings>
 

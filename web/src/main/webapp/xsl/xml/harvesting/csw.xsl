@@ -12,6 +12,7 @@
 
 	<xsl:template match="*" mode="site">
 		<capabilitiesUrl><xsl:value-of select="capabUrl/value" /></capabilitiesUrl>
+		<outputSchema><xsl:value-of select="outputSchema/value" /></outputSchema>
 		<icon><xsl:value-of select="icon/value" /></icon>
 	</xsl:template>
 

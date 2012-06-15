@@ -1,0 +1,26 @@
+<overrides>
+     <!-- properties allow some properties to be defined that will be substituted -->
+     <!-- into text or attributes where ${property} is the substitution pattern -->
+     <!-- The properties can reference other properties -->
+     <properties>
+         <fr>fr</fr>
+         <lang>${fr}</lang>
+         <host>localhost</host>
+         <aparam>default</aparam>
+     </properties>
+     <!-- In this version only the file name is considered not the path.  -->
+     <!-- So case conf1/config.xml and conf2/config.xml cannot be handled -->
+     <file name="config.xml">
+         <!-- remove all matching nodes -->
+         <removeXML xpath="*//toRemove"/>
+     </file>
+     <file name="config2.xml">
+         <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file" value="${dir}/other.xml"/>
+     </file>
+    <file name="config3.xml">
+         <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file" value="${dir}/other.xml"/>
+     </file>
+     <textFile name="test-sql.sql">
+     	<update linePattern="(.*) Relations">$1 NewRelations</update>
+     </textFile>
+ </overrides>

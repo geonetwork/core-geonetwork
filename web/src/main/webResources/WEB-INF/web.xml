@@ -6,14 +6,6 @@
             version="2.4">
 
     <display-name>geonetwork</display-name>
-    <!--<context-param>-->
-        <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
-        <!--<param-value>Joe</param-value>-->
-    <!--</context-param>-->
-    <!-- H2 DB starter configuration / remove if you don't use H2 -->
-    <listener>
-      <listener-class>org.h2.server.web.DbStarter</listener-class>
-    </listener>
   
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>
@@ -301,6 +293,7 @@
     </servlet-mapping>
     
     <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 

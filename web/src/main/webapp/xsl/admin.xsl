@@ -162,17 +162,28 @@
 								
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:call-template name="addrow">
-									<xsl:with-param name="service" select="'main.search'"/>
-									<xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true'"/>
-									
-									<xsl:with-param name="title"
-										select="/root/gui/strings/mymetadata"/>
-									<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
-								</xsl:call-template>
+					            <xsl:call-template name="addrow">
+							        <xsl:with-param name="service" select="'main.search'"/>
+							        <xsl:with-param name="args" select="concat('hitsPerPage=10&amp;editable=true&amp;_owner=',/root/gui/session/userId)"/>
+
+        							<xsl:with-param name="title"
+		        						select="/root/gui/strings/mymetadata"/>
+				        			<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
+						        </xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+						<xsl:if test="string(/root/gui/session/profile) = 'Administrator'">
+							<xsl:call-template name="addrow">
+								<xsl:with-param name="service" select="'main.search'"/>
+						        <xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true&amp;metadata_broken_xlink=1'"/>
+
+								<xsl:with-param name="title"
+									select="'Xlink Error Metadata'"/>
+								<xsl:with-param name="desc">
+									Find all metadata with xlinks that don't resolve to a valid reusable object
+								</xsl:with-param>
+							</xsl:call-template>
+						</xsl:if>						
 
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'transfer.ownership'"/>
@@ -185,7 +196,7 @@
 						<tr>
 							<td class="spacer"/>
 						</tr>
-						<xsl:call-template name="addrow">
+						<!--  <xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.schema.add.form'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/addSchema"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/addSchemaDes"/>
@@ -204,13 +215,12 @@
 	<xsl:with-param name="title" select="/root/gui/strings/deleteSchema"/>
 	<xsl:with-param name="desc" select="/root/gui/strings/deleteSchemaDes"/>
 							</xsl:call-template>
-						</xsl:if>
+						</xsl:if> -->
 					</xsl:variable>
-
 
 					<!-- Template administration -->
 					<xsl:variable name="mdTemplate">
-							
+ 							
 							
 
 						<xsl:call-template name="addrow">
@@ -228,7 +238,7 @@
 							select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
 						<xsl:with-param name="content">
 							<xsl:copy-of select="$mdServices"/>
-							<tr>
+<!--							<tr>
 								<td class="spacer"/>
 							</tr>
 							<xsl:copy-of select="$mdTemplate"/>
@@ -281,12 +291,11 @@
 									</table>
 								</xsl:with-param>
 							</xsl:call-template>
-							
+							-->
 							
 							
 						</xsl:with-param>
 					</xsl:call-template>
-
 
 
 					<xsl:variable name="io">
@@ -372,6 +381,12 @@
 								<xsl:with-param name="icon">chart_bar.png</xsl:with-param>
 							</xsl:call-template>
 						</xsl:if>
+						<xsl:call-template name="addrow">
+							<xsl:with-param name="service" select="'unpublish.report.csv'"/>
+							<xsl:with-param name="title" select="/root/gui/strings/unpublishReport"/>
+							<xsl:with-param name="desc"
+								select="/root/gui/strings/unpublishReportDes"/>
+						</xsl:call-template>
 
 					</xsl:variable>
 
@@ -465,12 +480,13 @@
   					  </xsl:call-template>
             </xsl:if>
 					</xsl:variable>
-
+<!-- 
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">book_addresses.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/classification"/>
 						<xsl:with-param name="content" select="$classification"/>
 					</xsl:call-template>
+ -->
 
 					<xsl:variable name="indexConfiguration">
 						<xsl:if
@@ -504,30 +520,78 @@
 					</xsl:variable>
 					
 					-->
-					
-					<xsl:variable name="i18n">
-						
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'localization'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/localiz"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/localizDes"/>
-						</xsl:call-template>
-						
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'test.i18n'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/i18n"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/i18nDesc"/>
-						</xsl:call-template>
-						
-					</xsl:variable>
-					
-					<xsl:call-template name="addTitle">
-						<xsl:with-param name="icon">comment.png</xsl:with-param>
-						<xsl:with-param name="title" select="/root/gui/strings/localiz"/>
-						<xsl:with-param name="content" select="$i18n"/>
-					</xsl:call-template>
-					
-					
+
+                    <xsl:variable name="i18n">
+                        
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'localization'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/localiz"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/localizDes"/>
+                        </xsl:call-template>
+<!--                         
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'test.i18n'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/i18n"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/i18nDesc"/>
+                        </xsl:call-template> -->
+                        
+                    </xsl:variable>
+                    
+                    <xsl:call-template name="addTitle">
+                        <xsl:with-param name="icon">comment.png</xsl:with-param>
+                        <xsl:with-param name="title" select="/root/gui/strings/localiz"/>
+                        <xsl:with-param name="content" select="$i18n"/>
+                    </xsl:call-template>
+                    
+                    <xsl:variable name="reusableObjects">
+                        
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'reusable.non_validated.admin'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/reusable/nonValidTitle"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/reusable/nonValidDesc"/>
+                        </xsl:call-template>
+                        
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'extent.admin'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/extents/management"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/extents/manDes"/>
+                        </xsl:call-template>
+
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'format.admin'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/format/management"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/format/manDes"/>
+                        </xsl:call-template>
+
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'validated.shared.user.admin'"/>
+                            <xsl:with-param name="title">
+                                 <xsl:value-of select="/root/gui/strings/userManagement"/> - <xsl:value-of select="/root/gui/strings/reusable/validated"/>
+                            </xsl:with-param>
+                            <xsl:with-param name="desc" select="/root/gui/strings/userManagementDes"/>
+                        </xsl:call-template>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'nonvalidated.shared.user.admin'"/>
+                            <xsl:with-param name="title">
+                                 <xsl:value-of select="/root/gui/strings/userManagement"/> - <xsl:value-of select="/root/gui/strings/reusable/nonValidated"/>
+                            </xsl:with-param>
+                            <xsl:with-param name="desc" select="/root/gui/strings/userManagementDes"/>
+                        </xsl:call-template>
+                        
+	                    <xsl:call-template name="addrow">
+	                        <xsl:with-param name="service" select="'thesaurus.admin'"/>
+	                        <xsl:with-param name="title" select="/root/gui/strings/thesaurus/management"/>
+	                        <xsl:with-param name="desc" select="/root/gui/strings/thesaurus/manDes"/>
+	                    </xsl:call-template>
+	                    
+                    </xsl:variable>
+                    
+                    <xsl:call-template name="addTitle">
+                        <xsl:with-param name="icon">layers.png</xsl:with-param>
+                        <xsl:with-param name="title" select="/root/gui/strings/Shared"/>
+                        <xsl:with-param name="content" select="$reusableObjects"/>
+                    </xsl:call-template>
+
 				</table>
 				<p/>
 			</xsl:with-param>
@@ -556,15 +620,29 @@
 		<tr>
 			<td/>
 			<td class="padded">
-				<xsl:value-of select="/root/gui/strings/metadata.admin.index.optimize.desc"/>
+				<xsl:value-of select="/root/gui/strings/unpublish_invalid_metadata_desc"/>
 			</td>
 			<td>
 				<button class="content"
-					onclick="idxOperation('metadata.admin.index.optimize', 'waitIdxOpt', this.name, true)"
-					id="btOptIdx" name="btOptIdx">
-					<xsl:value-of select="/root/gui/strings/optimize"/>
+					onclick="idxOperation('unpublish.invalid.metadata','waitIdxUnpublish', this.name, true)"
+					id="btUnpublishIdx" name="btUnpublishIdx">
+					<xsl:value-of select="/root/gui/strings/unpublish"/>
 				</button>
-				<img src="{/root/gui/url}/images/loading.gif" id="waitIdxOpt" style="display:none;"
+				<img src="{/root/gui/url}/images/loading.gif" id="waitIdxUnpublish" style="display:none;"/>
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td class="padded">
+				<xsl:value-of select="'Delete unused shared objects'"/>
+			</td>
+			<td>
+				<button class="content"
+					onclick="idxOperation('reusable.object.deleteUnused', 'waitIdxDelete', this.name, false)"
+					id="btDeleteIdx" name="btDeleteIdx">
+					<xsl:value-of select="'Delete'"/>
+				</button>
+				<img src="{/root/gui/url}/images/loading.gif" id="waitIdxDelete" style="display:none;"
 				/>
 			</td>
 		</tr>

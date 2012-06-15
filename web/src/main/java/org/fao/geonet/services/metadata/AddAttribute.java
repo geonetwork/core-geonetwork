@@ -72,7 +72,7 @@ public class AddAttribute implements Service
 		ajaxEditUtils.updateContent(params);
 
 		// version already checked in updateContent
-		if (! ajaxEditUtils.addAttribute(dbms, id, ref, name, null))
+		if (! ajaxEditUtils.addAttribute(dbms, id, ref, name, null,context))
 			throw new ConcurrentUpdateEx(id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);

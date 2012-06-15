@@ -134,10 +134,8 @@ var updateTemp =
 '      </account>'+
 '    </site>'+
 '    <options>'+
-'      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
-
 '      <every>{EVERY}</every>'+
-
+'      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
 '    <content>'+
 '      <validate>{VALIDATE}</validate>'+

@@ -61,6 +61,9 @@ function init()
 		{ id:'thredds.cataUrl',    type:'url' },
 		{ id:'thredds.username',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'thredds.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'thredds.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'thredds.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'thredds.every.mins',  type:'integer',  minValue:0, maxValue:59 },
 		
 		//--- stylesheet must be supplied if harvesting metadata fragments
 		

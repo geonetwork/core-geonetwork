@@ -107,6 +107,7 @@ public class SettingManager
 
 		root = new Setting(0, null, null);
 		createSubTree(root, list);
+		
 	}
 
 	//---------------------------------------------------------------------------

@@ -241,7 +241,6 @@ public class ServiceInfo
 		catch(Exception e)
 		{
 			//--- in case of exception we have to abort all resources
-
 			context.getResourceManager().abort();
 			ServiceManager.error("Exception when executing service");
 			ServiceManager.error(" (C) Exc : " + e);

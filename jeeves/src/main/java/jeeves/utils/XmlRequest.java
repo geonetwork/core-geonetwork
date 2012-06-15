@@ -44,7 +44,6 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -65,7 +64,13 @@ import java.util.List;
 
 public class XmlRequest
 {
-	public enum Method { GET, POST }
+    private int statusCode;
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public enum Method { GET, POST }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -81,16 +86,10 @@ public class XmlRequest
 
 	//---------------------------------------------------------------------------
 
-    public XmlRequest(String host, int port)
-    {
-        this(host, port, "http");
-    }
-    
-	public XmlRequest(String host, int port, String protocol)
+	public XmlRequest(String host, int port)
 	{
 		this.host = host;
 		this.port = port;
-        this.protocol = protocol;
 
 		setMethod(Method.GET);
 		state.addCookie(cookie);
@@ -108,7 +107,7 @@ public class XmlRequest
 
 	public XmlRequest(URL url)
 	{
-		this(url.getHost(), url.getPort() == -1 ? url.getDefaultPort() : url.getPort(), url.getProtocol());
+		this(url.getHost(), url.getPort() == -1 ? 80 : url.getPort());
 
 		address = url.getPath();
 		query   = url.getQuery();
@@ -153,9 +152,8 @@ public class XmlRequest
 	public void setUrl(URL url)
 	{
 		host    = url.getHost();
-		port    = (url.getPort() == -1) ? url.getDefaultPort(): url.getPort();
-		protocol= url.getProtocol();
-        address = url.getPath();
+		port    = (url.getPort() == -1) ? 80 : url.getPort();
+		address = url.getPath();
 		query   = url.getQuery();
 	}
 
@@ -326,7 +324,7 @@ public class XmlRequest
 
 	private Element doExecute(HttpMethodBase httpMethod) throws IOException, BadXmlResponseEx
 	{
-		config.setHost(host, port, Protocol.getProtocol(protocol));
+		config.setHost(host, port);
 
 		if (useProxy)
 			config.setProxy(proxyHost, proxyPort);
@@ -346,7 +344,7 @@ public class XmlRequest
 			if (locationHeader != null) {
 			    redirectLocation = locationHeader.getValue();
 			    httpMethod.setPath(redirectLocation);
-			    client.executeMethod(httpMethod);
+			    statusCode = client.executeMethod(httpMethod);
 			    data = httpMethod.getResponseBody();
 			}
 			return Xml.loadStream(new ByteArrayInputStream(data));
@@ -370,7 +368,7 @@ public class XmlRequest
 
 	private File doExecuteLarge(HttpMethodBase httpMethod, File outFile) throws IOException
 	{
-		config.setHost(host, port, Protocol.getProtocol(protocol));
+		config.setHost(host, port, "http");
 
 		if (useProxy)
 			config.setProxy(proxyHost, proxyPort);
@@ -548,7 +546,6 @@ public class XmlRequest
 
 	private String  host;
 	private int     port;
-    private String  protocol;
 	private String  address;
 	private boolean serverAuthent;
 	private String  query;

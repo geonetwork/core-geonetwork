@@ -1,0 +1,39 @@
+<overrides>
+    <import file="/WEB-INF/overrides-config-geocat.xml"/>
+
+	<logging>
+      <logFile>/WEB-INF/log4j.cfg</logFile>
+      <logFile>/WEB-INF/log4j-jeichar.cfg</logFile>
+  </logging>
+	  <!-- properties allow some properties to be defined that will be substituted -->
+    <!-- into text or attributes where ${property} is the substitution pattern -->
+    <!-- The properties can reference other properties -->
+    <properties>
+        <postgis.db>geocat2_trunk</postgis.db>
+        <postgis.max.active>10</postgis.max.active>
+        <postgis.max.idle>5</postgis.max.idle>
+        <serverStage>jeichar</serverStage>
+    </properties>
+    <file name=".*/WEB-INF/config-gui.xml">
+        <replaceText xpath="geoserver.url">http://localhost:8081/geoserver</replaceText>
+        <replaceXML xpath="mapSearch/layers">
+                <layer server="http://ec2-46-51-142-140.eu-west-1.compute.amazonaws.com/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+        </replaceXML>
+        <replaceXML xpath="mapViewer/layers">
+                <layer server="http://ec2-46-51-142-140.eu-west-1.compute.amazonaws.com/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+        </replaceXML>
+    </file>
+    <textFile name=".*/WEB-INF/classes/setup/sql/.+/data-db-default.sql">
+        <update linePattern="(INSERT INTO Users VALUES .*)d033e22ae348aeb566fc214aec3585c4da997(.*)">$1fe35f7a6044ba4492be92237a585c9683e50d49d$2</update>
+        <!-- enable xLinks -->
+        <update linePattern="(INSERT INTO Settings VALUES \(231,230,'enable',')false(.*)">$1true$2</update>
+        <!-- enable german -->
+        <update linePattern="(INSERT INTO Settings VALUES \(818,816,'selected',')false(.*)">$1true$2</update>
+        <!-- enable french -->
+        <update linePattern="(INSERT INTO Settings VALUES \(815,813,'selected',')false(.*)">$1true$2</update>
+        <!-- enable italian -->
+        <update linePattern="(INSERT INTO Settings VALUES \(824,822,'selected',')false(.*)">$1true$2</update>
+        <!-- enable inspire -->
+        <update linePattern="(INSERT INTO Settings VALUES \(721,720,'enable',')false(.*)">$1true$2</update>
+    </textFile>
+</overrides>

@@ -7,6 +7,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Represents a Jeeves local XML request (within JVM).
@@ -79,12 +81,19 @@ public class LocalServiceRequest extends ServiceRequest
 
 	public String getResultString()
 	{
-		return outputBuffer.toString();
+		String string = outputBuffer.toString().trim();
+		if(string.matches("<\\?xml\\s+version=[^>]+\\s+encoding=[^>]+\\?>")) {
+			return "";
+		}
+		return string;
 	}
 
 	public Element getResult() throws IOException, JDOMException
 	{
-		return Xml.loadString(getResultString(), false);
+		
+		String resultString = getResultString();
+		if(resultString.trim().isEmpty()) return null;
+		else return Xml.loadString(resultString, false);
 	}
 
 	//---------------------------------------------------------------------------
@@ -170,7 +179,11 @@ public class LocalServiceRequest extends ServiceRequest
 		{
 			nvPair = nvPairs[i].split("\\=");
 			name = nvPair[0];
-			value = nvPair[1];
+			if(nvPair.length == 2) {
+				value = nvPair[1];
+			} else {
+				value = "";
+			}
 			if (name.startsWith("@"))
 			{
 				// Some params should become attrs (indicated with @)
@@ -179,7 +192,11 @@ public class LocalServiceRequest extends ServiceRequest
 			} else
 			{
 				param = new Element(name);
-				param.setText(value);
+				try {
+					param.setText(URLDecoder.decode(value, "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					param.setText(value);
+				}
 				result.addContent(param);
 			}
 		}

@@ -41,6 +41,7 @@ GeoNetwork.miniapp = function() {
         var options = mapOptions || {
             projection: "EPSG:4326",
             units: "m",
+            theme: null,
             maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
             restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90),
             controls: []
@@ -115,8 +116,8 @@ GeoNetwork.miniapp = function() {
 
         action = new GeoExt.Action({
             control: new OpenLayers.Control.DragPan({
-                    isDefault: true
-                }),
+                isDefault: true
+            }),
             toggleGroup: "move",
             allowDepress: false,
             pressed: true,
@@ -130,21 +131,20 @@ GeoNetwork.miniapp = function() {
         toolbar.push("-");
 
         extentBox = new GeoNetwork.Control.ExtentBox({
-                minxelement: Ext.get(extentBoxIds.westBL), 
-                maxxelement: Ext.get(extentBoxIds.eastBL),
-                minyelement: Ext.get(extentBoxIds.southBL),
-                maxyelement: Ext.get(extentBoxIds.northBL)
-         });
+            minxelement: Ext.get(extentBoxIds.westBL), 
+            maxxelement: Ext.get(extentBoxIds.eastBL),
+            minyelement: Ext.get(extentBoxIds.southBL),
+            maxyelement: Ext.get(extentBoxIds.northBL)
+        });
 
         
         extentBox.events.register("finishBox", null, function(evt) {
-             regionControl.selectedIndex=1;
-             
-             if (synchMinimaps) {
-						 	for (var i = 0; i < synchMinimaps.length; i++) {
-                synchMinimaps[i].synch(regionControl.selectedIndex, extentBox);
-							}
-             }
+            regionControl.selectedIndex=1;
+            if (synchMinimaps) {
+                for (var i = 0; i < synchMinimaps.length; i++) {
+                    synchMinimaps[i].synch(regionControl.selectedIndex, extentBox);
+                }
+            }
         });
         
         action = new GeoExt.Action({
@@ -165,8 +165,8 @@ GeoNetwork.miniapp = function() {
      */
     var updateMap = function updateMap(zoom) {
         if (extentBox) {
-                extentBox.updateMap();
-                if(zoom) extentBox.zoomTo();                    
+            extentBox.updateMap();
+            if(zoom) extentBox.zoomTo();                    
         }                       
     };
 
@@ -177,7 +177,6 @@ GeoNetwork.miniapp = function() {
      */
     var createViewport = function(miniMapDiv, extentBoxIds) {	 
         createToolbar(extentBoxIds);
-         
         var mapPanel = new GeoExt.MapPanel({
             id: "mini_mappanel_" + miniMapDiv,
             renderTo: miniMapDiv,
@@ -195,14 +194,14 @@ GeoNetwork.miniapp = function() {
     var clearExtentBox = function clearExtentBox() {
         if (extentBox) {
             extentBox.clear();
-						// surprisingly the Ext set({value:''}) method doesn't work!?
-						extentBox.minxelement.dom.value = '';
-						extentBox.minyelement.dom.value = '';
-						extentBox.maxxelement.dom.value = '';
-						extentBox.maxyelement.dom.value = '';
+            // surprisingly the Ext set({value:''}) method doesn't work!?
+            extentBox.minxelement.dom.value = '';
+            extentBox.minyelement.dom.value = '';
+            extentBox.maxxelement.dom.value = '';
+            extentBox.maxyelement.dom.value = '';
             miniMap.zoomToMaxExtent();
         }
-    }
+    };
 
     // public space:
     return {
@@ -251,13 +250,12 @@ GeoNetwork.miniapp = function() {
         
         synch: function(regionIndex, eBox) {
             $(regionControl).selectedIndex = regionIndex;
-						if (eBox && extentBox) {
-							extentBox.minxelement.set({value: eBox.minxelement.getValue()});
-							extentBox.minyelement.set({value: eBox.minyelement.getValue()});
-							extentBox.maxxelement.set({value: eBox.maxxelement.getValue()});
-							extentBox.maxyelement.set({value: eBox.maxyelement.getValue()});
-						}
-
+            if (eBox && extentBox) {
+                extentBox.minxelement.set({value: eBox.minxelement.getValue()});
+                extentBox.minyelement.set({value: eBox.minyelement.getValue()});
+                extentBox.maxxelement.set({value: eBox.maxxelement.getValue()});
+                extentBox.maxyelement.set({value: eBox.maxyelement.getValue()});
+            }
             updateMap(false);
         },
         

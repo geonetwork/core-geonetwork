@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -89,6 +90,29 @@ public class DbLib {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public String getDBType(Dbms dbms) {
+		String url = dbms.getURL();
+		String file = "default";
+
+		if (url.startsWith("jdbc:oracle:")) {
+			file = "oracle";
+		} else if (url.startsWith("jdbc:mckoi:")) {
+			file = "mckoi";
+		} else if (url.startsWith("jdbc:db2:")) {
+			file = "db2";
+		} else if (url.startsWith("jdbc:mysql:")) {
+			file = "mysql";
+		} else if (url.startsWith("jdbc:postgresql:")) {
+			file = "postgres";
+		} else if (url.startsWith("jdbc:postgresql_postGIS:")) {
+			file = "postgis";
+    } else if (url.startsWith("jdbc:sqlserver:")) {
+			file = "sqlserver";
+		}
+
+		return file;
 	}
 
 	/**
@@ -264,13 +288,19 @@ public class DbLib {
 																	// appPath
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms schema to load
-		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(dbms).toString());
+		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
 
         if(Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "  Loading script:" + file);
 
+        String gcFile = checkFilePath(filePath, "create-db-geocat-", getDBType(dbms));
+        Log.debug(Geonet.DB, "Geocat Database creation script is:" + gcFile);
+
 		// --- load the dbms schema
-		return Lib.text.load(servletContext, appPath, file);
+        List<String> basicSchema = new ArrayList<String>(Lib.text.load(servletContext, appPath, file));
+        basicSchema.addAll(Lib.text.load(servletContext, appPath, gcFile));
+
+		return basicSchema;
 	}
 
 	/**
@@ -301,7 +331,7 @@ public class DbLib {
 	private List<String> loadSqlDataFile(ServletContext servletContext, Dbms dbms, String appPath, String filePath, String filePrefix)
 			throws FileNotFoundException, IOException {
 		// --- find out which dbms data file to load
-		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(dbms).toString());
+		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
 		
 		// --- load the sql data
 		return Lib.text.load(servletContext, appPath, file, "UTF-8");
@@ -328,5 +358,4 @@ public class DbLib {
 		public String name;
 		public String type;
 	}
-
 }

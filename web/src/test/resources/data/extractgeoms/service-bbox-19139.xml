@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier>
+        <gco:CharacterString>44940de5-8a64-481b-ab77-9bfe1c6d917f</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language>
+        <gco:CharacterString>fra</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel>
+        <gmd:MD_ScopeCode codeListValue="service" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName>
+        <gco:CharacterString>Service</gco:CharacterString>
+    </gmd:hierarchyLevelName>
+    <gmd:dateStamp>
+        <gco:DateTime>2011-08-05T11:53:04</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName>
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion>
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeListValue="fra" codeList="#LanguageCode">French</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:identificationInfo>
+        <che:CHE_SV_ServiceIdentification gco:isoType="srv:SV_ServiceIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">"{timestamp}NonSpatialSearchQuerySpec" FR Title polluée</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">
+                        {timestamp}NonSpatialSearchQuerySpec FRx{timestamp} 1 abstract
+                        {timestamp}-hyphen
+                        {timestamp}_underscore
+                        {timestamp}/forwardSlash
+                        {timestamp}\backSlash
+                        {timestamp}.point
+                        {timestamp},comma
+                        {timestamp} space
+                        FRxDEx{timestamp}
+                        </gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:abstract>
+            <srv:serviceType>
+                <gco:LocalName>OGC:WMS</gco:LocalName>
+            </srv:serviceType>
+            <srv:serviceTypeVersion>
+                <gco:CharacterString>1.1.1</gco:CharacterString>
+            </srv:serviceTypeVersion>
+            <srv:extent>
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Bernex</gco:CharacterString>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>Bernex</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Nb4b4ffcd149b43599a1b5d938144d35a">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N37a04638f5cd43bba8a5d82001aeb4f6">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.044 46.166 6.038 46.171 6.049 46.176 6.051 46.182 6.054 46.183 6.06 46.193 6.074 46.202 6.092 46.211 6.087 46.196 6.089 46.193 6.087 46.192 6.076 46.173 6.087 46.166 6.078 46.16 6.075 46.149 6.061 46.16 6.05 46.151 6.044 46.166</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.038</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.092</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.149</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.211</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </srv:extent>
+        </che:CHE_SV_ServiceIdentification>
+    </gmd:identificationInfo>
+</che:CHE_MD_Metadata>

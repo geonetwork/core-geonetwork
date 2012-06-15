@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.services.harvesting.Util;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -81,6 +82,8 @@ class Harvester {
 			rr = new WebDavRetriever();
 		else if(params.subtype.equals("waf"))
 			rr = new WAFRetriever();
+		else
+		    rr = new WebDavRetriever();
 		
 		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
 		rr.init(log, context, params);
@@ -158,9 +161,28 @@ class Harvester {
 		}
 		//--- schema handled check already done
 		String schema = dataMan.autodetectSchema(md);
-		String uuid   = UUID.randomUUID().toString();
-
-        if(log.isDebugEnabled()) log.debug("  - Setting uuid for metadata with remote path : "+ rf.getPath());
+		// issue GC #133712
+		// we first try to get the current MD UUID before trying to generate a new one
+		String uuid = "";
+		
+		// /!\ retrieveMedata auto converts MDs into iso19139.che
+		if (md.getName().equals("CHE_MD_Metadata"))
+		{
+		    uuid = Util.uuid(context, dbms, params.url,md, log, rf.getPath(), result, schema);
+		    if(uuid==null) {
+		        return;
+		    }
+		}
+		
+		// fallback by generating a new one
+		if ((uuid == null) || (uuid.equals("")))
+		{
+			if(log.isDebugEnabled()) log.debug("  - No UUID found in the remote MD ; generating a new one");
+			uuid   = UUID.randomUUID().toString();
+		}
+		// end of GC issue #13712
+		
+		if(log.isDebugEnabled()) log.debug("  - Setting uuid for metadata with remote path : "+ rf.getPath());
 
 		//--- set uuid inside metadata and get new xml
 		try {
@@ -191,7 +213,7 @@ class Harvester {
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 		result.added++;
 	}
 
@@ -203,24 +225,49 @@ class Harvester {
 			Element md = rf.getMetadata(schemaMan);
             if(log.isDebugEnabled()) log.debug("Record got:\n"+ Xml.getString(md));
 
-			String schema = dataMan.autodetectSchema(md);
+			String schema;
+			try {
+			    schema = dataMan.autodetectSchema(md);
+			} catch (NoSchemaMatchesException e) {
+                if (md.getName() == "TRANSFER") {
+                    // we need to convert to CHE
+                    try {
+                        String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03_2-to-ISO19139CHE.xsl";
+                        Element tmp = Xml.transform(md, styleSheetPath);
+                        md = tmp;
+                    } catch (Throwable e2) {
+                        String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
+                        Element tmp = Xml.transform(md, styleSheetPath);
+                        md = tmp;
+                    }
+                }
+                schema = dataMan.autodetectSchema(md);
+			}
 			if (!params.validate || validates(schema, md)) {
 				return (Element) md.detach();
-			}
+			} else {
+
+                if (!params.validate || validates(schema, md)) {
+                    return (Element) md.detach();
+                }
+                log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+                result.doesNotValidate++;
+            }
 
 			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
 			result.doesNotValidate++;
-		}
-		catch (NoSchemaMatchesException e) {
+		} catch (NoSchemaMatchesException e) {
 				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());
 				result.unknownSchema++;
-		}
-		catch(JDOMException e) {
+		} catch(JDOMException e) {
 			log.warning("Skipping metadata with bad XML format. Path is : "+ rf.getPath());
+			// issue #21546 : warn the admin by mail
+			Util.warnAdminByMail(context, Util.SKEL_MAIL_WEBDAV_ERROR, params.url, null, rf.getPath());
 			result.badFormat++;
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			log.warning("Raised exception while getting metadata file : "+ e);
+			// issue #21546 : warn the admin by mail
+			Util.warnAdminByMail(context, Util.SKEL_MAIL_WEBDAV_ERROR, params.url, null, rf.getPath());
 			result.unretrievable++;
 		}
 		//--- we don't raise any exception here. Just try to go on
@@ -308,7 +355,7 @@ class Harvester {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, record.id, md, validate, ufo, index, language, rf.getChangeDate(), false);
+            dataMan.updateMetadata(context, dbms, record.id, md, validate, ufo, index, language, rf.getChangeDate(), false, false);
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
@@ -317,7 +364,7 @@ class Harvester {
 			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
 			addCategories(record.id);
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, record.id);
+			dataMan.indexMetadataGroup(dbms, record.id, false, context);
 			result.updated++;
 		}
 	}

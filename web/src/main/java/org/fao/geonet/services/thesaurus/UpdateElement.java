@@ -23,15 +23,19 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import java.net.URLEncoder;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
@@ -67,11 +71,12 @@ public class UpdateElement implements Service {
 		String thesaType = Util.getParam(params, "refType");
 		String prefLab = Util.getParam(params, "prefLab");
 		String lang = Util.getParam(params, "lang");
-		String definition = Util.getParam(params, "definition");
+		String definition = Util.getParam(params, "definition","");
 
 		ThesaurusManager manager = gc.getThesaurusManager();
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
-
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" + URLEncoder.encode(namespace+oldid, "UTF-8").toLowerCase() + "&locales=en,it,de,fr");
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" + URLEncoder.encode(namespace+oldid, "UTF-8") + "&locales=en,it,de,fr");
 		if (!(oldid.equals(newid))) {
 			if (thesaurus.isFreeCode(namespace, newid)) {
 				thesaurus.updateCode(namespace, oldid, newid);
@@ -81,19 +86,17 @@ public class UpdateElement implements Service {
 				return elResp;
 			}
 		}
-		KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
-            .setCode(newid)
-            .setValue(prefLab, lang)
-            .setDefinition(definition, lang);
-    
-        if (thesaType.equals("place")) {
-            bean.setCoordEast(Util.getParam(params, "east"))
-                .setCoordNorth(Util.getParam(params, "north"))
-                .setCoordSouth(Util.getParam(params, "south"))
-                .setCoordWest(Util.getParam(params, "west"));
-        } 
-        
-        thesaurus.updateElement(bean, false);
+
+		if (thesaType.equals("place")) {
+			String east = Util.getParam(params, "east");
+			String west = Util.getParam(params, "west");
+			String south = Util.getParam(params, "south");
+			String north = Util.getParam(params, "north");
+			thesaurus.updateElement(namespace, newid, prefLab, definition, east,
+					west, south, north, lang);
+		} else {
+			thesaurus.updateElement(namespace, newid, prefLab, definition, lang);
+		}
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("selected").setText(ref));

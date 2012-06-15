@@ -9,9 +9,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import jeeves.JeevesJCS;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.local.LocalServiceRequest;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -61,6 +65,8 @@ public final class Processor {
 
 	public static final String XLINK_JCS = "xlink";
 	
+	private static CopyOnWriteArraySet<URIMapper> uriMapper = new CopyOnWriteArraySet<URIMapper>(); 
+	
 	/**
     * Default constructor.
     * Builds a Processor.
@@ -70,8 +76,8 @@ public final class Processor {
    /**
     * Resolve all XLinks of the input XML document.
     */
-	public static Element processXLink(Element xml) {
-		searchXLink(xml, ACTION_RESOLVE);
+	public static Element processXLink(Element xml,ServiceContext srvContext) {
+		searchXLink(xml, ACTION_RESOLVE, srvContext);
 		searchLocalXLink(xml, ACTION_RESOLVE);
 		return xml;
 	}
@@ -80,8 +86,8 @@ public final class Processor {
   /**
     * Uncache all XLinks child of the input XML document.
     */
-	public static Element uncacheXLink(Element xml) {
-		searchXLink(xml, ACTION_UNCACHE);
+	public static Element uncacheXLink(Element xml,ServiceContext srvContext) {
+		searchXLink(xml, ACTION_UNCACHE,srvContext);
 		return xml;
 	}
 
@@ -90,7 +96,7 @@ public final class Processor {
     * Remove all XLinks child of the input XML document.
     */
 	public static Element removeXLink(Element xml) {
-		searchXLink(xml, ACTION_REMOVE);
+		searchXLink(xml, ACTION_REMOVE,null);
 		searchLocalXLink(xml, ACTION_REMOVE);
 		return xml;
 	}
@@ -99,8 +105,8 @@ public final class Processor {
   /**
     * Detach all XLinks child of the input XML document.
     */
-	public static Element detachXLink(Element xml) {
-		searchXLink(xml, ACTION_DETACH);
+	public static Element detachXLink(Element xml,ServiceContext srvContext) {
+		searchXLink(xml, ACTION_DETACH,srvContext);
 		searchLocalXLink(xml, ACTION_DETACH);
 		return xml;
 	}
@@ -147,52 +153,64 @@ public final class Processor {
 
 	//--------------------------------------------------------------------------
 	/** Resolves an xlink */
-	public static Element resolveXLink(String uri) throws IOException, JDOMException, CacheException {
+	public static Element resolveXLink(String uri,ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 		String idSearch = null;
-		return resolveXLink(uri, idSearch);
+		return resolveXLink(uri, idSearch,srvContext);
 	}
 
 	//--------------------------------------------------------------------------
-	/** Resolves an xlink */
-	public static Element resolveXLink(String uri, String idSearch) throws IOException, JDOMException, CacheException {
+	/** Resolves an xlink*/
+	@SuppressWarnings("unchecked")
+	public static synchronized Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 
 		cleanFailures();
 		if (failures.size()>MAX_FAILURES) {
 			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
 		}
 
+		uri = uri.replaceAll("&+","&");
+		String mappedURI = mapURI(uri);
+
 		JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
-		Element remoteFragment = (Element) xlinkCache.get(uri.toLowerCase());
+		Element remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
 
 		if (remoteFragment == null) {
 			Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
 			
 			try {
-				URL url = new URL(uri.replaceAll("&amp;", "&"));
 				
-				URLConnection conn = url.openConnection();
-				conn.setConnectTimeout(1000);
-			
-				BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-				try {
-					remoteFragment = Xml.loadStream(in);
-                    if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                        Log.debug(Log.XLINK_PROCESSOR,"Read:\n"+Xml.getString(remoteFragment));
-				} finally {
-					in.close();
+				if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
+					LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
+					request.setDebug(false);
+					request.setLanguage("eng");
+					remoteFragment = srvContext.execute(request);
+				} else {
+					URL url = new URL(uri.replaceAll("&amp;", "&"));
+					URLConnection conn = url.openConnection();
+					conn.setConnectTimeout(1000);
+				
+					BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
+					try {
+						remoteFragment = Xml.loadStream(in);
+                        if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
+						  Log.debug(Log.XLINK_PROCESSOR,"Read:\n"+Xml.getString(remoteFragment));
+					} finally {
+						in.close();
+					}
 				}
 			} catch (Exception e) {	// MalformedURLException, IOException
 				synchronized(Processor.class) {
 					failures.add (System.currentTimeMillis());
 				}
+				
 				Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri 
 						+ " with exception message " + e.getMessage());
 			}
 			
-			if (remoteFragment != null) {
-				xlinkCache.put(uri.toLowerCase(), remoteFragment);
+			if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
+				xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
                 if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                    Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
+				  Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
 			} else {
 				return null;
 			}	
@@ -224,17 +242,34 @@ public final class Processor {
 		return res;
 	}
 
-	//--------------------------------------------------------------------------
+	public static String mapURI( String uri ) {
+	    uri = uri.replaceAll("&+","&").toLowerCase();
+	    for(URIMapper mapper: uriMapper) {
+	        uri = mapper.map(uri);
+	    }
+        return uri;
+    }
+	
+    public static void addUriMapper(URIMapper mapper) {
+        uriMapper.add(mapper);
+    }
+    public static void removeUriMapper(URIMapper mapper) {
+        uriMapper.add(mapper);
+    }
+
+    //--------------------------------------------------------------------------
 	/** Uncaches an xlink */
 	public static void uncacheXLinkUri(String uri) throws CacheException {
 		JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
-		Element theXLink = (Element)xlinkCache.get(uri.toLowerCase());
-		if (theXLink == null) {
-			Log.error(Log.XLINK_PROCESSOR,"Uri "+uri+" wasn't there");
-		} else {
-			xlinkCache.remove(uri);
-			Log.error(Log.XLINK_PROCESSOR,"Uri "+uri+" was removed from cache");
-		}
+		String mappedURI = mapURI(uri);
+        Set groupKeys = xlinkCache.getGroupKeys(mappedURI);
+        if(groupKeys==null || groupKeys.isEmpty()) {
+            xlinkCache.remove(uri);           
+        } else {
+            for( Object key : groupKeys ) {
+                xlinkCache.remove(key, mappedURI);
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -259,20 +294,17 @@ public final class Processor {
 		return xlinks;
 	}
 				
-	//--------------------------------------------------------------------------
-  /**
-    * Search for Remote XLinks in XML document. Load and cache remote resource 
-		* if needed.
-    * <p/>
-    * TODO : Maybe don't wait to much to load a remote resource. Add timeout
-    * param?
-    *
-    * @param action
-    *            Define what to do with XLink ({@link #ACTION_DETACH,
-    *            #ACTION_REMOVE, #ACTION_RESOLVE}).
-    *
-    */
-	private static void searchXLink(Element md, String action) {
+	
+	/**
+	 * Search for local:// XLinks in XML document. Load and cache resource if needed.
+	 *
+	 * @param action
+	 *            Define what to do with XLink ({@link #ACTION_DETACH,
+	 *            #ACTION_REMOVE, #ACTION_RESOLVE}).
+	 * @param srvContext 
+	 *
+	 */
+	private static void searchXLink(Element md, String action, ServiceContext srvContext) {
 		List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href");
 
         if(Log.isDebugEnabled(Log.XLINK_PROCESSOR)) Log.debug(Log.XLINK_PROCESSOR, "returned "+xlinks.size()+" elements");
@@ -287,9 +319,9 @@ public final class Processor {
 				idSearch = hrefUri.substring(hash+1);
 				hrefUri = hrefUri.substring(0, hash);
 			}
-
+			
 			if (hash != 0) { // skip local xlinks eg. xlink:href="#details"
-				doXLink(hrefUri, idSearch, xlink, action);
+				doXLink(hrefUri, idSearch, xlink, action,srvContext);
 			}
 		}
 	}
@@ -356,7 +388,7 @@ public final class Processor {
 	}
 
 	//--------------------------------------------------------------------------
-	private static void doXLink(String hrefUri, String idSearch, Attribute xlink, String action) {
+	private static void doXLink(String hrefUri, String idSearch, Attribute xlink, String action, ServiceContext srvContext) {
 		Element element = xlink.getParent();
 
         // Don't process XLink for operatesOn
@@ -385,13 +417,12 @@ public final class Processor {
 					}
 				} else {
 					try {
-						Element remoteFragment = resolveXLink(hrefUri, idSearch);
-						
+						Element remoteFragment = resolveXLink(hrefUri, idSearch,srvContext);
 						// Not resolved in cache or using href
 						if (remoteFragment == null)
 							return;
 						
-						searchXLink(remoteFragment, action);
+						searchXLink(remoteFragment, action,srvContext);
 						
 						if (show.equalsIgnoreCase(XLink.SHOW_REPLACE)) {
 							// replace this element with the fragment

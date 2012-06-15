@@ -81,7 +81,7 @@ public class LangSortField extends SortField {
             byte val = langCodeValue.get(locale);
             if (val == MapDefaults.defaultByte()) {
                 val = nextVal;
-                nextVal++;
+// Don't want to keep langs together in Geocat                nextVal++;
                 langCodeValue.put(locale, val);
             }
             return val;

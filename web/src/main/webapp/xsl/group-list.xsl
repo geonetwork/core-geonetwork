@@ -47,7 +47,18 @@
 			</tr>
 			<xsl:for-each select="/root/response/record">
 				<xsl:sort select="name"/>
+				<xsl:variable name="logoUuid" select="logouuid"/>
 				<tr>
+					<td class="padded" align="right">
+						<xsl:choose>
+							<xsl:when test="string($logoUuid)">
+								<img width="40" id="{$logoUuid}" src="{/root/gui/url}/images/logos/{$logoUuid}.png" alt="{/root/gui/strings/logo}" title="{/root/gui/strings/logo}"/>&#160;
+							</xsl:when>
+							<xsl:otherwise>
+								<span>&#160;</span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</td>
 					<td class="padded, bottom_border"><xsl:value-of select="name"/></td>
 					<td class="padded, bottom_border" width="150"><xsl:value-of select="description"/></td>
 					<td class="padded, bottom_border"><xsl:value-of select="email"/></td>

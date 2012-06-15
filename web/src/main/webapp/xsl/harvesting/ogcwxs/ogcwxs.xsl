@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:include href="../schedule-widget.xsl"/>
 	
 	<!-- ============================================================================================= -->
 	<!-- === editPanel -->
@@ -53,12 +52,12 @@
 				</td>
 			</tr>
 			<!-- TODO : Do we have to set up an account for WxS secured ? For BA support ?  -->
-			<tr>
+			<tr style="display:none;">
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
 				<td class="padded"><input id="ogcwxs.useAccount" type="checkbox"/></td>
 			</tr>
 
-			<tr>
+			<tr style="display:none;">
 				<td/>
 				<td>
 					<table id="ogcwxs.account">
@@ -151,9 +150,23 @@
 	<xsl:template name="options-OGCWXS">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
 
-		<xsl:call-template name="schedule-widget">
-			<xsl:with-param name="type">ogcwxs</xsl:with-param>
-		</xsl:call-template>
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="ogcwxs.every.days"  class="content" type="text" size="2"/> :
+					<input id="ogcwxs.every.hours" class="content" type="text" size="2"/> :
+					<input id="ogcwxs.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
+				<td class="padded"><input id="ogcwxs.oneRunOnly" type="checkbox" value=""/></td>
+			</tr>			
+		</table>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
@@ -225,15 +238,4 @@
 	
 	<!-- ============================================================================================= -->
 		
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

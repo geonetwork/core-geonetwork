@@ -97,7 +97,6 @@
 					<xsl:with-param name="tabLink" select="$tabLink"/>
 				</xsl:call-template>
 			</xsl:if>
-			
 			<!--  complete tab(s) -->
 			<xsl:choose>
 				<!-- hide complete tab for subtemplates -->
@@ -131,7 +130,7 @@
 	-->
 	<xsl:template name="completeTab">
 		<xsl:param name="tabLink"/>
-		
+
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'metadata'"/>
 			<xsl:with-param name="text"    select="/root/gui/strings/completeTab"/>
@@ -147,9 +146,8 @@
 		<xsl:param name="text"/>
 		<xsl:param name="indent"/>
 		<xsl:param name="tabLink"/>
-		
+
 		<xsl:variable name="currTab" select="/root/gui/currTab"/>
-	
 	  <tr>
 	    <xsl:attribute name="class">
 	      <xsl:choose>

@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
+    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
+    xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:che="http://www.geocat.ch/2008/che">
+    <element name="che:CHE_MD_DataIdentification" id="36">
+        <label>Basisinformation zum Datenbestand</label>
+        <help/>
+        <condition/>
+        <description>Basisinformation zur eindeutigen Beschreibung des Datenbestands</description>
+    </element>  
+    <element name="gmd:administrativeArea" context="che:CHE_CI_Address" id="383">
+        <label>Verwaltungseinheit</label>
+        <help/>
+        <condition/>
+        <description>Bundesland oder Kanton</description>
+    </element>  
+    <element name="che:organisationAcronym" context="che:CHE_CI_ResponsibleParty" id="501.0">
+        <label>Abkürzung der Organisation</label>
+        <help>z.B. BAFU, swisstopo...</help>
+        <condition/>
+        <description>Kurzbezeichnung oder Abkürzung der Organisation.</description>
+    </element>
+    <element name="che:parentResponsibleParty" context="che:CHE_CI_ResponsibleParty" id="518.0">
+        <label>Übergeordnete Stelle</label>
+        <help>Beschreibung von Adresshierarchien (z.B. Adresse des Hauptsitzes und Abteilung). Hier
+            können Angaben über die übergeordnete Stelle/ Organisation der verantwortlichen Person
+            oder Stelle (CI_ResponsibleParty) gemacht werden. Der Verweis erfolgt auf sich selbst,
+            auch die Koordinaten der übergeordneten Stelle sind vom Diese Angaben sind vom Datentyp
+            CI_ResponsibleParty und werden in der gleichnamigen Klasse verwaltet.</help>
+        <condition/>
+        <description>Beschreibung von Adresshierarchien (z.B. Adresse des Hauptsitzes und
+            Abteilung)</description>
+    </element>
+    <element name="che:individualFirstName" context="che:CHE_CI_ResponsibleParty" id="521.0">
+        <label>Vorname</label>
+        <help/>
+        <condition/>
+        <description/>
+    </element>
+    <element name="che:individualLastName" context="che:CHE_CI_ResponsibleParty" id="522.0">
+        <label>Nachname</label>
+        <help/>
+        <condition>Es muss entweder der Nachname, der Name der Organisation oder die Position angegeben werden</condition>
+        <description/>
+    </element>
+    <element name="che:electronicalMailAddress" context="che:CHE_CI_ResponsibleParty" id="523.0">
+        <label>E-Mail</label>
+        <help/>
+        <condition/>
+        <description>E-Mail-Adresse</description>
+    </element>
+    <element name="che:linkage" context="che:CHE_CI_ResponsibleParty" id="524.0">
+        <label>Online-Information</label>
+        <help>Hier kann z.B. der Internetauftritt der verantwortlichen Stelle angegeben werden.</help>
+        <condition/>
+        <description>Online-Information zur Kontaktaufnahme mit der Person oder Organisation</description>
+    </element>
+    <element name="che:address" context="che:CHE_CI_ResponsibleParty" id="525.0">
+        <label>Adressangaben</label>
+        <help/>
+        <condition/>
+        <description>Postanschrift, unter der die verantwortliche Person oder Organisation kontaktiert werden kann</description>
+    </element>
+    <element name="che:phone" context="che:CHE_CI_ResponsibleParty" id="526.0">
+        <label>Telefon</label>
+        <help/>
+        <condition/>
+        <description>Telefonnummer (Festnetz/Mobil/Fax) der verantwortlichen Person oder Organisation</description>
+    </element>
+    <element name="che:number" context="gmd:CHE_CI_Telephone" id="527.0">
+        <label>Nummer</label>
+        <help>Nummer für Telefon, Mobiltelefon oder Fax. Die Art der Nummer wird mit dem Nummerntyp
+            definiert.</help>
+        <condition/>
+        <description>Nummer für Telefon, Mobiltelefon oder Fax</description>
+    </element>
+    <element name="che:numberType" context="gmd:CHE_CI_Telephone" id="528.0">
+        <label>Nummerntyp</label>
+        <help>Art der Nummer, welche aus der folgenden Liste ausgewählt werden kann: Hauptnummer,
+            Direkte Nummer, Mobiltelefon, Faxnummer</help>
+        <condition/>
+        <description>Nummerntyp</description>
+    </element>
+    <element name="che:streetName" context="che:CHE_CI_Address" id="529.0">
+        <label>Strassenname</label>
+        <help/>
+        <condition/>
+        <description>Strassenname des Standortes</description>
+    </element>
+    <element name="che:streetNumber" context="che:CHE_CI_Address" id="530.0">
+        <label>Hausnummer</label>
+        <help/>
+        <condition/>
+        <description>Hausnummer des Standortes</description>
+    </element>
+    <element name="che:addressLine" context="che:CHE_CI_Address" id="531.0">
+        <label>Addresszusatz</label>
+        <help/>
+        <condition/>
+        <description>Adresszusatz (z.B. c/o)</description>
+    </element>
+    <element name="che:postBox" context="che:CHE_CI_Address" id="532.0">
+        <label>Postfach</label>
+        <help/>
+        <condition/>
+        <description/>
+    </element>
+    <element name="che:CHE_MD_CodeDomain" id="536">
+        <label>Code-Domäne</label>
+        <help>Ein Wertebereich ist z.B. Lkoord, CharacterString, Integer etc.</help>
+        <condition/>
+        <description>Benannte Wertebereichsdefinition eines Objektkataloges</description>
+    </element>
+    <element name="che:name" context="che:CHE_MD_CodeDomain" id="537.0">
+        <label>Bezeichnung</label>
+        <help/>
+        <condition/>
+        <description>Bezeichnung der Wertebereichsdefinition</description>
+    </element>
+    <element name="che:subDomain" context="che:CHE_MD_CodeDomain" id="538.0">
+        <label>Unterdomäne</label>
+        <help/>
+        <condition/>
+        <description>Verweis auf die erweiterten Wertebereichsdefinitionen (Vererbung).</description>
+    </element>
+    <element name="che:baseDomain" context="che:CHE_MD_CodeDomain" id="539.0">
+        <label>Basisdomäne</label>
+        <help/>
+        <condition/>
+        <description>Verweis auf die zugrundeliegenden Wertebereichsdefinitionen</description>
+    </element>
+    <element name="che:type" context="che:CHE_MD_CodeDomain" id="540.0">
+        <label>Datentyp</label>
+        <help>Ein Datentyp, der Werte beschreibt, im Gegensatz zu einer Klasse, die Objekte
+            beschreibt. Werte haben keine Identität und stehen in einer "Viele-zu-Eins"-Beziehung
+            mit Elementen, die ausserhalb des Modells definiert sind.</help>
+        <condition/>
+        <description>Datentyp der Wertebereichsdefinition</description>
+    </element>
+    <element name="che:description" context="che:CHE_MD_CodeDomain" id="541.0">
+        <label>Beschreibung</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung der Wertebereichsdefinition</description>
+    </element>
+    <element name="che:CHE_MD_Type" id="542.0">
+        <label>Typ</label>
+        <help>Ein Datentyp, der Werte beschreibt, im Gegensatz zu einer Klasse, die Objekte
+            beschreibt. Werte haben keine Identität und stehen in einer "Viele-zu-Eins"-Beziehung
+            mit Elementen, die ausserhalb des Modells definiert sind.</help>
+        <condition/>
+        <description>Datentyp, der Werte beschreibt</description>
+    </element>
+    <element name="che:type" context="che:CHE_MD_Type" id="543.0">
+        <label>Typdefinition</label>
+        <help/>
+        <condition/>
+        <description>Datentyp-Definition, formal oder informal (z.B. Text12, Linie)</description>
+    </element>
+    <element name="che:value" context="che:CHE_MD_Type" id="544.0">
+        <label>Wert</label>
+        <help>Liste der einzelnen Werte bei einer Codeliste oder Aufzählung.</help>
+        <condition/>
+        <description>Liste der Werte</description>
+    </element>
+    <element name="che:CHE_MD_CodeValue" id="545.0">
+        <label>Wert</label>
+        <help/>
+        <condition/>
+        <description>Einzelner Wert bei einer Codeliste oder Aufzählung.</description>
+    </element>
+    <element name="che:name" context="che:CHE_MD_CodeValue" id="546.0">
+        <label>Bezeichnung</label>
+        <help/>
+        <condition/>
+        <description>Bezeichnung des Wertes</description>
+    </element>
+    <element name="che:code" context="che:CHE_MD_CodeValue" id="547.0">
+        <label>Code</label>
+        <help/>
+        <condition/>
+        <description>Codes des Wertes (z.B. eine Zahl)</description>
+    </element>
+    <element name="che:subValue" context="che:CHE_MD_CodeValue" id="548.0">
+        <label>Unteraufzählung</label>
+        <help/>
+        <condition/>
+        <description>Wird ein Wert einer Auzählung weiter (feiner) unterteilt, wird damit auf die
+            untergeordneten Werte verwiesen.</description>
+    </element>
+    <element name="che:description" context="che:CHE_MD_CodeValue" id="549.0">
+        <label>Beschreibung des Wertes</label>
+        <help/>
+        <condition/>
+        <description/>
+    </element>
+    <element name="che:CHE_MD_Attribute" id="550.0">
+        <label>Attribut</label>
+        <help/>
+        <condition/>
+        <description>Attribute, welche in Klassen oder Assoziationen benutzt werden</description>
+    </element>
+    <element name="che:name" context="che:attribute" id="551.0">
+        <label>Name</label>
+        <help/>
+        <condition/>
+        <description>Bezeichnung des Attributs</description>
+    </element>
+    <element name="che:description" context="che:attribute" id="552.0">
+        <label>Beschreibung</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung des Attributs</description>
+    </element>
+    <element name="che:namedType" id="553.0">
+        <label>Benannter Typ</label>
+        <help/>
+        <condition/>
+        <description>Verweis auf Wertebereichsedefinition</description>
+    </element>
+    <element name="che:anonymousType" id="554.0">
+        <label>Wertebereich</label>
+        <help/>
+        <condition/>
+        <description>Wertebereich, der durch die Unterklassen MD_Type und MD_CodeValue definiert
+            wird.</description>
+    </element>
+    <element name="che:CHE_MD_Role" id="555.0">
+        <label>Rolle</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung eines Endes eines Assoziation. Jede Assoziation besitzt 2 Enden, jedes
+            Ende ist mit einer Klasse verbunden. Ein Ende kann explizit mit einem Namen versehen
+            werden. Dieser wird hier angegeben.</description>
+    </element>
+    <element name="che:name" context="che:CHE_MD_Role" id="556.0">
+        <label>Name</label>
+        <help/>
+        <condition/>
+        <description>Bezeichnung der Rolle</description>
+    </element>
+    <element name="che:description" context="che:CHE_MD_Role" id="557.0">
+        <label>Beschreibung</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung der Rolle</description>
+    </element>
+    <element name="che:toClass" context="che:CHE_MD_Role" id="558.0">
+        <label>zur Klasse</label>
+        <help/>
+        <condition/>
+        <description>Zeiger auf jene Klasse, welcher die Rolle zugeordnet ist</description>
+    </element>
+    <element name="che:CHE_MD_AbstractClass" id="559.0">
+        <label>Abstrakte Klasse</label>
+        <help/>
+        <condition/>
+        <description>Übergeordnete, abstrakte Klasse von MD_Association und MD_Class</description>
+    </element>
+    <element name="che:name" id="560.0" context="che:CHE_MD_AbstractClass">
+        <label>Name</label>
+        <help/>
+        <condition/>
+        <description>Bezeichnung der abstrakten Klasse</description>
+    </element>
+    <element name="che:description" id="561.0" context="che:CHE_MD_AbstractClass">
+        <label>Beschreibung</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung der abstrakten Klasse</description>
+    </element>
+    <element name="che:name" id="560.0" context="che:CHE_MD_Association">
+		<label>Name</label>
+		<description>Bezeichnung der Assoziation</description>
+	</element>
+	<element name="che:description" id="561.0" context="che:CHE_MD_Association">
+		<label>Beschreibung</label>
+		<description>Beschreibung der Assoziation</description>
+	</element>    
+    <element name="che:name" id="560.0" context="che:CHE_MD_Class">
+		<label>Bezeichnung</label>
+		<description>Bezeichnung der Klasse</description>
+	</element>
+	<element name="che:description" id="561.0" context="che:CHE_MD_Class">
+		<label>Beschreibung</label>
+		<description>Beschreibung der Klasse</description>
+	</element>
+    <element name="che:subClass" id="562.0">
+        <label>Unterklasse</label>
+        <help/>
+        <condition/>
+        <description>Verweis auf die erweiterten Klassen (Vererbung) einer abstrakten Klasse</description>
+    </element>
+    <element name="che:baseClass" id="563.0">
+        <label>Basisklasse</label>
+        <help/>
+        <condition/>
+        <description>Verweis auf die zugrundeliegende Klasse (Vererbung) einer abstrakten Klasse</description>
+    </element>
+    <element name="che:CHE_MD_Class" id="564.0">
+        <label>Klasse</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung einer Klasse eines Feature-Kataloges. Eine Klasse ist eine Menge von
+            gleichartigen Objekten mit gleichen Eigenschaften. Jede Eigenschaft wird durch ein
+            Attribut beschrieben.</description>
+    </element>
+    <element name="che:CHE_MD_Association" id="565.0">
+        <label>Assoziation</label>
+        <help/>
+        <condition/>
+        <description>Beschreibung der konkreten Beziehung zwischen Klassen</description>
+    </element>
+    <element name="che:role" id="566.0">
+        <label>Rolle</label>
+        <help/>
+        <condition/>
+        <description>Verweis auf die Enden (Rollen) einer konkreten Beziehung</description>
+    </element>
+    <element name="che:attribute" id="586.0">
+		<label>Attribut</label>
+		<description>Attribut einer Klasse</description>
+		<condition/>
+    </element>
+    <element name="che:CHE_SV_ServiceIdentification" id="40.0">
+        <label>Basisinformation zum Dienst</label>
+        <description>Basisinformation zum Leistungsumfang des bereit gestellten Dienstes gemäss ISO 19119, bzw. Profil GM03_2+</description>  
+    </element>
+    <element name="che:inspireServiceType">
+        <label>INSPIRE Dienste-Typ</label>
+        <description></description>  
+    </element>  
+    <element name="che:legislationInformation" id="505">
+        <label>Gesetzgebung</label>
+        <help>Informationen über rechtliche Belange, welche die Ressource(n) betreffen. Diese Angaben
+            werden in der Klasse MD_Legislation verwaltet.</help>
+        <condition/>
+        <description>Informationen über rechtliche Belange, welche die Ressource(n)
+            betreffen</description>
+    </element>
+    <element name="che:CHE_MD_Legislation" id="506.0">
+        <label>Gesetzgebung</label>
+        <help>z.B. Angaben über Gesetze und Verordnungen.</help>
+        <condition/>
+        <description>Informationen über gesetzliche Vorschriften.</description>
+    </element>
+    <element name="che:title" id="507.0">
+        <label>Gesetzestitel</label>
+        <help/>
+        <condition>Titel und Datumsangaben sind obligatorisch</condition>
+        <description>Bezeichnung und Datum des Gesetzestexts.</description>
+    </element>
+    <element name="che:country" context="che:CHE_MD_Legislation" id="508.0">
+        <label>Land</label>
+        <help>Land, in welchem das Gesetz erlassen wurde, Auswahl aus der ISO-Länderliste.</help>
+        <condition>Obligatorisch</condition>
+        <description>Land in welchem das Gesetz erlassen wurde.</description>
+    </element>
+    <element name="che:language" context="che:CHE_MD_Legislation" id="509.0">
+        <label>Sprache</label>
+        <help/>
+        <condition>Obligatorisch</condition>
+        <description>Sprache in welcher das Gesetz verfasst ist.</description>
+    </element>
+    <element name="che:legislationType" context="che:CHE_MD_Legislation" id="510.0">
+        <label>Gesetzestyp</label>
+        <help>Auswahl aus folgender Liste: privat-rechtliche Statuten, öffentlich-rechtliche Statuten, kommunales Gesetz, kantonales Gesetz, nationales Gesetz, nationale Verordnung, internationales Abkommen, sonstige Vereinbarung.</help>
+        <condition>Obligatorisch</condition>
+        <description>Art des Gesetzes.</description>
+    </element>
+    <element name="che:internalReference" context="che:CHE_MD_Legislation" id="511.0">
+        <label>Interne Referenz</label>
+        <help/>
+        <condition/>
+        <description>gesetzesinterne Referenz (Artikel, Paragraph usw.).</description>
+    </element>
+    <element name="che:ProjectType" context="che:CHE_MD_Identification" id="512">
+        <label>Projekttyp</label>
+        <help>Auswahl aus folgender Liste: Forschung, Überwachungsprogramm, Arbeitsprogramm, Inventar.</help>
+        <condition/>
+        <description>Typ der Intitiative oder des Projekts, auf Grund dessen die Daten erfasst wurden.</description>
+    </element>
+    <element name="che:dataModel" context="che:CHE_MD_FeatureCatalogueDescription" id="533">
+        <label>Datenmodell</label>
+        <help>Dieses konzeptionelle Modell entspricht dem Objektartenkatalog (z.B. INTERLIS-Beschreibung, UML-Diagramm, Objektkatolog, etc.)</help>
+        <condition/>
+        <description>Verweis auf das Datenmodell des Datenbestandes</description>
+    </element>
+    <element name="che:domain" context="che:CHE_MD_FeatureCatalogueDescription" id="534">
+        <label>Domäne</label>
+        <help>Explizite Wertebereichsdefinition in diesem Katalog</help>
+        <condition/>
+        <description>Wertebereich</description>
+    </element>
+    <element name="che:class" context="che:CHE_MD_FeatureCatalogueDescription" id="535">
+        <label>Klasse</label>
+        <help>Objektklassen</help>
+        <condition/>
+        <description>Objektklassen</description>
+    </element>
+    <element name="che:revision" id="567">
+        <label>Letzte Aktualisierung</label>
+        <help>Informationen über die letzte Aktualisierung der Ressource und deren Gültigkeit. Falls
+            nicht der ganze Datenbestand gleichzeitig aktualisiert wird, kann mit "revisionScope" und
+            "revisionScopeDescription" jeder aktualisierte Teil individuell beschrieben werden. Bsp:
+            Liegenschaften der AV werden jährlich aktualisiert, Nomenklaturen nur wenn nötig.</help>
+        <condition/>
+        <description>Informationen über die letzte Aktualisierung der Ressource und deren
+            Gültigkeit</description>
+    </element>
+    <element name="che:CHE_MD_Revision" id="568.0">
+        <label>Akualisierungsinformation</label>
+        <help>Klasse über den Rahmen und das Datum der letzten Nachführung.</help>
+        <condition/>
+        <description>Klasse über den Rahmen und das Datum der letzten Nachführung.</description>
+    </element>
+    <element name="che:revisionScope" context="che:CHE_MD_Revision" id="569.0">
+        <label>Aktualisierungsumfang</label>
+        <help>Umfang der Daten, die aktualisiert wurden.</help>
+        <condition/>
+        <description>Umfang der Daten, die aktualisiert wurden.</description>
+    </element>
+    <element name="che:dateOfLastUpdate" context="che:CHE_MD_Revision" id="570.0">
+        <label>Datum der letzten Aktualisierung</label>
+        <help>Datum der letzten Aktualisierung</help>
+        <condition/>
+        <description>Datum der letzten Aktualisierung</description>
+    </element>
+    <element name="che:revisionNote" context="che:CHE_MD_Revision" id="571.0">
+        <label>Bemerkung zur Aktualisierung</label>
+        <help>Bemerkung zur letzten Aktualisierung</help>
+        <condition/>
+        <description>Bemerkung zur letzten Aktualisierung</description>
+    </element>
+    <element name="che:revisionScopeDescription" context="che:CHE_MD_Revision" id="572.0">
+        <label>Beschreibung des Aktualisierungsumfangs</label>
+        <help>Zusätzliche Informationen über den Bereich oder Umfang der Aktualisierung</help>
+        <condition/>
+        <description>Zusätzliche Informationen über den Bereich oder Umfang der
+            Aktualisierung</description>
+    </element>
+    <element name="che:filmType" id="577">
+        <label>Filmtyp</label>
+        <help>Filmtyp, mit dem das Bild gemacht wurde. Es kann ausgewählt werden aus folgender Liste: SW
+            (schwarz/weiss), F (farbig), FIR (farbig infrarot), IR (infrarot)</help>
+        <condition/>
+        <description>Filmtyp, mit dem das Bild gemacht wurde</description>
+    </element>
+    <element name="che:focalDistance" id="578">
+        <label>Brennweite</label>
+        <help>Brennweite, mit dem das Bild gemacht wurde.</help>
+        <condition/>
+        <description>Brennweite, mit dem das Bild gemacht wurde</description>
+    </element>
+    <element name="che:modelType">
+        <label>Art des Modells</label>
+        <help/>
+        <condition/>
+        <description>Auswahl aus Codeliste</description>
+    </element>
+    <element name="che:CHE_MD_FeatureCatalogueDescription">
+        <label>Objektartenkatalog</label>
+        <help/>
+        <condition/>
+        <description>Information zum Objektartenkatalog oder zum konzeptionellen Schema</description>
+    </element>
+    <element name="che:CHE_CI_ResponsibleParty">
+        <label>Verantwortliche Stelle</label>
+        <help/>
+        <condition/>
+        <description>Kontaktinformation zur Person und Organisation, welche im Bezug zur Ressource steht</description>
+    </element>
+    <element name="che:CHE_CI_Telephone">
+        <label>Telefon</label>
+        <help/>
+        <condition/>
+        <description>Telefonnummern (Festnetz/Mobil/Fax) der verantwortlichen Person oder Organisation</description>
+    </element>
+    <element name="che:CHE_CI_Address">
+        <label>Adressangaben</label>
+        <help/>
+        <condition/>
+        <description>Adressangaben zur verantwortlichen Stelle</description>
+    </element>
+    
+    <element name="che:projectType">
+        <label>Projekttyp</label>
+        <description>Typ der Intitiative oder des Projekts.</description>
+        <help>Typ der Intitiative oder des Projekts, auf grund dessen die Daten erfasst wurden. Auswahl aus folgender Liste: Forschung, Überwachungsprogramm, Arbeitsprogramm, Inventar.</help>
+    </element>
+    <element name="che:revisionExtent" context="che:CHE_MD_Revision">
+        <label>Aktualisierungsausdehnung</label>
+        <description>Die von der letzten Nachführung betroffene Ausdehnung</description>
+        <help></help>
+    </element>
+    <element name="che:revisionContact" context="che:CHE_MD_Revision">
+        <label>Aktualisierungskontakt</label>
+        <description>Kontaktangaben bezüglich der letzten Aktualisierung</description>
+        <help></help>
+    </element>
+    <element name="che:LocalisedURL">
+        <label>URL (mehrsprachig)</label>
+        <description></description>
+        <help></help>
+    </element>
+    <!-- codelist <element name="che:CHE_MD_modelTypeCode" context="che:CHE_MD_FeatureCatalogueDescription">
+        <label>Art des Modells</label>
+        <description>Codeliste zur Auswahl</description>
+        <help></help>
+    </element>-->
+    <element name="che:dateOfMonitoringState" context="che:CHE_MD_MaintenanceInformation">
+        <label>Stand Monitoringdaten</label>
+        <description>Datum des Erfassungsstandes der Monitoringdaten</description>
+        <help>Bitte nur bei Nachführung der Daten und nicht der Metadaten angeben.</help>
+    </element>
+    <element name="che:historyConcept">
+        <label>Historisierungskonzept</label>
+        <description>Angaben zum Historisierungskonzept der Daten und Metadaten.</description>
+        <help>Laut GeoIG soll für alle Geobasisdaten des Bundesrechts ein Historisierungskonzept erstellt werden.</help>
+    </element>
+    <element name="che:archiveConcept">
+        <label>Archivierungskonzept</label>
+        <description>Angaben zum Archivierungskonzept der Daten und Metadaten.</description>
+        <help>Laut GeoIG soll für alle Geobasisdaten des Bundesrechts ein Archivierungskonzept erstellt werden.</help>
+    </element>
+    <element name="che:historyConceptCitation">
+        <label>Bezeichnung des Historisierungskonzepts</label>
+        <description>Titel und Datum</description>
+        <help></help>
+    </element>
+    <element name="che:historyConceptURL">
+        <label>URL zum Historisierungskonzept</label>
+        <description>Falls das Historisierungskonzept online zugänglich ist, kann hier dessen URL angegeben werden</description>
+        <help></help>
+    </element>
+    <element name="che:CHE_MD_HistoryConcept">
+        <label>Historisierungskonzept</label>
+        <description>Angaben zum Historisierungskonzept der Daten und Metadaten.</description>
+        <help>Laut GeoIG soll für alle Geobasisdaten des Bundesrechts ein Historisierungskonzept erstellt werden.</help>
+    </element>
+    <element name="che:archiveConceptCitation">
+        <label>Bezeichnung des Archivierungskonzepts</label>
+        <description>Titel und Datum</description>
+        <help></help>
+    </element>
+    <element name="che:archiveConceptURL">
+        <label>URL zum Archivierungskonzept</label>
+        <description>Falls das Archivierungskonzept online zugänglich ist, kann hier dessen URL angegeben werden</description>
+        <help></help>
+    </element>
+    <element name="che:CHE_MD_ArchiveConcept">
+        <label>Archivierungskonzept</label>
+        <description>Angaben zum Archivierungskonzept der Daten und Metadaten.</description>
+        <help>Laut GeoIG soll für alle Geobasisdaten des Bundesrechts ein Archivierungskonzept erstellt werden.</help>
+    </element>
+    <element name="che:CHE_MD_MaintenanceInformation">
+        <label>Datenpflege</label>
+        <description>Information zu Umfang und Turnus der Aktualisierung</description>
+        <help>z.B. Nachführungsinformationen</help>
+    </element>
+    <element name="che:CHE_MD_LegalConstraints">
+        <label>Rechtliche Einschränkungen</label>
+        <description>Einschränkungen und rechtliche Voraussetzungen für den Zugriff sowie die Verwendung
+      der Ressource oder der Metadaten</description>
+        <help></help>
+    </element>
+    <element name="che:portrayalCatalogueURL">
+        <label>URL zum Darstellungskatalog</label>
+        <description>Wenn der Darstellungskatalog online zugänglich ist, kann hier dessen URL angegeben werden.</description>
+    </element>
+    <element name="che:CHE_MD_PortrayalCatalogueReference" id="268.0">
+        <label>Darstellungskatalog</label>
+        <description>Information über das Regelwerk für die Darstellung einer Ressource</description> 
+        <help>z.B. Signaturenkatalog</help>
+    </element>
+    <element name="che:basicGeodataID">
+        <label>Identifikator des Geobasisdatensatzes</label>
+        <description>Identifikator des Geobasisdatensatzes nach Anhang I der Geoinformationsverordnung, bzw. der Sammlung der Geobasisdaten.</description> 
+        <help>Bei Fragen wenden Sie sich ans geocat.ch-Team</help>
+    </element>
+    <element name="che:basicGeodataIDType">
+        <label>Art des Identifikators</label>
+        <description>Angabe, ob es sich beim obigen Identifikator um einen Geobasisdatensatz in der Zuständigkeit des Bundes, der Kantone oder der Gemeinden handelt.</description> 
+        <help/>
+    </element> 
+    <element name="che:CHE_SV_ServiceIdentification" id="40.0">
+        <label>Basisinformation zum Dienst</label>
+        <description>Allgemeine Angaben zur Beschreibung von Diensten nach ISO 19119 (Profil GM03_2+)</description>  
+    </element>
+    <element name="che:inspireServiceType">
+        <label>INSPIRE Dienstetyp</label>
+        <description>Klassifizierung der Dienste laut den INSPIRE Durchführungsbestimmungen für Metadaten</description>  
+    </element>
+    <element name="che:PT_FreeURL">
+        <label>Freie URL</label>
+        <description>Klasse für die Beschreibung einer mehrsprachigen URL.</description>
+    </element>
+    <element name="che:URLGroup">
+        <label>URL Gruppe</label>
+        <description>Klasse für die Verwaltung von mehrsprachigen URLs.</description>
+    </element>
+    <element name="che:directNumber">
+        <label>Direkte Nummer</label>
+        <description/>
+    </element>
+    <element name="che:mobile">
+        <label>Natelnummer</label>
+        <description/>
+    </element>
+    <element name="che:legislationConstraints" id="582.0">
+        <label>Gesetzliche Einschränkungen</label>
+        <description>Informationen über die gesetzliche Grundlage einer Einschränkung</description>
+        <help>z.B. ein Verweis auf ein Gesetz oder eine Verordnung</help>
+    </element>
+    <element name="che:CHE_MD_ImageDescription" id="243.0">
+        <label>Aufnahmeeigenschaften</label>
+        <help/>
+        <condition/>
+        <description>Information über die Verwendbarkeit eines Bildes</description>
+    </element>
+    <element name="che:CHE_MD_CoverageDescription" id="239.0">
+		<label>Rasterdateninhalt</label>
+		<help/>
+		<condition/>
+		<description>Information zum Inhalt einer Rasterdatenzelle</description>
+    </element>
+</labels>

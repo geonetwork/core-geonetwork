@@ -117,8 +117,7 @@ GeoNetwork.editor.LogoSelectionPanel = Ext.extend(Ext.Panel, {
             autoScroll : true,
             listeners : {
                 selectionchange : function(dv, selections) {
-                    var idx = this.view
-                            .getSelectedIndexes();
+                    var idx = this.view.getSelectedIndexes();
                     if (selections) {
                         this.fireEvent('logoselected', this, idx);
                         this.ownerCt.hide();
@@ -133,6 +132,7 @@ GeoNetwork.editor.LogoSelectionPanel = Ext.extend(Ext.Panel, {
             split: true,
             border: true,
             autoScroll: true,
+            layout: 'fit',
             items: [this.view]
         }), this.getUploadForm()];
         

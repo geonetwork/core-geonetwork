@@ -14,6 +14,7 @@
 	
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata.xsl"/>
+    <xsl:include href="mapfish_includes.xsl"/>
 
     <xsl:variable name="protocol" select="/root/gui/env/server/protocol" />
 	<xsl:variable name="host" select="/root/gui/env/server/host" />
@@ -34,10 +35,10 @@
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<xsl:call-template name="geoHeader"/>
+        <xsl:call-template name="mapfish_script_includes"/>
 		<xsl:call-template name="jsHeader">
 			<xsl:with-param name="small" select="false()"/>
 		</xsl:call-template>
-		
 		<xsl:choose>
             <xsl:when test="/root/request/debug">
 	    		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"></script>
@@ -47,7 +48,17 @@
             <xsl:otherwise>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
             </xsl:otherwise>
-        </xsl:choose>		
+        </xsl:choose>
+        <script language="JavaScript" type="text/javascript">
+        function permlink(url) {
+		    Ext.MessageBox.show({
+		        title: translate("permlink"),
+		        msg: '<a href="'+url+'" target="_newtab">'+url+'</a>',
+		        animEl: 'mb7'
+		    });
+		}
+		</script>
+    <xsl:call-template name="extentViewerJavascriptInit"/>
 	</xsl:template>
 	
 	<!--
@@ -86,7 +97,7 @@
 							<xsl:variable name="buttons">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="buttons">
-										<xsl:with-param name="metadata" select="$metadata"/>
+										<xsl:with-param name="metadata" select="."/>
 									</xsl:call-template>
 								</td></tr>
 							</xsl:variable>
@@ -96,35 +107,10 @@
 							<tr>
 								<td align="center" valign="left" class="padded-content">
 									<table width="100%">
-										<tr>
-											<td align="left" valign="middle" class="padded-content" height="40">
-												<xsl:variable name="source" select="string(geonet:info/source)"/>
-												<xsl:choose>
-													<!-- //FIXME does not point to baseURL yet-->
-													<xsl:when test="/root/gui/sources/record[string(siteid)=$source]">
-														<a href="{/root/gui/sources/record[string(siteid)=$source]/baseURL}" target="_blank">
-															<img src="{/root/gui/url}/images/logos/{$source}.gif" width="40"/>
-														</a>
-													</xsl:when>
-													<xsl:otherwise>
-														<img src="{/root/gui/url}/images/logos/{$source}.gif" width="40"/>
-													</xsl:otherwise>
-												</xsl:choose>
-											</td>
-											<td class="padded" width="90%">
-												<h1 align="left">
-													<xsl:value-of select="$metadata/title"/>
-												</h1>
-											</td>
-											
-											<!-- Export links (XML, PDF, ...) -->
-											<xsl:if test="(string(geonet:info/isTemplate)!='s')">
-										  	<td align="right" class="padded-content" height="16" nowrap="nowrap">
-													<xsl:call-template name="showMetadataExportIcons"/>
-										  	</td>
-											</xsl:if>
-
-										</tr>
+										<xsl:call-template name="geocatButtons">
+			                                 <xsl:with-param name="metadata" select="$metadata"/>
+			                                 <xsl:with-param name="baseURL" select="$baseURL" /> <!-- The base URL of the local GeoNetwork site -->
+			                             </xsl:call-template>
 									</table>
 								</td>
 							</tr>

@@ -1,5 +1,6 @@
 <xsl:stylesheet version="2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                    xmlns:che="http://www.geocat.ch/2008/che"
                     xmlns:gml="http://www.opengis.net/gml"
                     xmlns:srv="http://www.isotc211.org/2005/srv"
                     xmlns:ADO="http://www.defence.gov.au/ADO_DM_MDP"
@@ -133,7 +134,12 @@
                 <xsl:otherwise><xsl:value-of select="$defaultLang"/></xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
+        <xsl:choose>
+        	<xsl:when test="normalize-space(string($tmp)) = 'fra'">fre</xsl:when>
+        	<xsl:when test="normalize-space(string($tmp)) = 'deu'">ger</xsl:when>
+        	<xsl:otherwise><xsl:value-of select="normalize-space(string($tmp))"/></xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
 
 
@@ -142,17 +148,32 @@
         
         <xsl:variable name="poundLangId" select="concat('#',upper-case($isoDocLangId))" />
 
+        <xsl:variable name="identification" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification' or name(.)='srv:SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"></xsl:variable>
+        <xsl:variable name="docLangTitle" select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
+        <xsl:variable name="charStringTitle" select="$identification/gmd:citation/*/gmd:title/gco:CharacterString"/>
+        <xsl:variable name="locStringTitles" select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString"/>
         <xsl:choose>
-        <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0]) != 0">
-            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId and string-length(.) > 0])"/>
+        <xsl:when    test="string-length(string($docLangTitle)) != 0">
+            <xsl:value-of select="$docLangTitle"/>
         </xsl:when>
-        <xsl:when    test="string-length(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title/gco:CharacterString[1]) != 0">
-            <xsl:value-of select="string(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title/gco:CharacterString[1])"/>
+        <xsl:when    test="string-length(string($charStringTitle[1])) != 0">
+            <xsl:value-of select="string($charStringTitle[1])"/>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:value-of select="string((/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString))"/>
+            <xsl:value-of select="string($locStringTitles[1])"/>
         </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="hasLinkageURL">
+        <xsl:variable name="linkage" select="//gmd:distributionInfo//gmd:transferOptions//gmd:linkage"/>
+        <xsl:variable name="hasLinkageURL">
+            <xsl:choose>
+                <xsl:when test="$linkage/gmd:URL[java:match(string(.), 'https?://.*')] or $linkage//che:LocalisedURL[java:match(string(.), 'https?://.*')]">y</xsl:when>
+                <xsl:otherwise>n</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <Field name="hasLinkageURL" string="{$hasLinkageURL}" store="true" index="true" token="false"/>
     </xsl:template>
 
     <!-- ================================================================== -->

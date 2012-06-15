@@ -203,10 +203,6 @@ class Harvester
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);
 
-        if (params.useAccount) {
-            req.setCredentials(params.username, params.password);
-        }
-
         xml = req.execute();
 
 		//-----------------------------------------------------------------------
@@ -655,7 +651,7 @@ class Harvester
 			
 			dbms.commit();
 			
-			dataMan.indexMetadataGroup(dbms, reg.id);
+			dataMan.indexMetadataGroup(dbms, reg.id, false, context);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

@@ -70,6 +70,32 @@
 					<th class="padded"><xsl:value-of select="/root/gui/strings/downloadEmail"/></th>
 					<td class="padded"><input class="content" type="text" name="email" value="{/root/response/record/email}"/></td>
 				</tr>
+				<tr>
+					<th class="padded">
+						<xsl:value-of select="/root/gui/strings/website"/>
+					</th>
+					<td class="padded">
+						<input class="content" type="text" name="website" size="60" value="{/root/response/record/website}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="padded">
+						<xsl:value-of select="/root/gui/strings/logo"/>
+					</td>
+					<td class="padded">
+						<xsl:variable name="logoUuid" select="//logouuid"/>
+						<xsl:choose>
+							<xsl:when test="string($logoUuid)">
+								<img style="float:left;" width="40" id="logo" src="{/root/gui/url}/images/logos/{$logoUuid}.png" alt="{$logoUuid}" title="{$logoUuid}"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<span>None</span>
+							</xsl:otherwise>
+						</xsl:choose>
+						<input id="upload" type="file" value="" name="upload" onchange="$('logofile').value=$('upload').value;" style="float:right;"/>
+						<input type="hidden" id="logofile" name="logofile" value="" />
+					</td>
+				</tr>
 			</table>
 		</form>
 	</xsl:template>

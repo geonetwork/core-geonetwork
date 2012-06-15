@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+  <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:CharacterString>7e4f21d6-0949-4325-b34f-70969b5a8493</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:CharacterString>deu</gco:CharacterString>
+  </gmd:language>
+  <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" />
+  </gmd:characterSet>
+  <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" />
+  </gmd:hierarchyLevel>
+  <gmd:hierarchyLevelName>
+    <gco:CharacterString />
+  </gmd:hierarchyLevelName>
+  <gmd:dateStamp xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:DateTime>2009-09-17T10:59:13</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:CharacterString>GM03 2+</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="DE">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeListValue="deu" codeList="#LanguageCode">German</gmd:LanguageCode>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="FR">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeListValue="fra" codeList="#LanguageCode">French</gmd:LanguageCode>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="IT">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeListValue="ita" codeList="#LanguageCode">Italian</gmd:LanguageCode>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="EN">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeListValue="eng" codeList="#LanguageCode">English</gmd:LanguageCode>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:spatialRepresentationInfo>
+    <gmd:MD_VectorSpatialRepresentation>
+      <gmd:topologyLevel>
+        <gmd:MD_TopologyLevelCode codeList="" codeListValue="" />
+      </gmd:topologyLevel>
+      <gmd:geometricObjects>
+        <gmd:MD_GeometricObjects>
+          <gmd:geometricObjectType>
+            <gmd:MD_GeometricObjectTypeCode codeList="" codeListValue="" />
+          </gmd:geometricObjectType>
+          <gmd:geometricObjectCount>
+            <gco:Integer />
+          </gmd:geometricObjectCount>
+        </gmd:MD_GeometricObjects>
+      </gmd:geometricObjects>
+    </gmd:MD_VectorSpatialRepresentation>
+  </gmd:spatialRepresentationInfo>
+  <gmd:referenceSystemInfo>
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:code>
+            <gco:CharacterString>EPSG:21781</gco:CharacterString>
+          </gmd:code>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
+  <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>-- GM03Medium Vektor --</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle>
+            <gco:CharacterString />
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeListValue="" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:identifier>
+            <gmd:MD_Identifier>
+              <gmd:code>
+                <gco:CharacterString>--Eindeutige ID des Datenbestands (INSPIRE) --</gco:CharacterString>
+              </gmd:code>
+            </gmd:MD_Identifier>
+          </gmd:identifier>
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString />
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#FR" />
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:abstract>
+      <gmd:purpose>
+        <gco:CharacterString />
+      </gmd:purpose>
+      <gmd:status>
+        <gmd:MD_ProgressCode codeList="" codeListValue="" />
+      </gmd:status>
+      <gmd:resourceMaintenance>
+        <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
+          <gmd:maintenanceAndUpdateFrequency>
+            <gmd:MD_MaintenanceFrequencyCode codeList="" codeListValue="" />
+          </gmd:maintenanceAndUpdateFrequency>
+        </che:CHE_MD_MaintenanceInformation>
+      </gmd:resourceMaintenance>
+      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0i.bgdi.admin.ch:80/geonetwork/srv/deu/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http://www.eionet.europa.eu/gemet/concept/14918&amp;amp;locales=DE,FR,IT,EN" xlink:title="" xlink:role="">
+        <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Vektor</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">vettore</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">vecteur</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">vector</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:resourceConstraints>
+        <gmd:MD_Constraints>
+          <gmd:useLimitation>
+            <gco:CharacterString />
+          </gmd:useLimitation>
+        </gmd:MD_Constraints>
+      </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <che:CHE_MD_LegalConstraints gco:isoType="gmd:MD_LegalConstraints">
+          <gmd:useLimitation>
+            <gco:CharacterString />
+          </gmd:useLimitation>
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="" codeListValue="" />
+          </gmd:accessConstraints>
+          <gmd:useConstraints>
+            <gmd:MD_RestrictionCode codeList="" codeListValue="" />
+          </gmd:useConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>-- wenn benutzerdef. ausgewählt --</gco:CharacterString>
+          </gmd:otherConstraints>
+        </che:CHE_MD_LegalConstraints>
+      </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <gmd:MD_SecurityConstraints>
+          <gmd:classification>
+            <gmd:MD_ClassificationCode codeList="" codeListValue="">-- wenn benutzerdef. ausgewählt --</gmd:MD_ClassificationCode>
+          </gmd:classification>
+        </gmd:MD_SecurityConstraints>
+      </gmd:resourceConstraints>
+      <gmd:spatialRepresentationType>
+        <gmd:MD_SpatialRepresentationTypeCode codeList="" codeListValue="vector" />
+      </gmd:spatialRepresentationType>
+      <gmd:spatialResolution>
+        <gmd:MD_Resolution>
+          <gmd:equivalentScale>
+            <gmd:MD_RepresentativeFraction>
+              <gmd:denominator>
+                <gco:Integer />
+              </gmd:denominator>
+            </gmd:MD_RepresentativeFraction>
+          </gmd:equivalentScale>
+        </gmd:MD_Resolution>
+      </gmd:spatialResolution>
+      <gmd:language>
+        <gco:CharacterString>deu</gco:CharacterString>
+      </gmd:language>
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" />
+      </gmd:characterSet>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode />
+      </gmd:topicCategory>
+    </che:CHE_MD_DataIdentification>
+  </gmd:identificationInfo>
+  <gmd:contentInfo>
+    <che:CHE_MD_FeatureCatalogueDescription gco:isoType="gmd:MD_FeatureCatalogueDescription">
+      <gmd:includedWithDataset>
+        <gco:Boolean>0</gco:Boolean>
+      </gmd:includedWithDataset>
+      <gmd:featureCatalogueCitation>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString />
+          </gmd:title>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="" codeListValue="" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+        </gmd:CI_Citation>
+      </gmd:featureCatalogueCitation>
+      <che:dataModel>
+        <che:PT_FreeURL>
+          <che:URLGroup>
+            <che:LocalisedURL />
+          </che:URLGroup>
+        </che:PT_FreeURL>
+      </che:dataModel>
+      <che:class>
+        <che:CHE_MD_Class>
+          <che:name>
+            <gco:CharacterString>ISO Ansicht "Inhalt" um weitere Klassen anzugeben</gco:CharacterString>
+          </che:name>
+          <che:description>
+            <gco:CharacterString />
+          </che:description>
+          <che:attribute>
+            <che:name>
+              <gco:CharacterString>ISO Ansicht "Inhalt"  um weitere Attribute anzugeben</gco:CharacterString>
+            </che:name>
+            <che:description>
+              <gco:CharacterString />
+            </che:description>
+          </che:attribute>
+        </che:CHE_MD_Class>
+      </che:class>
+      <che:modelType>
+        <che:CHE_MD_modelTypeCode codeList="" codeListValue="" />
+      </che:modelType>
+    </che:CHE_MD_FeatureCatalogueDescription>
+  </gmd:contentInfo>
+  <gmd:distributionInfo>
+    <gmd:MD_Distribution>
+      <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0i.bgdi.admin.ch:80/geonetwork/srv/deu/xml.format.get?id=31" xlink:title="" xlink:role="">
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>INTERLIS</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>1</gco:CharacterString>
+          </gmd:version>
+        </gmd:MD_Format>
+      </gmd:distributionFormat>
+      <gmd:distributor>
+        <gmd:MD_Distributor>
+          <gmd:distributionOrderProcess>
+            <gmd:MD_StandardOrderProcess>
+              <gmd:fees>
+                <gco:CharacterString />
+              </gmd:fees>
+            </gmd:MD_StandardOrderProcess>
+          </gmd:distributionOrderProcess>
+        </gmd:MD_Distributor>
+      </gmd:distributor>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <che:LocalisedURL />
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString />
+              </gmd:name>
+              <gmd:description>
+                <gco:CharacterString />
+              </gmd:description>
+              <gmd:function>
+                <gmd:CI_OnLineFunctionCode codeList="" codeListValue="" />
+              </gmd:function>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:offLine>
+            <gmd:MD_Medium>
+              <gmd:name>
+                <gmd:MD_MediumNameCode codeList="" codeListValue="" />
+              </gmd:name>
+            </gmd:MD_Medium>
+          </gmd:offLine>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+    </gmd:MD_Distribution>
+  </gmd:distributionInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="" codeListValue="dataset" />
+          </gmd:level>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+      <gmd:report>
+        <gmd:DQ_DomainConsistency>
+          <gmd:result>
+            <gmd:DQ_ConformanceResult>
+              <gmd:specification>
+                <gmd:CI_Citation>
+                  <gmd:title>
+                    <gco:CharacterString>INSPIRE Durchführungsbestimmungen bezüglich Metadaten</gco:CharacterString>
+                  </gmd:title>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>2008-12-03</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode codeList="" codeListValue="publication" />
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </gmd:CI_Citation>
+              </gmd:specification>
+              <gmd:explanation>
+                <gco:CharacterString />
+              </gmd:explanation>
+              <gmd:pass>
+                <gco:Boolean>0</gco:Boolean>
+              </gmd:pass>
+            </gmd:DQ_ConformanceResult>
+          </gmd:result>
+        </gmd:DQ_DomainConsistency>
+      </gmd:report>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="" codeListValue="dataset" />
+          </gmd:level>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:statement>
+            <gco:CharacterString />
+          </gmd:statement>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="" codeListValue="dataset" />
+          </gmd:level>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:processStep>
+            <gmd:LI_ProcessStep>
+              <gmd:description>
+                <gco:CharacterString />
+              </gmd:description>
+              <gmd:dateTime>
+                <gco:DateTime />
+              </gmd:dateTime>
+            </gmd:LI_ProcessStep>
+          </gmd:processStep>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <gmd:portrayalCatalogueInfo>
+    <che:CHE_MD_PortrayalCatalogueReference>
+      <gmd:portrayalCatalogueCitation>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString />
+          </gmd:title>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="" codeListValue="" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+        </gmd:CI_Citation>
+      </gmd:portrayalCatalogueCitation>
+      <che:portrayalCatalogueURL>
+        <che:PT_FreeURL>
+          <che:URLGroup>
+            <che:LocalisedURL />
+          </che:URLGroup>
+        </che:PT_FreeURL>
+      </che:portrayalCatalogueURL>
+    </che:CHE_MD_PortrayalCatalogueReference>
+  </gmd:portrayalCatalogueInfo>
+  <che:legislationInformation>
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="" codeListValue="" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="" codeListValue="" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="" codeListValue="" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="" codeListValue="" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="" codeListValue="" />
+      </che:legislationType>
+      <che:internalReference>
+        <gco:CharacterString />
+      </che:internalReference>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString />
+          </gmd:title>
+          <gmd:alternateTitle>
+            <gco:CharacterString />
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="" codeListValue="" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+</che:CHE_MD_Metadata>

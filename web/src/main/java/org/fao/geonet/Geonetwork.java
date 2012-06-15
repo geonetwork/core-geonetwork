@@ -54,10 +54,12 @@ import jeeves.utils.Xml;
 import jeeves.utils.XmlResolver;
 import jeeves.xlink.Processor;
 
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.Email;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -70,6 +72,8 @@ import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.kernel.reusable.SharedObjectUriMapper;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
@@ -77,11 +81,12 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
+import org.fao.geonet.services.extent.ExtentManager;
+import org.fao.geonet.services.monitoring.services.ServiceMonitorManager;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
@@ -90,6 +95,7 @@ import org.fao.geonet.util.ThreadUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.shapefile.indexed.IndexType;
 import org.geotools.data.shapefile.indexed.IndexedShapefileDataStore;
+import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
@@ -102,14 +108,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 
-/**
- * This is the main class, it handles http connections and inits the system.
+/** This is the main class. It handles http connections and inits the system
   */
 public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
 	private String 				path;				
 	private SearchManager 		searchMan;
-	private HarvestManager 		harvestMan;
 	private ThesaurusManager 	thesaurusMan;
 	private MetadataNotifierControl metadataNotifierControl;
 	private ThreadPool        threadPool;
@@ -136,8 +140,12 @@ public class Geonetwork implements ApplicationHandler {
 	/**
      * Inits the engine, loading all needed data.
 	  */
+
 	@SuppressWarnings(value = "unchecked")
 	public Object start(Element config, ServiceContext context) throws Exception {
+	    Processor.addUriMapper(new SharedObjectUriMapper());
+	    
+		System.setProperty(GeoTools.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.toString(true));
 		logger = context.getLogger();
 
 		path    = context.getAppPath();
@@ -237,7 +245,7 @@ public class Geonetwork implements ApplicationHandler {
 			logger.info("     Repositories file built from template.");
 
 			try {
-				app_context = new  ClassPathXmlApplicationContext( Geonet.File.JZKITAPPLICATIONCONTEXT );
+				app_context = new  ClassPathXmlApplicationContext( handlerConfig.getMandatoryValue( Geonet.Config.JZKITCONFIG )   );
 
 				// to have access to the GN context in spring-managed objects
 				ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
@@ -320,6 +328,21 @@ public class Geonetwork implements ApplicationHandler {
 				new SettingInfo(settingMan), schemaMan, servletContext);
 
 		//------------------------------------------------------------------------
+        //--- Initialize Extent Dict
+
+        logger.info("  - ExtentManager");
+
+        List<Element> extentConfig = handlerConfig.getChildren(Geocat.Config.EXTENT_CONFIG);
+
+        ExtentManager extentMan = new ExtentManager(dataStore, extentConfig);
+
+		//-------------------------------------------------------------------------
+		//--- ReusableObjectManager
+
+        List<Element> reusableConfig = handlerConfig.getChildren(Geocat.Config.REUSABLE_OBJECT_CONFIG);
+		ReusableObjManager reusableObjMan = new ReusableObjManager(path, reusableConfig, context.getSerialFactory());
+
+		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
 
 		logger.info("  - Access manager...");
@@ -343,13 +366,13 @@ public class Geonetwork implements ApplicationHandler {
 			xmlSerializer = new XmlSerializerDb(settingMan);
 		}
 
-		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, path);
+		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, reusableObjMan, extentMan, path);
 
 
         /**
          * Initialize iso languages mapper
          */
-        IsoLanguagesMapper.getInstance().init(dbms);
+        IsoLanguagesMapper.init(dbms);
         
         /**
          * Initialize language detector
@@ -362,13 +385,13 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Thesaurus...");
 
 		thesaurusMan = ThesaurusManager.getInstance(path, dataMan, context.getResourceManager(), thesauriDir);
-
+		dataMan.setThesaurusManager(thesaurusMan);
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
 
 		logger.info("  - Harvest manager...");
 
-		harvestMan = new HarvestManager(context, settingMan, dataMan);
+		HarvestManager harvestMan = new HarvestManager(context, settingMan, dataMan);
 		dataMan.setHarvestManager(harvestMan);
 
 		//------------------------------------------------------------------------
@@ -377,7 +400,7 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Catalogue services for the web...");
 
 		CatalogConfiguration.loadCatalogConfig(path, Csw.CONFIG_FILE);
-		CatalogDispatcher catalogDis = new CatalogDispatcher(new File(path,summaryConfigXmlFile), lc);
+		CatalogDispatcher catalogDis = new CatalogDispatcher(dataStore, new File(path,summaryConfigXmlFile), lc);
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
@@ -386,6 +409,10 @@ public class Geonetwork implements ApplicationHandler {
 
 		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
+        logger.info("  - Service monitor manager...");
+        ServiceMonitorManager smm = new ServiceMonitorManager(dbms, context, settingMan);
+
+        Email email = new Email(settingMan, threadPool);
 
         //------------------------------------------------------------------------
 		//--- initialize metadata notifier subsystem
@@ -401,16 +428,20 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.accessMan   = accessMan;
 		gnContext.dataMan     = dataMan;
 		gnContext.searchMan   = searchMan;
+		gnContext.email   = email;
 		gnContext.schemaMan   = schemaMan;
 		gnContext.config      = handlerConfig;
 		gnContext.catalogDis  = catalogDis;
 		gnContext.settingMan  = settingMan;
 		gnContext.harvestMan  = harvestMan;
-		gnContext.thesaurusMan= thesaurusMan;
+        gnContext.thesaurusMan= thesaurusMan;
+        gnContext.extentMan   = extentMan;
+        gnContext.reusableObjMan = reusableObjMan;
 		gnContext.oaipmhDis   = oaipmhDis;
 		gnContext.app_context = app_context;
         gnContext.metadataNotifierMan = metadataNotifierMan;
 		gnContext.threadPool  = threadPool;
+        gnContext.monitorMan  = smm;
 		gnContext.xmlSerializer  = xmlSerializer;
 		gnContext.svnManager  = svnManager;
 		gnContext.statusActionsClass = statusActionsClass;
@@ -492,7 +523,7 @@ public class Geonetwork implements ApplicationHandler {
      * @param appPath
      */
 	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
-		logger.info("  - Migration ...");
+		/*logger.info("  - Migration ...");
 		
 		// Get db version and subversion
 		String dbVersion = settingMan.getValue("system/platform/version");
@@ -522,20 +553,12 @@ public class Geonetwork implements ApplicationHandler {
 		) {
 			logger.info("      Webapp version = Database version, no migration task to apply.");
 		} else {
+			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+			String dbType = Lib.db.getDBType(dbms);
+			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
+			
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
-			
-            try {
-            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
-            } catch (Exception e) {
-                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                e.printStackTrace();
-                anyMigrationError = true;
-            }
-
-			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-			String dbType = DatabaseType.lookup(dbms).toString();
-			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
             @SuppressWarnings(value = "unchecked")
@@ -547,29 +570,17 @@ public class Geonetwork implements ApplicationHandler {
                     @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
-                    	if(file.getName().equals("java")) {
-	                        try {
-	                        	settingMan.refresh(dbms);
-	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
-	                            task.update(settingMan, dbms);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	} else {
-	                        String filePath = path + file.getAttributeValue("path");
-	                        String filePrefix = file.getAttributeValue("filePrefix");
-	                        anyMigrationAction = true;
-	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-	                        try {
-	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	}
+                        String filePath = path + file.getAttributeValue("path");
+                        String filePrefix = file.getAttributeValue("filePrefix");
+                        anyMigrationAction = true;
+                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+                        try {
+                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+                        } catch (Exception e) {
+                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                            e.printStackTrace();
+                            anyMigrationError = true;
+                        }
                     }
                 }
             }
@@ -613,7 +624,7 @@ public class Geonetwork implements ApplicationHandler {
                 logger.warning("      Error occurs during migration. Check the log file for more details.");
             }
 			// TODO : Maybe some migration stuff has to be done in Java ?
-		}
+		}*/
 	}
 
 	/**
@@ -799,10 +810,6 @@ public class Geonetwork implements ApplicationHandler {
 			logger.error("  Message   : " +e.getMessage());
 			logger.error("  Stack     : " +Util.getStackTrace(e));
 		}
-
-			
-		logger.info("  - Harvest Manager...");
-		harvestMan.shutdown();
 
 		logger.info("  - Z39.50...");
 		Server.end();

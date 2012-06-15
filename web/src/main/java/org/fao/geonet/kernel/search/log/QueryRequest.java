@@ -127,7 +127,7 @@ public class QueryRequest {
 	
 
 	public String getLuceneQuery() {
-		return luceneQuery;
+		return luceneQuery == null ? "" : luceneQuery;
 	}
 
 	public void setLuceneQuery(String luceneQuery) {
@@ -163,7 +163,7 @@ public class QueryRequest {
 	}
 
 	public String getSpatialFilter() {
-		return spatialFilter;
+		return spatialFilter == null ? "" : spatialFilter;
 	}
 
 	public void setSpatialFilter(String spatialFilter) {
@@ -180,7 +180,7 @@ public class QueryRequest {
 	
 
 	public String getMdType() {
-		return mdType;
+		return mdType == null ? "" : mdType;
 	}
 
 	public void setMdType(String mdtype) {
@@ -258,12 +258,12 @@ public class QueryRequest {
 					this.requestId,
 					this.getFormattedDate(),
 					this.getIp(),
-					this.getLuceneQuery(),
+					cap(this.getLuceneQuery()),
 					this.getHits(),
 					this.getLanguage(),
 					this.getSortBy(),
-					this.getSpatialFilter(),
-					this.getMdType(),
+					cap(this.getSpatialFilter()),
+					cap(this.getMdType()),
 					(this.simpleQuery ? 1 : 0),
 					(this.autoGenQuery ? 1 : 0),
 					this.getService());
@@ -306,5 +306,9 @@ public class QueryRequest {
 		}
 		return true;
 	}
+
+    private String cap(String string) {
+        return string.substring(0, Math.min(3999, string.length()));
+    }
 
 }

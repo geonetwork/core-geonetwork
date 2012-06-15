@@ -352,7 +352,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 		result.addedMetadata++;
 
 		return id;
@@ -603,7 +603,7 @@ public class Aligner
             boolean ufo = params.mefFormatFull;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false, false);
 
 			result.updatedMetadata++;
 		}
@@ -634,7 +634,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 	}
 
 	/**
@@ -770,7 +770,7 @@ public class Aligner
 		request.addParam("uuid",   uuid);
 		request.addParam("format", (params.mefFormatFull ? "full" : "partial"));
 
-		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
+		request.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 
 		File tempFile = File.createTempFile("temp-", ".dat");
 		request.executeLarge(tempFile);

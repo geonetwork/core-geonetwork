@@ -26,14 +26,11 @@ package org.fao.geonet.kernel.harvest.harvester.geonet20;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.utils.Util;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 //=============================================================================
@@ -66,8 +63,10 @@ public class GeonetParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		host    = Util.getParam(site, "host",    "");
+		port    = Util.getParam(site, "port",    80);
+		servlet = Util.getParam(site, "servlet", "geonetwork");
 
-		//checkPort(port);
+		checkPort(port);
 		addSearches(searches);
 	}
 
@@ -85,8 +84,10 @@ public class GeonetParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		host    = Util.getParam(site, "host",    host);
+		port    = Util.getParam(site, "port",    port);
+		servlet = Util.getParam(site, "servlet", servlet);
 
-		//checkPort(port);
+		checkPort(port);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -103,18 +104,6 @@ public class GeonetParams extends AbstractParams
 
 	public Iterable<Search> getSearches() { return alSearches; }
 
-    public String getServletPath() {
-        if (StringUtils.isNotEmpty(host)) {
-            try {
-                return  new URL(host).getPath();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        return "";
-    }
-
 	//---------------------------------------------------------------------------
 
 	public GeonetParams copy()
@@ -123,6 +112,8 @@ public class GeonetParams extends AbstractParams
 		copyTo(copy);
 
 		copy.host    = host;
+		copy.port    = port;
+		copy.servlet = servlet;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -171,6 +162,8 @@ public class GeonetParams extends AbstractParams
 	//---------------------------------------------------------------------------
 
 	public String  host;
+	public int     port;
+	public String  servlet;
 
 	private ArrayList<Search> alSearches = new ArrayList<Search>();
 }

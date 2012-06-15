@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gch="http://www.geocat.ch/2003/05/gateway/header" xmlns:ns1="http://www.geocat.ch/2003/05/gateway/query" xmlns:ns2="http://www.w3.org/2001/12/soap-envelope" xmlns:ns3="http://schemas.xmlsoap.org/soap/envelope/">
+	<xsd:import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="soap-envelope.xsd"/>
+	<xsd:import namespace="http://www.geocat.ch/2003/05/gateway/header" schemaLocation="header.xsd"/>
+	<xsd:import namespace="http://www.geocat.ch/2003/05/gateway/query" schemaLocation="request.xsd"/>
+</xsd:schema>

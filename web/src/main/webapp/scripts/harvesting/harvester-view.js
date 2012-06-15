@@ -57,7 +57,10 @@ this.setEmptyCommon = function()
 	
 	$(prefix+'.oneRunOnly').checked = false;
 
-	new Cron().setUI(prefix);
+	$(prefix+'.every.days') .value = '0';
+	$(prefix+'.every.hours').value = '1';
+	$(prefix+'.every.mins') .value = '30';
+	
 	$(prefix+'.validate').checked = false;
 	this.unselectImportXslt();
 
@@ -76,23 +79,11 @@ this.setDataCommon = function(node)
 	hvutil.setOptionIfExists(site, 'use',      prefix+'.useAccount');
 	hvutil.setOptionIfExists(site, 'username', prefix+'.username');
 	hvutil.setOptionIfExists(site, 'password', prefix+'.password');
-	hvutil.setOption(options, 'oneRunOnly', prefix+'.oneRunOnly')
-
-    var cron = new Cron(hvutil.find(options, 'every'));
-
-    $(prefix+'.atHour') .value = cron.hours;
-    $(prefix+'.atMin').value = cron.mins;
-    $(prefix+'.atIntervalHours') .value = cron.intervalHours;
-	var checkbox;
-    for (day in cron.days) {
-    	checkbox = $(prefix+"."+(day.toUpperCase()));
-    	if(cron.days[day]) {
-        	checkbox.setAttribute('checked', 'true');
-    	} else {
-            checkbox.removeAttribute('checked');
-    	}
-    }
-
+	hvutil.setOption(options, 'oneRunOnly', prefix+'.oneRunOnly');
+	var every = new Every(hvutil.find(options, 'every'));
+	$(prefix+'.every.days') .value = every.days;
+	$(prefix+'.every.hours').value = every.hours;
+	$(prefix+'.every.mins') .value = every.mins;
 	hvutil.setOption(content, 'validate', prefix+'.validate');
 	hvutil.setOption(content, 'importxslt', prefix+'.importxslt');
 }
@@ -101,12 +92,10 @@ this.setDataCommon = function(node)
 
 this.getDataCommon = function()
 {
-	//var days  = $F(prefix+'.every.days');
-	//var hours = $F(prefix+'.every.hours');
-	//var mins  = $F(prefix+'.every.mins');
-
-	var cron = new Cron().readUI(prefix);
-    
+	var days  = $F(prefix+'.every.days');
+	var hours = $F(prefix+'.every.hours');
+	var mins  = $F(prefix+'.every.mins');
+	
 	var data;
 	if($(prefix+'.useAccount')) {
 		data =
@@ -118,12 +107,8 @@ this.getDataCommon = function()
 		USERNAME   : $F(prefix+'.username'),
 		PASSWORD   : $F(prefix+'.password'),
 	
-		//--- options
-        EVERY        : cron.asString(),
-
-        AT_HOUR             : cron.hours,
-        AT_MIN              : cron.mins,
-        AT_INTERVAL_HOUR    : cron.intervalHours,
+		//--- options		
+		EVERY        : Every.build(days, hours, mins),
 		ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked,
 	
 		//--- content		
@@ -137,13 +122,8 @@ this.getDataCommon = function()
 			//--- site	
 			NAME     : $F(prefix+'.name'),
 			
-			//--- options
-            EVERY        : cron.asString(),
-
-            AT_HOUR             : cron.hours,
-            AT_MIN              : cron.mins,
-            AT_INTERVAL_HOUR    : cron.intervalHours,
-
+			//--- options		
+			EVERY        : Every.build(days, hours, mins),
 			ONE_RUN_ONLY : $(prefix+'.oneRunOnly').checked,
 
 			//--- content		
@@ -159,7 +139,7 @@ this.getDataCommon = function()
 
 this.isDataValidCommon = function()
 {
-	/*var days  = $F(prefix+'.every.days');
+	var days  = $F(prefix+'.every.days');
 	var hours = $F(prefix+'.every.hours');
 	var mins  = $F(prefix+'.every.mins');
 	
@@ -167,7 +147,7 @@ this.isDataValidCommon = function()
 	{
 		alert(loader.getText('everyZero'));
 		return false;
-	} */
+	}
 		
 	return true;
 }

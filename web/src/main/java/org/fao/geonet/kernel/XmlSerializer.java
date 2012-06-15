@@ -87,7 +87,7 @@ public abstract class XmlSerializer {
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id) throws Exception {
+	protected Element internalSelect(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
 		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
 
@@ -124,7 +124,7 @@ public abstract class XmlSerializer {
 					 String changeDate, String isTemplate, String root, String title,
 					 int owner, String groupOwner, String docType) throws SQLException {
 	
-		if (resolveXLinks()) Processor.removeXLink(xml);
+		if (false && resolveXLinks()) Processor.removeXLink(xml);
 
 		String date = new ISODate().toString();
 
@@ -185,7 +185,7 @@ public abstract class XmlSerializer {
      * @throws SQLException
      */
 	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp) throws SQLException {
-		if (resolveXLinks()) Processor.removeXLink(xml);
+		if (false && resolveXLinks()) Processor.removeXLink(xml);
 
 		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
         String queryMinor = "UPDATE Metadata SET data=?, root=? WHERE id=?";
@@ -261,10 +261,10 @@ public abstract class XmlSerializer {
 			 int owner, String groupOwner, String docType, ServiceContext context) 
 			 throws Exception;
 
-	public abstract Element select(Dbms dbms, String table, String id) 
+	public abstract Element select(Dbms dbms, String table, String id, ServiceContext srvContext) 
 			 throws Exception;
 
 	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, 
-				String id) 
+				String id, ServiceContext srvContext) 
 				throws Exception;
 } 

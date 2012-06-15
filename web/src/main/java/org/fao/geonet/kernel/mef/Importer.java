@@ -46,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -199,8 +200,9 @@ public class Importer {
 				String localId = null;
 				String rating = null;
 				String popularity = null;
-				String groupId = null;
+				String groupId = Util.getParam(params, Params.GROUP);
 				Element categs = null;
+				boolean skipPrivileges = Util.getParam(params, "skipPrivileges", false);
 				Element privileges;
 				boolean validate = false;
 
@@ -235,19 +237,7 @@ public class Importer {
 					}
 
 					groupId = Util.getParam(params, Params.GROUP);
-					privileges = new Element("group");
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "view"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "editing"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "download"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "notify"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "dynamic"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "featured"));
+					privileges = defaultPrivileges();
 
 					// Get the Metadata uuid if it's not a template.
 					if (isTemplate.equals("n"))
@@ -355,18 +345,40 @@ public class Importer {
 				if (categs != null)
 					addCategories(context, dm, dbms, id.get(index), categs);
 
-				if (groupId == null)
+				if (groupId == null || (!skipPrivileges && privileges != null && privileges.getName().equals("privileges"))) {
 					addPrivileges(context, dm, dbms, id.get(index), privileges);
-				else
-					addOperations(context, dm, dbms, privileges, id.get(index), groupId);
+				}
+				
+				if(groupId != null) {
+					addOperations(context, dm, dbms, defaultPrivileges(), id.get(index), groupId);
+				}
 
 				if (indexGroup) {
-					dm.indexMetadataGroup(dbms, id.get(index));
+				    dm.doValidate(context, dbms, schema, id.get(index), md.get(index), context.getLanguage(), false);
+					dm.indexMetadataGroup(dbms, id.get(index), true, context);
 				}
                 else {
-                    dm.indexInThreadPool(context,id.get(index),dbms);
+                    dm.indexInThreadPool(context,id.get(index),dbms, true, true);
 				}
 			}
+
+            private Element defaultPrivileges() {
+                Element privileges;
+                privileges = new Element("group");
+                privileges.addContent(new Element("operation")
+                		.setAttribute("name", "view"));
+                privileges.addContent(new Element("operation")
+                		.setAttribute("name", "editing"));
+                privileges.addContent(new Element("operation")
+                		.setAttribute("name", "download"));
+                privileges.addContent(new Element("operation")
+                		.setAttribute("name", "notify"));
+                privileges.addContent(new Element("operation")
+                		.setAttribute("name", "dynamic"));
+                privileges.addContent(new Element("operation")
+                		.setAttribute("name", "featured"));
+                return privileges;
+            }
 
 			// --------------------------------------------------------------------
 
@@ -564,11 +576,10 @@ public class Importer {
 			boolean groupOwner = group.getAttributeValue("groupOwner") != null;
 			String grpId = mapLocalEntity(locGrps, grpName);
 
-			if (grpId == null) {
-                if(Log.isDebugEnabled(Geonet.MEF)) {
+			if (grpId == null)
+                if(Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
-                }
-			} else {
+			else {
 				// --- metadata group exists locally
 
                     if(Log.isDebugEnabled(Geonet.MEF))
@@ -624,6 +635,14 @@ public class Importer {
 				return entity.getChildText("id");
 		}
 
+		if(entities.size() > 0) {
+		    int id = 0;
+		    Iterator iter = entities.iterator();
+		    while(iter.hasNext() && id < 2) {
+		        id = Integer.parseInt(((Element) iter.next()).getChildText("id"));
+		    }
+		    return Integer.toBinaryString(id);
+		}
 		return null;
 	}
 }

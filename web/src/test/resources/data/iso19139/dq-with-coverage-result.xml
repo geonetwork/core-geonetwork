@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gco:CharacterString>9c2bb458-f345-4ff2-8716-fd5110a9d68e</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gco:CharacterString>deu</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ScopeCode codeListValue="series" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:contact xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.user.get?id=721&amp;schema=iso19139.che&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">Schweizerische Geotechnische Kommission</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Commission Géotechnique Suisse</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:organisationName>
+            <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                            <gmd:voice>
+                                <gco:CharacterString>+41 44 632 37 28</gco:CharacterString>
+                            </gmd:voice>
+                            <gmd:facsimile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:facsimile>
+                            <che:directNumber gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:directNumber>
+                            <che:mobile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:mobile>
+                        </che:CHE_CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:city>
+                                <gco:CharacterString>Zürich</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:administrativeArea gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode>
+                                <gco:CharacterString>8092</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:country xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>CH</gco:CharacterString>
+                            </gmd:country>
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>andreas.baumeler@erdw.ethz.ch</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                            <che:streetName>
+                                <gco:CharacterString>Universitätsstrasse</gco:CharacterString>
+                            </che:streetName>
+                            <che:streetNumber>
+                                <gco:CharacterString>6</gco:CharacterString>
+                            </che:streetNumber>
+                            <che:addressLine>
+                                <gco:CharacterString>ETH Zürich, CAB E77</gco:CharacterString>
+                            </che:addressLine>
+                            <che:postBox gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:postBox>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <che:PT_FreeURL>
+                                    <che:URLGroup>
+                                        <che:LocalisedURL locale="#DE">http://www.sgtk.ch</che:LocalisedURL>
+                                    </che:URLGroup>
+                                </che:PT_FreeURL>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>text/html</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:name>
+                            <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:description>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                    <gmd:hoursOfService>
+                        <gco:CharacterString>8h00-17h00, Mo-Fr</gco:CharacterString>
+                    </gmd:hoursOfService>
+                    <gmd:contactInstructions gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </gmd:contactInstructions>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>Andreas</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>Baumeler</gco:CharacterString>
+            </che:individualLastName>
+            <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">SGTK</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gco:DateTime>2009-09-09T11:59:31</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:dataSetURI xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gco:CharacterString>http://www.sgtk.ch/main.asp?content=inhalt/produkte/rohstoffkarten.htm&amp;nav=21</gco:CharacterString>
+    </gmd:dataSetURI>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:PT_Locale id="DE">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeListValue="deu" codeList="#LanguageCode">German</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeListValue="fra" codeList="#LanguageCode">French</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:PT_Locale id="IT">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeListValue="ita" codeList="#LanguageCode">Italian</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:PT_Locale id="EN">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeListValue="eng" codeList="#LanguageCode">English</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:referenceSystemInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>CH1903</gco:CharacterString>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Karte der mineralischen Rohstoffe der Schweiz 1:200&apos;000</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Carte des matières premières minérales en Suisse</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                    <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>RK200</gco:CharacterString>
+                    </gmd:alternateTitle>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>1998-01-01</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="publication" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>1990-01-01</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="publication" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:otherCitationDetails xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Geobasisdatensatz des Bundesrechts: Geotechnisches Kartenwerk</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Geodonnées de base relevant du droit fédéral: Cartes géotechniques</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:otherCitationDetails>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>In der Karte der mineralischen Rohstoffe 200 ist der Untergrund nach geochemischen Kriterien klassiert. Überlagert sind Punktdaten zu Vorkommen von Vererzungen mit Angaben über Mineralisationstyp, Morphologie, Bedeutung und Erschliessungsgrad des Vorkommens.</gco:CharacterString>
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Dans la carte des matières premières minérales 200, le sous-sol est classé selon des critères géo-chimiques. Des données de type point sont superposées sur des gisements de minerai y c. des informations sur le type de minéralisation, morphologie, importance et degrès de relevé.</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:abstract>
+            <gmd:purpose xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Übersicht über die Vererzungen der Schweiz</gco:CharacterString>
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Vue d&apos;ensemble des gisements de minerai en Suisse</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:purpose>
+            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.user.get?id=722&amp;schema=iso19139.che&amp;role=originator" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+                    <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Schweizerische Geotechnische Kommission</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Commission Géotechnique Suisse</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:organisationName>
+                    <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Geschäftsführer</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:positionName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                                    <gmd:voice>
+                                        <gco:CharacterString>+41 44 632 37 28</gco:CharacterString>
+                                    </gmd:voice>
+                                    <gmd:facsimile gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:facsimile>
+                                    <che:directNumber gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </che:directNumber>
+                                    <che:mobile gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </che:mobile>
+                                </che:CHE_CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                                    <gmd:city>
+                                        <gco:CharacterString>Zürich</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:administrativeArea gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:administrativeArea>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>8092</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>CH</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>rainer.kuendig@erdw.ethz.ch</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                    <che:streetName>
+                                        <gco:CharacterString>Universitätsstrasse</gco:CharacterString>
+                                    </che:streetName>
+                                    <che:streetNumber>
+                                        <gco:CharacterString>6</gco:CharacterString>
+                                    </che:streetNumber>
+                                    <che:addressLine>
+                                        <gco:CharacterString>ETH Zürich, CAB E77</gco:CharacterString>
+                                    </che:addressLine>
+                                    <che:postBox gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </che:postBox>
+                                </che:CHE_CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                        <che:PT_FreeURL>
+                                            <che:URLGroup>
+                                                <che:LocalisedURL locale="#DE">http://www.sgtk.ch</che:LocalisedURL>
+                                            </che:URLGroup>
+                                        </che:PT_FreeURL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gco:CharacterString>text/html</gco:CharacterString>
+                                    </gmd:protocol>
+                                    <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:name>
+                                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:description>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                            <gmd:hoursOfService>
+                                <gco:CharacterString>8h00-17h00, Mo-Fr</gco:CharacterString>
+                            </gmd:hoursOfService>
+                            <gmd:contactInstructions gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:contactInstructions>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="originator"/>
+                    </gmd:role>
+                    <che:individualFirstName>
+                        <gco:CharacterString>Rainer</gco:CharacterString>
+                    </che:individualFirstName>
+                    <che:individualLastName>
+                        <gco:CharacterString>Kündig</gco:CharacterString>
+                    </che:individualLastName>
+                    <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">SGTK</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </che:organisationAcronym>
+                </che:CHE_CI_ResponsibleParty>
+            </gmd:pointOfContact>
+            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.user.get?id=723&amp;schema=iso19139.che&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+                    <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Bundesamt für Landestopografie</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Office fédéral de topographie</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">Federal Office of topography</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">Ufficio federale di topografia</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:organisationName>
+                    <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Landesgeologie</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Service géologique national</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">Swiss Geological Survey</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:positionName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                                    <gmd:voice>
+                                        <gco:CharacterString>0041 31 963 21 11</gco:CharacterString>
+                                    </gmd:voice>
+                                    <gmd:facsimile gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:facsimile>
+                                    <che:directNumber>
+                                        <gco:CharacterString>0041 31 963 25 38</gco:CharacterString>
+                                    </che:directNumber>
+                                    <che:mobile gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </che:mobile>
+                                </che:CHE_CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                                    <gmd:city>
+                                        <gco:CharacterString>Wabern</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:administrativeArea gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:administrativeArea>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>3084</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>CH</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>raffaella.piffarerio@swisstopo.ch</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                    <che:streetName>
+                                        <gco:CharacterString>Seftigenstrasse</gco:CharacterString>
+                                    </che:streetName>
+                                    <che:streetNumber>
+                                        <gco:CharacterString>264</gco:CharacterString>
+                                    </che:streetNumber>
+                                    <che:addressLine gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </che:addressLine>
+                                    <che:postBox gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </che:postBox>
+                                </che:CHE_CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                        <che:PT_FreeURL>
+                                            <che:URLGroup>
+                                                <che:LocalisedURL locale="#DE">http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/org/geology.html</che:LocalisedURL>
+                                            </che:URLGroup>
+                                            <che:URLGroup>
+                                                <che:LocalisedURL locale="#FR">http://www.swisstopo.admin.ch/internet/swisstopo/fr/home/swisstopo/org/geology.html</che:LocalisedURL>
+                                            </che:URLGroup>
+                                            <che:URLGroup>
+                                                <che:LocalisedURL locale="#EN">http://www.swisstopo.admin.ch/internet/swisstopo/en/home/swisstopo/org/geology.html</che:LocalisedURL>
+                                            </che:URLGroup>
+                                        </che:PT_FreeURL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gco:CharacterString>text/html</gco:CharacterString>
+                                    </gmd:protocol>
+                                    <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:name>
+                                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:description>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                            <gmd:hoursOfService>
+                                <gco:CharacterString>8h00-17h00, Mo-Do</gco:CharacterString>
+                            </gmd:hoursOfService>
+                            <gmd:contactInstructions gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:contactInstructions>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </gmd:role>
+                    <che:individualFirstName>
+                        <gco:CharacterString>Raffaella</gco:CharacterString>
+                    </che:individualFirstName>
+                    <che:individualLastName>
+                        <gco:CharacterString>Piffarerio</gco:CharacterString>
+                    </che:individualLastName>
+                    <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">swisstopo</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </che:organisationAcronym>
+                </che:CHE_CI_ResponsibleParty>
+            </gmd:pointOfContact>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F5277&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Mineral</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">minerale</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">minéral</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">mineral</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F5887&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Erz</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">minerale metallifero</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">minerai</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">ore</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F6967&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Rohstoff</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">materia prima</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">matière première</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">raw material</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:spatialRepresentationType>
+                <gmd:MD_SpatialRepresentationTypeCode codeListValue="paperMap" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode"/>
+            </gmd:spatialRepresentationType>
+            <gmd:spatialResolution>
+                <gmd:MD_Resolution>
+                    <gmd:equivalentScale>
+                        <gmd:MD_RepresentativeFraction>
+                            <gmd:denominator>
+                                <gco:Integer>200000</gco:Integer>
+                            </gmd:denominator>
+                        </gmd:MD_RepresentativeFraction>
+                    </gmd:equivalentScale>
+                </gmd:MD_Resolution>
+            </gmd:spatialResolution>
+            <gmd:language>
+                <gco:CharacterString>deu</gco:CharacterString>
+            </gmd:language>
+            <gmd:characterSet>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+            </gmd:characterSet>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>geoscientificInformation</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=1421&amp;format=GMD_COMPLETE&amp;extentTypeCode=false" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Wallis, Berner-Oberland, Tessin, Uri, Teile Graubündens und des angrenzenden Auslandes</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Wallis, Berner-Oberland, Tessin, Uri, Teile Graubündens und des angrenzenden Auslandes</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N27af88147e944550b09c99f17f397609">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nbafe920d505c49669a70d1508b59edd4">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.749999243472857 46.82999870495942 9.329998893096235 46.82999874426809 9.329998936574636 45.77999883190553 6.74999927321924 45.779998793811295 6.749999243472857 46.82999870495942</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.749999243472857</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>9.329998936574636</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.779998793811295</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.82999874426809</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+    <gmd:distributionInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_Distribution>
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.format.get?id=128" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>GeoTIFF</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>300 dpi</gco:CharacterString>
+                    </gmd:version>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.format.get?id=76" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>analoge Kopie</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>plano oder gefalzt</gco:CharacterString>
+                    </gmd:version>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.format.get?id=22" xlink:show="embed">
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>ESRI Shapefile</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>-</gco:CharacterString>
+                    </gmd:version>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:transferOptions>
+                <gmd:MD_DigitalTransferOptions>
+                    <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <gmd:URL>http://www.sgtk.ch/</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>Webseite SGTK</gco:CharacterString>
+                                <gmd:PT_FreeText>
+                                    <gmd:textGroup>
+                                        <gmd:LocalisedCharacterString locale="#FR">Page Web SGTK</gmd:LocalisedCharacterString>
+                                    </gmd:textGroup>
+                                </gmd:PT_FreeText>
+                            </gmd:name>
+                            <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>Zusätzliche Infos und Beispiel-download</gco:CharacterString>
+                                <gmd:PT_FreeText>
+                                    <gmd:textGroup>
+                                        <gmd:LocalisedCharacterString locale="#FR">Informations supplémentaires et téléchargement d&apos;extraits</gmd:LocalisedCharacterString>
+                                    </gmd:textGroup>
+                                </gmd:PT_FreeText>
+                            </gmd:description>
+                            <gmd:function>
+                                <gmd:CI_OnLineFunctionCode codeListValue="information" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
+                            </gmd:function>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onLine>
+                </gmd:MD_DigitalTransferOptions>
+            </gmd:transferOptions>
+            <gmd:transferOptions>
+                <gmd:MD_DigitalTransferOptions>
+                    <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <gmd:URL>http://www.sgtk.ch/inhalt/shop/candypress/Scripts/default.asp</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>Online-Shop SGTK</gco:CharacterString>
+                                <gmd:PT_FreeText>
+                                    <gmd:textGroup>
+                                        <gmd:LocalisedCharacterString locale="#FR">Shop en ligne SGTK</gmd:LocalisedCharacterString>
+                                    </gmd:textGroup>
+                                </gmd:PT_FreeText>
+                            </gmd:name>
+                            <gmd:function>
+                                <gmd:CI_OnLineFunctionCode codeListValue="order" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
+                            </gmd:function>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onLine>
+                </gmd:MD_DigitalTransferOptions>
+            </gmd:transferOptions>
+        </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+    <gmd:dataQualityInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmi="http://www.isotc211.org/2005/gmi">
+        <gmd:DQ_DataQuality>
+            <gmd:scope>
+                <gmd:DQ_Scope>
+                    <gmd:level>
+                        <gmd:MD_ScopeCode codeListValue="series" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+                    </gmd:level>
+                </gmd:DQ_Scope>
+            </gmd:scope>
+            <gmd:report>
+                <gmd:DQ_DomainConsistency>
+                    <gmd:result>
+                        <gmd:DQ_QuantitativeResult>
+                            <gmd:valueType>
+                                <gco:RecordType>value type</gco:RecordType>
+                            </gmd:valueType>
+                            <gmd:valueUnit>
+                                <gml:BaseUnit gml:id="N10477">
+                                    <gml:identifier codeSpace=""/>
+                                    <gml:unitsSystem/>
+                                </gml:BaseUnit>
+                            </gmd:valueUnit>
+                            <gmd:value>
+                                <gco:Record><somerandomData>text</somerandomData></gco:Record>
+                            </gmd:value>
+                        </gmd:DQ_QuantitativeResult>
+                    </gmd:result>
+                    <gmd:result>
+                        <gmi:QE_CoverageResult>
+                            <gmi:spatialRepresentationType>
+                                <gmd:MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode" codeListValue="grid"/>
+                            </gmi:spatialRepresentationType>
+                            <gmi:resultSpatialRepresentation>
+                                <gmd:MD_GridSpatialRepresentation>
+                                    <gmd:numberOfDimensions>
+                                        <gco:Integer>2</gco:Integer>
+                                    </gmd:numberOfDimensions>
+                                    <gmd:cellGeometry>
+                                        <gmd:MD_CellGeometryCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CellGeometryCode" codeListValue="area"/>
+                                    </gmd:cellGeometry>
+                                    <gmd:transformationParameterAvailability>
+                                        <gco:Boolean>1</gco:Boolean>
+                                    </gmd:transformationParameterAvailability>
+                                </gmd:MD_GridSpatialRepresentation>
+                            </gmi:resultSpatialRepresentation>
+                            <gmi:resultContentDescription>
+                                <che:CHE_MD_CoverageDescription>
+                                    <gmd:attributeDescription>
+                                        <gco:RecordType>att</gco:RecordType>
+                                    </gmd:attributeDescription>
+                                    <gmd:contentType>
+                                        <gmd:MD_CoverageContentTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CoverageContentTypeCode" codeListValue="image"/>
+                                    </gmd:contentType>
+                                </che:CHE_MD_CoverageDescription>
+                            </gmi:resultContentDescription>
+                            <gmi:resultFormat>
+                                <gmd:MD_Format>
+                                    <gmd:name>
+                                        <gco:CharacterString>formatresultname</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:version>
+                                        <gco:CharacterString>version 1</gco:CharacterString>
+                                    </gmd:version>
+                                </gmd:MD_Format>
+                            </gmi:resultFormat>
+                            <gmi:resultFile>
+                                <gmx:MX_DataFile xmlns:gmx="http://www.isotc211.org/2005/gmx">
+                                    <gmx:fileName>
+                                        <gmx:FileName/>
+                                    </gmx:fileName>
+                                    <gmx:fileDescription gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmx:fileDescription>
+                                    <gmx:fileType>
+                                        <gmx:MimeFileType type=""/>
+                                    </gmx:fileType>
+                                    <gmx:fileFormat>
+                                        <gmd:MD_Format>
+                                            <gmd:name>
+                                                <gco:CharacterString>gmx file format</gco:CharacterString>
+                                            </gmd:name>
+                                            <gmd:version>
+                                                <gco:CharacterString>gmx version 1</gco:CharacterString>
+                                            </gmd:version>
+                                        </gmd:MD_Format>
+                                    </gmx:fileFormat>
+                                </gmx:MX_DataFile>
+                            </gmi:resultFile>
+                        </gmi:QE_CoverageResult>
+                    </gmd:result>
+                </gmd:DQ_DomainConsistency>
+            </gmd:report>
+            <gmd:lineage>
+                <gmd:LI_Lineage>
+                    <gmd:statement xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Der geologische Untergund wurde auf der Basis des Geologischen Atlas 25&apos;000 kompiliert. Gebiete, in denen dieser bei Erstellung nicht vorhanden war, wurden auf Grund geologischer Spezialkarten und weiterer publizierter Unterlagen ergänzt. Die Daten wurden durch aktuelle, zum Teil unpublizierte Studien ergänzt. Die Auflösung am Boden kann bei abgeleitetet Themenkarten nicht exakt bestimmt werden, da die Lage der geologischen Objekte der Interpretation des kartierenden Geologen unterliegt. Sie weichen zusätzlich durch Gewichtung und Generalisierung vom eigentlichen Ort ab.</gco:CharacterString>
+                    </gmd:statement>
+                </gmd:LI_Lineage>
+            </gmd:lineage>
+        </gmd:DQ_DataQuality>
+    </gmd:dataQualityInfo>
+    <che:legislationInformation xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+            <che:country>
+                <gmd:Country codeListValue="CH" codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country"/>
+            </che:country>
+            <che:language>
+                <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="deu"/>
+            </che:language>
+            <che:language>
+                <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="fra"/>
+            </che:language>
+            <che:language>
+                <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ita"/>
+            </che:language>
+            <che:legislationType>
+                <che:CHE_CI_LegislationCode codeListValue="nationalDecree" codeList="./resources/codeList.xml#LegislationCode"/>
+            </che:legislationType>
+            <che:title>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Verordnung über die Landesgeologie</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Ordonnance sur la géologie nationale</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">Ordinanza sulla geologia nazionale</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                    <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Landesgeologieverordnung LGeolV</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">OCFG</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">OGN</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:alternateTitle>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2008-07-01</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="publication" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2008-05-21</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="creation" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                </gmd:CI_Citation>
+            </che:title>
+        </che:CHE_MD_Legislation>
+    </che:legislationInformation>
+    <che:legislationInformation xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+            <che:country>
+                <gmd:Country codeListValue="CH" codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country"/>
+            </che:country>
+            <che:language>
+                <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="deu"/>
+            </che:language>
+            <che:language>
+                <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="fra"/>
+            </che:language>
+            <che:language>
+                <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ita"/>
+            </che:language>
+            <che:legislationType>
+                <che:CHE_CI_LegislationCode codeListValue="nationalDecree" codeList="./resources/codeList.xml#LegislationCode"/>
+            </che:legislationType>
+            <che:title>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Verordnung über Geoinformation : Anhang Geobasisdatenkatalog</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Ordonnance sur l&apos;information géographique : Annexe Catalogue des géodonnées de base</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">Ordinanza sulla geoinformazione : Catalogo dei geodati di base</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                    <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Geoinformationsverordnung GeoIV</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">OGéo</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">OGI</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:alternateTitle>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2008-07-01</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="publication" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2008-05-21</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="creation" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                </gmd:CI_Citation>
+            </che:title>
+        </che:CHE_MD_Legislation>
+    </che:legislationInformation>
+</che:CHE_MD_Metadata>

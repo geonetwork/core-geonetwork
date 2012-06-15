@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xalan="http://xml.apache.org/xalan" exclude-result-prefixes="xalan"
+  xmlns:xalan="http://xml.apache.org/xalan" exclude-result-prefixes="xalan" xmlns:che="http://www.geocat.ch/2008/che"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
@@ -13,6 +13,12 @@
     <xsl:param name="schema"/>
     
     <xsl:choose>
+    <!-- Is a localized URL -->
+      <xsl:when test="contains($schema, 'iso19139') and che:PT_FreeURL">
+        <xsl:apply-templates mode="localizedURLFop" select=".">
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:apply-templates>
+      </xsl:when>
     <!-- Is a localized element -->
       <xsl:when test="contains($schema, 'iso19139') and gmd:PT_FreeText">
         <xsl:apply-templates mode="localizedElemFop" select=".">
@@ -94,9 +100,17 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="text">
-      <xsl:call-template name="getElementText">
-        <xsl:with-param name="schema" select="$schema"/>
-      </xsl:call-template>
+      <xsl:choose>
+      	<xsl:when test="name(..) = 'gmd:language'">
+      		<xsl:variable name="lang" select="text()"/>
+			<xsl:value-of select="/root/gui/strings/*[name() = $lang]"/>
+      	</xsl:when>
+      	<xsl:otherwise>
+			<xsl:call-template name="getElementText">
+              <xsl:with-param name="schema" select="$schema"/>
+	      </xsl:call-template>
+      	</xsl:otherwise>
+      </xsl:choose>
     </xsl:param>
     
     <xsl:call-template name="info-rows">
@@ -104,7 +118,7 @@
       <xsl:with-param name="value" select="$text"/>
     </xsl:call-template>
   </xsl:template>
-
+  
   <xsl:template mode="simpleElementFop" match="@*">
     <xsl:param name="schema"/>
     <xsl:param name="title">
@@ -126,8 +140,6 @@
     </xsl:call-template>
   </xsl:template>
 
-
-
   <xsl:template mode="complexElement" match="*">
     <xsl:param name="schema"/>
     <xsl:param name="title">
@@ -141,7 +153,6 @@
         <xsl:with-param name="schema" select="$schema"/>
       </xsl:call-template>
     </xsl:param>
-
 
     <xsl:call-template name="complexElementFop">
       <xsl:with-param name="title" select="$title"/>

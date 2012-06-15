@@ -32,6 +32,8 @@ var updateTemp =
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+
+'      <port>{PORT}</port>'+
+'      <servlet>{SERVLET}</servlet>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+
@@ -44,10 +46,8 @@ var updateTemp =
 '    </searches>'+
     
 '    <options>'+
-'      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
-
 '      <every>{EVERY}</every>'+
-
+'      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
 
 '    <content>'+

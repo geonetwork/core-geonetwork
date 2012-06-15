@@ -56,6 +56,7 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.jdom.Element;
+import org.jdom.filter.Filter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -229,11 +230,12 @@ public class ServiceManager
 	{
 		OutputPage outPage = new OutputPage();
 
-		outPage.setStyleSheet   (output.getAttributeValue(ConfigFile.Output.Attr.SHEET));
-		outPage.setForward      (output.getAttributeValue(ConfigFile.Output.Attr.FORWARD));
-		outPage.setTestCondition(output.getAttributeValue(ConfigFile.Output.Attr.TEST));
-		outPage.setFile         (output.getAttributeValue(ConfigFile.Output.Attr.FILE) != null);
-		outPage.setBLOB         (output.getAttributeValue(ConfigFile.Output.Attr.BLOB) != null);
+		outPage.setStyleSheet    (output.getAttributeValue(ConfigFile.Output.Attr.SHEET));
+		outPage.setPreStyleSheets(output.getChildren(ConfigFile.Output.Child.PRE_SHEET));
+		outPage.setForward       (output.getAttributeValue(ConfigFile.Output.Attr.FORWARD));
+		outPage.setTestCondition (output.getAttributeValue(ConfigFile.Output.Attr.TEST));
+		outPage.setFile          (output.getAttributeValue(ConfigFile.Output.Attr.FILE) != null);
+		outPage.setBLOB          (output.getAttributeValue(ConfigFile.Output.Attr.BLOB) != null);
 
 		//--- set content type
 
@@ -246,8 +248,22 @@ public class ServiceManager
 
 		//--- handle children
 
-		List<Element> guiList = output.getChildren();
+		//List<Element> guiList = output.getChildren();
 
+		List<Element> guiList = output.getContent(new Filter()
+        {
+
+            public boolean matches(Object arg0)
+            {
+                if (arg0 instanceof Element) {
+                    Element elem = (Element) arg0;
+                    return !elem.getName().equals(ConfigFile.Output.Child.PRE_SHEET );
+                }
+                return false;
+            }
+        });
+		
+		
 		for(Element gui : guiList) {
 			outPage.addGuiService(getGuiService(pack, gui));
 		}
@@ -340,17 +356,20 @@ public class ServiceManager
 		return context;
 	}
 
+	public void dispatch(ServiceRequest req, UserSession session) {
+		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
+		dispatch(req, session, context);
+	}
+
+	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void dispatch(ServiceRequest req, UserSession session)
+	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
-
-		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
-
 		context.setBaseUrl(baseUrl);
 		context.setLanguage(req.getLanguage());
 		context.setUserSession(session);
@@ -468,7 +487,7 @@ public class ServiceManager
 		}
 	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//--- Handle error
 	//---------------------------------------------------------------------------
 
@@ -480,7 +499,7 @@ public class ServiceManager
 		int     code  = getErrorCode(e);
 		boolean cache = (srvInfo == null) ? false : srvInfo.isCacheSet();
 
-		if(isDebug()) debug("Raised exception while executing service\n"+ Xml.getString(error));
+		error("Raised exception while executing service\n"+ Xml.getString(error));
 
 		try
 		{
@@ -546,6 +565,7 @@ public class ServiceManager
 	//---------------------------------------------------------------------------
 
 	/** Takes a service's response and builds the output
+	 * @param closeResources 
 	  */
 
 	private String dispatchOutput(ServiceRequest req, ServiceContext context,
@@ -704,6 +724,7 @@ public class ServiceManager
 			//--- build the xml data for the XSL translation
 
 			String  styleSheet = outPage.getStyleSheet();
+            List<String> preSheets = outPage.getPreStyleSheets();
 			Element guiElem;
             TimerContext guiServicesTimerContext = monitorManager.getTimer(ServiceManagerGuiServicesTimer.class).time();
             try {
@@ -740,16 +761,21 @@ public class ServiceManager
 					error("     -> stylesheet not found on disk, aborting : " +styleSheet);
 				else
 				{
-					info("     -> transforming with stylesheet : " +styleSheet);
 
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 					try
 					{
+					    Element transformedElem = rootElem;
+					    for (String preSheet : preSheets) {
+							info("     -> transforming with pre-stylesheet : " +preSheet);
+                            transformedElem = Xml.transform(transformedElem, toStyleSheetFile(preSheet));
+                        }
+					    
                         TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
                         try {
                             //--- first we do the transformation
-                            Xml.transform(rootElem, styleSheet, baos);
+                            Xml.transform(transformedElem, styleSheet, baos);
                         } finally {
                             timerContext.stop();
                         }
@@ -781,7 +807,10 @@ public class ServiceManager
 
 		return null;
 	}
-
+    private String toStyleSheetFile(String styleSheet)
+    {
+        return appPath + Jeeves.Path.XSL + styleSheet;
+    }
 	//---------------------------------------------------------------------------
 	//--- Dispatch error
 	//---------------------------------------------------------------------------

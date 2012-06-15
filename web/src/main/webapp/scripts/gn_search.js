@@ -662,7 +662,7 @@ function gn_search(pars)
 	for (var par in pars) {
 		parStr += ' ' + par + '=' + '"' + pars[par] + '"';
 	}
-	console.log('Setting params to '+parStr);*/
+//	console.log('Setting params to '+parStr);*/
 	var GNCookie = Ext.state.Manager.getProvider();
 	GNCookie.clear('params');
 	GNCookie.set('params', {searchParams: pars});

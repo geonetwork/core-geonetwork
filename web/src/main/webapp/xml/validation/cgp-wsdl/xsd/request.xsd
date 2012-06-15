@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gcq="http://www.geocat.ch/2003/05/gateway/query" xmlns:gm03small="http://www.geocat.ch/2003/05/gateway/GM03Small" xmlns:gml="http://www.geocat.ch/2003/05/gateway/GML" targetNamespace="http://www.geocat.ch/2003/05/gateway/query" elementFormDefault="qualified">
+	<xsd:import namespace="http://www.geocat.ch/2003/05/gateway/GM03Small" schemaLocation="gm03small.xsd"/>
+	<xsd:import namespace="http://www.geocat.ch/2003/05/gateway/GML" schemaLocation="GML_simplified.xsd"/>
+	<xsd:element name="catalogGatewayRequest">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element name="queryRequest" type="gcq:queryRequestType"/>
+				<xsd:element name="presentationRequest" type="gcq:presentationRequestType"/>
+				<xsd:element name="queryResult" type="gcq:queryResultType"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="queryRequestType">
+		<xsd:sequence>
+			<xsd:element name="criteria" type="gcq:criteriaType"/>
+			<xsd:element name="format" type="gcq:formatType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="criteriaType">
+		<xsd:sequence>
+			<xsd:element name="expression" type="gcq:expressionType"/>
+			<xsd:element name="concatenatedExpression" type="gcq:concatenatedExpressionType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="expressionType">
+		<xsd:sequence>
+			<xsd:element name="attribute" type="xsd:string"/>
+			<xsd:element name="operator" type="gcq:operatorType"/>
+			<xsd:element name="value" type="gcq:valueType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="valueType" mixed="true">
+		<xsd:complexContent mixed="true">
+			<xsd:restriction base="xsd:anyType">
+				<xsd:choice>
+					<!-- this 'dumy' type is only needed because of a buggy JAXB library -->
+					<xsd:element name="dummy" type="gcq:dummyType" minOccurs="0"/>
+					<xsd:element ref="gml:Polygon" minOccurs="0"/>
+				</xsd:choice>
+			</xsd:restriction>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- this 'dumy' type is only needed because of a buggy JAXB library -->
+	<xsd:complexType name="dummyType">
+		<xsd:sequence>
+			<xsd:element ref="gml:Polygon"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="concatenatedExpressionType">
+		<xsd:sequence>
+			<xsd:element name="concatenationOperator" type="gcq:concatenationOperatorType"/>
+			<xsd:element name="expression" type="gcq:expressionType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="operatorType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="eq"/>
+			<xsd:enumeration value="ne"/>
+			<xsd:enumeration value="lt"/>
+			<xsd:enumeration value="le"/>
+			<xsd:enumeration value="gt"/>
+			<xsd:enumeration value="ge"/>
+			<xsd:enumeration value="like"/>
+			<xsd:enumeration value="not like"/>
+			<xsd:enumeration value="EQUALS"/>
+			<xsd:enumeration value="DISJOINT"/>
+			<xsd:enumeration value="OVERLAPS"/>
+			<xsd:enumeration value="CONTAINS"/>
+			<xsd:enumeration value="WITHIN"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="concatenationOperatorType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="and"/>
+			<xsd:enumeration value="or"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="formatType">
+		<xsd:sequence>
+			<xsd:element name="profile" type="gcq:profileType"/>
+			<xsd:element name="order" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="profileType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="GM03Count"/>
+			<xsd:enumeration value="GM03Small"/>
+			<xsd:enumeration value="GM03Core"/>
+			<xsd:enumeration value="GM03Comprehensive"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="presentationRequestType">
+		<xsd:sequence>
+			<xsd:element name="get" type="xsd:string" maxOccurs="unbounded"/>
+			<xsd:element name="format" type="gcq:formatType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="queryResultType">
+		<xsd:choice>
+			<xsd:element name="GM03Count" type="xsd:string" minOccurs="0"/>
+			<xsd:element ref="gm03small:MD_Metadata" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:any namespace="http://www.geocat.ch/2003/05/gateway/GM03Core" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:any namespace="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:choice>
+	</xsd:complexType>
+</xsd:schema>

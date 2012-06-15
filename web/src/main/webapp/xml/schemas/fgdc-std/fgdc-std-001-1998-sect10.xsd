@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+<xsd:element name="cntinfo" type="cntinfoType"/>
+<xsd:complexType name="cntinfoType">
+	<xsd:sequence>
+		<xsd:choice>
+			<xsd:element ref="cntperp"/>
+			<xsd:element ref="cntorgp"/>
+		</xsd:choice>
+		<xsd:element ref="cntpos" minOccurs="0"/>
+		<xsd:element ref="cntaddr" maxOccurs="unbounded"/>
+		<xsd:element ref="cntvoice" maxOccurs="unbounded"/>
+		<xsd:element ref="cnttdd" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="cntfax" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="cntemail" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="hours" minOccurs="0"/>
+		<xsd:element ref="cntinst" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cntperp" type="cntperpType"/>
+<xsd:complexType name="cntperpType">
+	<xsd:sequence>
+		<xsd:element ref="cntper"/>
+		<xsd:element ref="cntorg" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cntper" type="cntperType"/>
+<xsd:simpleType name="cntperType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntorg" type="cntorgType"/>
+<xsd:simpleType name="cntorgType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntorgp" type="cntorgpType"/>
+<xsd:complexType name="cntorgpType">
+	<xsd:sequence>
+		<xsd:element ref="cntorg"/>
+		<xsd:element ref="cntper" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cntpos" type="cntposType"/>
+<xsd:simpleType name="cntposType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntaddr" type="cntaddrType"/>
+<xsd:complexType name="cntaddrType">
+	<xsd:sequence>
+		<xsd:element ref="addrtype"/>
+		<xsd:element ref="address" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="city"/>
+		<xsd:element ref="state"/>
+		<xsd:element ref="postal"/>
+		<xsd:element ref="country" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="addrtype" type="addrtypeType"/>
+<xsd:simpleType name="addrtypeType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="address" type="addressType"/>
+<xsd:simpleType name="addressType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="city" type="cityType"/>
+<xsd:simpleType name="cityType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="state" type="stateType"/>
+<xsd:simpleType name="stateType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="postal" type="postalType"/>
+<xsd:simpleType name="postalType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="country" type="countryType"/>
+<xsd:simpleType name="countryType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntvoice" type="cntvoiceType"/>
+<xsd:simpleType name="cntvoiceType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cnttdd" type="cnttddType"/>
+<xsd:simpleType name="cnttddType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntfax" type="cntfaxType"/>
+<xsd:simpleType name="cntfaxType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntemail" type="cntemailType"/>
+<xsd:simpleType name="cntemailType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="hours" type="hoursType"/>
+<xsd:simpleType name="hoursType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntinst" type="cntinstType"/>
+<xsd:simpleType name="cntinstType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+</xsd:schema>

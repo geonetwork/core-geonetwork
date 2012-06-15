@@ -249,7 +249,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
+        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false, false);
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
 		addPrivileges(id, localGroups, dbms);
@@ -258,7 +258,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -294,7 +294,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 		return id;
 	}
 	

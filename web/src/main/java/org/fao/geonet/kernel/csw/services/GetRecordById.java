@@ -31,6 +31,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
@@ -45,14 +46,18 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
+import org.geotools.data.DataStore;
 import org.jdom.Element;
-
+import org.jdom.Document;
 //=============================================================================
+import org.jdom.output.DOMOutputter;
 
 /**
  * TODO
@@ -72,8 +77,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
     private SearchController _searchController;
 
-    public GetRecordById(File summaryConfig, LuceneConfig luceneConfig) {
-        _searchController = new SearchController(summaryConfig, luceneConfig);
+    public GetRecordById(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
+        _searchController = new SearchController(ds, summaryConfig, luceneConfig);
     }
 
 
@@ -99,12 +104,16 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
-		Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
 
-		if (!ids.hasNext())
-			throw new MissingParameterValueEx("id");
 
 		try {
+			
+			Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
+
+			if (!ids.hasNext())
+				throw new MissingParameterValueEx("id");
+			
+			
 			while(ids.hasNext())
 			{
 				String  uuid = ((Element) ids.next()).getText();
@@ -150,8 +159,58 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
 
-				if (md != null)
-					response.addContent(md);
+				if (md != null){
+					 if (outSchema.equals(OutputSchema.GM03_PROFILE)) {
+						 DataManager dm = gc.getDataManager();
+				    	 String schema = dm.autodetectSchema(md);
+				    	
+				    	// Only deal with ISO 19139.CHE.
+				    	if (!schema.equals("iso19139.che"))
+				    		continue;
+				    	
+				    	Element elMd = (Element) md.detach();
+				    	md = null;
+				    	// Perform transfo to produce GM03
+				    	try {
+				            DOMOutputter outputter = new DOMOutputter();
+							
+							// We need w3c XML DOM Documents for XSL transform
+							org.jdom.Document doc = new org.jdom.Document(elMd);
+							
+							org.w3c.dom.Document domIn = outputter.output(doc);
+							// PMT GeoCat2 : Backport from old geocat version. GM03_profile should be activated later,
+							// For now leaving it commented out.
+							
+				            //ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03(null, context.getAppPath() + "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
+				            //org.w3c.dom.Document domOut = toGm03.convert(domIn);
+				            //DOMBuilder builder = new DOMBuilder();
+				            //md = builder.build(domOut).getRootElement();
+							
+							// TODO : backport the previous classes and remove following line once finished
+							md = elMd;
+							
+				        } catch (Exception e) {
+				            throw new NoApplicableCodeEx("Error transforming metadata ISO 19139.CHE into GM03_2Record "+ e.getMessage());
+				        }
+				    }
+					else if (outSchema.equals(OutputSchema.ISO_PROFILE))
+					{
+						// ISO 19139.che are fetched and considered as classic iso19139
+						// we then need to convert the MD into real classic iso19139
+
+
+						String styleSheet = gc.getSchemamanager().getSchemaDir("iso19139.che")+"/convert/to19139.xsl";
+						//String styleSheet =  context.getAppPath() + Geonet.Path.CONV_STYLESHEETS + "/export/xml_iso19139.xsl";
+
+						Document doc = new Document (new Element("MD_Metadata","gmd", "http://www.isotc211.org/2005/gmd"));
+						doc.getRootElement().setContent(md.cloneContent());
+						md = doc.getRootElement();
+						md = Xml.transform(md, styleSheet);
+					}
+
+					/* else : no transformation, "raw" metadata */
+					response.addContent(md.detach());
+				}
 			}
 		} catch (Exception e) {
 			context.error("Raised : "+ e);

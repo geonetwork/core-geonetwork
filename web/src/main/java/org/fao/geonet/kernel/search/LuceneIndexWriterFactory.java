@@ -1,11 +1,23 @@
 package org.fao.geonet.kernel.search;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import jeeves.utils.Log;
+
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.constants.Geonet;
 
 import java.io.File;
@@ -141,7 +153,7 @@ public class LuceneIndexWriterFactory {
                 throw new Error("Unable to create index directory: " + indexDir);
             }
             
-            writer = new IndexWriter(FSDirectory.open(indexDir), SearchManager.getAnalyzer(locale, false), IndexWriter.MaxFieldLength.UNLIMITED);
+            writer = new IndexWriter(FSDirectory.open(indexDir), SearchManager.getAnalyzer(locale), IndexWriter.MaxFieldLength.UNLIMITED);
             writer.setRAMBufferSizeMB(_luceneConfig.getRAMBufferSize());
             writer.setMergeFactor(_luceneConfig.getMergeFactor());
             _writers.put(locale, writer);

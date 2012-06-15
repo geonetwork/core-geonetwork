@@ -16,9 +16,12 @@
 		<script type="text/javascript" src="../../scripts/ext/form/FileUploadField.js"></script>
 		<script type="text/javascript" src="../../scripts/LogoManagerPanel.js"></script>
 		<script type="text/javascript" language="JavaScript">
-			 Ext.onReady(function(){
-				new GeoNetwork.LogoManagerPanel('logoManager');
-			})
+            Ext.onReady(function(){
+                // setTimeout required for correct layout on FF
+                window.setTimeout(function(){
+                    new GeoNetwork.LogoManagerPanel('logoManager');
+                }, 100);
+            });
 		</script>
 	</xsl:template>
 
@@ -26,7 +29,7 @@
 	  <xsl:call-template name="formLayout">
 			<xsl:with-param name="title" select="/root/gui/strings/logoDes"/>
 			<xsl:with-param name="content">
-				<div id="logoManager" style="width:100%;height:600px;"/>
+				<div id="logoManager" style="width:100%; height: 500px;"/>
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
 				<button class="content" onclick="load('{/root/gui/locService}/admin')">

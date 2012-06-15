@@ -184,7 +184,7 @@
       <xsl:with-param name="content">
         <xsl:apply-templates mode="iso19139-simple"
           select="
-          gmd:CI_ResponsibleParty/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
+          gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
           "/>
         
         <xsl:for-each select="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource">
@@ -237,25 +237,15 @@
       <xsl:with-param name="content">
         <xsl:for-each select="gmd:keyword">
           <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
-          
-          
-          <xsl:choose>
-            <xsl:when test="gmx:Anchor">
-              <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:call-template name="translatedString">
-                <xsl:with-param name="schema" select="$schema"/>
-                <xsl:with-param name="langId">
-                  <xsl:call-template name="getLangId">
-                    <xsl:with-param name="langGui" select="/root/gui/language"/>
-                    <xsl:with-param name="md" select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
-                  </xsl:call-template>
-                </xsl:with-param>
+          <xsl:call-template name="translatedString">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="langId">
+              <xsl:call-template name="getLangId">
+                <xsl:with-param name="langGui" select="/root/gui/language"/>
+                <xsl:with-param name="md" select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
               </xsl:call-template>
-            </xsl:otherwise>
-          </xsl:choose>
-          
+            </xsl:with-param>
+          </xsl:call-template>
         </xsl:for-each>
         <xsl:if test="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           (<xsl:value-of

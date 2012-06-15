@@ -7,7 +7,7 @@
 	main html header
 	-->
 	<xsl:template name="header">
-        <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
@@ -36,7 +36,7 @@
             Env.proxy     = "<xsl:value-of select="/root/gui/config/proxy-url"/>";
 			
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";
-			
+			window.gMfLocation = javascriptsLocation+"mapfishIntegration/";
 			<xsl:if test="//service/@name = 'main.home'">
             document.onkeyup = alertkey;
             
@@ -66,7 +66,7 @@
 		</script>		
 		
 		<!-- stylesheet -->
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geocat.css"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
 		<xsl:apply-templates mode="css" select="/"/>
 		

@@ -13,13 +13,13 @@
     
     <xsl:template match="text()"/>
 
-		<xsl:template match="gmd:EX_BoundingPolygon[string(gmd:extentTypeCode/gco:Boolean) != 'false' and string(gmd:extentTypeCode/gco:Boolean) != '0']" priority="2">
+		<xsl:template match="gmd:EX_BoundingPolygon" priority="2">
 			<xsl:for-each select="gmd:polygon/gml:*">
 				<xsl:copy-of select="."/>
 			</xsl:for-each>
 		</xsl:template>
     
-    <xsl:template match="gmd:EX_GeographicBoundingBox" priority="2">
+    <xsl:template match="gmd:EX_GeographicBoundingBox[not(../../gmd:geographicElement/gmd:EX_BoundingPolygon)]" priority="2">
         <xsl:variable name="w" select="./gmd:westBoundLongitude/gco:Decimal/text()"/>
         <xsl:variable name="e" select="./gmd:eastBoundLongitude/gco:Decimal/text()"/>
         <xsl:variable name="n" select="./gmd:northBoundLatitude/gco:Decimal/text()"/>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+	<Folder FolderName="che">
+		<File FilePath="che\che.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gmd">
+		<File FilePath="gmd\applicationSchema.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\citation.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\constraints.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\content.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\dataQuality.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\distribution.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\extent.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\freeText.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\gmd.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\identification.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\maintenance.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\metadataApplication.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\metadataEntity.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\metadataExtension.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\portrayalCatalogue.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\referenceSystem.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmd\spatialRepresentation.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gco">
+		<File FilePath="gco\basicTypes.xsd" HomeFolder="Yes"/>
+		<File FilePath="gco\gco.xsd" HomeFolder="Yes"/>
+		<File FilePath="gco\gcoBase.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gmi">
+		<File FilePath="gmi\gmi.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmi\imageryDataQuality.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gfc">
+		<File FilePath="gfc\gfc.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gml">
+		<File FilePath="gml\basicTypes.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\coordinateOperations.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\coordinateReferenceSystems.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\coordinateSystems.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\coverage.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\datums.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\dictionary.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\direction.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\dynamicFeature.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\feature.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\geometryAggregates.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\geometryBasic0d1d.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\geometryBasic2d.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\geometryComplexes.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\geometryPrimitives.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\gml.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\gmlBase.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\grids.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\measures.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\observation.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\readme.txt" HomeFolder="Yes"/>
+		<File FilePath="gml\referenceSystems.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\temporal.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\temporalReferenceSystems.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\temporalTopology.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\topology.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\units.xsd" HomeFolder="Yes"/>
+		<File FilePath="gml\valueObjects.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gmx">
+		<File FilePath="gmx\catalogues.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmx\codelistItem.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmx\crsItem.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmx\extendedTypes.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmx\gmx.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmx\gmxUsage.xsd" HomeFolder="Yes"/>
+		<File FilePath="gmx\uomItem.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gsr">
+		<File FilePath="gsr\gsr.xsd" HomeFolder="Yes"/>
+		<File FilePath="gsr\spatialReferencing.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gss">
+		<File FilePath="gss\geometry.xsd" HomeFolder="Yes"/>
+		<File FilePath="gss\gss.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="gts">
+		<File FilePath="gts\gts.xsd" HomeFolder="Yes"/>
+		<File FilePath="gts\temporalObjects.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="ressources">
+		<Folder FolderName="uom">
+			<File FilePath="resources\uom\gmxUom.xml" HomeFolder="Yes"/>
+			<File FilePath="resources\uom\ML_gmxUom.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="Codelist">
+			<File FilePath="resources\Codelist\gmxCodelists.xml" HomeFolder="Yes"/>
+			<File FilePath="resources\Codelist\ML_gmxCodelists.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="crs">
+			<File FilePath="resources\crs\gmxCrs.xml" HomeFolder="Yes"/>
+			<File FilePath="resources\crs\ML_gmxCrs.xml" HomeFolder="Yes"/>
+		</Folder>
+	</Folder>
+	<Folder FolderName="xlink">
+		<File FilePath="xlink\version.txt" HomeFolder="Yes"/>
+		<File FilePath="xlink\xlinks.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<ExtMountFolder FolderName="srv"/>
+</Project>

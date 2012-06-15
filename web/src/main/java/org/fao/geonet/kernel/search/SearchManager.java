@@ -22,30 +22,8 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.servlet.ServletContext;
-
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
@@ -53,7 +31,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -70,6 +47,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -90,6 +68,7 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
@@ -102,8 +81,32 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.servlet.ServletContext;
 
 /**
  * Indexes metadata using Lucene.
@@ -114,8 +117,8 @@ public class SearchManager {
 	public static final int UNUSED = 3;
 
     public static final String NON_SPATIAL_DIR = "/nonspatial";
-    
-	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
+
+	public static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
 
 	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
@@ -128,19 +131,14 @@ public class SearchManager {
 	private File _luceneDir;
     private SettingInfo _settingInfo;
     /**
-     * Used when adding documents to the Lucene index.
+     * Used when adding documents to the Lucene index, and also to analyze query terms at search time.
      */
 	private static PerFieldAnalyzerWrapper _analyzer;
-	/**
-     * Used when searching to analyze query terms.
-     */
-	private static PerFieldAnalyzerWrapper _searchAnalyzer;
 
     /**
      * Maps languages to Analyzer that contains GeoNetworkAnalyzers initialized with stopwords for this language.
      */
     private static Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
-    private static Map<String, Analyzer> searchAnalyzerMap = new HashMap<String, Analyzer>();
     
 	private static DocumentBoosting _documentBoostClass;
 	private String _luceneTermsToExclude;
@@ -151,11 +149,16 @@ public class SearchManager {
     private Spatial _spatial;
 	private LuceneIndexReaderFactory _indexReader;
 	private LuceneIndexWriterFactory _indexWriter;
-
+	private Timer _optimizerTimer = null;
+    /**
+     *  minutes between optimizations of the lucene index.
+     */
+	private int _optimizerInterval;
+	private Calendar _optimizerBeginAt;
+	private SimpleDateFormat _dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private boolean _inspireEnabled = false;
     private String _thesauriDir;
 	private boolean _logAsynch;
-	private final LuceneOptimizerManager _luceneOptimizerManager;
 
 
     public SettingInfo get_settingInfo() {
@@ -170,12 +173,13 @@ public class SearchManager {
      * Creates GeoNetworkAnalyzer, using Admin-defined stopwords if there are any.
      *
      * @param stopwords
+     * @param ignoreChars 
      * @return
      */
-    private static Analyzer createGeoNetworkAnalyzer(Set<String> stopwords) {
+    private static Analyzer createGeoNetworkAnalyzer(Set<String> stopwords, char[] ignoreChars) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Creating GeoNetworkAnalyzer");
-        return new GeoNetworkAnalyzer(stopwords);
+        return new GeoNetworkAnalyzer(stopwords, ignoreChars);
     }
 
     /**
@@ -184,9 +188,9 @@ public class SearchManager {
      * @param stopwords
      * @return
      */
-	private static PerFieldAnalyzerWrapper createHardCodedPerFieldAnalyzerWrapper(Set<String> stopwords) {
+	private static PerFieldAnalyzerWrapper createHardCodedPerFieldAnalyzerWrapper(Set<String> stopwords, char[] ignoreChars) {
         PerFieldAnalyzerWrapper pfaw;
-        Analyzer geoNetworkAnalyzer = SearchManager.createGeoNetworkAnalyzer(stopwords);
+        Analyzer geoNetworkAnalyzer = SearchManager.createGeoNetworkAnalyzer(stopwords, ignoreChars);
 		pfaw = new PerFieldAnalyzerWrapper(geoNetworkAnalyzer);
 		pfaw.addAnalyzer(LuceneIndexField.UUID, new GeoNetworkAnalyzer());
 		pfaw.addAnalyzer(LuceneIndexField.PARENTUUID, new GeoNetworkAnalyzer());
@@ -202,31 +206,17 @@ public class SearchManager {
 	public static PerFieldAnalyzerWrapper getAnalyzer() {
 		return _analyzer;
 	}
-	public static PerFieldAnalyzerWrapper getSearchAnalyzer() {
-		return _searchAnalyzer;
-	}
-    /**
-     * Retrieve per field analyzer according to language and for searching or indexing time.
-     * 
-     * @param language Language for the analyzer.
-     * @param forSearching true to return searching time analyzer, false for indexing time analayzer.
-     * @return 
-     */
-    public static PerFieldAnalyzerWrapper getAnalyzer(String language, boolean forSearching) {
-        if(Log.isDebugEnabled(Geonet.LUCENE)) {
-            Log.debug(Geonet.LUCENE, "Get analyzer for searching: " + forSearching + " and language: " + language);
-        }
-        
-        Map<String, Analyzer> map = forSearching ? searchAnalyzerMap : analyzerMap;
-        
-        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)map.get(language); 
+    
+    public static PerFieldAnalyzerWrapper getAnalyzer(String language) {
+        PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)analyzerMap.get(language); 
         if(analyzer != null) {
+            if(Log.isDebugEnabled(Geonet.LUCENE))
+                Log.debug(Geonet.LUCENE, "returning analyzer for language " + language);
             return analyzer;
-        } else {
-            if(Log.isDebugEnabled(Geonet.LUCENE)) {
-                Log.debug(Geonet.LUCENE, "Returning default analyzer.");
-            }
-            return forSearching ? _searchAnalyzer : _analyzer;
+        }
+        else {
+            Log.info(Geonet.LUCENE, "did not find analyzer for language " + language + ", returning default analyzer");
+            return _analyzer;
         }
     }
 
@@ -234,13 +224,13 @@ public class SearchManager {
 	 * Returns a default- (hardcoded) configured PerFieldAnalyzerWrapper, creating it if necessary.
      *
 	 */
-	private static void initHardCodedAnalyzers() {
+	private static void initHardCodedAnalyzers(char[] ignoreChars) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "initializing hardcoded analyzers");
         // no default analyzer instantiated: create one
         if(_defaultAnalyzer == null) {
             // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
-            _defaultAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(null);
+            _defaultAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(null, ignoreChars);
         }
         if(!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
             Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() + ", not using any stopwords.");
@@ -257,8 +247,8 @@ public class SearchManager {
                 Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
                 if(stopwordsForLanguage != null) {
                     if(Log.isDebugEnabled(Geonet.LUCENE))
-                        Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
-                    Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage);
+                      Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                    Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage, ignoreChars);
                     analyzerMap.put(language, languageAnalyzer);
                 }
                 else {
@@ -274,7 +264,7 @@ public class SearchManager {
      *
      * @param analyzerClassName Class name of analyzer to create
      * @param field The Lucene field this analyzer is created for
-     * @param stopwords Set stop words if analyzer class name equal org.fao.geonet.kernel.search.GeoNetworkAnalyzer.
+     * @param stopwords
      * @return
      */
     private Analyzer createAnalyzerFromLuceneConfig(String analyzerClassName, String field, Set<String> stopwords) {
@@ -284,14 +274,13 @@ public class SearchManager {
                 Log.debug(Geonet.SEARCH_ENGINE, "Creating analyzer defined in Lucene config:" + analyzerClassName);
             // GNA analyzer
             if(analyzerClassName.equals("org.fao.geonet.kernel.search.GeoNetworkAnalyzer")) {
-                analyzer = SearchManager.createGeoNetworkAnalyzer(stopwords);
+                analyzer = SearchManager.createGeoNetworkAnalyzer(stopwords, _settingInfo.getAnalyzerIgnoreChars());
             }
             // non-GNA analyzer
             else {
                 try {
-                    @SuppressWarnings("unchecked")
-					Class<? extends Analyzer> analyzerClass = (Class<? extends Analyzer>) Class.forName(analyzerClassName);
-                    Class<?>[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
+                    Class<? extends Analyzer> analyzerClass = (Class<? extends Analyzer>) Class.forName(analyzerClassName);
+                    Class[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
                     Object[] inParamsArray = _luceneConfig.getAnalyzerParameter((field==null?"":field) + analyzerClassName);
                     try {
                         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -322,7 +311,7 @@ public class SearchManager {
             // creation of analyzer has failed, default to GeoNetworkAnalyzer
             if(analyzer == null) {
                 Log.warning(Geonet.SEARCH_ENGINE, "Creating analyzer has failed, defaulting to GeoNetworkAnalyzer");
-                analyzer = SearchManager.createGeoNetworkAnalyzer(stopwords);
+                analyzer = SearchManager.createGeoNetworkAnalyzer(stopwords, _settingInfo.getAnalyzerIgnoreChars());
             }
         }
         return analyzer;
@@ -343,10 +332,12 @@ public class SearchManager {
 		String defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "defaultAnalyzer defined in Lucene config: " + defaultAnalyzerClass);
+
+        char[] ignoreChars = _settingInfo.getAnalyzerIgnoreChars();
         // there is no default analyzer defined in lucene config
 		if (defaultAnalyzerClass == null) {
             // create default (hardcoded) analyzer
-            SearchManager.initHardCodedAnalyzers();
+            SearchManager.initHardCodedAnalyzers(ignoreChars);
 		}
         // there is an analyzer defined in lucene config
         else {
@@ -356,11 +347,7 @@ public class SearchManager {
             }
             else {
                 if(Log.isDebugEnabled(Geonet.LUCENE))
-                    Log.debug(Geonet.LUCENE, "Loading stopwords and creating per field anlayzer ...");
-                
-                // One per field analyzer is created for each stopword list available using GNA as default analyzer
-                // Configuration can't define different analyzer per language.
-                // TODO : http://trac.osgeo.org/geonetwork/ticket/900
+                    Log.debug(Geonet.LUCENE, "loading stopwords");
                 for(File stopwordsFile : _stopwordsDir.listFiles()) {
                     String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
                     // TODO check for valid ISO 639-2 codes could be better than this
@@ -371,80 +358,43 @@ public class SearchManager {
                     Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
                     if(stopwordsForLanguage != null) {
                         if(Log.isDebugEnabled(Geonet.LUCENE))
-                            Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                            Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
 
-                        // Configure per field analyzer and register them to language map of pfa
-                        // ... for indexing
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
-                                analyzerMap, language, stopwordsForLanguage);
+                        // create the default analyzer according to Lucene config
+                        Analyzer a = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, stopwordsForLanguage);
+                        PerFieldAnalyzerWrapper languageAnalyzer = new PerFieldAnalyzerWrapper(a);
+                        // now handle the exceptions to the default analyzer as defined in lucene config
+                        for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
+                            String field = e.getKey();
+                            String aClassName = e.getValue();
+                            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                                Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
+                            Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field ,stopwordsForLanguage);
+                            languageAnalyzer.addAnalyzer(field, analyzer);
+                        }
+                        analyzerMap.put(language, languageAnalyzer);
                         
-                        // ... for searching
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
-                                searchAnalyzerMap, language, stopwordsForLanguage);
-
                     }
                     else {
                         if(Log.isDebugEnabled(Geonet.LUCENE))
-                            Log.debug(Geonet.LUCENE, "Failed to load any stopwords for language " + language);
+                            Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
                     }
                 }
-            }
-            
-            // Configure default per field analyzer
-            _analyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
-                null, null, null);
-            
-            _searchAnalyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
-                null, null, null);
-        }
-    }
+            }            
 
-	/**
-	 * Create, configure and optionnaly register in a list a per field analyzer wrapper.
-	 * 
-	 * @param defaultAnalyzer The default analyzer to use
-	 * @param fieldAnalyzers	The list of extra analyzer per field
-	 * @param referenceMap	A map where to reference the per field analyzer
-	 * @param referenceKey	The reference key
-	 * @param stopwordsForLanguage	The stopwords to use (only for GNA)
-	 * 
-	 * @return The per field analyzer wrapper
-	 */
-	private PerFieldAnalyzerWrapper configurePerFieldAnalyzerWrapper(
-			String defaultAnalyzerClass, Map<String, String> fieldAnalyzers,
-			Map<String, Analyzer> referenceMap, String referenceKey,
-			Set<String> stopwordsForLanguage) {
-
-		// Create the default analyzer according to Lucene config
-		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-			Log.debug(Geonet.SEARCH_ENGINE, " Default analyzer class: " + defaultAnalyzerClass);
-		Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(
-				defaultAnalyzerClass, null, stopwordsForLanguage);
-		
-		
-		PerFieldAnalyzerWrapper pfa = new PerFieldAnalyzerWrapper(
-				defaultAnalyzer);
-		
-		
-		// now handle the exceptions for each field to the default analyzer as
-		// defined in lucene config
-		for (Entry<String, String> e : fieldAnalyzers.entrySet()) {
-			String field = e.getKey();
-			String aClassName = e.getValue();
-			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-				Log.debug(Geonet.SEARCH_ENGINE, " Add analyzer for field: "
-						+ field + "=" + aClassName);
-			Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName,
-					field, stopwordsForLanguage);
-			pfa.addAnalyzer(field, analyzer);
+            // create the default analyzer according to Lucene config
+            Analyzer defaultAnalyzer = createAnalyzerFromLuceneConfig(defaultAnalyzerClass, null, null);
+			_analyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
+            // now handle the exceptions to the default analyzer as defined in lucene config
+			for (Entry<String, String> e : _luceneConfig.getFieldSpecificAnalyzers().entrySet()) {
+				String field = e.getKey();
+				String aClassName = e.getValue();
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE, field + ":" + aClassName);
+                Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field, null);
+                _analyzer.addAnalyzer(field, analyzer);
+			}
 		}
-		
-		// Register to a reference map if needed
-		if (referenceMap != null) {
-			referenceMap.put(referenceKey, pfa);
-		}
-		
-		return pfa;
 	}
 
     /**
@@ -506,6 +456,7 @@ public class SearchManager {
         }
 
         _luceneDir.getParentFile().mkdirs();
+
         _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
      	 _logAsynch = logAsynch;
@@ -514,8 +465,15 @@ public class SearchManager {
 
 		initLucene();
 		initZ3950();
-		
-		_luceneOptimizerManager = new LuceneOptimizerManager(this, si);
+
+		if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
+            _optimizerBeginAt  = si.getLuceneIndexOptimizerSchedulerAt();
+            _optimizerInterval = si.getLuceneIndexOptimizerSchedulerInterval();
+            scheduleOptimizerThread();
+        }
+        else {
+            Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
+        }
 	}
 
     /**
@@ -527,7 +485,7 @@ public class SearchManager {
     	    try {
                 @SuppressWarnings(value = "unchecked")
     	        Class<? extends DocumentBoosting> clazz = (Class<? extends DocumentBoosting>) Class.forName(className);
-                Class<?>[] clTypesArray = _luceneConfig.getDocumentBoostParameterClass();
+                Class[] clTypesArray = _luceneConfig.getDocumentBoostParameterClass();
                 Object[] inParamsArray = _luceneConfig.getDocumentBoostParameter();
                 try {
                     if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -571,7 +529,7 @@ public class SearchManager {
 	public void end() throws Exception {
 		endZ3950();
 		_spatial.end();
-		_luceneOptimizerManager.cancel();
+		_optimizerTimer.cancel();
 	}
 
     /**
@@ -581,7 +539,9 @@ public class SearchManager {
      */
 	public synchronized void disableOptimizer() throws Exception {
         Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
-		_luceneOptimizerManager.cancel();
+        if (_optimizerTimer != null) {
+            _optimizerTimer.cancel();
+        }
     }
 
     /**
@@ -592,7 +552,70 @@ public class SearchManager {
      * @throws Exception
      */
 	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
-		_luceneOptimizerManager.reschedule(optimizerBeginAt, optimizerInterval);
+		if (_dateFormat.format(optimizerBeginAt.getTime()).equals(_dateFormat.format(_optimizerBeginAt.getTime())) &&
+                (optimizerInterval == _optimizerInterval)) {
+            return; // do nothing unless at and interval has changed
+        }
+		_optimizerInterval = optimizerInterval;
+		_optimizerBeginAt  = optimizerBeginAt;
+		if (_optimizerTimer != null) _optimizerTimer.cancel();
+		scheduleOptimizerThread();
+	}
+
+    /**
+     * TODO javadoc.
+     *
+     * @throws Exception
+     */
+	private void scheduleOptimizerThread() throws Exception {
+		_optimizerTimer = new Timer(true);
+
+		// at _optimizerBeginAt and again at every _optimizerInterval minutes
+		Date beginAt = getBeginAt(_optimizerBeginAt);
+		_optimizerTimer.schedule(new OptimizeTask(), beginAt, _optimizerInterval * 60 * 1000);
+
+		Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index to run at "+_dateFormat.format(beginAt)+" and every "+_optimizerInterval+" minutes afterwards");
+	}
+
+    /**
+     * TODO javadoc.
+     *
+     * @param timeToStart
+     * @return
+     */
+	private Date getBeginAt(Calendar timeToStart) {
+		Calendar now = Calendar.getInstance();
+		Calendar ts  = Calendar.getInstance();
+
+		ts.set(Calendar.DAY_OF_MONTH,	now.get(Calendar.DAY_OF_MONTH));
+		ts.set(Calendar.MONTH,				now.get(Calendar.MONTH));
+		ts.set(Calendar.YEAR,					now.get(Calendar.YEAR));
+		ts.set(Calendar.HOUR,					timeToStart.get(Calendar.HOUR));
+		ts.set(Calendar.MINUTE,				timeToStart.get(Calendar.MINUTE));
+		ts.set(Calendar.SECOND,				timeToStart.get(Calendar.SECOND));
+
+		// if the starttime has already past then schedule for tommorrow
+		if (now.after(ts)) {
+            ts.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+		return ts.getTime();
+	}
+
+    /**
+     * TODO javadoc.
+     *
+     */
+	class OptimizeTask extends TimerTask {
+		public void run() {
+			try {
+				_indexWriter.optimize();
+			}
+            catch (Exception e) {
+				Log.error(Geonet.INDEX_ENGINE, "Optimize task failed: "+e.getMessage());
+				e.printStackTrace();
+			}
+		}
 	}
 
     /**
@@ -773,7 +796,7 @@ public class SearchManager {
 			xmlDoc = new Element("Document");
 
 			Element defaultDoc = new Element("Document");
-            defaultDoc.setAttribute(Geonet.LUCENE_LOCALE_KEY, Geonet.DEFAULT_LANGUAGE);
+            defaultDoc.setAttribute(Geonet.LUCENE_LOCALE_KEY, Geocat.DEFAULT_LANG);
             xmlDoc.addContent(defaultDoc);
 
            StringBuilder sb = new StringBuilder();
@@ -805,7 +828,8 @@ public class SearchManager {
             }
             String locale = doc.getAttributeValue("locale");
             if(locale == null || locale.trim().isEmpty()) {
-                locale = Geonet.DEFAULT_LANGUAGE;
+                locale = Geocat.DEFAULT_LANG;
+                doc.setAttribute("locale", locale);
             }
             documents.add(Pair.read(locale, newDocument(doc)));
         }
@@ -1383,7 +1407,7 @@ public class SearchManager {
                 boolean bIndex = sIndex != null && sIndex.equals("true");
                 boolean token = _luceneConfig.isTokenizedField(name);
                 boolean isNumeric = _luceneConfig.isNumericField(name);
-                
+
                 Field.Store store;
                 if (bStore) {
                     store = Field.Store.YES;
@@ -1407,7 +1431,7 @@ public class SearchManager {
                 else {
                     Field f = new Field(name, string, store, index);
 
-                    // Boost a particular field according to Lucene config. 
+                    // Boost a particular field according to Lucene config.
                     Float boost = _luceneConfig.getFieldBoost(name);
                     if (boost != null) {
                         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
@@ -1420,7 +1444,7 @@ public class SearchManager {
         }
         
         if(!hasLocaleField) {
-           doc.add(new Field(Geonet.LUCENE_LOCALE_KEY,Geonet.DEFAULT_LANGUAGE,Field.Store.YES,Field.Index.NOT_ANALYZED));
+           doc.add(new Field(Geonet.LUCENE_LOCALE_KEY, Geocat.DEFAULT_LANG,Field.Store.YES,Field.Index.NOT_ANALYZED));
         }
         
         // Set boost to promote some types of document selectively according to DocumentBoosting class
@@ -1477,7 +1501,13 @@ public class SearchManager {
 			Log.warning(Geonet.INDEX_ENGINE, "Failed to index numeric field: " + name + " with value: " + string + ", error is:" + e.getMessage());
 		}
 	}
+    public File getStylesheetsDir() {
+        return _stylesheetsDir;
+    }
 
+    public File getLuceneDir() {
+        return _luceneDir;
+    }
 	public Spatial getSpatial() {
         return _spatial;
     }
@@ -1522,11 +1552,11 @@ public class SearchManager {
          * TODO javadoc.
          *
          * @param dataStore
-         * @param maxWritesInTransaction - Number of features to write 
+         * @param maxWritesInTransaction - Number of features to write
 				 * to before commit - set 1 and the transaction will be
-				 * autocommit which results in faster loading for some (all?) 
-				 * configurations and does not keep a long running transaction 
-				 * open. 
+				 * autocommit which results in faster loading for some (all?)
+				 * configurations and does not keep a long running transaction
+				 * open.
          * @throws Exception
          */
         public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception {
@@ -1736,8 +1766,4 @@ public class SearchManager {
         return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, FeatureSource.class,
                 SpatialIndex.class);
     }
-
-	LuceneIndexWriterFactory getIndexWriter() {
-		return _indexWriter;
-	}
 }

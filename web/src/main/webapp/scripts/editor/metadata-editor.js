@@ -324,11 +324,11 @@ function doMoveElementAction(action, ref, id)
 	setBunload(true);
 }
 
-function doNewElementAction(action, ref, name, id, what, max)
+function doNewElementAction(action, ref, name, id, what, max, extraParams)
 {
 	var child = null;
 	var orElement = false;
-	doNewElementAjax(action, ref, name, child, id, what, max, orElement);
+	doNewElementAjax(action, ref, name, child, id, what, max, orElement, extraParams);
 }
 
 function doNewAttributeAction(action, ref, name, id, what)
@@ -336,13 +336,15 @@ function doNewAttributeAction(action, ref, name, id, what)
 	var child = "geonet:attribute";
 	var max = null;
 	var orElement = false;
-	doNewElementAjax(action, ref, name, child, id, what, max, orElement);
+	var extraParams = null;
+	doNewElementAjax(action, ref, name, child, id, what, max, orElement, extraParams);
 }
 
 function doNewORElementAction(action, ref, name, child, id, what, max)
 {
 	var orElement = true;
-	doNewElementAjax(action, ref, name, child, id, what, max, orElement);
+	var extraParams = null;
+	doNewElementAjax(action, ref, name, child, id, what, max, orElement, extraParams);
 }
 
 function setAddControls(el, orElement) 
@@ -382,12 +384,14 @@ function setAddControls(el, orElement)
 	}
 }
 
-function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
+function doNewElementAjax(action, ref, name, child, id, what, max, orElement, extraParams)
 {
 	var metadataId = document.mainForm.id.value;
 	var pars = "&id="+metadataId+"&ref="+ref+"&name="+name;
 	if (child != null) 
 		pars += "&child="+child;
+	if (extraParams != null) 
+		pars += '&'+extraParams;
 	var thisElement = $(id);
 
 	var myAjax = new Ajax.Request(
@@ -415,23 +419,30 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 					thisElement.insert({'before':html});
 					setAddControls(thisElement.previous(), orElement);
 				} else {
-					alert("doNewElementAjax: invalid what: " + what + " should be one of replace, after or before.");
+					alert("doNewElementAjax: invalid what: " + what + " should be one of replace, add, after or before.");
 				}
 
 				// Init map if spatial extent editing - usually bounding box or bounding polygon
-				if (name == 'gmd:geographicElement' || name == 'gmd:polygon')
-					extentMap.initMapDiv();
+				if (name == 'gmd:geographicElement' || name == 'gmd:polygon') {
+					searchTools.initMapDiv();
+//					extentMap.initMapDiv();
+				}
 				
 				initCalendar();
 				
 				// Check elements
 				validateMetadataFields();
-				
+				var eBusy = $('editorBusy');
+                if (eBusy) eBusy.hide();
+                $('editorOverlay').setStyle({display: "none"});
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
 				alert(translate("errorAddElement") + name + translate("errorFromDoc") 
 						+ " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+				var eBusy = $('editorBusy');
+                if (eBusy) eBusy.hide();
+                $('editorOverlay').setStyle({display: "none"});
 				setBunload(true); // reset warning for window destroy
 			}
 		}
@@ -448,6 +459,8 @@ function disableEditForm()
 function doSaveAction(action,validateAction)
 {
 	disableEditForm();
+
+	geocat.edit.resetAll();
 
 	// if we are doing a validation then enable display of errors in editor 
 	// - by default false
@@ -481,7 +494,8 @@ function doSaveAction(action,validateAction)
 					if (html.startsWith("<?xml") < 0) { // service returns xml on success
 						alert(translate("errorSaveFailed") + html);
 					}
-					
+					// always do validation so index is up-to-date
+					getValidationReport(false);
 					setBunload(false);
 					location.replace(getGNServiceURL('metadata.show?id='+metadataId+'&skipPopularity=y'));
 				},
@@ -507,11 +521,19 @@ function doSaveAction(action,validateAction)
 				evalScripts: true,
 				 onComplete: function(req) {
 					if (req.status == 200) {
-						if (document.mainForm.showvalidationerrors.value=='true')
-							getValidationReport();
+						// always do validation so index is up-to-date
+						getValidationReport(typeof validateAction != 'undefined');
 						setBunload(true); // reset warning for window destroy
 						initCalendar();
 						validateMetadataFields();
+						if (typeof(Ext) != "undefined") {
+			                //Ext.onReady(delayedInit);
+			                Ext.onReady(searchTools.initMapDiv);
+			            } else {
+			                // user geocat map handler
+			                //Event.observe(window,'load',delayedInit);
+			                Event.observe(window,'load',searchTools.initMapDiv);
+			            }
 					} else {
 						alert("Status returned was "+req.status+" this could be a problem");
 					}
@@ -952,16 +974,16 @@ var logoSelectionWindow;
 function showLogoSelectionPanel (ref){
     if (!logoSelectionWindow) {
         var logoSelectionPanel = new GeoNetwork.editor.LogoSelectionPanel({
-                    ref: ref, 
-                    serviceUrl: 'xml.harvesting.info?type=icons', 
-                    logoUrl: Env.host + Env.url + '/images/harvesting/',
-                    listeners: {
-                        logoselected : function(panel, idx){
-                            var record = panel.store.getAt(idx);
-                            Ext.getDom(panel.ref).value = panel.logoUrl + record.get('name');
-                        }
-                    }
-                });
+            ref: ref, 
+            serviceUrl: 'xml.harvesting.info?type=icons', 
+            logoUrl: Env.host + Env.url + '/images/harvesting/',
+            listeners: {
+                logoselected : function(panel, idx){
+                    var record = panel.store.getAt(idx);
+                    Ext.getDom(panel.ref).value = panel.logoUrl + record.get('name');
+                }
+            }
+        });
         
         logoSelectionWindow = new Ext.Window({
             title: translate('logoSelectionWindow'),
@@ -1349,6 +1371,9 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 				var layerName = Ext.getCmp('getCapabilitiesLayerName').getValue();
 		 		// update dataset metadata record
 				// and/or the service. Failed on privileges error.
+				var eBusy = $('editorBusy');
+				if (eBusy) eBusy.show();
+				disableEditForm();
 				if (name=='attachService') {
 					// Current dataset is a dataset metadata record.
 					// 1. Update service (if current user has privileges), using XHR request
@@ -1356,9 +1381,6 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 	    					"&process=update-srv-attachDataset&uuidref=" +
 	    					uuid +
 	    					"&scopedName=" + layerName;
-					var eBusy = $('editorBusy');
-					if (eBusy) eBusy.show();
-					disableEditForm();
 
                     Ext.Ajax.request({
                         url: serviceUpdateUrl,
@@ -1374,12 +1396,16 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 							}
 
 							// 2. Update current metadata record, in current window
-							doSaveThen("metadata.processing?uuid=" + uuid + 
+							// GEOCAT: disabled, we want it to be an option to update MDD
+							/*doSaveThen("metadata.processing?uuid=" + uuid + 
 			    					"&process=update-onlineSrc&desc=" +
 			    					layerName + "&url=" +
 			    					escape(metadata[0].data.uri) +
-			    					"&scopedName=" + layerName);
+			    					"&scopedName=" + layerName);*/
+							if (eBusy) eBusy.hide();
+							Element.remove($("editorOverlay"));
 
+							setBunload(true);
 						},
 						failure:function (result, request) {
 							if (eBusy) eBusy.hide();
@@ -1395,6 +1421,14 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 				} else {
 					// Current dataset is a service metadata record.
 					// 1. Update dataset (if current user has privileges), using XHR request
+
+/* GEOCAT START */
+					// 2. Update current metadata record, in current window
+					window.location.replace("metadata.processing?uuid=" + uuid + 
+	    					"&process=update-srv-attachDataset&uuidref=" +
+	    					metadata[0].data.uuid +
+	    					"&scopedName=" + layerName);	
+/** GEOCAT: comment this out and just update service MD.  Updating MDD will be optional  					
 					var datasetUpdateUrl = "xml.metadata.processing?uuid=" + metadata[0].data.uuid + 
 	    					"&process=update-onlineSrc&desc=" +
 	    					layerName + "&url=" +
@@ -1424,7 +1458,8 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
 							Ext.MessageBox.alert(translate("ServiceUpdateError"));
 							setBunload(true);
 						}
-					});		
+					});*/	
+					/* GEOCAT END */
 				}
             },
             scope: this
@@ -1686,11 +1721,12 @@ function updateValidationReportVisibilityRules(errorOnly) {
         if (el.nodeName=="SPAN") {
             // These are the titles.
             // Look and see if the following div contains any list elements which are errors.
-            errors = $(el).next().descendants().filter(
+            var next = $(el).next();
+            errors = next ? next.descendants().filter(
                 function(possibleError) {
                    return (possibleError.nodeName=='LI' && possibleError.getAttribute('name')=='error');
                 }
-            );
+            ) : [];
             // If none are found and we are only showing errors, we should turn this one off.
             if (errors.length==0 && errorOnly) {
                 el.style.display = "none";
@@ -1713,7 +1749,7 @@ function updateValidationReportVisibilityRules(errorOnly) {
  * Get the validation report for current metadata record
  * and display the report if success.
  */
-function getValidationReport()
+function getValidationReport(showReport)
 {	var metadataId = document.mainForm.id.value;
 	var pars = "&id="+metadataId;
 	var action = 'metadata.validate';
@@ -1723,17 +1759,22 @@ function getValidationReport()
 			method: 'get',
 			parameters: pars,
 			onSuccess: function(req) {
-				if (req.status == 0) {
-					alert("Browser returned status 0 and validation report has been lost - try again?");
-					getValidationReport();
+				if(showReport) {
+					if (req.status == 0) {
+						alert("Browser returned status 0 and validation report has been lost - try again?");
+						getValidationReport();
+					}
+					var html = req.responseText;
+					displayBox(html, 'validationReport', false);
+					updateValidationReportVisibilityRules($('checkError').checked);
 				}
-				var html = req.responseText;
-				displayBox(html, 'validationReport', false);
-				updateValidationReportVisibilityRules($('checkError').checked);
+   				$('editorBusy').hide();
 				setBunload(true); // reset warning for window destroy
 			},
 			onFailure: function(req) { 
-				alert(translate("errorOnAction") + action + " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+				if(showReport) {
+					alert(translate("errorOnAction") + action + " / status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+				}
    				$('editorBusy').hide();
 				setBunload(true); // reset warning for window destroy
 			}

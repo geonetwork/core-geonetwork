@@ -62,7 +62,7 @@ import java.util.Set;
  * <li>save: (optional) 1 to save the results (default), 0 to only process and return the processed record</li>
  * </ul>
  * <br/>
- * 
+ *
  * In each xml/schemas/schemaId directory, a process could be added in a
  * directory called process. Then the process could be called using the
  * following URL :
@@ -70,20 +70,20 @@ import java.util.Set;
  * =keywords-comma-exploder&url=http://xyz
  * <br/>
  * <br/>
- * 
+ *
  * In that example the process has to be named keywords-comma-exploder.xsl.
- * 
- * To retrieve parameters in XSL process use the following: 
+ *
+ * To retrieve parameters in XSL process use the following:
  * <pre>
  * {@code
  *     <xsl:param name="url">http://localhost:8080/</xsl:param>
  * }
  * </pre>
- * 
- * 
+ *
+ *
  *  TODO : it could be nice to add an option to return a diff
  *  so we could preview the change before applying them.
- * 
+ *
  * @author fxprunayre
  */
 
@@ -117,7 +117,7 @@ public class XslProcessing implements Service {
 			processedMetadata = process(id, process, save, _appPath, params,
 				context, metadata, notFound, notOwner, notProcessFound, false, dataMan.getSiteURL());
 			if (processedMetadata == null) {
-				throw new BadParameterEx("Processing failed", 
+				throw new BadParameterEx("Processing failed",
 						"Not found:" + notFound.size() +
 						", Not owner:" + notOwner.size() +
 						", No process found:" + notProcessFound.size() +
@@ -134,27 +134,27 @@ public class XslProcessing implements Service {
 		    response.addContent(new Element("record").addContent(processedMetadata));
 		}
 		return response;
-		
+
 	}
 
 	/**
 	 * Process a metadata record and add information about the processing
 	 * to one or more sets for reporting.
-	 * 
+	 *
 	 * @param id		The metadata identifier corresponding to the metadata record to process
 	 * @param process	The process name
 	 * @param appPath	The application path (use to get the process XSL)
 	 * @param params	The input parameters
 	 * @param context	The current context
-	 * @param metadata	
+	 * @param metadata
 	 * @param notFound
 	 * @param notOwner
 	 * @param notProcessFound
 	 * @return
 	 * @throws Exception
-	 */	
+	 */
 	public static Element process(String id, String process, boolean save,
-	        String appPath, Element params, ServiceContext context, 
+	        String appPath, Element params, ServiceContext context,
 	        Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
 			Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -176,7 +176,7 @@ public class XslProcessing implements Service {
 			// -----------------------------------------------------------------------
 			// --- check processing exist for current schema
 			String schema = info.schemaId;
-            
+
 			String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
@@ -185,8 +185,8 @@ public class XslProcessing implements Service {
 				return null;
 			}
 			// --- Process metadata
-            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true, allowDbmsClosing=false;
+            Element md = dataMan.getGeocatMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes,false,allowDbmsClosing);
 
             // -- here we send parameters set by user from URL if needed.
 			List<Element> children = params.getChildren();
@@ -200,7 +200,7 @@ public class XslProcessing implements Service {
             xslParameter.put("siteUrl", siteUrl);
 
 			Element processedMetadata = Xml.transform(md, filePath, xslParameter);
-			
+
 			// --- save metadata and return status
             if (save) {
                 boolean validate = true;
@@ -209,12 +209,12 @@ public class XslProcessing implements Service {
                 String language = context.getLanguage();
                 // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
                 boolean updateDateStamp = true;
-                dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp, false);
     			if (useIndexGroup) {
-    				dataMan.indexMetadataGroup(dbms, id);
+    				dataMan.indexMetadataGroup(dbms, id, false, context);
     			}
                 else {
-                    dataMan.indexInThreadPool(context, id, dbms);
+                    dataMan.indexInThreadPool(context, id, dbms, false);
     			}
             }
 

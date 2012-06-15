@@ -38,6 +38,27 @@
 				<td class="padded"><input id="csw.capabUrl" class="content" type="text" value="" size="30"/></td>
 			</tr>
 
+            <tr>
+                <script language="javascript">
+                function updateTextFieldOutputSchema(string)
+                {
+                   $('csw.outputSchema').value =  string;
+                }
+                </script>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/outputSchema"/></td>
+                <td class="padded">
+                    <input type="text" class="content" size="70" name="outputSchema" id="csw.outputSchema" value="http://www.geocat.ch/2008/che" />
+                    <p>Examples : </p>
+                    <ul>
+                      <li><a href="javascript:updateTextFieldOutputSchema('http://www.opengis.net/cat/csw/2.0.2')">http://www.opengis.net/cat/csw/2.0.2' for Dublin Core</a></li>
+                      <li><a href="javascript:updateTextFieldOutputSchema('http://www.isotc211.org/2005/gmd')">http://www.isotc211.org/2005/gmd' for ISO19139</a></li>
+                      <li><a href="javascript:updateTextFieldOutputSchema('http://www.geocat.ch/2008/che')">http://www.geocat.ch/2008/che' for ISO19139-CHE</a></li>
+                      <!--  issue #133730 : deactivated for now : GC subsystem is not able to handle GM03 MD yet -->
+                      <!-- <li><a href="javascript:updateTextFieldOutputSchema('http://www.geocat.ch/2008/gm03_2')">'http://www.geocat.ch/2008/gm03_2' for GM03_2</a></li>   -->
+                    </ul>
+                </td>
+            </tr>
+
 			<tr>
 				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
 				<td class="padded">
@@ -87,10 +108,25 @@
 	
 	<xsl:template name="options-CSW">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
-		<xsl:call-template name="schedule-widget">
-			<xsl:with-param name="type">csw</xsl:with-param>
-		</xsl:call-template>
-		</xsl:template>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="csw.every.days"  class="content" type="text" size="2"/> :
+					<input id="csw.every.hours" class="content" type="text" size="2"/> :
+					<input id="csw.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
+				<td class="padded"><input id="csw.oneRunOnly" type="checkbox" value=""/></td>
+			</tr>			
+		</table>
+	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -157,15 +193,4 @@
 	
 	<!-- ============================================================================================= -->
 	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

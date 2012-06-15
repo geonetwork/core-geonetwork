@@ -35,13 +35,22 @@ import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.StringReader;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
+
+import javax.xml.transform.stream.StreamSource;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -51,6 +60,8 @@ import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.gm03.ISO19139CHEtoGM03;
+import org.fao.geonet.services.gm03.TranslateAndValidate;
 import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 
@@ -65,6 +76,8 @@ class MEF2Exporter {
 	 *            {@link Format} to export.
 	 * @param skipUUID
 	 * @param stylePath
+	 * @param removeXlinkAttribute 
+	 * @param resolveXlink 
 	 * @return MEF2 File
 	 * @throws Exception
 	 */
@@ -105,10 +118,12 @@ class MEF2Exporter {
 	 * @param skipUUID
 	 * @param stylePath
 	 * @param format
+	 * @param resolveXlink 
+	 * @param removeXlinkAttribute 
 	 * @throws Exception
 	 */
 	private static void createMetadataFolder(ServiceContext context, Dbms dbms,
-			String uuid, ZipOutputStream zos, boolean skipUUID,
+			final String uuid, final ZipOutputStream zos, boolean skipUUID,
 			String stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		MEFLib.createDir(zos, uuid + FS);
@@ -146,6 +161,16 @@ class MEF2Exporter {
 					path);
 			MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA_19139,
 					data19139);
+		}
+		
+		if(schema.equals("iso19139.che")) {
+            String appPath = context.getAppPath();
+            ISO19139CHEtoGM03 togm03 = new ISO19139CHEtoGM03(null, appPath +FS+"xsl"+FS+"conversion"+FS+"import"+FS+"ISO19139CHE-to-GM03.xsl");
+            final StreamSource source = new StreamSource(formatData(record));
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            togm03.convert(source, "TransformationTestSupport", out);
+            InputStream result = new ByteArrayInputStream(out.toByteArray());
+            MEFLib.addFile(zos,uuid + FS + MD_DIR + "metadata-gm03_2.xml", result);
 		}
 
 		// --- save native metadata

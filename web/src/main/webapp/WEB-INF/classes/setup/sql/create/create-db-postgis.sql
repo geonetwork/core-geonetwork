@@ -51,6 +51,7 @@ CREATE TABLE Languages
   (
     id    varchar(5),
     name  varchar(32)   not null,
+    isocode varchar(3)  not null,
 	isInspire char(1)     default 'n',
     isDefault char(1)     default 'n',
 
@@ -245,6 +246,8 @@ CREATE TABLE Groups
     name         varchar(32)    not null,
     description  varchar(255),
     email        varchar(32),
+    logouuid     varchar(250),
+    website      varchar(255),
     referrer     int,
 
     primary key(id),

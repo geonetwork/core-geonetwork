@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+	<!--  
+		<codelist name="gmd:CI_DateTypeCode">
+		<entry><code></code><label></label><description></description></entry>
+		</codelist>-->
+	<codelist name="che:CHE_CI_LegislationCode">
+		<entry>
+			<code>cantonalLaw</code>
+			<label>Official law on cantonal level</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>nationalLaw</code>
+			<label>Official law on national level</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>nationalDecree</code>
+			<label>Other legal text on national level</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>internationalObligation</code>
+			<label>Convention, contract or other agreement on international level</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>otherLegalText</code>
+			<label>Any other legal text</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>bylawsPrivatLaw</code>
+			<label>Bylaws under privat law</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>bylawsPublicLaw</code>
+			<label>Bylaws under public law</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>communalLaw</code>
+			<label>Official law on communal level</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CI_NumberTypeCode">
+		<entry>
+			<code>mainNumber</code>
+			<label>Main Number</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>directNumber</code>
+			<label>Direct Number</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>mobile</code>
+			<label>Mobile Number</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>facsimile</code>
+			<label>Facsimile Number</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_MD_FilmTypeCode">
+		<entry>
+			<code>BW</code>
+			<label>Black/White</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>C</code>
+			<label>Colour</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>CIR</code>
+			<label>Colour infrared</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>IR</code>
+			<label>Infrared</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_MD_modelTypeCode">
+		<entry>
+			<code>FeatureDescription</code>
+			<label>Feature description</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>UMLdiagram</code>
+			<label>UML diagram</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>EntityRelationshipModel</code>
+			<label>Entity-Relationship diagram</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>INTERLIS1</code>
+			<label>INTERLIS 1</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>INTERLIS2</code>
+			<label>INTERLIS 2</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>GML</code>
+			<label>GML</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>Other</code>
+			<label>Other</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_CI_projectTypeCode">
+		<entry>
+			<code>research</code>
+			<label>Experimental research</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>monitoringProgram</code>
+			<label>Monitoring program</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>workProgram</code>
+			<label>Work program</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>inventory</code>
+			<label>Inventory / survey</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>planning</code>
+			<label>Planning</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:basicGeodataIDTypeCode">
+		<entry>
+			<code>communal</code>
+			<label>Communal</label>
+		</entry>
+		<entry>
+			<code>cantonal</code>
+			<label>Cantonal</label>
+		</entry>
+		<entry>
+			<code>federal</code>
+			<label>Federal</label>
+		</entry>
+		<entry>
+			<code>other</code>
+			<label>Other</label>
+		</entry>
+	</codelist>	
+	<codelist name="che:CHE_SV_inspireServiceTypeCode">
+		<entry>
+			<code>DiscoveryService</code>
+			<label>Discovery Service</label>
+		</entry>
+		<entry>
+			<code>ViewService</code>
+			<label>View Service</label>
+		</entry>
+		<entry>
+			<code>DownloadService</code>
+			<label>Download Service</label>
+		</entry>
+		<entry>
+			<code>TransformationService</code>
+			<label>Transformation Service</label>
+		</entry>
+		<entry>
+			<code>InvokeSpatialDataService</code>
+			<label>Invoke Spatial Data Service</label>
+		</entry>
+		<entry>
+			<code>OtherServices</code>
+			<label>Other Services</label>
+		</entry>
+	</codelist>
+</codelists>

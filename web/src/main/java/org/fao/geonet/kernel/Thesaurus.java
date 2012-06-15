@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -53,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
@@ -74,8 +71,6 @@ public class Thesaurus {
 
     private String downloadUrl;
 
-    private String keywordUrl;
-
 	@SuppressWarnings("unused")
 	private String name;
 
@@ -91,46 +86,32 @@ public class Thesaurus {
 	@SuppressWarnings("unused")
 	private String autority;
 
-	private IsoLanguagesMapper isoLanguageMapper;
-
 	/**
 	 * @param fname
 	 *            file name
 	 * @param type
-	 * @param dname category/domain name of thesaurus
+	 * @param dname
 	 */
-	public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-	    this(mapper, fname, type, dname, thesaurusFile, siteUrl, false);
-	}
-    public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+	public Thesaurus(String fname, String type, String dname, File thesaurusFile, String siteUrl) {
 		super();
-		this.isoLanguageMapper = mapper;
 		this.fname = fname;
 		this.type = type;
 		this.dname = dname;
 		this.thesaurusFile = thesaurusFile; 
 		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
-		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
 		
-        retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
+        retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
+
 	}
 
-	
-	public Thesaurus(String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-		this(null, fname, type, dname, thesaurusFile, siteUrl);
-	}
-	
-    /**
+	/**
 	 * 
 	 * @return Thesaurus identifier
 	 */
 	public String getKey() {
 		return buildThesaurusKey(fname, type, dname);
 	}
-	/**
-	 * Get the Domain/category name of the thesaurus 
-	 * @return
-	 */
+
 	public String getDname() {
 		return dname;
 	}
@@ -159,13 +140,9 @@ public class Thesaurus {
 		return downloadUrl;
 	}
 
-  public String getKeywordUrl() {
-		return keywordUrl;
-	}
-
   public void retrieveThesaurusTitle() {
-    retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, false);
-  }
+    retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
+	}
 
 
 	/**
@@ -187,18 +164,12 @@ public class Thesaurus {
 		}
 	}
 
-	private String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
-		return siteUrl + "/xml.keyword.get?thesaurus="+Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id="; 
-		// needs to have term/concept id tacked onto the end
-	}
-
 	public LocalRepository getRepository() {
 		return repository;
 	}
 
-	public Thesaurus setRepository(LocalRepository repository) {
+	public void setRepository(LocalRepository repository) {
 		this.repository = repository;
-		return this;
 	}
 
     /**
@@ -243,75 +214,110 @@ public class Thesaurus {
 		}
 	}
 
-	/**
-	 * Add a keyword to the Thesaurus.
-	 * 
-	 * @param keyword The keyword to add
-	 * 
-	 * @throws IOException
-	 * @throws AccessDeniedException
-	 * @throws GraphException
-	 */
-    public URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
-        Graph myGraph = new org.openrdf.model.impl.GraphImpl();
+	public URI addElement(String code, String prefLab, String note, String lang)
+			throws GraphException, IOException, AccessDeniedException {
+		return addElement("#", code, prefLab, note,lang);
+	}
 
-        ValueFactory myFactory = myGraph.getValueFactory();
+	public URI addElement(String namespace, String code, String prefLab, String note, String lang)
+			throws GraphException, IOException, AccessDeniedException {
 
-        // Define namespace
-        String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-        String namespaceGml = "http://www.opengis.net/gml#";
-        String namespace = keyword.getNameSpaceCode();
+	    lang = toiso639_1_Lang(lang);
 
-        // Create subject
-        URI mySubject = myFactory.createURI(namespace, keyword.getRelativeCode());
+		Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
-        URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
-        URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-        URI predicatePrefLabel = myFactory
-                .createURI(namespaceSkos, "prefLabel");
-        URI predicateScopeNote = myFactory
-                .createURI(namespaceSkos, "scopeNote");
+		ValueFactory myFactory = myGraph.getValueFactory();
+		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
 
-        URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
-        URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");
-        URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
-        URI srsNameURI = myFactory
-                .createURI("http://www.opengis.net/gml/srs/epsg.xml#epsg:4326");
-        BNode gmlNode = myFactory.createBNode();
-        URI predicateLowerCorner = myFactory.createURI(namespaceGml,
-                "lowerCorner");
-        URI predicateUpperCorner = myFactory.createURI(namespaceGml,
-                "upperCorner");
+		URI mySubject = myFactory.createURI(namespace, code);
 
-        Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
-        Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
+		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
+		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
+		mySubject.addProperty(rdfType, skosClass); 
 
-        mySubject.addProperty(rdfType, skosClass);
-        Set<Entry<String, String>> values = keyword.getValues().entrySet();
-        for (Entry<String, String> entry : values) {
-            String language = toiso639_1_Lang(entry.getKey());
-            Value valueObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(mySubject, predicatePrefLabel, valueObj );
-            
-        }
-        Set<Entry<String, String>> definitions = keyword.getDefinitions().entrySet();
-        for (Entry<String, String> entry : definitions) {
-            String language = toiso639_1_Lang(entry.getKey());
-            Value definitionObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(mySubject, predicateScopeNote, definitionObj );
-            
-        }
-        myGraph.add(mySubject, predicateBoundedBy, gmlNode);
+		URI myPredicate1 = myFactory.createURI(namespaceSkos, "prefLabel");
+		Literal myObject1 = myFactory.createLiteral(prefLab, lang);
+		myGraph.add(mySubject, myPredicate1, myObject1);
 
-        gmlNode.addProperty(rdfType, predicateEnvelope);
-        myGraph.add(gmlNode, predicateLowerCorner, lowerCorner);
-        myGraph.add(gmlNode, predicateUpperCorner, upperCorner);
-        myGraph.add(gmlNode, predicateSrsName, srsNameURI);
+		URI myPredicate2 = myFactory.createURI(namespaceSkos, "scopeNote");
+		Literal myObject2 = myFactory.createLiteral(note, lang);
+		myGraph.add(mySubject, myPredicate2, myObject2);
 
-        repository.addGraph(myGraph);
-        return mySubject;
-    }
-	
+		repository.addGraph(myGraph);
+
+		return mySubject;
+	}
+
+    /**
+     * TODO javadoc.
+     *
+     * @param code
+     * @param prefLab
+     * @param note
+     * @param east
+     * @param west
+     * @param south
+     * @param north
+     * @param lang
+     * @throws IOException
+     * @throws AccessDeniedException
+     * @throws GraphException
+     */
+	public void addElement(String code, String prefLab, String note, String east, String west, String south,
+                           String north, String lang) throws IOException, AccessDeniedException, GraphException {
+
+       lang = toiso639_1_Lang(lang);
+
+		Graph myGraph = new org.openrdf.model.impl.GraphImpl();
+
+		ValueFactory myFactory = myGraph.getValueFactory();
+
+		// Define namespace
+		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
+		String namespaceGml = "http://www.opengis.net/gml#";
+		String namespace = "#";
+
+		// Create subject
+		URI mySubject = myFactory.createURI(namespace, code);
+
+		URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
+		URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
+		URI predicatePrefLabel = myFactory
+				.createURI(namespaceSkos, "prefLabel");
+		URI predicateScopeNote = myFactory
+				.createURI(namespaceSkos, "scopeNote");
+
+		URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
+		URI predicateEnvelope = myFactory.createURI(namespaceGml, "Envelope");
+		URI predicateSrsName = myFactory.createURI(namespaceGml, "srsName");
+		URI srsNameURI = myFactory
+				.createURI("http://www.opengis.net/gml/srs/epsg.xml#epsg:4326");
+		BNode gmlNode = myFactory.createBNode();
+		URI predicateLowerCorner = myFactory.createURI(namespaceGml,
+				"lowerCorner");
+		URI predicateUpperCorner = myFactory.createURI(namespaceGml,
+				"upperCorner");
+
+		Literal myObject1 = myFactory.createLiteral(prefLab, lang);
+		Literal myObject2 = myFactory.createLiteral(note, lang);
+
+		Literal lowerCorner = myFactory.createLiteral(west + " " + south);
+		Literal upperCorner = myFactory.createLiteral(east + " " + north);
+
+		mySubject.addProperty(rdfType, skosClass);
+		myGraph.add(mySubject, predicatePrefLabel, myObject1);
+		myGraph.add(mySubject, predicateScopeNote, myObject2);
+		myGraph.add(mySubject, predicateBoundedBy, gmlNode);
+
+		gmlNode.addProperty(rdfType, predicateEnvelope);
+		myGraph.add(gmlNode, predicateLowerCorner, lowerCorner);
+		myGraph.add(gmlNode, predicateUpperCorner, upperCorner);
+		myGraph.add(gmlNode, predicateSrsName, srsNameURI);
+
+		repository.addGraph(myGraph);
+
+	}
+
     /**
      * Remove keyword from thesaurus.
      * 
@@ -321,12 +327,12 @@ public class Thesaurus {
      * @throws IOException
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
+    public void removeElement(KeywordBean keyword) throws MalformedQueryException,
             QueryEvaluationException, IOException, AccessDeniedException {
         String namespace = keyword.getNameSpaceCode();
         String code = keyword.getRelativeCode();
 
-        return removeElement(namespace, code);
+        removeElement(namespace, code);
     }
 
     /**
@@ -336,7 +342,7 @@ public class Thesaurus {
      * @param code
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
+    public void removeElement(String namespace, String code) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(namespace, code);
@@ -349,141 +355,167 @@ public class Thesaurus {
             }
         }
         myGraph.remove(subject, null, null);
-        return this;
     }
 
-    private String toiso639_1_Lang(String lang) {
-         String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(Geonet.DEFAULT_LANGUAGE, Geonet.DEFAULT_LANGUAGE.substring(2));
-        return getIsoLanguageMapper().iso639_2_to_iso639_1(lang, defaultCode);
-     }
+    /**
+     * TODO javadoc.
+     *
+     * @param namespace
+     * @param id
+     * @param prefLab
+     * @param note
+     * @param lang
+     * @return
+     * @throws IOException
+     * @throws MalformedQueryException
+     * @throws QueryEvaluationException
+     * @throws AccessDeniedException
+     * @throws GraphException
+     */
+	public URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
+            MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
 
-	/**
-	 * Update the keyword.  If replaceLanguages is true all of the old data will be removed and the new data in the keyword will replace it.
-	 * 
-	 * @param keyword the bean with the updated information
-	 * @param replace If true all of the old data will be removed and the new data in the keyword will replace it.  If false only the data in the
-	 * keyword will be updated.  This means only notes and labels that are in the keyword will be updated (for those languages) and the coordinates
-	 * will only be updated if they are non-empty strings.
-	 * @return 
-	 * 
-	 * @throws AccessDeniedException
-	 * @throws IOException
-	 * @throws MalformedQueryException
-	 * @throws QueryEvaluationException
-	 * @throws GraphException
-	 */
-	public URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
-	        MalformedQueryException, QueryEvaluationException, GraphException {
-	    
-        // Get thesaurus graph
-        Graph myGraph = repository.getGraph();      
-        
-        // Set namespace skos and predicates 
-        ValueFactory myFactory = myGraph.getValueFactory();
-        String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-        URI predicatePrefLabel = myFactory .createURI(namespaceSkos, "prefLabel");
-        URI predicateScopeNote = myFactory.createURI(namespaceSkos, "scopeNote");
+	    lang = toiso639_1_Lang(lang);
 
-        // Get subject (URI)
-        URI subject = myFactory.createURI(keyword.getNameSpaceCode(),keyword.getRelativeCode());
+		// Get thesaurus graph
+		Graph myGraph = repository.getGraph();		
+		
+		// Set namespace skos and predicates 
+		ValueFactory myFactory = myGraph.getValueFactory();
+		String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
+		URI predicatePrefLabel = myFactory
+				.createURI(namespaceSkos, "prefLabel");
+		URI predicateScopeNote = myFactory
+				.createURI(namespaceSkos, "scopeNote");
 
-        // Remove old labels
-        StatementIterator iter = myGraph.getStatements(subject, predicatePrefLabel, null);
-        removeMatchingLiterals(replace, myGraph, iter, keyword.getValues().keySet());
-        
-        // remove old scopeNote
-        iter = myGraph.getStatements(subject, predicateScopeNote, null);
-        removeMatchingLiterals(replace, myGraph, iter, keyword.getDefinitions().keySet());
+		// Get subject (URI)
+		URI subject = myFactory.createURI(namespace,id);
 
-        // add updated Labels
-        Set<Entry<String, String>> values = keyword.getValues().entrySet();
-        for (Entry<String, String> entry : values) {
-            String language = toiso639_1_Lang(entry.getKey());
-            Value valueObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(subject, predicatePrefLabel, valueObj );
-            
-        }
-        // add updated Definitions/Notes
-        Set<Entry<String, String>> definitions = keyword.getDefinitions().entrySet();
-        for (Entry<String, String> entry : definitions) {
-            String language = toiso639_1_Lang(entry.getKey());
-            Value definitionObj = myFactory.createLiteral(entry.getValue(), language);
-            myGraph.add(subject, predicateScopeNote, definitionObj );
-            
-        }
+		// Remove old one
+		StatementIterator iter = myGraph.getStatements(subject,
+				predicatePrefLabel, null);
+		while (iter.hasNext()) {
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof Literal) {
+				Literal litt = (Literal) st.get().getObject();
+				if (litt.getLanguage() != null
+						&& litt.getLanguage().equals(lang)) {
+					// remove
+					myGraph.remove(st.get());
+					break;
+				}
+			}
+		}
+		// Supp de scopeNote
+		iter = myGraph.getStatements(subject, predicateScopeNote, null);
+		while (iter.hasNext()) {
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof Literal) {
+				Literal litt = (Literal) st.get().getObject();
+				if (litt.getLanguage() != null
+						&& litt.getLanguage().equals(lang)) {
+					// Remove
+					myGraph.remove(st.get());
+					break;
+				}
+			}
+		}
 
-	    // update bbox
-        if(replace || !(keyword.getCoordEast() + keyword.getCoordNorth() + keyword.getCoordWest() + keyword.getCoordSouth()).trim().isEmpty()) {
-    	    String namespaceGml = "http://www.opengis.net/gml#";
-    	    URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
-    	    URI predicateLowerCorner = myFactory.createURI(namespaceGml, "lowerCorner");
-    	    URI predicateUpperCorner = myFactory.createURI(namespaceGml, "upperCorner");
-    	    
-    	    BNode subjectGml = null;
-    	    iter = myGraph.getStatements(subject, predicateBoundedBy, null);
-    	    while (iter.hasNext()) {
-    	        AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-    	        if (st.get().getObject() instanceof BNode) {
-    	            subjectGml = (BNode) st.get().getObject();
-    	        }
-    	    }
-    	    if (subjectGml != null) {
-    	        // lowerCorner
-    	        iter = myGraph.getStatements(subjectGml, predicateLowerCorner, null);
-    	        while (true) {
-    	            if (!(iter.hasNext())) {
-    	                break;
-    	            }
-    	            AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-    	            myGraph.remove(st.get());
-    	            break;
-    	        }
-    	        // upperCorner
-    	        iter = myGraph.getStatements(subjectGml, predicateUpperCorner, null);
-    	        while (true) {
-    	            if (!(iter.hasNext())) {
-    	                break;
-    	            }
-    	            AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
-    	            myGraph.remove(st.get());
-    	            break;
-    	        }
-    	        // create the new statements
-    	        Literal lowerCorner = myFactory.createLiteral(keyword.getCoordWest() + " " + keyword.getCoordSouth());
-    	        Literal upperCorner = myFactory.createLiteral(keyword.getCoordEast() + " " + keyword.getCoordNorth());
-    	        
-    	        // Add the new statements
-    	        myGraph.add(subjectGml, predicateLowerCorner, lowerCorner);
-    	        myGraph.add(subjectGml, predicateUpperCorner, upperCorner);
-	        }
-	    }
-        
-        return subject;
+		Literal litPrefLab = myFactory.createLiteral(prefLab, lang);
+		Literal litNote = myFactory.createLiteral(note, lang);
+
+		myGraph.add(subject, predicatePrefLabel, litPrefLab);
+		myGraph.add(subject, predicateScopeNote, litNote);
+
+		return subject;
 	}
-
-
-    private void removeMatchingLiterals(boolean replace, Graph myGraph, StatementIterator iter, Set<String> valueLanguages) {
-        try {
-            ArrayList<Statement> toRemove = new ArrayList<Statement>();
-            while (iter.hasNext()) {
-                Statement st = iter.next();
-                if (st.getObject() instanceof Literal) {
-                    Literal litt = (Literal) st.getObject();
-                    String lang = getIsoLanguageMapper().iso639_1_to_iso639_2(litt.getLanguage(), Geonet.DEFAULT_LANGUAGE);
-                    if (replace || valueLanguages.contains(lang)) {
-                        // remove
-                        toRemove.add(st);
-                    }
-                }
+   private String toiso639_1_Lang(String lang) {
+        if (lang != null && lang.length() > 2) {
+            try {
+                lang = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(lang);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-            
-            for (Statement statement : toRemove) {
-                myGraph.remove(statement);
-            }
-        } finally {
-            iter.close();
         }
+        return lang;
     }
+
+    /**
+     * TODO javadoc.
+     *
+     * @param namespace
+     * @param id
+     * @param prefLab
+     * @param note
+     * @param east
+     * @param west
+     * @param south
+     * @param north
+     * @param lang
+     * @throws AccessDeniedException
+     * @throws IOException
+     * @throws MalformedQueryException
+     * @throws QueryEvaluationException
+     * @throws GraphException
+     */
+	public void updateElement(String namespace, String id, String prefLab, String note, String east, String west,
+                              String south, String north, String lang) throws AccessDeniedException, IOException,
+            MalformedQueryException, QueryEvaluationException, GraphException {
+
+		// update label and definition
+		URI subject = updateElement(namespace, id, prefLab, note, lang);
+
+		// update bbox
+
+		Graph myGraph = repository.getGraph();
+
+		ValueFactory myFactory = myGraph.getValueFactory();
+		String namespaceGml = "http://www.opengis.net/gml#";
+		URI predicateBoundedBy = myFactory.createURI(namespaceGml, "BoundedBy");
+		URI predicateLowerCorner = myFactory.createURI(namespaceGml,
+				"lowerCorner");
+		URI predicateUpperCorner = myFactory.createURI(namespaceGml,
+				"upperCorner");
+
+		BNode subjectGml = null;
+		StatementIterator iter = myGraph.getStatements(subject,
+				predicateBoundedBy, null);
+		while (iter.hasNext()) {
+			AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+			if (st.get().getObject() instanceof BNode) {
+				subjectGml = (BNode) st.get().getObject();
+			}
+		}
+		if (subjectGml != null) {
+			// lowerCorner
+			iter = myGraph.getStatements(subjectGml, predicateLowerCorner, null);
+			while (true) {
+                if (!(iter.hasNext())) {
+                    break;
+                }
+                AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+				myGraph.remove(st.get());
+				break;
+			}
+			// upperCorner
+			iter = myGraph.getStatements(subjectGml, predicateUpperCorner, null);
+			while (true) {
+                if (!(iter.hasNext())) {
+                    break;
+                }
+                AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
+				myGraph.remove(st.get());
+				break;
+			}
+			// Preparation des nouveaux statements
+			Literal lowerCorner = myFactory.createLiteral(west + " " + south);
+			Literal upperCorner = myFactory.createLiteral(east + " " + north);
+
+			// ajout des nouveaux statements
+			myGraph.add(subjectGml, predicateLowerCorner, lowerCorner);
+			myGraph.add(subjectGml, predicateUpperCorner, upperCorner);
+		}
+	}
 
     /**
      * TODO javadoc.
@@ -498,7 +530,7 @@ public class Thesaurus {
 		Graph myGraph = repository.getGraph();
 		ValueFactory myFactory = myGraph.getValueFactory();		
 		URI obj = myFactory.createURI(namespace,code);
-		Collection<?> statementsCollection = myGraph.getStatementCollection(obj,null,null);
+		Collection statementsCollection = myGraph.getStatementCollection(obj,null,null);
 		if (statementsCollection!=null && statementsCollection.size()>0){
 			res = false;
 		}
@@ -508,9 +540,6 @@ public class Thesaurus {
 		}				
 		return res;
 	}
-    public Thesaurus updateCode(KeywordBean bean, String newcode) throws AccessDeniedException, IOException {
-        return updateCode(bean.getNameSpaceCode(), bean.getRelativeCode(), newcode);
-    }
 
     /**
      * TODO javadoc.
@@ -521,10 +550,12 @@ public class Thesaurus {
      * @throws AccessDeniedException
      * @throws IOException
      */
-	public Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+	public void updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
 		Graph myGraph = repository.getGraph();
+		//Graph myTmpGraph = new org.openrdf.model.impl.GraphImpl();
 		
 		ValueFactory myFactory = myGraph.getValueFactory();
+		//ValueFactory myTmpFactory = myTmpGraph.getValueFactory();
 		
 		URI oldobj = myFactory.createURI(namespace,oldcode);
 		URI newobj = myFactory.createURI(namespace,newcode);
@@ -540,18 +571,17 @@ public class Thesaurus {
 			myGraph.add(st.getSubject(), st.getPredicate(), newobj);
 		}
 		myGraph.remove(oldobj,null,null);
-		myGraph.remove(null,null,oldobj);
-		return this;
+		myGraph.remove(null,null,oldobj);		
+		//repository.addGraph(myTmpGraph);
 	}
 
     /**
      * Retrieves the thesaurus title from rdf file.
      *
      * Used to set the thesaurusName and thesaurusDate for keywords
-     * @param ignoreMissingError 
      *
      */
-    private void retrieveThesaurusTitle(File thesaurusFile, String defaultTitle, boolean ignoreMissingError) {
+    private void retrieveThesaurusTitle(File thesaurusFile, String defaultTitle) {
         try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
@@ -583,8 +613,7 @@ public class Thesaurus {
             }
 
         } catch (Exception ex) {
-            if(!ignoreMissingError)
-                Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info: " + ex.getMessage());
+            Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info: " + ex.getMessage());
         }
     }
 
@@ -643,97 +672,5 @@ public class Thesaurus {
 				repository.shutDown();
 			}
 		}
-
-        public IsoLanguagesMapper getIsoLanguageMapper() {
-            return isoLanguageMapper == null? IsoLanguagesMapper.getInstance() : isoLanguageMapper;
-        }
-
-        /**
-         * Adds a relation between two keywords.  Both directions in relation will be added   
-         * 
-         * @param subject the keyword that is related to the other keyword
-         * @param related the relation between the two keywords
-         * @param relatedSubject
-         */
-        public void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
-        MalformedQueryException, QueryEvaluationException, GraphException {
-            
-            Graph myGraph = repository.getGraph();      
-            
-             // Set namespace skos and predicates 
-             ValueFactory myFactory = myGraph.getValueFactory();
-             String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
-             URI relationURI = myFactory .createURI(namespaceSkos, related.name);
-             URI opposteRelationURI = myFactory .createURI(namespaceSkos, related.opposite().name);
-             URI subjectURI = myFactory.createURI(subject);
-             URI relatedSubjectURI = myFactory.createURI(relatedSubject);
-
-             myGraph.add(subjectURI, relationURI, relatedSubjectURI);
-             myGraph.add(relatedSubjectURI, opposteRelationURI, subjectURI);
-        }
-
-        // ------------------------------- Deprecated methods -----------------------------
-        /**
-         * @deprecated since 2.9.0.  Use {@link #add(KeywordBean)}
-         */
-        URI addElement(String code, String prefLab, String note, String lang) throws GraphException, IOException,
-                AccessDeniedException {
-
-            KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setCode(code)
-                .setValue(prefLab, lang)
-                .setDefinition(note, lang);
-            
-            return addElement(bean);
-        }
-
-        /**
-         * @deprecated since 2.9.0 use {@link #add(KeywordBean)}
-         */
-        URI addElement(String code, String prefLab, String note, String east, String west, String south,
-                               String north, String lang) throws IOException, AccessDeniedException, GraphException {
-            
-            return addElement(new KeywordBean(getIsoLanguageMapper())
-                        .setCode(code)
-                        .setValue(prefLab, lang)
-                        .setDefinition(note, lang)
-                        .setCoordEast(east)
-                        .setCoordNorth(north)
-                        .setCoordSouth(south)
-                        .setCoordWest(west));
-        }
-
-
-        /**
-         * @deprecated since 2.9.0 use {@link #updateElement(KeywordBean)}
-         */
-        URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
-                MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
-            KeywordBean keyword = new KeywordBean(getIsoLanguageMapper())
-                        .setNamespaceCode(namespace)
-                        .setRelativeCode(id)
-                        .setValue(prefLab, lang)
-                        .setDefinition(note, lang);
-            return updateElement(keyword, false);
-        }
-        /**
-         * @deprecated Since 2.9.0 use {@link #updateElement(KeywordBean)}
-         */
-        URI updateElement(String namespace, String id, String prefLab, String note, String east, String west,
-                                  String south, String north, String lang) throws AccessDeniedException, IOException,
-                MalformedQueryException, QueryEvaluationException, GraphException {
-
-            KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setNamespaceCode(namespace)
-                .setRelativeCode(id)
-                .setValue(prefLab, lang)
-                .setDefinition(note, lang)
-                .setCoordEast(east)
-                .setCoordNorth(north)
-                .setCoordSouth(south)
-                .setCoordWest(west);
-            
-            return updateElement(bean, true);
-        }
 
 }

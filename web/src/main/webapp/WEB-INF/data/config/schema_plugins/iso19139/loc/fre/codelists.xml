@@ -220,7 +220,6 @@
 			<label>Auteur</label>
 			<description>Organisme  ou personne qui est auteur. Acteur qui dispose des droits moraux relatifs à la ressource</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>editor</code>
 			<label>Editeur</label>
@@ -230,7 +229,7 @@
 			<code>partner</code>
 			<label>Partenaire</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
@@ -994,12 +993,11 @@
 			<label>Inconnue</label>
 			<description>Mise à jour inconnue</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>userDefined</code>
 			<label>Fréquence personnalisée</label>
 			<description>Dans ce cas l'attribut définissant une fréquence personnalisée doit être utilisée</description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_MediumFormatCode">
@@ -1149,7 +1147,6 @@
 			<label>Papier</label>
 			<description>Document papier</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 			<entry>
 			<code>zip100</code>
 			<label>ZIP 100</label>
@@ -1175,7 +1172,7 @@
 			<code>other</code>
 			<label>Autre</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_ObligationCode">
@@ -1424,7 +1421,6 @@
 			<label>Tuile</label>
 			<description>Tuile</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>project</code>
 			<label>Projet</label>
@@ -1439,7 +1435,7 @@
 			<code>publication</code>
 			<label>Publication</label>
 			<description>Ce sont des produits finis tels que les ouvrages, brochures, articles, rapports, matériel audiovisuel...</description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
@@ -1478,12 +1474,11 @@
 			<label>Vidéo</label>
 			<description>Enregistrement vidéo</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>paperMap</code>
 			<label>Carte papier</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">

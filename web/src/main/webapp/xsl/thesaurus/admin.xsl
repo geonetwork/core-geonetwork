@@ -22,44 +22,67 @@
   <xsl:template mode="script" match="/" priority="2">
 
     <script type="text/javascript" src="{$widgetPath}/js/ext/adapter/ext/ext-base.js"/>
-    <script type="text/javascript" src="{$widgetPath}/js/ext/ext-all-debug.js"/>
-    <script type="text/javascript" src="{$widgetPath}/js/proj4js-compressed.js"/>
-    <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+	<xsl:choose>
+		<xsl:when test="/root/request/debug">
+		    <script type="text/javascript" src="{$widgetPath}/js/ext/ext-all-debug.js"/>
+		    <script type="text/javascript" src="{$widgetPath}/js/proj4js-compressed.js"/>
+		    <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+		    <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js"/>
+		</xsl:when>
+		<xsl:otherwise>
+		    <script type="text/javascript" src="{$widgetPath}/js/ext/ext-all.js"/>
+		    <script type="text/javascript" src="{$widgetPath}/js/proj4js-compressed.js"/>
+		    <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+		</xsl:otherwise>
+	</xsl:choose>
     <script type="text/javascript" language="JavaScript">
-      var catalogue;
-      
-      OpenLayers.ProxyHostURL = '../../proxy?url=';
-      
-      OpenLayers.ProxyHost = function(url){
-          /**
-           * Do not use proxy for local domain.
-           * This is required to keep the session activated.
-           */
-          if (url &amp;&amp; url.indexOf(window.location.host) != -1) {
-              return url;
-          } else {
-              return OpenLayers.ProxyHostURL + encodeURIComponent(url);
-          }
-      };
-      Ext.onReady(function(){
+    var catalogue;
+
+    OpenLayers.ProxyHostURL = '../../proxy?url=';
+    OpenLayers.ProxyHost = function(url){
+        /**
+         * Do not use proxy for local domain.
+         * This is required to keep the session activated.
+         */
+        if (url &amp;&amp; url.indexOf(window.location.host) != -1) {
+            return url;
+        } else {
+            return OpenLayers.ProxyHostURL + encodeURIComponent(url);
+        }
+    };
+    
+    Ext.onReady(function(){
         GeoNetwork.Util.setLang('<xsl:value-of select="/root/gui/language"/>');
         
         catalogue = new GeoNetwork.Catalogue({
-                      statusBarId : 'info',
-                      hostUrl: '../..',
-                      lang: '<xsl:value-of select="/root/gui/language"/>',
-                      mdOverlayedCmpId : 'resultsPanel'
-                  });
-        
-        
-        var manager = new GeoNetwork.admin.ThesaurusManagerPanel({
-              catalogue: catalogue,
-              renderTo: 'manager',
-              autoWidth : true,
-              layout : 'border',
-              height: 680
+            statusBarId : 'info',
+            hostUrl: '../..',
+            lang: '<xsl:value-of select="/root/gui/language"/>',
+            mdOverlayedCmpId : 'resultsPanel'
         });
-      })
+        
+        var getParams = document.URL.split("?");
+        
+        var options = {
+            catalogue: catalogue,
+            renderTo: 'manager',
+            height: 680
+        };
+        
+        if (getParams.length == 2) {
+            var params = Ext.urlDecode(getParams[1]);
+            Ext.apply(options, {
+                thesaurus: params.thesaurus, // this is the thesaurus key, as returned by xml.thesaurus.getList
+                keywordId: params.id // this is the keyword id, as returned by xml.search.keywords
+            });
+            if (typeof(params.lang) != 'undefined') {
+                Ext.apply(options, {
+                    lang: params.lang // this is the keyword lang 
+                });
+            }
+        }
+        var manager = new GeoNetwork.admin.ThesaurusManagerPanel(options);
+    });
     </script>
   </xsl:template>
 
@@ -88,11 +111,11 @@
     
     <table  width="100%" height="100%">
       <tr>
-            <td class="padded-content" width="{$indent}"/>
-            <td class="dots"/>
-            <td class="padded-content" style="height:25px;">
-              <h1><xsl:value-of select="/root/gui/strings/thesaurus/management"/></h1>
-            </td>
+        <td class="padded-content" width="{$indent}"/>
+        <td class="dots"/>
+        <td class="padded-content" style="height:25px;">
+          <h1><xsl:value-of select="/root/gui/strings/thesaurus/management"/></h1>
+        </td>
       </tr>
       <tr>
         <td class="padded-content" width="{$indent}"/>

@@ -1,0 +1,11 @@
+body {
+    width: 1024px !important;
+}
+
+.noprint {
+    display: none !important;
+}
+
+.doprint {
+    display: block !important;
+}

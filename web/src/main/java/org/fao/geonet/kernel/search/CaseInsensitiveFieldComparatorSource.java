@@ -63,7 +63,9 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
 
         @Override
         public void copy(int slot, int doc) {
-            values[slot] = currentReaderValues[doc];
+            if(currentReaderValues[doc] != null) {
+                values[slot] = currentReaderValues[doc].trim();
+            }
         }
 
         @Override

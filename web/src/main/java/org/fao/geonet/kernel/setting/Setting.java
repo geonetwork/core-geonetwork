@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.setting;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -113,6 +114,13 @@ class Setting
 	private Setting parent;
 
 	private List<Setting> children = new ArrayList<Setting>();
+
+	@Override
+	public String toString() {
+		return (name == null?"":name)+"-"+(value==null?"":value)+"\n\t"+children+"";
+	}
+	
+	
 }
 
 //=============================================================================

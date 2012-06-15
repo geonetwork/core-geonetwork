@@ -8,42 +8,41 @@
 	<server>Server</server>
 	<host>Host</host>
 	<port>Port</port>
-	<protocol>Protocol</protocol>
+	<protocol>Protokoll</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Netzwerk</network>
 	<netmask>Netzwerkmaske</netmask>
 	
-	<searchStats>Search Statistics</searchStats>
-
+	<searchStats>Suchstatistik</searchStats>
 	<threadedindexing>Multi-threaded Indexing</threadedindexing>
-	<maxthreads>Number of processing threads</maxthreads>
-	<recommendedThreads>Recommended</recommendedThreads>
-	<reasonForOne>Database not tested or doesn't support</reasonForOne>
-	<reasonForMore>From number of processors</reasonForMore>
+	<maxthreads>Anzahl der prozessierenden threads</maxthreads>
+	<recommendedThreads>Empfohlen</recommendedThreads>
+	<reasonForOne>Datenbank nicht getestet oder nicht unterstützt</reasonForOne>
+	<reasonForMore>Von der Anzahl Prozessoren</reasonForMore>
 
     <multilingual>Mehrsprachige Einstellungen</multilingual>
-    <autoDetectEnable>Aktivieren Sie automatische Erkennung Suchabfrage Sprache</autoDetectEnable>
-    <requestedlanguageonly>Suche nur in gewünschten Sprache</requestedlanguageonly>
-    <requestedlanguagesorted>Suchergebnisse in gewünschte Sprache auf der Oberseite sortiert</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorieren gewünschten Sprache auf der Suche</requestedlanguageignored>
+    <autoDetectEnable>Aktivieren Sie die automatische Erkennung der Such-Sprache</autoDetectEnable>
+    <requestedlanguageonly>Suche nur in der gewünschten Sprache</requestedlanguageonly>
+    <requestedlanguagesorted>Suchergebnisse in der gewünschte Sprache sortieren</requestedlanguagesorted>
+    <requestedlanguageignored>Ignorieren der gewünschten Sprache in der Suche</requestedlanguageignored>
 
-	<selectionmanager>Metadata Search Results</selectionmanager>
-	<maxrecords>Maximum selected records</maxrecords>
+	<selectionmanager>Suchresultate</selectionmanager>
+	<maxrecords>Maximum der ausgewählten Einträge</maxrecords>
 
 	<indexoptimizer>Lucene Index Optimizer</indexoptimizer>
-		<at>Run at</at>
-		<atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-		<interval>Will run again every</interval>
+		<at>Starten um</at>
+		<atSpec>( Stunde : Minute Z.B. 23:15 )</atSpec>
+		<interval>Startet immer wieder alle</interval>
 		<hourintervals>
-			<hour label="1 hour (not recommended)">1</hour>
-			<hour label="3 hours">3</hour>
-			<hour label="6 hours">6</hour>
-			<hour label="12 hours">12</hour>
-			<hour label="1 day">24</hour>
-			<hour label="2 days">48</hour>
-			<hour label="3 days">72</hour>
-			<hour label="4 days">96</hour>
+			<hour label="Stunden (nicht empfohlen)">1</hour>
+			<hour label="3 Stunden">3</hour>
+			<hour label="6 Stunden">6</hour>
+			<hour label="12 Stunde">12</hour>
+			<hour label="Tage">24</hour>
+			<hour label="2 Tage">48</hour>
+			<hour label="3 Tage">72</hour>
+			<hour label="4 Tage">96</hour>
 		</hourintervals>
 		<hours>
 			<hour label="0">0</hour>
@@ -82,26 +81,26 @@
 	<enable>Aktiv</enable>
 		
 	<oai>OAI Provider</oai>
-		<datesearch>Datesearch</datesearch>
+		<datesearch>Datumssuche</datesearch>
 		<datesearchopt>
 			<dsopt label="temporal extent">1</dsopt>
 			<dsopt label="modification date">2</dsopt>
 		</datesearchopt>
 	
 		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
+		<cachesize>Cache Grösse</cachesize>
 
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 
     <inspire>INSPIRE</inspire>
 	
 	<harvester>Harvesting</harvester>
-	<enableEditing>Allow editing on harvested records</enableEditing>
+	<enableEditing>Bearbeiten von geharvesteten Daten erlauben</enableEditing>
 	
 	<downloadservice>Data-For-Download Service</downloadservice>
-	<leave>Use metadata linkage as is - no changes to linkage</leave>
-	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
-	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
+	<leave>Metadaten Verlinkung nutzen - keine Änderungen am Link vornehmen</leave>
+	<simple>GeoNetwork "simple file download" Dienst nutzen (resources.get)</simple>
+	<withdisclaimer>GeoNetwork "disclaimer and constraints service" nutzen (file.disclaimer)</withdisclaimer>
 
 	<csw>CSW ISO Profil</csw>
 	<contactId>Kontakt</contactId>
@@ -109,7 +108,7 @@
 	<abstract>Zusammenfassung</abstract>
 	<fees>Gebühren</fees>
 	<accessConstraints>Zugangsbeschränkungen</accessConstraints>
-    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
+    <cswMetadataPublic>Eingefügte Metadaten sind öffentlich</cswMetadataPublic>
 
 	<clickablehyperlinks>Anklickbare Hyperlinks</clickablehyperlinks>
 
@@ -117,11 +116,11 @@
     <autofixing>Automatische Updates</autofixing>
 
 	<proxy>Proxy</proxy>
-	<use>Use</use>
+	<use>Verwenden</use>
 	<username>Benutzername</username>
 	
 	<feedback>Feedback</feedback>
-	<email>EMail</email>
+	<email>E-Mail</email>
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Port</smtpPort>
 		
@@ -130,10 +129,10 @@
 	<removedMetadata>Gelöschte Metadaten</removedMetadata>
 	<dir>Verzeichnis</dir>
 
-	<authentication>Authentication</authentication>
+	<authentication>Authentifizierung</authentication>
 	
-	<loginuses>Login uses</loginuses>
-	<otherlogins>Allow other users to login from</otherlogins>
+	<loginuses>Login nutzt</loginuses>
+	<otherlogins>Anderen Benutzern erlauben sich einzuloggen mit</otherlogins>
 
 	<geonetworkdb>GeoNetwork Authentifizierung</geonetworkdb>
 		
@@ -148,8 +147,8 @@
 	<userAttribs>Benutzerattribute</userAttribs>
 	<password>Passwort</password>
 	<profile>Profil</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
+    <group>Gruppe</group>
+    <defGroup>Default Gruppe</defGroup>
 
 	<shib>Shibboleth Authentifizierung</shib>
 	<path>Pfad</path>
@@ -159,20 +158,20 @@
 
     <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
 
-    <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
-    <metadataDefaultView>Default view</metadataDefaultView>
-    <metadataSimpleView>Simple view</metadataSimpleView>
-    <metadataIsoView>ISO view</metadataIsoView>
-    <metadataInspireView>INSPIRE view</metadataInspireView>
-    <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Advanced view</metadataAdvancedView>
+    <metadataViews>Metadaten Ansichten</metadataViews>
+    <metadataEnableSimpleView>Einfache Ansicht einschalten</metadataEnableSimpleView>
+    <metadataEnableIsoView>ISO Ansicht einschalten</metadataEnableIsoView>
+    <metadataEnableInspireView>INSPIRE Ansicht einschalten</metadataEnableInspireView>
+    <metadataEnableXmlView>XML Ansicht einschalten</metadataEnableXmlView>
+    <metadataDefaultView>Default Ansicht</metadataDefaultView>
+    <metadataSimpleView>Einfache Ansicht</metadataSimpleView>
+    <metadataIsoView>ISO Ansicht</metadataIsoView>
+    <metadataInspireView>INSPIRE Ansicht</metadataInspireView>
+    <metadataXmlView>XML Ansicht</metadataXmlView>
+    <metadataAdvancedView>Erweiterte Ansicht</metadataAdvancedView>
 	
-	<metadataPrivs>Metadata privileges</metadataPrivs>
-	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+	<metadataPrivs>Metadaten Privilegien</metadataPrivs>
+	<md.usergrouponly>Nur Privilegien der Gruppe des Benutzers definieren</md.usergrouponly>
 	<!-- Buttons -->
 	
 	<save>Speichern</save>
@@ -182,45 +181,45 @@
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
-			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
-			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
+			<cannotBeEmpty>Das Feld '{NAME}' darf nicht leer sein</cannotBeEmpty>
+			<invalidMinSize>Das Feld '{NAME}' muss mindestens {VALUE} Zeichen lang sein</invalidMinSize>
+			<invalidMaxSize>Das Feld '{NAME}' darf hoechstens {VALUE} Zeichen lang sein</invalidMaxSize>
 		</length>
 		
 		<integer>
-			<notInt>The field '{NAME}' must be an integer</notInt>
-			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
-			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
+			<notInt>Das Feld '{NAME}' muss ganzzahlig sein</notInt>
+			<invalidMinValue>Das Feld '{NAME}' muss &gt;= {VALUE} sein</invalidMinValue>
+			<invalidMaxValue>Das Feld '{NAME}' muss &lt;= {VALUE} sein</invalidMaxValue>
 		</integer>		
 		
 		<alphanum>
-			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
+			<notAlphaNumeric>Das Feld '{NAME}' muss alphanumerisch sein (mit Buchstabe beginnen)</notAlphaNumeric>
 		</alphanum>
 		
 		<hostname>
-			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
+			<notHostName>Das Feld '{NAME}' ist kein gueltiger host name</notHostName>
 		</hostname>
 		
 		<url>
-			<notURL>The field '{NAME}' is not a valid URL</notURL>
+			<notURL>Das Feld '{NAME}' ist kein gueltiger URL</notURL>
 		</url>
 		
 		<ipaddress>
-			<notIP>The field '{NAME}' is not a valid IP address</notIP>
+			<notIP>Das Feld '{NAME}' ist keine gueltige IP address</notIP>
 		</ipaddress>
 	</validator>
 	
 	<!-- display messages -->
 	
-	<cannotGet>Unable to get the system configuration</cannotGet>
-	<cannotSave>Unable to save the system configuration</cannotSave>
-	<saveOk>System configuration saved.</saveOk>
+	<cannotGet>Kann die Systemkonfiguration nicht anzeigen</cannotGet>
+	<cannotSave>Kann die Systemkonfiguration nicht speichern</cannotSave>
+	<saveOk>Systemkonfiguration gespeichert.</saveOk>
 	
 	<!-- tooltips -->
 	
 	<tips>
 		<tip id="site.name">
-			Used to identify the installation.
+			Wird gebraucht um die Installation zu identifizieren.
 		</tip>
 		
 		<!-- server -->
@@ -281,73 +280,73 @@
 		<!-- clickable hyperlinks -->
 		
 		<tip id="clickablehyperlinks.enable">
-			Falls gesetzt, werden GeoNetwork anklickbare Hyperlinks Anzeige in den Metadaten.
+			Wenn aktiviert, werden URLs in den Metadaten als anklickbare Hyperlinks angezeigt.
 		</tip>
 	
 		<!-- local rating -->
 		<tip id="localrating.enable">
-			Falls gesetzt, werden GeoNetwork Ihre Bewertung für Metadaten aus diesen Knoten zu berechnen nur (nicht unter anderem GeoNetwork Knoten verteilt).
+			Wenn aktiviert, wird GeoNetwork Ihre Bewertung nur für Metadaten in diesem Knoten berechnen. (Wird nicht auf andere GeoNetwork Knoten verteilt).
 		</tip>
 		
         <!-- automatic fixes -->
         <tip id="autofixing.enable">
-            Wenn aktiviert, GeoNetwork gilt automatisch bestimmte Korrekturen, wenn Sie Metadaten speichern.
+            Wenn aktiviert, nimmt GeoNetwork automatisch bestimmte Korrekturen vor, wenn Sie Metadaten speichern.
         </tip>
 
 		<!-- proxy -->
 		
 		<tip id="proxy.use">
-			If set, GeoNetwork will use the provided proxy parameters when accessing
-			remote nodes. For example, this is used during the harvesting.
+			Wenn aktiviert, wird GeoNetwork die angegebenen Proxy-Einstellungen nutzen, um
+			entfernte Knoten anzusprechen. Dies ist z.B. beim Harvesting der Fall.
 		</tip>
 		
 		<!-- feedback -->
 		
 		<tip id="feedback.email">
-			This is the administrator's email address used to send feedback.
+			Dies ist die E-Mail Adresse des Administrators, sie wird genutzt um Feedbacks zu versenden.
 		</tip>
 		
 		<tip id="feedback.mail.host">
-			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
-			to GeoNetwork's users when a resource is downloaded.
+			Die SMTP Parameter <b>host</b> and <b>port</b> werden genutzt um E-Mails an
+			GeoNetwork-Benutzer zu senden, wenn eine Ressource heruntergeladen wird.
 		</tip>
 		
 		<!-- removed metadata -->
 		
 		<tip id="removedMd.dir">
-			Directory used to store metadata (in MEF format) when they are deleted.
+			Verzeichnis, worin die gelöschten Metadaten abgelegt werden (im MEF-Format).
 		</tip>
 		
 		<!-- userSelfRegistration -->
 		
 		<tip id="userSelfRegistration.enable">
-			If set, users will be able to register themselves. Self-registered
-			users are assigned to the GUEST group. An email is sent to the
-			user with their username and password enclosed using the feedback
-			email information.
+			Wenn aktiviert, können sich Benutzer selber registrieren. Diese
+			Benutzer werden der "Gast"-Gruppe zugeordnet. Eine E-Mail mit
+			Benutzername und Password wird von der Administratoren-Adresse aus
+			versendet.
 			<br/>
 		</tip>
 
 		<tip id="downloadservice.simple">
-				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork with no further user input - it is the simplest download interface
+				Wenn das Metadaten-Protokoll "Daten zum download" ist, erlaubt es dieser Dienst, Daten von GeoNetwork herunterzuladen ohne weiteren user Input - das ist die einfachste Download-Oberfläche.
 		</tip>
 		<tip id="downloadservice.withdisclaimer">
-				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork after they have agreed to accept any metadata constraints/generic disclaimer. The resource is bundled into a zip archive with an html description of the metadata constraints and a snapshot of the metadata record (as a MEF).
+				Wenn das Metadaten-Protokoll "Daten zum download" ist, erlaubt es dieser Dienst, Daten von GeoNetwork herunterzuladen, nachdem Disclamer und Einschränkungen akzeptiert worden sind. Die Ressource (Daten) werden zusammen mit den Metadaten (als MEF) und einer HTML Beschreibung der Einschränkungen in eine Zip-Datei gebunden.
 		</tip>
 		<tip id="downloadservice.leave">
-				Selecting this option means that GeoNetwork will not handle file downloads.
+				Wird diese Option gewählt, wird GeoNetwork keine Datei-Downloads verwalten.
 		</tip>
 
 		<!-- xlinkResolver -->
 
 		<tip id="xlinkResolver.enable">
-			If set, XLinks to metadata fragments in records will be resolved.
+			Wenn aktiviert, werden XLinks zu Fragmenten in Metadaten aufgelöst.
 		</tip>
 
 		<!-- searchStats -->
 
 		<tip id="searchStats.enable">
-			If set, Statistics on searches will be collected and stored in the database.
+			Wenn aktiviert, wird eine Suchstatistik erhoben und in der Datenbank gespeichert.
 		</tip>
 
         <!-- multilingual settings -->
@@ -365,38 +364,37 @@
         </tip>
 
     </tips>
-	<data.dataDir>Data directory:</data.dataDir>
-	<data.resources>Resources directory:</data.resources>
-	<data.configDir>Configuration directory:</data.configDir>
-	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
-	<data.subversionPath>Subversion directory:</data.subversionPath>
-	<data.codeListDir>Thesaurus directory:</data.codeListDir>
+	<data.dataDir>Datenverzeichnis:</data.dataDir>
+	<data.resources>Ressourcenverzeichnis:</data.resources>
+	<data.configDir>Verzeichnis konfigurieren:</data.configDir>
+	<data.schemaPluginsDir>Schema plugin Verzeichnis:</data.schemaPluginsDir>
+	<data.subversionPath>Subversion Verzeichnis:</data.subversionPath>
+	<data.codeListDir>Thesaurus Verzeichnis:</data.codeListDir>
 	<xslt.factory>XSLT factory:</xslt.factory>
 	<java.vm.name>JVM name:</java.vm.name>
 	<java.vm.vendor>JVM vendor:</java.vm.vendor>
 	<java.version>JVM version:</java.version>
-	<os.arch>System architecture:</os.arch>
-	<os.name>System name:</os.name>
-	<mem.total>Total memory:</mem.total>
-	<mem.free>Total free memory:</mem.free>
-	<index.size.lucene>Lucene index size (ko):</index.size.lucene>
-	<index.size>Total index size (ko):</index.size>
-	<index.path>Index directory:</index.path>
-	<index>Lucene index information</index>
-	<main>System information</main>
-	<catalogue>Catalogue information</catalogue>
-	<database>Database information</database>
-	<system>Catalogue configuration</system>
-	<siteId>Catalogue identifier:</siteId>
+	<os.arch>System Architektur:</os.arch>
+	<os.name>Systemname:</os.name>
+	<mem.total>Total Speicher:</mem.total>
+	<mem.free>Total freier Speicher:</mem.free>
+	<index.size.lucene>Lucene index Grösse (ko):</index.size.lucene>
+	<index.size>Total index Grösse (ko):</index.size>
+	<index.path>Indexverzeichnis:</index.path>
+	<index>Lucene index Information</index>
+	<main>Systeminformation</main>
+	<catalogue>Kataloginformation</catalogue>
+	<database>Datenbankinformation</database>
+	<system>Katalogkonfiguration</system>
+	<siteId>Katalog Identifikator:</siteId>
 	<version>Version:</version>
 	<subVersion>Sub-version:</subVersion>
-	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database URL:</db.url>	
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
-	<db.statserror>Database statistics:</db.statserror>
+	<index.lucene.config>Lucene-Konfiguration:</index.lucene.config>
+	<db.url>Databank URL:</db.url>	
+	<db.openattempt>Databank Status:</db.openattempt>	
+	<db.numactive>Databankverbindungen in Verwendung:</db.numactive>	
+	<db.numidle>Databankverbindungen verfügbar:</db.numidle>	
+	<db.maxactive>Maximale Anzahl Databankverbindungen:</db.maxactive>	
+	<db.statserror>Databankstatistik:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 </strings>
-

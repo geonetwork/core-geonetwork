@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -46,6 +47,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.geotools.data.DataStore;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.jdom.JDOMXPath;
@@ -73,8 +75,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 
    private SearchController _searchController;
 
-	public Transaction(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public Transaction(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(ds, summaryConfig, luceneConfig);
     }
 
 
@@ -162,7 +164,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		finally
 		{
             try {
-                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null);
+                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null, true, true);
             } catch (SQLException e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
@@ -261,7 +263,7 @@ public class Transaction extends AbstractOperation implements CatalogService
         }
 
 
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, true, context);
 		
 		fileIds.add( uuid );
 		
@@ -327,7 +329,7 @@ public class Transaction extends AbstractOperation implements CatalogService
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, false);
+            dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, false, true);
 
             dbms.commit();
             toIndex.add(id);
@@ -425,7 +427,7 @@ public class Transaction extends AbstractOperation implements CatalogService
                     boolean ufo = false;
                     boolean index = false;
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, dbms, id, metadata, validate, ufo, index, language, changeDate, false);
+                    dataMan.updateMetadata(context, dbms, id, metadata, validate, ufo, index, language, changeDate, false, true);
 
                     updatedMd.add(id);
 

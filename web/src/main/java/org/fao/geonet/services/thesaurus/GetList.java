@@ -24,14 +24,15 @@
 package org.fao.geonet.services.thesaurus;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Map;
+import java.util.Enumeration;
+import java.util.concurrent.ConcurrentHashMap;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -66,7 +67,7 @@ public class GetList implements Service {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		ThesaurusManager th = gc.getThesaurusManager();
-		Map<String, Thesaurus> thTable = th.getThesauriMap();
+		ConcurrentHashMap<String, Thesaurus> thTable = th.getThesauriMap();
 		
 		response.addContent(buildResultfromThTable(thTable, dbms));
 		
@@ -79,14 +80,14 @@ public class GetList implements Service {
 	 * @return {@link Element}
 	 * @throws SQLException 
 	 */
-	private Element buildResultfromThTable(Map<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
+	private Element buildResultfromThTable(ConcurrentHashMap<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
 		
 		Element elRoot = new Element("thesauri");
 		
-		Collection<Thesaurus> e = thTable.values();
-		
-		for (Thesaurus currentTh : e) {
-	        Element elLoop = new Element("thesaurus");
+		Enumeration<Thesaurus> e = thTable.elements();
+		while (e.hasMoreElements()) {
+		        Thesaurus currentTh = e.nextElement();
+		        Element elLoop = new Element("thesaurus");
 			
 			Element elKey = new Element("key");
 			String key = currentTh.getKey();

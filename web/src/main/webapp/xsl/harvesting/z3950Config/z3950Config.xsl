@@ -95,59 +95,18 @@
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/clearConfig"/></td>
 				<td class="padded"><input id="z3950Config.clearConfig" type="checkbox" value=""/></td>
 			</tr>
-		<xsl:call-template name="schedule-widget-notable">
-			<xsl:with-param name="type">z3950Config</xsl:with-param>
-		</xsl:call-template>
-<!-- 
 
-	This is wierd.  select containing select and tr elements?  It it a merge error or something?  I leave this for someone that might know better 
-	what is going on here.
-            <tr>
-                <td class="padded"><xsl:value-of select="/root/gui/harvesting/at"/></td>
-                <td class="padded">
-                    <select id="z3950Config.atHour" class="content" >
-                        <xsl:apply-templates mode="selectoptions" select="/root/gui/harvesting/hours/hour"/>
-                        <tr>
-                            <td class="padded"><xsl:value-of select="/root/gui/harvesting/at"/></td>
-                            <td class="padded">
-                                <select id="z3950.atHour" class="content" >
-                                    <xsl:apply-templates mode="selectoptions" select="/root/gui/harvesting/hours/hour"/>
-                                </select> :
-                                <select id="z3950.atMin" class="content" >
-                                    <xsl:apply-templates mode="selectoptions" select="/root/gui/harvesting/minutes/minute"/>
-                                </select>
-                                &#160;
-                                <xsl:value-of select="/root/gui/harvesting/atSpec"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="padded"><xsl:value-of select="/root/gui/harvesting/interval"/></td>
-                            <td class="padded">
-                                <select id="z3950.atIntervalHours" class="content" >
-                                    <xsl:apply-templates mode="selectoptions" select="/root/gui/harvesting/hourintervals/hour"/>
-                                </select>
-                                &#160;
-                                <xsl:value-of select="/root/gui/harvesting/intervalSpec"/>
-                            </td>
-                        </tr></select> :
-                    <select id="z3950Config.atMin" class="content" >
-                        <xsl:apply-templates mode="selectoptions" select="/root/gui/harvesting/minutes/minute"/>
-                    </select>
-                    &#160;
-                    <xsl:value-of select="/root/gui/harvesting/atSpec"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="padded"><xsl:value-of select="/root/gui/harvesting/interval"/></td>
-                <td class="padded">
-                    <select id="z3950Config.atIntervalHours" class="content" >
-                        <xsl:apply-templates mode="selectoptions" select="/root/gui/harvesting/hourintervals/hour"/>
-                    </select>
-                    &#160;
-                    <xsl:value-of select="/root/gui/harvesting/intervalSpec"/>
-                </td>
-            </tr>
- -->
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="z3950Config.every.days"  class="content" type="text" size="2"/> :
+					<input id="z3950Config.every.hours" class="content" type="text" size="2"/> :
+					<input id="z3950Config.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
 				<td class="padded"><input id="z3950Config.oneRunOnly" type="checkbox" value=""/></td>
@@ -215,16 +174,5 @@
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
-
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-        <option>
-            <xsl:attribute name="value">
-                <xsl:value-of select="."/>
-            </xsl:attribute>
-            <xsl:value-of select="@label"/>
-        </option>
-    </xsl:template>
-
-    <!-- ============================================================================================= -->
 
 </xsl:stylesheet>

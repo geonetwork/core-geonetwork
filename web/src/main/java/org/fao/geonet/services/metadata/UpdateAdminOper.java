@@ -23,22 +23,25 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.List;
+import java.util.StringTokenizer;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.UnpublishInvalidMetadataJob;
+import org.fao.geonet.kernel.UnpublishInvalidMetadataJob.Validity;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
-
-import java.util.List;
-import java.util.StringTokenizer;
 
 //=============================================================================
 
@@ -94,13 +97,17 @@ public class UpdateAdminOper implements Service
 		if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
 			skip = true;
 
+
+		final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
+        boolean publishedAgain = false;
+		
 		dm.deleteMetadataOper(dbms, id, skip);
 
 		//-----------------------------------------------------------------------
 		//--- set new ones
 
 		List list = params.getChildren();
-
+		
 		for(int i=0; i<list.size(); i++)
 		{
 			Element el = (Element) list.get(i);
@@ -114,12 +121,22 @@ public class UpdateAdminOper implements Service
 				String groupId = st.nextToken();
 				String operId  = st.nextToken();
 
+				if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
+				    publishedAgain = true;
+				}
+				
 				dm.setOperation(context, dbms, id, groupId, operId);
 			}
 		}
 
+		if(published && !publishedAgain) {
+	          new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
+		} else if (!published && publishedAgain) {
+            new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
+		}
+		
 		//--- index metadata
-        dm.indexInThreadPool(context,id, dbms);
+        dm.indexInThreadPool(context, id, dbms, false);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

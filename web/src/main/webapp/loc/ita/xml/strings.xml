@@ -1,5 +1,306 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<!-- GEOCAT Strings -->
+	<ContactSelectionTitle js="true">Contact Selection</ContactSelectionTitle>
+	<FormatSelectionTitle js="true">Format Selection</FormatSelectionTitle>
+	<ExtentSelectionTitle js="true">Extent Selection</ExtentSelectionTitle>
+	<refine.titles js="true">Title</refine.titles>
+	<refine.keyword js="true">Keyword(s)</refine.keyword>
+	<refine.resolution js="true">Spatial Resolution</refine.resolution>
+	<refine.category js="true">Category</refine.category>
+	<refine.spatialRepresentation js="true">Spatial Representation</refine.spatialRepresentation>
+	<refine.organisationName js="true">Organisation</refine.organisationName>
+	<refine.serviceType js="true">Service Type</refine.serviceType>
+	<refine.type js="true">Type</refine.type>
+	<skipPrivilegesImport>Skip Privileges Import</skipPrivilegesImport>
+	<unpublishReport>Unpublish CSV Report</unpublishReport>
+	<unpublishReportDes>Download the CSV Report of the metadata publish/unpublishing for the last weeks</unpublishReportDes>
+	<unpublish_invalid_metadata_desc>Perform validation of all local metadata and unpublish those that are found to be invalid</unpublish_invalid_metadata_desc>
+	<duplicate>Duplicate</duplicate>
+    <geocatNext js="true">Next</geocatNext>
+    <geocatPrevious js="true">Previous</geocatPrevious>
+    <nav>
+        <home>Homepage</home>
+        <overview>Overview</overview>
+        <news>News</news>
+        <metasearch>Discovery service</metasearch>
+        <metainput>Metadata management</metainput>
+        <doc>Documentation</doc>
+        <about>About geocat.ch</about>
+    </nav>
+    <replaceSharedObjects js="true">Validate shared objects</replaceSharedObjects>
+    <spatialRepresentation js="true">Spatial Representation</spatialRepresentation>
+    <selectedElementsAction js="true">Selected elements action</selectedElementsAction>
+    <resolution js="true">Spatial Resolution</resolution>
+    <mainpageTitle js="true">Search for geodata and geoservices</mainpageTitle>
+    <refinements js="true">Refinements</refinements>
+    <refineSearch.title js="true">Refine Search</refineSearch.title>
+	<keyword js="true">Keyword(s)</keyword>
+	<theme js="true">ISO topic category</theme>
+	<contact js="true">Contact</contact>
+	<rtitle js="true">Title</rtitle>
+	<organisationName js="true">Organisation</organisationName>
+	<kantone js="true">Canton(s)</kantone>
+	<theme js="true">Topic(s)</theme>
+	<formatTxt js="true">Format</formatTxt>
+	<toEdit js="true">To edit</toEdit>
+	<toPublish js="true">To publish</toPublish>
+	<bbox js="true">BBOX</bbox>
+	<wherenone js="true">Everywhere</wherenone>
+	<adminUnit js="true">Administrative unit</adminUnit>
+	<drawOnMap js="true">Draw on map</drawOnMap>
+	<startNewPolygon js="true">Delete or Start new polygon</startNewPolygon>
+	<startNewPolygonHelp js="true">Start new polygon (Doubleclick to finish)</startNewPolygonHelp>
+	<valid js="true">Valid</valid>
+	<yes js="true">Yes</yes>
+	<no js="true">No</no>
+	<intersectGeo js="true">Intersects</intersectGeo>
+	<withinGeo js="true">Completely within or equal</withinGeo>
+	<containsGeo js="true">Contains at least</containsGeo>
+	<layerTree js="true">Layer tree</layerTree>
+	<nothingFound js="true">Nothing found</nothingFound>
+	<source js="true">Source?</source>
+	<catalog js="true">Catalogue(s)</catalog>
+	<dataType id="dataset">Data</dataType>
+	<dataType id="basicgeodata">Basic Geodata</dataType>
+	<dataType id="basicgeodata-federal"> + Basic Geodata - federal</dataType>
+	<dataType id="basicgeodata-cantonal"> + Basic Geodata - cantonal</dataType>
+	<dataType id="basicgeodata-communal"> + Basic Geodata - communal</dataType>
+	<dataType id="basicgeodata-other"> + Basic Geodata - other</dataType>
+	<dataType id="service">Services</dataType>
+	<dataType id="service-OGC:WMS"> + WMS Services</dataType>
+	<dataType id="service-OGC:WFS"> + WFS Services</dataType>
+ 	<extended js="true">Advanced</extended>
+    <hideAdvancedOptions js="true">Hide advanced options</hideAdvancedOptions>
+    <highlights js="true">Highlights</highlights>
+    <hitsPerPage js="true">Hits per page</hitsPerPage>
+    <hitsPerPageChoice value="10">10</hitsPerPageChoice>
+    <hitsPerPageChoice value="20">20</hitsPerPageChoice>
+    <hitsPerPageChoice value="50">50</hitsPerPageChoice>
+    <hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<rm>Romanche</rm>
+	<fra>Français</fra> <!-- Do not translate! -->
+    <deu>Deutsch</deu> <!-- Do not translate! -->
+	<metadata.expired>
+		<recipient>Email Recipient</recipient>
+		<numExpiredElements>Number of Expired Records</numExpiredElements>
+		<owner>Owner</owner>
+		<formTitle>Search for Expiring Metadata</formTitle>
+		<limit>Last Change Limit:</limit>
+		<email>Email Notification</email>
+		<unpublish>Unpublish</unpublish>
+		<email.desc>Send an email to authors of metadata that have not been
+			changed within the provided limit</email.desc>
+		<unpublish.desc>Unpublishes all metadata that have not been changed
+			within the provided limit</unpublish.desc>
+		<email.action>Email</email.action>
+		<unpublish.action>Unpublish</unpublish.action>
+		<unsentNotifications>Email not sent: missing author's contact
+			information</unsentNotifications>
+		<sentNotifications>Notification messages sent to author
+		</sentNotifications>
+		<unpublished>unpublished</unpublished>
+	</metadata.expired>
+
+	<monitoring>Monitoring report</monitoring>
+	<monitoringDes>Monitoring report on GeoNetwork services state
+	</monitoringDes>
+	<monitoring.service.db>Database connection</monitoring.service.db>
+	<monitoring.service.csw>CSW service</monitoring.service.csw>
+	<monitoring.service.csw.capabilities>Capabilities
+	</monitoring.service.csw.capabilities>
+	<monitoring.service.csw.getrecords>GetRecords
+	</monitoring.service.csw.getrecords>
+	<monitoring.service.print>Print service</monitoring.service.print>
+	<monitoring.service.index>Index service</monitoring.service.index>
+	<monitoring.url>Url</monitoring.url>
+	<monitoring.status>Status</monitoring.status>
+	<monitoring.error.code>Error code</monitoring.error.code>
+	<monitoring.error.description>Error description
+	</monitoring.error.description>
+	<monitoring.responsetime>Response time</monitoring.responsetime>
+	<monitoring.metadatarecords>Metadata records
+	</monitoring.metadatarecords>
+	<monitoring.connectionsuccess>Connection succesful
+	</monitoring.connectionsuccess>
+	<monitoring.connectionerror>Error</monitoring.connectionerror>
+	<monitoring.enabled>Enabled</monitoring.enabled>
+	<monitoring.disabled>Disabled</monitoring.disabled>
+	<monitoring.refresh>Refresh</monitoring.refresh>
+	<monitoring.indexing>Indexing</monitoring.indexing>
+	<monitoring.idle>Idle</monitoring.idle>
+	<monitoring.service.disk>Disk monitor</monitoring.service.disk>
+	<monitoring.freespace>Free space</monitoring.freespace>
+
+    <reject>Reject</reject>
+    <rejected>Rejected</rejected>
+    <replaceSharedObjects>Validate shared objects</replaceSharedObjects>
+    <format>
+           <management>Distribution formats management</management>
+           <manDes>Add/modify/delete and show distribution formats</manDes>
+    </format>
+    <formats>Formats</formats>
+    <extents>Extents</extents>
+    <deleted>Deleted</deleted>
+    <insufficient.privileges.import.replace>A metadata record exists that you cannot replace because of insufficient privileges</insufficient.privileges.import.replace>
+    <updateDatasetTitle>Update dataset</updateDatasetTitle>
+    <updateDatasetMsg>You have to check \'Update dataset metadata\' to add an onlineResource section for not allowed metadata</updateDatasetMsg>
+    <reusable>
+        <validated>Validated</validated>
+        <nonValidated>Non-validated</nonValidated>
+        <nonValidTitle>Non-validated shared objects</nonValidTitle>
+        <nonValidDesc>Validate/Reject shared objects that have not yet been validated</nonValidDesc>
+        <rejectTitle>Rejection Message</rejectTitle>
+        <rejectDefaultMsg>Choose another shared object...</rejectDefaultMsg>
+    </reusable>
+    <deletedSharedObject>
+        <msg>Shared metadata elements have been deleted that affect metadata document(s) that you own.  The complete list of affected metadata objects are listed bellow. Please update the documents listed in this email.</msg>
+        <subject>Shared object deleted</subject>
+    </deletedSharedObject>
+    <Shared>Shared</Shared>
+    <extents>
+           <deselectAll>Deselect all</deselectAll>
+           <selectAll>Select all</selectAll>
+           <management>Manage Extents</management>
+           <confirmDelete>Confirm deleting selected extents</confirmDelete>
+           <manDes>Add/remove/update registered extents</manDes>
+    </extents>
+    <page>Page</page>
+    
+    <streetname>Street name</streetname>
+    <streetnumber>N°</streetnumber>
+    <postbox>Postbox</postbox>
+    <userdetails>User details</userdetails>
+    <facsimile>Facsimile</facsimile>
+    <phone>Phone</phone>
+    <orgacronym>Organisation acronym</orgacronym>
+    <positionname>Position name</positionname>
+    <directnumber>Direct number</directnumber>
+    <mobile>Mobile</mobile>
+    <onlineresource>Online resource</onlineresource>
+    <desc>Description</desc>
+    <hoursofservice>Hours of service</hoursofservice>
+    <contactinstructions>Contact instructions</contactinstructions>
+    <mostPopular>Most popular</mostPopular>    
+
+    <popXlink.about js="true">Search for an existing object or press 'New' if unable to locate a match.</popXlink.about>
+    <popXlink.contact.search js="true">Search for a contact in the list</popXlink.contact.search>
+    <popXlink.contact.role js="true">Fill the role of this contact</popXlink.contact.role>
+    <popXlink.add.action.tooltip js="true">Add the selected item to the metadata document</popXlink.add.action.tooltip>
+    <popXlink.create.action.tooltip js="true">Suggest a new entry (subject to moderation) if you cannot find the needed item</popXlink.create.action.tooltip>
+    <popXlink.extent.search js="true">Search for an extent in the list</popXlink.extent.search>
+    <popXlink.format.search js="true">Search for a Format in the list</popXlink.format.search>
+    <extentBbox js="true">Bounding box only</extentBbox>
+    <extentPolygon js="true">Polygon only</extentPolygon>
+    <extentBboxAndPolygon js="true">Bounding box and bounding polygon</extentBboxAndPolygon>
+    <boolean value="1" context="">True</boolean>
+    <boolean value="0" context="">False</boolean>
+    <boolean value="1" context="gmd:extentTypeCode">Include</boolean>
+    <boolean value="0" context="gmd:extentTypeCode">Exclude</boolean>
+    <boolean value="true" context="gmd:extentTypeCode">Include</boolean>
+    <boolean value="false" context="gmd:extentTypeCode">Exclude</boolean>
+    <extentTypeCode js="true">Extent Type Code</extentTypeCode>
+    <inclusion js="true">Include</inclusion>
+    <exclusion js="true">Exclude</exclusion>
+    <xlink.new js="true">New</xlink.new>
+    <xlink.newGeographic js="true">New (Geographic only)</xlink.newGeographic>
+    <noXlink js="true">Invalid selected element.</noXlink>
+
+	<displayValidationReport>Validation report</displayValidationReport>
+	<publishOnlyIfAdminOrValid>Metadata could be published only if valid against ISO rules or if you're an administrator.</publishOnlyIfAdminOrValid>
+	<xsdValid>XSD valid</xsdValid>
+	<isoValid>ISO valid</isoValid>
+	<gm03Valid>GM03 valid</gm03Valid>
+	<inspireValid>INSPIRE valid</inspireValid>
+
+    <xsl.admin>Metadata displaying Stylesheets</xsl.admin>
+    <xsl.admin.des>Stylesheets (XSL) for displaying metadata in HTML in custom layouts</xsl.admin.des>
+    <toggleVisibilityEdit>Enable element visibility editing</toggleVisibilityEdit>
+    <addLayerConfirmTitle js="true">Adding new WMS layer</addLayerConfirmTitle>
+    <addLayerConfirmText js="true">Would you like to remove previously added layers ?</addLayerConfirmText>
+    <other js="true">- Other -</other>
+	<ajaxRequestFailed mode="js">Ajax request failed</ajaxRequestFailed>
+	<searchElements mode="js">Search for an element</searchElements>
+	<viewCapabilities>Open GetCapabilities document</viewCapabilities>
+	<viewCapabilitiesHelp>Select one layername from the capabilities document.</viewCapabilitiesHelp>
+	<noCapabilities>Adresse du service invalide</noCapabilities>
+	<createAssoServiceHelp>
+	              <ul>
+	                     <li class="arrow">Use the search form to search for services metadata</li>
+	                     <li class="arrow">
+	                         Checking one or more service metadata will add a reference (ie. operatesOn and coupledResource elements) to current metadata in edition according to your privileges.
+	                     </li>
+	                     <li class="arrow">
+	                         Layer name define the name of the layer as defined in the OGC service (eg. layername in the GetCapabilities document)
+	                     </li>
+	                     <li class="arrow">
+	                            Use the update metadata checkbox only if you don't have privileges to update services metadata or
+	                            if you want to add a specific on-line source section.
+	                     </li>
+	              </ul>
+	       </createAssoServiceHelp>
+	<scopedName>Layer name </scopedName>
+	<boxSelectEmptyText>Type in or press arrow down</boxSelectEmptyText>
+	<standardValid>ISO and GM03 valid</standardValid>
+	<legislationInformation>Legislation Info</legislationInformation>
+	<searchBoxLegend>Search metadata</searchBoxLegend>
+	<codelistManager>Codelist management</codelistManager>
+	<completeTabPrint>Print view</completeTabPrint>
+	<confirmMassiveDelete>Are you sure you want to Delete all selected Metadata from the Database?</confirmMassiveDelete>
+	<copyright2><p><br></br></p></copyright2>
+	<creation>Creation</creation>
+	<datasets>Datasets</datasets>
+	<disclaimer1>Your Disclaimer title</disclaimer1>
+	<disclaimer2>Your Disclaimer text</disclaimer2>
+	<elementAdd>Add element</elementAdd>
+	<elementDel>Remove element</elementDel>
+	<elementDown>Down</elementDown>
+	<elementMandatory>Mandatory</elementMandatory>
+	<elementSch>Conditional</elementSch>
+	<elementUp>Up</elementUp>
+	<elementVisAll>Visible to all</elementVisAll>
+	<elementVisibility>Element visibility (available in ISO View</elementVisibility>
+	<elementVisIntra>Group only</elementVisIntra>
+	<elementVisNo>Intranet only</elementVisNo>
+	<elementXLink>Add from dictionary</elementXLink>
+	<generateUUID><span>Generate <a href="http://en.wikipedia.org/wiki/Universally_Unique_Identifier">UUID (Universally Unique Identifier)</a> for inserted metadata</span></generateUUID>
+	<deleteGroup.confirm>Delete the group?</deleteGroup.confirm>
+	<deleteGroup.deleteUsers.confirm>Delete group but keep users (Cancel will remove group AND users)?</deleteGroup.deleteUsers.confirm>
+	<interMapInfo><a target="_blank" class="sm" href="http://www.opengeospatial.org">Open
+	                     GeoSpatial® Consortium</a><a target="_blank" class="sm" href="http://www.esri.com">ESRI®
+	              ArcIMS</a></interMapInfo>
+	<languageIso3>eng</languageIso3>
+	<localizationHelp><br></br></localizationHelp>
+	<mainpage2><p> GeoNetwork opensource allows to easily share geographically referenced thematic
+	                     information between different organisations. For more information please
+	                     contact </p></mainpage2>
+	<mainMetadataLanguageNotSet>(Default metadata language not defined)</mainMetadataLanguageNotSet>
+	<massiveActions>Massive actions : </massiveActions>
+	<mef2File>MEF2 file</mef2File>
+	<organizationName>Organisation</organizationName>
+	<parent>View parent metadata</parent>
+	<publicaccess>Allow user to be used in metadata records</publicaccess>
+	<searchIn>Search in:</searchIn>
+	<services>Services</services>
+	<serviceType>Service Type</serviceType>
+	<showPdf>Metadata</showPdf>
+	<stat.></stat.>
+	<titles>Title</titles>
+	<users>Users</users>
+	<version>Version</version>
+	<website>Website</website>
+	<xlink>Search</xlink>
+	<months>Months</months>
+	<emailPDF>Send pdf</emailPDF>
+	<emailFrom>Email from</emailFrom>
+	<emailTo>Email to</emailTo>
+	<subject>Subject</subject>
+	<emailSent>Email sent!</emailSent>
+	<rm>Romanche</rm>
+	<replaceDuplicates>Duplicates</replaceDuplicates>
+	<permlink mode="js">Permlink</permlink>
+	<!-- END GEOCAT Strings -->
+
 	<ara>عربي</ara> <!-- Do not translate! -->
 	<cat>Català</cat> <!-- Do not translate! -->
 	<chi>中文</chi> <!-- Do not translate! -->
@@ -16,21 +317,10 @@
 
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
     
-	<extractRegisterItems>Extract Register Items</extractRegisterItems>
-	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
-	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
-	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
-	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
-	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
-	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
-	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
-	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-	<makeChanges>I really want to do this!</makeChanges>
-	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
-
 	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
-	<thesaurusType>Tipo di Thesaurus</thesaurusType>
+	<thesaurusType>Thesaurus Type</thesaurusType>
+	<thesaurusType>Thesaurus Type</thesaurusType>
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
@@ -70,7 +360,7 @@
 	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
 	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
 	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
-	<add>Add</add>
+	<add js="true">Add</add>
 	<schemaOps>Metadata Schema Operations</schemaOps>
 	<enterSchema>Enter a name for the schema to be added</enterSchema>
 	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
@@ -385,8 +675,6 @@
 	<categoryNameMandatory>Deve essere inserito un nome per la categoria.</categoryNameMandatory>
 	<changeDate>Data di modifica del metadato</changeDate>
 	<checkusername>Verifica</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Scegli-</choose>
 	<chooseFile>Scegli la posizione del file da caricare</chooseFile>
 	<chooseLargeThumbnail>Scegli la posizione del file della miniatura grande</chooseLargeThumbnail>
@@ -411,7 +699,7 @@
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Tutti i diritti riservati.<br/> [Dichiarazione generica di copyright] </p></copyright2>
 	<country>Stato</country>
-	<create>Crea</create>
+	<create js="true">Crea</create>
 	<createTip>Crea un nuovo metadato da questo modello</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
@@ -531,21 +819,21 @@
 	<i18nDesc>Pagina di test dei file di localizzazione</i18nDesc>
 	<identificationTab>Identificazione</identificationTab>
 	<identifier>Identificatore</identifier>
-	<imAreaInterest>Seleziona un'area di interesse</imAreaInterest>
-	<imPan>Sposta</imPan>
+<!--	<imAreaInterest>Seleziona un'area di interesse</imAreaInterest>
+	<imPan>Sposta</imPan> -->
 	<import>Importa</import>
-	<imZoomFull>Zoom alla massima estensione</imZoomFull>
+<!--	<imZoomFull>Zoom alla massima estensione</imZoomFull>
 	<imZoomIn>Ingrandisci</imZoomIn>
 	<imZoomOut>Riduci</imZoomOut>
-	<imZoomToLayer>Zoom all'estensione del layer selezionato</imZoomToLayer>
+	<imZoomToLayer>Zoom all'estensione del layer selezionato</imZoomToLayer>-->
 	<infoTitle>Info</infoTitle>
 	<insert>Inserisci</insert>
 	<insertFileMode js="true">Carica file</insertFileMode>
 	<insertMode>Modalità d'inserimento:</insertMode>
 	<insertPasteMode>Copia/incolla</insertPasteMode>
 	<interactiveMap>Mappa interattiva</interactiveMap>
-	<interMapInfo><h1>nformazioni sulle mappe interattive</h1><p>È possibile trovare mappe interattive cercando in GeoNetwork di dati digitali con una mappa interattiva, oppure connettersi direttamente a un pre-configurato server di mappe.</p><p> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
-	<intermapSearch>Ricerca geografica</intermapSearch>
+<!--	<interMapInfo><h1>nformazioni sulle mappe interattive</h1><p>È possibile trovare mappe interattive cercando in GeoNetwork di dati digitali con una mappa interattiva, oppure connettersi direttamente a un pre-configurato server di mappe.</p><p> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
+	<intermapSearch>Ricerca geografica</intermapSearch>-->
 	<isoAll>ISO: Completo</isoAll>
 	<isoCore>ISO: Base</isoCore>
 	<isoMinimum>ISO: Minimo</isoMinimum>
@@ -570,7 +858,7 @@
 	<legend>Legenda</legend>
 	<link>Collegamento</link>
 	<links>Collegamenti</links>
-	<loading>Caricamento ...</loading>
+	<loading js="true">Caricamento ...</loading>
 	<local>ricerca locale</local>
 	<localiz>Localizzazione</localiz>
 	<localizationHelp>Attenzione! Questa form permette di aggiungere un valore chiave al database. Il valore non deve contenere spazi.<br/> Dopo aver aggiunto nuovi valori chiave, usare la pagina "Localizzazione" nel pannello di amministrazione per fornire il vero nome che si desidera visualizzare sul sito nelle diverse lingue.</localizationHelp>
@@ -832,9 +1120,8 @@
 	<siteId>ID del sito</siteId>
 	<sizeBytes>Dimensione (bytes)</sizeBytes>
 	<sortBy>Ordina per</sortBy>
-	<sortByType id="changeDate">Data ultima modifica</sortByType>
+	<sortByType id="revisionDate">Data ultima modifica</sortByType>
 	<sortByType id="popularity">Popolarità</sortByType>
-	<sortByType id="rating">Voto</sortByType>
 	<sortByType id="relevance">Rilevanza</sortByType>
 	<sortByType id="title">Titolo</sortByType>
 	<southbc>Coordinata limite verso sud</southbc>
@@ -1364,7 +1651,9 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
     <catalogueTemplates>Modelli di metadato</catalogueTemplates>
     <addremove>Aggiungi/Rimuovi</addremove>
     <enabled>Abilitato</enabled>
-    <notifications>Notifica ai destinatari remoti</notifications>    
+    <notifications>Notifica ai destinatari remoti</notifications>
+    <url>URL</url>
+    
     <cswServer>Server CSW</cswServer>
     <cswServerDes>Descrizione server CSW</cswServerDes>
     <cswServerConfig>Configurazione server CSW</cswServerConfig>

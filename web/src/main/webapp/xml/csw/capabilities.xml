@@ -110,6 +110,10 @@
             <ows:Parameter name="outputSchema">
                 <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
                 <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+        		<ows:Value>http://www.geocat.ch/2008/che</ows:Value>
+                <ows:Value>http://www.isotc211.org/2008/gm03_2</ows:Value>
+                <ows:Value>GM03_2Record</ows:Value>
+                <ows:Value>own</ows:Value>    
             </ows:Parameter>
             <ows:Parameter name="typeNames">
                 <ows:Value>csw:Record</ows:Value>
@@ -134,6 +138,10 @@
             <ows:Parameter name="outputSchema">
                 <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
                 <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+                <ows:Value>http://www.geocat.ch/2008/che</ows:Value>
+                <ows:Value>http://www.isotc211.org/2008/gm03_2</ows:Value>
+                <ows:Value>GM03_2Record</ows:Value>
+                <ows:Value>own</ows:Value>                
             </ows:Parameter>
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
@@ -154,24 +162,24 @@
             </ows:Constraint>
         </ows:Operation>
         <ows:Operation name="Transaction">
-            <ows:DCP>
-                <ows:HTTP>
-                    <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication" />
-                    <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication"  />
-                </ows:HTTP>
-            </ows:DCP>
-        </ows:Operation>
-        <ows:Operation name="Harvest">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT" />
+					<ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+		<ows:Operation name="Harvest">
             <ows:Parameter name="ResourceType">
                 <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
             </ows:Parameter>
-            <ows:DCP>
-                <ows:HTTP>
-                    <ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication" />
-                    <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT-publication"  />
-                </ows:HTTP>
-            </ows:DCP>
-        </ows:Operation>
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get  xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT" />
+					<ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT"  />
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
         <ows:Parameter name="service">
             <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
         </ows:Parameter>

@@ -27,15 +27,24 @@ import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
+import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.resources.ProviderManager;
+import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+
+import org.jdom.Element;
+import org.jdom.JDOMException;
 
 //=============================================================================
 
@@ -170,6 +179,53 @@ public class ServiceContext extends BasicContext
 	public void setHeaders(Map<String, String> headers)
 	{
 		this.headers = headers;
+	}
+
+	public Element execute(LocalServiceRequest request) throws Exception {
+		ServiceContext context = new ServiceContext(request.getService(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
+			public ResourceManager getResourceManager() {
+				return new ResourceManager(getMonitorManager(), getProviderManager()) {
+					@Override
+					public synchronized void abort() throws Exception {
+					}
+					@Override
+					public synchronized void close() throws Exception {
+					}
+					@Override
+					public synchronized void close(String name, Object resource)
+							throws Exception {
+					}
+					@Override
+					public synchronized void abort(String name, Object resource)
+							throws Exception {
+					}
+					@Override
+					protected void openMetrics(Object resource) {
+					}
+					@Override
+					protected void closeMetrics(Object resource) {
+					}
+				};
+			}
+		};
+		
+		UserSession session = userSession;
+		if(userSession == null) {
+			session = new UserSession();
+		} 
+		
+		try {
+		servlet.getEngine().getServiceManager().dispatch(request,session,context);
+		} catch (Exception e) {
+			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml"+ request.getService());
+			throw new ServiceExecutionFailedException(request.getService(),e);
+		}
+		try {
+			return request.getResult();
+		} catch (Exception e) {
+			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml from service:"+request.getService()+"\n"+ request.getResultString());
+			throw new ServiceExecutionFailedException(request.getService(),e);
+		}
 	}
 
 	public JeevesServlet getServlet() {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.opengis.net/context" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:context="http://www.opengis.net/context" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.0.0">
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../xlink/1.0.0/xlinks.xsd"/>
+	<xs:element name="ViewContextCollection" type="context:ViewContextCollectionType"/>
+	<xs:complexType name="ViewContextCollectionType">
+		<xs:sequence>
+			<xs:element name="ViewContextReference" type="context:ViewContextReferenceType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="version" type="xs:string" use="required" fixed="1.0.0"/>
+	</xs:complexType>
+	<xs:complexType name="ViewContextReferenceType">
+		<xs:sequence>
+			<xs:element name="Title" type="xs:string"/>
+			<xs:element name="ContextURL" type="context:ContextURLType"/>
+		</xs:sequence>
+		<xs:attribute name="version" use="required"/>
+		<xs:attribute name="id" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ContextURLType">
+		<xs:sequence>
+			<xs:element name="OnlineResource" type="context:OnlineResourceType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OnlineResourceType">
+		<xs:attributeGroup ref="xlink:simpleLink"/>
+	</xs:complexType>
+</xs:schema>

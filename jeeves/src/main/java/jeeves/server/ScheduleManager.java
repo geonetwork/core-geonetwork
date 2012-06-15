@@ -23,45 +23,37 @@
 
 package jeeves.server;
 
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
-
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.UUID;
-
 import jeeves.constants.ConfigFile;
+import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Schedule;
 import jeeves.monitor.MonitorManager;
+import jeeves.server.context.ScheduleContext;
 import jeeves.server.resources.ProviderManager;
-import jeeves.utils.QuartzSchedulerUtils;
+import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
-
+import jeeves.utils.Util;
 import org.jdom.Element;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 //=============================================================================
 
-public class ScheduleManager
+public class ScheduleManager extends Thread
 {
-    private static final String SCHEDULER_ID = "scheduleManager";
+	private boolean exit = false;
 
 	private String appPath;
 	private String baseUrl;
-	private String instanceId = SCHEDULER_ID+"-"+UUID.randomUUID().toString();
+
 	private ProviderManager providMan;
 	private SerialFactory   serialFact;
     private MonitorManager monitorManager;
 
+	private Vector<ScheduleInfo> vSchedules = new Vector<ScheduleInfo>();
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
-	private Scheduler scheduler;
 
-    private Map<String, ScheduleInfo> vSchedules = new HashMap<String, ScheduleInfo>();
-	
     //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -96,21 +88,13 @@ public class ScheduleManager
     public void setProviderMan  (ProviderManager p) { providMan  = p; }
     public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
+
 	public void setAppPath(String  path)  { appPath = path;  }
 
-    //--------------------------------------------------------------------------
-
-    public String getAppPath() { return appPath;}
-    public String getBaseUrl() {return baseUrl;}
-    public ProviderManager getProvidMan() {return providMan;}
-    public SerialFactory getSerialFact() {return serialFact;}
-    public MonitorManager getMonitorManager() {return monitorManager;}
-    public Hashtable<String, Object> getHtContexts() {return htContexts;}
-
-    //--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-   void addSchedule(String pack, Element sched) throws Exception
+   public void addSchedule(String pack, Element sched) throws Exception
 	{
 		String name = sched.getAttributeValue(ConfigFile.Schedule.Attr.NAME);
 		String clas = sched.getAttributeValue(ConfigFile.Schedule.Attr.CLASS);
@@ -134,49 +118,173 @@ public class ScheduleManager
 
 		ScheduleInfo si = new ScheduleInfo();
 
-        si.name = name;
-        si.schedule = schedule;
-        si.job = newJob(ScheduleJob.class).withIdentity(name, instanceId).usingJobData(ScheduleJob.NAME_FIELD_NAME, name).build();
-        si.trigger = QuartzSchedulerUtils.getTrigger(name, instanceId, when, Integer.MAX_VALUE);
+		si.name     = name;
+		si.schedule = schedule;
+		si.period   = getPeriod(when);
+		si.counter  = si.period;
 
-		vSchedules.put(name, si);
+		vSchedules.add(si);
 	}
 
 	//--------------------------------------------------------------------------
 
-    public void start() throws SchedulerException {
-        scheduler = QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
-        scheduler.getListenerManager().addJobListener(new ScheduleListener(this), jobGroupEquals(instanceId));
-
-        for (ScheduleInfo info : vSchedules.values()) {
-            scheduler.scheduleJob(info.job, info.trigger);
-        }
-    }
-
-	public void exit() throws SchedulerException
+	public void exit()
 	{
-		scheduler.shutdown();
+		exit = true;
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Main loop
+	//---
+	//--------------------------------------------------------------------------
+
+	public void run()
+	{
+		while(!exit)
+		{
+			doJob();
+
+			try
+			{
+				sleep(1000);
+			}
+			catch (InterruptedException e) {}
+		}
+	}
+
+	//--------------------------------------------------------------------------
+	//---
+	//--- Private methods
+	//---
+	//--------------------------------------------------------------------------
+
+	/** This method is called every second */
+
+	private void doJob()
+	{
+		for (ScheduleInfo si : vSchedules) {
+			if (--si.counter <= 0) {
+				si.counter = si.period;
+				executeSchedule(si);
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
 
-    public ScheduleInfo getScheduleInfo(String scheduleName) {
-        return vSchedules.get(scheduleName);
-    }
+	private void executeSchedule(ScheduleInfo si)
+	{
+		//--- create the corresponding schedule context
+
+		ScheduleContext context = new ScheduleContext(si.name, monitorManager, providMan, serialFact, htContexts);
+
+		context.setBaseUrl(baseUrl);
+		context.setAppPath(appPath);
+
+		try
+		{
+			si.schedule.exec(context);
+			context.getResourceManager().close();
+			return;
+		}
+
+		catch(JeevesException e)
+		{
+			error("Communication exception while executing schedule : "+ si.name);
+			error(" (C) Status  : "+e.getId());
+			error(" (C) Message : "+e.getMessage());
+
+			if (e.getObject() != null)
+				error(" (C) Object  : "+e.getObject());
+		}
+
+		catch (Exception e)
+		{
+			error("Raised exception when executing schedule : "+ si.name);
+			error(" (C) Stack trace : "+ Util.getStackTrace(e));
+		}
+
+		//--- in case of exception we have to abort all resources
+
+		abort(context);
+	}
+
+	//--------------------------------------------------------------------------
+
+	private void abort(ScheduleContext context)
+	{
+		try
+		{
+			context.getResourceManager().abort();
+		}
+		catch (Exception ex)
+		{
+			error("CANNOT ABORT PREVIOUS EXCEPTION");
+			error(" (C) Exc : " + ex);
+		}
+	}
+
+	//--------------------------------------------------------------------------
+
+	private int getPeriod(String when)
+	{
+		int period = 0;
+		int mult   = 0;
+
+		StringTokenizer st = new StringTokenizer(when, ",");
+
+		while (st.hasMoreTokens())
+		{
+			String token = st.nextToken().trim().toLowerCase();
+
+			if (token.endsWith(" hour"))
+			{
+				token = token.substring(0, token.length() -5);
+				mult  = 3600;
+			}
+
+			else if (token.endsWith(" hours"))
+			{
+				token = token.substring(0, token.length() -6);
+				mult  = 3600;
+			}
+
+			else if (token.endsWith(" min"))
+			{
+				token = token.substring(0, token.length() -4);
+				mult  = 60;
+			}
+
+			else if (token.endsWith(" sec"))
+			{
+				token = token.substring(0, token.length() -4);
+				mult  = 1;
+			}
+
+			else
+				throw new IllegalArgumentException("Bad period format :" +when);
+
+			period += mult * Integer.parseInt(token);
+		}
+
+		return period;
+	}
 
 	//---------------------------------------------------------------------------
 
-
+	private void error  (String message) { Log.error  (Log.SCHEDULER, message); }
 }
 
 //=============================================================================
 
 class ScheduleInfo
 {
+	public String   name;
 	public Schedule schedule;
-    public JobDetail job;
-    public Trigger trigger;
-    public String   name;
+
+	public int period;
+	public int counter;
 }
 
 //=============================================================================

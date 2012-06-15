@@ -97,7 +97,7 @@ public class UpdateStatus implements Service {
 		Set<Integer> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
-		dataMan.indexMetadata(dbms, id, false);
+		dataMan.indexInThreadPool(context, id, dbms, false);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

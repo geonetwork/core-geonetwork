@@ -242,7 +242,6 @@
 			<label>Autore</label>
 			<description>Gruppo autore della risorso</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY 
 		<entry>
 			<code>editor</code>
 			<label>Redattore/label>
@@ -252,7 +251,7 @@
 			<code>partner</code>
 			<label>Partner</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
@@ -1018,13 +1017,11 @@ polvere</description>
 			<label>Sconosciuto</label>
 			<description>La frequenza di aggiornamento per i dati non è nota</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>userDefined</code>
 			<label>Definiti dall'utente</label>
 			<description></description>
 		</entry>
-		-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_MediumFormatCode">
@@ -1174,8 +1171,6 @@ polvere</description>
 			<label>Copia cartacea</label>
 			<description>Fascicolo o foglio informativo che fornisce le informazioni descrittive</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- ISO PROFIL CHE ONLY 
 		<entry>
 			<code>zip100</code>
 			<label>Zip100</label>
@@ -1201,7 +1196,7 @@ polvere</description>
 			<code>other</code>
 			<label>Altro</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_ObligationCode">
@@ -1464,7 +1459,6 @@ polvere</description>
 			<label>Tile</label>
 			<description>Le informazioni si applicano ad un tile, un sottoinsieme spaziale dei dati geografici</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>project</code>
 			<label>Progetto</label>
@@ -1479,7 +1473,7 @@ polvere</description>
 			<code>publication</code>
 			<label>Pubblicazione</label>
 			<description>Pubblicazione</description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
@@ -1518,12 +1512,11 @@ polvere</description>
 			<label>Video</label>
 			<description>Scene da una registrazione video</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>paperMap</code>
 			<label>Mappa cartacea</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">

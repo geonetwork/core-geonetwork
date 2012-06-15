@@ -16,24 +16,10 @@
 
     <anyLanguage>أي لغة</anyLanguage>
 
-	<extractRegisterItems>Extract Register Items</extractRegisterItems>
-	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
-	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
-	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
-	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
-	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
-	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
-	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
-	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-	<makeChanges>I really want to do this!</makeChanges>
-	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
-
 	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
 	<editAttributes>Add more details</editAttributes>
-  <subtemplate.admin>إدارة الأدلة</subtemplate.admin>	
-  <subtemplate.admin.desc>إضافة / تعديل / حذف الدلائل (الدلائل الاتصال مثلا)</subtemplate.admin.desc>    
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
@@ -386,8 +372,6 @@
 	<categoryNameMandatory>A category name must be filled in.</categoryNameMandatory>
 	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>- اختر -</choose>
 	<chooseFile>عين مكان الملف للتحميل</chooseFile>
 	<chooseLargeThumbnail>عين مكان الصورة التوضيحية الكبيرة</chooseLargeThumbnail>
@@ -416,10 +400,6 @@
 	<createTip>بيانات أساسية جديدة من هذا الوعاء</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
-	<crs code="EPSG:4258">ETRS 89</crs>
-	<crs code="EPSG:900913">Google Mercator</crs>
-	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test interface for the CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>جودة البيانات</dataQualityTab>
@@ -745,11 +725,6 @@
     <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Service</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">ملف للتحميل (ftp)</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">ملف للتحميل</protocolChoice>
 	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
@@ -1139,6 +1114,7 @@
 		<iso19139>Save ISO19115/19139 metadata as XML</iso19139>
 		<iso19139fra>Save ISO19115/19139 Fra metadata as XML</iso19139fra>
 	</savexml>
+  <url>URL</url>
 	<thesaurus>
 	  <load>Load from GeoNetwork thesaurus repository</load>	  
 		<addelement>Add element</addelement>

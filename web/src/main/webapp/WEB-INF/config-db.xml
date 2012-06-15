@@ -37,35 +37,31 @@
   </data>
   <migrate>
     <version id="243">
-      <file path="WEB-INF/classes/setup/sql/migrate/v243" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/243" filePrefix="migrate-"/>
     </version>
     <version id="260">
-      <file path="WEB-INF/classes/setup/sql/migrate/v260" filePrefix="migrate-db-"/>
-      <file path="WEB-INF/classes/setup/sql/migrate/v260" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/260" filePrefix="migrate-db-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/260" filePrefix="migrate-"/>
     </version>
     <version id="261">
-      <file path="WEB-INF/classes/setup/sql/migrate/v261" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/261" filePrefix="migrate-"/>
     </version>
     <version id="262">
-      <file path="WEB-INF/classes/setup/sql/migrate/v262" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/262" filePrefix="migrate-"/>
     </version>
     <version id="263">
-      <file path="WEB-INF/classes/setup/sql/migrate/v263" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/263" filePrefix="migrate-"/>
     </version>
     <version id="264">
-      <file path="WEB-INF/classes/setup/sql/migrate/v264" filePrefix="migrate-db-"/>
-      <file path="WEB-INF/classes/setup/sql/migrate/v264" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/264" filePrefix="migrate-db-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/264" filePrefix="migrate-"/>
     </version>
     <version id="265">
-      <file path="WEB-INF/classes/setup/sql/migrate/v265" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/265" filePrefix="migrate-"/>
     </version>
     <version id="270">
-      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-db-"/>
-      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-"/>
-    </version>
-    <version id="280">
-      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
-      <java class="v280.MigrationTask"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/270" filePrefix="migrate-db-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/270" filePrefix="migrate-"/>
     </version>
   </migrate>
 </db>

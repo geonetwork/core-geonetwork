@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che"
+	xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:gco="http://www.isotc211.org/2005/gco"
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive"
+	gco:isoType="gmd:MD_Metadata">
+	<gmd:language>
+		<gco:CharacterString>fra</gco:CharacterString>
+	</gmd:language>
+	<gmd:characterSet>
+		<gmd:MD_CharacterSetCode codeListValue="utf8"
+			codeList="./resources/codeList.xml#MD_CharacterSetCode" />
+	</gmd:characterSet>
+	<gmd:hierarchyLevel>
+		<gmd:MD_ScopeCode codeListValue="dataset"
+			codeList="./resources/codeList.xml#MD_ScopeCode" />
+	</gmd:hierarchyLevel>
+	<gmd:contact>
+		<che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+			<gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+				<gco:CharacterString>Service de l'organisation et des systèmes
+					d'information</gco:CharacterString>
+			</gmd:organisationName>
+			<gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+				<gco:CharacterString>Technicien en géomatique, resp. Métadonnées
+				</gco:CharacterString>
+			</gmd:positionName>
+			<gmd:contactInfo>
+				<gmd:CI_Contact>
+					<gmd:phone>
+						<che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+							<gmd:voice>
+								<gco:CharacterString>+4122 546 72 81</gco:CharacterString>
+							</gmd:voice>
+							<gmd:facsimile>
+								<gco:CharacterString>+4122 546 72 70</gco:CharacterString>
+							</gmd:facsimile>
+						</che:CHE_CI_Telephone>
+					</gmd:phone>
+					<gmd:address>
+						<che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+							<gmd:city>
+								<gco:CharacterString>Genève 8</gco:CharacterString>
+							</gmd:city>
+							<gmd:postalCode>
+								<gco:CharacterString>1211</gco:CharacterString>
+							</gmd:postalCode>
+							<gmd:country>
+								<gco:CharacterString>CH</gco:CharacterString>
+							</gmd:country>
+							<gmd:electronicMailAddress>
+								<gco:CharacterString>pierre.lafontaine@etat.ge.ch
+								</gco:CharacterString>
+							</gmd:electronicMailAddress>
+							<che:streetName>
+								<gco:CharacterString>rue des Gazomètres</gco:CharacterString>
+							</che:streetName>
+							<che:streetNumber>
+								<gco:CharacterString>7</gco:CharacterString>
+							</che:streetNumber>
+							<che:postBox>
+								<gco:CharacterString>36</gco:CharacterString>
+							</che:postBox>
+						</che:CHE_CI_Address>
+					</gmd:address>
+					<gmd:onlineResource>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+								<gmd:URL>http://etat.geneve.ch/dt/geomatique/accueil.html
+								</gmd:URL>
+							</gmd:linkage>
+						</gmd:CI_OnlineResource>
+					</gmd:onlineResource>
+				</gmd:CI_Contact>
+			</gmd:contactInfo>
+			<gmd:role>
+				<gmd:CI_RoleCode codeListValue="originator"
+					codeList="./resources/codeList.xml#CI_RoleCode" />
+			</gmd:role>
+			<che:individualFirstName>
+				<gco:CharacterString>Pierre</gco:CharacterString>
+			</che:individualFirstName>
+			<che:individualLastName>
+				<gco:CharacterString>Lafontaine</gco:CharacterString>
+			</che:individualLastName>
+			<che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+				<gco:CharacterString>SOSI</gco:CharacterString>
+			</che:organisationAcronym>
+		</che:CHE_CI_ResponsibleParty>
+	</gmd:contact>
+	<gmd:dateStamp>
+		<gco:DateTime>2011-02-11T12:00:00</gco:DateTime>
+	</gmd:dateStamp>
+	<gmd:metadataStandardName>
+		<gco:CharacterString>ISO 19115 Geographic Information - Metadata
+		</gco:CharacterString>
+	</gmd:metadataStandardName>
+	<gmd:metadataStandardVersion>
+		<gco:CharacterString>DIS_ESRI1.0</gco:CharacterString>
+	</gmd:metadataStandardVersion>
+	<gmd:dataSetURI>
+		<gco:CharacterString>http://www.sitg.ch</gco:CharacterString>
+	</gmd:dataSetURI>
+	<gmd:locale>
+		<gmd:PT_Locale id="DE">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="deu" codeList="#LanguageCode">German
+				</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="FR">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="fra" codeList="#LanguageCode">French
+				</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="IT">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="ita" codeList="#LanguageCode">Italian
+				</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="EN">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="eng" codeList="#LanguageCode">English
+				</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:referenceSystemInfo>
+		<gmd:MD_ReferenceSystem>
+			<gmd:referenceSystemIdentifier>
+				<gmd:RS_Identifier>
+					<gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>CH1903_LV03</gco:CharacterString>
+					</gmd:code>
+				</gmd:RS_Identifier>
+			</gmd:referenceSystemIdentifier>
+		</gmd:MD_ReferenceSystem>
+	</gmd:referenceSystemInfo>
+	<gmd:identificationInfo>
+		<che:CHE_MD_DataIdentification
+			xmlns:srv="http://www.isotc211.org/2005/srv" gco:isoType="gmd:MD_DataIdentification">
+			<gmd:citation>
+				<gmd:CI_Citation>
+					<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>EXPLOITATION DES GRAVIERES
+						</gco:CharacterString>
+					</gmd:title>
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2007-11-15</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode codeListValue="creation"
+									codeList="./resources/codeList.xml#CI_DateTypeCode" />
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+				</gmd:CI_Citation>
+			</gmd:citation>
+			<gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+				<gco:CharacterString>Plan de l'état des zones d'exploitation des
+					gravières. Le plan d'exploitation des gravières présente trois
+					types de zones: - Les zones en exploitation: gravières dont
+					l'autorisation d'exploiter a été délivrée par le département du
+					territoire. - Les zones remblayées: gravières qui, une fois
+					l'exploitation terminée, font l'objet d'un remblayage de manière à
+					permettre (exceptions mises à part) la réintégration du terrain à
+					son affectation initiale, en particulier agricole. - Les zones
+					remblayées et rendues à l'agriculture</gco:CharacterString>
+			</gmd:abstract>
+			<gmd:status>
+				<gmd:MD_ProgressCode codeListValue="completed"
+					codeList="./resources/codeList.xml#MD_ProgressCode" />
+			</gmd:status>
+			<gmd:pointOfContact>
+				<che:CHE_CI_ResponsibleParty
+					gco:isoType="gmd:CI_ResponsibleParty">
+					<gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>Service de géologie, sols et déchets
+						</gco:CharacterString>
+					</gmd:organisationName>
+					<gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>inspecteur des gravières
+						</gco:CharacterString>
+					</gmd:positionName>
+					<gmd:contactInfo>
+						<gmd:CI_Contact>
+							<gmd:phone>
+								<che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+									<gmd:voice>
+										<gco:CharacterString>+4122 546 70 76</gco:CharacterString>
+									</gmd:voice>
+									<gmd:facsimile>
+										<gco:CharacterString>+4122 546 70 90</gco:CharacterString>
+									</gmd:facsimile>
+								</che:CHE_CI_Telephone>
+							</gmd:phone>
+							<gmd:address>
+								<che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+									<gmd:city>
+										<gco:CharacterString>Genève</gco:CharacterString>
+									</gmd:city>
+									<gmd:postalCode>
+										<gco:CharacterString>1205</gco:CharacterString>
+									</gmd:postalCode>
+									<gmd:country>
+										<gco:CharacterString>CH</gco:CharacterString>
+									</gmd:country>
+									<gmd:electronicMailAddress>
+										<gco:CharacterString>remi.fritschi@etat.ge.ch
+										</gco:CharacterString>
+									</gmd:electronicMailAddress>
+									<che:streetName>
+										<gco:CharacterString>quai du Rhône</gco:CharacterString>
+									</che:streetName>
+									<che:streetNumber>
+										<gco:CharacterString>12</gco:CharacterString>
+									</che:streetNumber>
+								</che:CHE_CI_Address>
+							</gmd:address>
+							<gmd:onlineResource>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+										<gmd:URL>http://etat.geneve.ch/dt/geologie/accueil.html
+										</gmd:URL>
+									</gmd:linkage>
+								</gmd:CI_OnlineResource>
+							</gmd:onlineResource>
+						</gmd:CI_Contact>
+					</gmd:contactInfo>
+					<gmd:role>
+						<gmd:CI_RoleCode codeListValue="pointOfContact"
+							codeList="./resources/codeList.xml#CI_RoleCode" />
+					</gmd:role>
+					<che:individualFirstName>
+						<gco:CharacterString>Rémi</gco:CharacterString>
+					</che:individualFirstName>
+					<che:individualLastName>
+						<gco:CharacterString>Fritschi</gco:CharacterString>
+					</che:individualLastName>
+					<che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>GESDEC</gco:CharacterString>
+					</che:organisationAcronym>
+				</che:CHE_CI_ResponsibleParty>
+			</gmd:pointOfContact>
+			<gmd:spatialRepresentationType>
+				<gmd:MD_SpatialRepresentationTypeCode
+					codeListValue="vector"
+					codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode" />
+			</gmd:spatialRepresentationType>
+			<gmd:language>
+				<gco:CharacterString>fra</gco:CharacterString>
+			</gmd:language>
+			<gmd:characterSet>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="./resources/codeList.xml#MD_CharacterSetCode" />
+			</gmd:characterSet>
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>geoscientificInformation
+				</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+			<gmd:extent>
+				<gmd:EX_Extent>
+					<gmd:geographicElement>
+						<gmd:EX_GeographicBoundingBox>
+							<gmd:extentTypeCode>
+								<gco:Boolean>true</gco:Boolean>
+							</gmd:extentTypeCode>
+							<gmd:westBoundLongitude>
+								<gco:Decimal>5.961575</gco:Decimal>
+							</gmd:westBoundLongitude>
+							<gmd:eastBoundLongitude>
+								<gco:Decimal>6.243943</gco:Decimal>
+							</gmd:eastBoundLongitude>
+							<gmd:southBoundLatitude>
+								<gco:Decimal>46.141047</gco:Decimal>
+							</gmd:southBoundLatitude>
+							<gmd:northBoundLatitude>
+								<gco:Decimal>46.294446</gco:Decimal>
+							</gmd:northBoundLatitude>
+						</gmd:EX_GeographicBoundingBox>
+					</gmd:geographicElement>
+				</gmd:EX_Extent>
+			</gmd:extent>
+		</che:CHE_MD_DataIdentification>
+	</gmd:identificationInfo>
+	<gmd:distributionInfo>
+		<gmd:MD_Distribution>
+			<gmd:distributionFormat>
+				<gmd:MD_Format xmlns:srv="http://www.isotc211.org/2005/srv">
+					<gmd:name>
+						<gco:CharacterString>Shape file, Mif/mid, Dwg/dxf
+						</gco:CharacterString>
+					</gmd:name>
+					<gmd:version>
+						<gco:CharacterString>Sur demande</gco:CharacterString>
+					</gmd:version>
+				</gmd:MD_Format>
+			</gmd:distributionFormat>
+			<gmd:transferOptions>
+				<gmd:MD_DigitalTransferOptions>
+					<gmd:onLine>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+								<gmd:URL>http://www.sitg.ch</gmd:URL>
+							</gmd:linkage>
+							<gmd:function>
+								<gmd:CI_OnLineFunctionCode
+									codeListValue="order" codeList="./resources/codeList.xml#CI_OnLineFunctionCode" />
+							</gmd:function>
+						</gmd:CI_OnlineResource>
+					</gmd:onLine>
+				</gmd:MD_DigitalTransferOptions>
+			</gmd:transferOptions>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
+</che:CHE_MD_Metadata>

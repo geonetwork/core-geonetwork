@@ -10,6 +10,7 @@
 	<xsl:include href="geonet20/geonetwork.xsl"/>
 	<xsl:include href="webdav/webdav.xsl"/>
 	<xsl:include href="csw/csw.xsl"/>
+	<xsl:include href="cgp/cgp.xsl"/>
 	<xsl:include href="ogcwxs/ogcwxs.xsl"/>
 	<xsl:include href="z3950/z3950.xsl"/>
 	<xsl:include href="z3950Config/z3950Config.xsl"/>
@@ -66,7 +67,6 @@
 				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/type"/></b></th>
 				<th class="padded" style="width:40px;" align="center"><b><xsl:value-of select="/root/gui/harvesting/status"/></b></th>
 				<th class="padded" style="width:40px;" align="center"><b><xsl:value-of select="/root/gui/harvesting/errors"/></b></th>
-				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/at"/></b></th>
 				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/every"/></b></th>
 				<th class="padded" style="width:80px;"><b><xsl:value-of select="/root/gui/harvesting/lastRun"/></b></th>
 				<th class="padded" style="width:60px;"><b><xsl:value-of select="/root/gui/harvesting/operation"/></b></th>
@@ -101,7 +101,8 @@
 		<xsl:call-template name="editPanel-GN"/>
 		<xsl:call-template name="editPanel-WD"/>
 		<xsl:call-template name="editPanel-GN20"/>
-		<xsl:call-template name="editPanel-CSW"/>
+        <xsl:call-template name="editPanel-CGP"/>
+        <xsl:call-template name="editPanel-CSW"/>
 		<xsl:call-template name="editPanel-OGCWXS"/>
 		<xsl:call-template name="editPanel-thredds"/>
 		<xsl:call-template name="editPanel-wfsfeatures"/>

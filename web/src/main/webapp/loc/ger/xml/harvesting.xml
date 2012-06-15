@@ -31,6 +31,11 @@
 		<short>CSW/ISO 2.0</short>
 		<long>Katalogservice für Web ISO Profil 2.0</long>
 	</info>
+
+    <info type="cgp">
+        <short>CGP</short>
+        <long>GM03 Catalog Gateway Protocol (swisstopo)</long>
+    </info>
 	
 	<info type="z3950">
 		<short>Z3950</short>
@@ -39,12 +44,12 @@
 	
 	<info type="oaipmh">
 		<short>OAIPMH</short>
-		<long>OAI Protokol für Metadaten Harvesting 2.0</long>
+		<long>OAI Protokoll für Metadaten Harvesting 2.0</long>
 	</info>
 	
 	<info type="ogcwxs">
 		<short>OGC WxS</short>
-		<long>OGC Web services (ie. WMS, WFS, WCS, WPS, CSW, SOS)</long>
+		<long>OGC Web services (z.B. WMS, WFS, WCS, WPS, CSW, SOS)</long>
 	</info>
 
 	<info type="arcsde">
@@ -53,8 +58,8 @@
 	</info>
 	
 	<info type="thredds">
-		<short>Thredds</short>
-		<long>Thredds Catalog</long>
+		<short>THREDDS</short>
+		<long>THREDDS Katalog</long>
 	</info>
 	
 	<info type="wfsfeatures">
@@ -76,10 +81,10 @@
 	
 	<site>Site</site>
 		
-	<category>Category</category>
-	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
+	<category>Kategorie</category>
+	<clearConfig>Z3950 Server Konfiguration löschen</clearConfig>
 
-	<wxstype>Type of OGC webservice</wxstype>
+	<wxstype>Art des OGC webservice</wxstype>
 	<wxstypes>
 		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
 		<type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
@@ -93,20 +98,20 @@
 		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>
 	</wxstypes>
 	
-	<wxslang>Metadata language</wxslang>
-	<wxsImp>Type of import</wxsImp>
-	<wxsOutputSchema>Target schema</wxsOutputSchema>
-	<wxs119Only>By default GetCapabilities harvester will create<br/> only metadata for services in ISO19119.</wxs119Only>
-	<wxs139>Create metadata for layer elements using GetCapabilities information.</wxs139>
-	<wxs139Layer>Create metadata for layer elements using MetadataURL attributes (if existing, if not use GetCapabilities).</wxs139Layer>
-	<createThumbnails>Create thumbnails for WMS layers.</createThumbnails>
+	<wxslang>Metadaten Sprache</wxslang>
+	<wxsImp>Art des Imports</wxsImp>
+	<wxsOutputSchema>Zielschema</wxsOutputSchema>
+	<wxs119Only>Standardmässig erstellt der GetCapabilities harvester <br/> nur Dienstemetadaten in ISO 19119</wxs119Only>
+	<wxs139>Metadaten für Layer erstellen mit Hilfe der GetCapabilities Information.</wxs139>
+	<wxs139Layer>Metadaten für Layer erstellen mit Hilfe der MetadataURL Attribute (falls vorhanden, sonst mit GetCapabilities).</wxs139Layer>
+	<createThumbnails>Vorschaubilder für WMS Layer erstellen.</createThumbnails>
 	
-	<serviceCategory>Category for service</serviceCategory>
-	<datasetCategory>Category for datasets</datasetCategory>
+	<serviceCategory>Kategorie für Dienste</serviceCategory>
+	<datasetCategory>Kategorie für Daten</datasetCategory>
 		
-	<returnedSets>OAI provider sets</returnedSets>
-	<returnedPrefixes>OAI provider prefixes</returnedPrefixes>
-	<retrieveSetsPrefixes>Retrieve Sets/Prefixes</retrieveSetsPrefixes>
+	<returnedSets>Sets des OAI Providers</returnedSets>
+	<returnedPrefixes>Präfixe des OAI Providers</returnedPrefixes>
+	<retrieveSetsPrefixes>Sets und Präfixe abrufen</retrieveSetsPrefixes>
     
 	<host>Host</host>
 	<port>Port</port>
@@ -114,20 +119,21 @@
 	<useAccount>Benutzerzugang</useAccount>
 	<username>Benutzername</username>
 	<password>Passwort</password>
-	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
-	<mefFormatFull>Use full MEF format</mefFormatFull>
+    <outputSchema>Output schema</outputSchema>
+	<createRemoteCategory>Kategorien zuweisen, falls lokal vorhanden</createRemoteCategory>
+	<mefFormatFull>Das komplette MEF Format nutzen</mefFormatFull>
 	
-	<xslfilter>XSL filter name</xslfilter>
+	<xslfilter>XSL-Filter Name</xslfilter>
 	<search>Suchkriterium</search>
 	<siteName>Seitenname</siteName>
 	
 	<freeText>Freitext</freeText>
 	<title>Titel</title>
-	<abstract>Kurzzusammenfassung</abstract>
+	<abstract>Kurzbeschreibung</abstract>
 	<keywords>Schlüsselwörter</keywords>
-	<minscale>Min scale denominator</minscale>
-	<maxscale>Max scale denominator</maxscale>
-	<subject>Betreff</subject>
+	<minscale>Massstabs-Minimum (minscale)</minscale>
+	<maxscale>Massstabs-Maximum (maxscale)</maxscale>
+	<subject>Thema</subject>
 	<digital>Digital</digital>
 	<hardcopy>Ausdruck</hardcopy>
 	<siteId>Seiten ID</siteId>
@@ -135,36 +141,9 @@
 	<retrieve>Abfrage</retrieve>
 	<warn>Nur nach Ausfüllen der Felder können Abfragen ausgeführt werden.</warn>
 	
-	<content>Harvested Content</content>
-	<importxslt>Apply this XSLT to harvested records</importxslt>
+	<content>Geharvesteter Inhalt</content>
+	<importxslt>Dieses XSLT auf geharvestete Metadaten anwenden</importxslt>
 
-	<at>Ausf�hren um</at>
-    <atSpec>( Stunde : Minute z.B. 23:15 )</atSpec>
-    <interval>Wird ausgef�hrt</interval>
-    <hourintervals>
-        <hour label="st�ndlich">1</hour>
-        <hour label="alle 3 Stunden">3</hour>
-        <hour label="alle 6 Stunden">6</hour>
-        <hour label="alle 12 Stunden">12</hour>
-        <hour label="N/A">undefined</hour>
-    </hourintervals>
-    <hourintervals>
-        <hour label="st�ndlich">1</hour>
-        <hour label="alle 3 Stunden">3</hour>
-        <hour label="alle 6 Stunden">6</hour>
-        <hour label="alle 12 Stunden">12</hour>
-        <hour label="t�glich">24</hour>
-    </hourintervals>
-    <dayofweek>
-        <day label="Montag">MON</day>
-        <day label="Dienstag">TUE</day>
-        <day label="Mittwoch">WED</day>
-        <day label="Donnerstag">THU</day>
-        <day label="Freitag">FRI</day>
-        <day label="Samstag">SAT</day>
-        <day label="Sonntag">SUN</day>
-    </dayofweek>
-    
 	<options>Optionen</options>
 	<everySpec>(Tage : Stunden : Minuten)</everySpec>
 	<oneRun>Nur einmalig</oneRun>
@@ -174,7 +153,7 @@
 	<inactive>inaktiv</inactive>
 	<retrieveSources>Quelle abfragen</retrieveSources>
 	<retrieveGroups>Gruppe abfragen</retrieveGroups>
-	<retrieveInfo>Empfange Info</retrieveInfo>
+	<retrieveInfo>Info abrufen</retrieveInfo>
 	<source>Quelle</source>
 	<criteria>Kriterium</criteria>
 	<validate>Validieren</validate>
@@ -216,41 +195,41 @@
 	<run>Starten</run>
 	<remove>Entfernen</remove>
 	<refresh>Neuladen</refresh>
-	<history>History</history>
-	<clone>Clone</clone>
+	<history>Verlauf</history>
+	<clone>Kopieren</clone>
 	
 	<days>Tage</days>
 	<hours>Studen</hours>
 	<mins>Minuten</mins>
 
-	<threddslang>Metadata language</threddslang>
-	<threddsCreateDIFMd>Extract DIF metadata elements and create ISO metadata</threddsCreateDIFMd>
-	<threddsCreateFragments>Extract Unidata dataset discovery metadata using fragments</threddsCreateFragments>
-  <threddsFragmentStylesheet>Stylesheet to create metadata fragments</threddsFragmentStylesheet>
-	<threddsCreateSubtemplates>Create subtemplates for fragments and XLink them into template</threddsCreateSubtemplates>
-	<threddsIgnoreHarvest>Ignore harvesting attribute</threddsIgnoreHarvest>
-	<threddsOutputSchema>Select schema for output metadata records</threddsOutputSchema>
-	<threddsCreateThumbnails>Create thumbnails for any datasets delivered by WMS</threddsCreateThumbnails>
-	<threddsModifiedOnly>Harvest new or modified datasets only</threddsModifiedOnly>
-	<threddsServiceMd>Create ISO19119 metadata for all services in the catalog</threddsServiceMd>
-	<threddsCollectionDataset>Create metadata for Collection Datasets</threddsCollectionDataset>
-	<threddsAtomicDataset>Create metadata for Atomic Datasets</threddsAtomicDataset>
-	<threddsTemplate>Select template to combine with fragments</threddsTemplate>
+	<threddslang>Metadaten Sprache</threddslang>
+	<threddsCreateDIFMd>DIF Metadatenelemente extrahieren und ISO Metadaten erstellen</threddsCreateDIFMd>
+	<threddsCreateFragments>Unidata dataset discovery Metadaten erstellen mittels Fragmenten</threddsCreateFragments>
+  <threddsFragmentStylesheet>Stylesheet um Metadatenfragmente zu erstellen</threddsFragmentStylesheet>
+	<threddsCreateSubtemplates>Untervorlagen für Fragmente erstellen und mittels XLink in die Vorlage einbinden</threddsCreateSubtemplates>
+	<threddsIgnoreHarvest>Harvesting Attribute ignorieren</threddsIgnoreHarvest>
+	<threddsOutputSchema>Schema für die Metadatenausgabe wählen</threddsOutputSchema>
+	<threddsCreateThumbnails>Vorschaubilder für alle Datensätze eines WMS erstelleS</threddsCreateThumbnails>
+	<threddsModifiedOnly>Nur neue oder abgeänderte Datensätze harvesten</threddsModifiedOnly>
+	<threddsServiceMd>ISO 19119 Metadaten für alle Dienste im Katalog erstellen</threddsServiceMd>
+	<threddsCollectionDataset>Metadaten für Collection Datensätze erstellen</threddsCollectionDataset>
+	<threddsAtomicDataset>Metadaten für Atomic Datensätze erstellen</threddsAtomicDataset>
+	<threddsTemplate>Vorlage wählen die mit Fragmenten zusammengesetzt werden soll</threddsTemplate>
 	
-	<wfsFeaturesLang>Metadata language</wfsFeaturesLang>
-	<wfsFeaturesQuery>OGC WFS GetFeature Query</wfsFeaturesQuery>
-	<wfsFeaturesStylesheet>Stylesheet to create fragments</wfsFeaturesStylesheet>
-	<wfsFeaturesLargeResponse>Save large response to disk</wfsFeaturesLargeResponse>
-	<wfsFeaturesCreateSubtemplates>Create subtemplates</wfsFeaturesCreateSubtemplates>
-	<wfsFeaturesTemplate>Select template to combine with fragments</wfsFeaturesTemplate>
-	<wfsFeaturesSubtemplateCategory>Category for subtemplates</wfsFeaturesSubtemplateCategory>
-	<wfsFeaturesRecordCategory>Category for output metadata records</wfsFeaturesRecordCategory>
-	<wfsFeaturesOutputSchema>Schema for output metadata records</wfsFeaturesOutputSchema>
+	<wfsFeaturesLang>Metadaten Sprache</wfsFeaturesLang>
+	<wfsFeaturesQuery>OGC WFS GetFeature Abfrage</wfsFeaturesQuery>
+	<wfsFeaturesStylesheet>Stylesheet um Fragmente zu erstellen</wfsFeaturesStylesheet>
+	<wfsFeaturesLargeResponse>Grosse Antwort abspeichern</wfsFeaturesLargeResponse>
+	<wfsFeaturesCreateSubtemplates>Untervorlagen erstellen</wfsFeaturesCreateSubtemplates>
+	<wfsFeaturesTemplate>Vorlage wählen die mit Fragmenten zusammengesetzt werden soll</wfsFeaturesTemplate>
+	<wfsFeaturesSubtemplateCategory>Kategorie für Untervorlagen</wfsFeaturesSubtemplateCategory>
+	<wfsFeaturesRecordCategory>Kategorie für ausgegebene Metadaten</wfsFeaturesRecordCategory>
+	<wfsFeaturesOutputSchema>Schema für ausgegebene Metadaten</wfsFeaturesOutputSchema>
 
-	<z3950repositories>Z3950 Server(s)</z3950repositories>
-	<z3950query>Z3950 Query</z3950query>
+	<z3950repositories>Z3950 Server</z3950repositories>
+	<z3950query>Z3950 Abfrage</z3950query>
 	
-	<cataUrl>Catalog URL</cataUrl>
+	<cataUrl>Katalog URL</cataUrl>
 	<!-- validator messages -->
 	
 	<validator>
@@ -289,8 +268,8 @@
 	<cannotStart>Ausgewählte(r) Eintrag/Einträge konnte nicht aktiviert werden</cannotStart>
 	<cannotStop>Ausgewählte(r) Eintrag/Einträge konnte nicht gestoppt werden</cannotStop>
 	<cannotRun>Ausgewählte(r) Eintrag/Einträge konnten nicht ablaufen</cannotRun>
-	<confirmRemove>Löschen der ausgewählten Einträge ? Die Knoten und alle lokalen Kopien der Datensätze dwer Knoten werden gelöscht.</confirmRemove>
-	<everyZero>Die Harvesting Periode darf nicht 0:0:0</everyZero>
+	<confirmRemove>Löschen der ausgewählten Einträge? Die Knoten und alle lokalen Kopien der Datensätze der Knoten werden gelöscht.</confirmRemove>
+	<everyZero>Die Harvesting Periode darf nicht 0:0:0 sein</everyZero>
 	<pleaseRetrieve>Bitte fragen Sie erst ein paar Seiten ab</pleaseRetrieve>
 	<cannotRetrieve>Kann keine Informationen abrufen</cannotRetrieve>
 	<cannotUpdate>Kann keine Informationen vom dem Server updaten</cannotUpdate>
@@ -313,24 +292,24 @@
 	</oper>
 	
 	<!-- history messages -->
-  <harvesterHistory>Harvester History</harvesterHistory>
-  <noHistory>No History</noHistory>
-  <dateDesc>Date (most recent first)</dateDesc>
-  <date>Date</date>
+  <harvesterHistory>Harvester Verlauf</harvesterHistory>
+  <noHistory>Kein Verlauf</noHistory>
+  <dateDesc>Datum (neueste zuerst)</dateDesc>
+  <date>Datum</date>
   <detail>Detail</detail>
-  <grandTotal>Grand Total</grandTotal>
-  <counter>of</counter>
-  <totalHistory>Total history records:</totalHistory>
-  <viewAll>View All</viewAll>
-  <deleteHistory>Delete History</deleteHistory>
-  <harvestedNothing>Harvested Nothing</harvestedNothing>
-  <sortBy>Sort by:</sortBy>
-  <ok>Success</ok>
-  <deleted>Deleted</deleted>
-  <historyDeleted>Harvesting History Records Deleted:</historyDeleted>
-  <historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
-	<historyDeleteConfirm>Delete selected harvester history entries?</historyDeleteConfirm>
-  <backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
+  <grandTotal>Total</grandTotal>
+  <counter>von</counter>
+  <totalHistory>Total der Daten im Verlauf:</totalHistory>
+  <viewAll>Alle anzeigen</viewAll>
+  <deleteHistory>Verlauf löschen</deleteHistory>
+  <harvestedNothing>Nichts geharvestet</harvestedNothing>
+  <sortBy>Sortieren nach:</sortBy>
+  <ok>Erfolgreich</ok>
+  <deleted>Gelöscht</deleted>
+  <historyDeleted>Daten des Harvesting Verlaufs gelöscht:</historyDeleted>
+  <historyDeletedTitle>Löschen des Harvesting Verlaufs</historyDeletedTitle>
+	<historyDeleteConfirm>Ausgewählte Einträge im Harvester Verlauf löschen?</historyDeleteConfirm>
+  <backToHarvestManager>Zurück zum Harvest Manager</backToHarvestManager>
 	
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
@@ -344,32 +323,32 @@
 		<total>Total</total>
 		<added>Hinzugefügt</added>
 		<removed>Gelöscht</removed>
-		<updated>Geupdated</updated>
+		<updated>Aktualisiert</updated>
 		<unchanged>Nicht verändert</unchanged>
 		<unknownSchema>Unbekanntes Schema</unknownSchema>
 		<unretrievable>nicht abrufbar</unretrievable>
 		<badFormat>Falsches XML Format</badFormat>
 		<doesNotValidate>Validiert nicht</doesNotValidate>
-		<datasetAdded>Datasets</datasetAdded>
-		<datasetExist>Existing datasets</datasetExist>
-		<datasetMdUrl>Metadata Url used</datasetMdUrl>
-		<thumbnails>Thumbnails</thumbnails>
-		<thumbnailsFailed>Thumbnails failed</thumbnailsFailed>
-		<serviceRecords>Services Added</serviceRecords>
-		<collectionDatasetRecords>Collections Added</collectionDatasetRecords>
-		<atomicDatasetRecords>Atomics Added</atomicDatasetRecords>
-        <fragmentsAdded>Fragments Added</fragmentsAdded>
-        <subtemplatesAdded>Subtemplates Added</subtemplatesAdded>
-        <fragmentsRemoved>Fragments Removed</fragmentsRemoved>
-        <subtemplatesRemoved>Subtemplates Removed</subtemplatesRemoved>
-		<fragmentsUnknownSchema>Fragments w/Unknown Schema</fragmentsUnknownSchema>
-		<fragmentsReturned>Fragments Returned</fragmentsReturned>
-		<fragmentsMatched>Fragments Matched</fragmentsMatched>
-		<recordsBuilt>Records Built</recordsBuilt>
-		<incompatible>Incompatible</incompatible>
-		<couldNotInsert>Could not insert</couldNotInsert>
-    <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
-		<recordsUpdated>Records Updated</recordsUpdated>
+		<datasetAdded>Datensätze</datasetAdded>
+		<datasetExist>Vorhandene Datensätze</datasetExist>
+		<datasetMdUrl>Metadaten URL verwendet</datasetMdUrl>
+		<thumbnails>Vorschaubilder</thumbnails>
+		<thumbnailsFailed>Vorschaubilder fehlgeschlagen</thumbnailsFailed>
+		<serviceRecords>Dienste hinzugefügt</serviceRecords>
+		<collectionDatasetRecords>Collections hinzugefügt</collectionDatasetRecords>
+		<atomicDatasetRecords>Atomics hinzugefügt</atomicDatasetRecords>
+        <fragmentsAdded>Fragmente hinzugefügt</fragmentsAdded>
+        <subtemplatesAdded>Untervorlagen hinzugefügt</subtemplatesAdded>
+        <fragmentsRemoved>Fragmente entfernt</fragmentsRemoved>
+        <subtemplatesRemoved>Untervorlagen entfernt</subtemplatesRemoved>
+		<fragmentsUnknownSchema>Fragmente mit unbekanntem Schema</fragmentsUnknownSchema>
+		<fragmentsReturned>Fragmente erhalten</fragmentsReturned>
+		<fragmentsMatched>Fragmente eingepasst</fragmentsMatched>
+		<recordsBuilt>Einträge gebildet</recordsBuilt>
+		<incompatible>Inkompatibel</incompatible>
+		<couldNotInsert>Konnte nicht einfügen</couldNotInsert>
+    <subtemplatesUpdated>Untervorlagen aktualisiert</subtemplatesUpdated>
+		<recordsUpdated>Einträge aktualisiert</recordsUpdated>
 	</tipHeader>
 	
 	<notRun>Warten auf das erste Update</notRun>
@@ -382,15 +361,13 @@
 		</tip>
 		
 		<tip id="gn.host">
-            The given URL must point to a geonetwork server. The format of a
-            URL is like this:<br/>
-            http[s]://HOST[:port]/geonetwork
+			Der entfernte Knoten, mit dem Sie verbinden wollen
 		</tip>
 		
 		<tip id="gn.xslfilter">
-			The name of the XSL filter to be applied to harvested metadata records. The filter must be
-			registered in schema's process folder by catalogue administrator. If filter is not found
-			for metadata schema, not filter is applied.
+			Name des XSL Filters der auf die geharvesteten Metadaten angewendet wird. Der Filter
+                           muss im Schema Prozessierungs Verzeichnis durch den Katalog Administrator registriert werden.
+			Wenn der Filter zum Schema nicht gefunden wird, wird kein Filter angewendet.
 		</tip>
 		<tip id="gn.retrieveSources">
 			Geben Sie bitte den <i>host</i>, <i>port</i> und <i>servlet</i> Parameter an und drücken
@@ -415,15 +392,15 @@
 		<!-- Z3950 harvesting type - - - - - - - - - - - - - - - - - - - - - -->
 	
 		<tip id="z3950.repositories">
-			Select one or more of the Z3950 servers shown
+			Einen oder mehrere der angezeigten Z3950 Server auswählen.
 		</tip>
 		
 		<tip id="z3950.query">
-			The query should be a valid Z3950 query eg. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "water"
+			Die Abfrage muss nach Z3950 gültig sein Z.B. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "water"
 		</tip>
 	
 		<tip id="z3950.profile">
-			Select a profile (group of) Z3950 servers
+			Ein Profil (Gruppe) der Z3950 Server wählen
 		</tip>
 		
 		<!-- CSW ISO Profile harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
@@ -443,12 +420,12 @@
 		</tip>
 		
 		<tip id="csw.addGroups">
-			Selektieren Sie eine oder mehrere Gruppen (benutzen Sie die <b>&lt;Strg&gt;</b>-Taste) auf
+			Wählen Sie eine oder mehrere Gruppen (benutzen Sie die <b>&lt;Strg&gt;</b>-Taste) auf
 			der linken Seite und drücken Sie den Button.
 		</tip>
 		
 		<tip id="csw.categories">
-			Sie können eine	oder mehrere Kategorien für die harvesting Metadaten zuweisen.
+			Sie können eine oder mehrere Kategorien für die harvesting Metadaten zuweisen.
 			Benutzen Sie die <b>&lt;Strg&gt;</b>-Taste zur Auswahl mehrere Kategorien.
 		</tip>
 	
@@ -472,7 +449,7 @@
 		</tip>
 		
 		<tip id="ogcwxs.outputSchema">
-			The schema to be used for harvested metadata
+			Angewandtes Schema für geharvestete Metadaten
 		</tip>
 
 		<tip id="ogcwxs.addSearch">
@@ -499,7 +476,7 @@
 		</tip>
 		
 		<tip id="oai.addSearch">
-			Fügen sie eine Suche auf dem entfernten Server hinzu. Wenn Sie keine Suche hinzufügen, wird eine If you don't add any search, eine Suche nache dem 'oai_dc' Metadatenformat vorgenommen
+			Fügen sie eine Suche auf dem entfernten Server hinzu. Wenn Sie keine Suche hinzufügen, wird eine Suche nach dem 'oai_dc' Metadatenformat vorgenommen
 		</tip>
 		
 		<tip id="oai.groups">
@@ -515,7 +492,7 @@
 		</tip>
 	
 		<tip id="oai.validate">
-			Nur Harvesting von Metadaten, die valide zu Ihrem Schema sind.
+			Nur Harvesting von Metadaten, die gültig zu ihrem Schema sind.
 		</tip>
 		
 		<!-- OAI-PMH harvesting type : dynamic search part -->
@@ -529,7 +506,7 @@
 		</tip>
 		
 		<tip id="oai.from.set">
-			Öffne Dialog zum Anfangsdatum zu setzen
+			Öffne Dialog um Anfangsdatum zu setzen
 		</tip>
 		
 		<tip id="oai.from.clear">
@@ -537,7 +514,7 @@
 		</tip>
 		
 		<tip id="oai.until">
-			Optionales Datum zum Beenden des Harvesting.
+			Optionales Datum zum Beenden des Harvestings.
 		</tip>
 		
 		<tip id="oai.until.set">
@@ -555,5 +532,21 @@
 		<tip id="oai.prefix">
 			Wählen Sie das Metadatenformat, das Sie harvesten wollen.
 		</tip>
+        <!-- CGP-GM03 harvesting type : dynamic search part -->
+        <tip id="cgp.url"> Diese URL muss auf den entfernten CGP SOAP messaging handler zeigen</tip>
+
+        <tip id="cgp.addSearch"> Einen Suchbegriff angeben. Wenn nichts eingegeben wird, werden sämtliche Metadaten des entfernten Katalogs abgeholt.</tip>
+
+        <tip id="cgp.groups"> Es können Privilegien für die geharvesteten Metadaten gewählt werden. </tip>
+
+        <tip id="cgp.addGroups"> Wählen Sie eine oder mehrere Gruppen (benutzen Sie die <b>&lt;STRG&gt;</b> Taste) auf der linken Seite und drücken Sie diesen Button. </tip>
+
+        <tip id="cgp.categories"> Sie können eine oder mehrere Kategorien zu den geharvesteten Metadatensätzen hinzufügen. Benutzen Sie die <b>&lt;STRG&gt;</b> Taste, wenn Sie mehrere Kategorien wählen wollen. </tip>
 	</tips>
+    <latNorth>Nord</latNorth>
+    <lonWest>West</lonWest>
+    <latSouth>Süd</latSouth>
+    <lonEast>Ost</lonEast>
+    <extent>Ausdehnung</extent>
+    
 </strings>

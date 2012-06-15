@@ -269,27 +269,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.extract.subtemplates.form">
-		  <!-- use same service for category update -->
-			<class name=".services.metadata.PrepareBatchUpdateCategories"/>
-
-			<output sheet="metadata-batchextractsubtemplates.xsl">
-				<xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.batch.extract.subtemplates">
-			<class name=".services.metadata.BatchExtractSubtemplates"/>
-
-			<output sheet="metadata-batch-extract-subtemplates-results.xsl">
-				<xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="metadata.delete">
 			<class name=".services.metadata.Delete"/>
 

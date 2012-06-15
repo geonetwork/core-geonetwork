@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
+import org.geotools.data.DataStore;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.util.CollectionUtils;
@@ -78,13 +79,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---------------------------------------------------------------------------
 
 	private SearchController _searchController;
-
-    /**
+	/**
      * @param summaryConfig
      * @param luceneConfig
      */
-	public GetRecords(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public GetRecords(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(ds, summaryConfig, luceneConfig);
     }
 
     /**
@@ -205,7 +205,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         String filterVersion = getFilterVersion(constr);
 
         // Get max hits to be used for summary - CSW GeoNetwork extension
-        int maxHitsInSummary = 1000;
+        int maxHitsInSummary = 100000;
         String sMaxRecordsInKeywordSummary = query.getAttributeValue("maxHitsInSummary");
         if (sMaxRecordsInKeywordSummary != null) {
             // TODO : it could be better to use service config parameter instead
@@ -713,9 +713,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
             }
             else {
-                sortFields.add(Pair.read(field, "DESC".equals(order)));
+                if (!field.equals(Geonet.SearchResult.SortBy.RELEVANCE)) sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
+        if (sortFields.isEmpty()) return null;
 		// we always want to keep the relevancy as part of the sorting mechanism
 		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
 	}

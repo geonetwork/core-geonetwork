@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che"
+	xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+	gco:isoType="gmd:MD_Metadata">
+	<gmd:fileIdentifier xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gco:CharacterString>4622a381-6f9a-11bb-2201-f6ce78f74601
+		</gco:CharacterString>
+	</gmd:fileIdentifier>
+	<gmd:language xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gco:CharacterString>deu</gco:CharacterString>
+	</gmd:language>
+	<gmd:characterSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:MD_CharacterSetCode
+			codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"
+			codeListValue="utf8" />
+	</gmd:characterSet>
+	<gmd:hierarchyLevel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:MD_ScopeCode
+			codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"
+			codeListValue="dataset" />
+	</gmd:hierarchyLevel>
+	<gmd:hierarchyLevelName>
+		<gco:CharacterString>Grundwasserpegel Fachstelle Naturschutz
+		</gco:CharacterString>
+	</gmd:hierarchyLevelName>
+	<gmd:contact>
+		<che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+			<gmd:organisationName>
+				<gco:CharacterString>Amt für Landschaft und Natur - Naturschutz
+				</gco:CharacterString>
+			</gmd:organisationName>
+			<gmd:contactInfo>
+				<gmd:CI_Contact>
+					<gmd:phone>
+						<che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+							<gmd:voice>
+								<gco:CharacterString>+41 43 259 30 32</gco:CharacterString>
+							</gmd:voice>
+							<che:directNumber>
+								<gco:CharacterString>+41 43 259 49 84</gco:CharacterString>
+							</che:directNumber>
+						</che:CHE_CI_Telephone>
+					</gmd:phone>
+					<gmd:address>
+						<che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+							<gmd:city>
+								<gco:CharacterString>Zürich</gco:CharacterString>
+							</gmd:city>
+							<gmd:postalCode>
+								<gco:CharacterString>8090</gco:CharacterString>
+							</gmd:postalCode>
+							<gmd:country>
+								<gco:CharacterString>CH</gco:CharacterString>
+							</gmd:country>
+							<gmd:electronicMailAddress>
+								<gco:CharacterString>andreas.lienhard@bd.zh.ch
+								</gco:CharacterString>
+							</gmd:electronicMailAddress>
+							<che:streetName>
+								<gco:CharacterString>Stampfenbachstrasse</gco:CharacterString>
+							</che:streetName>
+							<che:streetNumber>
+								<gco:CharacterString>12</gco:CharacterString>
+							</che:streetNumber>
+							<che:postBox>
+								<gco:CharacterString>Postfach</gco:CharacterString>
+							</che:postBox>
+						</che:CHE_CI_Address>
+					</gmd:address>
+					<gmd:onlineResource>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage>
+								<gmd:URL>http://www.naturschutz.zh.ch</gmd:URL>
+							</gmd:linkage>
+						</gmd:CI_OnlineResource>
+					</gmd:onlineResource>
+				</gmd:CI_Contact>
+			</gmd:contactInfo>
+			<gmd:role>
+				<gmd:CI_RoleCode
+					codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"
+					codeListValue="pointOfContact" />
+			</gmd:role>
+			<che:individualFirstName>
+				<gco:CharacterString>Andreas</gco:CharacterString>
+			</che:individualFirstName>
+			<che:individualLastName>
+				<gco:CharacterString>Lienhard</gco:CharacterString>
+			</che:individualLastName>
+			<che:organisationAcronym>
+				<gco:CharacterString>ALN FNS</gco:CharacterString>
+			</che:organisationAcronym>
+		</che:CHE_CI_ResponsibleParty>
+	</gmd:contact>
+	<gmd:dateStamp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gco:DateTime>2010-08-12T09:25:19</gco:DateTime>
+	</gmd:dateStamp>
+	<gmd:metadataStandardName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gco:CharacterString>GM03 2+</gco:CharacterString>
+	</gmd:metadataStandardName>
+	<gmd:spatialRepresentationInfo
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:MD_VectorSpatialRepresentation>
+			<gmd:geometricObjects>
+				<gmd:MD_GeometricObjects>
+					<gmd:geometricObjectType>
+						<gmd:MD_GeometricObjectTypeCode
+							codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_GeometricObjectTypeCode"
+							codeListValue="point" />
+					</gmd:geometricObjectType>
+				</gmd:MD_GeometricObjects>
+			</gmd:geometricObjects>
+		</gmd:MD_VectorSpatialRepresentation>
+	</gmd:spatialRepresentationInfo>
+	<gmd:referenceSystemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:MD_ReferenceSystem>
+			<gmd:referenceSystemIdentifier>
+				<gmd:RS_Identifier>
+					<gmd:code>
+						<gco:CharacterString>EPSG:21781</gco:CharacterString>
+					</gmd:code>
+				</gmd:RS_Identifier>
+			</gmd:referenceSystemIdentifier>
+		</gmd:MD_ReferenceSystem>
+	</gmd:referenceSystemInfo>
+	<gmd:identificationInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<che:CHE_MD_DataIdentification
+			gco:isoType="gmd:MD_DataIdentification">
+			<gmd:citation>
+				<gmd:CI_Citation>
+					<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>Grundwasserpegel Fachstelle Naturschutz
+						</gco:CharacterString>
+						<gmd:PT_FreeText>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString
+									locale="#DE" />
+							</gmd:textGroup>
+						</gmd:PT_FreeText>
+					</gmd:title>
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2009-12-31</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode
+									codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+									codeListValue="revision" />
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+				</gmd:CI_Citation>
+			</gmd:citation>
+			<gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+				<gco:CharacterString>Vor allem im Rahmen von Hochmoorregenerationen
+					und Aufwertungs- und Regenerationsprojekten in Flachmooren ist es
+					notwendig die hydrologische Situation im Detail zu kennen um die
+					richtigen Massnahmen in den Gebieten ergreifen zu können. Im
+					Auftrag der FNS werden deshalb in verschiedenen Naturschutzgebieten
+					Grundwasserpegelmessungen durchgeführt. Dazu werden automatische
+					Pegelmessgeräte gesetzt. Damit diese durch Bewirtschaftungs- und
+					Unterhaltsmassnahmen nicht beschädigt werden sind deren Standorte
+					durch das Auftragnehmende Büro mit GPS eingemessen worden. Diese
+					werden im GIS abgelegt und über die WebGIS – Anwendungen der FNS
+					den Gebietsbetreuenden zur Verfügung gestellt. Die Daten dienen den
+					Gebietsbetreuenden dazu die Pegelstandorte vor Mäh- oder anderen
+					Unterhaltsarbeiten aufzufinden und für die Bewirtschaftenden gut
+					erkennbar</gco:CharacterString>
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#DE" />
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</gmd:abstract>
+			<gmd:resourceMaintenance>
+				<che:CHE_MD_MaintenanceInformation
+					xmlns:gts="http://www.isotc211.org/2005/gts" gco:isoType="gmd:MD_MaintenanceInformation">
+					<gmd:maintenanceAndUpdateFrequency>
+						<gmd:MD_MaintenanceFrequencyCode
+							codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode"
+							codeListValue="annually" />
+					</gmd:maintenanceAndUpdateFrequency>
+					<gmd:contact>
+						<che:CHE_CI_ResponsibleParty
+							gco:isoType="gmd:CI_ResponsibleParty">
+							<gmd:organisationName>
+								<gco:CharacterString>Amt für Landschaft und Natur - Naturschutz
+								</gco:CharacterString>
+							</gmd:organisationName>
+							<gmd:contactInfo>
+								<gmd:CI_Contact>
+									<gmd:phone>
+										<che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+											<gmd:voice>
+												<gco:CharacterString>+41 43 259 30 32</gco:CharacterString>
+											</gmd:voice>
+											<che:directNumber>
+												<gco:CharacterString>+41 43 259 49 84</gco:CharacterString>
+											</che:directNumber>
+										</che:CHE_CI_Telephone>
+									</gmd:phone>
+									<gmd:address>
+										<che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+											<gmd:city>
+												<gco:CharacterString>Zürich</gco:CharacterString>
+											</gmd:city>
+											<gmd:postalCode>
+												<gco:CharacterString>8090</gco:CharacterString>
+											</gmd:postalCode>
+											<gmd:country>
+												<gco:CharacterString>CH</gco:CharacterString>
+											</gmd:country>
+											<gmd:electronicMailAddress>
+												<gco:CharacterString>andreas.lienhard@bd.zh.ch
+												</gco:CharacterString>
+											</gmd:electronicMailAddress>
+											<che:streetName>
+												<gco:CharacterString>Stampfenbachstrasse
+												</gco:CharacterString>
+											</che:streetName>
+											<che:streetNumber>
+												<gco:CharacterString>12</gco:CharacterString>
+											</che:streetNumber>
+											<che:postBox>
+												<gco:CharacterString>Postfach</gco:CharacterString>
+											</che:postBox>
+										</che:CHE_CI_Address>
+									</gmd:address>
+									<gmd:onlineResource>
+										<gmd:CI_OnlineResource>
+											<gmd:linkage>
+												<gmd:URL>http://www.naturschutz.zh.ch</gmd:URL>
+											</gmd:linkage>
+										</gmd:CI_OnlineResource>
+									</gmd:onlineResource>
+								</gmd:CI_Contact>
+							</gmd:contactInfo>
+							<gmd:role>
+								<gmd:CI_RoleCode
+									codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"
+									codeListValue="owner" />
+							</gmd:role>
+							<che:individualFirstName>
+								<gco:CharacterString>Andreas</gco:CharacterString>
+							</che:individualFirstName>
+							<che:individualLastName>
+								<gco:CharacterString>Lienhard</gco:CharacterString>
+							</che:individualLastName>
+							<che:organisationAcronym>
+								<gco:CharacterString>ALN FNS</gco:CharacterString>
+							</che:organisationAcronym>
+						</che:CHE_CI_ResponsibleParty>
+					</gmd:contact>
+				</che:CHE_MD_MaintenanceInformation>
+			</gmd:resourceMaintenance>
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
+						<gco:CharacterString />
+					</gmd:keyword>
+					<gmd:type>
+						<gmd:MD_KeywordTypeCode
+							codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+							codeListValue="theme" />
+					</gmd:type>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<gmd:resourceConstraints>
+				<che:CHE_MD_LegalConstraints
+					gco:isoType="gmd:MD_LegalConstraints">
+					<gmd:useLimitation>
+						<gco:CharacterString>Die Daten sind grundsätzlich nur FNS-intern
+							verfügbar. Für andere kant. Stellen können die Daten auf Anfrage
+							zur Verfügung gestellt werden. Für besondere Projekte (z.B.
+							Forschung) können die Daten u.U. mit entsprechendem
+							Datennutzungsvertrag auch Dritten zugänglich gemacht werden.
+							Urheberrecht / Quellenverweis: Diese Geodaten sind
+							urheberrechtlich geschützt. Alle Rechte liegen beim Amt für
+							Landschaft und Natur. Die Verwendung oder Publikation der
+							digitalen Daten wird im Rahmen des Datennutzungsvertrages
+							geregelt. Arbeiten, welche auf diesen Daten beruhen, müssen mit
+							folgendem Vermerk auf die Quelle verweisen:
+							Grundwasserpegelstandorte FNS, Jahr, Fachstelle Naturschutz
+							Kanton Zürich Werden auf Plänen die Daten zusammen mit weiteren
+							Geodaten der Fachstelle Naturschutz verwendet, darf ein
+							gemeinsamer Quellenverweis angegeben werden: Naturschutzgeodaten,
+							Fachstelle Naturschutz Kanton Zürich Datenschutz: Bei diesen
+							Geodaten handelt es sich um topographisch, naturkundliche Inhalte
+							ohne Bezug zu Personendaten wie z.B. Eigentümer oder
+							Bewirtschafter und unterliegen damit nicht dem Datenschutz.
+							Werden durch die Anwender derartige Bezüge mit Hilfe zusätzlicher
+							Datenquellen hergestellt, unterliegt die weitere Verwendung den
+							datenschutzrechtlichen Erlassen des Kantons Zürich
+							(http://www.datenschutz.ch/themen/gesetze.php?selnavi=96 )und dem
+							Bundesgesetz über den Datenschutz, DSG
+							(http://www.admin.ch/ch/d/sr/23.html#235 ) . Gewährleistung: Bei
+							diesen Geodaten handelt es sich um unverbindliche
+							Informationsquellen. Es können keinerlei Rechtsansprüche direkt
+							aus den Datenebenen abgeleitet werden. Für die Vollständigkeit,
+							inhaltliche Richtigkeit und Aktualität der Daten wird keine
+							Gewährleistung übernommen. Die Informationen sind im
+							Zweifelsfalle durch erneute Felderhebungen zu verifizieren.
+						</gco:CharacterString>
+					</gmd:useLimitation>
+				</che:CHE_MD_LegalConstraints>
+			</gmd:resourceConstraints>
+			<gmd:spatialRepresentationType>
+				<gmd:MD_SpatialRepresentationTypeCode
+					codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode"
+					codeListValue="vector" />
+			</gmd:spatialRepresentationType>
+			<gmd:spatialResolution>
+				<gmd:MD_Resolution>
+					<gmd:equivalentScale>
+						<gmd:MD_RepresentativeFraction>
+							<gmd:denominator>
+								<gco:Integer>1</gco:Integer>
+							</gmd:denominator>
+						</gmd:MD_RepresentativeFraction>
+					</gmd:equivalentScale>
+				</gmd:MD_Resolution>
+			</gmd:spatialResolution>
+			<gmd:language>
+				<gco:CharacterString>deu</gco:CharacterString>
+			</gmd:language>
+			<gmd:characterSet>
+				<gmd:MD_CharacterSetCode
+					codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"
+					codeListValue="utf8" />
+			</gmd:characterSet>
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>biota</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>inlandWaters</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+			<gmd:extent>
+				<gmd:EX_Extent>
+					<gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>Kanton Zürich</gco:CharacterString>
+					</gmd:description>
+					<gmd:geographicElement>
+						<gmd:EX_GeographicDescription>
+							<gmd:geographicIdentifier>
+								<gmd:MD_Identifier>
+									<gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+										<gco:CharacterString>ZH</gco:CharacterString>
+									</gmd:code>
+								</gmd:MD_Identifier>
+							</gmd:geographicIdentifier>
+						</gmd:EX_GeographicDescription>
+					</gmd:geographicElement>
+					<gmd:geographicElement>
+						<gmd:EX_BoundingPolygon>
+							<gmd:extentTypeCode>
+								<gco:Boolean>true</gco:Boolean>
+							</gmd:extentTypeCode>
+							<gmd:polygon>
+								<gml:MultiSurface gml:id="N10285">
+									<gml:surfaceMember>
+										<gml:Polygon gml:id="N1028A">
+											<gml:exterior>
+												<gml:LinearRing>
+													<gml:posList>8.41006777902432 47.2483757899245
+														8.40303866967898 47.2570883333628 8.40144149533734
+														47.2681658802198 8.4020643864333 47.2726583025907
+														8.39163249396825 47.2864897352264 8.38864177530173
+														47.2900315419811 8.41467192462415 47.2935740983562
+														8.42912266989256 47.3006740207862 8.42852350316168
+														47.3011649080144 8.43623112945713 47.3152209615622
+														8.44124245168547 47.315834156434 8.45410300895583
+														47.3347914519761 8.44985328502633 47.3304841110744
+														8.43281471090933 47.3263684957635 8.41628225516286
+														47.3244588973435 8.41259997743512 47.3285558444917
+														8.41638214017789 47.3371231850609 8.40386324831644
+														47.3465654784547 8.40680529448865 47.3518839007643
+														8.40929832393093 47.3550472101296 8.40510666747981
+														47.3640504301883 8.40818572118802 47.366651157702
+														8.40035132386219 47.3705125756065 8.39951554192278
+														47.3748281334602 8.39493441124323 47.3807578686937
+														8.39656212941379 47.3939489547822 8.37865467835604
+														47.4000506911943 8.3661951780372 47.3989191047962
+														8.36234694933538 47.4023679855958 8.381469502822
+														47.4086358479729 8.39214308044735 47.4208802111169
+														8.38761760568706 47.4279694037473 8.37467703577473
+														47.4322754921406 8.38391080132011 47.4349437642487
+														8.38102438490871 47.4463726990246 8.38683585549147
+														47.4495632998014 8.38292327438022 47.4562424276122
+														8.36568459830569 47.4662400782687 8.37358246660119
+														47.4748563683575 8.37324779675142 47.4814791334414
+														8.36315411337862 47.4809126131831 8.35766442740346
+														47.5025973208971 8.36120542311106 47.5100706032339
+														8.37879368628851 47.5137337976447 8.38160547937519
+														47.5255477336475 8.38665808776804 47.5288884169984
+														8.39204938723371 47.5251653970818 8.39329434773024
+														47.525721795483 8.39498233070212 47.5317072131956
+														8.40254128302196 47.5332905438372 8.40280817316111
+														47.5333602784064 8.40867153469525 47.5438888599106
+														8.41740925587986 47.545884095465 8.4144882787149
+														47.5539228212948 8.41874717360998 47.5651119531292
+														8.42573539398369 47.5678678991867 8.43425886964675
+														47.5666976631664 8.4641339244385 47.5721936172841
+														8.4766298728637 47.577748904016 8.48380763043291
+														47.5770637829328 8.48730702021565 47.5779136357555
+														8.49473474126901 47.5811112007096 8.48721716027327
+														47.5874935708838 8.46760512926977 47.5839635912354
+														8.46049775119231 47.5883617753513 8.45805821203752
+														47.5970178801479 8.46114718050461 47.6020545208123
+														8.47773894568114 47.6106315908941 8.47861493768734
+														47.6132500954189 8.5072212565147 47.6182787796422
+														8.51517374370385 47.623395013338 8.51657353930913
+														47.632043597457 8.52098580349092 47.6343860277062
+														8.53897189601376 47.6309518926811 8.53928894072892
+														47.6282775475758 8.55786238106152 47.6244571035454
+														8.56932247274115 47.6172043525861 8.57154167594805
+														47.6108685530442 8.56305232036117 47.5994201880403
+														8.556313153766 47.5976684470777 8.555516840759
+														47.5939523789484 8.54773951246112 47.5927408195046
+														8.5372488669132 47.5876148775183 8.53357327046872
+														47.5821629790426 8.54049178295718 47.5747578445162
+														8.5463156356141 47.5742166220086 8.55408811196326
+														47.5531935405686 8.56327063526922 47.5576560768573
+														8.56750722941642 47.5625529556708 8.5720253361569
+														47.574372808841 8.57887529824228 47.5900552117661
+														8.59289050395643 47.5956191035849 8.59567461587052
+														47.605602336791 8.60339890628997 47.6109217588781
+														8.60500953927315 47.616419240809 8.59809791037809
+														47.62702112916 8.59561109425325 47.6429302033691
+														8.60722845473149 47.6525188118424 8.61401312995921
+														47.6445261832565 8.6028955570862 47.6394934180693
+														8.60674111168761 47.6370532430162 8.61601916971423
+														47.6377689749227 8.62301671495264 47.640638965164
+														8.6282339109023 47.648356845523 8.62755771611831
+														47.6538144267446 8.61455110206924 47.6615742034736
+														8.60881449323239 47.663458035051 8.6063239859578
+														47.6688617550498 8.6135690992219 47.6785295672432
+														8.61891300933039 47.6750934921733 8.62396166130437
+														47.6763462503763 8.62734540676481 47.6799543840093
+														8.62507754619414 47.6916792229872 8.63227238141355
+														47.6923250557155 8.6442104646774 47.6941625317173
+														8.66341459716068 47.6858216956976 8.66942642985644
+														47.6848676917755 8.66816702673099 47.6776674913289
+														8.67698040513194 47.6718353592133 8.67745254238037
+														47.6658309907698 8.6881037276606 47.6499853617389
+														8.71721763321881 47.6418069423174 8.73187433448613
+														47.6419413448016 8.74719185553565 47.6386484492315
+														8.76497338381479 47.6488085048451 8.77629065437886
+														47.6489214680985 8.78596742071197 47.6551868135635
+														8.78854340414312 47.6653749053908 8.79851997082449
+														47.6649886233535 8.80302610830389 47.6652055916774
+														8.80486189307418 47.6522315226876 8.81469717055166
+														47.6495787853332 8.8264303037555 47.6467496063569
+														8.82535375441877 47.6371469534412 8.81320492107217
+														47.6274601104367 8.81428984572906 47.6210698548396
+														8.80467198694614 47.6133669403707 8.80392598444372
+														47.6081586596026 8.80286726249798 47.6011280668256
+														8.78882811871486 47.6034062139089 8.78785398577994
+														47.6095520909441 8.76218301748937 47.6180961988831
+														8.75501355682031 47.6176021223566 8.74954463936668
+														47.6213159548826 8.74604907032379 47.6214543508269
+														8.74582337924396 47.6128398699536 8.74024085153934
+														47.6119312189383 8.73970267365336 47.6084292786834
+														8.74819060510346 47.5923498566546 8.76200522074613
+														47.5928496084703 8.79790642109307 47.5850313319324
+														8.80604787463421 47.5831545544738 8.80481587516852
+														47.5750645439983 8.81025264195231 47.570952537477
+														8.83115852128763 47.5734107261182 8.83874344250461
+														47.5712054748516 8.83924217317051 47.565424559559
+														8.85090415159444 47.5636638651656 8.8510529566232
+														47.5607655977765 8.82946712776638 47.5575636073148
+														8.82989464828395 47.5530878711443 8.84077016670512
+														47.5327084587946 8.86779168662193 47.5304441042143
+														8.87400527029137 47.5293777548665 8.88756184210961
+														47.5282643858937 8.89831463787941 47.5242163182644
+														8.89502918284323 47.5027136061013 8.89280588169612
+														47.4884117407837 8.88359412900229 47.470293227596
+														8.89381449182188 47.4636882634791 8.89425230458096
+														47.4632059867122 8.90880428762775 47.448340993392
+														8.90265790866323 47.4442540016506 8.90684359939606
+														47.4388035013909 8.93273952727876 47.4355390381158
+														8.93081814337552 47.4317946362963 8.9199001111138
+														47.432960605602 8.91305962999261 47.4281903812133
+														8.91267394163034 47.4128305409741 8.9035071170941
+														47.4023770989776 8.90616863254966 47.4013537758053
+														8.92082218414962 47.3994304654976 8.94158592436817
+														47.3873055363865 8.94022987482324 47.3796136701904
+														8.94363288148032 47.3758360412281 8.95130219441943
+														47.3716876154792 8.96022557095331 47.355854284045
+														8.97430029466386 47.3472025260544 8.97747767779971
+														47.3270538329828 8.98503510700743 47.3193779626375
+														8.97512901083767 47.3070776375014 8.95693455309588
+														47.3044668888422 8.94888920533062 47.2921758373064
+														8.93518616005791 47.2877755237334 8.94888798355728
+														47.2809216051953 8.93579236335318 47.260374209498
+														8.90918727621576 47.2544735659857 8.88527870121931
+														47.2527881828397 8.87385903031971 47.2496924420181
+														8.87017391595034 47.2452942176578 8.85524820954018
+														47.2443902567447 8.82835176435095 47.2504844343931
+														8.8090767052607 47.2479536232662 8.80255543128752
+														47.2466006740654 8.79575816492291 47.2390523655294
+														8.80849500371961 47.2201268025956 8.79335859859862
+														47.2225639415142 8.71332081554926 47.2030483208663
+														8.69418229235335 47.1963588708528 8.68109925802159
+														47.1837087255354 8.68237214311709 47.1743302167914
+														8.69203624047791 47.1667496656927 8.69222199801271
+														47.1634191322199 8.66579543648443 47.1596650127976
+														8.66124791030338 47.1609369015795 8.6607235861808
+														47.1703162149702 8.63284498041645 47.1718774908813
+														8.62389680188318 47.1734813540831 8.62759088884792
+														47.1800191773305 8.61515196813062 47.199344064429
+														8.60671212857034 47.2051153495255 8.60315582346877
+														47.2030463899575 8.59862296170968 47.2015808878799
+														8.59475054689537 47.2117220336517 8.58676349601737
+														47.211721020251 8.57716929294767 47.218697998929
+														8.57432124368366 47.2170169589938 8.54343818653399
+														47.2220581765704 8.53935270480622 47.2230778282816
+														8.52881612206025 47.218572354912 8.51256673691956
+														47.2194177465717 8.51161709752025 47.2155225348123
+														8.49845098416052 47.2120282997138 8.48913313537277
+														47.2108093633458 8.47992842296125 47.2085991457203
+														8.44784265086843 47.2200483067714 8.44671731585181
+														47.2233864777763 8.42169432691461 47.2233329894821
+														8.41702483297378 47.2336904631065 8.41398449298373
+														47.2436651195282 8.41006777902432 47.2483757899245
+													</gml:posList>
+												</gml:LinearRing>
+											</gml:exterior>
+										</gml:Polygon>
+									</gml:surfaceMember>
+								</gml:MultiSurface>
+							</gmd:polygon>
+						</gmd:EX_BoundingPolygon>
+					</gmd:geographicElement>
+					<gmd:geographicElement>
+						<gmd:EX_GeographicBoundingBox>
+							<gmd:extentTypeCode>
+								<gco:Boolean>true</gco:Boolean>
+							</gmd:extentTypeCode>
+							<gmd:westBoundLongitude>
+								<gco:Decimal>8.35198754496522</gco:Decimal>
+							</gmd:westBoundLongitude>
+							<gmd:eastBoundLongitude>
+								<gco:Decimal>8.99576220276481</gco:Decimal>
+							</gmd:eastBoundLongitude>
+							<gmd:southBoundLatitude>
+								<gco:Decimal>47.1623924236472</gco:Decimal>
+							</gmd:southBoundLatitude>
+							<gmd:northBoundLatitude>
+								<gco:Decimal>47.6902060844179</gco:Decimal>
+							</gmd:northBoundLatitude>
+						</gmd:EX_GeographicBoundingBox>
+					</gmd:geographicElement>
+				</gmd:EX_Extent>
+			</gmd:extent>
+		</che:CHE_MD_DataIdentification>
+	</gmd:identificationInfo>
+	<gmd:contentInfo>
+		<che:CHE_MD_FeatureCatalogueDescription
+			gco:isoType="gmd:MD_FeatureCatalogueDescription">
+			<gmd:includedWithDataset>
+				<gco:Boolean>0</gco:Boolean>
+			</gmd:includedWithDataset>
+			<gmd:featureCatalogueCitation>
+				<gmd:CI_Citation>
+					<gmd:title>
+						<gco:CharacterString>Grundwasserpegel Fachstelle Naturschutz
+						</gco:CharacterString>
+					</gmd:title>
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2009-12-31</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode
+									codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+									codeListValue="creation" />
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+				</gmd:CI_Citation>
+			</gmd:featureCatalogueCitation>
+			<che:class>
+				<che:CHE_MD_Class>
+					<che:name>
+						<gco:CharacterString>ALN_FNS.APFM_GWPEGELSTAO_P
+						</gco:CharacterString>
+					</che:name>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>BEWIRTSCHAFTUNG</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Angaben zur Bewirtschaftungsart der Fläche
+								auf der der Pegel installiert ist</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>GEBIET</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Gebietsbezeichung</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>GEMEINDE</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Gemeindename</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>HOCHWERT</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Y-Koordinate aus GPS-Vermessung
+							</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>INFOSTAND_BEWI</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Angaben zum Informationsstand des
+								Bewirtschafters über die Pegelinstallation</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>OBJECTID</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Systemnummer</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>PROJEKT</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Angaben zum Projekt in dessen Rahmen der
+								Pegel installiert wurde</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>RECHTSWERT</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>X-Koordinate aus GPS-Vermessung
+							</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>STATUS</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Angaben zum Status des Pegel, etwa:
+								funktionstüchtig, beschädigt, etc.</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+					<che:attribute>
+						<che:name>
+							<gco:CharacterString>VORAUSSICHTLICHE_LAUFZEIT
+							</gco:CharacterString>
+						</che:name>
+						<che:description>
+							<gco:CharacterString>Angabe, bis wann ein Pegel voraussichtlich
+								installiert bleiben soll. während dieser Zeit muss insbesondere
+								bei Mäharbeiten auf die Pegel geachtet werden.
+							</gco:CharacterString>
+						</che:description>
+					</che:attribute>
+				</che:CHE_MD_Class>
+			</che:class>
+			<che:modelType>
+				<che:CHE_MD_modelTypeCode codeList=""
+					codeListValue="FeatureDescription" />
+			</che:modelType>
+		</che:CHE_MD_FeatureCatalogueDescription>
+	</gmd:contentInfo>
+	<gmd:distributionInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:MD_Distribution>
+			<gmd:distributionFormat>
+				<gmd:MD_Format>
+					<gmd:name>
+						<gco:CharacterString>ESRI Shapefile</gco:CharacterString>
+					</gmd:name>
+					<gmd:version>
+						<gco:CharacterString>-</gco:CharacterString>
+					</gmd:version>
+				</gmd:MD_Format>
+			</gmd:distributionFormat>
+			<gmd:distributionFormat>
+				<gmd:MD_Format>
+					<gmd:name>
+						<gco:CharacterString>ESRI Shapefile</gco:CharacterString>
+					</gmd:name>
+					<gmd:version>
+						<gco:CharacterString>-</gco:CharacterString>
+					</gmd:version>
+				</gmd:MD_Format>
+			</gmd:distributionFormat>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
+	<gmd:dataQualityInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:DQ_DataQuality>
+			<gmd:scope>
+				<gmd:DQ_Scope>
+					<gmd:level>
+						<gmd:MD_ScopeCode
+							codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"
+							codeListValue="dataset" />
+					</gmd:level>
+				</gmd:DQ_Scope>
+			</gmd:scope>
+			<gmd:lineage>
+				<gmd:LI_Lineage />
+			</gmd:lineage>
+		</gmd:DQ_DataQuality>
+	</gmd:dataQualityInfo>
+</che:CHE_MD_Metadata>

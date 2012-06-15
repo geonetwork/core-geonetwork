@@ -1,0 +1,3421 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<TRANSFER>
+  <HEADERSECTION VERSION='2.2' SENDER='testcatalog'>
+    <ALIAS>
+      <ENTRIES FOR='GM03Core'>
+        <TAGENTRY FROM='GM03Core.Core' TO='GM03Core.Core'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive' TO='GM03Core.Core'/>
+        <TAGENTRY FROM='GM03Core.Core.CharacterString_' TO='GM03Core.Core.CharacterString_'/>
+        <TAGENTRY FROM='GM03Core.Core.CharacterStringLong_' TO='GM03Core.Core.CharacterStringLong_'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_RoleCode_' TO='GM03Core.Core.CI_RoleCode_'/>
+        <TAGENTRY FROM='GM03Core.Core.GM_Point_' TO='GM03Core.Core.GM_Point_'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_CharacterSetCode_' TO='GM03Core.Core.MD_CharacterSetCode_'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_ProgressCode_' TO='GM03Core.Core.MD_ProgressCode_'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_ScopeCode_' TO='GM03Core.Core.MD_ScopeCode_'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_SpatialRepresentationTypeCode_' TO='GM03Core.Core.MD_SpatialRepresentationTypeCode_'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_TopicCategoryCode_' TO='GM03Core.Core.MD_TopicCategoryCode_'/>
+        <TAGENTRY FROM='GM03Core.Core.Real_' TO='GM03Core.Core.Real_'/>
+        <TAGENTRY FROM='GM03Core.Core.URL_' TO='GM03Core.Core.URL_'/>
+        <TAGENTRY FROM='GM03Core.Core.DQ_DataQuality' TO='GM03Core.Core.DQ_DataQuality'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Authority' TO='GM03Core.Core.MD_Authority'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DigitalTransferOptions' TO='GM03Core.Core.MD_DigitalTransferOptions'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions' TO='GM03Core.Core.MD_DigitalTransferOptions'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions.unitsOfDistribution'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions.transferSize'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Distribution' TO='GM03Core.Core.MD_Distribution'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_ReferenceSystem' TO='GM03Core.Core.MD_ReferenceSystem'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CRS' TO='GM03Core.Core.MD_ReferenceSystem'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Thesaurus' TO='GM03Core.Core.MD_Thesaurus'/>
+        <TAGENTRY FROM='GM03Core.Core.SC_VerticalDatum' TO='GM03Core.Core.SC_VerticalDatum'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_Address' TO='GM03Core.Core.CI_Address'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_Telephone' TO='GM03Core.Core.CI_Telephone'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_VerticalExtent' TO='GM03Core.Core.EX_VerticalExtent'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Format' TO='GM03Core.Core.MD_Format'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Format' TO='GM03Core.Core.MD_Format'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Format.amendmentNumber'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Format.specification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Format.fileDecompressionTechnique'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_RepresentativeFraction' TO='GM03Core.Core.MD_RepresentativeFraction'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Resolution' TO='GM03Core.Core.MD_Resolution'/>
+        <TAGENTRY FROM='GM03Core.Core.PT_Group' TO='GM03Core.Core.PT_Group'/>
+        <TAGENTRY FROM='GM03Core.Core.PT_URLGroup' TO='GM03Core.Core.PT_URLGroup'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DistributiontransferOptions' TO='GM03Core.Core.MD_DistributiontransferOptions'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_BoundingPolygon' TO='GM03Core.Core.EX_BoundingPolygon'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_GeographicBoundingBox' TO='GM03Core.Core.EX_GeographicBoundingBox'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_GeographicDescription' TO='GM03Core.Core.EX_GeographicDescription'/>
+        <TAGENTRY FROM='GM03Core.Core.PT_FreeText' TO='GM03Core.Core.PT_FreeText'/>
+        <TAGENTRY FROM='GM03Core.Core.PT_FreeURL' TO='GM03Core.Core.PT_FreeURL'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DistributiondistributionFormat' TO='GM03Core.Core.MD_DistributiondistributionFormat'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_ResolutionequivalentScale' TO='GM03Core.Core.MD_ResolutionequivalentScale'/>
+        <TAGENTRY FROM='GM03Core.Core.verticalDatumEX_VerticalExtent' TO='GM03Core.Core.verticalDatumEX_VerticalExtent'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_Citation' TO='GM03Core.Core.CI_Citation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_Citation' TO='GM03Core.Core.CI_Citation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.edition'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.editionDate'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.presentationForm'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.ISBN'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.ISSN'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.alternateTitle'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.collectiveTitle'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citation.otherCitationDetails'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_Contact' TO='GM03Core.Core.CI_Contact'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_OnlineResource' TO='GM03Core.Core.CI_OnlineResource'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_ResponsibleParty' TO='GM03Core.Core.CI_ResponsibleParty'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_Extent' TO='GM03Core.Core.EX_Extent'/>
+        <TAGENTRY FROM='GM03Core.Core.LI_Lineage' TO='GM03Core.Core.LI_Lineage'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Identifier' TO='GM03Core.Core.MD_Identifier'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.RS_Identifier' TO='GM03Core.Core.MD_Identifier'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.RS_Identifier.codeSpace'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.RS_Identifier.version'/>
+        <TAGENTRY FROM='GM03Core.Core.RS_Identifier' TO='GM03Core.Core.MD_Identifier'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Keywords' TO='GM03Core.Core.MD_Keywords'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DataIdentification' TO='GM03Core.Core.MD_DataIdentification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_DataIdentification' TO='GM03Core.Core.MD_DataIdentification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DataIdentification.ProjectType'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DataIdentification.credit'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DataIdentification.environmentDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DataIdentification.supplementalInformation'/>
+        <TAGENTRY FROM='GM03Core.Core.RS_Identifier' TO='GM03Core.Core.RS_Identifier'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.RS_Identifier' TO='GM03Core.Core.RS_Identifier'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.RS_Identifier.codeSpace'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.RS_Identifier.version'/>
+        <TAGENTRY FROM='GM03Core.Core.authorityMD_Identifier' TO='GM03Core.Core.authorityMD_Identifier'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_ResponsiblePartyaddress' TO='GM03Core.Core.CI_ResponsiblePartyaddress'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_ResponsiblePartycontactInfo' TO='GM03Core.Core.CI_ResponsiblePartycontactInfo'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_ResponsiblePartyparentinfo' TO='GM03Core.Core.CI_ResponsiblePartyparentinfo'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_ResponsiblePartyphone' TO='GM03Core.Core.CI_ResponsiblePartyphone'/>
+        <TAGENTRY FROM='GM03Core.Core.citationCI_Citation' TO='GM03Core.Core.citationCI_Citation'/>
+        <TAGENTRY FROM='GM03Core.Core.descriptiveKeywordsMD_Identification' TO='GM03Core.Core.descriptiveKeywordsMD_Identification'/>
+        <TAGENTRY FROM='GM03Core.Core.DQ_DataQualitylineage' TO='GM03Core.Core.DQ_DataQualitylineage'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_ExtentgeographicElement' TO='GM03Core.Core.EX_ExtentgeographicElement'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_ExtentverticalElement' TO='GM03Core.Core.EX_ExtentverticalElement'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_GeographicDescriptiongeographicIdentifier' TO='GM03Core.Core.EX_GeographicDescriptiongeographicIdentifier'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DigitalTransferOptionsonLine' TO='GM03Core.Core.MD_DigitalTransferOptionsonLine'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Identificationcitation' TO='GM03Core.Core.MD_Identificationcitation'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_IdentificationpointOfContact' TO='GM03Core.Core.MD_IdentificationpointOfContact'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Keywordsthesaurus' TO='GM03Core.Core.MD_Keywordsthesaurus'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Thesauruscitation' TO='GM03Core.Core.MD_Thesauruscitation'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DataIdentificationextent' TO='GM03Core.Core.MD_DataIdentificationextent'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_DataIdentificationspatialResolution' TO='GM03Core.Core.MD_DataIdentificationspatialResolution'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_ReferenceSystemreferenceSystemIdentifier' TO='GM03Core.Core.MD_ReferenceSystemreferenceSystemIdentifier'/>
+        <TAGENTRY FROM='GM03Core.Core.SC_VerticalDatumdatumID' TO='GM03Core.Core.SC_VerticalDatumdatumID'/>
+        <TAGENTRY FROM='GM03Core.Core.DateTime_' TO='GM03Core.Core.DateTime_'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_Date' TO='GM03Core.Core.CI_Date'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Metadata' TO='GM03Core.Core.MD_Metadata'/>
+        <TAGENTRY FROM='GM03Core.Core.TM_Primitive' TO='GM03Core.Core.TM_Primitive'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_TemporalExtent' TO='GM03Core.Core.EX_TemporalExtent'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_SpatialTemporalExtent' TO='GM03Core.Core.EX_TemporalExtent'/>
+        <TAGENTRY FROM='GM03Core.Core.CI_Citationdate' TO='GM03Core.Core.CI_Citationdate'/>
+        <TAGENTRY FROM='GM03Core.Core.distributionInfoMD_Metadata' TO='GM03Core.Core.distributionInfoMD_Metadata'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_Metadatacontact' TO='GM03Core.Core.MD_Metadatacontact'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_MetadatadataQualityInfo' TO='GM03Core.Core.MD_MetadatadataQualityInfo'/>
+        <TAGENTRY FROM='GM03Core.Core.MD_MetadataidentificationInfo' TO='GM03Core.Core.MD_MetadataidentificationInfo'/>
+        <TAGENTRY FROM='GM03Core.Core.parentIdentifierMD_Metadata' TO='GM03Core.Core.parentIdentifierMD_Metadata'/>
+        <TAGENTRY FROM='GM03Core.Core.referenceSystemInfoMD_Metadata' TO='GM03Core.Core.referenceSystemInfoMD_Metadata'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_SpatialTemporalExtent' TO='GM03Core.Core.EX_SpatialTemporalExtent'/>
+        <TAGENTRY FROM='GM03Core.Core.EX_ExtenttemporalElement' TO='GM03Core.Core.EX_ExtenttemporalElement'/>
+        <TAGENTRY FROM='GM03Core.Core.spatialExtentEX_SpatialTemporalExtent' TO='GM03Core.Core.spatialExtentEX_SpatialTemporalExtent'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_PresentationFormCode_'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.GenericName_'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MediumFormatCode_'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_RestrictionCode_'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.Record_'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Series'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_Scope'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_ProcessStep'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_Source'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Attribute'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_BrowseGraphic'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_CodeDomain'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_CodeValue'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Constraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Distributor'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_EllipsoidParameters'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ObliqueLineAzimuth'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ObliqueLinePoint'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ProjectionParameters'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Revision'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Role'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ServiceIdentification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_StandardOrderProcess'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Type'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Usage'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.resourceFormatMD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ConformanceResult'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_QuantitativeResult'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_AggregateInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Association'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Class'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_CoverageDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Dimension'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_GeometricObjects'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_LegalConstraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Legislation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MaintenanceInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Medium'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_RangeDimension'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ScopeDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_SecurityConstraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.anonymousTypeMD_Attribute'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.attributeMD_AbstractClass'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.contentInfoMD_Metadata'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_Scopeextent'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.ellipsoidParametersMD_CRS'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.formatDistributordistributorFormat'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.graphicOverviewMD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_SourcescaleDenominator'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_SourcesourceExtent'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_SourcesourceReferenceSystem'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_AttributenamedType'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_CRSdatum'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_CRSellipsoid'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_CRSprojection'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Distributiondistributor'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DistributordistributorContact'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MetadataExtensionInfoextensionOnLineResource'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MetadataspatialRepresentationInfo'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_RevisionrevisionExtent'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_RoletoClass'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.obliqueLineAzimuthParameterMD_ProjectionParameters'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.processStepLI_Lineage'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.projectionParametersMD_CRS'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.resourceSpecificUsageMD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.revisionMD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.scopeDQ_DataQuality'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.sourceLI_Lineage'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.sourceStepsource'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.subClassbaseClass'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.subDomainbaseDomain'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.subValueMD_CodeValue'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.typeMD_CodeDomain'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.valueMD_Type'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georeferenceable'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.axisDimensionPropertiesMD_GridSpatialRepresentation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citationidentifier'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.CI_Citationseries'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ConformanceResultspecification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ElementevaluationProcedure'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ElementmeasureIdentification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ScopelevelDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.featureCatalogueCitationCI_Citation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.LI_SourcesourceCitation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetIdentifier'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetName'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformationname'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptionsoffLine'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Legislationtitle'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_MetadatametadataMaintenance'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReferenceportrayalCatalogueCitation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentationgeometricObjects'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.reportDQ_DataQuality'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.resourceMaintenanceMD_Identification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.resultDQ_Element'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.roleMD_Association'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_CompletenessCommission'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_CompletenessOmission'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ConceptualConsistency'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_DomainConsistency'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_FormatConsistency'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_TemporalConsistency'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_TemporalValidity'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.DQ_TopologicalConsistency'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_GeoreferenceableparameterCitation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescriptionimageQualitiyCode'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescriptionprocessingLevelCode'/>
+      </ENTRIES>
+      <ENTRIES FOR='GM03Comprehensive'>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive' TO='GM03Comprehensive.Comprehensive'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_PresentationFormCode_' TO='GM03Comprehensive.Comprehensive.CI_PresentationFormCode_'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.GenericName_' TO='GM03Comprehensive.Comprehensive.GenericName_'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MediumFormatCode_' TO='GM03Comprehensive.Comprehensive.MD_MediumFormatCode_'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_RestrictionCode_' TO='GM03Comprehensive.Comprehensive.MD_RestrictionCode_'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.Record_' TO='GM03Comprehensive.Comprehensive.Record_'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_Series' TO='GM03Comprehensive.Comprehensive.CI_Series'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_Scope' TO='GM03Comprehensive.Comprehensive.DQ_Scope'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_ProcessStep' TO='GM03Comprehensive.Comprehensive.LI_ProcessStep'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_Source' TO='GM03Comprehensive.Comprehensive.LI_Source'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Attribute' TO='GM03Comprehensive.Comprehensive.MD_Attribute'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_BrowseGraphic' TO='GM03Comprehensive.Comprehensive.MD_BrowseGraphic'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CodeDomain' TO='GM03Comprehensive.Comprehensive.MD_CodeDomain'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CodeValue' TO='GM03Comprehensive.Comprehensive.MD_CodeValue'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Constraints' TO='GM03Comprehensive.Comprehensive.MD_Constraints'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_LegalConstraints' TO='GM03Comprehensive.Comprehensive.MD_Constraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_LegalConstraints.accessConstraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_LegalConstraints.useConstraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_LegalConstraints.otherConstraints'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_SecurityConstraints' TO='GM03Comprehensive.Comprehensive.MD_Constraints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_SecurityConstraints.classification'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_SecurityConstraints.classificationSystem'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_SecurityConstraints.handlingDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_SecurityConstraints.userNote'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CRS' TO='GM03Comprehensive.Comprehensive.MD_CRS'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions' TO='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Distributor' TO='GM03Comprehensive.Comprehensive.MD_Distributor'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_EllipsoidParameters' TO='GM03Comprehensive.Comprehensive.MD_EllipsoidParameters'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Format' TO='GM03Comprehensive.Comprehensive.MD_Format'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation' TO='GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ObliqueLineAzimuth' TO='GM03Comprehensive.Comprehensive.MD_ObliqueLineAzimuth'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ObliqueLinePoint' TO='GM03Comprehensive.Comprehensive.MD_ObliqueLinePoint'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference' TO='GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ProjectionParameters' TO='GM03Comprehensive.Comprehensive.MD_ProjectionParameters'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Revision' TO='GM03Comprehensive.Comprehensive.MD_Revision'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Role' TO='GM03Comprehensive.Comprehensive.MD_Role'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ServiceIdentification' TO='GM03Comprehensive.Comprehensive.MD_ServiceIdentification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_StandardOrderProcess' TO='GM03Comprehensive.Comprehensive.MD_StandardOrderProcess'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Type' TO='GM03Comprehensive.Comprehensive.MD_Type'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Usage' TO='GM03Comprehensive.Comprehensive.MD_Usage'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.RS_Identifier' TO='GM03Comprehensive.Comprehensive.RS_Identifier'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.resourceFormatMD_Identification' TO='GM03Comprehensive.Comprehensive.resourceFormatMD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_Citation' TO='GM03Comprehensive.Comprehensive.CI_Citation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ConformanceResult' TO='GM03Comprehensive.Comprehensive.DQ_ConformanceResult'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_QuantitativeResult' TO='GM03Comprehensive.Comprehensive.DQ_QuantitativeResult'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_AggregateInformation' TO='GM03Comprehensive.Comprehensive.MD_AggregateInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation' TO='GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Association' TO='GM03Comprehensive.Comprehensive.MD_Association'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Class' TO='GM03Comprehensive.Comprehensive.MD_Class'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CoverageDescription' TO='GM03Comprehensive.Comprehensive.MD_CoverageDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ImageDescription' TO='GM03Comprehensive.Comprehensive.MD_CoverageDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.illuminationElevationAngle'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.illuminationAzimuthAngle'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.imagingCondition'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.cloudCoverPercentage'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.compressionGenerationQuantity'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.triangulationIndicator'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.radiometricCalibrationDataAvailability'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.cameraCalibrationInformationAvailability'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.filmDistortionInformationAvailability'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_ImageDescription.lensDistortionInformationAvailability'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_DataIdentification' TO='GM03Comprehensive.Comprehensive.MD_DataIdentification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Dimension' TO='GM03Comprehensive.Comprehensive.MD_Dimension'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation' TO='GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription' TO='GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_GeometricObjects' TO='GM03Comprehensive.Comprehensive.MD_GeometricObjects'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation' TO='GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Georectified' TO='GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.checkPointAvailability'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.checkPointDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.cornerPoints'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.centerPoint'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.pointInPixel'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.transformationDimensionDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georectified.transformationDimensionMapping'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Georeferenceable' TO='GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georeferenceable.controlPointAvailability'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georeferenceable.orientationParameterAvailability'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georeferenceable.orientationParameterDescription'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Georeferenceable.georeferencedParameters'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_LegalConstraints' TO='GM03Comprehensive.Comprehensive.MD_LegalConstraints'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Legislation' TO='GM03Comprehensive.Comprehensive.MD_Legislation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MaintenanceInformation' TO='GM03Comprehensive.Comprehensive.MD_MaintenanceInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Medium' TO='GM03Comprehensive.Comprehensive.MD_Medium'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_RangeDimension' TO='GM03Comprehensive.Comprehensive.MD_RangeDimension'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Band' TO='GM03Comprehensive.Comprehensive.MD_RangeDimension'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.maxValue'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.minValue'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.units'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.peakResponse'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.bitsPerValue'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.toneGradation'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.scaleFactor'/>
+        <DELENTRY TAG='GM03Comprehensive.Comprehensive.MD_Band.offset'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ScopeDescription' TO='GM03Comprehensive.Comprehensive.MD_ScopeDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_SecurityConstraints' TO='GM03Comprehensive.Comprehensive.MD_SecurityConstraints'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation' TO='GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.anonymousTypeMD_Attribute' TO='GM03Comprehensive.Comprehensive.anonymousTypeMD_Attribute'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.attributeMD_AbstractClass' TO='GM03Comprehensive.Comprehensive.attributeMD_AbstractClass'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.contentInfoMD_Metadata' TO='GM03Comprehensive.Comprehensive.contentInfoMD_Metadata'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor' TO='GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor' TO='GM03Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_Scopeextent' TO='GM03Comprehensive.Comprehensive.DQ_Scopeextent'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.ellipsoidParametersMD_CRS' TO='GM03Comprehensive.Comprehensive.ellipsoidParametersMD_CRS'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.formatDistributordistributorFormat' TO='GM03Comprehensive.Comprehensive.formatDistributordistributorFormat'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.graphicOverviewMD_Identification' TO='GM03Comprehensive.Comprehensive.graphicOverviewMD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor' TO='GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_SourcescaleDenominator' TO='GM03Comprehensive.Comprehensive.LI_SourcescaleDenominator'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_SourcesourceExtent' TO='GM03Comprehensive.Comprehensive.LI_SourcesourceExtent'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_SourcesourceReferenceSystem' TO='GM03Comprehensive.Comprehensive.LI_SourcesourceReferenceSystem'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_AttributenamedType' TO='GM03Comprehensive.Comprehensive.MD_AttributenamedType'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CRSdatum' TO='GM03Comprehensive.Comprehensive.MD_CRSdatum'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CRSellipsoid' TO='GM03Comprehensive.Comprehensive.MD_CRSellipsoid'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_CRSprojection' TO='GM03Comprehensive.Comprehensive.MD_CRSprojection'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Distributiondistributor' TO='GM03Comprehensive.Comprehensive.MD_Distributiondistributor'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_DistributordistributorContact' TO='GM03Comprehensive.Comprehensive.MD_DistributordistributorContact'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MetadataExtensionInfoextensionOnLineResource' TO='GM03Comprehensive.Comprehensive.MD_MetadataExtensionInfoextensionOnLineResource'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints' TO='GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MetadataspatialRepresentationInfo' TO='GM03Comprehensive.Comprehensive.MD_MetadataspatialRepresentationInfo'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact' TO='GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_RevisionrevisionExtent' TO='GM03Comprehensive.Comprehensive.MD_RevisionrevisionExtent'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_RoletoClass' TO='GM03Comprehensive.Comprehensive.MD_RoletoClass'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo' TO='GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata' TO='GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.obliqueLineAzimuthParameterMD_ProjectionParameters' TO='GM03Comprehensive.Comprehensive.obliqueLineAzimuthParameterMD_ProjectionParameters'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters' TO='GM03Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata' TO='GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.processStepLI_Lineage' TO='GM03Comprehensive.Comprehensive.processStepLI_Lineage'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.projectionParametersMD_CRS' TO='GM03Comprehensive.Comprehensive.projectionParametersMD_CRS'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification' TO='GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.resourceSpecificUsageMD_Identification' TO='GM03Comprehensive.Comprehensive.resourceSpecificUsageMD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.revisionMD_Identification' TO='GM03Comprehensive.Comprehensive.revisionMD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.scopeDQ_DataQuality' TO='GM03Comprehensive.Comprehensive.scopeDQ_DataQuality'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.sourceLI_Lineage' TO='GM03Comprehensive.Comprehensive.sourceLI_Lineage'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.sourceStepsource' TO='GM03Comprehensive.Comprehensive.sourceStepsource'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.subClassbaseClass' TO='GM03Comprehensive.Comprehensive.subClassbaseClass'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.subDomainbaseDomain' TO='GM03Comprehensive.Comprehensive.subDomainbaseDomain'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.subValueMD_CodeValue' TO='GM03Comprehensive.Comprehensive.subValueMD_CodeValue'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.typeMD_CodeDomain' TO='GM03Comprehensive.Comprehensive.typeMD_CodeDomain'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.valueMD_Type' TO='GM03Comprehensive.Comprehensive.valueMD_Type'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Band' TO='GM03Comprehensive.Comprehensive.MD_Band'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Georectified' TO='GM03Comprehensive.Comprehensive.MD_Georectified'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Georeferenceable' TO='GM03Comprehensive.Comprehensive.MD_Georeferenceable'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ImageDescription' TO='GM03Comprehensive.Comprehensive.MD_ImageDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification' TO='GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata' TO='GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.axisDimensionPropertiesMD_GridSpatialRepresentation' TO='GM03Comprehensive.Comprehensive.axisDimensionPropertiesMD_GridSpatialRepresentation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty' TO='GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_Citationidentifier' TO='GM03Comprehensive.Comprehensive.CI_Citationidentifier'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.CI_Citationseries' TO='GM03Comprehensive.Comprehensive.CI_Citationseries'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription' TO='GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription' TO='GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription' TO='GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ConformanceResultspecification' TO='GM03Comprehensive.Comprehensive.DQ_ConformanceResultspecification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ElementevaluationProcedure' TO='GM03Comprehensive.Comprehensive.DQ_ElementevaluationProcedure'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ElementmeasureIdentification' TO='GM03Comprehensive.Comprehensive.DQ_ElementmeasureIdentification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ScopelevelDescription' TO='GM03Comprehensive.Comprehensive.DQ_ScopelevelDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation' TO='GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.featureCatalogueCitationCI_Citation' TO='GM03Comprehensive.Comprehensive.featureCatalogueCitationCI_Citation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints' TO='GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.LI_SourcesourceCitation' TO='GM03Comprehensive.Comprehensive.LI_SourcesourceCitation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetIdentifier' TO='GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetIdentifier'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetName' TO='GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetName'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformationname' TO='GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformationname'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptionsoffLine' TO='GM03Comprehensive.Comprehensive.MD_DigitalTransferOptionsoffLine'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource' TO='GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_Legislationtitle' TO='GM03Comprehensive.Comprehensive.MD_Legislationtitle'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact' TO='GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription' TO='GM03Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation' TO='GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_MetadatametadataMaintenance' TO='GM03Comprehensive.Comprehensive.MD_MetadatametadataMaintenance'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReferenceportrayalCatalogueCitation' TO='GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReferenceportrayalCatalogueCitation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription' TO='GM03Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentationgeometricObjects' TO='GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentationgeometricObjects'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.reportDQ_DataQuality' TO='GM03Comprehensive.Comprehensive.reportDQ_DataQuality'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.resourceMaintenanceMD_Identification' TO='GM03Comprehensive.Comprehensive.resourceMaintenanceMD_Identification'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.resultDQ_Element' TO='GM03Comprehensive.Comprehensive.resultDQ_Element'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.roleMD_Association' TO='GM03Comprehensive.Comprehensive.roleMD_Association'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy' TO='GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement' TO='GM03Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_CompletenessCommission' TO='GM03Comprehensive.Comprehensive.DQ_CompletenessCommission'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_CompletenessOmission' TO='GM03Comprehensive.Comprehensive.DQ_CompletenessOmission'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ConceptualConsistency' TO='GM03Comprehensive.Comprehensive.DQ_ConceptualConsistency'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_DomainConsistency' TO='GM03Comprehensive.Comprehensive.DQ_DomainConsistency'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_FormatConsistency' TO='GM03Comprehensive.Comprehensive.DQ_FormatConsistency'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy' TO='GM03Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy' TO='GM03Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy' TO='GM03Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy' TO='GM03Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_TemporalConsistency' TO='GM03Comprehensive.Comprehensive.DQ_TemporalConsistency'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_TemporalValidity' TO='GM03Comprehensive.Comprehensive.DQ_TemporalValidity'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness' TO='GM03Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.DQ_TopologicalConsistency' TO='GM03Comprehensive.Comprehensive.DQ_TopologicalConsistency'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_GeoreferenceableparameterCitation' TO='GM03Comprehensive.Comprehensive.MD_GeoreferenceableparameterCitation'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ImageDescriptionimageQualitiyCode' TO='GM03Comprehensive.Comprehensive.MD_ImageDescriptionimageQualitiyCode'/>
+        <TAGENTRY FROM='GM03Comprehensive.Comprehensive.MD_ImageDescriptionprocessingLevelCode' TO='GM03Comprehensive.Comprehensive.MD_ImageDescriptionprocessingLevelCode'/>
+      </ENTRIES>
+    </ALIAS>
+  </HEADERSECTION>
+  <DATASECTION>
+    <GM03Comprehensive.Comprehensive BID='xBID72'>
+      <GM03Core.Core.MD_Metadata TID='xMetadatax1101'>
+        <fileIdentifier>xxxxx</fileIdentifier>
+        <language>DE</language>
+        <characterSet>utf8</characterSet>
+        <dateStamp>2009:01:06</dateStamp>
+        <metadataStandardName>GM03Comprehensive</metadataStandardName>
+        <metadataStandardVersion>xxx</metadataStandardVersion>
+        <hierarchyLevel>
+          <GM03Core.Core.MD_ScopeCode_>
+            <value>dataset</value>
+          </GM03Core.Core.MD_ScopeCode_>
+        </hierarchyLevel>
+        <hierarchyLevelName>
+          <GM03Core.Core.CharacterString_>
+            <value>xx</value>
+          </GM03Core.Core.CharacterString_>
+        </hierarchyLevelName>
+        <dataSetURI>http://www.xxx.ch</dataSetURI>
+        <metadataMaintenance REF='xMaintInfox402'/>
+        <distributionInfo REF='xDistribx1101'/>
+      </GM03Core.Core.MD_Metadata>
+      <GM03Comprehensive.Comprehensive.MD_Georectified TID='xGeorectx1101x0'>
+        <numberOfDimensions>3</numberOfDimensions>
+        <cellGeometry>area</cellGeometry>
+        <transformationParameterAvailability>true</transformationParameterAvailability>
+        <checkPointAvailability>true</checkPointAvailability>
+        <checkPointDescription>xxx</checkPointDescription>
+        <cornerPoints>
+          <GM03Core.Core.GM_Point_>
+            <value>
+              <COORD>
+                <C1>13.0</C1>
+                <C2>20.0</C2>
+              </COORD>
+            </value>
+          </GM03Core.Core.GM_Point_>
+          <GM03Core.Core.GM_Point_>
+            <value>
+              <COORD>
+                <C1>20.0</C1>
+                <C2>60.0</C2>
+              </COORD>
+            </value>
+          </GM03Core.Core.GM_Point_>
+        </cornerPoints>
+        <centerPoint>
+          <COORD>
+            <C1>10.0</C1>
+            <C2>10.0</C2>
+          </COORD>
+        </centerPoint>
+        <pointInPixel>upperLeft</pointInPixel>
+        <transformationDimensionDescription>transfo dimension</transformationDimensionDescription>
+        <transformationDimensionMapping>
+          <GM03Core.Core.CharacterString_>
+            <value>rasterabbildungsbeschreibung</value>
+          </GM03Core.Core.CharacterString_>
+        </transformationDimensionMapping>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_Georectified>
+      <GM03Comprehensive.Comprehensive.MD_Dimension TID='xDimenx313'>
+        <dimensionName>column</dimensionName>
+        <dimensionSize>20</dimensionSize>
+        <resolution>100.0</resolution>
+        <MD_GridSpatialRepresentation REF='xGeorectx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_Dimension>
+      <GM03Comprehensive.Comprehensive.MD_Georeferenceable TID='xGeorefx1101x0'>
+        <numberOfDimensions>3</numberOfDimensions>
+        <cellGeometry>point</cellGeometry>
+        <transformationParameterAvailability>false</transformationParameterAvailability>
+        <controlPointAvailability>false</controlPointAvailability>
+        <orientationParameterAvailability>false</orientationParameterAvailability>
+        <georeferencedParameters>georefernizierte parameter</georeferencedParameters>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_Georeferenceable>
+      <GM03Comprehensive.Comprehensive.MD_Dimension TID='xDimenx314'>
+        <dimensionName>track</dimensionName>
+        <dimensionSize>100</dimensionSize>
+        <resolution>20.0</resolution>
+        <MD_GridSpatialRepresentation REF='xGeorefx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_Dimension>
+      <GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation TID='xGridSpatRepx1101x0'>
+        <numberOfDimensions>2</numberOfDimensions>
+        <cellGeometry>area</cellGeometry>
+        <transformationParameterAvailability>true</transformationParameterAvailability>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation>
+      <GM03Comprehensive.Comprehensive.MD_Dimension TID='xDimenx315'>
+        <dimensionName>sample</dimensionName>
+        <dimensionSize>100</dimensionSize>
+        <resolution>60.0</resolution>
+        <MD_GridSpatialRepresentation REF='xGridSpatRepx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_Dimension>
+      <GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation TID='xVectSpatRepx1101x0'>
+        <topologyLevel>fullPlanarGraph</topologyLevel>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation>
+      <GM03Comprehensive.Comprehensive.MD_GeometricObjects TID='xGeometObjsx1101x0x0'>
+        <geometricObjectType>surface</geometricObjectType>
+        <geometricObjectCount>100</geometricObjectCount>
+        <MD_VectorSpatialRepresentation REF='xVectSpatRepx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_GeometricObjects>
+      <GM03Comprehensive.Comprehensive.MD_CoverageDescription TID='xCovDescx1101x0'>
+        <attributeDescription>blab</attributeDescription>
+        <contentType>image</contentType>
+        <filmType>CIR</filmType>
+        <focalDistance>23</focalDistance>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_CoverageDescription>
+      <GM03Comprehensive.Comprehensive.MD_Band TID='xBandx1'>
+        <sequenceIdentifier>2</sequenceIdentifier>
+        <descriptor>xxx</descriptor>
+        <maxValue>2.0</maxValue>
+        <minValue>1.0</minValue>
+        <units>cm</units>
+        <peakResponse>1.0</peakResponse>
+        <bitsPerValue>2</bitsPerValue>
+        <toneGradation>10</toneGradation>
+        <scaleFactor>300.0</scaleFactor>
+        <offset>5.0</offset>
+      </GM03Comprehensive.Comprehensive.MD_Band>
+      <GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID='x222'>
+        <dimension REF='xBandx1'/>
+        <MD_CoverageDescription REF='xCovDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription>
+      <GM03Comprehensive.Comprehensive.MD_RangeDimension TID='xRangeDimx1'>
+        <sequenceIdentifier>45</sequenceIdentifier>
+        <descriptor>xxxxx</descriptor>
+      </GM03Comprehensive.Comprehensive.MD_RangeDimension>
+      <GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID='x223'>
+        <dimension REF='xRangeDimx1'/>
+        <MD_CoverageDescription REF='xCovDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription>
+      <GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription TID='xFetCatDescx1101x0'>
+        <language>
+          <CodeISO.LanguageCodeISO_>
+            <value>DE</value>
+          </CodeISO.LanguageCodeISO_>
+        </language>
+        <includedWithDataset>true</includedWithDataset>
+        <complianceCode>false</complianceCode>
+        <featureTypes>
+          <GM03Comprehensive.Comprehensive.GenericName_>
+            <value>xxx</value>
+          </GM03Comprehensive.Comprehensive.GenericName_>
+          <GM03Comprehensive.Comprehensive.GenericName_>
+            <value>yyy</value>
+          </GM03Comprehensive.Comprehensive.GenericName_>
+          <GM03Comprehensive.Comprehensive.GenericName_>
+            <value>zzz</value>
+          </GM03Comprehensive.Comprehensive.GenericName_>
+        </featureTypes>
+        <dataModel>http://www.interlis.ch</dataModel>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1319'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xxx</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>yyy</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <edition>23</edition>
+        <editionDate>2000:01:03</editionDate>
+        <presentationForm>
+          <GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+            <value>documentDigital</value>
+          </GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+        </presentationForm>
+        <ISBN>3-123-456-7891-0</ISBN>
+        <ISSN>1234-5678</ISSN>
+        <alternateTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xx</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>yyy</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </alternateTitle>
+        <collectiveTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>alpha</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>beta</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </collectiveTitle>
+        <otherCitationDetails>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>dies ist ein comprehensive-test</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>ceci est un test</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </otherCitationDetails>
+        <series REF='xDatasetSeriesx1319'/>
+        <MD_FeatureCatalogueDescription REF='xFetCatDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1319x0'>
+        <date>2009:01:06</date>
+        <dateType>creation</dateType>
+        <CI_Citation REF='xCitationx1319'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.CI_Series TID='xDatasetSeriesx1319'>
+        <page>6</page>
+        <issueIdentification>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>asdfasdfsadfadf</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>asdfasdfsadfasdf</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </issueIdentification>
+        <name>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xxx</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>yyy</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </name>
+      </GM03Comprehensive.Comprehensive.CI_Series>
+      <GM03Core.Core.CI_ResponsibleParty TID='xRespPartyx1101'>
+        <individualFirstName>{automated_test_metadata}</individualFirstName>
+        <individualLastName>{automated_test_metadata}</individualLastName>
+        <electronicalMailAddress>
+          <GM03Core.Core.URL_>
+            <value>{automated_test_metadata}@swisstopo.ch</value>
+          </GM03Core.Core.URL_>
+        </electronicalMailAddress>
+        <organisationName>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Office federal de topographie</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Bundesamt für Landestopografie</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>IT</language>
+                <plainText>Ufficio federale da topografia</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </organisationName>
+        <positionName>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>tester</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>tester</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </positionName>
+        <organisationAcronym>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>swisstopo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </organisationAcronym>
+        <linkage>
+          <GM03Core.Core.PT_FreeURL>
+            <URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>DE</language>
+                <plainURL>http://www.swisstopo.admin.ch</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+            </URLGroup>
+          </GM03Core.Core.PT_FreeURL>
+        </linkage>
+        <contactInfo REF='xContactx1101'/>
+        <address REF='xAddressx1101'/>
+      </GM03Core.Core.CI_ResponsibleParty>
+      <GM03Core.Core.CI_Telephone TID='xTelephonex1101x0'>
+        <number>+41 31 963 21 11</number>
+        <numberType>mainNumber</numberType>
+        <CI_ResponsibleParty REF='xRespPartyx1101'/>
+      </GM03Core.Core.CI_Telephone>
+      <GM03Core.Core.CI_Telephone TID='xTelephonex1101x1'>
+        <number>+41 31 963 24 59</number>
+        <numberType>facsimile</numberType>
+        <CI_ResponsibleParty REF='xRespPartyx1101'/>
+      </GM03Core.Core.CI_Telephone>
+      <GM03Core.Core.CI_Contact TID='xContactx1101'>
+        <hoursOfService>08h30 - 11h00 / 14h00 - 16h00 GMT+1</hoursOfService>
+        <contactInstructions>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>niemals telefonieren</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>ne jamais telefoner</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </contactInstructions>
+      </GM03Core.Core.CI_Contact>
+      <GM03Core.Core.CI_Address TID='xAddressx1101'>
+        <streetName>Seftigenstrasse</streetName>
+        <streetNumber>264</streetNumber>
+        <addressLine>ccc</addressLine>
+        <postBox>12345</postBox>
+        <postalCode>3084</postalCode>
+        <city>Wabern</city>
+        <administrativeArea>Köniz</administrativeArea>
+        <country>CH</country>
+      </GM03Core.Core.CI_Address>
+      <GM03Core.Core.CI_ResponsibleParty TID='xRespPartyx401'>
+        <individualFirstName>{automated_test_metadata}3</individualFirstName>
+        <individualLastName>{automated_test_metadata}3</individualLastName>
+        <organisationName>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <plainText>swisstopo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </organisationName>
+        <contactInfo REF='xContactx1101'/>
+      </GM03Core.Core.CI_ResponsibleParty>
+      <GM03Core.Core.CI_Telephone TID='xTelephonex401x0'>
+        <number>+41319632423</number>
+        <numberType>directNumber</numberType>
+        <CI_ResponsibleParty REF='xRespPartyx401'/>
+      </GM03Core.Core.CI_Telephone>
+      <GM03Core.Core.CI_Address TID='xAddressx401'>
+        <country>CH</country>
+      </GM03Core.Core.CI_Address>
+      <GM03Core.Core.CI_ResponsiblePartyparentinfo TID='x224'>
+        <parentResponsibleParty REF='xRespPartyx1101'/>
+        <CI_ResponsibleParty REF='xRespPartyx401'/>
+      </GM03Core.Core.CI_ResponsiblePartyparentinfo>
+      <GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID='x225'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>author</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <citedResponsibleParty REF='xRespPartyx1101'/>
+        <CI_Citation REF='xCitationx1319'/>
+      </GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx901'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xxx</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>yyy</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Comprehensive.Comprehensive.CI_Citationidentifier TID='x226'>
+        <identifier REF='xMdIdentx901'/>
+        <CI_Citation REF='xCitationx1319'/>
+      </GM03Comprehensive.Comprehensive.CI_Citationidentifier>
+      <GM03Comprehensive.Comprehensive.MD_CodeDomain TID='xCodDomx2'>
+        <name>codeDomain</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>code-domäne</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>domaine code</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <type REF='xTypex2'/>
+        <baseDomain REF='xCodDomx1'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeDomain>
+      <GM03Comprehensive.Comprehensive.MD_Type TID='xTypex2'>
+        <type>typText</type>
+      </GM03Comprehensive.Comprehensive.MD_Type>
+      <GM03Comprehensive.Comprehensive.MD_CodeValue TID='xCodValx3'>
+        <name>valName</name>
+        <code>xxx</code>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Beschreibung des Wertes</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>description de la valeur</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_Type REF='xTypex2'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeValue>
+      <GM03Comprehensive.Comprehensive.MD_CodeValue TID='xCodValx4'>
+        <name>unteraufzählung</name>
+        <code>xxx</code>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>unteraufzählung</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>sub enumération</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_CodeValue REF='xCodValx3'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeValue>
+      <GM03Comprehensive.Comprehensive.MD_CodeDomain TID='xCodDomx1'>
+        <name>BasisDomain</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Basis-Domäne</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>domaine de base</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <type REF='xTypex1'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeDomain>
+      <GM03Comprehensive.Comprehensive.MD_Type TID='xTypex1'>
+        <type>basisdomainetext</type>
+      </GM03Comprehensive.Comprehensive.MD_Type>
+      <GM03Comprehensive.Comprehensive.MD_CodeValue TID='xCodValx1'>
+        <name>basisdomaine-wert</name>
+        <code>xx</code>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xxxx</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>yyyy</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_Type REF='xTypex1'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeValue>
+      <GM03Comprehensive.Comprehensive.MD_CodeValue TID='xCodValx2'>
+        <name>unteraufzählung basisdomaine wert</name>
+        <code>xx</code>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xx</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>yy</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_CodeValue REF='xCodValx1'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeValue>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx101'>
+        <name>Attribut_x</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Attribut_x</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Attribut_x</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <anonymousType REF='xTypex3'/>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Type TID='xTypex3'>
+        <type>text</type>
+      </GM03Comprehensive.Comprehensive.MD_Type>
+      <GM03Comprehensive.Comprehensive.MD_CodeValue TID='xCodValx5'>
+        <name>attribut x wert</name>
+        <code>attribut x code</code>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>attribut x wert</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>attribut x wert</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_Type REF='xTypex3'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeValue>
+      <GM03Comprehensive.Comprehensive.MD_CodeValue TID='xCodValx6'>
+        <name>attribut x wert unteraufzählung</name>
+        <code>attribut x wert unteraufzählung code</code>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>attribut x wert unteraufzählung beschreibung</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>attribut x wert unteraufzählung beschreibung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_CodeValue REF='xCodValx5'/>
+      </GM03Comprehensive.Comprehensive.MD_CodeValue>
+      <GM03Comprehensive.Comprehensive.MD_AttributenamedType TID='x227'>
+        <MD_Attribute REF='xMDAttx101'/>
+        <namedType REF='xCodDomx1'/>
+      </GM03Comprehensive.Comprehensive.MD_AttributenamedType>
+      <GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription TID='x228'>
+        <domain REF='xCodDomx2'/>
+        <MD_FeatureCatalogueDescription REF='xFetCatDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription>
+      <GM03Comprehensive.Comprehensive.MD_Class TID='xMDClassx117'>
+        <name>Oberflächengewässer</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Oberflächengewässer</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Oberflächengewässer</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+      </GM03Comprehensive.Comprehensive.MD_Class>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx2'>
+        <name>ogc_fid</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>OGC Feature ID</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx3'>
+        <name>wkb_geometry</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>EN</language>
+                <plainText>4D OGC WKB Geometrie x y z m</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx4'>
+        <name>dh_gew</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Datenherr der Gewässerbildung: 0 - Gewässerbildung festgelegt durch BWG 11 - Gewässerbildung festgelegt durch Kanton Solothurn</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx5'>
+        <name>hauptgnr</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Hauptgewässernummer: Bei den vom BWG festgelegten Gewässern (DH_GEW=0) ist die HAUPTGNR identisch mit der GEWISSNR.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx6'>
+        <name>nebengnr</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Nebengewässernummer: Bei den vom BWG festgelegten Gewässern (DH_GEW=0) ist die NEBENGNR identisch mit der NEBENARMNR. Die vom Kanton festgelegten Nebengewässer (DH_GEW=11) sind kürzer als 500m.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx7'>
+        <name>gewissnr</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Gewässernummer BWG des Vorfluters. Attribut gemäss Bericht BWG (Struktur und Adressierung digitaler Gewässernetze, Januar 2000). Alle vom Kanton gebildeten Gewässer, die in ein BWG-Gewässer fliessen tragen dessen GEWISSNR in diesem Attribut. Bei zwei Vorflutern wurde dem Arc die GEWISSNR eines Vorfluters zugewiesen. Das BWG-Gewässer selber trägt die eigene GEWISSNR in diesem Attribut. (seit 14.12.2001)</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx8'>
+        <name>abschnitt</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Abschnitt BWG des Vorfluters. Attribut gemäss Bericht BWG(Struktur und Adressierung digitaler Gewässernetze, Januar 2000). Alle vom Kanton gebildeten Gewässer, die in ein BWG-Gewässer fliessen tragen dessen ABSCHNITT in diesem Attribut. Bei zwei Vorflutern wurde dem Arc der ABSCHNITT eines Vorfluters zugewiesen. Das BWG-Gewässer selbert trägt den eigenen ABSCHNITT in diesem Attribut. (seit 14.12.2001)</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx9'>
+        <name>gnrso</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Gewässernummer Kanton Solothurn Alle Gewässerläufe werden über ein numerisches Attribut referenziert. Dieses wird aus den drei Attributen DH_GEW(AA), HAUPTGNR(BBBBB) und NebenGNR(CC) berechnet. Es gilt: GNRSO = AABBBBBCC Für allfällige Verwendung der Kilometrierung zur linearen Referenzierung des Gewässernetzes wird die GNRSO als Gruppenvariable verwendet.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx10'>
+        <name>meas_unten</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Anfangsmass des Linestrings zur Adressierung der 4. Dimension (M-Wert).</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx11'>
+        <name>meas_oben</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Endmass des Linestrings zur Adressierung der 4. Dimension (M-Wert).</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx12'>
+        <name>name</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Gewässername</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx13'>
+        <name>typ</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>0: offen 1: Eingedolt 2: Parallel 3: Seeufer 4: Virtuell 5: Karst 6: Versickert 7: Stausee 8: Insel 9: Unterirdisch</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx14'>
+        <name>groesse</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>0: klein 1: mittel 2: gross</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx15'>
+        <name>gemeinde</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Vierstellige Gemeindenummer gemäss dem Bundesamt für Statistik (BfS-Nummer)</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx16'>
+        <name>qualitaet</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>0: unbekannt 1: SE-Ausf-plan 2: Uebers.plan 3: SE-GEP/GKP 4: Vermessung 5: Melioration 6: Projektplan 7: Leitungskataster 8: Orthofoto</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx17'>
+        <name>erfassung</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Datum der Erfassung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx18'>
+        <name>erfasser</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Kürzel des Erfassers: kue für R. Künzle, Ki für Keller Ing. AG und Digital AG</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx19'>
+        <name>bearbeitun</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Bearbeitung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx20'>
+        <name>bearbeiter</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Kürzel des Bearbeiters, s.o.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx21'>
+        <name>se_connect</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Verbindung zum Oberflächengewässer 1: ja 2: nein</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx22'>
+        <name>se_select</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Hilfsattribut für die Bearbeitung der Daten, zur Kontrolle der Verbindung zur Siedlungsentwässerung.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx23'>
+        <name>neg_imp</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>siehe se_select</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx24'>
+        <name>symbol</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>SYMBOL = [Typ x 100] + Groesse. Dient zur Symbolisierung in der Plotappli (historisch)</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx25'>
+        <name>gem2</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Dient zum Druck der Gemeindepläne mit der Plotappli. Vierstellige Gemeindenummer Gemäss Bundesamt für Statistik (BfS-Nummer)</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx26'>
+        <name>privat</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>0: öffentliches Gewässer 1: privates Gewässer</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx27'>
+        <name>anno</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Anschrift der Gewässer für den Druck der Gemeindepläne mit der Plotappli.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx28'>
+        <name>bende</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Darstelleung des Gewässerendes für den Druck der Gemeindepläne mit der Plotappli.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx29'>
+        <name>flip</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Hillsfeld zur Umkehrung der Gewässerrichtung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx30'>
+        <name>vorf_gewis</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>vorf_gewis</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx31'>
+        <name>vorf_neben</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>vorf_neben</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx32'>
+        <name>dh_km</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Datenherr der Kilometrierung: 0 - Kilometrierung festgelegt durch BWG 11 - Kilometrierung festgelegt durch Kanton Solothurn</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx33'>
+        <name>arcid25040</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>arcid25040</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx34'>
+        <name>strahler</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Ordnungsnummer nach dem Flussordnungsprinzip nach Strahler. Das Ordnungssystem berücksichtigt nur Gewässer vom Typ 0 und Typ 1.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx35'>
+        <name>new_date</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Datum des Importes des Objektes</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx36'>
+        <name>archive_date</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Datum der Archivierung des Objektes</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.MD_Attribute TID='xMDAttx37'>
+        <name>archive</name>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>0: aktiv, 1: archiviert</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_AbstractClass REF='xMDClassx117'/>
+      </GM03Comprehensive.Comprehensive.MD_Attribute>
+      <GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription TID='x229'>
+        <class REF='xMDClassx117'/>
+        <MD_FeatureCatalogueDescription REF='xFetCatDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription>
+      <GM03Comprehensive.Comprehensive.MD_ImageDescription TID='xImgDescx1101x0'>
+        <attributeDescription>Bildattribut</attributeDescription>
+        <contentType>image</contentType>
+        <filmType>CIR</filmType>
+        <focalDistance>3</focalDistance>
+        <illuminationElevationAngle>3.0</illuminationElevationAngle>
+        <illuminationAzimuthAngle>4.0</illuminationAzimuthAngle>
+        <imagingCondition>semiDarkness</imagingCondition>
+        <cloudCoverPercentage>20</cloudCoverPercentage>
+        <compressionGenerationQuantity>10</compressionGenerationQuantity>
+        <triangulationIndicator>true</triangulationIndicator>
+        <radiometricCalibrationDataAvailability>true</radiometricCalibrationDataAvailability>
+        <cameraCalibrationInformationAvailability>true</cameraCalibrationInformationAvailability>
+        <filmDistortionInformationAvailability>true</filmDistortionInformationAvailability>
+        <lensDistortionInformationAvailability>true</lensDistortionInformationAvailability>
+        <MD_Metadata REF='xMetadatax1101'/>
+        <imageQualityCode REF='xMdIdentx903'/>
+        <processingLevelCode REF='xMdIdentx904'/>
+      </GM03Comprehensive.Comprehensive.MD_ImageDescription>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx903'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Bildqualität GUT</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Bonne qualité d&apos;image</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx904'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Bildverarbeitung GUT</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Bonne qualité de traitement d&apos;image</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID='x230'>
+        <dimension REF='xBandx1'/>
+        <MD_CoverageDescription REF='xImgDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription>
+      <GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID='x231'>
+        <dimension REF='xRangeDimx1'/>
+        <MD_CoverageDescription REF='xImgDescx1101x0'/>
+      </GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription>
+      <GM03Core.Core.DQ_DataQuality TID='xDataQualx1101x0'>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Core.Core.DQ_DataQuality>
+      <GM03Core.Core.LI_Lineage TID='xLineagex1101x0'>
+        <statement>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>aussage zur herkunft</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>aussage zur herkunft en français</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </statement>
+        <DQ_DataQuality REF='xDataQualx1101x0'/>
+      </GM03Core.Core.LI_Lineage>
+      <GM03Comprehensive.Comprehensive.LI_ProcessStep TID='xPrcessStepx101'>
+        <description>prozessschritt 1</description>
+        <dateTime>2009:01:06:14:00</dateTime>
+        <rationale>
+          <GM03Core.Core.CharacterString_>
+            <value>prozessschritt 1</value>
+          </GM03Core.Core.CharacterString_>
+        </rationale>
+        <LI_Lineage REF='xLineagex1101x0'/>
+      </GM03Comprehensive.Comprehensive.LI_ProcessStep>
+      <GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor TID='x232'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>processor</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <processor REF='xRespPartyx401'/>
+        <LI_ProcessStep REF='xPrcessStepx101'/>
+      </GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor>
+      <GM03Comprehensive.Comprehensive.LI_Source TID='xSourcex101'>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Übersichtsplan 1:10 000 der amtlichen Vermessung des Kanton Solothurn.</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <sourceReferenceSystem REF='xRefSystemx502'/>
+        <sourceCitation REF='xCitationx1305'/>
+        <scaleDenominator REF='xRepFractx801'/>
+      </GM03Comprehensive.Comprehensive.LI_Source>
+      <GM03Core.Core.MD_ReferenceSystem TID='xRefSystemx502'>
+        <referenceSystemIdentifier REF='xRsIdentx201'/>
+      </GM03Core.Core.MD_ReferenceSystem>
+      <GM03Comprehensive.Comprehensive.RS_Identifier TID='xRsIdentx201'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>IT</language>
+                <plainText>CH1903</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Ch1903</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Ch1903</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+        <codeSpace>100</codeSpace>
+        <version>3</version>
+      </GM03Comprehensive.Comprehensive.RS_Identifier>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1305'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <edition>3</edition>
+        <editionDate>2009:01:06</editionDate>
+        <presentationForm>
+          <GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+            <value>documentDigital</value>
+          </GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+        </presentationForm>
+        <ISBN>1234567890</ISBN>
+        <ISSN>1234568</ISSN>
+        <alternateTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </alternateTitle>
+        <collectiveTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </collectiveTitle>
+        <otherCitationDetails>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelldatenreferenz</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </otherCitationDetails>
+        <series REF='xDatasetSeriesx1305'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1305x0'>
+        <date>2006:01:06</date>
+        <dateType>publication</dateType>
+        <CI_Citation REF='xCitationx1305'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.CI_Series TID='xDatasetSeriesx1305'>
+        <page>6</page>
+        <issueIdentification>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelldatenreferenzserie information</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelldatenreferenzserie information</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </issueIdentification>
+        <name>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelldatenreferenzserie nom</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelldatenreferenzserie nom</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </name>
+      </GM03Comprehensive.Comprehensive.CI_Series>
+      <GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID='x233'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>author</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <citedResponsibleParty REF='xRespPartyx401'/>
+        <CI_Citation REF='xCitationx1305'/>
+      </GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx905'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>herkunftsidentifikator</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>herkunftsidentifikator</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Comprehensive.Comprehensive.CI_Citationidentifier TID='x234'>
+        <identifier REF='xMdIdentx905'/>
+        <CI_Citation REF='xCitationx1305'/>
+      </GM03Comprehensive.Comprehensive.CI_Citationidentifier>
+      <GM03Core.Core.MD_RepresentativeFraction TID='xRepFractx801'>
+        <denominator>10000</denominator>
+      </GM03Core.Core.MD_RepresentativeFraction>
+      <GM03Core.Core.EX_Extent TID='xUnifiedExtentxsrcExtentx101x0'>
+        <LI_Source REF='xSourcex101'/>
+      </GM03Core.Core.EX_Extent>
+      <GM03Core.Core.EX_GeographicDescription TID='xUnifiedExtentxsrcExtentx101x0xGeoDescx0'>
+        <extentTypeCode>false</extentTypeCode>
+        <geographicIdentifier REF='xMdIdentx902'/>
+      </GM03Core.Core.EX_GeographicDescription>
+      <GM03Core.Core.EX_ExtentgeographicElement TID='x235'>
+        <EX_Extent REF='xUnifiedExtentxsrcExtentx101x0'/>
+        <geographicElement REF='xUnifiedExtentxsrcExtentx101x0xGeoDescx0'/>
+      </GM03Core.Core.EX_ExtentgeographicElement>
+      <GM03Comprehensive.Comprehensive.sourceStepsource TID='x236'>
+        <sourceStep REF='xPrcessStepx101'/>
+        <source REF='xSourcex101'/>
+      </GM03Comprehensive.Comprehensive.sourceStepsource>
+      <GM03Comprehensive.Comprehensive.LI_Source TID='xSourcex201'>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>quelle ohne prozesschritt</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>quelle ohne prozesschritt</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+      </GM03Comprehensive.Comprehensive.LI_Source>
+      <GM03Comprehensive.Comprehensive.sourceLI_Lineage TID='x237'>
+        <source REF='xSourcex101'/>
+        <LI_Lineage REF='xLineagex1101x0'/>
+      </GM03Comprehensive.Comprehensive.sourceLI_Lineage>
+      <GM03Comprehensive.Comprehensive.DQ_Scope TID='xDQScopex1101x0'>
+        <level>dataset</level>
+        <extent REF='xUnifiedExtentxscpExtentx1101x0'/>
+        <DQ_DataQuality REF='xDataQualx1101x0'/>
+      </GM03Comprehensive.Comprehensive.DQ_Scope>
+      <GM03Core.Core.EX_Extent TID='xUnifiedExtentxscpExtentx1101x0'/>
+      <GM03Core.Core.EX_GeographicDescription TID='xUnifiedExtentxscpExtentx1101x0xGeoDescx0'>
+        <extentTypeCode>false</extentTypeCode>
+        <geographicIdentifier REF='xMdIdentx907'/>
+      </GM03Core.Core.EX_GeographicDescription>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx907'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>scopeExtent</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Core.Core.EX_ExtentgeographicElement TID='x238'>
+        <EX_Extent REF='xUnifiedExtentxscpExtentx1101x0'/>
+        <geographicElement REF='xUnifiedExtentxscpExtentx1101x0xGeoDescx0'/>
+      </GM03Core.Core.EX_ExtentgeographicElement>
+      <GM03Comprehensive.Comprehensive.MD_ScopeDescription TID='xScpDescx10'>
+        <!--<attributes>scopeAttribut</attributes>
+        <features>scopeFeatures</features>
+        <featureInstances>scopeFeatureInstances</featureInstances>
+        <attributeInstances>scopeAttributeInstances</attributeInstances>
+        <dataset>Datenbestand</dataset>-->
+        <other>Andere</other>
+        <DQ_Scope REF='xDQScopex1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_ScopeDescription>
+      <GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy TID='xDQAbsExtPosAccx1'>
+        <nameOfMeasure>
+          <GM03Core.Core.CharacterString_>
+            <value>absolutePositionsgenauigkeit</value>
+          </GM03Core.Core.CharacterString_>
+        </nameOfMeasure>
+        <measureDescription>absolutePositionsgenauigkeit</measureDescription>
+        <evaluationMethodType>directExternal</evaluationMethodType>
+        <evaluationMethodDescription>absolutePositionsgenauigkeit</evaluationMethodDescription>
+        <dateTime>
+          <GM03Core.Core.DateTime_>
+            <value>2000:01:03:00:00</value>
+          </GM03Core.Core.DateTime_>
+        </dateTime>
+        <measureIdentification REF='xMdIdentx906'/>
+      </GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy>
+      <GM03Comprehensive.Comprehensive.DQ_ConformanceResult TID='xConResultx1'>
+        <explanation>absolutePositionsgenauigkeit</explanation>
+        <pass>true</pass>
+        <DQ_Element REF='xDQAbsExtPosAccx1'/>
+      </GM03Comprehensive.Comprehensive.DQ_ConformanceResult>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1307'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>absolutePositionsgenauigkeit</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <DQ_ConformanceResult REF='xConResultx1'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1307x0'>
+        <date>1999:01:06</date>
+        <dateType>creation</dateType>
+        <CI_Citation REF='xCitationx1307'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.DQ_QuantitativeResult TID='xQuanResultx1'>
+        <valueType>absolutePositionsgenauigkeit</valueType>
+        <valueUnit>absolutePositionsgenauigkeit</valueUnit>
+        <errorStatistic>absolutePositionsgenauigkeit</errorStatistic>
+        <value>
+          <GM03Comprehensive.Comprehensive.Record_>
+            <value>absolutePositionsgenauigkeit</value>
+          </GM03Comprehensive.Comprehensive.Record_>
+        </value>
+        <DQ_Element REF='xDQAbsExtPosAccx1'/>
+      </GM03Comprehensive.Comprehensive.DQ_QuantitativeResult>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx906'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>absolutePositionsgenauigkeit</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>absolutePositionsgenauigkeit</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1306'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>absolutePositionsgenauigkeit Beurteilungsvorgehen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>absolutePositionsgenauigkeit Beurteilungsvorgehen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <DQ_Element REF='xDQAbsExtPosAccx1'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1306x0'>
+        <date>2000:01:06</date>
+        <dateType>creation</dateType>
+        <CI_Citation REF='xCitationx1306'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.reportDQ_DataQuality TID='x239'>
+        <report REF='xDQAbsExtPosAccx1'/>
+        <DQ_Qualitiy REF='xDataQualx1101x0'/>
+      </GM03Comprehensive.Comprehensive.reportDQ_DataQuality>
+      <GM03Comprehensive.Comprehensive.MD_DataIdentification TID='xDataIdentx1101x0'>
+        <status>
+          <GM03Core.Core.MD_ProgressCode_>
+            <value>historicalArchive</value>
+          </GM03Core.Core.MD_ProgressCode_>
+        </status>
+        <abstract>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>xx</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </abstract>
+        <purpose>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>geocat.ch II testen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>geocat.ch II testen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </purpose>
+        <spatialRepresentationType>
+          <GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+            <value>paperMap</value>
+          </GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+          <GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+            <value>vector</value>
+          </GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+          <GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+            <value>grid</value>
+          </GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+        </spatialRepresentationType>
+        <language>
+          <CodeISO.LanguageCodeISO_>
+            <value>DE</value>
+          </CodeISO.LanguageCodeISO_>
+          <CodeISO.LanguageCodeISO_>
+            <value>FR</value>
+          </CodeISO.LanguageCodeISO_>
+        </language>
+        <characterSet>
+          <GM03Core.Core.MD_CharacterSetCode_>
+            <value>utf8</value>
+          </GM03Core.Core.MD_CharacterSetCode_>
+        </characterSet>
+        <topicCategory>
+          <GM03Core.Core.MD_TopicCategoryCode_>
+            <value>intelligenceMilitary</value>
+          </GM03Core.Core.MD_TopicCategoryCode_>
+        </topicCategory>
+        <ProjectType>inventory</ProjectType>
+        <credit>
+          <GM03Core.Core.CharacterString_>
+            <value>gute arbeit</value>
+          </GM03Core.Core.CharacterString_>
+        </credit>
+        <supplementalInformation>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>geocat.ch II testen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>geocat.ch II testen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </supplementalInformation>
+        <environmentDescription>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>geocat.ch II testen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>geocat.ch II testen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </environmentDescription>
+        <MD_Metadata REF='xMetadatax1101'/>
+        <citation REF='xCitationx1320'/>
+      </GM03Comprehensive.Comprehensive.MD_DataIdentification>
+      <GM03Core.Core.MD_Resolution TID='xResolx1101x0x0'>
+        <distance>10E3</distance>
+        <MD_DataIdentification REF='xDataIdentx1101x0'/>
+        <equivalentScale REF='xRepFractx806'/>
+      </GM03Core.Core.MD_Resolution>
+      <GM03Core.Core.MD_RepresentativeFraction TID='xRepFractx806'>
+        <denominator>10</denominator>
+      </GM03Core.Core.MD_RepresentativeFraction>
+
+
+        <GM03Core.Core.EX_Extent TID='xUnifiedExtentxdataExtentx531x0x0'>
+          <MD_DataIdentification REF='xDataIdentx1101x0'/>
+        </GM03Core.Core.EX_Extent>
+        <GM03Core.Core.EX_GeographicDescription TID='xUnifiedExtentxdataExtentx531x0x0xGeoDescx0'>
+          <extentTypeCode>false</extentTypeCode>
+          <geographicIdentifier REF='xMdIdentx408'/>
+        </GM03Core.Core.EX_GeographicDescription>
+        <GM03Core.Core.MD_Identifier TID='xMdIdentx408'>
+          <code>
+            <GM03Core.Core.PT_FreeText>
+              <textGroup>
+                <GM03Core.Core.PT_Group>
+                  <language>DE</language>
+                  <plainText>{automated_test_metadata}3DE</plainText>
+                </GM03Core.Core.PT_Group>
+                <GM03Core.Core.PT_Group>
+                  <language>EN</language>
+                  <plainText>{automated_test_metadata}3EN</plainText>
+                </GM03Core.Core.PT_Group>
+                <GM03Core.Core.PT_Group>
+                  <language>FR</language>
+                  <plainText>{automated_test_metadata}3FR</plainText>
+                </GM03Core.Core.PT_Group>
+              </textGroup>
+            </GM03Core.Core.PT_FreeText>
+          </code>
+        </GM03Core.Core.MD_Identifier>
+        <GM03Core.Core.EX_ExtentgeographicElement TID='x96754'>
+          <EX_Extent REF='xUnifiedExtentxdataExtentx531x0x0'/>
+          <geographicElement REF='xUnifiedExtentxdataExtentx531x0x0xGeoDescx0'/>
+        </GM03Core.Core.EX_ExtentgeographicElement>
+        <GM03Core.Core.EX_GeographicBoundingBox TID='xUnifiedExtentxdataExtentx531x0x0xGeoBndBoxx0'>
+          <extentTypeCode>false</extentTypeCode>
+          <northBoundLatitude>47.2201</northBoundLatitude>
+          <southBoundLatitude>47.1965</southBoundLatitude>
+          <eastBoundLongitude>7.5523</eastBoundLongitude>
+          <westBoundLongitude>7.5094</westBoundLongitude>
+        </GM03Core.Core.EX_GeographicBoundingBox>
+        <GM03Core.Core.EX_ExtentgeographicElement TID='x96755'>
+          <EX_Extent REF='xUnifiedExtentxdataExtentx531x0x0'/>
+          <geographicElement REF='xUnifiedExtentxdataExtentx531x0x0xGeoBndBoxx0'/>
+        </GM03Core.Core.EX_ExtentgeographicElement>
+        <GM03Core.Core.EX_BoundingPolygon TID='xUnifiedExtentxdataExtentx531x0x0xBoundPolyx0'>
+          <extentTypeCode>false</extentTypeCode>
+          <polygon>
+              <SURFACE>
+                <BOUNDARY>
+                  <POLYLINE>
+                    <COORD>
+                      <C1>7.605</C1>
+                      <C2>47.221</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.672</C1>
+                      <C2>47.223</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.647</C1>
+                      <C2>47.191</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.617</C1>
+                      <C2>47.195</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.588</C1>
+                      <C2>47.202</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.559</C1>
+                      <C2>47.208</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.521</C1>
+                      <C2>47.212</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.553</C1>
+                      <C2>47.205</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.569</C1>
+                      <C2>47.177</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.55</C1>
+                      <C2>47.159</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.52</C1>
+                      <C2>47.158</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.502</C1>
+                      <C2>47.162</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.501</C1>
+                      <C2>47.17</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.508</C1>
+                      <C2>47.182</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.498</C1>
+                      <C2>47.195</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.46</C1>
+                      <C2>47.198</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.461</C1>
+                      <C2>47.184</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.467</C1>
+                      <C2>47.165</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.465</C1>
+                      <C2>47.161</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.438</C1>
+                      <C2>47.17</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.428</C1>
+                      <C2>47.187</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.427</C1>
+                      <C2>47.199</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.458</C1>
+                      <C2>47.209</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.528</C1>
+                      <C2>47.22</C2>
+                    </COORD>
+                    <COORD>
+                      <C1>7.605</C1>
+                      <C2>47.221</C2>
+                    </COORD>
+                  </POLYLINE>
+                </BOUNDARY>
+              </SURFACE>
+          </polygon>
+        </GM03Core.Core.EX_BoundingPolygon>
+        <GM03Core.Core.EX_ExtentgeographicElement TID='x96756'>
+          <EX_Extent REF='xUnifiedExtentxdataExtentx531x0x0'/>
+          <geographicElement REF='xUnifiedExtentxdataExtentx531x0x0xBoundPolyx0'/>
+        </GM03Core.Core.EX_ExtentgeographicElement>
+
+
+
+
+      <GM03Core.Core.EX_Extent TID='xUnifiedExtentxdataExtentx1101x0x0'>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>{automated_test_metadata}2DE</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>{automated_test_metadata}2FR</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <MD_DataIdentification REF='xDataIdentx1101x0'/>
+      </GM03Core.Core.EX_Extent>
+      <GM03Core.Core.EX_GeographicDescription TID='xUnifiedExtentxdataExtentx1101x0x0xGeoDescx0'>
+        <extentTypeCode>false</extentTypeCode>
+        <geographicIdentifier REF='xMdIdentx902'/>
+      </GM03Core.Core.EX_GeographicDescription>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx902'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>{automated_test_metadata}2DE</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Core.Core.EX_ExtentgeographicElement TID='x240'>
+        <EX_Extent REF='xUnifiedExtentxdataExtentx1101x0x0'/>
+        <geographicElement REF='xUnifiedExtentxdataExtentx1101x0x0xGeoDescx0'/>
+      </GM03Core.Core.EX_ExtentgeographicElement>
+      <GM03Core.Core.EX_Extent TID='xUnifiedExtentxdataExtentx1101x0x1'>
+        <MD_DataIdentification REF='xDataIdentx1101x0'/>
+      </GM03Core.Core.EX_Extent>
+      <GM03Core.Core.EX_SpatialTemporalExtent TID='xUnifiedExtentxdataExtentx1101x0x1xSpatTempExx0'>
+        <extent>
+          <GM03Core.Core.TM_Primitive>
+            <begin>2009:01:06:00:00</begin>
+            <end>2009:03:10:00:00</end>
+          </GM03Core.Core.TM_Primitive>
+        </extent>
+      </GM03Core.Core.EX_SpatialTemporalExtent>
+      <GM03Core.Core.EX_ExtenttemporalElement TID='x241'>
+        <EX_Extent REF='xUnifiedExtentxdataExtentx1101x0x1'/>
+        <temporalElement REF='xUnifiedExtentxdataExtentx1101x0x1xSpatTempExx0'/>
+      </GM03Core.Core.EX_ExtenttemporalElement>
+      <GM03Core.Core.EX_GeographicDescription TID='xUnifiedExtentxdataExtentx1101x0x1xGeoDescx0'>
+        <extentTypeCode>false</extentTypeCode>
+        <geographicIdentifier REF='xMdIdentx601'/>
+      </GM03Core.Core.EX_GeographicDescription>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx601'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>{automated_test_metadata}DE</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>EN</language>
+                <plainText>{automated_test_metadata}EN</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>{automated_test_metadata}FR</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Core.Core.spatialExtentEX_SpatialTemporalExtent TID='x242'>
+        <spatialExtent REF='xUnifiedExtentxdataExtentx1101x0x1xGeoDescx0'/>
+        <EX_SpatialTemporalExtent REF='xUnifiedExtentxdataExtentx1101x0x1xSpatTempExx0'/>
+      </GM03Core.Core.spatialExtentEX_SpatialTemporalExtent>
+      <GM03Core.Core.EX_BoundingPolygon TID='xUnifiedExtentxdataExtentx1101x0x1xBoundPolyx0'>
+        <extentTypeCode>false</extentTypeCode>
+        <polygon>
+            <SURFACE>
+              <BOUNDARY>
+                <POLYLINE>
+                  <COORD>
+                    <C1>7.605</C1>
+                    <C2>47.221</C2>
+                  </COORD>
+                  <COORD>
+                    <C1>7.672</C1>
+                    <C2>47.223</C2>
+                  </COORD>
+                  <COORD>
+                    <C1>7.647</C1>
+                    <C2>47.191</C2>
+                  </COORD>
+                  <COORD>
+                    <C1>7.617</C1>
+                    <C2>47.195</C2>
+                  </COORD>
+                  <COORD>
+                    <C1>7.588</C1>
+                    <C2>47.202</C2>
+                  </COORD>
+                  <COORD>
+                    <C1>7.559</C1>
+                    <C2>47.208</C2>
+                  </COORD>
+                  <COORD>
+                    <C1>7.605</C1>
+                    <C2>47.221</C2>
+                  </COORD>
+                </POLYLINE>
+              </BOUNDARY>
+            </SURFACE>
+        </polygon>
+      </GM03Core.Core.EX_BoundingPolygon>
+      <GM03Core.Core.spatialExtentEX_SpatialTemporalExtent TID='x243'>
+        <spatialExtent REF='xUnifiedExtentxdataExtentx1101x0x1xBoundPolyx0'/>
+        <EX_SpatialTemporalExtent REF='xUnifiedExtentxdataExtentx1101x0x1xSpatTempExx0'/>
+      </GM03Core.Core.spatialExtentEX_SpatialTemporalExtent>
+      <GM03Comprehensive.Comprehensive.MD_BrowseGraphic TID='xBrowGraphx2'>
+        <fileName>http://www.geocat.ch/internet/geocat/de/home.parsys.00011.Image.jpeg</fileName>
+        <fileType>jpg</fileType>
+        <fileDescription>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>geocat.ch-Logo</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>geocat.ch-Logo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </fileDescription>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_BrowseGraphic>
+      <GM03Comprehensive.Comprehensive.MD_Usage TID='xUsagex2'>
+        <usageDateTime>1999:01:01:00:00</usageDateTime>
+        <userDeterminedLimitations>benutzerdefinierte EInschränkungen</userDeterminedLimitations>
+        <specificUsage>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>nur zu testzwecken</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>nur zu testzwecken</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </specificUsage>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_Usage>
+      <GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo TID='x244'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>pointOfContact</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <userContactInfo REF='xRespPartyx401'/>
+        <MD_Usage REF='xUsagex2'/>
+      </GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1320'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>COmprehenisve Test</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>COmprehenisve Test</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <edition>1</edition>
+        <editionDate>2009:01:06</editionDate>
+        <presentationForm>
+          <GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+            <value>documentDigital</value>
+          </GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+        </presentationForm>
+        <ISBN>1234567890</ISBN>
+        <ISSN>12345678</ISSN>
+        <alternateTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>kurztitel</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>titre court</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </alternateTitle>
+        <collectiveTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>COmprehenisve Test Kollektiv</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>COmprehenisve Test Kollektiv</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </collectiveTitle>
+        <otherCitationDetails>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>weitere Identifikationsbeschreibungen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>weitere Identifikationsbeschreibungen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </otherCitationDetails>
+        <series REF='xDatasetSeriesx1320'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1320x0'>
+        <date>2009:01:06</date>
+        <dateType>creation</dateType>
+        <CI_Citation REF='xCitationx1320'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.CI_Series TID='xDatasetSeriesx1320'>
+        <page>66</page>
+        <issueIdentification>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>infos zur serie</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>infos sur la série</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </issueIdentification>
+        <name>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>comprehensive test serie</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>comprehensive test serie</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </name>
+      </GM03Comprehensive.Comprehensive.CI_Series>
+      <GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID='x245'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>author</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <citedResponsibleParty REF='xRespPartyx401'/>
+        <CI_Citation REF='xCitationx1320'/>
+      </GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx908'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>comprehensive test serie herkunftsid</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>comprehensive test serie herkunftsid</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Comprehensive.Comprehensive.CI_Citationidentifier TID='x246'>
+        <identifier REF='xMdIdentx908'/>
+        <CI_Citation REF='xCitationx1320'/>
+      </GM03Comprehensive.Comprehensive.CI_Citationidentifier>
+      <GM03Comprehensive.Comprehensive.MD_MaintenanceInformation TID='xMaintInfox403'>
+        <maintenanceAndUpdateFrequency>annually</maintenanceAndUpdateFrequency>
+        <dateOfNextUpdate>2020:10:10</dateOfNextUpdate>
+        <userDefinedMaintenanceFrequency>1:2:3:2:5:1</userDefinedMaintenanceFrequency>
+        <updateScope>
+          <GM03Core.Core.MD_ScopeCode_>
+            <value>dataset</value>
+          </GM03Core.Core.MD_ScopeCode_>
+        </updateScope>
+        <maintenanceNote>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>bemerkungen zur nachführung</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>bemerkungen zur nachführung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </maintenanceNote>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.MD_MaintenanceInformation>
+      <GM03Comprehensive.Comprehensive.MD_ScopeDescription TID='xScpDescx11'>
+        <attributes>nachführungsattribut</attributes>
+        <MD_MaintenanceInformation REF='xMaintInfox403'/>
+      </GM03Comprehensive.Comprehensive.MD_ScopeDescription>
+      <GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact TID='x247'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>processor</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <contact REF='xRespPartyx401'/>
+        <MD_MaintenanceInformation REF='xMaintInfox403'/>
+      </GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact>
+      <GM03Core.Core.MD_Keywords TID='xKeywordsx352'>
+        <type>discipline</type>
+        <keyword>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>{automated_test_metadata}DE</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>{automated_test_metadata}FR</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>EN</language>
+                <plainText>{automated_test_metadata}EN</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </keyword>
+      </GM03Core.Core.MD_Keywords>
+      <GM03Core.Core.descriptiveKeywordsMD_Identification TID='x248'>
+        <descriptiveKeywords REF='xKeywordsx352'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Core.Core.descriptiveKeywordsMD_Identification>
+      <GM03Core.Core.MD_Keywords TID='xKeywordsx225'>
+        <type>theme</type>
+        <keyword>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>{automated_test_metadata}2DE</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>{automated_test_metadata}2FR</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>EN</language>
+                <plainText>{automated_test_metadata}2EN</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </keyword>
+      </GM03Core.Core.MD_Keywords>
+      <GM03Core.Core.descriptiveKeywordsMD_Identification TID='x249'>
+        <descriptiveKeywords REF='xKeywordsx225'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Core.Core.descriptiveKeywordsMD_Identification>
+      <GM03Core.Core.CI_ResponsibleParty TID='xRespPartyx517'>
+        <individualLastName>{automated_test_metadata}2</individualLastName>
+        <electronicalMailAddress>
+          <GM03Core.Core.URL_>
+            <value>{automated_test_metadata}2@swisstopo.ch</value>
+          </GM03Core.Core.URL_>
+        </electronicalMailAddress>
+        <organisationName>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Office fédéral de topographie</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Bundesamt für Landestopografie</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>IT</language>
+                <plainText>Ufficio federale da topografia</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </organisationName>
+        <organisationAcronym>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>swisstopo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </organisationAcronym>
+        <linkage>
+          <GM03Core.Core.PT_FreeURL>
+            <URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>DE</language>
+                <plainURL>http://www.swisstopo.admin.ch</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+            </URLGroup>
+          </GM03Core.Core.PT_FreeURL>
+        </linkage>
+        <contactInfo REF='xContactx517'/>
+        <address REF='xAddressx517'/>
+      </GM03Core.Core.CI_ResponsibleParty>
+      <GM03Core.Core.CI_Telephone TID='xTelephonex517x0'>
+        <number>+41 31 963 21 11</number>
+        <numberType>mainNumber</numberType>
+        <CI_ResponsibleParty REF='xRespPartyx517'/>
+      </GM03Core.Core.CI_Telephone>
+      <GM03Core.Core.CI_Telephone TID='xTelephonex517x1'>
+        <number>+41 31 963 24 59</number>
+        <numberType>facsimile</numberType>
+        <CI_ResponsibleParty REF='xRespPartyx517'/>
+      </GM03Core.Core.CI_Telephone>
+      <GM03Core.Core.CI_Contact TID='xContactx517'>
+        <hoursOfService>08h30 - 11h00 / 14h00 - 16h00 GMT+1</hoursOfService>
+      </GM03Core.Core.CI_Contact>
+      <GM03Core.Core.CI_Address TID='xAddressx517'>
+        <streetName>Seftigenstrasse</streetName>
+        <streetNumber>264</streetNumber>
+        <postalCode>3084</postalCode>
+        <city>Wabern</city>
+        <country>CH</country>
+      </GM03Core.Core.CI_Address>
+      <GM03Core.Core.MD_IdentificationpointOfContact TID='x250'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>pointOfContact</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <pointOfContact REF='xRespPartyx517'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Core.Core.MD_IdentificationpointOfContact>
+      <GM03Comprehensive.Comprehensive.MD_Constraints TID='xConstsx201'>
+        <useLimitation>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>allgemeine Einschränkungen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>allgemeine Einschränkungen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </useLimitation>
+      </GM03Comprehensive.Comprehensive.MD_Constraints>
+      <GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID='x251'>
+        <resourceConstraints REF='xConstsx201'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+      <GM03Comprehensive.Comprehensive.MD_LegalConstraints TID='xLegConstsx201'>
+        <useLimitation>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Allgemeine Rechtliche Einschränkung</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>Allgemeine Rechtliche Einschränkung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </useLimitation>
+        <accessConstraints>
+          <GM03Comprehensive.Comprehensive.MD_RestrictionCode_>
+            <value>patent</value>
+          </GM03Comprehensive.Comprehensive.MD_RestrictionCode_>
+          <GM03Comprehensive.Comprehensive.MD_RestrictionCode_>
+            <value>copyright</value>
+          </GM03Comprehensive.Comprehensive.MD_RestrictionCode_>
+        </accessConstraints>
+        <useConstraints>
+          <GM03Comprehensive.Comprehensive.MD_RestrictionCode_>
+            <value>otherRestrictions</value>
+          </GM03Comprehensive.Comprehensive.MD_RestrictionCode_>
+        </useConstraints>
+        <otherConstraints>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>andere rechtliche Einschränkungen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>andere rechtliche Einschränkungen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </otherConstraints>
+      </GM03Comprehensive.Comprehensive.MD_LegalConstraints>
+      <GM03Comprehensive.Comprehensive.MD_Legislation TID='xlegislationx201'>
+        <country>
+          <CodeISO.CountryCodeISO_>
+            <value>CH</value>
+          </CodeISO.CountryCodeISO_>
+        </country>
+        <language>
+          <CodeISO.LanguageCodeISO_>
+            <value>DE</value>
+          </CodeISO.LanguageCodeISO_>
+          <CodeISO.LanguageCodeISO_>
+            <value>FR</value>
+          </CodeISO.LanguageCodeISO_>
+          <CodeISO.LanguageCodeISO_>
+            <value>IT</value>
+          </CodeISO.LanguageCodeISO_>
+        </language>
+        <legislationType>nationalLaw</legislationType>
+        <internalReference>
+          <GM03Core.Core.CharacterString_>
+            <value>interne referenz</value>
+          </GM03Core.Core.CharacterString_>
+        </internalReference>
+        <title REF='xCitationx1316'/>
+      </GM03Comprehensive.Comprehensive.MD_Legislation>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1316'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>Geoig</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>lgeo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <edition>1</edition>
+        <editionDate>2008:01:01</editionDate>
+        <presentationForm>
+          <GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+            <value>documentHardcopy</value>
+          </GM03Comprehensive.Comprehensive.CI_PresentationFormCode_>
+        </presentationForm>
+        <ISBN>1234567890</ISBN>
+        <ISSN>12345678</ISSN>
+        <alternateTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>geoig</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>lgeo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </alternateTitle>
+        <collectiveTitle>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>bundesgesetz</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>bundesgesetz</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </collectiveTitle>
+        <otherCitationDetails>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>bundesgesetz</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>bundesgesetz</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </otherCitationDetails>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1316x0'>
+        <date>2008:07:01</date>
+        <dateType>publication</dateType>
+        <CI_Citation REF='xCitationx1316'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints TID='x252'>
+        <legislationConstraints REF='xlegislationx201'/>
+        <MD_LegalConstraints REF='xLegConstsx201'/>
+      </GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints>
+      <GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID='x253'>
+        <resourceConstraints REF='xLegConstsx201'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+      <GM03Comprehensive.Comprehensive.MD_SecurityConstraints TID='xSecConstsx1'>
+        <useLimitation>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>allgemeine Sicherheitseinschränkung</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>allgemeine Sicherheitseinschränkung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </useLimitation>
+        <classification>secret</classification>
+        <classificationSystem>vbs system</classificationSystem>
+        <userNote>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>erklärung sicherheitseinschränkung</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>erklärung sicherheitseinschränkung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </userNote>
+        <handlingDescription>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>darf nicht veröffentlicht werden</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>darf nicht veröffentlicht werden</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </handlingDescription>
+      </GM03Comprehensive.Comprehensive.MD_SecurityConstraints>
+      <GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID='x254'>
+        <resourceConstraints REF='xSecConstsx1'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+      <GM03Comprehensive.Comprehensive.MD_Format TID='xFormatx403'>
+        <name>{automated_test_metadata}</name>
+        <version>{automated_test_metadata}</version>
+        <amendmentNumber>1</amendmentNumber>
+        <specification>spezifikatin</specification>
+        <fileDecompressionTechnique>filedekompressionsmethode</fileDecompressionTechnique>
+      </GM03Comprehensive.Comprehensive.MD_Format>
+      <GM03Comprehensive.Comprehensive.MD_Distributor TID='xDistributorx201'>
+        <distributorContact REF='xRespPartyx401'>
+          <GM03Comprehensive.Comprehensive.MD_DistributordistributorContact>
+            <role>
+              <GM03Core.Core.CI_RoleCode_>
+                <value>distributor</value>
+              </GM03Core.Core.CI_RoleCode_>
+            </role>
+          </GM03Comprehensive.Comprehensive.MD_DistributordistributorContact>
+        </distributorContact>
+      </GM03Comprehensive.Comprehensive.MD_Distributor>
+      <GM03Comprehensive.Comprehensive.MD_StandardOrderProcess TID='xStanOrdProcx201'>
+        <fees>200</fees>
+        <plannedAvailableDateTime>2000:03:01:00:00</plannedAvailableDateTime>
+        <turnaround>10 Tage</turnaround>
+        <orderingInstructions>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>muss abgeholt werden</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>muss abgeholt werden</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </orderingInstructions>
+      </GM03Comprehensive.Comprehensive.MD_StandardOrderProcess>
+      <GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor TID='x255'>
+        <distributionOrderProcess REF='xStanOrdProcx201'/>
+        <MD_Distributor REF='xDistributorx201'/>
+      </GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor>
+      <GM03Comprehensive.Comprehensive.formatDistributordistributorFormat TID='x256'>
+        <formatDistributor REF='xDistributorx201'/>
+        <distributorFormat REF='xFormatx403'/>
+      </GM03Comprehensive.Comprehensive.formatDistributordistributorFormat>
+      <GM03Comprehensive.Comprehensive.resourceFormatMD_Identification TID='x257'>
+        <resourceFormat REF='xFormatx403'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.resourceFormatMD_Identification>
+      <GM03Comprehensive.Comprehensive.MD_Revision TID='xMDRevx201'>
+        <revisionScope>
+          <GM03Core.Core.MD_ScopeCode_>
+            <value>dataset</value>
+          </GM03Core.Core.MD_ScopeCode_>
+        </revisionScope>
+        <dateOfLastUpdate>2008:01:06</dateOfLastUpdate>
+        <revisionNote>wurde seit da nicht mehr aktualisiert</revisionNote>
+      </GM03Comprehensive.Comprehensive.MD_Revision>
+      <GM03Core.Core.EX_Extent TID='xUnifiedExtentxRevExtentx201'>
+        <MD_Revision REF='xMDRevx201'/>
+      </GM03Core.Core.EX_Extent>
+      <GM03Core.Core.EX_GeographicDescription TID='xUnifiedExtentxRevExtentx201xGeoDescx0'>
+        <extentTypeCode>false</extentTypeCode>
+        <geographicIdentifier REF='xMdIdentx909'/>
+      </GM03Core.Core.EX_GeographicDescription>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx909'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>revisionausdehnung</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Core.Core.EX_ExtentgeographicElement TID='x258'>
+        <EX_Extent REF='xUnifiedExtentxRevExtentx201'/>
+        <geographicElement REF='xUnifiedExtentxRevExtentx201xGeoDescx0'/>
+      </GM03Core.Core.EX_ExtentgeographicElement>
+      <GM03Comprehensive.Comprehensive.MD_ScopeDescription TID='xScpDescx8'>
+        <attributes>revision attribute</attributes>
+        <features>revision feature</features>
+        <featureInstances>revision featureinstances</featureInstances>
+        <attributeInstances>revision attribinstance</attributeInstances>
+        <dataset>revision dataset</dataset>
+        <other>revision andere</other>
+        <MD_Revision REF='xMDRevx201'/>
+      </GM03Comprehensive.Comprehensive.MD_ScopeDescription>
+      <GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact TID='x259'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>pointOfContact</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <MD_Revision REF='xMDRevx201'/>
+        <revisionContact REF='xRespPartyx401'/>
+      </GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact>
+      <GM03Comprehensive.Comprehensive.revisionMD_Identification TID='x260'>
+        <revision REF='xMDRevx201'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.revisionMD_Identification>
+      <GM03Comprehensive.Comprehensive.MD_AggregateInformation TID='xAggregatInfox1'>
+        <associationType>stereoMate</associationType>
+        <initiativeType>experiment</initiativeType>
+        <aggregateDataSetIdentifier REF='xMdIdentx910'/>
+      </GM03Comprehensive.Comprehensive.MD_AggregateInformation>
+      <GM03Core.Core.MD_Identifier TID='xMdIdentx910'>
+        <code>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>datenbestandsidentifikator Aggregationinfo</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>datenbestandsidentifikator Aggregationinfo</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </code>
+      </GM03Core.Core.MD_Identifier>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1317'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>agregierter datenbestand</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>agregierter datenbestand</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <MD_AggregateInformation REF='xAggregatInfox1'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1317x0'>
+        <date>1111:01:01</date>
+        <dateType>revision</dateType>
+        <CI_Citation REF='xCitationx1317'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification TID='x261'>
+        <aggregationInfo REF='xAggregatInfox1'/>
+        <MD_Identification REF='xDataIdentx1101x0'/>
+      </GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification>-->
+      <GM03Comprehensive.Comprehensive.MD_MaintenanceInformation TID='xMaintInfox402'>
+        <maintenanceAndUpdateFrequency>biannually</maintenanceAndUpdateFrequency>
+        <dateOfNextUpdate>1234:11:12</dateOfNextUpdate>
+      </GM03Comprehensive.Comprehensive.MD_MaintenanceInformation>
+      <GM03Comprehensive.Comprehensive.MD_ScopeDescription TID='xScpDescx9'>
+        <attributes>metadatanachführung</attributes>
+        <!-- <features>metadatanachführung</features>
+        <featureInstances>metadatanachführung</featureInstances>
+        <attributeInstances>metadatanachführung</attributeInstances>
+        <dataset>metadatanachführung</dataset>
+        <other>metadatanachführung</other> -->
+        <MD_MaintenanceInformation REF='xMaintInfox402'/>
+      </GM03Comprehensive.Comprehensive.MD_ScopeDescription>
+      <GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact TID='x262'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>partner</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <contact REF='xRespPartyx401'/>
+        <MD_MaintenanceInformation REF='xMaintInfox402'/>
+      </GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact>
+      <GM03Core.Core.MD_Distribution TID='xDistribx1101'/>
+      <GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions TID='xDigTranOpsx301'>
+        <unitsOfDistribution>ebene</unitsOfDistribution>
+        <transferSize>10.0</transferSize>
+        <MD_Distribution REF='xDistribx1101'/>
+      </GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions>
+      <GM03Core.Core.CI_OnlineResource TID='xOnlineResx602'>
+        <protocol>http</protocol>
+        <applicationProfile>xml</applicationProfile>
+        <function>order</function>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>toposhop</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>toposhop</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <name>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>toposhop</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </name>
+        <linkage>
+          <GM03Core.Core.PT_FreeURL>
+            <URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>DE</language>
+                <plainURL>http://www.toposhop.admin.ch/de/shop/products/maps/national/digital/index</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>EN</language>
+                <plainURL>http://www.toposhop.admin.ch/en/shop/products/maps/national/digital/index</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>FR</language>
+                <plainURL>http://www.toposhop.admin.ch/fr/shop/products/maps/national/digital/index</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+            </URLGroup>
+          </GM03Core.Core.PT_FreeURL>
+        </linkage>
+        <MD_DigitalTransferOptions REF='xDigTranOpsx301'/>
+      </GM03Core.Core.CI_OnlineResource>
+      <GM03Comprehensive.Comprehensive.MD_Distributiondistributor TID='x263'>
+        <distributor REF='xDistributorx201'/>
+        <MD_Distribution REF='xDistribx1101'/>
+      </GM03Comprehensive.Comprehensive.MD_Distributiondistributor>
+      <GM03Comprehensive.Comprehensive.MD_Format TID='xFormatx402'>
+        <name>{automated_test_metadata}2</name>
+        <version>{automated_test_metadata}2</version>
+      </GM03Comprehensive.Comprehensive.MD_Format>
+      <GM03Core.Core.MD_DistributiondistributionFormat TID='x264'>
+        <MD_Distribution REF='xDistribx1101'/>
+        <distributionFormat REF='xFormatx402'/>
+      </GM03Core.Core.MD_DistributiondistributionFormat>
+      <GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference TID='xPortCatRefx1'/>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx601'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/maps/national/digital.parsysrelated1.3666.downloadList.28894.DownloadFile.tmp/pixelkarteninfode.pdf</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>http://www.swisstopo.admin.ch/internet/swisstopo/fr/home/products/maps/national/digital.parsysrelated1.3666.downloadList.16017.DownloadFile.tmp/pixelkarteninfofr.pdf</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <MD_PortrayalCatalogReference REF='xPortCatRefx1'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex601x0'>
+        <date>2007:02:01</date>
+        <dateType>publication</dateType>
+        <CI_Citation REF='xCitationx601'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata TID='x265'>
+        <portrayalCatalogueInfo REF='xPortCatRefx1'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata>
+      <GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation TID='x266'>
+        <MD_Metadata REF='xMetadatax1101'/>
+        <legislationInformation REF='xlegislationx201'/>
+      </GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation>
+      <GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation TID='xAppSchInfox1'>
+        <schemaLanguage>schemasprache</schemaLanguage>
+        <constraintLanguage>benutzte sprache im schema</constraintLanguage>
+        <schemaAscii>ascii</schemaAscii>
+        <graphicsFile>grafisch</graphicsFile>
+        <softwareDevelopmentFile>sw-entwicklungssprach</softwareDevelopmentFile>
+        <softwareDevelopmentFileFormat>sw-entwicklungsformat</softwareDevelopmentFileFormat>
+      </GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation>
+      <GM03Comprehensive.Comprehensive.CI_Citation TID='xCitationx1318'>
+        <title>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>schemaname</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>schemaname</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </title>
+        <MD_ApplicationSchemaInformation REF='xAppSchInfox1'/>
+      </GM03Comprehensive.Comprehensive.CI_Citation>
+      <GM03Core.Core.CI_Date TID='xDatex1318x0'>
+        <date>2000:01:01</date>
+        <dateType>publication</dateType>
+        <CI_Citation REF='xCitationx1318'/>
+      </GM03Core.Core.CI_Date>
+      <GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata TID='x267'>
+        <applicationSchemaInfo REF='xAppSchInfox1'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata>
+      <GM03Comprehensive.Comprehensive.MD_Constraints TID='xConstsx202'>
+        <useLimitation>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>allgemeine metadateneinschränkungen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>allgemeine metadateneinschränkungen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </useLimitation>
+      </GM03Comprehensive.Comprehensive.MD_Constraints>
+      <GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints TID='x268'>
+        <metadataConstraints REF='xConstsx202'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints>
+      <GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints TID='x269'>
+        <metadataConstraints REF='xLegConstsx201'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints>
+      <GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints TID='x270'>
+        <metadataConstraints REF='xSecConstsx1'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints>
+      <GM03Core.Core.MD_ReferenceSystem TID='xRefSystemx503'>
+        <referenceSystemIdentifier REF='xRsIdentx201'/>
+      </GM03Core.Core.MD_ReferenceSystem>
+      <GM03Core.Core.referenceSystemInfoMD_Metadata TID='x271'>
+        <referenceSystemInfo REF='xRefSystemx503'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Core.Core.referenceSystemInfoMD_Metadata>
+      <GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation TID='xMdExtInfox1'/>
+      <GM03Core.Core.CI_OnlineResource TID='xOnlineResx603'>
+        <protocol>http</protocol>
+        <applicationProfile>xml</applicationProfile>
+        <function>information</function>
+        <description>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>info zu erweiterungen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>info zu erweiterungen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </description>
+        <name>
+          <GM03Core.Core.PT_FreeText>
+            <textGroup>
+              <GM03Core.Core.PT_Group>
+                <language>DE</language>
+                <plainText>info zu erweiterungen</plainText>
+              </GM03Core.Core.PT_Group>
+              <GM03Core.Core.PT_Group>
+                <language>FR</language>
+                <plainText>info zu erweiterungen</plainText>
+              </GM03Core.Core.PT_Group>
+            </textGroup>
+          </GM03Core.Core.PT_FreeText>
+        </name>
+        <linkage>
+          <GM03Core.Core.PT_FreeURL>
+            <URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>DE</language>
+                <plainURL>http://www.erweiterungsinfo.ch</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+              <GM03Core.Core.PT_URLGroup>
+                <language>FR</language>
+                <plainURL>http://www.erweiterungsinfo.ch</plainURL>
+              </GM03Core.Core.PT_URLGroup>
+            </URLGroup>
+          </GM03Core.Core.PT_FreeURL>
+        </linkage>
+        <MD_MetadataExtensionInformation REF='xMdExtInfox1'/>
+      </GM03Core.Core.CI_OnlineResource>
+      <GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation TID='xExtEleInfox1'>
+        <name>name</name>
+        <shortName>kurzname</shortName>
+        <domainCode>123</domainCode>
+        <definition>erweitertes element 1</definition>
+        <obligation>optional</obligation>
+        <condition>keine</condition>
+        <dataType>datatypeClass</dataType>
+        <maximumOccurence>1</maximumOccurence>
+        <domainValue>text</domainValue>
+        <parentEntity>
+          <GM03Core.Core.CharacterString_>
+            <value>erweiterte klasse 1</value>
+          </GM03Core.Core.CharacterString_>
+        </parentEntity>
+        <rule>keine</rule>
+        <rationale>
+          <GM03Core.Core.CharacterString_>
+            <value>keine</value>
+          </GM03Core.Core.CharacterString_>
+        </rationale>
+      </GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation>
+      <GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource TID='x272'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>custodian</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <MD_ExtendedElementInformation REF='xExtEleInfox1'/>
+        <source REF='xRespPartyx401'/>
+      </GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource>
+      <GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation TID='x273'>
+        <extendedElementInformation REF='xExtEleInfox1'/>
+        <MD_MetadataExtensionInformation REF='xMdExtInfox1'/>
+      </GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation>
+      <GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata TID='x274'>
+        <metadataExtensionInfo REF='xMdExtInfox1'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata>
+      <GM03Core.Core.MD_Metadatacontact TID='x275'>
+        <role>
+          <GM03Core.Core.CI_RoleCode_>
+            <value>originator</value>
+          </GM03Core.Core.CI_RoleCode_>
+        </role>
+        <contact REF='xRespPartyx401'/>
+        <MD_Metadata REF='xMetadatax1101'/>
+      </GM03Core.Core.MD_Metadatacontact>
+    </GM03Comprehensive.Comprehensive>
+  </DATASECTION>
+</TRANSFER>

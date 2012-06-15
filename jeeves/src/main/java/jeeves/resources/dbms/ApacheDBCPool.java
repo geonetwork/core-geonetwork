@@ -23,6 +23,8 @@
 
 package jeeves.resources.dbms;
 
+import java.sql.Connection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,14 +34,13 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.resources.ResourceListener;
 
 import jeeves.server.resources.Stats;
 import org.apache.commons.dbcp.BasicDataSource;
-
 import org.geotools.data.DataStore;
 
 import org.geotools.data.postgis.PostgisDataStoreFactory;
-
 import org.jdom.Element;
 
 /**
@@ -61,7 +62,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 	// --------------------------------------------------------------------------
 	// ---
 	// --- API
-	// ---
+	// ---y
 	// --------------------------------------------------------------------------
 
 	/**
@@ -119,9 +120,6 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 				.parseInt(size);
 		int maxWait = (maxw == null) ? Jeeves.Res.Pool.DEF_MAX_WAIT : Integer
 				.parseInt(maxw);
-
-		// set maximum number of prepared statements in pool cache
-		int iMaxOpen = getPreparedStatementCacheSize(config);
 
 		boolean testWhileIdle = false;
 		if (testWhileIdleStr != null) {
@@ -183,15 +181,8 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		// test all idle connections each run
 		basicDataSource.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
 
-		// set maximum number of prepared statements in pool cache, if not set
-		// then switch it off altogether
-		if (iMaxOpen != -1) {
-			basicDataSource.setPoolPreparedStatements(true);
-			basicDataSource.setMaxOpenPreparedStatements(iMaxOpen);
-		} else {
-			basicDataSource.setPoolPreparedStatements(false);
-			basicDataSource.setMaxOpenPreparedStatements(-1);
-		}
+		basicDataSource.setPoolPreparedStatements(true);
+		basicDataSource.setMaxOpenPreparedStatements(-1);
 
 		if (validationQuery != null && validationQuery.trim().length() > 0) {
 			basicDataSource.setValidationQuery(validationQuery);
@@ -204,13 +195,13 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		basicDataSource.setPassword(passwd);
 
 		basicDataSource.setInitialSize(poolSize);
-
 	}
 
 	// --------------------------------------------------------------------------
 
 	public void end() {
 		try {
+		  threadDbms.set(null);
 		  basicDataSource.close();
 		} catch (java.sql.SQLException e) {
 			error("Problem "+e);
@@ -342,7 +333,6 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 			throw new Exception("Unknown database in url "+url);
 		}
 	}
-
 }
 
 // =============================================================================

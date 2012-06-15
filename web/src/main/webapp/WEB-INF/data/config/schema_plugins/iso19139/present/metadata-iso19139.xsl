@@ -131,19 +131,31 @@
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
+				<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
+				<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
+				<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+			
 				<xsl:variable name="text">
 					<xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
 					
 					<input type="text" class="md" name="_{$ref}" id="_{$ref}"  
 						onkeyup="validateNumber(this,true,true);"
 						onchange="validateNumber(this,true,true);"
-						value="{gco:Distance}" size="30"/>
+						value="{gco:Distance}" size="30">
+						<xsl:if test="$rejected or $isXLinked = 'true' or $isDisabled">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+					</input>
 					
 					&#160;
 					<xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
 					&#160;
 					<input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
-						value="{gco:Distance/@uom}" size="10"/>
+						value="{gco:Distance/@uom}" size="10">
+						<xsl:if test="$rejected or $isXLinked = 'true' or $isDisabled">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+					</input>
 					
 					<xsl:for-each select="gco:Distance">
 						<xsl:call-template name="helper">
@@ -379,8 +391,9 @@
     <xsl:param name="langId" />
     <xsl:param name="widget" />
     <xsl:param name="validator" />
+
     <xsl:choose>
-      <xsl:when test="gmd:PT_FreeText">
+      <xsl:when test="not(gco:*)">
         <xsl:for-each select="gmd:PT_FreeText">
           <xsl:call-template name="getElementText">
             <xsl:with-param name="edit" select="$edit" />
@@ -393,7 +406,7 @@
           </xsl:for-each>
         </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each select="gco:*|gmx:*">
+        <xsl:for-each select="gco:*">
           <xsl:call-template name="getElementText">
             <xsl:with-param name="edit" select="$edit" />
             <xsl:with-param name="schema" select="$schema" />
@@ -413,6 +426,7 @@
 		<xsl:param name="rows" select="1"/>
 		<xsl:param name="cols" select="40"/>
 		<xsl:param name="langId" />
+		<xsl:param name="overrideMandatory" select="''"/>
 		<xsl:param name="widget" />
 		<xsl:param name="validator" />
 		
@@ -469,6 +483,7 @@
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="overrideMandatory" select="$overrideMandatory"/>
 					</xsl:apply-templates>
 				</xsl:for-each>
 
@@ -479,6 +494,7 @@
 					<xsl:with-param name="title"    select="$title"/>
 					<xsl:with-param name="helpLink" select="$helpLink"/>
 					<xsl:with-param name="text"     select="$text"/>
+					<xsl:with-param name="overrideMandatory" select="$overrideMandatory"/>
 				</xsl:apply-templates>
 				</xsl:with-param>
 			</xsl:apply-templates>
@@ -490,6 +506,7 @@
 				<xsl:with-param name="title"    select="$title"/>
 				<xsl:with-param name="helpLink" select="$helpLink"/>
 				<xsl:with-param name="text"     select="$text"/>
+				<xsl:with-param name="overrideMandatory" select="$overrideMandatory"/>
 			</xsl:apply-templates>
 		</xsl:otherwise>
 		</xsl:choose>
@@ -885,12 +902,15 @@
 				
 				<xsl:variable name="codelistCore">
 					<xsl:choose>
-						<xsl:when test="normalize-space($codelistProfil)!=''">
+						<xsl:when test="normalize-space($codelistProfil) != ''">
 							<xsl:copy-of select="$codelistProfil" />
+						</xsl:when>
+						<xsl:when test="/root/gui/schemas/iso19139.che/codelists/codelist[@name = $qname]">
+							<xsl:copy-of select="/root/gui/schemas/iso19139.che/codelists/codelist[@name = $qname]/*" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:copy-of
-								select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $qname]/*" />
+								select="/root/gui/schemas/iso19139/codelists/codelist[@name = $qname]/*" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
@@ -926,6 +946,7 @@
 						<!-- codelist in view mode -->
 						<xsl:if test="normalize-space($value)!=''">
 							<b><xsl:value-of select="$codelist/entry[code = $value]/label"/></b>
+							
 							<xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
 						</xsl:if>
 					</xsl:otherwise>
@@ -1026,33 +1047,6 @@
 		</xsl:choose>
 	</xsl:template>
 	
- 	<!-- gmx:Anchor is a substitute of gco:CharacterString and 
-	     could be use to create a hyperlink for an element.
-	   -->
-	<xsl:template mode="iso19139" match="*[gmx:Anchor]" priority="99">
-	     <xsl:param name="schema" />
-	     <xsl:param name="edit" />
-	     
-	     <xsl:apply-templates mode="complexElement" select=".">
-	       <xsl:with-param name="schema"   select="$schema"/>
-	       <xsl:with-param name="edit"     select="$edit"/>
-	       <xsl:with-param name="content">
-	         <xsl:choose>
-	           <xsl:when test="$edit=true()">
-	             <!-- existing content -->
-	             <xsl:apply-templates mode="simpleElement" select="gmx:Anchor/.">
-	               <xsl:with-param name="schema" select="$schema"/>
-	               <xsl:with-param name="edit"   select="$edit"/>
-	             </xsl:apply-templates>
-	           </xsl:when>
-	           <xsl:otherwise>
-	             <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>    
-	           </xsl:otherwise> 
-	         </xsl:choose>
-	       </xsl:with-param>  
-	     </xsl:apply-templates>
-	</xsl:template>
-
 	<!-- ============================================================================= -->
 	<!-- descriptiveKeywords -->
 	<!-- ============================================================================= -->
@@ -1109,12 +1103,6 @@
 						<xsl:variable name="value">
 							<xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
 								<xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
-								<xsl:choose>
-                  <xsl:when test="gmx:Anchor">
-                    <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
-                  </xsl:when>
-                  <xsl:otherwise>
-
 							  <xsl:call-template name="translatedString">
 							    <xsl:with-param name="schema" select="$schema"/>
 							    <xsl:with-param name="langId">
@@ -1124,10 +1112,6 @@
 				            </xsl:call-template>
 							    </xsl:with-param>
 							  </xsl:call-template>
-
-									</xsl:otherwise>
-							</xsl:choose>
-
 							</xsl:for-each>
 							<xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
 								<xsl:text> (</xsl:text>
@@ -1139,21 +1123,18 @@
 						<table width="100%">
 							<tr>
 								<td colspan="2">
-									<xsl:copy-of select="$value"/>
+									<!-- Clean new lines which may be added by formatting. -->
+									<xsl:value-of select="normalize-space($value)"/>
 								</td>
 							</tr>
-							<xsl:variable name="thesaurusTitle" select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:title/*[1]"/>
-							<xsl:for-each select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/gmx:Anchor[starts-with(string(),'geonetwork.thesaurus')]">
+							<xsl:for-each select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:otherCitationDetails/gmx:FileName">
 								<tr>
 									<td width="20%">
 										<xsl:value-of select="/root/gui/strings/thesaurus/thesaurus"/>
 									</td>
 									<td>
-										<a href="{@xlink:href}">
+										<a href="{@src}">
 											<xsl:choose>
-												<xsl:when test="normalize-space($thesaurusTitle)!=''">
-													<xsl:value-of select="$thesaurusTitle"/>
-												</xsl:when>
 												<xsl:when test="normalize-space()!=''">
 													<xsl:value-of select="text()"/>
 												</xsl:when>
@@ -1176,7 +1157,7 @@
 	<!-- place keyword; only called in edit mode (see descriptiveKeywords template) -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:keyword[following-sibling::gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place' and not(following-sibling::gmd:thesaurusName/*/gmd:identifier/*/gmd:code/gmx:Anchor[starts-with(string(),'geonetwork.thesaurus')])]">
+	<xsl:template mode="iso19139" match="gmd:keyword[following-sibling::gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -1394,8 +1375,8 @@
 						</xsl:call-template>
 					</div>
 				</xsl:if>
-				<xsl:if test="/root/gui/config/editor-metadata-relation">
-					<div style="float:right;">				
+				<xsl:if test="/root/gui/config/editor-metadata-relation">	
+					<div style="float:right;">			
 						<xsl:call-template name="relatedResources">
 							<xsl:with-param name="edit" select="$edit"/>
 						</xsl:call-template>
@@ -1547,6 +1528,12 @@
 				</xsl:call-template>
 			</xsl:when>
 			
+			<xsl:when test="$currTab='complete'">
+				<xsl:call-template name="iso19139Complete">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:call-template>
+			</xsl:when>
 			
 			<!-- default -->
 			<xsl:otherwise>
@@ -2703,7 +2690,9 @@
 				    </xsl:apply-templates>
 				  </xsl:when>				  
 					<xsl:otherwise>
+					
 						<!-- use elementEP for geonet:child only -->
+						<!-- GEOCAT CHANGE
 						<xsl:apply-templates mode="elementEP" select="geonet:child[string(@name)='name']">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="true()"/>
@@ -2713,6 +2702,13 @@
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="true()"/>
 						</xsl:apply-templates>
+						  -->
+						<xsl:apply-templates mode="elementEP" select="gmd:name|geonet:child[string(@name)='name']">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit"   select="true()"/>
+						</xsl:apply-templates>
+						
+						<!-- End GEOCAT Change -->  
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -2992,11 +2988,49 @@
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
 						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
-						<input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
-						<select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');" class="md">
-							<xsl:if test="$value=''">
-								<option value=""/>
+						<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
+						<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
+						<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+						<xsl:variable name="hideInput">
+							<xsl:choose>
+								<xsl:when test="/root/gui/strings/protocolChoice[@value = $value and string-length($value) &gt; 0]">true</xsl:when>
+								<xsl:otherwise>false</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						
+						<input class="md" size="50" id="_{$ref}" name="_{$ref}" value="{$value}">
+							<xsl:if test="$rejected or $isXLinked = 'true' or $isDisabled">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
 							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="string($hideInput) = 'true'">
+			                        <xsl:attribute name="style">display:none</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+			                        <xsl:attribute name="style">display:block</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+	                        <xsl:attribute name="name">_<xsl:value-of select="$ref"/></xsl:attribute>
+	                        <xsl:attribute name="value"><xsl:value-of select="$value"/></xsl:attribute>
+						</input>
+						<select id="s_{$ref}" size="1" onchange="doProtocolChange('{$ref}');checkForFileUpload('{$fref}', '{$ref}');" class="md">
+							<xsl:choose>
+								<xsl:when test="string($hideInput) = 'true'">
+									<xsl:attribute name="name">s_<xsl:value-of select="$ref"/></xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="name">disabled_<xsl:value-of select="$ref"/></xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:if test="$rejected or $isXLinked = 'true' or $isDisabled">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+							<option value="{/root/gui/strings/other}">
+                                   <xsl:if test="string($hideInput) = 'false'">
+                                       <xsl:attribute name="selected"/>
+                                   </xsl:if>
+                                <xsl:value-of select="/root/gui/strings/other"/>
+							</option>
 							<xsl:for-each select="/root/gui/strings/protocolChoice[@value]">
 								<option>
 									<xsl:if test="string(@value)=$value">
@@ -3034,6 +3068,9 @@
 				<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref|gmx:MimeFileType/geonet:element/@ref"/>
 				<xsl:variable name="value" select="gco:CharacterString|gmx:MimeFileType"/>
 				<xsl:variable name="button" select="starts-with($protocol,'WWW:DOWNLOAD') and contains($protocol,'http') and normalize-space($value)=''"/>
+				<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
+				<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
+				<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
 
 				<xsl:call-template name="simpleElementGui">
 					<xsl:with-param name="schema" select="$schema"/>
@@ -3058,7 +3095,11 @@
 						</xsl:call-template>
 					</xsl:with-param>
 					<xsl:with-param name="text">
-						<input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
+						<input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" >
+							<xsl:if test="$rejected or $isXLinked = 'true' or $isDisabled">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+						</input>
 						</xsl:with-param>
 					<xsl:with-param name="id" select="concat('di_',$ref)"/>
 					<xsl:with-param name="visible" select="not($button)"/>
@@ -3674,7 +3715,9 @@
 		
 		<xsl:variable name="qname" select="name(.)"/>
 		<xsl:variable name="value" select="gco:CharacterString"/>
-		<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />		
+		<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
+		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+		<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
 		
 		<xsl:apply-templates mode="simpleElement" select=".">
 			<xsl:with-param name="schema" select="$schema" />
@@ -3686,9 +3729,9 @@
 						<xsl:variable name="lang" select="/root/gui/language"/>
 						<input class="md" name="_{gco:CharacterString/geonet:element/@ref}"
 						id="_{gco:CharacterString/geonet:element/@ref}" value="{gco:CharacterString}">
-							<xsl:if test="$isXLinked">
-								<xsl:attribute name="disabled">disabled</xsl:attribute>
-							</xsl:if>					
+						<xsl:if test="$rejected or $isXLinked = 'true' or $isDisabled">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
 						</input>
 						<xsl:if test="not($isXLinked)">
 							<xsl:text> </xsl:text>
@@ -4056,6 +4099,13 @@
 		<xsl:param name="edit" />
 		<xsl:param name="rows" select="1" />
 		
+		<xsl:variable name="overrideMandatory">
+			<xsl:choose>
+				<xsl:when test="ancestor-or-self::gmd:code and ancestor-or-self::gmd:geographicIdentifier">false</xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		 
 		<xsl:variable name="langId">
 			<xsl:call-template name="getLangId">
 				<xsl:with-param name="langGui" select="/root/gui/language" />
@@ -4063,9 +4113,9 @@
 					select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" />
 			</xsl:call-template>
 		</xsl:variable>
-		
 		<xsl:variable name="widget">
 			<xsl:if test="$edit=true()">
+			
 				<xsl:variable name="tmpFreeText">
 					<xsl:call-template name="PT_FreeText_Tree" />
 				</xsl:variable>
@@ -4082,7 +4132,6 @@
 					</xsl:call-template>
 				</xsl:variable>
 
-				
 				<table><tr><td>
 					<!-- Match gco:CharacterString element which is in default language or
 						process a PT_FreeText with a reference to the main metadata language. -->
@@ -4093,6 +4142,7 @@
 									<xsl:with-param name="schema" select="$schema" />
 									<xsl:with-param name="edit" select="'true'" />
 									<xsl:with-param name="rows" select="$rows" />
+									<xsl:with-param name="overrideMandatory" select="$overrideMandatory" />
 								</xsl:call-template>
 							</xsl:for-each>                        
 						</xsl:when>
@@ -4102,6 +4152,7 @@
 									<xsl:with-param name="schema" select="$schema" />
 									<xsl:with-param name="edit" select="'true'" />
 									<xsl:with-param name="rows" select="$rows" />
+									<xsl:with-param name="overrideMandatory" select="$overrideMandatory" />
 								</xsl:call-template>
 							</xsl:for-each>                        
 						</xsl:when>
@@ -4111,6 +4162,7 @@
 									<xsl:with-param name="schema" select="$schema" />
 									<xsl:with-param name="edit" select="'true'" />
 									<xsl:with-param name="rows" select="$rows" />
+									<xsl:with-param name="overrideMandatory" select="$overrideMandatory" />
 								</xsl:call-template>
 							</xsl:for-each>         
 						</xsl:when>
@@ -4120,6 +4172,7 @@
 									<xsl:with-param name="schema" select="$schema" />
 									<xsl:with-param name="edit" select="'true'" />
 									<xsl:with-param name="rows" select="$rows" />
+									<xsl:with-param name="overrideMandatory" select="$overrideMandatory" />
 								</xsl:call-template>
 							</xsl:for-each>         
 						</xsl:otherwise>
@@ -4131,6 +4184,7 @@
 							<xsl:with-param name="edit" select="'true'" />
 							<xsl:with-param name="visible" select="'false'" />
 							<xsl:with-param name="rows" select="$rows" />
+							<xsl:with-param name="overrideMandatory" select="$overrideMandatory" />
 						</xsl:call-template>
 					</xsl:for-each>
 				</td>
@@ -4146,8 +4200,8 @@
                                             <xsl:value-of select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:value-of select="concat('_',
-                                      gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref)"/>
+                                        <xsl:variable name="local" select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref"/>
+                                            <xsl:value-of select="concat('_', $local[1])"/>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:variable>
@@ -4228,6 +4282,7 @@
 			<xsl:with-param name="edit" select="$edit" />
 			<xsl:with-param name="langId" select="$langId" />
 			<xsl:with-param name="widget" select="$widget" />
+			<xsl:with-param name="overrideMandatory" select="$overrideMandatory" />
 			<xsl:with-param name="rows" select="$rows" />
 		</xsl:call-template>
 	</xsl:template>
@@ -4256,13 +4311,26 @@
 					<xsl:with-param name="langId" select="substring($langId,2)" />
 				</xsl:call-template>
 			</xsl:variable>
-
+			<xsl:variable name="isValidatedXLink">
+				<xsl:call-template name="validatedXlink">
+					<xsl:with-param name="root" select="$currentNode"/>
+				</xsl:call-template>
+			</xsl:variable>
 			<xsl:variable name="ref" select="$currentNode/../geonet:element/@ref" />
+			<xsl:variable name="disabled" select="$currentNode/../geonet:element/@disabled" />
 			<xsl:variable name="min" select="$currentNode/../geonet:element/@min" />
 			<xsl:variable name="guiLang" select="/root/gui/language" />
-			<xsl:variable name="language"
-				select="/root/gui/isoLang/record[code=$code]/label/*[name(.)=$guiLang]" />
-			<gmd:PT_FreeText>
+			<xsl:variable name="language">
+				<xsl:choose>
+					<xsl:when test="/root/gui/isoLang/record[code=$code]/label/*[name(.)=$guiLang]">
+						<xsl:value-of select="/root/gui/isoLang/record[code=$code]/label/*[name(.)=$guiLang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$code"/> no found in <xsl:value-of select="$guiLang"/> 
+					</xsl:otherwise>
+				</xsl:choose>			
+			</xsl:variable>
+			<gmd:PT_FreeText xlink:title="{$currentNode/ancestor-or-self::*[contains(@xlink:title,'rejected')]/@xlink:title}">
 				<gmd:textGroup>
 					<gmd:LocalisedCharacterString locale="{$langId}"
 						code="{$code}" language="{$language}">
@@ -4272,20 +4340,35 @@
 							<xsl:when
 								test="$currentNode//gmd:LocalisedCharacterString[@locale=$langId]">
 								<geonet:element
-									ref="{$currentNode//gmd:LocalisedCharacterString[@locale=$langId]/geonet:element/@ref}" />
+									ref="{$currentNode//gmd:LocalisedCharacterString[@locale=$langId]/geonet:element/@ref}">
+									<xsl:if test="$isValidatedXLink = 'true' or $disabled">
+										<xsl:attribute name="disabled">true</xsl:attribute>
+									</xsl:if>
+								</geonet:element>
 							</xsl:when>
 							<xsl:otherwise>
-								<geonet:element ref="lang_{substring($langId,2)}_{$ref}" />
+								<geonet:element ref="lang_{substring($langId,2)}_{$ref}">
+									<xsl:if test="$isValidatedXLink = 'true' or $disabled">
+										<xsl:attribute name="disabled">true</xsl:attribute>
+									</xsl:if>
+								</geonet:element>
 							</xsl:otherwise>
 						</xsl:choose>
 					</gmd:LocalisedCharacterString>
-					<geonet:element ref="" />
+					<geonet:element ref="" >
+						<xsl:if test="$isValidatedXLink = 'true' or $disabled">
+							<xsl:attribute name="disabled">true</xsl:attribute>
+						</xsl:if>
+					</geonet:element>
 				</gmd:textGroup>
 				<geonet:element ref="">
 					<!-- Add min attribute from current node to PT_FreeText
 					child in order to turn on validation criteria. -->
 					<xsl:if test="$min = 1">
 						<xsl:attribute name="min">1</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="$isValidatedXLink = 'true' or $disabled">
+						<xsl:attribute name="disabled">true</xsl:attribute>
 					</xsl:if>
 				</geonet:element>
 			</gmd:PT_FreeText>

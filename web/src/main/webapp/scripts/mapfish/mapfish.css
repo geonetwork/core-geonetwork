@@ -1,0 +1,69 @@
+.mf-print-action {
+    background-image:url(img/printer.png) !important;
+}
+
+.zoomin {
+    background-image:url(img/icon_zoomin.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.zoomout {
+    background-image:url(img/icon_zoomout.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.zoomfull {
+    background-image:url(img/icon_zoomfull.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.pan {
+    background-image:url(img/icon_pan.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.back {
+    background-image:url(img/resultset_previous.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.next {
+    background-image:url(img/resultset_next.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.modifyfeature {
+    background-image:url(img/move_vertex_off.png) !important;
+    height:20px !important;
+    width:20px !important;
+}
+
+.drawpoint {
+  background-image:url(img/draw_point_off.png) !important;
+  height:20px !important;
+  width:20px !important;
+}
+
+.drawline {
+  background-image:url(img/draw_line_off.png) !important;
+  height:20px !important;
+  width:20px !important;
+}
+
+.drawpolygon {
+  background-image:url(img/draw_polygon_off.png) !important;
+  height:20px !important;
+  width:20px !important;
+}
+
+.info {
+  background-image:url(img/info.png) !important;
+  height:20px !important;
+  width:20px !important;
+}

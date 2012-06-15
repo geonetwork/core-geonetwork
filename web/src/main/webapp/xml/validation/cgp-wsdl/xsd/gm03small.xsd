@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gm03small="http://www.geocat.ch/2003/05/gateway/GM03Small" xmlns:GML="http://www.geocat.ch/2003/05/gateway/GML" targetNamespace="http://www.geocat.ch/2003/05/gateway/GM03Small" elementFormDefault="qualified">
+	<xsd:import namespace="http://www.geocat.ch/2003/05/gateway/GML" schemaLocation="GML_simplified.xsd"/>
+	<xsd:element name="MD_Metadata" type="gm03small:MD_MetadataType"/>
+	<xsd:complexType name="MD_MetadataType">
+		<xsd:sequence>
+			<xsd:element name="fileIdentifier" type="gm03small:optionalString" minOccurs="0"/>
+			<xsd:element name="dateStamp" type="xsd:dateTime"/>
+			<xsd:element name="dataSetURI" type="gm03small:optionalString" minOccurs="0"/>
+			<xsd:element name="metadataSetURI" type="gm03small:optionalString" minOccurs="0"/>
+			<xsd:element name="identificationInfo" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="language" type="gm03small:LanguageCodeISO" maxOccurs="unbounded"/>
+						<xsd:element name="purpose" type="gm03small:optionalPT_FreeText" minOccurs="0"/>
+						<xsd:element name="topicCategory" type="gm03small:optionalTopicCategory" minOccurs="0" maxOccurs="unbounded"/>
+						<xsd:element name="abstract" type="gm03small:PT_FreeText"/>
+						<xsd:element name="citation">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="title" type="gm03small:PT_FreeText"/>
+									<xsd:element name="date" maxOccurs="unbounded">
+										<xsd:complexType>
+											<xsd:sequence>
+												<!--                          <xsd:element name="date" type="xsd:date"/>-->
+												<xsd:element name="date">
+													<xsd:simpleType>
+														<xsd:union memberTypes="gm03small:NotAvailable xsd:date"/>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element name="dateType" type="gm03small:CI_DateTypeCode"/>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="pointOfContact" minOccurs="0" maxOccurs="unbounded">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="role" type="gm03small:CI_RoleCode" maxOccurs="unbounded"/>
+									<xsd:element name="individualName" type="xsd:string" minOccurs="0"/>
+									<xsd:element name="positionName" type="gm03small:PT_FreeText" minOccurs="0"/>
+									<xsd:element name="organisationName" type="gm03small:PT_FreeText" minOccurs="0"/>
+								</xsd:sequence>
+								<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="descriptiveKeywords" minOccurs="0" maxOccurs="unbounded">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="keyword" type="gm03small:PT_FreeText" maxOccurs="unbounded"/>
+								</xsd:sequence>
+								<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="extent" minOccurs="0" maxOccurs="unbounded">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="description" type="gm03small:optionalPT_FreeText" minOccurs="0"/>
+									<xsd:element name="geographicElement" minOccurs="0" maxOccurs="unbounded">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element ref="GML:Polygon" minOccurs="0"/>
+												<xsd:element name="westBoundLongitude" type="xsd:double" minOccurs="0"/>
+												<xsd:element name="eastBoundLongitude" type="xsd:double" minOccurs="0"/>
+												<xsd:element name="southBoundLatitude" type="xsd:double" minOccurs="0"/>
+												<xsd:element name="northBoundLatitude" type="xsd:double" minOccurs="0"/>
+												<xsd:element name="geographicIdentifier" minOccurs="0">
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element name="code" type="gm03small:PT_FreeText"/>
+														</xsd:sequence>
+														<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+													</xsd:complexType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+								<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="objid" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="PT_Group">
+		<xsd:sequence>
+			<xsd:element name="plainText" type="xsd:string"/>
+			<xsd:element name="language" type="gm03small:LanguageCodeISO" minOccurs="0"/>
+			<xsd:element name="country" type="gm03small:CountryCodeISO" minOccurs="0"/>
+			<xsd:element name="characterSetCode" type="gm03small:MD_CharacterSetCode" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PT_FreeText" mixed="true">
+		<xsd:sequence>
+			<xsd:element name="textGroup" type="gm03small:PT_Group" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:attributeGroup name="notSupportedGroup">
+		<xsd:attribute name="notSupported" type="xsd:boolean" use="optional" default="false"/>
+	</xsd:attributeGroup>
+	<xsd:complexType name="optionalPT_FreeText" mixed="true">
+		<xsd:complexContent mixed="true">
+			<xsd:extension base="gm03small:PT_FreeText">
+				<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="optionalString">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="optionalTopicCategory">
+		<xsd:simpleContent>
+			<xsd:extension base="gm03small:MD_TopicCategoryCode">
+				<xsd:attributeGroup ref="gm03small:notSupportedGroup"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="CI_RoleCode">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="resourceProvider"/>
+			<xsd:enumeration value="custodian"/>
+			<xsd:enumeration value="owner"/>
+			<xsd:enumeration value="user"/>
+			<xsd:enumeration value="distributor"/>
+			<xsd:enumeration value="originator"/>
+			<xsd:enumeration value="pointOfContact"/>
+			<xsd:enumeration value="principalInvestigator"/>
+			<xsd:enumeration value="processor"/>
+			<xsd:enumeration value="publisher"/>
+			<xsd:enumeration value="author"/>
+			<xsd:enumeration value="editor"/>
+			<xsd:enumeration value="partner"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LanguageCodeISO">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="aa"/>
+			<xsd:enumeration value="ab"/>
+			<xsd:enumeration value="af"/>
+			<xsd:enumeration value="am"/>
+			<xsd:enumeration value="ar"/>
+			<xsd:enumeration value="as"/>
+			<xsd:enumeration value="ay"/>
+			<xsd:enumeration value="az"/>
+			<xsd:enumeration value="ba"/>
+			<xsd:enumeration value="be"/>
+			<xsd:enumeration value="bg"/>
+			<xsd:enumeration value="bh"/>
+			<xsd:enumeration value="bi"/>
+			<xsd:enumeration value="bn"/>
+			<xsd:enumeration value="bo"/>
+			<xsd:enumeration value="br"/>
+			<xsd:enumeration value="ca"/>
+			<xsd:enumeration value="co"/>
+			<xsd:enumeration value="cs"/>
+			<xsd:enumeration value="cy"/>
+			<xsd:enumeration value="da"/>
+			<xsd:enumeration value="de"/>
+			<xsd:enumeration value="dz"/>
+			<xsd:enumeration value="el"/>
+			<xsd:enumeration value="en"/>
+			<xsd:enumeration value="eo"/>
+			<xsd:enumeration value="es"/>
+			<xsd:enumeration value="et"/>
+			<xsd:enumeration value="eu"/>
+			<xsd:enumeration value="fa"/>
+			<xsd:enumeration value="fi"/>
+			<xsd:enumeration value="fj"/>
+			<xsd:enumeration value="fo"/>
+			<xsd:enumeration value="fr"/>
+			<xsd:enumeration value="fy"/>
+			<xsd:enumeration value="ga"/>
+			<xsd:enumeration value="gd"/>
+			<xsd:enumeration value="gl"/>
+			<xsd:enumeration value="gn"/>
+			<xsd:enumeration value="gu"/>
+			<xsd:enumeration value="ha"/>
+			<xsd:enumeration value="hi"/>
+			<xsd:enumeration value="hr"/>
+			<xsd:enumeration value="hu"/>
+			<xsd:enumeration value="hy"/>
+			<xsd:enumeration value="ia"/>
+			<xsd:enumeration value="ie"/>
+			<xsd:enumeration value="ik"/>
+			<xsd:enumeration value="in"/>
+			<xsd:enumeration value="is"/>
+			<xsd:enumeration value="it"/>
+			<xsd:enumeration value="iw"/>
+			<xsd:enumeration value="ja"/>
+			<xsd:enumeration value="ji"/>
+			<xsd:enumeration value="jw"/>
+			<xsd:enumeration value="ka"/>
+			<xsd:enumeration value="kk"/>
+			<xsd:enumeration value="kl"/>
+			<xsd:enumeration value="km"/>
+			<xsd:enumeration value="kn"/>
+			<xsd:enumeration value="ko"/>
+			<xsd:enumeration value="ks"/>
+			<xsd:enumeration value="ku"/>
+			<xsd:enumeration value="ky"/>
+			<xsd:enumeration value="la"/>
+			<xsd:enumeration value="ln"/>
+			<xsd:enumeration value="lo"/>
+			<xsd:enumeration value="lt"/>
+			<xsd:enumeration value="lv"/>
+			<xsd:enumeration value="mg"/>
+			<xsd:enumeration value="mi"/>
+			<xsd:enumeration value="mk"/>
+			<xsd:enumeration value="ml"/>
+			<xsd:enumeration value="mn"/>
+			<xsd:enumeration value="mo"/>
+			<xsd:enumeration value="mr"/>
+			<xsd:enumeration value="ms"/>
+			<xsd:enumeration value="mt"/>
+			<xsd:enumeration value="my"/>
+			<xsd:enumeration value="na"/>
+			<xsd:enumeration value="ne"/>
+			<xsd:enumeration value="nl"/>
+			<xsd:enumeration value="no"/>
+			<xsd:enumeration value="oc"/>
+			<xsd:enumeration value="om"/>
+			<xsd:enumeration value="or"/>
+			<xsd:enumeration value="pa"/>
+			<xsd:enumeration value="pl"/>
+			<xsd:enumeration value="ps"/>
+			<xsd:enumeration value="pt"/>
+			<xsd:enumeration value="qu"/>
+			<xsd:enumeration value="rm"/>
+			<xsd:enumeration value="rn"/>
+			<xsd:enumeration value="ro"/>
+			<xsd:enumeration value="ru"/>
+			<xsd:enumeration value="rw"/>
+			<xsd:enumeration value="sa"/>
+			<xsd:enumeration value="sd"/>
+			<xsd:enumeration value="sg"/>
+			<xsd:enumeration value="sh"/>
+			<xsd:enumeration value="si"/>
+			<xsd:enumeration value="sk"/>
+			<xsd:enumeration value="sl"/>
+			<xsd:enumeration value="sm"/>
+			<xsd:enumeration value="sn"/>
+			<xsd:enumeration value="so"/>
+			<xsd:enumeration value="sq"/>
+			<xsd:enumeration value="sr"/>
+			<xsd:enumeration value="ss"/>
+			<xsd:enumeration value="st"/>
+			<xsd:enumeration value="su"/>
+			<xsd:enumeration value="sv"/>
+			<xsd:enumeration value="sw"/>
+			<xsd:enumeration value="ta"/>
+			<xsd:enumeration value="te"/>
+			<xsd:enumeration value="tg"/>
+			<xsd:enumeration value="th"/>
+			<xsd:enumeration value="ti"/>
+			<xsd:enumeration value="tk"/>
+			<xsd:enumeration value="tl"/>
+			<xsd:enumeration value="tn"/>
+			<xsd:enumeration value="to"/>
+			<xsd:enumeration value="tr"/>
+			<xsd:enumeration value="ts"/>
+			<xsd:enumeration value="tt"/>
+			<xsd:enumeration value="tw"/>
+			<xsd:enumeration value="uk"/>
+			<xsd:enumeration value="ur"/>
+			<xsd:enumeration value="uz"/>
+			<xsd:enumeration value="vi"/>
+			<xsd:enumeration value="vo"/>
+			<xsd:enumeration value="wo"/>
+			<xsd:enumeration value="xh"/>
+			<xsd:enumeration value="yo"/>
+			<xsd:enumeration value="zh"/>
+			<xsd:enumeration value="zu"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CountryCodeISO">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="AF"/>
+			<xsd:enumeration value="AX"/>
+			<xsd:enumeration value="AL"/>
+			<xsd:enumeration value="DZ"/>
+			<xsd:enumeration value="AS"/>
+			<xsd:enumeration value="AD"/>
+			<xsd:enumeration value="AO"/>
+			<xsd:enumeration value="AI"/>
+			<xsd:enumeration value="AQ"/>
+			<xsd:enumeration value="AG"/>
+			<xsd:enumeration value="AR"/>
+			<xsd:enumeration value="AM"/>
+			<xsd:enumeration value="AW"/>
+			<xsd:enumeration value="AU"/>
+			<xsd:enumeration value="AT"/>
+			<xsd:enumeration value="AZ"/>
+			<xsd:enumeration value="BS"/>
+			<xsd:enumeration value="BH"/>
+			<xsd:enumeration value="BD"/>
+			<xsd:enumeration value="BB"/>
+			<xsd:enumeration value="BY"/>
+			<xsd:enumeration value="BE"/>
+			<xsd:enumeration value="BZ"/>
+			<xsd:enumeration value="BJ"/>
+			<xsd:enumeration value="BM"/>
+			<xsd:enumeration value="BT"/>
+			<xsd:enumeration value="BO"/>
+			<xsd:enumeration value="BA"/>
+			<xsd:enumeration value="BW"/>
+			<xsd:enumeration value="BV"/>
+			<xsd:enumeration value="BR"/>
+			<xsd:enumeration value="IO"/>
+			<xsd:enumeration value="BN"/>
+			<xsd:enumeration value="BG"/>
+			<xsd:enumeration value="BF"/>
+			<xsd:enumeration value="BI"/>
+			<xsd:enumeration value="KH"/>
+			<xsd:enumeration value="CM"/>
+			<xsd:enumeration value="CA"/>
+			<xsd:enumeration value="CV"/>
+			<xsd:enumeration value="KY"/>
+			<xsd:enumeration value="CF"/>
+			<xsd:enumeration value="TD"/>
+			<xsd:enumeration value="CL"/>
+			<xsd:enumeration value="CN"/>
+			<xsd:enumeration value="CX"/>
+			<xsd:enumeration value="CC"/>
+			<xsd:enumeration value="CO"/>
+			<xsd:enumeration value="KM"/>
+			<xsd:enumeration value="CG"/>
+			<xsd:enumeration value="CD"/>
+			<xsd:enumeration value="CK"/>
+			<xsd:enumeration value="CR"/>
+			<xsd:enumeration value="CI"/>
+			<xsd:enumeration value="HR"/>
+			<xsd:enumeration value="CU"/>
+			<xsd:enumeration value="CY"/>
+			<xsd:enumeration value="CZ"/>
+			<xsd:enumeration value="DK"/>
+			<xsd:enumeration value="DJ"/>
+			<xsd:enumeration value="DM"/>
+			<xsd:enumeration value="DO"/>
+			<xsd:enumeration value="EC"/>
+			<xsd:enumeration value="EG"/>
+			<xsd:enumeration value="SV"/>
+			<xsd:enumeration value="GQ"/>
+			<xsd:enumeration value="ER"/>
+			<xsd:enumeration value="EE"/>
+			<xsd:enumeration value="ET"/>
+			<xsd:enumeration value="FK"/>
+			<xsd:enumeration value="FO"/>
+			<xsd:enumeration value="FJ"/>
+			<xsd:enumeration value="FI"/>
+			<xsd:enumeration value="FR"/>
+			<xsd:enumeration value="GF"/>
+			<xsd:enumeration value="PF"/>
+			<xsd:enumeration value="TF"/>
+			<xsd:enumeration value="GA"/>
+			<xsd:enumeration value="GM"/>
+			<xsd:enumeration value="GE"/>
+			<xsd:enumeration value="DE"/>
+			<xsd:enumeration value="GH"/>
+			<xsd:enumeration value="GI"/>
+			<xsd:enumeration value="GR"/>
+			<xsd:enumeration value="GL"/>
+			<xsd:enumeration value="GD"/>
+			<xsd:enumeration value="GP"/>
+			<xsd:enumeration value="GU"/>
+			<xsd:enumeration value="GT"/>
+			<xsd:enumeration value="GN"/>
+			<xsd:enumeration value="GW"/>
+			<xsd:enumeration value="GY"/>
+			<xsd:enumeration value="HT"/>
+			<xsd:enumeration value="HM"/>
+			<xsd:enumeration value="VA"/>
+			<xsd:enumeration value="HN"/>
+			<xsd:enumeration value="HK"/>
+			<xsd:enumeration value="HU"/>
+			<xsd:enumeration value="IS"/>
+			<xsd:enumeration value="IN"/>
+			<xsd:enumeration value="ID"/>
+			<xsd:enumeration value="IR"/>
+			<xsd:enumeration value="IQ"/>
+			<xsd:enumeration value="IE"/>
+			<xsd:enumeration value="IL"/>
+			<xsd:enumeration value="IT"/>
+			<xsd:enumeration value="JM"/>
+			<xsd:enumeration value="JP"/>
+			<xsd:enumeration value="JO"/>
+			<xsd:enumeration value="KZ"/>
+			<xsd:enumeration value="KE"/>
+			<xsd:enumeration value="KI"/>
+			<xsd:enumeration value="KP"/>
+			<xsd:enumeration value="KR"/>
+			<xsd:enumeration value="KW"/>
+			<xsd:enumeration value="KG"/>
+			<xsd:enumeration value="LA"/>
+			<xsd:enumeration value="LV"/>
+			<xsd:enumeration value="LB"/>
+			<xsd:enumeration value="LS"/>
+			<xsd:enumeration value="LR"/>
+			<xsd:enumeration value="LY"/>
+			<xsd:enumeration value="LI"/>
+			<xsd:enumeration value="LT"/>
+			<xsd:enumeration value="LU"/>
+			<xsd:enumeration value="MO"/>
+			<xsd:enumeration value="MK"/>
+			<xsd:enumeration value="MG"/>
+			<xsd:enumeration value="MW"/>
+			<xsd:enumeration value="MY"/>
+			<xsd:enumeration value="MV"/>
+			<xsd:enumeration value="ML"/>
+			<xsd:enumeration value="MT"/>
+			<xsd:enumeration value="MH"/>
+			<xsd:enumeration value="MQ"/>
+			<xsd:enumeration value="MR"/>
+			<xsd:enumeration value="MU"/>
+			<xsd:enumeration value="YT"/>
+			<xsd:enumeration value="MX"/>
+			<xsd:enumeration value="FM"/>
+			<xsd:enumeration value="MD"/>
+			<xsd:enumeration value="MC"/>
+			<xsd:enumeration value="MN"/>
+			<xsd:enumeration value="MS"/>
+			<xsd:enumeration value="MA"/>
+			<xsd:enumeration value="MZ"/>
+			<xsd:enumeration value="MM"/>
+			<xsd:enumeration value="NA"/>
+			<xsd:enumeration value="NR"/>
+			<xsd:enumeration value="NP"/>
+			<xsd:enumeration value="NL"/>
+			<xsd:enumeration value="AN"/>
+			<xsd:enumeration value="NC"/>
+			<xsd:enumeration value="NZ"/>
+			<xsd:enumeration value="NI"/>
+			<xsd:enumeration value="NE"/>
+			<xsd:enumeration value="NG"/>
+			<xsd:enumeration value="NU"/>
+			<xsd:enumeration value="NF"/>
+			<xsd:enumeration value="MP"/>
+			<xsd:enumeration value="NO"/>
+			<xsd:enumeration value="OM"/>
+			<xsd:enumeration value="PK"/>
+			<xsd:enumeration value="PW"/>
+			<xsd:enumeration value="PS"/>
+			<xsd:enumeration value="PA"/>
+			<xsd:enumeration value="PG"/>
+			<xsd:enumeration value="PY"/>
+			<xsd:enumeration value="PE"/>
+			<xsd:enumeration value="PH"/>
+			<xsd:enumeration value="PN"/>
+			<xsd:enumeration value="PL"/>
+			<xsd:enumeration value="PT"/>
+			<xsd:enumeration value="PR"/>
+			<xsd:enumeration value="QA"/>
+			<xsd:enumeration value="RE"/>
+			<xsd:enumeration value="RO"/>
+			<xsd:enumeration value="RU"/>
+			<xsd:enumeration value="RW"/>
+			<xsd:enumeration value="SH"/>
+			<xsd:enumeration value="KN"/>
+			<xsd:enumeration value="LC"/>
+			<xsd:enumeration value="PM"/>
+			<xsd:enumeration value="VC"/>
+			<xsd:enumeration value="WS"/>
+			<xsd:enumeration value="SM"/>
+			<xsd:enumeration value="ST"/>
+			<xsd:enumeration value="SA"/>
+			<xsd:enumeration value="SN"/>
+			<xsd:enumeration value="CS"/>
+			<xsd:enumeration value="SC"/>
+			<xsd:enumeration value="SL"/>
+			<xsd:enumeration value="SG"/>
+			<xsd:enumeration value="SK"/>
+			<xsd:enumeration value="SI"/>
+			<xsd:enumeration value="SB"/>
+			<xsd:enumeration value="SO"/>
+			<xsd:enumeration value="ZA"/>
+			<xsd:enumeration value="GS"/>
+			<xsd:enumeration value="ES"/>
+			<xsd:enumeration value="LK"/>
+			<xsd:enumeration value="SD"/>
+			<xsd:enumeration value="SR"/>
+			<xsd:enumeration value="SJ"/>
+			<xsd:enumeration value="SZ"/>
+			<xsd:enumeration value="SE"/>
+			<xsd:enumeration value="CH"/>
+			<xsd:enumeration value="SY"/>
+			<xsd:enumeration value="TW"/>
+			<xsd:enumeration value="TJ"/>
+			<xsd:enumeration value="TZ"/>
+			<xsd:enumeration value="TH"/>
+			<xsd:enumeration value="TL"/>
+			<xsd:enumeration value="TG"/>
+			<xsd:enumeration value="TK"/>
+			<xsd:enumeration value="TO"/>
+			<xsd:enumeration value="TT"/>
+			<xsd:enumeration value="TN"/>
+			<xsd:enumeration value="TR"/>
+			<xsd:enumeration value="TM"/>
+			<xsd:enumeration value="TC"/>
+			<xsd:enumeration value="TV"/>
+			<xsd:enumeration value="UG"/>
+			<xsd:enumeration value="UA"/>
+			<xsd:enumeration value="AE"/>
+			<xsd:enumeration value="GB"/>
+			<xsd:enumeration value="US"/>
+			<xsd:enumeration value="UM"/>
+			<xsd:enumeration value="UY"/>
+			<xsd:enumeration value="UZ"/>
+			<xsd:enumeration value="VU"/>
+			<xsd:enumeration value="VE"/>
+			<xsd:enumeration value="VN"/>
+			<xsd:enumeration value="VG"/>
+			<xsd:enumeration value="VI"/>
+			<xsd:enumeration value="WF"/>
+			<xsd:enumeration value="EH"/>
+			<xsd:enumeration value="YE"/>
+			<xsd:enumeration value="ZM"/>
+			<xsd:enumeration value="ZW"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="MD_CharacterSetCode">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="ucs2"/>
+			<xsd:enumeration value="ucs4"/>
+			<xsd:enumeration value="utf7"/>
+			<xsd:enumeration value="utf8"/>
+			<xsd:enumeration value="utf16"/>
+			<xsd:enumeration value="a8859part1"/>
+			<xsd:enumeration value="a8859part2"/>
+			<xsd:enumeration value="a8859part3"/>
+			<xsd:enumeration value="a8859part4"/>
+			<xsd:enumeration value="a8859part5"/>
+			<xsd:enumeration value="a8859part6"/>
+			<xsd:enumeration value="a8859part7"/>
+			<xsd:enumeration value="a8859part8"/>
+			<xsd:enumeration value="a8859part9"/>
+			<xsd:enumeration value="a8859part10"/>
+			<xsd:enumeration value="a8859part11"/>
+			<xsd:enumeration value="a8859part13"/>
+			<xsd:enumeration value="a8859part14"/>
+			<xsd:enumeration value="a8859part15"/>
+			<xsd:enumeration value="a8859part16"/>
+			<xsd:enumeration value="jis"/>
+			<xsd:enumeration value="shiftJIS"/>
+			<xsd:enumeration value="eucJP"/>
+			<xsd:enumeration value="usAscii"/>
+			<xsd:enumeration value="ebcdic"/>
+			<xsd:enumeration value="eucKR"/>
+			<xsd:enumeration value="big5"/>
+			<xsd:enumeration value="GB2312"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="MD_TopicCategoryCode">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="farming"/>
+			<xsd:enumeration value="biota"/>
+			<xsd:enumeration value="boundaries"/>
+			<xsd:enumeration value="climatologyMeteorologyAtmosphere"/>
+			<xsd:enumeration value="economy"/>
+			<xsd:enumeration value="elevation"/>
+			<xsd:enumeration value="inlandWaters"/>
+			<xsd:enumeration value="environment"/>
+			<xsd:enumeration value="geoscientificInformation"/>
+			<xsd:enumeration value="health"/>
+			<xsd:enumeration value="imageryBaseMapsEarthCover"/>
+			<xsd:enumeration value="intelligenceMilitary"/>
+			<xsd:enumeration value="location"/>
+			<xsd:enumeration value="oceans"/>
+			<xsd:enumeration value="planningCadastre"/>
+			<xsd:enumeration value="society"/>
+			<xsd:enumeration value="structure"/>
+			<xsd:enumeration value="transportation"/>
+			<xsd:enumeration value="utilitiesCommunication"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CI_DateTypeCode">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="creation"/>
+			<xsd:enumeration value="publication"/>
+			<xsd:enumeration value="revision"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="NotAvailable">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value=""/>
+			<xsd:enumeration value="N/A"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

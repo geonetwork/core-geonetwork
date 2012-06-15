@@ -46,7 +46,10 @@ function init()
 		{ id:'wd.url',         type:'url' },
 		{ id:'wd.subtype',     type:'length',   minSize :1,  maxSize :200 },
 		{ id:'wd.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'wd.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'wd.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'wd.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'wd.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'wd.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
 	shower = new Shower('wd.useAccount', 'wd.account');

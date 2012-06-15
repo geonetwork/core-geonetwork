@@ -1,6 +1,5 @@
 INSERT INTO Languages VALUES ('ita','Italiano', 'y', 'n');
 
--- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES (49, 'ita', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (50, 'ita', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (51, 'ita', 'fees', '');
@@ -16,8 +15,6 @@ INSERT INTO CategoriesDes VALUES (7,'ita','Fotografie');
 INSERT INTO CategoriesDes VALUES (8,'ita','Audio/Video');
 INSERT INTO CategoriesDes VALUES (9,'ita','Archivi');
 INSERT INTO CategoriesDes VALUES (10,'ita','Altre risorse di informazione');
-INSERT INTO CategoriesDes VALUES (11,'eng','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'eng','Registri');
 
 INSERT INTO GroupsDes VALUES (-1,'ita','Visitatore');
 INSERT INTO GroupsDes VALUES (0,'ita','Intranet');

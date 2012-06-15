@@ -97,9 +97,29 @@
 	
 	<xsl:template name="options-OAI">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
-		<xsl:call-template name="schedule-widget">
-			<xsl:with-param name="type">oai</xsl:with-param>
-		</xsl:call-template>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="oai.every.days"  class="content" type="text" size="2"/> :
+					<input id="oai.every.hours" class="content" type="text" size="2"/> :
+					<input id="oai.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
+				<td class="padded"><input id="oai.oneRunOnly" type="checkbox" value=""/></td>
+			</tr>
+			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><input id="oai.validate" type="checkbox" value=""/></td>
+			</tr>
+		</table>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
@@ -166,15 +186,4 @@
 	
 	<!-- ============================================================================================= -->
 	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

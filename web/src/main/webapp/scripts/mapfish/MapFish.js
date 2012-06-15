@@ -260,7 +260,7 @@ return;var isBaseLayer=false;var displayInLayerSwitcher=false;if(layers){isBaseL
 if(layer.displayInLayerSwitcher){displayInLayerSwitcher=true;}},this);}else{displayInLayerSwitcher=true;}
 if((isBaseLayer||node.attributes.radio)&&displayInLayerSwitcher){node.attributes.uiProvider=mapfish.widgets.RadioTreeNodeUI;if(node.ui)
 node.ui=new mapfish.widgets.RadioTreeNodeUI(node);}},this);},initComponent:function(){this.eventModel=new mapfish.widgets.LayerTreeEventModel(this);mapfish.widgets.LayerTree.superclass.initComponent.call(this);this.addListener("checkchange",function checkChange(node,checked){this._handleModelChange(node,checked);},this);this.addListener("radiochange",function radioChange(node,checked){this._handleModelChange(node,checked);},this);this._automaticModel=!this.model;if(!this.model){this.model=this._extractOLModel();}
-var root={text:'Root',draggable:false,id:'source',children:this.model,leaf:false};function buildTree(attributes){var node=new Ext.tree.TreeNode(attributes);console.log(attributes);var cs=attributes.children;node.leaf=!cs;if(!cs)
+var root={text:'Root',draggable:false,id:'source',children:this.model,leaf:false};function buildTree(attributes){var node=new Ext.tree.TreeNode(attributes);var cs=attributes.children;node.leaf=!cs;if(!cs)
 return node;for(var i=0;i<cs.length;i++){if(!cs[i]){continue;}
 node.appendChild(buildTree(cs[i]));}
 return node;}

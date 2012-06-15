@@ -164,7 +164,7 @@ USA.
 			<sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and 
 				geonet:contains-any-of($resourceLanguage, 
-				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
+				('eng', 'fre', 'ger', 'fra', 'deu', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
 				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul', 
 				'hun', 'swe', 'gle'))"/>
 			<sch:assert test="$euLanguage">
@@ -257,17 +257,19 @@ USA.
 			<sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE Theme thesaurus is not available. -->
-			<sch:assert test="count($inspire-theme) > 0">
-				INSPIRE Theme thesaurus not found. Check installation in codelist/external/thesauri/theme.
-				Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
-			</sch:assert>
 			
+			<!-- GEOCAT: disabled until geocat metadata has all been migrated to have a theme
+    			<sch:assert test="count($inspire-theme) > 0">
+    				INSPIRE Theme thesaurus not found. Check installation in codelist/external/thesauri/theme.
+    				Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
+    			</sch:assert>
+			-->
 			
 			<sch:let name="thesaurus_name" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:title/*/text()"/>
 			<sch:let name="thesaurus_date" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
 			<sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
 			<sch:let name="keyword" 
-				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString"/>
+				value="(gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString | gmd:descriptiveKeywords/*/gmd:keyword//gmd:LocalisedCharacterString)"/>
 			<sch:let name="inspire-theme-found" 
 				value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
 			<sch:assert test="$inspire-theme-found > 0">

@@ -86,9 +86,10 @@
                 displayElement('gn.type',display);
                 displayElement('gn.stylesheet',display);
                 displayElement('gn.validate',display);
-                displayElement('gn.groups',display);
+                //displayElement('gn.groups',display);
                 displayElement('gn.categories',display);
-                displayElement('gn.assign',mefdisplay);
+                displayElement('gn.assign','none');
+                displayElement('gn.privileges',mefdisplay);
                 
             }
             
@@ -252,6 +253,12 @@
 							</td>
 						</tr>
 
+						<tr id="gn.privileges">
+							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/skipPrivilegesImport"/></th>
+							<td>
+								<input type="checkbox" name="skipPrivileges" id="skipPrivileges" value="true" />
+							</td>
+						</tr>
                         <xsl:call-template name="metadata-insert-common-form"/>
 
 						

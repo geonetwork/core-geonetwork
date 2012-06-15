@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <M6>Attribut darf nicht leer sein</M6>
+    <M7>Bedingungen für CRS Attribute</M7>
+    <M8>[ISOFTDS19139:2005-TableA1-Row24] - Name, Organisation oder Position ist obligatorisch.</M8>
+    <M9>[ISOFTDS19139:2005-TableA1-Row07] - "Andere Einschränkungen" muss ausgefüllt werden, wenn unter Zugriffseinschränkungen oder Nutzungseinschränkungen "benutzerdefinierte Einschränkungen" ausgewält wurde.</M9>
+    <M10>[ISOFTDS19139:2005-TableA1-Row16] - Einheiten für Werte sind obligatorisch.</M10>
+    <M11>[ISOFTDS19139:2005-TableA1-Row13] - (Quelldaten-)Beschreibung obligatorisch wenn keine Ausdehnung (sourceExtent) angegeben ist.</M11>
+    <M12>[ISOFTDS19139:2005-TableA1-Row14] - Ausdehnung (sourceExtent) ist obligatorisch wenn keine (Quelldaten-)Beschreibung angegeben ist.</M12>
+    <M13>[ISOFTDS19139:2005-TableA1-Row10] - Inhalt obligatorisch für Datenbestand oder Serie</M13>
+    <M14>[ISOFTDS19139:2005-TableA1-Row11] - Angabe der Datenquelle ist obligatorisch wenn Erläuterung oder Bearbeitungsschritt nicht ausgefüllt sind.</M14>
+    <M15>[ISOFTDS19139:2005-TableA1-Row12] - Bearbeitungsschritt ist obligatorisch, wenn Erläuterung oder Datenquelle nicht ausgefüllt ist</M15>
+    <M16>[ISOFTDS19139:2005-TableA1-Row08] - Für Datenbestand muss entweder "Qualitätsbericht" oder "Herkunft" ausgefüllt werden.</M16>
+    <M17>[ISOFTDS19139:2005-TableA1-Row09] - Ebenenbeschreibung ist obligatorisch ausser für "Datenbestand" oder "Serie".</M17>
+    <M18>[ISOFTDS19139:2005-TableA1-Row17] - Einheit ist obligatorisch für Dichte-Werte.</M18>
+    <M19>[ISOFTDS19139:2005-TableA1-Row18] - Format (MD_Format) muss ausgefüllt werden.</M19>
+    <M20>[ISOFTDS19139:2005-TableA1-Row23] - Element erforderlich</M20>
+    <M21>[ISOFTDS19139:2005-TableA1-Row04] - Der Datenbestand muss eine Ausdehnung haben.</M21>
+    <M22>[ISOFTDS19139:2005-TableA1-Row05] - Datenbestand und Serie müssen ein Thema (topicCategory) haben.</M22>
+    <M23>[ISOFTDS19139:2005-TableA1-Row06] - Entweder Assoziierter Datenbestand (aggregateDataSetName) oder Identifikator (aggregateDataSetIdentifier) müssen ausgefüllt werden.</M23>
+    <M24>[ISOFTDS19139:2005-TableA1-Row01] - Sprache ist obligatorisch</M24>
+    <M25>[ISOFTDS19139:2005-TableA1-Row02] - Zeichensatz ist obligatorisch</M25>
+    <M26>[ISOFTDS19139:2005-TableA1-Row19] - detail required unless simple term</M26>
+    <M27>[ISOFTDS19139:2005-TableA1-Row20] - Bedingung</M27>
+    <M28>[ISOFTDS19139:2005-TableA1-Row21] - Code</M28>
+    <M29>[ISOFTDS19139:2005-TableA1-Row22] - shortName</M29>
+    <M30>[ISOFTDS19139:2005-TableA1-Row15] - Kontrollpunktbeschreibung ist obligatorisch</M30>
+    <M61>[ISOFTDS19139:2005-TableA1] - Bezeichnung der Hierarchieebene</M61>
+    
+    
+    <alert.M6><div>Thematik (ISO-Thema) ist obligatorisch, wenn Hierarchieebene entweder mit "Datenbestand", "Serie" oder gar nicht ausgefüllt ist.</div></alert.M6>
+    <alert.M6.characterString><div><h2>Attribut darf nicht leer sein (ausfüllen oder entfernen)</h2></div></alert.M6.characterString>
+    <alert.M6.directPosition><div>Wenn das Attribut Dimension ausgefüllt ist, muss auch ein srsName angegeben werden.</div></alert.M6.directPosition>
+    <alert.M7.axisAndSrs><div>Wenn ein "axisLabels" Attribut vorhanden ist, braucht es auch ein "srsName" Attribut.</div></alert.M7.axisAndSrs>
+    <alert.M7.uomAndSrs><div>Wenn ein "uomLabels" Attribut vorhanden ist, braucht es auch ein "srsName" Attribut.</div></alert.M7.uomAndSrs>
+    <alert.M7.uomAndAxis><div>Wenn ein "uomLabels" Attribut vorhanden ist, braucht es auch ein "axisLabels" Attribut und umgekehrt.</div></alert.M7.uomAndAxis>
+    <alert.M8><div>Es muss entweder ein Nachname, eine Organisation oder eine Position angegeben werden.</div></alert.M8>
+    <alert.M9.access><div>"Andere Einschränkungen" muss ausgefüllt werden, wenn unter Zugriffseinschränkungen "benutzerdefinierte Einschränkungen" ausgewält wurde.</div></alert.M9.access>
+    <alert.M9.use><div>"Andere Einschränkungen" muss ausgefüllt werden, wenn unter Nutzungseinschränkungen "benutzerdefinierte Einschränkungen" ausgewält wurde.</div></alert.M9.use>
+    <alert.M10><div>Die Angabe von Einheiten ist obligatorisch, wenn ein Maximalwert oder ein Minimalwert ausgefüllt wurde.</div></alert.M10>
+    <alert.M11><div>Die (Quelldaten-)Beschreibung obligatorisch wenn keine Ausdehnung (sourceExtent) angegeben ist.</div></alert.M11>
+    <alert.M13><div>Wenn (count(Quelldaten) + count(Bearbeitungsschritt) = 0) und (DQ_DataQuality.scope.level = "Datenbestand" oder "Serie") dann ist eine Erläuterung (statement) obligatorisch.</div></alert.M13>
+    <alert.M14><div>Obligatorisch wenn Erläuterung und Bearbeitungsschritt nicht ausgefüllt sind.</div></alert.M14>
+    <alert.M15><div>Obligatorisch wenn Erläuterung und Datenquelle nicht ausgefüllt sind.</div></alert.M15>
+    <alert.M16><div>Für Datenbestand muss entweder "Qualitätsbericht" oder "Herkunft" ausgefüllt werden.</div></alert.M16>
+    <alert.M17><div>Ebenenbeschreibung ist obligatorisch ausser es gibt einen "Datenbestand" oder eine "Serie".</div></alert.M17>
+    <alert.M18><div>Die Angabe einer Einheit ist obligatorisch für Dichte-Werte.</div></alert.M18>
+    <alert.M19><div>Es ist entweder das Datenformat beim Vertrieb (MD_Distribution.distributionFormat) oder
+        bei der Vertriebsstelle (MD_Distributor.distributorFormat) anzugeben.</div></alert.M19>
+    <alert.M20><div>count(description + geographicElement + temporalElement + verticalElement) &gt; 0.</div></alert.M20>
+    <alert.M21><div>Es muss entweder description, geographicElement, temporalElement oder verticalElement ausgefüllt sein</div></alert.M21>
+    <alert.M22><div>Datenbestand und Serie müssen ein Thema (topicCategory) haben.</div></alert.M22>
+    <alert.M23><div>Entweder Assoziierter Datenbestand (aggregateDataSetName) oder Identifikator (aggregateDataSetIdentifier) müssen ausgefüllt werden.</div></alert.M23>
+    <alert.M26.obligation><div>Angabe der Verbindlichkeit ist obligatorisch ausser: Datentyp = "codelist", "enumeration" oder "codelistElement"</div></alert.M26.obligation>
+    <alert.M26.maximumOccurence><div>Angabe des Maximalen Vorkommens ist obligatorisch ausser: Datentyp = "codelist", "enumeration" oder "codelistElement"</div></alert.M26.maximumOccurence>
+    <alert.M26.domainValue><div>Angabe des Wertebereichs ist obligatorisch ausser: Datentyp = "codelist", "enumeration" oder "codelistElement"</div></alert.M26.domainValue>
+    <alert.M27><div>Angabe einer Bedingung ist obligatorisch falls Verbindlichkeit = "bedingt"</div></alert.M27>
+    <alert.M28><div>Angabe eines Codes (domainCode) ist obligatorisch wenn Datentyp = "codelistElement"</div></alert.M28>
+    <alert.M29><div>Angebe eines Shortnames ist obligatorisch ausser wenn Datentyp = CodelistElement</div></alert.M29>
+    <alert.M30><div>Kontrollpunktbeschreibung obligatorisch wenn unter "Kontrollpunktverfügbarkeit" mit Ja geantwortet wird</div></alert.M30>
+    <alert.M61><div><h2>Bezeichnung der Hierarchieebene ist obligatorisch wenn Hierarchiebene nicht "Datenbestand"</h2></div></alert.M61>
+    
+</strings>

@@ -91,10 +91,11 @@
 
 
     <!-- ============================================================================= -->
-    <xsl:template mode="iso19139" match="gmd:EX_GeographicBoundingBox" priority="2">
+    <xsl:template mode="iso19139" match="gmd:EX_GeographicBoundingBox[../../gmd:geographicElement/gmd:EX_BoundingPolygon]" priority="2"/>
+    <xsl:template mode="iso19139" match="gmd:EX_GeographicBoundingBox[not(../../gmd:geographicElement/gmd:EX_BoundingPolygon)]" priority="2">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
-        
+
         <!-- regions combobox -->
         <xsl:variable name="places">
           <xsl:if test="$edit=true() and /root/gui/regions/record">

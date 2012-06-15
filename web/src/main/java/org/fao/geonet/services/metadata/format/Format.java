@@ -139,7 +139,6 @@ public class Format extends AbstractFormatService {
     	String schema = getMetadataSchema(params, context);
     	List<String> applicable = config.listOfApplicableSchemas();
 		return applicable.contains(schema) || applicable.contains("all");
-		
 	}
 
 	private Element getStrings(String appPath, String lang) throws IOException, JDOMException {

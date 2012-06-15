@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <M500>[Language] - Jos metatiedot määritellään vain yhdellä kielellä, se on määriteltävä metatiedon kielenä. Muut kielet määritellään vaihtoehtoisina kielinä.</M500>
+    <alert.M500>
+        <div>Jos metatiedot määritellään vain yhdellä kielellä, se on määriteltävä metatiedon kielenä. Muut kielet määritellään vaihtoehtoisina kielinä. <br/>
+            <span class="validationReportSuggestion">Ehdotus: Tarkista, että metatiedon kieli on määritelty.  </span></div>
+    </alert.M500>
+    <report.M500>Metatiedon pääkieli:</report.M500>
+    <alert.M501>
+        <div>Jos metatiedot määritellään vain yhdellä kielellä, se on määriteltävä metatiedon kielenä. Muut kielet määritellään vaihtoehtoisina kielinä. <br/>
+            <span class="validationReportSuggestion">Ehdotus: Tarkista, että metatiedon pääkieltä ei ole määritelty vaihtoehtoisena kielenä.</span></div>
+    </alert.M501>
+    <report.M501>Kieltä ei ole määritelty kahteen kertaan</report.M501>
+</strings>

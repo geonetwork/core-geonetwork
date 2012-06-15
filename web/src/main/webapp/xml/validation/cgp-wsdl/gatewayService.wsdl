@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp1 (http://www.altova.com) by Pierre-Yann Bridé (GeoTask AG) -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://new.webservice.namespace" xmlns:ns="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.geocat.ch/2003/05/gateway/GM03Small" xmlns:ns2="http://www.geocat.ch/2003/05/gateway/GML" xmlns:ns3="http://www.geocat.ch/2003/05/gateway/header" xmlns:ns4="http://www.geocat.ch/2003/05/gateway/query" targetNamespace="http://new.webservice.namespace">
+	<wsdl:import location="xsd/envelope.xsd"/>
+	<wsdl:types>
+		<xs:schema targetNamespace="http://new.webservice.namespace" elementFormDefault="qualified"/>
+	</wsdl:types>
+	<wsdl:message name="queryRequest">
+		<wsdl:part name="parameter" element="ns4:catalogGatewayRequest"/>
+	</wsdl:message>
+	<wsdl:message name="queryResult">
+		<wsdl:part name="parameter" element="ns4:catalogGatewayRequest"/>
+	</wsdl:message>
+	<wsdl:message name="requestID">
+		<wsdl:part name="parameter" element="ns3:requestID"/>
+	</wsdl:message>
+	<wsdl:portType name="catalogGatewayRequestPortType">
+		<wsdl:operation name="queryRequest">
+			<wsdl:documentation>New documentation</wsdl:documentation>
+			<wsdl:input message="tns:queryRequest"/>
+			<wsdl:output message="tns:queryResult"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SOAPBinding" type="tns:catalogGatewayRequestPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="queryRequest">
+			<soap:operation soapAction="urn:#NewOperation" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header message="tns:requestID" part="parameter" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+				<soap:header message="tns:requestID" part="parameter" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="GatewayService">
+		<wsdl:port name="NewPort" binding="tns:SOAPBinding">
+			<soap:address location="http://gbs02.geotaskserver.com/home_gs/services/MessageService"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

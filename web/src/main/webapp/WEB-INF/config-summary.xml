@@ -18,15 +18,17 @@
 			<item name="keyword" plural="keywords" indexKey="keyword" order="freq"
 				type="string" max="10" />
 			<item name="category" plural="categories" indexKey="topicCat"
-				order="name" type="string" max="10" />
+				order="name" type="string" max="10"  translator="codelist:gmd:MD_TopicCategoryCode"/>
 			<item name="spatialRepresentation" plural="spatialRepresentations"
-				indexKey="spatialRepresentation" type="string" order="freq" max="10" />
+				indexKey="spatialRepresentation" type="string" order="freq" max="10" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
 			<item name="organisationName" plural="organisationNames"
-				indexKey="orgName" order="freq" type="string" max="10" />
+				indexKey="_orgName" order="freq" type="string" max="10" />
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"
 				order="freq" type="string" max="10" />
 			<item name="type" plural="types" indexKey="type" order="freq"
-				type="string" max="10" />
+				type="string" max="10" translator="codelist:gmd:MD_ScopeCode"/>
+			<item name="group" plural="groups"
+            	indexKey="_groupOwnerName" order="freq" type="string" max="10" translator="db:Groups"/>	
 			<item name="created" plural="created" indexKey="_createDate"
 				type="date" order="freq" max="10" />
 		</results_with_summary>

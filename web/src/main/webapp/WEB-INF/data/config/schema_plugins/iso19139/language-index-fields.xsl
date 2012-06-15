@@ -107,6 +107,20 @@
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date">
 					<Field name="publicationDate" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date">
+						<xsl:variable name="date" select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date"/>
+						<Field name="_revisionDate" string="{$date[1]}" store="true" index="true" token="false"/>
+					</xsl:when>
+					<xsl:when test="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date/gco:Date">
+						<xsl:variable name="date" select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date"/>
+						<Field name="_revisionDate" string="{$date[1]}" store="true" index="true" token="false"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:variable name="date" select="gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+						<Field name="_revisionDate" string="{$date[1]}" store="true" index="true" token="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
 
 				<!-- fields used to search for metadata in paper or digital format -->
 
@@ -236,25 +250,7 @@
 				</xsl:for-each>
 			</xsl:for-each>
 
-            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-            <xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
-                <xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
-                <xsl:if test="$fileName != ''">
-                    <xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
-                    <xsl:choose>
-                        <xsl:when test="contains($fileName ,'://')">
-                            <Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
-                        </xsl:when>
-                        <xsl:when test="string($fileDescr)='thumbnail'">
-                            <!-- FIXME : relative path -->
-                            <Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:if>
-            </xsl:for-each>
-
-            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!--  Fields use to search on Service -->
 
 			<xsl:for-each select="srv:serviceType/gco:LocalName">
@@ -320,6 +316,28 @@
 			<Field name="serviceTypeVersion" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 
+		<xsl:for-each
+			select="gmd:identificationInfo/(*[@gco:isoType='srv:SV_ServiceIdentification']|srv:SV_ServiceIdentification)/srv:coupledResource/srv:SV_CoupledResource/gco:ScopedName">
+			<xsl:variable name="layerName" select="string(.)" />
+			<xsl:variable name="uuid" select="string(../srv:identifier/gco:CharacterString)" />
+			<xsl:variable name="allConnectPoint" 
+				select="../../../srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL" />
+		    <xsl:variable name="connectPoint" select="$allConnectPoint[1]"/>
+			<xsl:variable name="serviceUrl">
+				<xsl:choose>
+					<xsl:when test="$connectPoint=''">
+						<xsl:value-of
+							select="//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$connectPoint" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:if test="string-length($layerName) > 0 and string-length($serviceUrl) > 0">
+		    	<Field name="wms_uri" string="{$uuid}###{$layerName}###{$serviceUrl}" store="true" index="true" token="false"/>
+		    </xsl:if>
+		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- === General stuff === -->

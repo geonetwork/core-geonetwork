@@ -86,9 +86,7 @@
 		minIdle   - pool size/minimum number of idle connections (default 0)
 		maxWait   - number of milliseconds to wait for a connection to become
 		            available (default 200)
-        validationQuery - optional, sql statement for verifying a connection, 
-                    the statement must return a least one row, empty 
-                    result sets may cause problems
+
 		timeBetweenEvictionRunsMillis - time between eviction runs 
 		                          (default -1 which means the next three params 
 															 are ignored)
@@ -104,6 +102,7 @@
 		removeAbandonedTimeout - 60 x 60 seconds = 1 hour
 		logAbandoned - true
 		testOnBorrow - true
+		validationQuery - 'SELECT 1'
 		defaultReadOnly - false
 		defaultAutoCommit - false
 		initialSize - maxActive
@@ -144,7 +143,7 @@
 	-->
   
 	<resources>
-	  <resource enabled="false">
+	  <resource enabled="true">
 	    <name>main-db</name>
 	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
@@ -279,12 +278,12 @@
 		<!-- postgresql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<resource enabled="true">
+		<resource enabled="false">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
-				<user>www-data</user>
-				<password>www-data</password>
+				<user>postgres</user>
+				<password>postgres</password>
 				<!-- we use org.postgis.DriverWrapper in place of
 				     org.postgresql.Driver to support both postgresql and postgis -->
 			  <driver>org.postgresql.Driver</driver>
@@ -299,7 +298,7 @@
 					jdbc:postgresql_postGIS://host:port/database
 					
 				-->
-			  <url>jdbc:postgresql://localhost:5432/geonetwork</url>
+			  <url>jdbc:postgresql://localhost:5432/geonetwork-lang</url>
 				<poolSize>10</poolSize>
         <validationQuery>SELECT 1</validationQuery>
 			</config>
@@ -820,7 +819,7 @@
 
 			<output sheet="user-infoupdate.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
+			<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
 		</service>
 
@@ -899,9 +898,7 @@
 		<service name="category.list">
 			<class name=".services.category.List" />
 
-			<output sheet="category-list.xsl" >
-				<call name="services" class="jeeves.guiservices.services.Get" />
-			</output>
+			<output sheet="category-list.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

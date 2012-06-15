@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gch="http://www.geocat.ch/2003/05/gateway/header" targetNamespace="http://www.geocat.ch/2003/05/gateway/header" elementFormDefault="qualified">
+	<xsd:complexType name="requestIDType">
+		<xsd:sequence>
+			<xsd:element name="version" type="xsd:string"/>
+			<xsd:element name="sendingNodeId" type="xsd:string"/>
+			<xsd:element name="referenceId" type="xsd:string"/>
+			<xsd:element name="messageId" type="xsd:string"/>
+			<xsd:element name="responseTo" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="dateAndTime" type="xsd:dateTime"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="requestID" type="gch:requestIDType"/>
+</xsd:schema>

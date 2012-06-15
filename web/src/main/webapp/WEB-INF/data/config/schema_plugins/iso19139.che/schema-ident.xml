@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://geonetwork-opensource.org/schemas/schema-ident" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
+	<name>iso19139.che</name>
+	<id>4f95190a-dde4-11df-8626-001c2346de4c</id>
+	<version>1.0</version>
+	<schemaLocation>http://www.geocat.ch/2008/che http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd</schemaLocation>
+	<autodetect xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+		<elements type="root">
+			<che:CHE_MD_Metadata/>
+		</elements>
+	</autodetect>
+</schema>

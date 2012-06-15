@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:smpl="http://www.geocat.ch/2003/05/gateway/GML" targetNamespace="http://www.geocat.ch/2003/05/gateway/GML" elementFormDefault="qualified">
+	<xsd:element name="Polygon" type="smpl:PolygonType"/>
+	<!-- this type is copied and adapted from GML 3.00 -->
+	<xsd:complexType name="PolygonType">
+		<xsd:annotation>
+			<xsd:documentation>
+			A Polygon is a special surface that is defined by a single surface patch. The boundary of this patch is coplanar and the polygon uses planar interpolation in its interior. It is backwards compatible with the Polygon of GML 2, GM_Polygon of ISO 19107 is implemented by PolygonPatch.
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="exteriorRing" type="smpl:LinearRingType" minOccurs="0"/>
+			<xsd:element name="interiorRing" type="smpl:LinearRingType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="gid" type="xsd:string" use="optional"/>
+		<xsd:attribute name="srsName" type="xsd:anyURI" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+				In general this reference points to a CRS instance of smpl:CoordinateReferenceSystemType (see coordinateReferenceSystems.xsd). For well known references it is not required that the CRS description exists at the location the URI points to (Note: These "WKCRS"-ids still have to be specified). If no srsName attribute is given, the CRS must be specified as part of the larger context this geometry element is part of.
+			</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- this type is copied and adapted from GML 3.00 -->
+	<xsd:complexType name="LinearRingType">
+		<xsd:annotation>
+			<xsd:documentation>
+			A LinearRing is defined by four or more coordinate tuples, with linear interpolation between them; the first and last coordinates must be coincident.
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="pos" type="smpl:DirectPositionType" minOccurs="4" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- this type is copied from GML 3.00 -->
+	<xsd:complexType name="DirectPositionType">
+		<xsd:annotation>
+			<xsd:documentation>
+			DirectPosition instances hold the coordinates for a position within some coordinate reference system (CRS). Since DirectPositions, as data types, will often be included in larger objects (such as geometry elements) that have references to CRS, the "srsName" attribute will in general be missing, if this particular DirectPosition is included in a larger element with such a reference to a CRS. In this case, the CRS is implicitly assumed to take on the value of the containing object's CRS.
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="smpl:doubleList">
+				<xsd:attribute name="srsName" type="xsd:anyURI" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+						In general this reference points to a CRS instance of smpl:CoordinateReferenceSystemType (see coordinateReferenceSystems.xsd).For well known references it is not required that the CRS description exists at the location the URI points to (Note: These "WKCRS"-ids still have to be specified). If no srsName attribute is given, the CRS must be specified as part of the larger context this geometry element is part of, e.g. a geometric element like point, curve, etc. It is expected that the attribute will be specified at the direct position level only in rare cases.
+					</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="dimension" type="xsd:positiveInteger" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+						The attribute "dimension" is the length of coordinate sequence (the number of entries in the list). This is determined by the coordinate reference system.
+					</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!-- this type is copied from GML 3.00 -->
+	<xsd:simpleType name="doubleList">
+		<xsd:annotation>
+			<xsd:documentation>
+			XML List based on XML Schema double type. An element of this type contains a space-separated list of double values
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:list itemType="xsd:double"/>
+	</xsd:simpleType>
+</xsd:schema>

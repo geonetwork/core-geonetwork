@@ -1,0 +1,252 @@
+<overrides>
+    <import file="/WEB-INF/server-props-overrides.xml"/>
+    <import file="/WEB-INF/overrides-config-csw-geocat.xml"/>
+    
+    <properties>
+        <postgis.user>www-data</postgis.user>
+        <postgis.pass>www-data</postgis.pass>
+        <postgis.host>localhost</postgis.host>
+        <postgis.port>5432</postgis.port>
+        <postgis.db>geocat</postgis.db>
+        <postgis.max.active>50</postgis.max.active>
+        <postgis.max.idle>20</postgis.max.idle>
+        <postgis.min.idle>0</postgis.min.idle>
+        <wfs.host>localhost</wfs.host>
+        <wfs.port>8700</wfs.port>
+        <serverStage>production</serverStage>
+    </properties>
+    <file name=".*/WEB-INF/config.xml">
+        <replaceText xpath="default/language">eng</replaceText>
+        <replaceAtt xpath="appHandler/param[@name = 'preferredSchema']" attName="value" value="iso19139.che"/>
+        <addXML xpath="appHandler">
+            <param name="postgisConfig">
+                <database>${postgis.db}</database>
+                <user>${postgis.user}</user>
+                <password>${postgis.pass}</password>
+                <host>${postgis.host}</host>
+                <port>${postgis.port}</port>
+            </param>
+            <param name="reusable">
+                <param name="processOnInsert" value="true" />
+            </param>
+            <param name="extent">
+                <!--  If there is no id then the server is the default server and can be accessed with ExtentManager.DEFAULT_SOURCE_ID id -->
+                <!--  columns are case sensitive -->
+                <source database="${postgis.db}"
+                        user="${postgis.user}"
+                        password="${postgis.pass}"
+                        host="${postgis.host}"
+                        port="${postgis.port}"
+                        schema="public">
+                    <typename typename="gn:countries" idColumn="ID" descColumn="LAND" searchColumn="SEARCH"
+                                        geoIdColumn="LAND" CRS="EPSG:21781" />
+                    <typename typename="gn:gemeindenBB" idColumn="OBJECTVAL" descColumn="DESC" searchColumn="SEARCH"
+                                        geoIdColumn="GEMNAME" CRS="EPSG:21781" />
+                    <typename typename="gn:kantoneBB" idColumn="KANTONSNR" descColumn="NAME" searchColumn="SEARCH"
+                                        geoIdColumn="KUERZEL" CRS="EPSG:21781" />
+                    <typename typename="gn:xlinks" idColumn="ID" descColumn="DESC" geoIdColumn="GEO_ID"
+                                        searchColumn="SEARCH" modifiable="true" CRS="EPSG:21781" />
+                    <typename typename="gn:non_validated" idColumn="ID" descColumn="DESC" geoIdColumn="GEO_ID"
+                                        searchColumn="SEARCH" modifiable="true" CRS="EPSG:21781" />
+                </source>
+            </param>
+        </addXML>
+        <replaceXML xpath="resources">
+            <resource enabled="true">
+                <name>main-db</name>
+                <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+                <config>
+                    <user>${postgis.user}</user>
+                    <password>${postgis.pass}</password>
+                    <driver>org.postgis.DriverWrapper</driver>
+                    <url>jdbc:postgresql_postGIS://${postgis.host}:${postgis.port}/${postgis.db}</url>
+	                <postgis.max.active>${postgis.max.active}</postgis.max.active>
+			        <postgis.max.idle>${postgis.max.idle}</postgis.max.idle>
+        			<postgis.min.idle>${postgis.min.idle}</postgis.min.idle>
+	        		<validationQuery>SELECT 1</validationQuery> 
+                </config>
+            </resource>
+        </replaceXML>
+        <addXML xpath="">
+            <include>config-geocat.xml</include>
+        </addXML>
+        <addXml xpath="schedules">
+        	<schedule name="unpublish-invalid-metadata" when="1 hour" class=".kernel.UnpublishInvalidMetadataJob" />
+        </addXml>
+    </file>
+    <file name=".*/WEB-INF/config-monitoring.xml">
+        <addXml xpath="monitors[1]">
+        	<healthCheck class="org.fao.geonet.monitor.health.MetadataTypeHealthCheck"/>
+        </addXml>
+    </file>
+    <file name=".*/WEB-INF/config-db.xml">
+        <removeXML xpath="data/file" />
+        <addXml xpath="data">
+        	<file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
+		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-"/>
+        </addXml>
+    </file>
+    <file name=".*/WEB-INF/user-profiles.xml">
+        <removeXML xpath="allow[@service='metadata.schema.add.form']"/>
+        <removeXML xpath="allow[@service='csw-publication']"/>
+        <addXML xpath="profile[@name ='Editor']">
+            <allow service="metadata.xlink.add"/>
+            <allow service="csw-publication"/>
+        </addXML>
+        <addXML xpath="profile[@name ='RegisteredUser']">
+        </addXML>
+        <addXML xpath="profile[@name ='Administrator']">
+            <!-- Search for metadata that has not recently been updated -->
+            <allow service="metadata.expired.email"/>
+            <allow service="metadata.expired.unpublish"/>
+            <allow service="metadata.expired.form"/>
+
+            <!-- Format facilities -->
+            <allow service="format.admin"/>
+            <allow service="format"/>
+
+            <!-- Unpublish facilities -->
+            <allow service="unpublish.invalid.metadata"/>
+            <allow service="unpublish.report.xml"/>
+            <allow service="unpublish.report.csv"/>
+
+            <!-- Extent facilities -->
+            <allow service="xml.extent.add"/>
+            <allow service="xml.extent.delete"/>
+            <allow service="xml.extent.update"/>
+            <allow service="extent.admin"/>
+            <allow service="extent.edit"/>
+            <allow service="extent.select"/>
+
+            <!-- Reusable object admin facilities -->
+            <allow service="metadata.reusable.replace"/>
+            <allow service="reusable.non_validated.admin"/>
+            <allow service="reusable.non_validated.list"/>
+            <allow service="reusable.validate"/>
+            <allow service="reusable.reject"/>
+            <allow service="reusable.delete"/>
+            <allow service="reusable.references"/>
+            <allow service="reusable.duplicates.find"/>
+            <allow service="reusable.object.process"/>
+            <allow service="reusable.object.update"/>
+            <allow service="reusable.object.deleteUnused"/>
+
+            <!-- Allow a user to specify a XSL -->
+            <allow service="metadata.formatter.register"/>
+            <allow service="metadata.formatter.remove"/>
+            <allow service="metadata.formatter.download"/>
+            <allow service="metadata.formatter.admin"/>
+            <allow service="metadata.formatter.update"/>
+            <allow service="metadata.formatter.files"/>
+            <allow service="metadata.formatter.edit"/>
+
+            <!-- Monitoring services -->
+            <allow service="monitoring.indexing"/>
+            <allow service="monitoring.report"/>
+            <allow service="monitoring"/>
+            
+            <!-- shared user services -->
+	        <allow service="shared.user.edit"/>
+	        <allow service="validated.shared.user.admin"/>
+	        <allow service="nonvalidated.shared.user.admin"/>
+	        <allow service="validated.shared.user.remove"/>
+	        <allow service="validated.shared.user.update"/>
+	        <allow service="nonvalidated.shared.user.remove"/>
+	        <allow service="nonvalidated.shared.user.update"/>
+	        <allow service="shared.user.remove"/>
+	        
+            <allow service="thesaurus.editelement"/>
+            <allow service="geocat.thesaurus.updateelement"/>
+            <allow service="geocat.thesaurus.editelement"/>
+            <allow service="keywords.duplicate"/>
+        </addXML>
+        <replaceAtt xpath="profile[@name = 'Guest']" attName="extends" value="Shared"/>
+        <addXML xpath="profile[@name = 'Guest']">
+            <allow service="mapfish"/>
+            <allow service="geocat"/>
+            <allow service="cgp"/>
+            <allow service="gm03.xml"/>
+            <allow service="gm03small.xml"/>
+            <allow service="monitoring.csv"/>
+
+            <!-- Extent services -->
+            <allow service="xml.extent.get"/>
+            <allow service="xml.extent.list"/>
+            <allow service="xml.extent.search"/>
+            <allow service="extent.search.list"/>
+            <allow service="extent.search.paging"/>
+
+            <!-- service for resolving xlinks that are pending deletion -->
+            <allow service="xml.reusable.deleted"/>
+
+            <allow service="status"/>
+
+            <!-- Metadata formatter -->
+            <allow service="metadata.formatter.html"/>
+            <allow service="metadata.formatter.xml"/>
+            <allow service="metadata.formatter.resource"/>
+            <allow service="metadata.formatter.list"/>
+
+            <allow service="xml.format.get"/>
+            <allow service="xml.format.list"/>
+
+            <allow service="xml.user.get"/>
+            <allow service="shared.user.list"/>
+
+            <allow service="che.keyword.get"/>
+            
+            <allow service="metadata.print"/>
+
+            <allow service="csw.pdf"/>
+            <allow service="csw.csv"/>
+            <allow service="geocat.keywords.list"/>
+
+        </addXML>
+        <addXML xpath="">
+            <profile name="Shared"/>
+        </addXML>
+    </file>
+
+    <file name=".*/WEB-INF/config-csw.xml">
+    	<addXml xpath="*//operation[@name = 'GetRecords']/parameters">
+    		<parameter name="geonetworkId" field="_id" type="AdditionalQueryables" />
+    	</addXml>
+    </file>
+    
+    
+   <file name=".*/WEB-INF/config-metadata.xml">
+    	<addXml xpath="*//service[@name='metadata.show.embedded']/output">
+			<preSheet sheet="metadata-order-complex-elements.xsl"/>
+    	</addXml>
+    </file>
+    <file name=".*WEB-INF/config-lucene.xml">
+    	<addXml xpath="search/dumpFields">
+	      <field name="wms_uri" tagName="wmsuri"/>
+    	</addXml>
+    	<addXml xpath="tokenized">
+    		<Field name="orgName"/>
+    	</addXml>
+    </file>
+    <file name=".*/WEB-INF/config-gui.xml">
+        <replaceAtt xpath="client" attName="url" value="geocat"/>
+        <replaceAtt xpath="client" attName="parameters"/>
+        <removeXML xpath="editor-geopublisher"/>
+        <removeXML xpath="compute-extent-from-keyword"/>
+        <removeXML xpath="editor-google-translate"/>
+        <removeXML xpath="metadata-tab/simple"/>
+        <addXml xpath="">
+            <serverStage>${serverStage}</serverStage>
+        </addXml>
+        <addXml xpath="">
+            <geoserver.url>http://${wfs.host}:${wfs.port}/geoserver</geoserver.url>
+        </addXml>
+        <replaceAtt xpath="mapSearch" attName="options" value="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(5,45,10,55), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(5,45,10,55)}"/>
+        <replaceAtt xpath="mapViewer" attName="options" value="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(5,45,10,55), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(5,45,10,55)}"/>
+        <replaceXML xpath="mapSearch/layers">
+            <layer server="http://${wfs.host}:${wfs.port}/geoserver/wms" tocName="Kantone"  params="{layers: 'chtopo:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+        </replaceXML>
+        <replaceXML xpath="mapViewer/layers">
+           <layer server="http://${wfs.host}:${wfs.port}/geoserver/wms" tocName="Kantone"  params="{layers: 'chtopo:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+        </replaceXML>
+    </file>
+</overrides>

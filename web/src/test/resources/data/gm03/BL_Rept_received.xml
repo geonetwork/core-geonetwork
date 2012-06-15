@@ -1,0 +1,2612 @@
+<TRANSFER xmlns="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" >
+    <HEADERSECTION VERSION="2.2" SENDER="GEOKATO">
+        <ALIAS>
+            <ENTRIES FOR="GM03Core">
+                <TAGENTRY FROM="GM03Core.Core" TO="GM03Core.Core"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive" TO="GM03Core.Core"/>
+                <TAGENTRY FROM="GM03Core.Core.CharacterString_" TO="GM03Core.Core.CharacterString_"/>
+                <TAGENTRY FROM="GM03Core.Core.CharacterStringLong_" TO="GM03Core.Core.CharacterStringLong_"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_RoleCode_" TO="GM03Core.Core.CI_RoleCode_"/>
+                <TAGENTRY FROM="GM03Core.Core.GM_Point_" TO="GM03Core.Core.GM_Point_"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_CharacterSetCode_" TO="GM03Core.Core.MD_CharacterSetCode_"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_ProgressCode_" TO="GM03Core.Core.MD_ProgressCode_"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_ScopeCode_" TO="GM03Core.Core.MD_ScopeCode_"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_SpatialRepresentationTypeCode_" TO="GM03Core.Core.MD_SpatialRepresentationTypeCode_"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_TopicCategoryCode_" TO="GM03Core.Core.MD_TopicCategoryCode_"/>
+                <TAGENTRY FROM="GM03Core.Core.Real_" TO="GM03Core.Core.Real_"/>
+                <TAGENTRY FROM="GM03Core.Core.URL_" TO="GM03Core.Core.URL_"/>
+                <TAGENTRY FROM="GM03Core.Core.DQ_DataQuality" TO="GM03Core.Core.DQ_DataQuality"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Authority" TO="GM03Core.Core.MD_Authority"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DigitalTransferOptions" TO="GM03Core.Core.MD_DigitalTransferOptions"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions" TO="GM03Core.Core.MD_DigitalTransferOptions"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions.unitsOfDistribution"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions.transferSize"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Distribution" TO="GM03Core.Core.MD_Distribution"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_ReferenceSystem" TO="GM03Core.Core.MD_ReferenceSystem"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CRS" TO="GM03Core.Core.MD_ReferenceSystem"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Thesaurus" TO="GM03Core.Core.MD_Thesaurus"/>
+                <TAGENTRY FROM="GM03Core.Core.SC_VerticalDatum" TO="GM03Core.Core.SC_VerticalDatum"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_Address" TO="GM03Core.Core.CI_Address"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_Telephone" TO="GM03Core.Core.CI_Telephone"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_VerticalExtent" TO="GM03Core.Core.EX_VerticalExtent"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Format" TO="GM03Core.Core.MD_Format"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Format" TO="GM03Core.Core.MD_Format"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Format.amendmentNumber"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Format.specification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Format.fileDecompressionTechnique"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_RepresentativeFraction" TO="GM03Core.Core.MD_RepresentativeFraction"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Resolution" TO="GM03Core.Core.MD_Resolution"/>
+                <TAGENTRY FROM="GM03Core.Core.PT_Group" TO="GM03Core.Core.PT_Group"/>
+                <TAGENTRY FROM="GM03Core.Core.PT_URLGroup" TO="GM03Core.Core.PT_URLGroup"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DistributiontransferOptions" TO="GM03Core.Core.MD_DistributiontransferOptions"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_BoundingPolygon" TO="GM03Core.Core.EX_BoundingPolygon"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_GeographicBoundingBox" TO="GM03Core.Core.EX_GeographicBoundingBox"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_GeographicDescription" TO="GM03Core.Core.EX_GeographicDescription"/>
+                <TAGENTRY FROM="GM03Core.Core.PT_FreeText" TO="GM03Core.Core.PT_FreeText"/>
+                <TAGENTRY FROM="GM03Core.Core.PT_FreeURL" TO="GM03Core.Core.PT_FreeURL"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DistributiondistributionFormat" TO="GM03Core.Core.MD_DistributiondistributionFormat"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_ResolutionequivalentScale" TO="GM03Core.Core.MD_ResolutionequivalentScale"/>
+                <TAGENTRY FROM="GM03Core.Core.verticalDatumEX_VerticalExtent" TO="GM03Core.Core.verticalDatumEX_VerticalExtent"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_Citation" TO="GM03Core.Core.CI_Citation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_Citation" TO="GM03Core.Core.CI_Citation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.edition"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.editionDate"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.presentationForm"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.ISBN"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.ISSN"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.alternateTitle"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.collectiveTitle"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citation.otherCitationDetails"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_Contact" TO="GM03Core.Core.CI_Contact"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_OnlineResource" TO="GM03Core.Core.CI_OnlineResource"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_ResponsibleParty" TO="GM03Core.Core.CI_ResponsibleParty"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_Extent" TO="GM03Core.Core.EX_Extent"/>
+                <TAGENTRY FROM="GM03Core.Core.LI_Lineage" TO="GM03Core.Core.LI_Lineage"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Identifier" TO="GM03Core.Core.MD_Identifier"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.RS_Identifier" TO="GM03Core.Core.MD_Identifier"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.RS_Identifier.codeSpace"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.RS_Identifier.version"/>
+                <TAGENTRY FROM="GM03Core.Core.RS_Identifier" TO="GM03Core.Core.MD_Identifier"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Keywords" TO="GM03Core.Core.MD_Keywords"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DataIdentification" TO="GM03Core.Core.MD_DataIdentification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_DataIdentification" TO="GM03Core.Core.MD_DataIdentification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DataIdentification.ProjectType"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DataIdentification.credit"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DataIdentification.environmentDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DataIdentification.supplementalInformation"/>
+                <TAGENTRY FROM="GM03Core.Core.RS_Identifier" TO="GM03Core.Core.RS_Identifier"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.RS_Identifier" TO="GM03Core.Core.RS_Identifier"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.RS_Identifier.codeSpace"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.RS_Identifier.version"/>
+                <TAGENTRY FROM="GM03Core.Core.authorityMD_Identifier" TO="GM03Core.Core.authorityMD_Identifier"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_ResponsiblePartyaddress" TO="GM03Core.Core.CI_ResponsiblePartyaddress"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_ResponsiblePartycontactInfo" TO="GM03Core.Core.CI_ResponsiblePartycontactInfo"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_ResponsiblePartyparentinfo" TO="GM03Core.Core.CI_ResponsiblePartyparentinfo"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_ResponsiblePartyphone" TO="GM03Core.Core.CI_ResponsiblePartyphone"/>
+                <TAGENTRY FROM="GM03Core.Core.citationCI_Citation" TO="GM03Core.Core.citationCI_Citation"/>
+                <TAGENTRY FROM="GM03Core.Core.descriptiveKeywordsMD_Identification" TO="GM03Core.Core.descriptiveKeywordsMD_Identification"/>
+                <TAGENTRY FROM="GM03Core.Core.DQ_DataQualitylineage" TO="GM03Core.Core.DQ_DataQualitylineage"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_ExtentgeographicElement" TO="GM03Core.Core.EX_ExtentgeographicElement"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_ExtentverticalElement" TO="GM03Core.Core.EX_ExtentverticalElement"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_GeographicDescriptiongeographicIdentifier" TO="GM03Core.Core.EX_GeographicDescriptiongeographicIdentifier"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DigitalTransferOptionsonLine" TO="GM03Core.Core.MD_DigitalTransferOptionsonLine"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Identificationcitation" TO="GM03Core.Core.MD_Identificationcitation"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_IdentificationpointOfContact" TO="GM03Core.Core.MD_IdentificationpointOfContact"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Keywordsthesaurus" TO="GM03Core.Core.MD_Keywordsthesaurus"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Thesauruscitation" TO="GM03Core.Core.MD_Thesauruscitation"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DataIdentificationextent" TO="GM03Core.Core.MD_DataIdentificationextent"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_DataIdentificationspatialResolution" TO="GM03Core.Core.MD_DataIdentificationspatialResolution"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_ReferenceSystemreferenceSystemIdentifier" TO="GM03Core.Core.MD_ReferenceSystemreferenceSystemIdentifier"/>
+                <TAGENTRY FROM="GM03Core.Core.SC_VerticalDatumdatumID" TO="GM03Core.Core.SC_VerticalDatumdatumID"/>
+                <TAGENTRY FROM="GM03Core.Core.DateTime_" TO="GM03Core.Core.DateTime_"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_Date" TO="GM03Core.Core.CI_Date"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Metadata" TO="GM03Core.Core.MD_Metadata"/>
+                <TAGENTRY FROM="GM03Core.Core.TM_Primitive" TO="GM03Core.Core.TM_Primitive"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_TemporalExtent" TO="GM03Core.Core.EX_TemporalExtent"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_SpatialTemporalExtent" TO="GM03Core.Core.EX_TemporalExtent"/>
+                <TAGENTRY FROM="GM03Core.Core.CI_Citationdate" TO="GM03Core.Core.CI_Citationdate"/>
+                <TAGENTRY FROM="GM03Core.Core.distributionInfoMD_Metadata" TO="GM03Core.Core.distributionInfoMD_Metadata"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_Metadatacontact" TO="GM03Core.Core.MD_Metadatacontact"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_MetadatadataQualityInfo" TO="GM03Core.Core.MD_MetadatadataQualityInfo"/>
+                <TAGENTRY FROM="GM03Core.Core.MD_MetadataidentificationInfo" TO="GM03Core.Core.MD_MetadataidentificationInfo"/>
+                <TAGENTRY FROM="GM03Core.Core.parentIdentifierMD_Metadata" TO="GM03Core.Core.parentIdentifierMD_Metadata"/>
+                <TAGENTRY FROM="GM03Core.Core.referenceSystemInfoMD_Metadata" TO="GM03Core.Core.referenceSystemInfoMD_Metadata"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_SpatialTemporalExtent" TO="GM03Core.Core.EX_SpatialTemporalExtent"/>
+                <TAGENTRY FROM="GM03Core.Core.EX_ExtenttemporalElement" TO="GM03Core.Core.EX_ExtenttemporalElement"/>
+                <TAGENTRY FROM="GM03Core.Core.spatialExtentEX_SpatialTemporalExtent" TO="GM03Core.Core.spatialExtentEX_SpatialTemporalExtent"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_PresentationFormCode_"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.GenericName_"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MediumFormatCode_"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_RestrictionCode_"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.Record_"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Series"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_Scope"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_ProcessStep"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_Source"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Attribute"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_BrowseGraphic"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_CodeDomain"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_CodeValue"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Constraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Distributor"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_EllipsoidParameters"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ObliqueLineAzimuth"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ObliqueLinePoint"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ProjectionParameters"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Revision"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Role"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ServiceIdentification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_StandardOrderProcess"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Type"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Usage"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.resourceFormatMD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ConformanceResult"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_QuantitativeResult"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_AggregateInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Association"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Class"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_CoverageDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Dimension"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_GeometricObjects"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_LegalConstraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Legislation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MaintenanceInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Medium"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_RangeDimension"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ScopeDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_SecurityConstraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.anonymousTypeMD_Attribute"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.attributeMD_AbstractClass"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.contentInfoMD_Metadata"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_Scopeextent"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.ellipsoidParametersMD_CRS"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.formatDistributordistributorFormat"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.graphicOverviewMD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_SourcescaleDenominator"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_SourcesourceExtent"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_SourcesourceReferenceSystem"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_AttributenamedType"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_CRSdatum"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_CRSellipsoid"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_CRSprojection"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Distributiondistributor"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DistributordistributorContact"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MetadataExtensionInfoextensionOnLineResource"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MetadataspatialRepresentationInfo"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_RevisionrevisionExtent"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_RoletoClass"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.obliqueLineAzimuthParameterMD_ProjectionParameters"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.processStepLI_Lineage"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.projectionParametersMD_CRS"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.resourceSpecificUsageMD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.revisionMD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.scopeDQ_DataQuality"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.sourceLI_Lineage"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.sourceStepsource"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.subClassbaseClass"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.subDomainbaseDomain"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.subValueMD_CodeValue"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.typeMD_CodeDomain"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.valueMD_Type"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georeferenceable"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.axisDimensionPropertiesMD_GridSpatialRepresentation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citationidentifier"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.CI_Citationseries"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ConformanceResultspecification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ElementevaluationProcedure"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ElementmeasureIdentification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ScopelevelDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.featureCatalogueCitationCI_Citation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.LI_SourcesourceCitation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetIdentifier"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetName"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformationname"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptionsoffLine"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Legislationtitle"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_MetadatametadataMaintenance"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReferenceportrayalCatalogueCitation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentationgeometricObjects"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.reportDQ_DataQuality"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.resourceMaintenanceMD_Identification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.resultDQ_Element"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.roleMD_Association"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_CompletenessCommission"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_CompletenessOmission"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ConceptualConsistency"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_DomainConsistency"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_FormatConsistency"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_TemporalConsistency"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_TemporalValidity"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.DQ_TopologicalConsistency"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_GeoreferenceableparameterCitation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescriptionimageQualitiyCode"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescriptionprocessingLevelCode"/>
+            </ENTRIES>
+            <ENTRIES FOR="GM03Comprehensive">
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive" TO="GM03Comprehensive.Comprehensive"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_PresentationFormCode_" TO="GM03Comprehensive.Comprehensive.CI_PresentationFormCode_"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.GenericName_" TO="GM03Comprehensive.Comprehensive.GenericName_"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MediumFormatCode_" TO="GM03Comprehensive.Comprehensive.MD_MediumFormatCode_"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_RestrictionCode_" TO="GM03Comprehensive.Comprehensive.MD_RestrictionCode_"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.Record_" TO="GM03Comprehensive.Comprehensive.Record_"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_Series" TO="GM03Comprehensive.Comprehensive.CI_Series"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_Scope" TO="GM03Comprehensive.Comprehensive.DQ_Scope"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_ProcessStep" TO="GM03Comprehensive.Comprehensive.LI_ProcessStep"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_Source" TO="GM03Comprehensive.Comprehensive.LI_Source"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Attribute" TO="GM03Comprehensive.Comprehensive.MD_Attribute"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_BrowseGraphic" TO="GM03Comprehensive.Comprehensive.MD_BrowseGraphic"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CodeDomain" TO="GM03Comprehensive.Comprehensive.MD_CodeDomain"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CodeValue" TO="GM03Comprehensive.Comprehensive.MD_CodeValue"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Constraints" TO="GM03Comprehensive.Comprehensive.MD_Constraints"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_LegalConstraints" TO="GM03Comprehensive.Comprehensive.MD_Constraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_LegalConstraints.accessConstraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_LegalConstraints.useConstraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_LegalConstraints.otherConstraints"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_SecurityConstraints" TO="GM03Comprehensive.Comprehensive.MD_Constraints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_SecurityConstraints.classification"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_SecurityConstraints.classificationSystem"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_SecurityConstraints.handlingDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_SecurityConstraints.userNote"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CRS" TO="GM03Comprehensive.Comprehensive.MD_CRS"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions" TO="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Distributor" TO="GM03Comprehensive.Comprehensive.MD_Distributor"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_EllipsoidParameters" TO="GM03Comprehensive.Comprehensive.MD_EllipsoidParameters"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Format" TO="GM03Comprehensive.Comprehensive.MD_Format"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation" TO="GM03Comprehensive.Comprehensive.MD_MetadataExtensionInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ObliqueLineAzimuth" TO="GM03Comprehensive.Comprehensive.MD_ObliqueLineAzimuth"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ObliqueLinePoint" TO="GM03Comprehensive.Comprehensive.MD_ObliqueLinePoint"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference" TO="GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReference"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ProjectionParameters" TO="GM03Comprehensive.Comprehensive.MD_ProjectionParameters"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Revision" TO="GM03Comprehensive.Comprehensive.MD_Revision"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Role" TO="GM03Comprehensive.Comprehensive.MD_Role"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ServiceIdentification" TO="GM03Comprehensive.Comprehensive.MD_ServiceIdentification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_StandardOrderProcess" TO="GM03Comprehensive.Comprehensive.MD_StandardOrderProcess"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Type" TO="GM03Comprehensive.Comprehensive.MD_Type"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Usage" TO="GM03Comprehensive.Comprehensive.MD_Usage"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.RS_Identifier" TO="GM03Comprehensive.Comprehensive.RS_Identifier"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.resourceFormatMD_Identification" TO="GM03Comprehensive.Comprehensive.resourceFormatMD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_Citation" TO="GM03Comprehensive.Comprehensive.CI_Citation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ConformanceResult" TO="GM03Comprehensive.Comprehensive.DQ_ConformanceResult"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_QuantitativeResult" TO="GM03Comprehensive.Comprehensive.DQ_QuantitativeResult"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_AggregateInformation" TO="GM03Comprehensive.Comprehensive.MD_AggregateInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation" TO="GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Association" TO="GM03Comprehensive.Comprehensive.MD_Association"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Class" TO="GM03Comprehensive.Comprehensive.MD_Class"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CoverageDescription" TO="GM03Comprehensive.Comprehensive.MD_CoverageDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ImageDescription" TO="GM03Comprehensive.Comprehensive.MD_CoverageDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.illuminationElevationAngle"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.illuminationAzimuthAngle"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.imagingCondition"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.cloudCoverPercentage"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.compressionGenerationQuantity"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.triangulationIndicator"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.radiometricCalibrationDataAvailability"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.cameraCalibrationInformationAvailability"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.filmDistortionInformationAvailability"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_ImageDescription.lensDistortionInformationAvailability"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_DataIdentification" TO="GM03Comprehensive.Comprehensive.MD_DataIdentification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Dimension" TO="GM03Comprehensive.Comprehensive.MD_Dimension"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation" TO="GM03Comprehensive.Comprehensive.MD_ExtendedElementInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription" TO="GM03Comprehensive.Comprehensive.MD_FeatureCatalogueDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_GeometricObjects" TO="GM03Comprehensive.Comprehensive.MD_GeometricObjects"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation" TO="GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Georectified" TO="GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.checkPointAvailability"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.checkPointDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.cornerPoints"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.centerPoint"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.pointInPixel"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.transformationDimensionDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georectified.transformationDimensionMapping"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Georeferenceable" TO="GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georeferenceable.controlPointAvailability"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georeferenceable.orientationParameterAvailability"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georeferenceable.orientationParameterDescription"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Georeferenceable.georeferencedParameters"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_LegalConstraints" TO="GM03Comprehensive.Comprehensive.MD_LegalConstraints"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Legislation" TO="GM03Comprehensive.Comprehensive.MD_Legislation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MaintenanceInformation" TO="GM03Comprehensive.Comprehensive.MD_MaintenanceInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Medium" TO="GM03Comprehensive.Comprehensive.MD_Medium"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_RangeDimension" TO="GM03Comprehensive.Comprehensive.MD_RangeDimension"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Band" TO="GM03Comprehensive.Comprehensive.MD_RangeDimension"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.maxValue"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.minValue"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.units"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.peakResponse"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.bitsPerValue"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.toneGradation"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.scaleFactor"/>
+                <DELENTRY TAG="GM03Comprehensive.Comprehensive.MD_Band.offset"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ScopeDescription" TO="GM03Comprehensive.Comprehensive.MD_ScopeDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_SecurityConstraints" TO="GM03Comprehensive.Comprehensive.MD_SecurityConstraints"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation" TO="GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.anonymousTypeMD_Attribute" TO="GM03Comprehensive.Comprehensive.anonymousTypeMD_Attribute"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.attributeMD_AbstractClass" TO="GM03Comprehensive.Comprehensive.attributeMD_AbstractClass"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.contentInfoMD_Metadata" TO="GM03Comprehensive.Comprehensive.contentInfoMD_Metadata"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor" TO="GM03Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor" TO="GM03Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_Scopeextent" TO="GM03Comprehensive.Comprehensive.DQ_Scopeextent"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.ellipsoidParametersMD_CRS" TO="GM03Comprehensive.Comprehensive.ellipsoidParametersMD_CRS"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.formatDistributordistributorFormat" TO="GM03Comprehensive.Comprehensive.formatDistributordistributorFormat"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.graphicOverviewMD_Identification" TO="GM03Comprehensive.Comprehensive.graphicOverviewMD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor" TO="GM03Comprehensive.Comprehensive.LI_ProcessStepprocessor"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_SourcescaleDenominator" TO="GM03Comprehensive.Comprehensive.LI_SourcescaleDenominator"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_SourcesourceExtent" TO="GM03Comprehensive.Comprehensive.LI_SourcesourceExtent"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_SourcesourceReferenceSystem" TO="GM03Comprehensive.Comprehensive.LI_SourcesourceReferenceSystem"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_AttributenamedType" TO="GM03Comprehensive.Comprehensive.MD_AttributenamedType"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CRSdatum" TO="GM03Comprehensive.Comprehensive.MD_CRSdatum"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CRSellipsoid" TO="GM03Comprehensive.Comprehensive.MD_CRSellipsoid"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_CRSprojection" TO="GM03Comprehensive.Comprehensive.MD_CRSprojection"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Distributiondistributor" TO="GM03Comprehensive.Comprehensive.MD_Distributiondistributor"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_DistributordistributorContact" TO="GM03Comprehensive.Comprehensive.MD_DistributordistributorContact"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MetadataExtensionInfoextensionOnLineResource" TO="GM03Comprehensive.Comprehensive.MD_MetadataExtensionInfoextensionOnLineResource"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints" TO="GM03Comprehensive.Comprehensive.MD_MetadatametadataConstraints"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MetadataspatialRepresentationInfo" TO="GM03Comprehensive.Comprehensive.MD_MetadataspatialRepresentationInfo"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact" TO="GM03Comprehensive.Comprehensive.MD_RevisionrevisionContact"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_RevisionrevisionExtent" TO="GM03Comprehensive.Comprehensive.MD_RevisionrevisionExtent"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_RoletoClass" TO="GM03Comprehensive.Comprehensive.MD_RoletoClass"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo" TO="GM03Comprehensive.Comprehensive.MD_UsageuserContactInfo"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata" TO="GM03Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.obliqueLineAzimuthParameterMD_ProjectionParameters" TO="GM03Comprehensive.Comprehensive.obliqueLineAzimuthParameterMD_ProjectionParameters"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters" TO="GM03Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata" TO="GM03Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.processStepLI_Lineage" TO="GM03Comprehensive.Comprehensive.processStepLI_Lineage"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.projectionParametersMD_CRS" TO="GM03Comprehensive.Comprehensive.projectionParametersMD_CRS"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification" TO="GM03Comprehensive.Comprehensive.resourceConstraintsMD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.resourceSpecificUsageMD_Identification" TO="GM03Comprehensive.Comprehensive.resourceSpecificUsageMD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.revisionMD_Identification" TO="GM03Comprehensive.Comprehensive.revisionMD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.scopeDQ_DataQuality" TO="GM03Comprehensive.Comprehensive.scopeDQ_DataQuality"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.sourceLI_Lineage" TO="GM03Comprehensive.Comprehensive.sourceLI_Lineage"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.sourceStepsource" TO="GM03Comprehensive.Comprehensive.sourceStepsource"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.subClassbaseClass" TO="GM03Comprehensive.Comprehensive.subClassbaseClass"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.subDomainbaseDomain" TO="GM03Comprehensive.Comprehensive.subDomainbaseDomain"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.subValueMD_CodeValue" TO="GM03Comprehensive.Comprehensive.subValueMD_CodeValue"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.typeMD_CodeDomain" TO="GM03Comprehensive.Comprehensive.typeMD_CodeDomain"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.valueMD_Type" TO="GM03Comprehensive.Comprehensive.valueMD_Type"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Band" TO="GM03Comprehensive.Comprehensive.MD_Band"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Georectified" TO="GM03Comprehensive.Comprehensive.MD_Georectified"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Georeferenceable" TO="GM03Comprehensive.Comprehensive.MD_Georeferenceable"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ImageDescription" TO="GM03Comprehensive.Comprehensive.MD_ImageDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification" TO="GM03Comprehensive.Comprehensive.aggregationInfo_MD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata" TO="GM03Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.axisDimensionPropertiesMD_GridSpatialRepresentation" TO="GM03Comprehensive.Comprehensive.axisDimensionPropertiesMD_GridSpatialRepresentation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty" TO="GM03Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_Citationidentifier" TO="GM03Comprehensive.Comprehensive.CI_Citationidentifier"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.CI_Citationseries" TO="GM03Comprehensive.Comprehensive.CI_Citationseries"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription" TO="GM03Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription" TO="GM03Comprehensive.Comprehensive.dimensionMD_CoverageDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription" TO="GM03Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ConformanceResultspecification" TO="GM03Comprehensive.Comprehensive.DQ_ConformanceResultspecification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ElementevaluationProcedure" TO="GM03Comprehensive.Comprehensive.DQ_ElementevaluationProcedure"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ElementmeasureIdentification" TO="GM03Comprehensive.Comprehensive.DQ_ElementmeasureIdentification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ScopelevelDescription" TO="GM03Comprehensive.Comprehensive.DQ_ScopelevelDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation" TO="GM03Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.featureCatalogueCitationCI_Citation" TO="GM03Comprehensive.Comprehensive.featureCatalogueCitationCI_Citation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints" TO="GM03Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.LI_SourcesourceCitation" TO="GM03Comprehensive.Comprehensive.LI_SourcesourceCitation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetIdentifier" TO="GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetIdentifier"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetName" TO="GM03Comprehensive.Comprehensive.MD_AggregateInformationaggregateDataSetName"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformationname" TO="GM03Comprehensive.Comprehensive.MD_ApplicationSchemaInformationname"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptionsoffLine" TO="GM03Comprehensive.Comprehensive.MD_DigitalTransferOptionsoffLine"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource" TO="GM03Comprehensive.Comprehensive.MD_ExtendedElementInformationsource"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_Legislationtitle" TO="GM03Comprehensive.Comprehensive.MD_Legislationtitle"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact" TO="GM03Comprehensive.Comprehensive.MD_MaintenanceInformationcontact"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription" TO="GM03Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation" TO="GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_MetadatametadataMaintenance" TO="GM03Comprehensive.Comprehensive.MD_MetadatametadataMaintenance"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReferenceportrayalCatalogueCitation" TO="GM03Comprehensive.Comprehensive.MD_PortrayalCatalogueReferenceportrayalCatalogueCitation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription" TO="GM03Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentationgeometricObjects" TO="GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentationgeometricObjects"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.reportDQ_DataQuality" TO="GM03Comprehensive.Comprehensive.reportDQ_DataQuality"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.resourceMaintenanceMD_Identification" TO="GM03Comprehensive.Comprehensive.resourceMaintenanceMD_Identification"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.resultDQ_Element" TO="GM03Comprehensive.Comprehensive.resultDQ_Element"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.roleMD_Association" TO="GM03Comprehensive.Comprehensive.roleMD_Association"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy" TO="GM03Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement" TO="GM03Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_CompletenessCommission" TO="GM03Comprehensive.Comprehensive.DQ_CompletenessCommission"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_CompletenessOmission" TO="GM03Comprehensive.Comprehensive.DQ_CompletenessOmission"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ConceptualConsistency" TO="GM03Comprehensive.Comprehensive.DQ_ConceptualConsistency"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_DomainConsistency" TO="GM03Comprehensive.Comprehensive.DQ_DomainConsistency"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_FormatConsistency" TO="GM03Comprehensive.Comprehensive.DQ_FormatConsistency"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy" TO="GM03Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy" TO="GM03Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy" TO="GM03Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy" TO="GM03Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_TemporalConsistency" TO="GM03Comprehensive.Comprehensive.DQ_TemporalConsistency"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_TemporalValidity" TO="GM03Comprehensive.Comprehensive.DQ_TemporalValidity"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness" TO="GM03Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.DQ_TopologicalConsistency" TO="GM03Comprehensive.Comprehensive.DQ_TopologicalConsistency"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_GeoreferenceableparameterCitation" TO="GM03Comprehensive.Comprehensive.MD_GeoreferenceableparameterCitation"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ImageDescriptionimageQualitiyCode" TO="GM03Comprehensive.Comprehensive.MD_ImageDescriptionimageQualitiyCode"/>
+                <TAGENTRY FROM="GM03Comprehensive.Comprehensive.MD_ImageDescriptionprocessingLevelCode" TO="GM03Comprehensive.Comprehensive.MD_ImageDescriptionprocessingLevelCode"/>
+            </ENTRIES>
+        </ALIAS>
+    </HEADERSECTION>
+    <DATASECTION>
+        <GM03Comprehensive.Comprehensive BID="xBID2600">
+            <GM03Core.Core.MD_Metadata TID="xMetadatax404">
+                <fileIdentifier>BL0029_001</fileIdentifier>
+                <language>DE</language>
+                <characterSet>utf8</characterSet>
+                <dateStamp>2009:07:08</dateStamp>
+                <metadataStandardName>GM03Comprehensive, Profil GM03MediumBL</metadataStandardName>
+                <hierarchyLevel>
+                    <GM03Core.Core.MD_ScopeCode_>
+                        <value>dataset</value>
+                    </GM03Core.Core.MD_ScopeCode_>
+                </hierarchyLevel>
+                <dataSetURI>http://www.geo.bl.ch/parzis/automap.jsp?ZOOM=604900|260500|609000|264000&amp;LAYERS=map_2|layer_1571</dataSetURI>
+                <distributionInfo REF="xDistribx404"/>
+            </GM03Core.Core.MD_Metadata>
+            <GM03Core.Core.DQ_DataQuality TID="xDataQualx404x0">
+                <MD_Metadata REF="xMetadatax404"/>
+            </GM03Core.Core.DQ_DataQuality>
+            <GM03Core.Core.LI_Lineage TID="xLineagex404x0">
+                <statement>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Projekt der Kantone BL und BS, ausgeführt in den Jahren 1994-1998</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </statement>
+                <DQ_DataQuality REF="xDataQualx404x0"/>
+            </GM03Core.Core.LI_Lineage>
+            <GM03Comprehensive.Comprehensive.DQ_Scope TID="xDQScopex404x0">
+                <level>dataset</level>
+                <DQ_DataQuality REF="xDataQualx404x0"/>
+            </GM03Comprehensive.Comprehensive.DQ_Scope>
+            <GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation TID="xVectSpatRepx404x0">
+                <topologyLevel>fullPlanarGraph</topologyLevel>
+                <MD_Metadata REF="xMetadatax404"/>
+            </GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation>
+            <GM03Comprehensive.Comprehensive.MD_GeometricObjects TID="xGeometObjsx404x0x0">
+                <geometricObjectType>surface</geometricObjectType>
+                <MD_VectorSpatialRepresentation REF="xVectSpatRepx404x0"/>
+            </GM03Comprehensive.Comprehensive.MD_GeometricObjects>
+            <GM03Comprehensive.Comprehensive.MD_DataIdentification TID="xDataIdentx404x0">
+                <status>
+                    <GM03Core.Core.MD_ProgressCode_>
+                        <value>completed</value>
+                    </GM03Core.Core.MD_ProgressCode_>
+                </status>
+                <abstract>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>In den Jahren 1994 bis 1998 wurden zuerst im alten Teil des Kantons
+                                    Basel-Landschaft und im Kanton Basel-Stadt, später im neu dazugekommenen Laufental,
+                                    flächendeckend der Bestand von Objekten/Teilobjekten mit Reptilienvorkommen
+                                    aufgenommen. Neben Teilobjekten mit Tierbeobachtungen wurden auch solche mit hohem
+                                    Potential als Reptilien-Lebensraum inventarisiert. Zu jedem Teilobjekt wurden neben
+                                    den beobachteten und den potentiell vorhandenen Arten, detailliert Strukturen wie
+                                    Vegetation oder Bodenbeschaffenheit beschrieben. Zudem wurden mögliche Massnahmen
+                                    für die Erhaltung bzw. die Verbesserung des Lebensraums vorgeschlagen.
+                                </plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </abstract>
+                <purpose>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Bestandesaufnahme als Grundlage für den Ökologischen Ausgleich und den Arten-
+                                    und Biotopschutz.
+                                </plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </purpose>
+                <spatialRepresentationType>
+                    <GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+                        <value>vector</value>
+                    </GM03Core.Core.MD_SpatialRepresentationTypeCode_>
+                </spatialRepresentationType>
+                <language>
+                    <CodeISO.LanguageCodeISO_>
+                        <value>DE</value>
+                    </CodeISO.LanguageCodeISO_>
+                </language>
+                <characterSet>
+                    <GM03Core.Core.MD_CharacterSetCode_>
+                        <value>utf8</value>
+                    </GM03Core.Core.MD_CharacterSetCode_>
+                </characterSet>
+                <topicCategory>
+                    <GM03Core.Core.MD_TopicCategoryCode_>
+                        <value>biota</value>
+                    </GM03Core.Core.MD_TopicCategoryCode_>
+                    <GM03Core.Core.MD_TopicCategoryCode_>
+                        <value>environment</value>
+                    </GM03Core.Core.MD_TopicCategoryCode_>
+                </topicCategory>
+                <MD_Metadata REF="xMetadatax404"/>
+                <citation REF="xCitationx3503"/>
+            </GM03Comprehensive.Comprehensive.MD_DataIdentification>
+            <GM03Core.Core.MD_Resolution TID="xResolx404x0x0">
+                <MD_DataIdentification REF="xDataIdentx404x0"/>
+                <equivalentScale REF="xRepFractx595"/>
+            </GM03Core.Core.MD_Resolution>
+            <GM03Core.Core.MD_RepresentativeFraction TID="xRepFractx595">
+                <denominator>5000</denominator>
+            </GM03Core.Core.MD_RepresentativeFraction>
+            <GM03Core.Core.EX_Extent TID="xUnifiedExtentxdataExtentx404x0x0">
+                <description>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Kantone Basel-Stadt und Basel-Landschaft</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </description>
+                <MD_DataIdentification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.EX_Extent>
+            <GM03Core.Core.EX_GeographicDescription TID="xUnifiedExtentxdataExtentx404x0x0xGeoDescx0">
+                <extentTypeCode>false</extentTypeCode>
+                <geographicIdentifier REF="xMdIdentx324"/>
+            </GM03Core.Core.EX_GeographicDescription>
+            <GM03Core.Core.MD_Identifier TID="xMdIdentx324">
+                <code>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Kantone Basel-Stadt und Basel-Landschaft</plainText>
+                            </GM03Core.Core.PT_Group>
+                            <GM03Core.Core.PT_Group>
+                                <language>EN</language>
+                                <plainText>Kantone Basel-Stadt und Basel-Landschaft</plainText>
+                            </GM03Core.Core.PT_Group>
+                            <GM03Core.Core.PT_Group>
+                                <language>FR</language>
+                                <plainText>Kantone Basel-Stadt und Basel-Landschaft</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </code>
+            </GM03Core.Core.MD_Identifier>
+            <GM03Core.Core.EX_ExtentgeographicElement TID="x38270">
+                <EX_Extent REF="xUnifiedExtentxdataExtentx404x0x0"/>
+                <geographicElement REF="xUnifiedExtentxdataExtentx404x0x0xGeoDescx0"/>
+            </GM03Core.Core.EX_ExtentgeographicElement>
+            <GM03Core.Core.EX_GeographicBoundingBox TID="xUnifiedExtentxdataExtentx404x0x0xGeoBndBoxx0">
+                <extentTypeCode>false</extentTypeCode>
+                <northBoundLatitude>47.6001</northBoundLatitude>
+                <southBoundLatitude>47.3385</southBoundLatitude>
+                <eastBoundLongitude>7.9638</eastBoundLongitude>
+                <westBoundLongitude>7.3252</westBoundLongitude>
+            </GM03Core.Core.EX_GeographicBoundingBox>
+            <GM03Core.Core.EX_ExtentgeographicElement TID="x38271">
+                <EX_Extent REF="xUnifiedExtentxdataExtentx404x0x0"/>
+                <geographicElement REF="xUnifiedExtentxdataExtentx404x0x0xGeoBndBoxx0"/>
+            </GM03Core.Core.EX_ExtentgeographicElement>
+            <GM03Core.Core.EX_BoundingPolygon TID="xUnifiedExtentxdataExtentx404x0x0xBoundPolyx0">
+                <extentTypeCode>false</extentTypeCode>
+                <polygon>
+                    <SURFACE>
+                        <BOUNDARY>
+                            <POLYLINE>
+                                <COORD>
+                                    <C1>7.38000001</C1>
+                                    <C2>47.42800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.383</C1>
+                                    <C2>47.43000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.38100001</C1>
+                                    <C2>47.43200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.374</C1>
+                                    <C2>47.43400002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.35600001</C1>
+                                    <C2>47.43400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.34700001</C1>
+                                    <C2>47.43500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.33900001</C1>
+                                    <C2>47.44100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.33</C1>
+                                    <C2>47.44200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.32700001</C1>
+                                    <C2>47.44000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.32800001</C1>
+                                    <C2>47.43800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.32500001</C1>
+                                    <C2>47.43500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.326</C1>
+                                    <C2>47.43200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.33200001</C1>
+                                    <C2>47.43000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.34000001</C1>
+                                    <C2>47.43000002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.34400001</C1>
+                                    <C2>47.42500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.35800001</C1>
+                                    <C2>47.41800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.35700001</C1>
+                                    <C2>47.41500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.363</C1>
+                                    <C2>47.41500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.38400001</C1>
+                                    <C2>47.41200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.38900001</C1>
+                                    <C2>47.40300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.39600001</C1>
+                                    <C2>47.40300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.39900001</C1>
+                                    <C2>47.39700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.415</C1>
+                                    <C2>47.39400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.41400001</C1>
+                                    <C2>47.38900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.41600001</C1>
+                                    <C2>47.38500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.41200001</C1>
+                                    <C2>47.38100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.43400001</C1>
+                                    <C2>47.37900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.43700001</C1>
+                                    <C2>47.38100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.43900001</C1>
+                                    <C2>47.38600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.444</C1>
+                                    <C2>47.38900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.441</C1>
+                                    <C2>47.40000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.443</C1>
+                                    <C2>47.40200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.449</C1>
+                                    <C2>47.40000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.45100001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.45000001</C1>
+                                    <C2>47.40400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.45500001</C1>
+                                    <C2>47.40400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.457</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.46000001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.46300001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.46400001</C1>
+                                    <C2>47.40300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.47100001</C1>
+                                    <C2>47.40000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.47800001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.47700001</C1>
+                                    <C2>47.39600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.479</C1>
+                                    <C2>47.39000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.48100001</C1>
+                                    <C2>47.38900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.48400001</C1>
+                                    <C2>47.38900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.48500001</C1>
+                                    <C2>47.38700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.49100001</C1>
+                                    <C2>47.38600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.50200001</C1>
+                                    <C2>47.38500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.511</C1>
+                                    <C2>47.39000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.517</C1>
+                                    <C2>47.38900002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51900001</C1>
+                                    <C2>47.38800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.52900001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53100001</C1>
+                                    <C2>47.40500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.52700001</C1>
+                                    <C2>47.40900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.526</C1>
+                                    <C2>47.41200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.54400001</C1>
+                                    <C2>47.41400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.566</C1>
+                                    <C2>47.41300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.58100001</C1>
+                                    <C2>47.41500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57800001</C1>
+                                    <C2>47.41800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57200001</C1>
+                                    <C2>47.41900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.56800001</C1>
+                                    <C2>47.42200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.56900001</C1>
+                                    <C2>47.43700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57600001</C1>
+                                    <C2>47.43700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57800001</C1>
+                                    <C2>47.43500002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57800001</C1>
+                                    <C2>47.43200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.58000001</C1>
+                                    <C2>47.43200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57900001</C1>
+                                    <C2>47.43000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.581</C1>
+                                    <C2>47.42900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.58500001</C1>
+                                    <C2>47.42900002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.59200001</C1>
+                                    <C2>47.43300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60200001</C1>
+                                    <C2>47.43100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60900001</C1>
+                                    <C2>47.43300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61600001</C1>
+                                    <C2>47.43300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61600001</C1>
+                                    <C2>47.43800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61600001</C1>
+                                    <C2>47.44500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.623</C1>
+                                    <C2>47.45700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.62200001</C1>
+                                    <C2>47.46200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.62600001</C1>
+                                    <C2>47.46300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.62</C1>
+                                    <C2>47.46700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61100001</C1>
+                                    <C2>47.47000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.605</C1>
+                                    <C2>47.47000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.608</C1>
+                                    <C2>47.47500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60600001</C1>
+                                    <C2>47.47600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60600001</C1>
+                                    <C2>47.47900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60900001</C1>
+                                    <C2>47.48300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60700001</C1>
+                                    <C2>47.48800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60700001</C1>
+                                    <C2>47.48900002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61700001</C1>
+                                    <C2>47.48900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.627</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64100001</C1>
+                                    <C2>47.48300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.644</C1>
+                                    <C2>47.48600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64700001</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.656</C1>
+                                    <C2>47.48700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65100001</C1>
+                                    <C2>47.48800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65500001</C1>
+                                    <C2>47.49000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.649</C1>
+                                    <C2>47.49200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65100001</C1>
+                                    <C2>47.49500002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65300001</C1>
+                                    <C2>47.49600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65900001</C1>
+                                    <C2>47.49500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66600001</C1>
+                                    <C2>47.49700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66500001</C1>
+                                    <C2>47.49200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66800001</C1>
+                                    <C2>47.48600002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.67</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.7</C1>
+                                    <C2>47.48100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.70500001</C1>
+                                    <C2>47.47600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.71000001</C1>
+                                    <C2>47.46900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.70700001</C1>
+                                    <C2>47.46900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.7</C1>
+                                    <C2>47.46200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.69900001</C1>
+                                    <C2>47.45600002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.693</C1>
+                                    <C2>47.45400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.69100001</C1>
+                                    <C2>47.45300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.685</C1>
+                                    <C2>47.44800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68300001</C1>
+                                    <C2>47.43900002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68700001</C1>
+                                    <C2>47.43400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68500001</C1>
+                                    <C2>47.42900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68000001</C1>
+                                    <C2>47.41800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.674</C1>
+                                    <C2>47.41500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66300001</C1>
+                                    <C2>47.41000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65700001</C1>
+                                    <C2>47.40900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63300001</C1>
+                                    <C2>47.41000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.637</C1>
+                                    <C2>47.38600002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63300001</C1>
+                                    <C2>47.38500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63300001</C1>
+                                    <C2>47.38300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63600001</C1>
+                                    <C2>47.38100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.642</C1>
+                                    <C2>47.38100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.641</C1>
+                                    <C2>47.37800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64300001</C1>
+                                    <C2>47.37600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64400001</C1>
+                                    <C2>47.36700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68800001</C1>
+                                    <C2>47.37100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.70000001</C1>
+                                    <C2>47.37200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.72800001</C1>
+                                    <C2>47.36900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.729</C1>
+                                    <C2>47.36700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.73400001</C1>
+                                    <C2>47.35800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.74300001</C1>
+                                    <C2>47.35000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.751</C1>
+                                    <C2>47.34400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.754</C1>
+                                    <C2>47.34300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.76600001</C1>
+                                    <C2>47.34300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.769</C1>
+                                    <C2>47.34200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.76900001</C1>
+                                    <C2>47.33900002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.78200001</C1>
+                                    <C2>47.34000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.785</C1>
+                                    <C2>47.33800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.78800001</C1>
+                                    <C2>47.33800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79300001</C1>
+                                    <C2>47.34000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.798</C1>
+                                    <C2>47.35600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.80200001</C1>
+                                    <C2>47.36100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.80600001</C1>
+                                    <C2>47.36200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.82200001</C1>
+                                    <C2>47.36300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.83100001</C1>
+                                    <C2>47.36500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.834</C1>
+                                    <C2>47.36800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.84000001</C1>
+                                    <C2>47.37400002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.85000001</C1>
+                                    <C2>47.37800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.85900001</C1>
+                                    <C2>47.38000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.863</C1>
+                                    <C2>47.38200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.869</C1>
+                                    <C2>47.38100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87600001</C1>
+                                    <C2>47.38500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87900001</C1>
+                                    <C2>47.38400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87900001</C1>
+                                    <C2>47.38800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87700001</C1>
+                                    <C2>47.39000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87400001</C1>
+                                    <C2>47.39000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87200001</C1>
+                                    <C2>47.39100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.86900001</C1>
+                                    <C2>47.39500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87500001</C1>
+                                    <C2>47.39800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87800001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.88</C1>
+                                    <C2>47.40200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.883</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.88300001</C1>
+                                    <C2>47.40600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.889</C1>
+                                    <C2>47.40700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.90100001</C1>
+                                    <C2>47.40100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.90400001</C1>
+                                    <C2>47.40200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.91000001</C1>
+                                    <C2>47.39800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.92100001</C1>
+                                    <C2>47.40200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.92400001</C1>
+                                    <C2>47.40200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.93700001</C1>
+                                    <C2>47.40800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.93500001</C1>
+                                    <C2>47.41200002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.94100001</C1>
+                                    <C2>47.41400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.94800001</C1>
+                                    <C2>47.41600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95500001</C1>
+                                    <C2>47.41600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95600001</C1>
+                                    <C2>47.41700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.954</C1>
+                                    <C2>47.41700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95700001</C1>
+                                    <C2>47.41900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.96200001</C1>
+                                    <C2>47.42200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95000001</C1>
+                                    <C2>47.43200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.952</C1>
+                                    <C2>47.43300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.947</C1>
+                                    <C2>47.44300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.947</C1>
+                                    <C2>47.44500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95</C1>
+                                    <C2>47.44600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95800001</C1>
+                                    <C2>47.45100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.958</C1>
+                                    <C2>47.45400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.95800001</C1>
+                                    <C2>47.45900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.94900001</C1>
+                                    <C2>47.46400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.94000001</C1>
+                                    <C2>47.46200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.94600001</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.93400001</C1>
+                                    <C2>47.48200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.91800001</C1>
+                                    <C2>47.48300002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.912</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.90500001</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.90500001</C1>
+                                    <C2>47.49200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.90000001</C1>
+                                    <C2>47.49600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.898</C1>
+                                    <C2>47.50100002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.89500001</C1>
+                                    <C2>47.50200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.89400001</C1>
+                                    <C2>47.50600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.88400001</C1>
+                                    <C2>47.50900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.878</C1>
+                                    <C2>47.51400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87600001</C1>
+                                    <C2>47.51300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87500001</C1>
+                                    <C2>47.51700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.87700001</C1>
+                                    <C2>47.52300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.872</C1>
+                                    <C2>47.52200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.86900001</C1>
+                                    <C2>47.51900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.864</C1>
+                                    <C2>47.51900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.863</C1>
+                                    <C2>47.52400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.85700001</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.85200001</C1>
+                                    <C2>47.53500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.846</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.83900001</C1>
+                                    <C2>47.53400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.833</C1>
+                                    <C2>47.53400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.835</C1>
+                                    <C2>47.53200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.83300001</C1>
+                                    <C2>47.53000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.83200001</C1>
+                                    <C2>47.51500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.82900001</C1>
+                                    <C2>47.51400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.81400001</C1>
+                                    <C2>47.50400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.80700001</C1>
+                                    <C2>47.49700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.80200001</C1>
+                                    <C2>47.49700002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.80000001</C1>
+                                    <C2>47.49800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.798</C1>
+                                    <C2>47.49900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.797</C1>
+                                    <C2>47.49700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79900001</C1>
+                                    <C2>47.49600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79700001</C1>
+                                    <C2>47.49500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79500001</C1>
+                                    <C2>47.49600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.78800001</C1>
+                                    <C2>47.49300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.792</C1>
+                                    <C2>47.49900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79200001</C1>
+                                    <C2>47.50200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79000001</C1>
+                                    <C2>47.50500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.78800001</C1>
+                                    <C2>47.51400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79000001</C1>
+                                    <C2>47.51600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.79000001</C1>
+                                    <C2>47.51900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.75800001</C1>
+                                    <C2>47.52600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.74900001</C1>
+                                    <C2>47.52500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.73800001</C1>
+                                    <C2>47.52700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.73400001</C1>
+                                    <C2>47.53100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.73300001</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.726</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.72400001</C1>
+                                    <C2>47.53700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.72100001</C1>
+                                    <C2>47.53500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.71600001</C1>
+                                    <C2>47.53600002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.71400001</C1>
+                                    <C2>47.54000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.697</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68600001</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.67500001</C1>
+                                    <C2>47.53400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.666</C1>
+                                    <C2>47.53800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66100001</C1>
+                                    <C2>47.54500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65100001</C1>
+                                    <C2>47.54700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64600001</C1>
+                                    <C2>47.55200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64</C1>
+                                    <C2>47.55900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63400001</C1>
+                                    <C2>47.56100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63600001</C1>
+                                    <C2>47.56400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63900001</C1>
+                                    <C2>47.56300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.641</C1>
+                                    <C2>47.56100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.644</C1>
+                                    <C2>47.56100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64800001</C1>
+                                    <C2>47.56000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65400001</C1>
+                                    <C2>47.56200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65600001</C1>
+                                    <C2>47.56200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65900001</C1>
+                                    <C2>47.56400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66500001</C1>
+                                    <C2>47.56600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66600001</C1>
+                                    <C2>47.56500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.67100001</C1>
+                                    <C2>47.56600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.67200001</C1>
+                                    <C2>47.56500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.677</C1>
+                                    <C2>47.56400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.675</C1>
+                                    <C2>47.56500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.679</C1>
+                                    <C2>47.56900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.684</C1>
+                                    <C2>47.57100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.683</C1>
+                                    <C2>47.56800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.686</C1>
+                                    <C2>47.56600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.687</C1>
+                                    <C2>47.56900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.69</C1>
+                                    <C2>47.57100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68600001</C1>
+                                    <C2>47.57300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68400001</C1>
+                                    <C2>47.57400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.684</C1>
+                                    <C2>47.57700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68200001</C1>
+                                    <C2>47.57700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68100001</C1>
+                                    <C2>47.58300002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.672</C1>
+                                    <C2>47.58500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.67200001</C1>
+                                    <C2>47.58700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68000001</C1>
+                                    <C2>47.59200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68500001</C1>
+                                    <C2>47.59700002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68900001</C1>
+                                    <C2>47.59700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.691</C1>
+                                    <C2>47.59800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.69300001</C1>
+                                    <C2>47.59900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.694</C1>
+                                    <C2>47.60100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.691</C1>
+                                    <C2>47.59900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68800001</C1>
+                                    <C2>47.59900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.68300001</C1>
+                                    <C2>47.59900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.682</C1>
+                                    <C2>47.59800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.676</C1>
+                                    <C2>47.59400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.675</C1>
+                                    <C2>47.59200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.66700001</C1>
+                                    <C2>47.59200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65600001</C1>
+                                    <C2>47.59500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.65200001</C1>
+                                    <C2>47.59600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64600001</C1>
+                                    <C2>47.59700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.64200001</C1>
+                                    <C2>47.59400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.643</C1>
+                                    <C2>47.59100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63800001</C1>
+                                    <C2>47.59000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.63500001</C1>
+                                    <C2>47.58700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.631</C1>
+                                    <C2>47.58300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.625</C1>
+                                    <C2>47.58000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61900001</C1>
+                                    <C2>47.57700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.61500001</C1>
+                                    <C2>47.57800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60900001</C1>
+                                    <C2>47.57800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60500001</C1>
+                                    <C2>47.57800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60600001</C1>
+                                    <C2>47.58000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60400001</C1>
+                                    <C2>47.58200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.60500001</C1>
+                                    <C2>47.58500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.598</C1>
+                                    <C2>47.58800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.589</C1>
+                                    <C2>47.59000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.586</C1>
+                                    <C2>47.58500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.585</C1>
+                                    <C2>47.58100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.585</C1>
+                                    <C2>47.57600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.58200001</C1>
+                                    <C2>47.57600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.578</C1>
+                                    <C2>47.57700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.57600001</C1>
+                                    <C2>47.57600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.56600001</C1>
+                                    <C2>47.57800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.56500001</C1>
+                                    <C2>47.57600002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.56400001</C1>
+                                    <C2>47.57500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.558</C1>
+                                    <C2>47.57300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.55600001</C1>
+                                    <C2>47.57100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.55900001</C1>
+                                    <C2>47.57000002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.557</C1>
+                                    <C2>47.56500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.554</C1>
+                                    <C2>47.56500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.547</C1>
+                                    <C2>47.56200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.54</C1>
+                                    <C2>47.55700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.536</C1>
+                                    <C2>47.55500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.527</C1>
+                                    <C2>47.55300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51800001</C1>
+                                    <C2>47.54600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.511</C1>
+                                    <C2>47.54500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.50900001</C1>
+                                    <C2>47.54600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.504</C1>
+                                    <C2>47.54300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.49900001</C1>
+                                    <C2>47.54000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.49800001</C1>
+                                    <C2>47.53600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.50100001</C1>
+                                    <C2>47.53200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.501</C1>
+                                    <C2>47.52900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.508</C1>
+                                    <C2>47.52800002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51600001</C1>
+                                    <C2>47.53300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51900001</C1>
+                                    <C2>47.53500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.525</C1>
+                                    <C2>47.53200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.527</C1>
+                                    <C2>47.53300002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53100001</C1>
+                                    <C2>47.53000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.531</C1>
+                                    <C2>47.52700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.52300001</C1>
+                                    <C2>47.51900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.524</C1>
+                                    <C2>47.51500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.522</C1>
+                                    <C2>47.51400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.521</C1>
+                                    <C2>47.51600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51900001</C1>
+                                    <C2>47.51500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51700001</C1>
+                                    <C2>47.51700002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.50200001</C1>
+                                    <C2>47.51500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.50000001</C1>
+                                    <C2>47.52100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.498</C1>
+                                    <C2>47.52100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.49900001</C1>
+                                    <C2>47.51600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.50900001</C1>
+                                    <C2>47.50900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51</C1>
+                                    <C2>47.50300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.512</C1>
+                                    <C2>47.49900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51900001</C1>
+                                    <C2>47.49700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53200001</C1>
+                                    <C2>47.49700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53300001</C1>
+                                    <C2>47.49100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53600001</C1>
+                                    <C2>47.49100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.537</C1>
+                                    <C2>47.48500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53300001</C1>
+                                    <C2>47.47800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.529</C1>
+                                    <C2>47.47800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.52700001</C1>
+                                    <C2>47.47400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.53100001</C1>
+                                    <C2>47.46100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51700001</C1>
+                                    <C2>47.46100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.51</C1>
+                                    <C2>47.45900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.495</C1>
+                                    <C2>47.45900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.48400001</C1>
+                                    <C2>47.45700002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.48000001</C1>
+                                    <C2>47.45600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.46800001</C1>
+                                    <C2>47.45400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.46300001</C1>
+                                    <C2>47.45100002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.45500001</C1>
+                                    <C2>47.44900001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.447</C1>
+                                    <C2>47.45700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.44600001</C1>
+                                    <C2>47.46200001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.43000001</C1>
+                                    <C2>47.46000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.428</C1>
+                                    <C2>47.45700001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.429</C1>
+                                    <C2>47.45400002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.42200001</C1>
+                                    <C2>47.45100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.42400001</C1>
+                                    <C2>47.45000001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.421</C1>
+                                    <C2>47.44600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.42500001</C1>
+                                    <C2>47.44300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.438</C1>
+                                    <C2>47.44600001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.43900001</C1>
+                                    <C2>47.44300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.448</C1>
+                                    <C2>47.43800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.45600001</C1>
+                                    <C2>47.42800001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.44700001</C1>
+                                    <C2>47.41500001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.43800001</C1>
+                                    <C2>47.41300001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.42700001</C1>
+                                    <C2>47.41400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.42</C1>
+                                    <C2>47.41100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.41400001</C1>
+                                    <C2>47.41100001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.38800001</C1>
+                                    <C2>47.41400002</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.376</C1>
+                                    <C2>47.41400001</C2>
+                                </COORD>
+                                <COORD>
+                                    <C1>7.38000001</C1>
+                                    <C2>47.42800002</C2>
+                                </COORD>
+                            </POLYLINE>
+                        </BOUNDARY>
+                    </SURFACE>
+                </polygon>
+            </GM03Core.Core.EX_BoundingPolygon>
+            <GM03Core.Core.EX_ExtentgeographicElement TID="x38272">
+                <EX_Extent REF="xUnifiedExtentxdataExtentx404x0x0"/>
+                <geographicElement REF="xUnifiedExtentxdataExtentx404x0x0xBoundPolyx0"/>
+            </GM03Core.Core.EX_ExtentgeographicElement>
+            <GM03Comprehensive.Comprehensive.CI_Citation TID="xCitationx3503">
+                <title>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Reptilieninventar beider Basel</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </title>
+            </GM03Comprehensive.Comprehensive.CI_Citation>
+            <GM03Core.Core.CI_Date TID="xDatex3503x0">
+                <date>1998:12:31</date>
+                <dateType>creation</dateType>
+                <CI_Citation REF="xCitationx3503"/>
+            </GM03Core.Core.CI_Date>
+            <GM03Comprehensive.Comprehensive.MD_MaintenanceInformation TID="xMaintInfox409">
+                <maintenanceAndUpdateFrequency>notPlanned</maintenanceAndUpdateFrequency>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Comprehensive.Comprehensive.MD_MaintenanceInformation>
+            <GM03Core.Core.MD_Keywords TID="xKeywordsx101">
+                <type>theme</type>
+                <keyword>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Naturschutz</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </keyword>
+            </GM03Core.Core.MD_Keywords>
+            <GM03Core.Core.descriptiveKeywordsMD_Identification TID="x38273">
+                <descriptiveKeywords REF="xKeywordsx101"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.descriptiveKeywordsMD_Identification>
+            <GM03Core.Core.MD_Keywords TID="xKeywordsx273">
+                <type>theme</type>
+                <keyword>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Biologie</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </keyword>
+            </GM03Core.Core.MD_Keywords>
+            <GM03Core.Core.descriptiveKeywordsMD_Identification TID="x38274">
+                <descriptiveKeywords REF="xKeywordsx273"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.descriptiveKeywordsMD_Identification>
+            <GM03Core.Core.MD_Keywords TID="xKeywordsx274">
+                <type>theme</type>
+                <keyword>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Reptilien</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </keyword>
+            </GM03Core.Core.MD_Keywords>
+            <GM03Core.Core.descriptiveKeywordsMD_Identification TID="x38275">
+                <descriptiveKeywords REF="xKeywordsx274"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.descriptiveKeywordsMD_Identification>
+            <GM03Core.Core.MD_Keywords TID="xKeywordsx275">
+                <type>theme</type>
+                <keyword>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Schlangen</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </keyword>
+            </GM03Core.Core.MD_Keywords>
+            <GM03Core.Core.descriptiveKeywordsMD_Identification TID="x38276">
+                <descriptiveKeywords REF="xKeywordsx275"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.descriptiveKeywordsMD_Identification>
+            <GM03Core.Core.MD_Keywords TID="xKeywordsx276">
+                <type>theme</type>
+                <keyword>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Eidechsen</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </keyword>
+            </GM03Core.Core.MD_Keywords>
+            <GM03Core.Core.descriptiveKeywordsMD_Identification TID="x38277">
+                <descriptiveKeywords REF="xKeywordsx276"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.descriptiveKeywordsMD_Identification>
+            <GM03Core.Core.CI_ResponsibleParty TID="xRespPartyx2">
+                <individualFirstName>Ulrich</individualFirstName>
+                <individualLastName>Wyss</individualLastName>
+                <electronicalMailAddress>
+                    <GM03Core.Core.URL_>
+                        <value>ulrich.wyss@bl.ch</value>
+                    </GM03Core.Core.URL_>
+                </electronicalMailAddress>
+                <organisationName>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>GIS-Fachstelle BL</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </organisationName>
+                <positionName>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Produktion/Datenabgabe</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </positionName>
+                <organisationAcronym>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>GF</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </organisationAcronym>
+                <linkage>
+                    <GM03Core.Core.PT_FreeURL>
+                        <URLGroup>
+                            <GM03Core.Core.PT_URLGroup>
+                                <language>DE</language>
+                                <plainURL>http://www.agi.bl.ch</plainURL>
+                            </GM03Core.Core.PT_URLGroup>
+                        </URLGroup>
+                    </GM03Core.Core.PT_FreeURL>
+                </linkage>
+                <contactInfo REF="xContactx2"/>
+                <address REF="xAddressx2"/>
+            </GM03Core.Core.CI_ResponsibleParty>
+            <GM03Core.Core.CI_Telephone TID="xTelephonex2x0">
+                <number>+41 61 552 65 06</number>
+                <numberType>directNumber</numberType>
+                <CI_ResponsibleParty REF="xRespPartyx2"/>
+            </GM03Core.Core.CI_Telephone>
+            <GM03Core.Core.CI_Telephone TID="xTelephonex2x1">
+                <number>+41 61 552 56 73</number>
+                <numberType>mainNumber</numberType>
+                <CI_ResponsibleParty REF="xRespPartyx2"/>
+            </GM03Core.Core.CI_Telephone>
+            <GM03Core.Core.CI_Telephone TID="xTelephonex2x2">
+                <number>+41 61 552 69 46</number>
+                <numberType>facsimile</numberType>
+                <CI_ResponsibleParty REF="xRespPartyx2"/>
+            </GM03Core.Core.CI_Telephone>
+            <GM03Core.Core.CI_Contact TID="xContactx2">
+                <hoursOfService>8.00-12.00, 13.30-17.00</hoursOfService>
+            </GM03Core.Core.CI_Contact>
+            <GM03Core.Core.CI_Address TID="xAddressx2">
+                <streetName>Kreuzbodenweg</streetName>
+                <streetNumber>1</streetNumber>
+                <postalCode>4410</postalCode>
+                <city>Liestal</city>
+                <administrativeArea>BL</administrativeArea>
+                <country>CH</country>
+            </GM03Core.Core.CI_Address>
+            <GM03Core.Core.MD_IdentificationpointOfContact TID="x38278">
+                <role>
+                    <GM03Core.Core.CI_RoleCode_>
+                        <value>distributor</value>
+                    </GM03Core.Core.CI_RoleCode_>
+                </role>
+                <pointOfContact REF="xRespPartyx2"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.MD_IdentificationpointOfContact>
+            <GM03Core.Core.CI_ResponsibleParty TID="xRespPartyx101">
+                <individualFirstName>Paul</individualFirstName>
+                <individualLastName>Imbeck</individualLastName>
+                <electronicalMailAddress>
+                    <GM03Core.Core.URL_>
+                        <value>paul.imbeck@bl.ch</value>
+                    </GM03Core.Core.URL_>
+                    <GM03Core.Core.URL_>
+                        <value>naturundlandschaft@bl.ch</value>
+                    </GM03Core.Core.URL_>
+                </electronicalMailAddress>
+                <organisationName>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Amt für Raumplanung BL, Natur und Landschaft</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </organisationName>
+                <positionName>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Landschaftspfleger</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </positionName>
+                <organisationAcronym>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>ARP</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </organisationAcronym>
+                <linkage>
+                    <GM03Core.Core.PT_FreeURL>
+                        <URLGroup>
+                            <GM03Core.Core.PT_URLGroup>
+                                <language>DE</language>
+                                <plainURL>http://www.baselland.ch/arp-htm.283428.0.html</plainURL>
+                            </GM03Core.Core.PT_URLGroup>
+                        </URLGroup>
+                    </GM03Core.Core.PT_FreeURL>
+                </linkage>
+                <contactInfo REF="xContactx101"/>
+                <address REF="xAddressx101"/>
+            </GM03Core.Core.CI_ResponsibleParty>
+            <GM03Core.Core.CI_Telephone TID="xTelephonex101x0">
+                <number>+41 61 552 55 76</number>
+                <numberType>directNumber</numberType>
+                <CI_ResponsibleParty REF="xRespPartyx101"/>
+            </GM03Core.Core.CI_Telephone>
+            <GM03Core.Core.CI_Telephone TID="xTelephonex101x1">
+                <number>+41 61 552 59 33</number>
+                <numberType>mainNumber</numberType>
+                <CI_ResponsibleParty REF="xRespPartyx101"/>
+            </GM03Core.Core.CI_Telephone>
+            <GM03Core.Core.CI_Telephone TID="xTelephonex101x2">
+                <number>+41 61 552 69 82</number>
+                <numberType>facsimile</numberType>
+                <CI_ResponsibleParty REF="xRespPartyx101"/>
+            </GM03Core.Core.CI_Telephone>
+            <GM03Core.Core.CI_Contact TID="xContactx101">
+                <hoursOfService>8.00-12.00, 13.30-17.00</hoursOfService>
+            </GM03Core.Core.CI_Contact>
+            <GM03Core.Core.CI_Address TID="xAddressx101">
+                <streetName>Rheinstrasse</streetName>
+                <streetNumber>29</streetNumber>
+                <postalCode>4410</postalCode>
+                <city>Liestal</city>
+                <administrativeArea>BL</administrativeArea>
+                <country>CH</country>
+            </GM03Core.Core.CI_Address>
+            <GM03Core.Core.MD_IdentificationpointOfContact TID="x38279">
+                <role>
+                    <GM03Core.Core.CI_RoleCode_>
+                        <value>pointOfContact</value>
+                    </GM03Core.Core.CI_RoleCode_>
+                </role>
+                <pointOfContact REF="xRespPartyx101"/>
+                <MD_Identification REF="xDataIdentx404x0"/>
+            </GM03Core.Core.MD_IdentificationpointOfContact>
+            <GM03Core.Core.MD_Distribution TID="xDistribx404"/>
+            <GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions TID="xDigTranOpsx220">
+                <MD_Distribution REF="xDistribx404"/>
+                <offLine REF="xMediumx220"/>
+            </GM03Comprehensive.Comprehensive.MD_DigitalTransferOptions>
+            <GM03Comprehensive.Comprehensive.MD_Medium TID="xMediumx220">
+                <name>cdRom</name>
+            </GM03Comprehensive.Comprehensive.MD_Medium>
+            <GM03Comprehensive.Comprehensive.MD_Format TID="xFormatx1">
+                <name>SHP</name>
+                <version>3.2</version>
+            </GM03Comprehensive.Comprehensive.MD_Format>
+            <GM03Core.Core.MD_DistributiondistributionFormat TID="x38280">
+                <MD_Distribution REF="xDistribx404"/>
+                <distributionFormat REF="xFormatx1"/>
+            </GM03Core.Core.MD_DistributiondistributionFormat>
+            <GM03Comprehensive.Comprehensive.MD_Legislation TID="xlegislationx15">
+                <country>
+                    <CodeISO.CountryCodeISO_>
+                        <value>CH</value>
+                    </CodeISO.CountryCodeISO_>
+                </country>
+                <language>
+                    <CodeISO.LanguageCodeISO_>
+                        <value>DE</value>
+                    </CodeISO.LanguageCodeISO_>
+                </language>
+                <legislationType>otherLegalText</legislationType>
+                <internalReference>
+                    <GM03Core.Core.CharacterString_>
+                        <value>§§ 2, 4 Abs. 1</value>
+                    </GM03Core.Core.CharacterString_>
+                </internalReference>
+                <title REF="xCitationx3134"/>
+            </GM03Comprehensive.Comprehensive.MD_Legislation>
+            <GM03Comprehensive.Comprehensive.CI_Citation TID="xCitationx3134">
+                <title>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>Verordnung über den Schutz der einheimischen Pflanzen- und Tierarten
+                                    (Artenschutzverordnung)
+                                </plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </title>
+                <alternateTitle>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>SGS 790.11</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </alternateTitle>
+            </GM03Comprehensive.Comprehensive.CI_Citation>
+            <GM03Core.Core.CI_Date TID="xDatex3134x0">
+                <date>2009:04:07</date>
+                <dateType>revision</dateType>
+                <CI_Citation REF="xCitationx3134"/>
+            </GM03Core.Core.CI_Date>
+            <GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation TID="x38281">
+                <MD_Metadata REF="xMetadatax404"/>
+                <legislationInformation REF="xlegislationx15"/>
+            </GM03Comprehensive.Comprehensive.MD_MetadatalegislationInformation>
+            <GM03Core.Core.MD_ReferenceSystem TID="xRefSystemx7">
+                <referenceSystemIdentifier REF="xRsIdentx1"/>
+            </GM03Core.Core.MD_ReferenceSystem>
+            <GM03Comprehensive.Comprehensive.RS_Identifier TID="xRsIdentx1">
+                <code>
+                    <GM03Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03Core.Core.PT_Group>
+                                <language>DE</language>
+                                <plainText>CH1903</plainText>
+                            </GM03Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03Core.Core.PT_FreeText>
+                </code>
+            </GM03Comprehensive.Comprehensive.RS_Identifier>
+            <GM03Core.Core.referenceSystemInfoMD_Metadata TID="x38282">
+                <referenceSystemInfo REF="xRefSystemx7"/>
+                <MD_Metadata REF="xMetadatax404"/>
+            </GM03Core.Core.referenceSystemInfoMD_Metadata>
+            <GM03Core.Core.MD_Metadatacontact TID="x38283">
+                <role>
+                    <GM03Core.Core.CI_RoleCode_>
+                        <value>pointOfContact</value>
+                    </GM03Core.Core.CI_RoleCode_>
+                </role>
+                <contact REF="xRespPartyx101"/>
+                <MD_Metadata REF="xMetadatax404"/>
+            </GM03Core.Core.MD_Metadatacontact>
+        </GM03Comprehensive.Comprehensive>
+    </DATASECTION>
+</TRANSFER>

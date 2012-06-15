@@ -60,9 +60,9 @@ public class XmlSerializerDb extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element select(Dbms dbms, String table, String id) throws Exception {
-		Element rec = internalSelect(dbms, table, id);
-		if (resolveXLinks()) Processor.detachXLink(rec);
+	public Element select(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
+		Element rec = internalSelect(dbms, table, id, srvContext);
+		if (resolveXLinks()) Processor.detachXLink(rec, srvContext);
 		return rec;
 	}
 
@@ -77,8 +77,8 @@ public class XmlSerializerDb extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception {
-		return internalSelect(dbms, table, id);
+	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
+		return internalSelect(dbms, table, id, srvContext);
 	}
 
     /**

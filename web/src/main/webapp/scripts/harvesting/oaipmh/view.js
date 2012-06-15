@@ -69,7 +69,10 @@ function init()
 		{ id:'oai.url',         type:'length',   minSize :1,  maxSize :200 },
 		{ id:'oai.url',         type:'url' },
 		{ id:'oai.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'oai.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'oai.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'oai.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'oai.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'oai.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
 	shower = new Shower('oai.useAccount', 'oai.account');

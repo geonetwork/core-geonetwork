@@ -153,20 +153,14 @@
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.status'">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.status.form','{/root/gui/strings/batchUpdateStatusTitle}',800, null)">
+									<button onclick="batchOperation('metadata.batch.status.form','{/root/gui/strings/batchUpdateStatusTitle}',800)">
 										<xsl:value-of select="/root/gui/strings/updateStatus"/>
 									</button>
 								</xsl:if>
 								<xsl:if test="/root/gui/services/service/@name='metadata.batch.version' and /root/gui/svnmanager/enabled='true'">
 								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.version','{/root/gui/strings/batchStartVersionTitle}',600, null)">
+									<button onclick="batchOperation('metadata.batch.version','{/root/gui/strings/batchStartVersionTitle}',600)">
 										<xsl:value-of select="/root/gui/strings/startVersion"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.extract.subtemplates'">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.extract.subtemplates.form','{/root/gui/strings/batchExtractSubtemplatesTitle}',800, null)">
-										<xsl:value-of select="/root/gui/strings/extractSubtemplates"/>
 									</button>
 								</xsl:if>
 							</xsl:if>
@@ -283,6 +277,7 @@
 <!-- normal records -->
 
 			<xsl:otherwise>
+
 				<xsl:variable name="md">
 					<xsl:apply-templates mode="brief" select="."/>
 				</xsl:variable>

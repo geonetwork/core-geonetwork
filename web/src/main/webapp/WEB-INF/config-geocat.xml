@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+	<services package="org.fao.geonet">
+
+
+        <service name="geocat">
+            <output sheet="geocat.xsl">
+            	<call name="groups" class=".guiservices.groups.GetAll" />
+				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+                    <param name="maxItems" value="10" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+                <call name="featured" class=".guiservices.metadata.GetRandom">
+                    <param name="maxItems" value="1" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+                <call name="mostPopular" class=".guiservices.metadata.GetMostPopular">
+                    <param name="maxItems" value="5" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+            	<call name="formats" class="jeeves.services.db.Select">
+            		<param name="db" value="main-db" />
+            		<param name="query" value="select name,version from formats" />
+            	</call>
+            	<call name="usergroups" class="jeeves.services.db.Select">
+            		<param name="db" value="main-db" />
+            		<param name="query" value="select groupId,userId from usergroups" />
+            	</call>
+                <call name="sources"       class =".guiservices.util.Sources"/>
+                <!--<xml name="countries" file="xml/countries.xml" />                -->
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.user.get">
+            <class name=".services.user.Get">
+                <param name="xml" />
+            </class>
+
+            <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
+        </service>
+        
+        <service name="validated.shared.user.admin">
+            <class name=".services.user.List" >
+                <param name="type" value="VALIDATED_SHARED"/>
+            </class>
+
+            <output sheet="shared-user/user-list.xsl">
+                <xml name="strings" file="xml/confirm.xml" />
+            </output>
+        </service>
+        <service name="nonvalidated.shared.user.admin">
+            <class name=".services.user.List" >
+                <param name="type" value="NON_VALIDATED_SHARED"/>
+            </class>
+
+            <output sheet="shared-user/user-list.xsl">
+                <xml name="strings" file="xml/confirm.xml" />
+            </output>
+        </service>
+
+        <service name="shared.user.edit">
+            <class name=".services.user.Get" />
+
+            <output sheet="shared-user/user-update.xsl">
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="profiles" class="jeeves.guiservices.profiles.Get" />
+            </output>
+        </service>
+
+        <service name="validated.shared.user.update">
+            <class name=".services.user.SharedUpdate" />
+            <output forward="validated.shared.user.admin" />
+        </service>
+
+        <service name="validated.shared.user.remove">
+            <class name=".services.user.Remove">
+                <param name="type" value="VALIDATED_SHARED"/>
+            </class>
+            <output forward="validated.shared.user.admin" />
+        </service>
+
+        <service name="shared.user.update">
+            <class name=".services.user.SharedUpdate" />
+        </service>
+
+        <service name="nonvalidated.shared.user.update">
+            <class name=".services.user.SharedUpdate" />
+            <output forward="nonvalidated.shared.user.admin" />
+        </service>
+
+        <service name="nonvalidated.shared.user.remove">
+            <class name=".services.user.Remove">
+                <param name="type" value="NON_VALIDATED_SHARED"/>
+            </class>
+            <output forward="nonvalidated.shared.user.admin" />
+        </service>
+        <service name="shared.user.remove">
+            <class name=".services.user.Remove">
+                <param name="type" value="SHARED"/>
+            </class>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="reusable.object.process">
+            <class name=".services.reusable.Process"/>
+        </service>
+        
+        <service name="reusable.object.deleteUnused">
+            <class name=".services.reusable.DeleteUnused"/>
+        </service>
+
+        <service name="reusable.object.update">
+            <class name=".services.reusable.Update"/>
+        </service>
+
+        <service name="shared.user.list">
+            <class name=".services.user.List">
+                <param name="xml" />
+                <param name="type" value="SHARED"/>
+            </class>
+
+            <output sheet="shared-user/user-list-xml.xsl" contentType="application/xml; charset=UTF-8"/>
+
+        </service>
+
+        <service name="xml.extent.get">
+            <class name=".services.extent.Get" />
+            <output sheet="trim-coords.xsl" contentType="text/xml; charset=UTF-8"/>
+        </service>
+
+        <service name="xml.extent.search">
+            <class name=".services.extent.Search" />
+            <output sheet="trim-coords.xsl" contentType="text/xml; charset=UTF-8"/>
+        </service>
+
+        <!-- returns the results as one <ul> long list -->
+        <service name="extent.search.list">
+            <class name=".services.extent.Search" />
+            <output sheet="extent-list.xsl" contentType="text/xml; charset=UTF-8"/>
+        </service>
+
+        <!-- returns the results paginated and nice.  Has edit and view modes -->
+        <service name="extent.search.paging">
+            <class name=".services.extent.Search" />
+            <output sheet="extent-paging.xsl" />
+        </service>
+         <service name="extent.select">
+            <class name=".services.extent.Select" />
+        </service>
+
+        <service name="xml.extent.add">
+            <class name=".services.extent.Add" />
+        </service>
+
+        <service name="xml.extent.delete">
+            <class name=".services.extent.Delete" />
+            <call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
+        </service>
+
+        <service name="xml.extent.update">
+            <class name=".services.extent.Update" />
+        </service>
+
+        <service name="extent.admin">
+            <class name=".services.extent.List">
+                <param name="typename">
+                    <typename>gn:xlinks</typename>
+                    <typename>gn:non_validated</typename>
+                </param>
+                <param name="max" value="1" />
+            </class>
+            <output sheet="extent-admin.xsl" />
+        </service>
+
+        <service name="extent.edit">
+            <class name=".services.extent.Get">
+                <param name="typename"/>
+                <param name="modal" />
+            </class>
+            <output sheet="extent-edit.xsl" />
+        </service>
+
+        <service name="xml.extent.list">
+            <class name=".services.extent.List" />
+        </service>
+
+
+        <service name="gm03.xml" type="xml">
+          <class name=".services.gm03.Gm03Service">
+            <param name="xsl" value="xsl/conversion/import/ISO19139CHE-to-GM03.xsl" />
+            <param name="xsd" value="WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2.xsd" />
+          </class>
+        </service>
+
+        <service name="gm03small.xml" type="xml">
+          <class name=".services.gm03.Gm03smallService">
+            <param name="xsl" value="xsl/conversion/import/ISO19139CHE-to-GM03small.xsl" />
+            <param name="xsd" value="xml/validation/cgp-wsdl/xsd/gm03small.xsd" />
+          </class>
+        </service>
+
+        <service name="cgp" type="xml">
+          <class name=".services.cgp.CgpDispatcher">
+            <param name="xsl19139CHEtoGM03" value="xsl/conversion/import/ISO19139CHE-to-GM03small.xsl" />
+            <param name="xsdGM03" value="xml/validation/cgp-wsdl/xsd/gm03small.xsd" />
+            <param name="xsd19139CHE" value="WEB-INF/data/config/schema_plugins/iso19139.che/schema.xsd" />
+          </class>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Monitoring -->
+
+		<service name="monitoring.report">
+			<class name=".guiservices.monitoring.Get" />
+			<output sheet="monitoring.xsl" />
+
+			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+				<xml name="error" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+
+        <service name="monitoring" type="xml">
+			<class name=".services.monitoring.Check" />
+
+            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+				<xml name="error" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+
+        <service name="monitoring.indexing" type="xml">
+			<class name=".services.monitoring.services.IndexServiceMonitor" />
+
+            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+				<xml name="error" file="xml/privileges-error.xml" />
+			</error>
+		</service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Add an xlink to a metadata                                    -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.xlink.add">
+            <class name=".services.metadata.AddXLink"/>
+
+			<output sheet="metadata-add-xlink.xsl">
+				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
+				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
+				<call name="groups"        class =".guiservices.groups.GetMine"/>
+				<call name="regions"       class =".guiservices.regions.Get"/>
+				<call name="sources"       class =".guiservices.util.Sources"/>
+				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
+			</output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Search for shared objects in metadata and replace with XLINK  -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.reusable.replace">
+            <class name=".services.reusable.Replace" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Admin services for managing reusable objects                  -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="reusable.non_validated.admin">
+           <output sheet="reusable_admin_non_validated_results.xsl"/>
+        </service>
+
+        <service name="reusable.non_validated.list">
+            <class name=".services.reusable.ViewNonValidated" />
+        </service>
+
+        <service name="xml.reusable.deleted">
+            <class name=".services.reusable.Deleted" />
+        </service>
+
+        <service name="reusable.validate">
+            <class name=".services.reusable.Validate" />
+        </service>
+
+        <service name="reusable.reject">
+            <class name=".services.reusable.Reject" />
+        </service>
+
+        <service name="reusable.delete">
+            <class name=".services.reusable.Delete" />
+        </service>
+
+        <service name="reusable.references">
+            <class name=".services.reusable.ReferencingMetadata" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Search for metadata that has not recently been updated        -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.expired.email" type="xml">
+           <class name=".services.metadata.DetectOld">
+               <param name="serviceType" value="email" />
+           </class>
+           <output sheet="metadata_expire_results.xsl"/>
+         </service>
+
+        <service name="metadata.expired.unpublish" type="xml">
+           <class name=".services.metadata.DetectOld">
+               <param name="serviceType" value="unpublish" />
+           </class>
+           <output sheet="metadata_expire_results.xsl"/>
+         </service>
+
+        <service name="metadata.expired.form" type="html">
+           <class name=".services.metadata.DetectOld">
+               <param name="email" value="3" />
+               <param name="unpublish" value="5" />
+               <param name="serviceType" value="form" />
+           </class>
+           <output sheet="metadata_expire_operations.xsl"/>
+         </service>
+
+        <service name="metadata.ext.edit" type="html">
+			<output sheet="ext/edit.xsl"/>
+         </service>
+
+        <service name="metadata.ext.edit.data" type="xml">
+			<class name=".services.metadata.GetEditableData"/>
+         </service>
+
+        <!-- - - - - - - - - - - - - - Format MD services - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.formatter.register">
+            <class name=".services.metadata.format.Register">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <service name="metadata.formatter.admin">
+            <output sheet="metadata-formatter/admin.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <service name="metadata.formatter.list">
+            <class name=".services.metadata.format.ListFormatters">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <service name="metadata.formatter.update">
+            <class name=".services.metadata.format.UpdateFile">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            
+			<output forward="metadata.formatter.edit" />
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <service name="metadata.formatter.files">
+            <class name=".services.metadata.format.ListBundleFiles">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+        <service name="metadata.formatter.edit">
+            <class name=".services.metadata.format.EditFile">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            
+            <output sheet="metadata-formatter/edit.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <service name="metadata.formatter.remove">
+            <class name=".services.metadata.format.Remove">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+        <service name="metadata.formatter.download">
+            <class name=".services.metadata.format.Download">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <output file="true" />
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+        <service name="metadata.formatter.resource">
+            <class name=".services.metadata.format.Resource">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <output file="true" />
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+        
+        <service name="metadata.formatter.html">
+            <class name=".services.metadata.format.Format">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <output sheet="metadata-formatter/identity.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <service name="metadata.formatter.xml">
+            <class name=".services.metadata.format.Format">
+               <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <error id="illegal-params" sheet="metadata-error.xsl"/>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Format services                                               -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.format.list">
+            <class name=".services.format.List">
+                <param name="xml" />
+            </class>
+
+            <output sheet="format-list.xsl" contentType="text/xml; charset=UTF-8" />
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.format.get">
+            <class name=".services.format.Get">
+                <param name="xml" />
+            </class>
+
+            <output sheet="format-xml.xsl" contentType="text/xml; charset=UTF-8" />
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="format.admin">
+            <output sheet="format-admin.xsl">
+                <call name="formats" class="jeeves.services.db.Select">
+                    <param name="db" value="main-db" />
+                    <param name="query" value="SELECT * FROM Formats" />
+                </call>
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="format">
+            <class name=".services.format.Manager" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="che.keyword.get" type="xml">
+            <class name=".services.thesaurus.GetCHEKeywordById" />
+            <output sheet="skos-to-iso.xsl" contentType="text/xml; charset=UTF-8"/>
+        </service>
+
+	    <service name="geocat.thesaurus.updateelement">
+	      <class name=".services.thesaurus.GeocatUpdateElement"/>
+	    </service>
+	    
+	    <service name="geocat.thesaurus.editelement">
+	      <class name=".services.thesaurus.GeocatEditElement"/>
+	        <output sheet="thesaurus-edit-element.xsl">
+	            <call name="languages" class=".guiservices.languages.Get" />
+	        </output>
+	    </service>
+	    
+	    <service name="metadata.print">
+			<class name=".services.metadata.Show">
+				<param name="addRefs" value="y" />
+				<param name="cache" value="y" />
+			</class>
+
+			<output sheet="metadata-print.xsl">
+				<call name="services" class="jeeves.guiservices.services.Get"/>
+				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
+				<call name="position" class=".guiservices.util.GetPositionMD"/>
+				<call name="relation" class =".guiservices.metadata.GetRelated"/>
+				<call name="sources"  class=".guiservices.util.Sources"/>
+				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+				<call name="clear"  class=".services.metadata.ClearCachedShowMetadata"/>
+			</output>
+
+			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+				<xml name="error" file="xml/metadata-show-error.xml" />
+			</error>
+	    </service>
+
+        <!-- Service to export a CSW query in a pdf document.
+        To be used with no outputSchema (ie. default ogc) to return
+        search result in a pdf. Replace existing pdf.search service. -->
+        <service name="csw.pdf">
+            <class name=".services.main.CswDiscoveryDispatcher" />
+
+            <output sheet="csw-pdf-fop.xsl" file="true" contentType="application/pdf">
+                <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+            </output>
+        </service>
+        <!-- Service to export a CSW query in a text file output.
+        To be used with outputSchema=own in order to be able to produce
+        specific output according to schema. -->
+        <service name="csw.csv">
+            <class name=".services.main.CswDiscoveryDispatcher" />
+
+            <output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
+        </service>
+        
+        <!-- Custom keywords search that sorts keywords -->
+        <service name="geocat.keywords.list">
+            <class name=".services.main.Search">
+				<param name="maxSummaryKeys" value="1000" />
+				<param name="maxHitsInSummary" value="10000" />
+			</class>
+			<output sheet="thesaurus/sortedKeywords.xsl" contentType="text/xml; charset=UTF-8"/>
+        </service>
+
+		<!-- Unpublishing control and monitor services -->        
+        <service name="unpublish.invalid.metadata">
+            <class name=".kernel.UnpublishInvalidMetadataJob" />
+        </service>
+
+        <service name="unpublish.report.xml"  contentType="text/xml; charset=UTF-8">
+            <class name=".kernel.UnpublishInvalidMetadataReport"/>
+        </service>
+        <service name="unpublish.report.csv">
+            <class name=".kernel.UnpublishInvalidMetadataReport"/>
+			<output sheet="unpublish-report.xsl" contentType="text/csv; charset=UTF-8"/>
+        </service>
+
+        <service name="keywords.duplicate">
+            <class name=".services.thesaurus.Duplicate"/>
+
+            <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
+        </service>
+
+    </services>
+</geonet>

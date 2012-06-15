@@ -30,6 +30,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
@@ -81,6 +83,9 @@ public class Update implements Service
 
 		java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
 
+		if(Geocat.Profile.SHARED.equals(profile)) {
+		    throw new IllegalArgumentException("this service cannot edit shared users");
+		}
 		if (!operation.equals(Params.Operation.RESETPW)) {
 			if (!context.getProfileManager().exists(profile))
 				throw new Exception("Unknown profile : "+ profile);
@@ -205,4 +210,3 @@ public class Update implements Service
 }
 
 //=============================================================================
-

@@ -1,0 +1,14 @@
+<strings>
+  <M100>[GM03_2] - Basic geodata</M100>
+  <alert.M100><div><h2>Basic geodata type is mandatory if basic geodata identifier is defined.</h2></div></alert.M100>
+  <report.M100><div><h2>Basic geodata type is mandatory if basic geodata identifier is defined.</h2></div></report.M100>
+  <M101>[GM03_2] - Model type</M101>
+  <alert.M101><div><h2>Model type is mandatory</h2></div></alert.M101>
+  <report.M101><div><h2>Model type is mandatory</h2></div></report.M101>
+  <M102>[GM03_2] - Codelist values</M102>
+  <alert.M102><div><h2>Select one value from the codelist or remove the element.</h2></div></alert.M102>
+  <report.M102><div><h2>Select one value from the codelist or remove the element.</h2></div></report.M102>
+  <M103>[GM03_2] - Citation titles</M103>
+  <alert.M103><div><h2>Citation titles are mandatory, give a title or remove the specific citation-Class.</h2></div></alert.M103>
+  <report.M103><div><h2>Citation titles are mandatory, give a title or remove the specific citation-Class.</h2></div></report.M103>
+</strings>
