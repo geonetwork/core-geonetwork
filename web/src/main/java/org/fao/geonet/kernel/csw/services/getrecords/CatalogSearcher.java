@@ -202,10 +202,10 @@ public class CatalogSearcher {
 
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
-					maxHits, 0, maxHits, Integer.MAX_VALUE, 
-					_lang, ResultType.RESULTS.toString(), _summaryConfig, 
-					_reader, _query, _filter, _sort, false,
-					_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+					maxHits, 0, maxHits, _lang, 
+					ResultType.RESULTS.toString(), _summaryConfig, _reader, 
+					_query, _filter, _sort, null, false, _luceneConfig.isTrackDocScores(),
+					_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
 			);
 		TopDocs tdocs = searchResults.one();
 		Element summary = searchResults.two();
@@ -485,10 +485,11 @@ public class CatalogSearcher {
 		_sort = sort;
 		_lang = context.getLanguage();
 	
-		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, _reader, query, cFilter,
-                sort, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
-                _luceneConfig.isDocsScoredInOrder()
+		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(
+				numHits, startPosition - 1, maxRecords, _lang, 
+				resultType.toString(), _summaryConfig, _reader, 
+				query, cFilter, sort, null, buildSummary, _luceneConfig.isTrackDocScores(),
+				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()		
 		);
 		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();

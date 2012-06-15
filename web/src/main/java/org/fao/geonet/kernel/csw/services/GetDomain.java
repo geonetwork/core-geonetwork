@@ -212,10 +212,10 @@ public class GetDomain extends AbstractOperation implements CatalogService
 				CachingWrapperFilter filter = null;
 
 				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( 
-						maxRecords, 0, maxRecords, Integer.MAX_VALUE, 
-						context.getLanguage(), "results", new Element("summary"), 
-						reader, query, filter, sort, false,
-						false, false, false	// Scoring is useless for GetDomain operation
+						maxRecords, 0, maxRecords, context.getLanguage(), 
+						"results", new Element("summary"), reader, 
+						query, filter, sort, null, false, false,
+						false, false	// Scoring is useless for GetDomain operation
 				);
 				TopDocs hits = searchResults.one();
 			

@@ -55,6 +55,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.lf5.viewer.categoryexplorer.CategoryPath;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
@@ -69,6 +70,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -113,7 +115,8 @@ public class SearchManager {
 	public static final int Z3950 = 2;
 	public static final int UNUSED = 3;
 
-    public static final String NON_SPATIAL_DIR = "/nonspatial";
+    public static final String NON_SPATIAL_DIR = "/index";
+    public static final String TAXONOMY_DIR = "/taxonomy";
     
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
@@ -124,8 +127,11 @@ public class SearchManager {
 	private final File _stylesheetsDir;
     private static File _stopwordsDir;
 	private final Element _summaryConfig;
+	Map<String, Map<String,Object>> _summaryConfigValues = null;
+
 	private LuceneConfig _luceneConfig;
 	private File _luceneDir;
+	private File _luceneTaxonomyDir;
     private SettingInfo _settingInfo;
     /**
      * Used when adding documents to the Lucene index.
@@ -473,7 +479,14 @@ public class SearchManager {
 		_scm = scm;
 		_thesauriDir = thesauriDir;
 		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
-
+    	try {
+    		// TODO : be able to reload summary config like lucene config
+    		// TODO : hits is one type, we should merge all type of summary
+    		_summaryConfigValues = LuceneSearcher.getSummaryConfig(_summaryConfig, "hits");
+    	} catch (Exception e) {
+			// TODO: handle exception
+    		e.printStackTrace();
+		}
 		if (servletContext != null) {
 			ConfigurationOverrides.updateWithOverrides(summaryConfigXmlFile, servletContext, appPath, _summaryConfig);
 		}
@@ -500,13 +513,16 @@ public class SearchManager {
 
 
 		_luceneDir = new File(luceneDir + NON_SPATIAL_DIR);
-
 		if (!_luceneDir.isAbsolute()) {
             _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
         }
-
         _luceneDir.getParentFile().mkdirs();
         _spatial = new Spatial(dataStore, maxWritesInTransaction);
+
+		_luceneTaxonomyDir = new File(luceneDir + TAXONOMY_DIR);
+		if (!_luceneTaxonomyDir.isAbsolute()) _luceneTaxonomyDir = new File(luceneDir+ TAXONOMY_DIR);
+		_luceneTaxonomyDir.getParentFile().mkdirs();
+
 
      	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;
@@ -665,11 +681,11 @@ public class SearchManager {
                       String title) throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
-		_indexWriter.openWriter();
-		try {
-            List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
-            for( Pair<String, Document> document : docs ) {
-                _indexWriter.addDocument(document.one(), document.two());
+        _indexWriter.openWriter();
+        try {
+            List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
+            for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
+                _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
                 if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                     Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
             }
@@ -677,7 +693,7 @@ public class SearchManager {
         finally {
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                 Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
-			_indexWriter.closeWriter();
+            _indexWriter.closeWriter();
 		}
 		_spatial.writer().index(schemaDir, id, metadata);
 	}
@@ -704,12 +720,12 @@ public class SearchManager {
      * @param title
      * @throws Exception
      */
-	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
+    public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                            String title) throws Exception {
-        List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title,
+        List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title,
                 true);
-        for( Pair<String, Document> document : docs ) {
-            _indexWriter.addDocument(document.one(), document.two());
+        for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
+            _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
         }
         _spatial.writer().index(schemaDir, id, metadata);
 	}
@@ -754,10 +770,10 @@ public class SearchManager {
      * @return
      * @throws Exception
      */
-	private List<Pair<String,Document>> buildIndexDocument(String schemaDir, Element metadata, String id,
-                                                           List<Element> moreFields, String isTemplate, String title,
-                                                           boolean group) throws Exception {
-
+     private List<Pair<String,Pair<Document, List<CategoryPath>>>> buildIndexDocument(String schemaDir, Element metadata, String id, 
+                                   List<Element> moreFields, String isTemplate, String title, 
+                                   boolean group) throws Exception
+     {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
 		if (group) deleteGroup("_id", id);
@@ -794,7 +810,7 @@ public class SearchManager {
         @SuppressWarnings(value = "unchecked")
         List<Element> documentElements = xmlDoc.getContent();
 
-        List<Pair<String, Document>> documents = new ArrayList<Pair<String, Document>>();
+        List<Pair<String, Pair<Document, List<CategoryPath>>>> documents = new ArrayList<Pair<String, Pair<Document, List<CategoryPath>>>>();
         for( Element doc : documentElements ) {
             // add _id field
             SearchManager.addField(doc, LuceneIndexField.ID, id, true, true);
@@ -1258,6 +1274,9 @@ public class SearchManager {
     public boolean isUpToDateReader(IndexReader reader) throws IOException, InterruptedException {
         return _indexReader.isUpToDateReader(reader);
     }
+	public TaxonomyReader getIndexTaxonomyReader() {
+		return _indexReader.getTaxonomyReader();
+	}
 
     /**
      * TODO javadoc.
@@ -1278,19 +1297,22 @@ public class SearchManager {
      */
 	private void setupIndex(boolean rebuild) throws Exception {
         if (_indexReader == null) {
-            _indexReader = new LuceneIndexReaderFactory(_luceneDir);
+            _indexReader = new LuceneIndexReaderFactory(_luceneDir, _luceneTaxonomyDir);
         }
         if (_indexWriter == null) {
-            _indexWriter = new LuceneIndexWriterFactory(_luceneDir, _analyzer, _luceneConfig);
+            _indexWriter = new LuceneIndexWriterFactory(_luceneDir, _luceneTaxonomyDir, _analyzer, _luceneConfig);
         }
 
         // if rebuild forced don't check
 		boolean badIndex = true;
 		if (!rebuild) {
 			try {
-                _indexReader = new LuceneIndexReaderFactory(_luceneDir);
+                _indexReader = new LuceneIndexReaderFactory(_luceneDir, _luceneTaxonomyDir);
                 // reason for calling this is a side-effect, probably the call to maybeReopen() inside there
                 _indexReader.getReader(null);
+                // TODO : false if one or the other is in bad shape
+                TaxonomyReader taxoReader = new LuceneTaxonomyReader(FSDirectory.open(_luceneTaxonomyDir));
+                taxoReader.close();
                 badIndex = false;
             }
             catch (AssertionError e) {
@@ -1303,6 +1325,14 @@ public class SearchManager {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
 			if (_spatial != null) _spatial.writer().reset();
 			_indexWriter.createDefaultLocale();
+			
+
+			  if (!_luceneTaxonomyDir.exists()) {
+				  _luceneTaxonomyDir.mkdirs();
+			  }
+			  
+			TaxonomyWriter taxoWriter = new LuceneTaxonomyWriter(FSDirectory.open(_luceneTaxonomyDir), OpenMode.CREATE);
+			taxoWriter.close();
 		}
 	}
 
@@ -1366,18 +1396,20 @@ public class SearchManager {
      * @param xml	The list of field to be indexed.
      * @return
      */
-	private Document newDocument(Element xml) {
+	private Pair<Document, List<CategoryPath>> newDocument(Element xml)
+	{
 		Document doc = new Document();
-		
+		List<CategoryPath> categories = new ArrayList<CategoryPath>();
+    	
 		boolean hasLocaleField = false;
         for (Object o : xml.getChildren()) {
             Element field = (Element) o;
-            String name = field.getAttributeValue("name");
-            String string = field.getAttributeValue("string"); // Lower case field is handled by Lucene Analyzer.
+            String name = field.getAttributeValue(LuceneFieldAttribute.NAME.name());
+            String string = field.getAttributeValue(LuceneFieldAttribute.STRING.name()); // Lower case field is handled by Lucene Analyzer.
             if(name.equals(Geonet.LUCENE_LOCALE_KEY)) hasLocaleField = true;
             if (string.trim().length() > 0) {
-            	String sStore = field.getAttributeValue("store");
-                String sIndex = field.getAttributeValue("index");
+            	String sStore = field.getAttributeValue(LuceneFieldAttribute.STORE.name());
+                String sIndex = field.getAttributeValue(LuceneFieldAttribute.INDEX.name());
 
                 boolean bStore = sStore != null && sStore.equals("true");
                 boolean bIndex = sIndex != null && sIndex.equals("true");
@@ -1403,8 +1435,7 @@ public class SearchManager {
                 }
                 if (isNumeric) {
                 	addNumericField(doc, name, string, store, bIndex);
-                }
-                else {
+                } else {
                     Field f = new Field(name, string, store, index);
 
                     // Boost a particular field according to Lucene config. 
@@ -1415,6 +1446,13 @@ public class SearchManager {
                         f.setBoost(boost);
                     }
                     doc.add(f);
+                }
+                
+                if(_summaryConfigValues.get(name) != null) {
+                    if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                        Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
+                    }
+                    categories.add(new CategoryPath(name, string));
                 }
             }
         }
@@ -1432,7 +1470,8 @@ public class SearchManager {
                 doc.setBoost(f);
             }
         }
-		return doc;
+        return Pair.write(doc, categories);
+
 	}
 
 	/**

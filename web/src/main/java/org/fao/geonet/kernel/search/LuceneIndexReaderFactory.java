@@ -1,11 +1,5 @@
 package org.fao.geonet.kernel.search;
 
-import jeeves.utils.Log;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.MultiReader;
-import org.apache.lucene.store.FSDirectory;
-import org.fao.geonet.constants.Geonet;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,6 +12,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import jeeves.utils.Log;
+
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyReader;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.MultiReader;
+import org.apache.lucene.store.FSDirectory;
+import org.fao.geonet.constants.Geonet;
+
 /**
  * Utility class to get/refresh readers for SearchManager class Works by opening an IndexReader at
  * startup and keeping that reader open. It is never closed. Users of this class call getReader
@@ -28,11 +32,12 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class LuceneIndexReaderFactory {
-
     private static final long LOCK_WAIT_TIME = 15;
     private static final TimeUnit WAIT_UNIT = TimeUnit.SECONDS;
     private Map<String/* locale */, IndexReader> subReaders = new HashMap<String, IndexReader>();
+    private volatile TaxonomyReader currentTaxoReader;
     private File luceneDir;
+    private File taxoDir;
     private final Lock lock = new ReentrantLock();
     // ===========================================================================
     // Constructor
@@ -41,8 +46,13 @@ public class LuceneIndexReaderFactory {
         this.luceneDir = dir;
     }
 
+  public LuceneIndexReaderFactory(File dir, File taxoDir) throws IOException {
+      this.luceneDir = dir;
+      this.taxoDir = taxoDir;
+  }
     // ===========================================================================
     // Public interface methods
+
 
     /**
      * Get {@linkplain MultiReader}. If
@@ -71,6 +81,29 @@ public class LuceneIndexReaderFactory {
         } finally {
             lock.unlock();
         }
+    }
+    
+    /**
+     * Refresh and return the current taxonomy reader.
+     * 
+     * @return
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public TaxonomyReader getTaxonomyReader() {
+        if (currentTaxoReader == null)
+            try {
+                currentTaxoReader = new LuceneTaxonomyReader(
+                        FSDirectory.open(taxoDir));
+            } catch (CorruptIndexException e) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Taxonomy index is corrupted. Error is " + e.getMessage());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Failed to open taxonomy reader from directory " 
+                    + taxoDir.getPath() + ". Error is " + e.getMessage());
+                e.printStackTrace();
+            }
+        return currentTaxoReader;
     }
 
     public void releaseReader( IndexReader reader ) throws InterruptedException, IOException {
