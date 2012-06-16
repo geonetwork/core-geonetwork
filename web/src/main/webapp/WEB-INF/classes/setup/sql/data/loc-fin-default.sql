@@ -509,12 +509,12 @@ INSERT INTO IsoLanguagesDes VALUES (482,'fin','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'fin','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'fin','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'eng','Publish');
-INSERT INTO OperationsDes VALUES (1,'eng','Download');
-INSERT INTO OperationsDes VALUES (2,'eng','Editing');
-INSERT INTO OperationsDes VALUES (3,'eng','Notify');
-INSERT INTO OperationsDes VALUES (5,'eng','Interactive Map');
-INSERT INTO OperationsDes VALUES (6,'eng','Featured');
+INSERT INTO OperationsDes VALUES (0,'fin','Publish');
+INSERT INTO OperationsDes VALUES (1,'fin','Download');
+INSERT INTO OperationsDes VALUES (2,'fin','Editing');
+INSERT INTO OperationsDes VALUES (3,'fin','Notify');
+INSERT INTO OperationsDes VALUES (5,'fin','Interactive Map');
+INSERT INTO OperationsDes VALUES (6,'fin','Featured');
 
 INSERT INTO StatusValuesDes VALUES (0,'fin','Unknown');
 INSERT INTO StatusValuesDes VALUES (1,'fin','Draft');
