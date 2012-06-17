@@ -43,6 +43,7 @@ import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +69,8 @@ public class Thesaurus {
     private String title;
 
     private String date;
+
+    private String version;
 
     private String downloadUrl;
 
@@ -131,11 +134,15 @@ public class Thesaurus {
 		return type;
 	}
 
-    public String getTitle() {
+  public String getTitle() {
 		return title;
 	}
 
-    public String getDate() {
+  public String getVersion() {
+		return version;
+	}
+
+  public String getDate() {
 		return date;
 	}
 
@@ -595,7 +602,9 @@ public class Thesaurus {
     /**
      * Retrieves the thesaurus title from rdf file.
      *
-     * Used to set the thesaurusName and thesaurusDate for keywords
+     * Used to set the thesaurusName, thesaurusDate and thesaurusVersion
+		 * for keywords. Note we assume that the thesaurus is versioned according
+		 * to the SKOS Core Guide on http://www.w3.org/TR/2005/WD-swbp-skos-core-guide-20051102/#secschemeversioning
      *
      */
     private void retrieveThesaurusTitle(File thesaurusFile, String defaultTitle) {
@@ -603,7 +612,8 @@ public class Thesaurus {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
             List<Namespace> theNSs = new ArrayList<Namespace>();
-            theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+						Namespace rdfNs = Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+            theNSs.add(rdfNs);
             theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
             theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
@@ -628,6 +638,14 @@ public class Thesaurus {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 this.date = df.format(thesaususDate);
             }
+
+            Element versionEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme", theNSs);
+						if (versionEl != null) {
+							this.version = versionEl.getAttributeValue("about",rdfNs);
+							if (!StringUtils.hasLength(this.version)) this.version="unknown";
+						} else {
+							this.version = "unknown"; // not really acceptable!
+						}
 
         } catch (Exception ex) {
             Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info: " + ex.getMessage());

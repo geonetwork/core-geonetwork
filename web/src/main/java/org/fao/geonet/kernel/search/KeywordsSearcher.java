@@ -116,7 +116,7 @@ public class KeywordsSearcher {
 					sUri = uri.toString();
 				}
 
-				KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
+				KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getVersion(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
 				idKeyword++;
 
 				return kb;
@@ -302,7 +302,7 @@ public class KeywordsSearcher {
                 }
 
                 KeywordBean kb = new KeywordBean(idKeyword, sValue, sDefinition, sUri, sEast, sWest, sSouth, sNorth, thesaurusName.getTextTrim(),
-                        false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
+                        false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getVersion(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
                 _results.add(kb);
                 idKeyword++;
             }
@@ -415,7 +415,7 @@ public class KeywordsSearcher {
 				sUri = uri.toString();
 			}
 
-			KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
+			KeywordBean kb = new KeywordBean(idKeyword, sValue, "", sUri, "", "", "", "", sThesaurusName, false, _lang, thesaurus.getTitle(), thesaurus.getDate(), thesaurus.getVersion(), thesaurus.getDownloadUrl(), thesaurus.getKeywordUrl());
 			_results.add(kb);
 			idKeyword++;
 		}

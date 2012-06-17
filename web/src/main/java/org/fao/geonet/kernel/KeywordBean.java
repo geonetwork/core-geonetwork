@@ -49,8 +49,9 @@ public class KeywordBean {
 	private String coordNorth;	
 	private String thesaurus;	
 	private boolean selected;
-    private String thesaurusTitle;
+  private String thesaurusTitle;
 	private String thesaurusDate;
+	private String thesaurusVersion;
 	private String downloadUrl;
 	private String keywordUrl;
 
@@ -75,13 +76,14 @@ public class KeywordBean {
    * @param lang
    * @param thesaurusTitle
    * @param thesaurusDate
+   * @param thesaurusVersion
 	 * @param downloadUrl
 	 * @param keywordUrl
 	 */
 	public KeywordBean(int id, String value, String definition, String code, 
 				String coordEast, String coordWest, 
 				String coordSouth, String coordNorth, 
-				String thesaurus, boolean selected, String lang, String thesaurusTitle, String thesaurusDate, String downloadUrl, String keywordUrl) {
+				String thesaurus, boolean selected, String lang, String thesaurusTitle, String thesaurusDate, String thesaurusVersion, String downloadUrl, String keywordUrl) {
 		super();
 		this.id = id;
 		this.value = value;
@@ -96,6 +98,7 @@ public class KeywordBean {
 		this.selected = selected;
         this.thesaurusTitle = thesaurusTitle;
         this.thesaurusDate = thesaurusDate;
+        this.thesaurusVersion = thesaurusVersion;
 		this.downloadUrl = downloadUrl;
 		this.keywordUrl = keywordUrl;
 	}
@@ -286,7 +289,13 @@ public class KeywordBean {
 	 *  			<gmd:title>
 	 *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
 	 *  			</gmd:title>
-	 *  			<gmd:date gco:nilReason="unknown"/>
+	 *				<gmd:date gco:nilReason="missing"/>
+	 *        <gmd:edition>
+	 *          <gco:CharacterString>skos:ConceptScheme@rdf:about</gco:CharacterString>
+	 *        </gmd:edition>
+	 *        <gmd:editionDate>
+	 *          <gco:Date>skos:ConceptScheme/dct:issued|skos:ConceptScheme/dct:modified</gco:CharacterString>
+	 *        </gmd:edition>
 	 *				<gmd:identifier>
 	 *          <gmd:MD_Identifier>
 	 *						<gmd:code>
@@ -349,7 +358,13 @@ public class KeywordBean {
 	 *  			<gmd:title>
 	 *  				<gco:CharacterString>THESAURUS NAME</gco:CharacterString>
 	 *  			</gmd:title>
-	 *  			<gmd:date gco:nilReason="unknown"/>
+	 *				<gmd:date gco:nilReason="missing"/>
+	 *        <gmd:edition>
+	 *          <gco:CharacterString>skos:ConceptScheme@rdf:about</gco:CharacterString>
+	 *        </gmd:edition>
+	 *        <gmd:editionDate>
+	 *          <gco:Date>skos:ConceptScheme/dct:issued|skos:ConceptScheme/dct:modified</gco:CharacterString>
+	 *        </gmd:edition>
 	 *				<gmd:identifier>
 	 *          <gmd:MD_Identifier>
 	 *						<gmd:code>
@@ -453,40 +468,38 @@ public class KeywordBean {
 		Element thesaurusName = new Element("thesaurusName", NS_GMD);
 		Element citation = new Element("CI_Citation", NS_GMD);
 		Element title = new Element("title", NS_GMD);
-		Element cs = new Element("CharacterString", NS_GCO);
 		Element date = new Element("date", NS_GMD);
+		date.setAttribute("nilReason", "missing", NS_GCO);
+		Element cs = new Element("CharacterString", NS_GCO);
 
-        cs.setText(kb.thesaurusTitle);
+		Element edition = new Element("edition", NS_GMD);
+				if (StringUtils.hasLength(kb.thesaurusVersion)) {
+    				cs.setText(kb.thesaurusVersion);
+						edition.addContent((Content) cs.clone());
+				} else {
+            edition.setAttribute("nilReason", "unknown", NS_GCO);
+				}
 
-        if (StringUtils.hasLength(kb.thesaurusDate)) {
-            Element ciDateEl = new Element("CI_Date", NS_GMD);
-            Element ciDateDateEl = new Element("date", NS_GMD);
-            Element ciDateDateGcoDateEl = new Element("Date", NS_GCO);
+		Element editionDate = new Element("editionDate", NS_GMD);
 
-            ciDateDateGcoDateEl.setText(kb.thesaurusDate);
-
-            Element ciDateDatetypeEl = new Element("dateType", NS_GMD);
-            Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", NS_GMD);
-            ciDateDatetypeCodeEl.setAttribute("codeList","http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
-            ciDateDatetypeCodeEl.setAttribute("codeListValue", "publication");
-
-            ciDateDatetypeEl.addContent(ciDateDatetypeCodeEl);
-            ciDateDateEl.addContent(ciDateDateGcoDateEl);
-            ciDateEl.addContent(0, ciDateDateEl);
-            ciDateEl.addContent(1, ciDateDatetypeEl);
-            date.addContent(ciDateEl);
-
+    		if (StringUtils.hasLength(kb.thesaurusDate)) {
+            Element dateGcoDateEl = new Element("Date", NS_GCO);
+            dateGcoDateEl.setText(kb.thesaurusDate);
+            editionDate.addContent(dateGcoDateEl);
         } else {
-            date.setAttribute("nilReason", "unknown",NS_GCO);
+            editionDate.setAttribute("nilReason", "unknown", NS_GCO);
         }
 
 
+    cs.setText(kb.thesaurusTitle);
 		title.addContent((Content) cs.clone());
 		Element id = createIdentifier("geonetwork.thesaurus."+kb.thesaurus,kb.downloadUrl);
 
 		citation.addContent(0,title);
 		citation.addContent(1,date);
-		citation.addContent(2,id);
+		citation.addContent(2,edition);
+		citation.addContent(3,editionDate);
+		citation.addContent(4,id);
 		thesaurusName.addContent(citation);
 		
 		return thesaurusName;
