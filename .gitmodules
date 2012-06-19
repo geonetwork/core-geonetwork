@@ -1,6 +1,6 @@
 [submodule "installer"]
 	path = installer
-	url = git@github.com:geonetwork/core-installer.git
+	url = git://github.com/geonetwork/core-installer.git
 [submodule "gast"]
 	path = gast
 	url = git://github.com/geonetwork/core-gast.git
@@ -15,4 +15,4 @@
 	url = git://github.com/geonetwork/core-doc-sources.git
 [submodule "geoserver"]
 	path = geoserver
-	url = git@github.com:geonetwork/core-geoserver.git
+	url = git://github.com/geonetwork/core-geoserver.git
