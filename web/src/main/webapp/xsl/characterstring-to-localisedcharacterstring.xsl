@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 						    xmlns:gmd="http://www.isotc211.org/2005/gmd"
 						    xmlns:gco="http://www.isotc211.org/2005/gco"
 						    xmlns:gmx="http://www.isotc211.org/2005/gmx"
@@ -12,7 +12,7 @@
 						    xmlns:java="java:org.fao.geonet.util.XslUtil"
 						    xmlns:geonet="http://www.fao.org/geonetwork"
 						    xmlns:xalan = "http://xml.apache.org/xalan"
-						    exclude-result-prefixes="java xalan">
+						    exclude-result-prefixes="#all">
 
 	<xsl:template match="@*|node()">
 		<xsl:copy>
