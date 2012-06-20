@@ -844,10 +844,6 @@
     <module>sde</module>
     <module>web-client</module>
     <module>web</module>
-<<<<<<< HEAD
-=======
-    <module>geoserver</module>
->>>>>>> master
   </modules>
   
   <profiles>

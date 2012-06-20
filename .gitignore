@@ -1,5 +1,5 @@
-web/src/main/webapp/xml/schemas/*/loc/*/schematron*
-web/src/main/webapp/xml/schemas/*/schematron*
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/loc/*/schematron*
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron*
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
 web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
@@ -11,9 +11,9 @@ web/coverage.ec
 web/src/main/webapp/data/
 web/src/main/webapp/WEB-INF/lucene/
 web/src/main/webapp/WEB-INF/metadata_subversion/
-*.iml
 .classpath
 .settings
 .project
 schematrons/.build
 docs/*/users/build
+.props/
