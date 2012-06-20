@@ -1,0 +1,4 @@
+#!/bin/sh
+
+git $@
+git submodule foreach "git $@"

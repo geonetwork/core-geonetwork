@@ -844,6 +844,10 @@
     <module>sde</module>
     <module>web-client</module>
     <module>web</module>
+<<<<<<< HEAD
+=======
+    <module>geoserver</module>
+>>>>>>> master
   </modules>
   
   <profiles>
@@ -851,6 +855,17 @@
       <id>itests</id>
       <modules>
         <module>web-itest</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>gast</id>
+      <activation>
+        <file>
+          <exists>gast/pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>gast</module>
       </modules>
     </profile>
   </profiles>
