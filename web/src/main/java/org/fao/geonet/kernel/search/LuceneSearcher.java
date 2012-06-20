@@ -1235,7 +1235,8 @@ public class LuceneSearcher extends MetaSearcher {
                 
                 Element childElem = new Element(name);
                 childElem.setAttribute("count", Integer.toString(keyCount));
-                childElem.setAttribute("name", translator.translate(keyword));
+                childElem.setAttribute("title", translator.translate(keyword));
+                childElem.setAttribute("name", keyword);
                 childElem.setAttribute("indexKey", indexKey);
 
                 rootElem.addContent(childElem);
