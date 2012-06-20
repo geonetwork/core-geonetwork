@@ -2339,9 +2339,9 @@ var geocat = {
                '  </xsl:template>';
     },
 
-    basicLabelFormat: '<xsl:value-of select="@name" /> (<xsl:value-of select="@count" />)',
-    denominatorLabelFormat: '1/<xsl:value-of select="@name" /> (<xsl:value-of select="@count" />)',
-    dateLabelFormat: '<xsl:value-of select="@name" /> (<xsl:value-of select="@count" />)',
+    basicLabelFormat: '<xsl:value-of select="@title" /> (<xsl:value-of select="@count" />)',
+    denominatorLabelFormat: '1/<xsl:value-of select="@title" /> (<xsl:value-of select="@count" />)',
+    dateLabelFormat: '<xsl:value-of select="@title" /> (<xsl:value-of select="@count" />)',
     sortArryAsc: function(array) {
         var end = array.slice(1).sort(function(a,b){
             var al = a[0].toLowerCase()+a[1].toLowerCase();
