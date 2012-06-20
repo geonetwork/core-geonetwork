@@ -1274,8 +1274,6 @@
 			<label>Ausdruck</label>
 			<description>Prospekt oder Merkblatt mit beschreibenden Informationen</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - 
-		ISO PROFIL CHE ONLY
 		<entry>
 			<code>zip100</code>
 			<label>ZIP 100</label>
