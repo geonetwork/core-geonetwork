@@ -60,9 +60,9 @@
                     <password>${postgis.pass}</password>
                     <driver>org.postgis.DriverWrapper</driver>
                     <url>jdbc:postgresql_postGIS://${postgis.host}:${postgis.port}/${postgis.db}</url>
-	                <postgis.max.active>${postgis.max.active}</postgis.max.active>
-			        <postgis.max.idle>${postgis.max.idle}</postgis.max.idle>
-        			<postgis.min.idle>${postgis.min.idle}</postgis.min.idle>
+	                <maxActive>${postgis.max.active}</maxActive>
+			        <maxIdle>${postgis.max.idle}</maxIdle>
+        			<minIdle>${postgis.min.idle}</minIdle>
 	        		<validationQuery>SELECT 1</validationQuery> 
                 </config>
             </resource>
