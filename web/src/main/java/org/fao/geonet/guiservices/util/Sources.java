@@ -23,10 +23,14 @@
 
 package org.fao.geonet.guiservices.util;
 
+import java.util.List;
+
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -54,17 +58,30 @@ public class Sources implements Service
 		//--- create local node
 
 		String name   = sm.getValue("system/site/name");
-		String siteId = sm.getValue("system/site/siteId");
+        String siteId = sm.getValue("system/site/siteId");
+        String url = sm.getValue("system/server/protocol")+"://"+sm.getValue("system/server/host")+":"+sm.getValue("system/server/port")+context.getBaseUrl();
 
 		Element local = new Element("record");
 
 		local.addContent(new Element("name")  .setText(name));
 		local.addContent(new Element("siteid").setText(siteId));
+		local.addContent(new Element("url").setText(url));
 
 		//--- retrieve known nodes
 
 		Element nodes = dbms.select("SELECT uuid as siteId, name FROM Sources");
 		nodes.addContent(local);
+		
+		Element harvestingNodes = sm.get("harvesting",5);
+		
+		for (Object obj : nodes.getChildren()) {
+            Element record = (Element) obj;
+            siteId = record.getChildTextTrim("siteid");
+            url = Xml.selectString(harvestingNodes,"*//site[.//uuid/value/text() = '"+siteId+"']//url/value/text()");
+            if(url != null) {
+                record.addContent(new Element("url").setText(url));
+            }
+        }
 
 
 		return nodes;

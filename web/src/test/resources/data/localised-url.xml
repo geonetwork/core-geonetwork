@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+    <gmd:URL>http://camptocamp.com/main</gmd:URL>
+    <che:PT_FreeURL>
+        <che:URLGroup>
+            <che:LocalisedURL locale="#EN">http://camptocamp.com/en</che:LocalisedURL>
+            <che:LocalisedURL locale="#DE">http://camptocamp.com/de</che:LocalisedURL>
+        </che:URLGroup>
+        <che:URLGroup>
+            <che:LocalisedURL locale="#IT">http://camptocamp.com/it</che:LocalisedURL>
+        </che:URLGroup>
+    </che:PT_FreeURL> 
+    <che:PT_FreeURL>
+        <che:URLGroup>
+            <che:LocalisedURL locale="#FR">http://camptocamp.com/fr</che:LocalisedURL>
+        </che:URLGroup>
+    </che:PT_FreeURL>
+</root>

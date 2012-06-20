@@ -35,6 +35,8 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.UnpublishInvalidMetadataJob;
+import org.fao.geonet.kernel.UnpublishInvalidMetadataJob.Validity;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -104,6 +106,9 @@ public class BatchUpdatePrivileges implements Service
 				if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
 					skip = true;
 
+				final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
+		        boolean publishedAgain = false;
+
 				dm.deleteMetadataOper(dbms, id, skip);
 
 				//--- set new ones
@@ -121,17 +126,27 @@ public class BatchUpdatePrivileges implements Service
 						String groupId = st.nextToken();
 						String operId  = st.nextToken();
 
+						if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
+		                    publishedAgain = true;
+		                }
+
 						dm.setOperation(context, dbms, id, groupId, operId);
 					}
 				}
 				metadata.add(new Integer(id));
+				if(published && !publishedAgain) {
+		              new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
+		        } else if (!published && publishedAgain) {
+		            new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
+		        }
 			}
 		}
+
 		}
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata, context);
 		r.processWithFastIndexing();
 
 		// -- for the moment just return the sizes - we could return the ids

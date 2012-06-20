@@ -7,7 +7,7 @@ import com.yammer.metrics.reporting.JmxReporter;
 
 /**
  * A jmx reporter that appends the webapp name so multiple geonetwork instances can exist in same JVM
- * 
+ *
  * @author jeichar
  */
 public class GeonetworkJmxReporter extends JmxReporter {

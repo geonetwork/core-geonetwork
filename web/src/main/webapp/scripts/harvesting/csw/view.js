@@ -90,7 +90,10 @@ function setData(node)
 
 	hvutil.setOption(site, 'capabilitiesUrl', 'csw.capabUrl');
 	hvutil.setOption(site, 'icon',            'csw.icon');
-	
+
+	// - issue GeoCat.ch #133730
+	hvutil.setOption(site, 'outputSchema', 'csw.outputSchema');
+
 	//--- add search entries
 	
 	var list = searches.getElementsByTagName('search');
@@ -122,7 +125,10 @@ function getData()
 	
 	data.CAPAB_URL = $F('csw.capabUrl');
 	data.ICON      = $F('csw.icon');
-	
+
+	// GeoCat issue #133730
+	data.OUTPUTSCHEMA = $F('csw.outputSchema');
+
 	//--- retrieve search information
 	
 	var searchData = [];

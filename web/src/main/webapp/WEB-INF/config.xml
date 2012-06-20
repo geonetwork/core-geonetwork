@@ -86,9 +86,7 @@
 		minIdle   - pool size/minimum number of idle connections (default 0)
 		maxWait   - number of milliseconds to wait for a connection to become
 		            available (default 200)
-        validationQuery - optional, sql statement for verifying a connection, 
-                    the statement must return a least one row, empty 
-                    result sets may cause problems
+
 		timeBetweenEvictionRunsMillis - time between eviction runs 
 		                          (default -1 which means the next three params 
 															 are ignored)
@@ -104,6 +102,7 @@
 		removeAbandonedTimeout - 60 x 60 seconds = 1 hour
 		logAbandoned - true
 		testOnBorrow - true
+		validationQuery - 'SELECT 1'
 		defaultReadOnly - false
 		defaultAutoCommit - false
 		initialSize - maxActive

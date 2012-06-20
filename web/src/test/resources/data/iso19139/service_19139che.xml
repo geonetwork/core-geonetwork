@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geocat.ch/2008/che ../../web/geonetwork/xml/schemas/iso19139.che/schema.xsd" gco:isoType="gmd:MD_Metadata">
+	<gmd:fileIdentifier>
+		<gco:CharacterString>32177c55-684b-444b-ab06-821dc249c50b</gco:CharacterString>
+	</gmd:fileIdentifier>
+	<gmd:language>
+		<gco:CharacterString>fra</gco:CharacterString>
+	</gmd:language>
+	<gmd:characterSet>
+		<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+	</gmd:characterSet>
+	<gmd:hierarchyLevel>
+		<gmd:MD_ScopeCode codeListValue="service" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+	</gmd:hierarchyLevel>
+	<gmd:hierarchyLevelName>
+		<gco:CharacterString>Service</gco:CharacterString>
+	</gmd:hierarchyLevelName>
+	<gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0i.bgdi.admin.ch:80/geonetwork/srv/fra/xml.user.get?id=1000&amp;schema=iso19139.che&amp;role=originator" xlink:title="" xlink:role="http://www.geonetwork.org/non_valid_obj">
+		<che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+			<gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#FR">Service de la planification et des offres de mobilité</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</gmd:organisationName>
+			<gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#FR">Responsable système information</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</gmd:positionName>
+			<gmd:contactInfo>
+				<gmd:CI_Contact>
+					<gmd:phone>
+						<che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+							<gmd:voice>
+								<gco:CharacterString>+4122 327 75 23</gco:CharacterString>
+							</gmd:voice>
+							<gmd:facsimile>
+								<gco:CharacterString>+4122 327 51 33</gco:CharacterString>
+							</gmd:facsimile>
+							<che:directNumber gco:nilReason="missing">
+								<gco:CharacterString/>
+							</che:directNumber>
+							<che:mobile gco:nilReason="missing">
+								<gco:CharacterString/>
+							</che:mobile>
+						</che:CHE_CI_Telephone>
+					</gmd:phone>
+					<gmd:address>
+						<che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+							<gmd:city>
+								<gco:CharacterString>Genève</gco:CharacterString>
+							</gmd:city>
+							<gmd:administrativeArea gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:administrativeArea>
+							<gmd:postalCode>
+								<gco:CharacterString>1204</gco:CharacterString>
+							</gmd:postalCode>
+							<gmd:country xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:country>
+							<gmd:electronicMailAddress>
+								<gco:CharacterString>patrick.verhoeven@etat.ge.ch</gco:CharacterString>
+							</gmd:electronicMailAddress>
+							<che:streetName>
+								<gco:CharacterString>20</gco:CharacterString>
+							</che:streetName>
+							<che:streetNumber>
+								<gco:CharacterString>rue du Stand</gco:CharacterString>
+							</che:streetNumber>
+							<che:addressLine gco:nilReason="missing">
+								<gco:CharacterString/>
+							</che:addressLine>
+							<che:postBox gco:nilReason="missing">
+								<gco:CharacterString/>
+							</che:postBox>
+						</che:CHE_CI_Address>
+					</gmd:address>
+					<gmd:onlineResource>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage>
+								<gmd:URL>http://etat.geneve.ch/dt/site/mobilite/</gmd:URL>
+							</gmd:linkage>
+							<gmd:protocol>
+								<gco:CharacterString>text/html</gco:CharacterString>
+							</gmd:protocol>
+							<gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:name>
+							<gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:description>
+						</gmd:CI_OnlineResource>
+					</gmd:onlineResource>
+				</gmd:CI_Contact>
+			</gmd:contactInfo>
+			<gmd:role>
+				<gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="originator"/>
+			</gmd:role>
+			<che:individualFirstName>
+				<gco:CharacterString>Patrick</gco:CharacterString>
+			</che:individualFirstName>
+			<che:individualLastName>
+				<gco:CharacterString>Verhoeven</gco:CharacterString>
+			</che:individualLastName>
+			<che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#FR">SPOM</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</che:organisationAcronym>
+		</che:CHE_CI_ResponsibleParty>
+	</gmd:contact>
+	<gmd:dateStamp>
+		<gco:DateTime>2009-06-24T18:15:38</gco:DateTime>
+	</gmd:dateStamp>
+	<gmd:metadataStandardName>
+		<gco:CharacterString>GM03 2+</gco:CharacterString>
+	</gmd:metadataStandardName>
+	<gmd:metadataStandardVersion>
+		<gco:CharacterString>1.0</gco:CharacterString>
+	</gmd:metadataStandardVersion>
+	<gmd:locale>
+		<gmd:PT_Locale id="FR">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="EN">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng">English</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="DE">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode" codeListValue="deu">German</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="IT">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita">Italian</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:identificationInfo>
+		<che:CHE_SV_ServiceIdentification gco:isoType="srv:SV_ServiceIdentification">
+			<gmd:citation>
+				<gmd:CI_Citation>
+					<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>Test for Jesse</gco:CharacterString>
+						<gmd:PT_FreeText>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString locale="#EN">Template GM03 / WMS / INSPIRE valid</gmd:LocalisedCharacterString>
+							</gmd:textGroup>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString locale="#DE">Template GM03 / WMS / INSPIRE valid</gmd:LocalisedCharacterString>
+							</gmd:textGroup>
+						</gmd:PT_FreeText>
+					</gmd:title>
+                    <gmd:date/>
+				</gmd:CI_Citation>
+			</gmd:citation>
+			<gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+				<gco:CharacterString>-- Résumé --</gco:CharacterString>
+			</gmd:abstract>
+			<srv:serviceType>
+				<gco:LocalName>OGC:WMS</gco:LocalName>
+			</srv:serviceType>
+			<srv:serviceTypeVersion>
+				<gco:CharacterString>1.1.1</gco:CharacterString>
+			</srv:serviceTypeVersion>
+			<srv:restrictions>
+				<gmd:MD_Constraints/>
+			</srv:restrictions>
+			<srv:extent>
+				<gmd:EX_Extent>
+					<gmd:description>
+						<gco:CharacterString>my triangle</gco:CharacterString>
+					</gmd:description>
+					<gmd:geographicElement>
+						<gmd:EX_BoundingPolygon>
+							<gmd:extentTypeCode>
+								<gco:Boolean>0</gco:Boolean>
+							</gmd:extentTypeCode>
+							<gmd:polygon>
+								<gml:Polygon gml:id="N100E3">
+									<gml:exterior>
+										<gml:LinearRing>
+												<gml:posList>8.223271386442365 46.808586787082994 8.223073566794001 46.808498186387176 8.22035563721143 46.806290338085766 8.227128375281458 46.805794034291004 8.223271386442365 46.808586787082994</gml:posList>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gmd:polygon>
+						</gmd:EX_BoundingPolygon>
+					</gmd:geographicElement>
+				</gmd:EX_Extent>
+			</srv:extent>
+			<srv:coupledResource>
+				<srv:SV_CoupledResource>
+					<srv:operationName>
+						<gco:CharacterString>GetMap</gco:CharacterString>
+					</srv:operationName>
+					<srv:identifier>
+						<gco:CharacterString>-- Identifiant de la ressource couplée --</gco:CharacterString>
+					</srv:identifier>
+					<gco:ScopedName>-- Nom de la couche --</gco:ScopedName>
+				</srv:SV_CoupledResource>
+			</srv:coupledResource>
+		<srv:coupledResource xmlns:date="http://exslt.org/dates-and-times" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gts="http://www.isotc211.org/2005/gts">
+				<srv:SV_CoupledResource>
+					<srv:operationName>
+						<gco:CharacterString>GetCapabilities</gco:CharacterString>
+					</srv:operationName>
+					<srv:identifier>
+						<gco:CharacterString>5af2a23b-5993-4d4b-a949-92df746499c5</gco:CharacterString>
+					</srv:identifier>
+					<gco:ScopedName>bla_layername</gco:ScopedName>
+				</srv:SV_CoupledResource>
+			</srv:coupledResource>
+			<srv:couplingType>
+				<srv:SV_CouplingType codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#SV_CouplingType" codeListValue="tight"/>
+			</srv:couplingType>
+			<srv:containsOperations>
+				<srv:SV_OperationMetadata>
+					<srv:operationName>
+						<gco:CharacterString>GetCapabilities</gco:CharacterString>
+					</srv:operationName>
+					<srv:DCP>
+						<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="WebServices"/>
+					</srv:DCP>
+					<srv:connectPoint>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage>
+								<gmd:URL>http://test.ch</gmd:URL>
+							</gmd:linkage>
+							<gmd:protocol>
+								<gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+							</gmd:protocol>
+						</gmd:CI_OnlineResource>
+					</srv:connectPoint>
+				</srv:SV_OperationMetadata>
+			</srv:containsOperations>
+			<srv:containsOperations>
+				<srv:SV_OperationMetadata>
+					<srv:operationName>
+						<gco:CharacterString>GetMap</gco:CharacterString>
+					</srv:operationName>
+					<srv:DCP>
+						<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="WebServices"/>
+					</srv:DCP>
+					<srv:connectPoint>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage>
+								<gmd:URL>http://ogcpublic.brgm.fr/risques</gmd:URL>
+							</gmd:linkage>
+							<gmd:protocol>
+								<gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+							</gmd:protocol>
+						</gmd:CI_OnlineResource>
+					</srv:connectPoint>
+				</srv:SV_OperationMetadata>
+			</srv:containsOperations>
+			<srv:containsOperations>
+				<srv:SV_OperationMetadata>
+					<srv:operationName>
+						<gco:CharacterString>GetFeatureInfo</gco:CharacterString>
+					</srv:operationName>
+					<srv:DCP>
+						<srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="WebServices"/>
+					</srv:DCP>
+					<srv:connectPoint>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage>
+								<gmd:URL>http://ogcpublic.brgm.fr/risques</gmd:URL>
+							</gmd:linkage>
+							<gmd:protocol>
+								<gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+							</gmd:protocol>
+						</gmd:CI_OnlineResource>
+					</srv:connectPoint>
+				</srv:SV_OperationMetadata>
+			</srv:containsOperations>
+			<srv:operatesOn xmlns:date="http://exslt.org/dates-and-times" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gts="http://www.isotc211.org/2005/gts" uuidref="5af2a23b-5993-4d4b-a949-92df746499c5"/>
+		</che:CHE_SV_ServiceIdentification>
+	</gmd:identificationInfo>
+	<gmd:distributionInfo>
+		<gmd:MD_Distribution>
+			<gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0i.bgdi.admin.ch:80/geonetwork/srv/eng/xml.format.get?id=94" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+				<gmd:MD_Format>
+					<gmd:name>
+						<gco:CharacterString>Service OGC-WMS</gco:CharacterString>
+					</gmd:name>
+					<gmd:version>
+						<gco:CharacterString>1.11</gco:CharacterString>
+					</gmd:version>
+				</gmd:MD_Format>
+			</gmd:distributionFormat>
+			<gmd:transferOptions>
+				<gmd:MD_DigitalTransferOptions>
+					<gmd:onLine>
+						<gmd:CI_OnlineResource>
+							<gmd:linkage>
+								<gmd:URL>-- url du service --</gmd:URL>
+							</gmd:linkage>
+							<gmd:protocol gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:protocol>
+							<gmd:name gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:name>
+							<gmd:description gco:nilReason="missing">
+								<gco:CharacterString/>
+							</gmd:description>
+						</gmd:CI_OnlineResource>
+					</gmd:onLine>
+				</gmd:MD_DigitalTransferOptions>
+			</gmd:transferOptions>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
+	<gmd:dataQualityInfo>
+		<gmd:DQ_DataQuality>
+			<gmd:scope>
+				<gmd:DQ_Scope>
+					<gmd:level>
+						<gmd:MD_ScopeCode codeListValue="service" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+					</gmd:level>
+					<gmd:levelDescription>
+						<gmd:MD_ScopeDescription>
+							<gmd:other>
+								<gco:CharacterString>-- level description --</gco:CharacterString>
+							</gmd:other>
+						</gmd:MD_ScopeDescription>
+					</gmd:levelDescription>
+				</gmd:DQ_Scope>
+			</gmd:scope>
+			<gmd:report>
+				<gmd:DQ_DomainConsistency>
+					<gmd:result>
+						<gmd:DQ_ConformanceResult>
+							<gmd:specification>
+								<gmd:CI_Citation>
+									<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+										<gco:CharacterString>INSPIRE Implementing rules</gco:CharacterString>
+									</gmd:title>
+									<gmd:date>
+										<gmd:CI_Date>
+											<gmd:date>
+												<gco:Date>2008-08-11</gco:Date>
+											</gmd:date>
+											<gmd:dateType>
+												<gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+											</gmd:dateType>
+										</gmd:CI_Date>
+									</gmd:date>
+								</gmd:CI_Citation>
+							</gmd:specification>
+							<gmd:explanation xsi:type="gmd:PT_FreeText_PropertyType">
+								<gco:CharacterString>-- information sur le test de conformité                   --</gco:CharacterString>
+							</gmd:explanation>
+							<gmd:pass>
+								<gco:Boolean>1</gco:Boolean>
+							</gmd:pass>
+						</gmd:DQ_ConformanceResult>
+					</gmd:result>
+				</gmd:DQ_DomainConsistency>
+			</gmd:report>
+			<gmd:lineage>
+				<gmd:LI_Lineage>
+					<gmd:statement xsi:type="gmd:PT_FreeText_PropertyType">
+						<gco:CharacterString>-- Informer sur la provenance du service --</gco:CharacterString>
+					</gmd:statement>
+				</gmd:LI_Lineage>
+			</gmd:lineage>
+		</gmd:DQ_DataQuality>
+	</gmd:dataQualityInfo>
+</che:CHE_MD_Metadata>
+

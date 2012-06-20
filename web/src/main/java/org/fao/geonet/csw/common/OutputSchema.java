@@ -4,6 +4,11 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 
 public enum OutputSchema
 {
+	// PMT GC2 : backported from old version
+	OWN("own"), 
+	GM03_PROFILE("GM03_2Record"),
+	CHE_PROFILE("http://www.geocat.ch/2008/che"),
+	// Those are standard
 	OGC_CORE("Record"), ISO_PROFILE("IsoRecord");
 
 	//------------------------------------------------------------------------
@@ -54,12 +59,22 @@ public enum OutputSchema
 	public static OutputSchema parse(String schema) throws InvalidParameterValueEx
 	{
 		if (schema == null)						return OGC_CORE;
+		// PMT : Backport from old geocat version
+		if (schema.equals(OGC_CORE.toString())) return OGC_CORE;
+		if (schema.equals(ISO_PROFILE.toString())) return ISO_PROFILE;
+		if (schema.equals(GM03_PROFILE.toString())) return GM03_PROFILE;
+		if (schema.equals("http://www.geocat.ch/2008/gm03_2")) return GM03_PROFILE;
+        if (schema.equalsIgnoreCase(OWN.toString()))		return OWN;
+        //
         // TODO heikki: seems to me the following two values are invalid and should be rejected
 		if (schema.equals("csw:Record"))		return OGC_CORE;
 		if (schema.equals("csw:IsoRecord")) return ISO_PROFILE;
 		
 		if (schema.equals(Csw.NAMESPACE_CSW.getURI())) return OGC_CORE;
 		if (schema.equals(Csw.NAMESPACE_GMD.getURI())) return ISO_PROFILE;
+		if (schema.equals("http://www.geocat.ch/2008/che")) return CHE_PROFILE;
+
+		if (schema.equals("http://www.isotc211.org/2008/gm03_2")) return GM03_PROFILE;
 
 		throw new InvalidParameterValueEx("outputSchema", schema);
 	}

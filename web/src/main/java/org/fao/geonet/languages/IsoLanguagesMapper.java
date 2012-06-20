@@ -22,12 +22,12 @@
 package org.fao.geonet.languages;
 
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO javadoc.
@@ -41,7 +41,8 @@ public class IsoLanguagesMapper {
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
-    protected BiMap<String, String> isoLanguagesMap639 =  HashBiMap.create();
+    private final static Map<String, String> iso639_1_to_iso639_2IsoLanguagesMap =  new HashMap<String, String>();
+    private final static Map<String, String> iso639_2_to_iso639_1IsoLanguagesMap =  new HashMap<String, String>();
 
 
     protected IsoLanguagesMapper() {}
@@ -81,7 +82,11 @@ public class IsoLanguagesMapper {
         @SuppressWarnings("unchecked")
 		List<Element> records = dbms.select(query).getChildren();
         for(Element record : records) {
-            isoLanguagesMap639.put(record.getChildText("shortcode").toLowerCase(), record.getChildText("code").toLowerCase());
+            final String shortcode = record.getChildText("shortcode");
+            final String code = record.getChildText("code");
+            iso639_2_to_iso639_1IsoLanguagesMap.put(code, shortcode);
+            if(!iso639_1_to_iso639_2IsoLanguagesMap.containsKey(shortcode))
+                iso639_1_to_iso639_2IsoLanguagesMap.put(shortcode, code);
         }
     }
 
@@ -96,7 +101,7 @@ public class IsoLanguagesMapper {
         if(isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
             return iso639_1.toLowerCase();
         } else {
-            return isoLanguagesMap639.get(iso639_1.toLowerCase());
+            return iso639_1_to_iso639_2IsoLanguagesMap.get(iso639_1.toLowerCase());
         }
     }
 
@@ -110,7 +115,7 @@ public class IsoLanguagesMapper {
         if(isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
             return iso639_2.toLowerCase();
         } else {
-            return isoLanguagesMap639.inverse().get(iso639_2.toLowerCase());
+            returniso639_2_to_iso639_1IsoLanguagesMap.get(iso639_2.toLowerCase());
         }
     }
 

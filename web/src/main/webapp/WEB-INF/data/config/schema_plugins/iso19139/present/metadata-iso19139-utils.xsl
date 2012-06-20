@@ -51,9 +51,43 @@
     <xsl:template name="getLangId">
         <xsl:param name="langGui"/>
         <xsl:param name="md"/>
-
+        
+        <!-- Mapping gui language to iso3code -->
+        <xsl:variable name="lang">
+            <xsl:choose>
+            <!-- PMT GC2 modification : 3char lang codes in GeoCat  -->
+            <!--
+                <xsl:when test="$langGui='ar'">ara</xsl:when>
+                <xsl:when test="$langGui='ca'">cat</xsl:when>
+                <xsl:when test="$langGui='cn'">chi</xsl:when>
+                <xsl:when test="$langGui='de'">ger</xsl:when>
+                <xsl:when test="$langGui='es'">spa</xsl:when>
+                <xsl:when test="$langGui='fi'">fin</xsl:when>
+                <xsl:when test="$langGui='fr'">fre</xsl:when>
+                <xsl:when test="$langGui='nl'">dut</xsl:when>
+                <xsl:when test="$langGui='no'">nor</xsl:when>
+                <xsl:when test="$langGui='ru'">rus</xsl:when>
+                <xsl:when test="$langGui='pt'">por</xsl:when>
+                <xsl:when test="$langGui='no'">nor</xsl:when>
+                 -->
+                <xsl:when test="$langGui='deu'">deu</xsl:when>
+                <xsl:when test="$langGui='eng'">eng</xsl:when>
+                <xsl:when test="$langGui='fra'">fra</xsl:when>
+                <xsl:when test="$langGui='ita'">ita</xsl:when>
+                <xsl:when test="$langGui='fre'">fra</xsl:when>
+                <xsl:when test="$langGui='ger'">deu</xsl:when>
+                <xsl:when test="$langGui='de'">deu</xsl:when>
+                <xsl:when test="$langGui='en'">eng</xsl:when>
+                <xsl:when test="$langGui='fr'">fra</xsl:when>
+                <xsl:when test="$langGui='it'">ita</xsl:when>
+                <xsl:when test="$langGui='ge'">deu</xsl:when>
+                <xsl:when test="$langGui='fre'">fra</xsl:when>
+                <xsl:otherwise>eng</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        
         <xsl:call-template name="getLangIdFromMetadata">
-            <xsl:with-param name="lang" select="$langGui"/>
+            <xsl:with-param name="lang" select="$lang"/>
             <xsl:with-param name="md" select="$md"/>
         </xsl:call-template>
     </xsl:template>        
@@ -136,7 +170,10 @@
 		<xsl:param name="edit"/>
 
 		<xsl:variable name="metadata" select="/root/gmd:MD_Metadata|/root/*[@gco:isoType='gmd:MD_Metadata']"/>
-		<xsl:if test="starts-with(geonet:info/schema, 'iso19139') or geonet:info/schema = 'iso19110'">
+		<xsl:if test="
+				lower-case(normalize-space(/root/gui/reqService)) != 'metadata.xlink.add' and 
+				lower-case(normalize-space(/root/gui/reqService)) != 'metadata.elem.add' and 
+				lower-case(normalize-space(/root/gui/reqService)) != 'metadata.elem.delete' and (starts-with(geonet:info/schema, 'iso19139') or geonet:info/schema = 'iso19110')">
 
 			<xsl:variable name="uuid" select="$metadata/geonet:info/uuid"/>
 			

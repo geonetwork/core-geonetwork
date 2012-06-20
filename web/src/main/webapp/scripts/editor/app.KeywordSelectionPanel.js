@@ -62,6 +62,8 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
      */
     keywordsSelected: [],
     
+    addCreateXLinkButton: false,
+    
     initComponent: function() {
         this.items = [{
             xtype: 'panel',
@@ -114,6 +116,19 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             scope: this
         }];
 
+        if(this.addCreateXLinkButton) {
+        	this.bbar.push({
+	            id: 'keywordCreateXLink',
+	            iconCls: 'addIcon',
+	            text: translate('create'),
+	            handler: function() {
+	            	createNewXLink();
+	            	this.ownerCt.hide();
+	            },
+	            scope: this
+	        });
+        }
+        
         app.KeywordSelectionPanel.superclass.initComponent.call(this);
     },
     

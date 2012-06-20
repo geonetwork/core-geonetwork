@@ -17,6 +17,14 @@
     
 -->
 <urlrewrite use-query-string="true" use-context="false">
+    <rule>
+        <from>^(.*)/fra/(.*)$</from>
+        <to type="forward" last="true">$1/fre/$2</to>
+    </rule>
+    <rule>
+        <from>^(.*)/deu/(.*)$</from>
+        <to type="forward" last="true">$1/ger/$2</to>
+    </rule>
     
     <rule>
         <from>^(.*)/ar/(.*)$</from>

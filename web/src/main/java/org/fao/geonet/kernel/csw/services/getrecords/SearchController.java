@@ -23,6 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -33,6 +39,7 @@ import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.OutputSchema;
@@ -40,12 +47,14 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.geotools.data.DataStore;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -64,14 +73,14 @@ import java.util.Set;
 public class SearchController {
     
 	private final CatalogSearcher _searcher;
-    public SearchController(File summaryConfig, LuceneConfig luceneConfig) {
-        _searcher = new CatalogSearcher(summaryConfig, luceneConfig);
+    public SearchController(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
+        _searcher = new CatalogSearcher(ds, summaryConfig, luceneConfig);
     }
-	
+
     public CatalogSearcher getSearcher() {
     	return _searcher;
     }
-    
+
 	//---------------------------------------------------------------------------
     //---
     //--- Single public method to perform the general search tasks
@@ -235,14 +244,18 @@ public class SearchController {
 		//--- get metadata from DB
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element res = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        Element res = gc.getDataManager().getGeocatMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes, true, false);
 		SchemaManager scm = gc.getSchemamanager();
 		if (res==null) {
             return null;
         }
 		Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
+		String fullSchema = schema;
 
+		boolean isCHE = schema.equals("iso19139.che") && OutputSchema.CHE_PROFILE == outSchema;
+		// PMT GeoCat c2c : Backported from old geocat
+		if (schema.contains("iso19139")) schema = "iso19139";
 
 		// --- transform iso19115 record to iso19139
 		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
@@ -253,11 +266,14 @@ public class SearchController {
                     .append(File.separator).append("ISO19115-to-ISO19139.xsl").toString());
 			schema = "iso19139";
 		}
-		
+
 		//--- skip metadata with wrong schemas
 		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if(outSchema != OutputSchema.OGC_CORE)
 		    	return null;
+		if (outSchema != OutputSchema.OWN && !isCHE) {
+		    res = geocatConversions(context, schema, res, outSchema, fullSchema, resultType, id, gc, isCHE);
+		
         //
 		// apply stylesheet according to setName and schema
         //
@@ -269,7 +285,7 @@ public class SearchController {
 	    // apply elementnames
         //
         res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
-
+		}
         if(res != null) {
             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
@@ -323,7 +339,20 @@ public class SearchController {
 		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
 		try {
-		    result = Xml.transform(result, styleSheet, params);
+		    // issue #133730 : MDs harvested as Dublin-Core
+            // format are not well detected here.
+            // we add a check to ensure that no extra xsl transformation
+            // would not be applied.
+		    if (!result.getName().equals("simpledc"))
+		        result = Xml.transform(result, styleSheet, params);
+            else {
+                // we still need to do some transformation
+                // in order to ensure csw response compliance
+                // (simpledc -> csw:record)
+                Element tempElem = new Element("Record", "csw", "http://www.opengis.net/cat/csw/2.0.2");
+                tempElem.setContent(result.cloneContent());
+                result = tempElem;
+            }
 		}
         catch (Exception e) {
 		    context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
@@ -577,6 +606,68 @@ public class SearchController {
                 Log.debug(Geonet.CSW_SEARCH, "No ElementNames to apply");
         }
         return result;
+    }
+
+    private static Element geocatConversions(ServiceContext context, String schema, Element res, OutputSchema outSchema, String fullSchema,
+            ResultType resultType, String id, GeonetContext gc, boolean isCHE) throws Exception {
+
+        String FS = File.separator;
+
+        // --- transform iso19115 record to iso19139
+        // --- If this occur user should probably migrate the catalogue
+        // from
+        // iso19115 to iso19139.
+        // --- But sometimes you could harvest remote node in iso19115
+        // and
+        // make them available through CSW
+        if (schema.equals("iso19115")) {
+            res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "import" + FS + "ISO19115-to-ISO19139.xsl");
+            schema = "iso19139";
+        }
+
+        if (fullSchema.equals("iso19139.che")) {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("lang", context.getLanguage());
+            params.put("includeInfo", "true");
+
+            res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "export" + FS + "xml_iso19139.xsl", params);
+        }
+        // --- skip metadata with wrong schemas
+        if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19110"))
+            if (outSchema != OutputSchema.OGC_CORE)
+                return null;
+
+        // --- apply stylesheet according to setName and schema
+        if (outSchema == OutputSchema.OGC_CORE) {
+            // --- Search for related services to add dc:URI elements to ogc
+            // output.
+            // Append list of service to the current metadata record.
+            // Process related service to retrieve coupledResources.
+            GetRelated serviceSearcher = new GetRelated();
+            serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
+            Element idElem = new Element(Params.ID).setText(id);
+            Element uuidElem = new Element(Params.UUID)
+                    .setText(res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Params.UUID));
+            Element typeElem = new Element("type").setText("service");
+            Element relatedServices = serviceSearcher.exec(
+                    new Element(Jeeves.Elem.REQUEST).addContent(
+                            new Element(Edit.RootChild.INFO, Edit.NAMESPACE).addContent(idElem).addContent(uuidElem)).addContent(typeElem),
+                    context);
+
+            res.addContent(relatedServices);
+        } else {
+            // PMT c2c previous geocat backport, was:
+            // throw new
+            // InvalidParameterValueEx("outputSchema not supported for metadata "
+            // + id + " schema.", schema);
+            if (!schema.contains("iso19139")) {
+                // FIXME : should we return null or an exception in that
+                // case and which exception
+                throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
+            }
+            return res;
+        }
+        return res;
     }
 
 }

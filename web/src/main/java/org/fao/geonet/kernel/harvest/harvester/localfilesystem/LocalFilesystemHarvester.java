@@ -294,7 +294,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
+        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false, false);
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
 		addPrivileges(id, localGroups, dbms);
@@ -303,7 +303,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 	}
 
 	
@@ -340,7 +340,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 		return id;
 	}
 	

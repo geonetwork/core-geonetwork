@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>a4ad5dec-d89e-4b9c-98a7-98c1cea56ae7</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>fra</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>Jeu de données</gco:CharacterString>
+    </gmd:hierarchyLevelName>
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.user.get?id=535&amp;schema=iso19139.che&amp;role=editor" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="editor"/>
+            </gmd:role>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:DateTime>2009-08-07T15:19:20</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:identificationInfo xmlns:xlink="http://www.w3.org/1999/xlink">
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Template GM03 / datasets / INSPIRE valid</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date/>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Ce template permet de</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:language>
+                <gco:CharacterString>deu</gco:CharacterString>
+            </gmd:language>
+            <gmd:extent>
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>EX_2 
+                            A large include polygon and a small exclude polygon that fully intersects the include polygon
+                            
+                            should be an include polygon with a hole
+                        </gco:CharacterString>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="NN5">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="NN6">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>7.451274430342886 47.20273398587142 8.202103838777475 47.20273398587142 8.202103838777475 46.531638673907764 7.451274430342886 46.531638673907764 7.451274430342886 47.20273398587142</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="NN7">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="NN8">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>7.703765735834164 47.003398744694096 7.909745485050732 47.003398744694096 7.909745485050732 46.823997027634505 7.703765735834164 46.823997027634505 7.703765735834164 47.003398744694096</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+</che:CHE_MD_Metadata>

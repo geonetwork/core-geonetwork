@@ -24,11 +24,11 @@
    
    
             <!--  Check that main language is not defined and gmd:locale element exist. -->
+            
             <sch:assert test="$localeAndNoLanguage"
                 >$loc/strings/alert.M500</sch:assert>
             <sch:report test="$localeAndNoLanguage"
                 ><sch:value-of select="$loc/strings/report.M500"/> "<sch:value-of select="normalize-space($language)"/>"</sch:report>
-            
     
             <!-- 
                 * Check that main language is defined and does not exist in gmd:locale.
@@ -38,11 +38,12 @@
                 "The value 'XX' of attribute 'id' on element 'gmd:PT_Locale' is not valid with respect to its type, 'ID'. 
                 (Element: gmd:PT_Locale with parent element: gmd:locale)"
             -->
+            <!-- removed this check because it will cause many many metadata to not be valid in geocat
             <sch:assert test="$duplicateLanguage"
                 >$loc/strings/alert.M501</sch:assert>
             <sch:report test="$duplicateLanguage"
                 >$loc/strings/report.M501</sch:report>
-            
+            -->
         </sch:rule>
     </sch:pattern>
 </sch:schema>

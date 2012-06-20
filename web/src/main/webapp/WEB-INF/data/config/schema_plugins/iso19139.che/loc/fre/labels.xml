@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
+ xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
+ xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:che="http://www.geocat.ch/2008/che">
+ <element name="che:individualFirstName" id="521.0">
+  <label>Prénom</label>
+  <description>Prénom</description>
+  <condition/>
+ </element>
+ <element name="che:individualLastName" id="522.0">
+  <label>Nom (de famille)</label>
+  <description>Nom (de famille)</description>
+  <condition/>
+ </element>
+ <element name="che:organisationAcronym" id="501.0">
+  <label>Acronyme de l'organisation</label>
+  <description>Acronyme ou abréviation de l'organisation</description>
+  <help>Désignation abrégée ou abréviation de l'organisation. Ces informations sont du type
+   PT_FreeText et sont gérées dans la classe du même nom.</help>
+  <condition/>
+ </element>
+ <element name="che:parentResponsibleParty" id="518.0">
+  <label>Hiérarchie des adresses</label>
+  <description>Description de la hiérarchie des adresses (par exemple l'adresse de la société mère
+   et des sous-société)</description>
+  <help>Description de hiérarchies d'adresses (exemple : adresse du siège et de filiales). Des
+   renseignements relatifs au service ou à l'organisation de rang supérieur à la personne ou à
+   l'organisation responsable (CI_ResponsibleParty) peuvent être fournis ici. Le renvoi s'effectue
+   vers lui-même et les coordonnées du service de rang supérieur sont du type de données
+   CI_ResponsibleParty, gérées dans la classe du même nom.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_CI_ResponsibleParty" id="374">
+  <label>Responsable</label>
+  <description>Type de données pour l'identification des personnes et organisations, ainsi que pour
+   la description des modes de communication avec, associées avec le jeu de données</description>
+  <help>Type de données destiné à l'identification de personnes et/ou d'organisations en relation
+   avec le jeu de données (en tant que responsable, en charge du traitement, propriétaire, etc.),
+   intégrant par ailleurs d'autres informations telles que le numéro de téléphone, l'adresse
+   (postale, messagerie électronique) permettant d'entrer en contact avec ces personnes et/ou
+   organisations. Les trois premiers attributs (individualName, organisationName, positionName) de
+   ce type de données permettent de savoir s'il s'agit de la description d'une personne, d'un
+   service ou de la domiciliation d'une personne précédemment définie. Une indication au moins est
+   obligatoire. La liste de sélection CI_RoleCode spécifie alors la nature de la responsabilité
+   endossée par le service désigné. Cf. CI_Citation pour d'autres informations.</help>
+  <condition/>
+ </element>
+ <element name="che:streetName" id="529.0">
+  <label>Nom de la rue</label>
+  <description>Nom de la rue associée à la position (emplacement)</description>
+  <help>Nom de la rue associée à la position (emplacement).</help>
+  <condition/>
+ </element>
+ <element name="che:streetNumber" id="530.0">
+  <label>Numéro de la maison</label>
+  <description>Numéro de la maison associée à la position (emplacement)</description>
+  <help>Numéro de la maison associée à la position (emplacement).</help>
+  <condition/>
+ </element>
+ <element name="che:addressLine" id="531.0">
+  <label>Complément d'adresse</label>
+  <description>Complément d'adresse (exemple : aux bons soins de (c/o))</description>
+  <help>Complément d'adresse (exemple : aux bons soins de (c/o)).</help>
+  <condition/>
+ </element>
+ <element name="che:postBox" id="532.0">
+  <label>Case postale</label>
+  <description>Numéro de case postale</description>
+  <condition/>
+ </element>
+ <element name="che:CHE_CI_Address" id="380.0">
+  <label>Adresse</label>
+  <description>Type de données pour la localisation de l'organisation ou la personne individuelle
+   responsable</description>
+  <help>Type de données avec indication d'adresse.</help>
+  <condition/>
+ </element>
+ <element name="che:directNumber">
+  <label>Numéro direct</label>
+  <description/>
+ </element>
+ <element name="che:mobile">
+  <label>Numéro de portable</label>
+  <description/>
+ </element>
+ <element name="che:CHE_CI_Telephone" id="407.0">
+  <label>Téléphone</label>
+  <description>Type de données pour le numéro de téléphone de la personne ou du service
+   responsable</description>
+  <help>Type de données pour les numéros de téléphone.</help>
+  <condition/>
+ </element>
+ <element name="che:country" id="508.0">
+  <label>Pays</label>
+  <description>Pays d'où provient la loi</description>
+  <help>Pays dans lequel la loi a été promulguée, sélection dans la liste ISO des pays.</help>
+  <condition>Obligatoire</condition>
+ </element>
+ <element name="che:language" id="509.0">
+  <label>Langue</label>
+  <description>Langue dans laquelle la loi est écrite</description>
+  <condition>Obligatoire</condition>
+ </element>
+ <element name="che:legislationType" id="510.0">
+  <label>Type de législation</label>
+  <description>Type de loi</description>
+  <help>Nature du texte législatif. Sélection dans la liste suivante : statuts de droit privé,
+   statuts de droit public, arrêté communal, loi cantonale, loi fédérale, ordonnance fédérale,
+   traité international, autre accord.</help>
+  <condition/>
+ </element>
+ <element name="che:internalReference" id="511.0">
+  <label>Référence interne</label>
+  <description>Référence interne de la loi (article, paragraphe, etc.)</description>
+  <help>Référence interne à la loi (article, paragraphe, etc.)</help>
+  <condition/>
+ </element>
+ <element name="che:title" id="507.0">
+  <label>Références sur la source légale</label>
+  <description>Informations de références sur la source légale</description>
+  <help>Nom de la loi ou référence de la source légale. Ces informations sont du type CI_Citation et sont gérées dans la classe du même nom.</help>
+  <condition>Le titre et la date sont obligatoires</condition>
+ </element>
+ <element name="che:CHE_MD_Legislation" id="506">
+  <label>Législation</label>
+  <description>Classe avec l'information sur les bases légales</description>
+  <help>Classe contenant des informations relatives à des prescriptions légales ou des indications
+   concernant des lois et des ordonnances. Cette classe fait partie intégrante des informations
+   relatives aux dispositions légales figurant dans MD_Legislation et DQ_Legislation. Vous trouverez
+   d'autres informations dans les classes concernées.</help>
+  <condition/>
+ </element>
+ <!--<element name="che:CHE_CI_LegislationCode">
+  <label/>
+  <description/>
+ </element>-->
+ <element name="che:legislationConstraints" id="582.0">
+  <label>Restrictions légales</label>
+  <description>Information relative à la base légale d'une restriction</description>
+  <help>Information relative à la base légale d'une restriction. Renvoi à une loi, etc.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_LegalConstraints" id="69.0">
+  <label>Contraintes légales</label>
+  <description>Classe pour les restrictions et conditions préalables légales pour accéder et
+   utiliser les ressources où de métadonnées</description>
+  <help>Classe contenant des informations relatives aux restrictions juridiques s'appliquant à la
+   ressource, au jeu de métadonnées ou à leur utilisation. Cette classe est une représentation de la
+   classe MD_Constraints.</help>
+  <condition/>
+ </element>
+ <element name="che:legislationInformation" id="505.0">
+  <label>Ordonnance légale</label>
+  <description>Informations sur les ordonnances légales concernant les ressources</description>
+  <help>Informations relatives à des aspects juridiques concernant la ou les ressources. Ces informations sont gérées dans la classe MD_Legislation.</help>
+ </element>
+ <element name="che:CHE_MD_Metadata" id="1.0">
+  <label>Métadonnées</label>
+  <description>Classe qui définit les métadonnées concernant des ressources</description>
+  <help>Classe définissant les métadonnées d'une ou de plusieurs ressources. Les métadonnées
+   peuvent se rapporter à des jeux de données entiers mais également à des objets géométriques, des
+   attributs, des types d'objets géométriques et d'attributs ou à des agrégations de données, de
+   séries de données ou de niveaux hiérarchiques ("hierarchyLevel"). Les relations de dépendance
+   hiérarchique entre jeux de métadonnées peuvent être indiquées par la filiation
+   ("parentIdentifier"). La norme ISO prévoit une relation monovalente entre jeux de métadonnées
+   dans ce cadre, une seule filiation pouvant être indiquée et non plusieurs. La classe MD_Metadata
+   présente également un attribut de contact avec le service compétent pour d'autres informations
+   relatives aux métadonnées.</help>
+  <condition>Obligatoire</condition>
+ </element>
+ <element name="che:revisionScope" id="569">
+  <label>Etendue de l'actualisation</label>
+  <description>Etendue des données concernées par l'actualisation</description>
+  <help>Etendue des données concernées par l'actualisation.</help>
+  <condition/>
+ </element>
+ <element name="che:dateOfLastUpdate" id="570.0">
+  <label>Date de la dernière actualisation</label>
+  <description>Date de la dernière actualisation</description>
+  <help>Date de la dernière actualisation.</help>
+  <condition/>
+ </element>
+ <element name="che:revisionNote" id="571.0">
+  <label>Remarque concernant l'actualisation</label>
+  <description>Remarque concernant la dernière actualisation</description>
+  <help>Remarque concernant la dernière actualisation.</help>
+  <condition/>
+ </element>
+ <element name="che:revisionScopeDescription" id="572.0">
+  <label>Description de l'étendue de l'actualisation</label>
+  <description>Informations supplémentaires relatives au champ d'application ou à l'étendue de
+   l'actualisation</description>
+  <help>Informations supplémentaires relatives au champ d'application ou à l'étendue de
+   l'actualisation.</help>
+  <condition/>
+ </element>
+ <element name="che:revisionExtent" id="587.0">
+  <label>Etendue d'actualisation</label>
+  <description>Description supplémentaire sur l'étendu d'actualisation</description>
+  <condition/>
+ </element>
+ <element name="che:revisionContact" id="588.0">
+  <label>Responsble</label>
+  <description>Responsable pour l'actualistion</description>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_Revision" id="568.0">
+  <label>Information d'actualisation</label>
+  <description>Classe relative au champ d'application et à la date de la dernière mise à
+   jour</description>
+  <help>Classe relative au champ d'application et à la date de la dernière mise à jour.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_CI_projectTypeCode">
+  <label>Code du projet</label>
+  <description/>
+ </element>
+ <element name="che:projectType" id="512.0">
+  <label>Type de projet</label>
+  <description>Type d'initiative ou projet</description>
+  <help>Type de l'initiative ou du projet ayant motivé la saisie des données. Sélection dans la
+   liste suivante : recherche, programme de surveillance, programme de travail, inventaire.</help>
+  <condition/>
+ </element>
+ <element name="che:revision" id="567.0">
+  <label>Actualisation</label>
+  <description>Informations concernant la dernière actualisation de la ressource et sa
+   validité</description>
+  <help>Informations concernant la dernière actualisation de la ressource et sa validité. Si le jeu
+   de données n'est pas actualisé en totalité, "revisionScope" et "revisionScopeDescription"
+   permettent une description séparée pour chacune des parties actualisées.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_DataIdentification" id="36">
+  <label>Identification des données</label>
+  <description>Classe avec l'information utile pour identifier un jeu de données</description>
+  <help>Classe contenant des informations de base utilisées pour l'identification sans équivoque du
+   ou des jeux de données. Il s'agit de la description du jeu de données concret. La classe
+   MD_DataIdentification est la représentation de MD_Identification pour les données. Elle intègre
+   des informations relatives à la caractérisation spatiale et temporelle des données, au jeu de
+   caractères et à la langue utilisés, de même que d'autres informations descriptives. Une
+   extension spatiale minimale des données est à indiquer par l'intermédiaire de l'option
+   "geographicBox" (rectangle de délimitation géographique), de l'option "geographicDescription"
+   (description textuelle de l'extension) ou des deux simultanément. Il est en outre possible de
+   restreindre l'extension par le biais de l'attribut "extent", aussi bien au niveau spatial (via
+   un polygone) que temporel. La norme prévoit une liste internationale de 19 thèmes
+   (MD_TopicCategoryCode) pour la classification thématique des données, gérée par l'intermédiaire
+   de l'attribut "topicCategory". Une recherche standardisée par thèmes est de la sorte possible au
+   plan international.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_MaintenanceInformation" id="142.0">
+    <label>Information de maintenance</label>
+    <description>Classe sur la raison, l'étendue et la fréquence des mises à jour.</description>
+    <help>Les informations concernant l'étendue, la fréquence et la date de mise à jour des données sont contenues dans la classe MD_MaintenanceInformation. Cette classe recèle des attributs renseignant sur la fréquence et l'étendue de la mise à jour et de la réactualisation des données du jeu. Seule l'indication de la fréquence est impérative et doit être sélectionnée dans la liste MD_MaintenanceFrequencyCode. l'étendue de la mise à jour, les attributs qu''elle concerne et les descriptions associées sont des informations qu''il est possible d'indiquer via les attributs "updateScope" et "updateScopeDescription". Il n''est pas prévu d'indiquer l'extension spatiale de la mise à jour. Si seules des parties d'un jeu de données sont mises à jour ou si toutes ses parties ne sont pas mises à jour simultanément, alors les parties concernées par la description de la mise à jour peuvent être précisées via "+updateScopeDescription" dans la classe MD_ScopeDescription.</help>
+      <condition/>
+ </element>
+ <element name="che:description" id="561.0" context="che:CHE_MD_AbstractClass">
+  <label>Description</label>
+  <description>Description</description>
+  <condition/>
+ </element>
+ <element name="che:attribute" id="586.0">
+  <label>Attribut</label>
+  <description>Attribut d´une classe</description>
+  <condition/>
+ </element>
+ <element name="che:baseClass" id="563.0">
+  <label>Classe de base</label>
+  <description>Renvoi à la classe de base</description>
+  <help>Renvoi à la classe de base (héritage).</help>
+  <condition/>
+ </element>
+ <element name="che:subClass" id="562.0">
+  <label>Sous-classe</label>
+  <description>Renvoi aux classes étendues</description>
+  <help>Renvoi aux classes étendues (héritage).</help>
+  <condition/>
+ </element>
+ <element name="che:name" id="560.0" context="che:CHE_MD_AbstractClass">
+  <label>Nom</label>
+  <description>Nom de la classe abstraite</description>
+  <condition/>
+ </element>
+ <element name="che:description" id="561.0" context="che:CHE_MD_AbstractClass">
+  <label>Description</label>
+  <description>Description de la classe abstraite</description>
+ </element>
+ <element name="che:name" id="560.0" context="che:CHE_MD_Association">
+  <label>Nom</label>
+  <description>Nom de l´association</description>
+  <condition/>
+ </element>
+ <element name="che:description" id="561.0" context="che:CHE_MD_Association">
+  <label>Description</label>
+  <description>Description de l´association</description>
+  <condition/>
+ </element>
+ <element name="che:name" id="560.0" context="che:CHE_MD_Class">
+  <label>Nom</label>
+  <description>Nom de la classe</description>
+  <condition/>
+ </element>
+ <element name="che:description" id="561.0" context="che:CHE_MD_Class">
+  <label>Description</label>
+  <description>Description de la classe</description>
+  <condition/>
+ </element> 
+ <element name="che:CHE_MD_AbstractClass" id="559.0">
+  <label>Classe abstraite</label>
+  <description>Classe abstraite, de rang supérieur, de MD_Association et MD_Class</description>
+  <help>Classe abstraite, de rang supérieur, de MD_Association et MD_Class.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_Class" id="564.0">
+  <label>Classe</label>
+  <description>Description d'une classe d'un catalogue d'objets géométriques</description>
+  <help>Description d'une classe d'un catalogue d'objets géométriques. Une classe est un ensemble
+   d'objets similaires possédant des propriétés identiques. Chacune de ces propriétés est décrite
+   par un attribut.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_Association" id="565.0">
+  <label>Association</label>
+  <description>Description de la relation concrète entre classes</description>
+  <help>Description de la relation concrète entre classes.</help>
+  <condition/>
+ </element>
+ <element name="che:role" id="566.0">
+  <label>Rôle</label>
+  <description>Renvoi aux extrémités (rôles) d´une relation concrète</description>
+ </element>
+ <element name="che:name" id="537.0" context="che:CHE_MD_CodeDomain">
+  <label>Nom</label>
+  <description>Nom de la définition du domaine de valeurs</description>
+  <help>Nom de la définition du domaine de valeurs (exemple : CoordNat, CharacterString).</help>
+  <condition/>
+ </element>
+ <element name="che:description" id="541.0" context="che:CHE_MD_CodeDomain">
+  <label>Description</label>
+  <description>Description de la définition du domaine de valeurs</description>
+  <help>Description de la définition du domaine de valeurs.</help>
+  <condition/>
+ </element>
+ <element name="che:type" id="543.0" context="che:CHE_MD_Type">
+  <label>Définition du type</label>
+  <description>Définition du type de données</description>
+  <help>Définition du type de données, formelle ou informelle (exemple : texte12, ligne).</help>
+ </element>
+ <element name="che:type" id="540.0" context="che:CHE_MD_CodeDomain">
+  <label>Type</label>
+  <description>Type de données de la définition du domaine de valeurs</description>
+  <help>Type de données de la définition du domaine de valeurs.</help>
+  <condition/>
+ </element>
+ <element name="che:subDomain" id="538.0" context="che:CHE_MD_CodeDomain">
+  <label>Sous-domaine</label>
+  <description>Renvoi aux définitions de domaines de valeurs étendues</description>
+  <help>Renvoi aux définitions de domaines de valeurs étendues (héritage).</help>
+  <condition/>
+ </element>
+ <element name="che:baseDomain" id="539.0" context="che:CHE_MD_CodeDomain">
+  <label>Domaine de base</label>
+  <description>Renvoi aux définitions de domaines de valeurs de base</description>
+  <help>Renvoi aux définitions de domaines de valeurs de base.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_CodeDomain" id="534.0">
+  <label>Domaine</label>
+  <description>Domaine de valeurs</description>
+  <help>Définition explicite de domaine de valeurs dans ce catalogue.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_Type" id="542.0">
+  <label>Type</label>
+  <description>Type de données décrivant des valeurs</description>
+  <help>Un type de données décrivant des valeurs, au contraire d'une classe qui décrit des objets.
+   Les valeurs sont dépourvues d'identité et sont en relation de type "n à un" avec des éléments
+   définis en dehors du modèle.</help>
+  <condition/>
+ </element>
+ <element name="che:value" id="544.0">
+  <label>Valeur</label>
+  <description>Liste des valeurs</description>
+  <help>Liste des différentes valeurs dans le cas d´une liste de codes ou d´une énumération.</help>
+ </element>
+ <element name="che:name" id="551.0" context="che:attribute">
+  <label>Nom</label>
+  <description>Nom d'attribut</description>
+  <condition/>
+ </element>
+ <element name="che:description" id="552.0" context="che:attribute">
+  <label>Description</label>
+  <description>Description d'attribut</description>
+  <condition/>
+ </element>
+ <element name="che:namedType" id="553.0">
+  <label>Type désigné par un nom</label>
+  <description>Renvoi à la définition du domaine de valeurs</description>
+  <help>Renvoi à la définition du domaine de valeurs.</help>
+  <condition/>
+ </element>
+ <element name="che:anonymousType" id="554.0">
+  <label>Domaine de valeurs</label>
+  <description>Domaine de valeurs</description>
+  <help>Domaine de valeurs défini par les sous-classes MD_Type et MD_CodeValue.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_Attribute" id="550.0">
+  <label>Attribut</label>
+  <description>Attributs utilisés dans le cadre de classes ou d'associations</description>
+  <help>Attributs utilisés dans le cadre de classes ou d'associations.</help>
+  <condition/>
+ </element>
+ <element name="che:name" id="556.0" context="che:CHE_MD_Role">
+  <label>Nom</label>
+  <description>Nom de rôle</description>
+  <condition/>
+ </element>
+ <element name="che:description" id="557.0" context="che:CHE_MD_Role">
+  <label>Description</label>
+  <description>Description du rôle</description>
+  <condition/>
+ </element>
+ <element name="che:toClass" id="558.0">
+  <label>à la classe</label>
+  <description>Pointeur sur la classe à laquelle le rôle est associé</description>
+  <help>Pointeur sur la classe à laquelle le rôle est associé.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_Role" id="555.0">
+  <label>Rôle</label>
+  <description>Description de l'une des extrémités d'une association</description>
+  <help>Description de l'une des extrémités d'une association. Toute association comporte deux
+   extrémités, chacune d'entre elles étant reliée à une classe. Une extrémité peut explicitement
+   être pourvue d'un nom, lequel est alors indiqué ici.</help>
+  <condition/>
+ </element>
+ <element name="che:name" id="546.0" context="che:CHE_MD_CodeValue">
+  <label>Nom</label>
+  <description>Nom de la valeur</description>
+  <condition/>
+ </element>
+ <element name="che:code" id="547.0" context="che:CHE_MD_CodeValue">
+  <label>Code</label>
+  <description>Codes de la valeur</description>
+  <help>Code de la valeur (un nombre par exemple).</help>
+  <condition/>
+ </element>
+ <element name="che:description" id="549.0" context="che:CHE_MD_CodeValue">
+  <label>Description de la valeur</label>
+  <description>Description de la valeur</description>
+  <help>Description de la valeur.</help>
+  <condition/>
+ </element>
+ <element name="che:subValue" id="548.0">
+  <label>Sous-énumération</label>
+  <description>Sous-énumération</description>
+  <help>Si une valeur d'une énumération contient un niveau de subdivision supplémentaire (encore
+   plus fin), il est renvoyé par ce moyen aux valeurs de ce niveau inférieur.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_CodeValue" id="545.0">
+  <label>Valeur</label>
+  <description>Valeur</description>
+  <help>Une des valeurs d'une liste de codes ou d'une énumération.</help>
+  <condition/>
+ </element>
+ <element name="che:dataModel" id="533.0">
+  <label>Modèle de données</label>
+  <description>Renvoi au modèle de données du jeu de données</description>
+  <help>Renvoi au modèle de données du jeu de données. Ce modèle conceptuel correspond au catalogue
+   des objets géométriques et est interprétable par un outil informatique (exemple : description
+   INTERLIS).</help>
+  <condition/>
+ </element>
+ <element name="che:class" id="535.0" context="che:CHE_MD_FeatureCatalogueDescription">
+  <label>Classe</label>
+  <description>Classes d'objets</description>
+  <condition/>
+ </element>
+ <element name="che:domain" id="536.0" context="che:CHE_MD_FeatureCatalogueDescription">
+  <label>Domaine de code</label>
+  <description>Définition du domaine de valeurs d'un catalogue d'objets désignée par un
+   nom</description>
+  <help>Définition du domaine de valeurs d'un catalogue d'objets désignée par un nom. Cette
+   définition est réutilisable (exemple : CoordNat, CharacterString).</help>
+  <condition/>
+ </element>
+ <element name="che:modelType" context="che:CHE_MD_FeatureCatalogueDescription">
+  <label>Type de modèle</label>
+  <description/>
+ </element>
+ <element name="che:portrayalCatalogueURL" context="che:CHE_MD_FeatureCatalogueDescription">
+  <label/>
+  <description/>
+ </element>
+ <element name="che:CHE_MD_FeatureCatalogueDescription" id="233.0">
+  <label>Description du catalogue d'objet</label>
+  <description>Classe pour l'information qui définit le catalogue d'objets ou le modèle de
+   donnée</description>
+  <help>Classe destinée aux informations identifiant le catalogue d'objets ou le modèle de données
+   utilisé. Dans cette classe, le catalogue d'objets mis en application est spécifié sans entrer
+   dans les détails de son contenu. Le catalogue d'objets auquel il est renvoyé par
+   l'intermédiaire de l'attribut featureCatalogueCitation contient la description des propriétés
+   des objets figurant dans le jeu de données. Dans la plupart des cas, le catalogue d'objets
+   consiste en une liste exhaustive enregistrée qui n'est pas définie en fonction du jeu de données
+   spécifique auquel le jeu de métadonnées se rapporte. La norme ne prévoit pas non plus que les
+   objets définis dans le catalogue soient listés. Il est uniquement indiqué si le jeu de données
+   contient effectivement des objets dont les propriétés coïncident avec celles des objets du
+   catalogue. Vous trouverez d'autres informations sous MD_ContentInformation.</help>
+  <condition/>
+ </element>
+ <element name="che:filmType" id="577.0">
+  <label>Type de film</label>
+  <description>Type de film ayant servi à la prise de vue</description>
+  <help>Type de film ayant servi à la prise de vue. Il peut s'agir de l'une des possibilités
+   suivantes : NB (noir et blanc), C (couleur), IRC (infrarouge couleur) ou IR (infrarouge).</help>
+  <condition/>
+ </element>
+ <element name="che:focalDistance" id="578">
+  <label>Distance focale</label>
+  <description>Distance focale de la prise de vue</description>
+  <help>Distance focale de la prise de vue.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_CoverageDescription" id="239.0">
+  <label>Contenu du raster</label>
+  <description>Classe pour l'information sur le contenu de la cellule de données
+   raster</description>
+  <help>Des contenus physiques et thématiques d'une trame peuvent être décrits dans la classe
+   MD_CoverageDescription. Si l'on se limite au contenu, les informations générales relatives aux
+   attributs obligatoires attributeDescription et contentType peuvent convenir, la description de
+   l'attribut dans attributeDescription devant toutefois s'effectuer via la valeur mesurée. Cf.
+   MD_ContentInformation pour plus d'informations.</help>
+  <condition/>
+ </element>
+ <element name="che:CHE_MD_FilmTypeCode">
+  <label/>
+  <description/>
+ </element>
+ <element name="che:URLGroup" id="609.0">
+  <label>Groupe URL</label>
+  <description>Informations relatives aux éléments de métadonnées recourant à des URL
+   multilingues</description>
+  <help>Informations permettant la définition de l'élément URL en plusieurs langues (langue,
+   contenu, etc.). Ces indications sont du type de données PT_URLGroup et sont gérées dans la classe
+   du même nom.</help>
+  <condition/>
+ </element>
+ <element name="che:PT_FreeURL" id="608">
+  <label>URL libre</label>
+  <description>Classe destinée à la description d'un élément de métadonnées URL libre
+   multilingue</description>
+  <help>Classe destinée à la description d'un élément de métadonnées URL libre multilingue. Le type
+   de données PT_FreeText permet de gérer des informations textuelles en plusieurs langues.</help>
+  <condition/>
+ </element>
+  <!--<element name="che:LocalisedURL">
+  <label>URL (multilingue)</label>
+  <description/>
+ </element>
+element name="che:language">
+  <label/>
+  <description/>
+ </element>
+ <element name="gmd:language" id="39.0" context="che:CHE_MD_DataIdentification">
+  <label>Langue</label>
+  <description>Langue utilisée pour le jeu de données</description>
+  <help>Langue utilisée pour la documentation des métadonnées. La sélection s'opère dans la liste
+   des langues ISO. Exemple : "fr" pour le français, "de" pour l'allemand, "en" pour l'anglais,
+   "it" pour l'italien, "rm" pour le romanche.</help>
+  <condition>Obligatoire</condition>
+ </element>
+ <element name="gmd:characterSet" id="40.0" context="che:CHE_MD_DataIdentification">
+  <label>Jeu de caractère</label>
+  <description>Nom entier du standard de code de caractères utilisé pour le jeu de
+   données</description>
+  <help>Nom complet du code de caractères normalisé utilisé pour le fichier de métadonnées. Le
+   paramètre par défaut est "utf8". Les fichiers de texte contiennent normalement des valeurs
+   d'octets représentant un sous-ensemble de valeurs de caractères via un codage (8859_1, ISO
+   Latin-1), un format de transfert (Unicode-Transfer-Format UTF8) ou tout autre moyen.</help>
+  <condition>Par défaut: UTF-8</condition>
+ </element>
+ <element name="che:revision">
+  <label>Révision</label>
+  <description></description>
+  <help></help>
+ </element>
+ <element name="che:revisionExtent">
+  <label>Etendue de la révision</label>
+  <description></description>
+  <help></help>
+ </element>
+ <element name="che:revisionContact">
+  <label>Contact pour la révision</label>
+  <description></description>
+  <help></help>
+ </element>-->
+ <element name="che:LocalisedURL">
+  <label>URL (multilingue)</label>
+  <description></description>
+  <help></help>
+ </element>
+ <element name="che:CHE_MD_modelTypeCode">
+  <label>Code du type de modèle</label>
+  <description>Choix de la codeliste</description>
+  <condition>obligatoire</condition>
+ </element>
+ <element name="che:dateOfMonitoringState">
+  <label>Etat du monitoring</label>
+  <description>Date du monitoring des géodonnées de base</description>
+  <help>A remplir uniquement dans le contexte des données et non pas des métadonnées</help>
+ </element>
+ <element name="che:historyConcept">
+  <label>Concept d'historique</label>
+  <description>Information sur l'établissement de l'historique des données et métadonnées</description>
+  <help>Selon la législation fédérale sur la géoinformation l'historique des géodonnées de base doit être établi et documenté</help>
+ </element>
+ <element name="che:archiveConcept">
+  <label>Concept d'archivage</label>
+  <description>Information sur l'archivage des données et métadonnées</description>
+  <help>Selon la législation fédérale sur la géoinformation l'archivage des géodonnées de base doit être établi et documenté</help>
+ </element>
+ <element name="che:historyConceptCitation">
+  <label>Titre et date du concept d'historique</label>
+  <description/>
+  <help/>
+ </element>
+ <element name="che:historyConceptURL">
+  <label>URL du concept d'historique</label>
+  <description>Si le concept d'historique est accessible en ligne, l'URL peut être renseigné ici</description>
+  <help/>
+ </element>
+ <element name="che:CHE_MD_HistoryConcept">
+  <label>Concept d'historique</label>
+  <description>Information sur l'établissement de l'historique des données et métadonnées</description>
+  <help>Selon la législation fédérale sur la géoinformation l'historique des géodonnées de base doit être établi et documenté</help>
+ </element>
+ <element name="che:archiveConceptCitation">
+  <label>Titre et date du concept d'archivage</label>
+  <description/>
+  <help/>
+ </element>
+ <element name="che:archiveConceptURL">
+  <label>URL du concept d'archivage</label>
+  <description>Si le concept d'archivage est accessible en ligne, l'URL peut être renseigné ici</description>
+  <help/>
+ </element>
+ <element name="che:CHE_MD_ArchiveConcept">
+  <label>Concept d'archivage</label>
+  <description>Information sur l'archivage des données et métadonnées</description>
+  <help>Selon la législation fédérale sur la géoinformation l'archivage des géodonnées de base doit être établi et documenté</help>
+ </element>
+ <!--<element name="che:CHE_MD_MaintenanceInformation">
+  <label>Information sur la maintenance</label>
+  <description></description>
+  <help></help>
+ </element>
+ <element name="che:CHE_MD_LegalConstraints">
+  <label>Contraintes légales</label>
+  <description></description>
+  <help></help>
+ </element>-->
+ <element name="che:portrayalCatalogueURL">
+  <label>URL du catalogue de présentation</label>
+  <description/>
+ </element>
+ <element name="che:CHE_MD_PortrayalCatalogueReference" id="268.0">
+    <label>Référence du catalogue de présentation</label>
+    <description>Classe avec l'information pour l'identification du catalogue de présentation utilisé</description>
+    <help>La classe MD_PortrayalCatalogueReference comprend uniquement l'attribut portrayalCatalogueCitation. Le catalogue utilisé pour la description de la représentation des objets peut être identifié ici via le type de données CI_Citation. La classe MD_PortrayalCatalogueReference permet uniquement la description des conditions marginales de la représentation "cartographique" sans tenir compte de leur mise en oeuvre.</help>
+    <condition></condition>
+ </element>
+ <element name="che:basicGeodataID">
+  <label>Identifiant Géodonnées de base</label>
+  <description>Identifiant de la géodonnée de base selon l'Annexe I de la OGéo, voire de la collection des géodonnées de base.</description> 
+  <help>Contactez l'équipe geocat.ch en cas de questions</help>
+ </element>
+ <element name="che:basicGeodataIDType">
+  <label>Type de géodonnées de base</label>
+  <description>Indication si l'identifiant ci-dessus appartient au niveau fédéral, cantonal, communal ou autre.</description>
+ </element> 
+ <element name="che:CHE_SV_ServiceIdentification" id="40.0">
+    <label>Identification des services</label>
+    <description>Classe pour l'identification des prestations, disponibles auprès un fournisseur de services, via un ensemble d'interfaces définissant un comportement (Profil GM03_2+ de l'ISO 19119)</description>
+    <help>Classe destinée à l'identification des services qu''un prestataire propose à l'utilisateur et dont le contenu et l'étendue sont définis par un ensemble d'informations(cf. ISO 19119 pour obtenir plus d'information).</help>
+    <condition/> 
+ </element>
+ <element name="che:inspireServiceType">
+  <label>Type de service INSPIRE</label>
+  <description>Type de service tel que décrit dans le "Règlement (CE) No 1205/2008 de la commission portant modalités d'application de la directive 2007/2/CE du Parlement européen et du Conseil en
+ce qui concerne les métadonnées"</description>  
+ </element> 
+ <element name="che:PT_FreeURL">
+  <label>PT_FreeURL</label>
+ </element>
+ <element name="che:URLGroup">
+  <label>URLGroup</label>
+ </element>
+ <!--<element name="che:legislationConstraints">
+  <label>legislationConstraints</label>
+ </element>-->
+ <element name="che:CHE_MD_ImageDescription" id="243.0">
+    <label>Description de l'image</label>
+    <description>Classe avec l'information sur l'utilisation d'une image</description>
+    <help>Classe contenant les informations relatives aux possibilités d'utilisation d'une image.</help>
+    <condition/>
+ </element>
+</labels>

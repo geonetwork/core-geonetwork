@@ -1,5 +1,292 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<!-- GEOCAT Strings -->
+	<refine.titles js="true">Titre</refine.titles>
+	<refine.keyword js="true">Mot-clé</refine.keyword>
+	<refine.resolution js="true">Résolution spatiale</refine.resolution>
+	<refine.category js="true">Thématique</refine.category>
+	<refine.spatialRepresentation js="true">Représentation spatiale</refine.spatialRepresentation>
+	<refine.organisationName js="true">Organisation</refine.organisationName>
+	<refine.serviceType js="true">Type de service</refine.serviceType>
+	<refine.type js="true">Type</refine.type>
+	<skipPrivilegesImport>Ignorer l'import des privilèges</skipPrivilegesImport>
+	<unpublishReport>Rapport CSV de dépublication</unpublishReport>
+	<unpublishReportDes>Télécharger le rapport CSV des métadonnées (dé-)publiées ces dernières semaines</unpublishReportDes>
+	<unpublish_invalid_metadata_desc>Valider toutes les métadonnées locales et dépublier les non-valides</unpublish_invalid_metadata_desc>
+
+	<duplicate>Dupliquer</duplicate>
+    <geocatNext js="true">Suivante</geocatNext>
+    <geocatPrevious js="true">Précédente</geocatPrevious>
+    <nav>
+        <home>Page d'accueil</home>
+        <overview>Vue d'ensemble</overview>
+        <news>Actualités</news>
+        <metasearch>Catalogue</metasearch>
+        <metainput>Gestion de métadonnées</metainput>
+        <doc>Documentation</doc>
+        <about>Autour de geocat</about>
+    </nav>
+    <replaceSharedObjects js="true">Remplacer par des objets réutilisables</replaceSharedObjects>
+    <spatialRepresentation js="true">Représentation spatiale</spatialRepresentation>
+    <selectedElementsAction js="true">Actions sur la sélection</selectedElementsAction>
+    <resolution js="true">Résolution spatiale</resolution>
+    <mainpageTitle js="true">Recherche de géodonnées et géoservices</mainpageTitle>
+    <refinements js="true">Affinage</refinements>
+    <refineSearch.title js="true">Précisez votre recherche</refineSearch.title>
+    <keyword js="true">Mot-clé</keyword>
+    <theme js="true">Sujet ISO</theme>
+    <contact js="true">Nom de famille</contact>
+    <rtitle js="true">Titre</rtitle>
+    <organisationName js="true">Organisation</organisationName>
+    <kantone js="true">Canton(s)</kantone>
+    <theme js="true">Thématique</theme>
+    <formatTxt js="true">Format</formatTxt>
+    <toEdit js="true">A éditer</toEdit>
+    <toPublish js="true">A publier</toPublish>
+    <bbox js="true">BBOX</bbox>
+    <wherenone js="true">Partout</wherenone>
+    <adminUnit js="true">Unité administrative</adminUnit>
+    <drawOnMap js="true">Dessiner sur la carte</drawOnMap>
+    <startNewPolygon js="true">Dessiner un nouveau polygone</startNewPolygon>
+    <startNewPolygonHelp js="true">Dessiner un polygone (Double clique pour terminer)</startNewPolygonHelp>
+    <valid js="true">Valide</valid>
+    <yes js="true">Oui</yes>
+    <no js="true">Non</no>
+    <intersectGeo js="true">au moins partiellement à l\'intérieur</intersectGeo>
+    <withinGeo js="true">complètement à l\'intérieur ou égal</withinGeo>
+    <containsGeo js="true">comprend au moins</containsGeo>
+    <layerTree js="true">Arbre des couches</layerTree>
+    <nothingFound js="true">Pas de résultat</nothingFound>
+    <source js="true">Provenance?</source>
+    <catalog js="true">Catalogue(s)</catalog>
+    <dataType id="dataset">Données</dataType>
+    <dataType id="basicgeodata">Geodonnées de base</dataType>
+    <dataType id="basicgeodata-federal"> + Geodonnées de base - fédérales</dataType>
+    <dataType id="basicgeodata-cantonal"> + Geodonnées de base - cantonales</dataType>
+    <dataType id="basicgeodata-communal"> + Geodonnées de base - communales</dataType>
+    <dataType id="basicgeodata-other"> + Geodonnées de base - autres</dataType>
+    <dataType id="service">Services</dataType>
+    <dataType id="service-OGC:WMS"> + Services WMS</dataType>
+    <dataType id="service-OGC:WFS"> + Services WFS</dataType>
+    <extended js="true">Recherche avancée</extended>
+    <hideAdvancedOptions js="true">Recherche simple</hideAdvancedOptions>
+    <highlights js="true">Epinglés</highlights>
+    <hitsPerPage js="true">Résultats par page</hitsPerPage>
+    <hitsPerPageChoice value="10">10</hitsPerPageChoice>
+    <hitsPerPageChoice value="20">20</hitsPerPageChoice>
+    <hitsPerPageChoice value="50">50</hitsPerPageChoice>
+    <hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<metadata.expired>
+		<recipient>Email du bénéficiaire</recipient>
+		<numExpiredElements>Nombre de dossiers trop vieux</numExpiredElements>
+		<owner>propriétaire</owner>
+		<formTitle>Recherche les métadonnées non mises à jour</formTitle>
+		<limit>Limite de dernière modification :</limit>
+		<email>Alerte email</email>
+		<unpublish>Dépublier</unpublish>
+		<email.desc>Envoyer un email aux auteurs qui n'ont pas modifiée leurs métadonnées depuis la date limite</email.desc>
+		<unpublish.desc>Dépublier les métadonnées qui n'ont pas été modifiée depuis la date limite</unpublish.desc>
+		<email.action>Email</email.action>
+		<unpublish.action>Dépublier</unpublish.action>
+		<unsentNotifications>email non envoyé : information manquante</unsentNotifications>
+		<sentNotifications>Notification envoyée à l'auteur</sentNotifications>
+		<unpublished>dépublié</unpublished>
+	</metadata.expired>
+	<monitoring>Rapport du Monitoring</monitoring>
+    <monitoringDes>Rapport du Monitoring du statut des services de GeoNetwork</monitoringDes>
+    <monitoring.service.db>Connection Base de données</monitoring.service.db>
+    <monitoring.service.csw>Service CSW</monitoring.service.csw>
+    <monitoring.service.csw.capabilities>Capabilities</monitoring.service.csw.capabilities>
+    <monitoring.service.csw.getrecords>GetRecords</monitoring.service.csw.getrecords>
+    <monitoring.service.print>Service d'impression</monitoring.service.print>
+    <monitoring.service.index>Service d'index</monitoring.service.index>
+    <monitoring.url>URL</monitoring.url>
+    <monitoring.status>Statut</monitoring.status>
+    <monitoring.error.code>Code de l'erreur</monitoring.error.code>
+    <monitoring.error.description>Description de l'erreur</monitoring.error.description>
+    <monitoring.responsetime>Temps de réponse</monitoring.responsetime>
+    <monitoring.metadatarecords>Entrées de métadonnées</monitoring.metadatarecords>
+    <monitoring.connectionsuccess>Connection établie</monitoring.connectionsuccess>
+    <monitoring.connectionerror>Erreur</monitoring.connectionerror>
+    <monitoring.enabled>Activé</monitoring.enabled>
+    <monitoring.disabled>Desactivé</monitoring.disabled>
+    <monitoring.refresh>Actualiser</monitoring.refresh>
+    <monitoring.indexing>Indexation</monitoring.indexing>
+    <monitoring.idle>Idle</monitoring.idle>
+    <monitoring.service.disk>Monitor du disque</monitoring.service.disk>
+    <monitoring.freespace>Espace libre</monitoring.freespace>
+
+    <reject>Refuser</reject>
+    <rejected>rejeté</rejected>
+    <replaceSharedObjects>Remplacer par des objets réutilisables</replaceSharedObjects>
+    <format>
+        <management>Gestion des formats de distribution</management>
+        <manDes>Ajouter/modifier/supprimer des formats de distribution</manDes>
+    </format>
+    <formats>Formats</formats>
+    <extents>Etendues</extents>
+    <deleted>Supprimé</deleted>
+    <insufficient.privileges.import.replace>Une métadonnée avec le même identifiant existe déjà. Vos privilèges ne suffisent pas pour la remplacer.</insufficient.privileges.import.replace>
+    <updateDatasetTitle>Mettre à jour une MDD</updateDatasetTitle>
+    <updateDatasetMsg>Il faut cocher \'Mettre à jour une MDD\' pour ajouter une section "ressource online" si on n\'a pas droit d\'édition sur la MDS</updateDatasetMsg>
+    <reusable>
+        <validated>validé</validated>
+        <nonValidated>non validé</nonValidated>
+        <nonValidTitle>Gérer les objets réutilisables non validés</nonValidTitle>
+        <nonValidDesc>Valider/rejeter les objets réutilisables non validés</nonValidDesc>
+        <rejectTitle>Message de rejet</rejectTitle>
+        <rejectDefaultMsg>Choisissez un autre objet réutilisable...</rejectDefaultMsg>
+    </reusable>
+    <deletedSharedObject>
+        <msg>Cher partenaire geocat.ch,
+Des objets réutilisables que vous utilisez dans vos métadonnées ont été rejetés. Vous trouverez ci-contre la liste des métadonnées concernées et la raison du rejet. Nous vous prions de bien vouloir adapter ces métadonnées et de les republier. N&apos;hésitez pas à prendre contact avec nous en cas de questions: geocat@swisstopo.ch
+Merci beaucoup de votre collaboration et meilleures salutations.
+Votre équipe geocat.ch</msg>
+        <subject>Objet réutilisable rejeté</subject>
+    </deletedSharedObject>
+    <Shared>Objet réutilisable</Shared>
+    <extents>
+        <deselectAll>Tout déselectionner</deselectAll>
+        <selectAll>Tout selectionner</selectAll>
+        <management>Gérer les étendues</management>
+        <confirmDelete>Etes-vous sur de vouloir suprimmer les étendues sélectionnées</confirmDelete>
+        <manDes>Gestion des objets géographiques</manDes>
+    </extents>
+    <page>Page</page>
+    
+    <streetname>Nom de rue</streetname>
+    <streetnumber>N°</streetnumber>
+    <postbox>Case postale</postbox>
+    <userdetails>User details</userdetails>
+    <facsimile>Fax</facsimile>
+    <phone>Téléphone</phone>
+    <orgacronym>Abbréviation de l'organisation</orgacronym>
+    <positionname>Position</positionname>
+    <directnumber>Numéro direct</directnumber>
+    <mobile>Mobile</mobile>
+    <onlineresource>Site Web</onlineresource>
+    <desc>Description</desc>
+    <hoursofservice>Heures de service</hoursofservice>
+    <contactinstructions>Instructions pour le contact</contactinstructions>
+    <mostPopular>Les plus populaires</mostPopular>
+
+    <popXlink.about>Rechercher un objet existant ou utiliser le bouton 'Nouveau' si vous n'en trouvez pas.</popXlink.about>
+    <popXlink.contact.search>Rechercher dans la liste de valeur un contact</popXlink.contact.search>
+    <popXlink.contact.role>Renseigner le rôle de ce contact</popXlink.contact.role>
+    <popXlink.contact.action>Ajouter cet élément à la fiche de métadonnée, ou proposer une nouvelle entrée (soumise à modération) si vous ne trouvez pas l'élément désiré.</popXlink.contact.action>
+    <extentBbox>BBOX seulement</extentBbox>
+    <extentPolygon>Polygone seulement</extentPolygon>
+    <extentBboxAndPolygon>Polygone et BBOX</extentBboxAndPolygon>
+    <boolean value="1" context="">Vrai</boolean>
+    <boolean value="0" context="">Faux</boolean>
+    <boolean value="1" context="gmd:extentTypeCode">Inclusion</boolean>
+    <boolean value="0" context="gmd:extentTypeCode">Exclusion</boolean>
+    <boolean value="true" context="gmd:extentTypeCode">Inclusion</boolean>
+    <boolean value="false" context="gmd:extentTypeCode">Exclusion</boolean>
+    <xlink.new js="true">Nouveau</xlink.new>
+    <xlink.newGeographic>Nouvelle étendue géographique</xlink.newGeographic>
+    <noXlink js="true">Elément choisi non valide.</noXlink>
+
+	<displayValidationReport>Rapport de validation</displayValidationReport>
+	<publishOnlyIfAdminOrValid>Une métadonnée peut être publiée si elle est valide ISO ou si vous êtes un administrateur.</publishOnlyIfAdminOrValid>
+	<xsdValid>Valide XSD</xsdValid>
+	<isoValid>Valide ISO</isoValid>
+	<gm03Valid>Valide GM03</gm03Valid>
+	<inspireValid>Valide INSPIRE</inspireValid>
+
+    <xsl.admin>Feuilles de style pour la présentation des métadonnées</xsl.admin>
+    <xsl.admin.des>Feuilles de style (XSL) personalisées pour l'affichage des métadonnées en HTML</xsl.admin.des>
+    <toggleVisibilityEdit>Activer la gestion de la visibilité des informations</toggleVisibilityEdit>
+    <addLayerConfirmTitle js="true">Ajout d'une nouvelle couche WMS</addLayerConfirmTitle>
+    <addLayerConfirmText js="true">Voulez-vous supprimer les couches déjà ajoutées à la carte ?</addLayerConfirmText>
+    <other js="true">- Autre -</other>
+	<ajaxRequestFailed mode="js">Echec lors de la recherche</ajaxRequestFailed>
+	<searchElements mode="js">Rechercher un élément</searchElements>
+	<viewCapabilities>Consulter le document GetCapabilities</viewCapabilities>
+	<viewCapabilitiesHelp>Le fichier GetCapabilities contient les noms des couches diffusées par le service. Saisir ici le nom d'une couche (ie. layername).</viewCapabilitiesHelp>
+	<noCapabilities>URL du service invalide</noCapabilities>
+	<createAssoServiceHelp>
+	        <ul>
+	            <li class="arrow">Utiliser le formulaire de recherche pour trouver des métadonnées de services</li>
+	            <li class="arrow">
+	                En sélectionnant une ou plusieurs métadonnées de service, vous allez ajouter une référence (ie. les éléments operatesOn et coupledResource) vers la métadonnée de données en cours d'édition fonction de vos privilèges.
+	            </li>
+	            <li class="arrow">
+	                Saisir le nom de la couche tel que définit dans le service OGC (eg. layername du document GetCapabilities)
+	            </li>
+	            <li class="arrow">
+	                Pour ajouter une section ressource en ligne ou si vous n'avez pas les privilèges de mise à jour des métadonnées
+	                de service, vous pouvez cocher l'option mise à jour de la métadonnée de donnée.
+	            </li>
+	        </ul>
+	    </createAssoServiceHelp>
+	<standardValid>Valide ISO et GM03</standardValid>
+	<scopedName>Nom de la couche</scopedName>
+	<boxSelectEmptyText>Saisissez un texte ou pressez la flèche vers le bas</boxSelectEmptyText>
+	<legislationInformation>Information sur la législation</legislationInformation>
+	<months>mois</months>
+	<searchBoxLegend>Rechercher des métadonnées</searchBoxLegend>
+	<codelistManager>Gestion des listes de valeurs</codelistManager>
+	<completeTabPrint>Vue print</completeTabPrint>
+	<confirmMassiveDelete>Confirmer la suppression</confirmMassiveDelete>
+	<creation>Création</creation>
+	<datasets>Données</datasets>
+	<elementAdd>Ajouter un élément</elementAdd>
+	<elementDel>Supprimer</elementDel>
+	<elementDown>Descendre</elementDown>
+	<elementMandatory>Obligatoire</elementMandatory>
+	<elementSch>Condition</elementSch>
+	<elementUp>Monter</elementUp>
+	<elementVisAll>Visible à tous</elementVisAll>
+	<elementVisibility>Visibilité des éléments (disponible dans la Vue ISO)</elementVisibility>
+	<elementVisIntra>Uniquement pour le groupe</elementVisIntra>
+	<elementVisNo>Invisible</elementVisNo>
+	<elementXLink>Ajouter des valeurs prédéfinies</elementXLink>
+	<emailAddress>Email</emailAddress>
+	<generateUUID><span>Générer un <a href="http://fr.wikipedia.org/wiki/Universal_Unique_Identifier">UUID (Universally Unique Identifier)</a></span></generateUUID>
+	<deleteGroup.confirm>Effacer le groupe?</deleteGroup.confirm>
+	<deleteGroup.deleteUsers.confirm>Effacer le groupe, mais garder les utilisateurs (Annuler efface le groupe ET les utilisateurs)?</deleteGroup.deleteUsers.confirm>
+	<interMapInfo><a target="_blank" class="sm" href="http://www.opengeospatial.org">Open GeoSpatial®
+	            Consortium</a><a target="_blank" class="sm" href="http://www.esri.com">ESRI®
+	            ArcIMS</a></interMapInfo>
+	<languageIso3>fra</languageIso3>
+	<mainpage1><ul>
+	            <li>Améliorer l'accès et l'usage des informations et données spatiales</li>
+	            <li>Aider les processus de prise de décision</li>
+	            <li>Favoriser l'approche multidisciplinaire nécessaire au développement durable</li>
+	            <li>Améliorer la compréhension des apports de l'information géographique</li>
+	        </ul></mainpage1>
+	<mainMetadataLanguageNotSet>(Langue des métadonnées non définie)</mainMetadataLanguageNotSet>
+	<massiveActions>Actions</massiveActions>
+	<mef2File>Fichier MEF v2</mef2File>
+	<organizationName>Organisation</organizationName>
+	<parent>Consulter la fiche du parent</parent>
+	<publicaccess>Autoriser l'utilisation de cet utilisateur dans les métadonnées</publicaccess>
+	<searchIn>Recherche dans :</searchIn>
+	<services>Services</services>
+	<serviceType>Type de service</serviceType>
+	<showPdf>Fiche complète</showPdf>
+	<sort>Trier</sort>
+	<stat.requestParamsLink>le lien entre requetes et paramètres se fait par le champs requestId</stat.requestParamsLink>
+	<titles>Titres</titles>
+	<users>Utilisateurs</users>
+	<version>Version</version>
+	<website>Website</website>
+	<xlink>Recherche</xlink>
+	<emailPDF>Envoyer un PDF</emailPDF>
+	<emailFrom>Expéditeur</emailFrom>
+	<emailTo>Destinataire</emailTo>
+	<subject>Sujet</subject>
+	<emailSent>E-Mail envoyé!</emailSent>
+	<replaceDuplicates>Doublons</replaceDuplicates>
+	<permlink mode="js">Lien permanent</permlink>
+	<rm>Romanche</rm>
+	<fra>Français</fra> <!-- Do not translate! -->
+    <deu>Deutsch</deu> <!-- Do not translate! -->
+	
+	<!-- END GEOCAT Strings -->
+
+
     <ara>عربي</ara> <!-- Do not translate! -->
     <cat>Català</cat> <!-- Do not translate! -->
     <chi>中文</chi> <!-- Do not translate! -->
@@ -74,9 +361,6 @@
 	<schemaFileName>Chemin vers l'archive ZIP</schemaFileName>
 	<schemaUrl>URL de l'archive ZIP</schemaUrl>
 	<schemaUuid>Identifiant (UUID) d'une métadonnée locale avec l'URL du schéma (GeoNetwork Metadata Schema Archive-GMSA URL) dans la section ressource en ligne</schemaUuid>
-<stat.numAutoGeneratedSearches>Nombre de recherches auto-générés (guiservice) </stat.numAutoGeneratedSearches>	
-       <stat.mostSearchedCategories>Catégories les plus recherchés</stat.mostSearchedCategories>
-			 <stat.popularityByCategory>La popularité des métadonnées par catégorie</stat.popularityByCategory>	   
 	<add>Ajouter</add>
 	<schemaOps>Gestion des schémas de métadonnées</schemaOps>
 	<enterSchema>Nom du schéma à ajouter</enterSchema>
@@ -252,6 +536,7 @@
 	<schematronReport>Conformité par rapport aux recommendations (Schematron)</schematronReport>
 	<xsdReport>Conformité par rapport au standard (Schéma XML)</xsdReport>
 	<rules name="schematron-rules-inspire">Règles INSPIRE</rules>
+	<rules name="schematron-rules-iso-che">Règles GM03</rules>
 	<rules name="schematron-rules-iso">Règles ISO 19115/19119</rules>
 	<rules name="schematron-rules-geonetwork">Recommendations GeoNetwork</rules>
 	<getCapabilitiesLayer js="true">Couches du GetCapabilities</getCapabilitiesLayer>
@@ -294,7 +579,7 @@
 	<searchText js="true">Recherche libre</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
 	<createRelation js="true">Créer la relation</createRelation>
-	<export>Exporter</export>
+	<export js="true">Exporter</export>
 	<exportText>Export (TXT)</exportText>
 	<addXMLFragment>Ajouter depuis un dictionnaire ...</addXMLFragment>
 	<translateWithGoogle>Utiliser le service de traduction de Google pour proposer une traduction pour la langue sélectionnée.</translateWithGoogle>
@@ -344,7 +629,7 @@
 	<foundCRS js="true">Systèmes disponibles</foundCRS>
 	
 	<about>A propos</about>
-	<abstract>Résumé</abstract>
+	<abstract js="true">Résumé</abstract>
 	<accept>Accepter</accept>
 	<actionOnSelect>Actions sur la sélection</actionOnSelect>
 	<add js="true">Ajouter</add>
@@ -353,8 +638,8 @@
 	<admin>Administration</admin>
 	<Administrator>Administrateur</Administrator>
 	<agrovocKeyword>Mots clés Agrovoc</agrovocKeyword>
-	<all>Tout</all>
-	<any>- Tous -</any>
+	<all js="true">Tout</all>
+	<any js="true">- Tous -</any>
 	<anytime>N'importe quand</anytime>
 	<appSchInfoTab>Schéma d'app.</appSchInfoTab>
 	<assigned>Attribuer</assigned>
@@ -389,7 +674,7 @@
 	<byPackage>Vue Avancée</byPackage>
 	<cancel>Annuler</cancel>
 	<categories>Catégories</categories>
-	<category>Catégorie</category>
+	<category js="true">Catégorie</category>
 	<categoryManagement>Gestion des catégories</categoryManagement>
 	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catégories</categoryManDes>
 	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
@@ -399,7 +684,7 @@
 	<chooseFile>Choisir le fichier à télécharger</chooseFile>
 	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
-	<city>Ville</city>
+	<city js="true">Ville</city>
 	<clear js="true">Effacer</clear>
 	<clearAll>Aucun</clearAll>
 	<close js="true">Fermer</close>
@@ -418,14 +703,14 @@
 	<convert>Conversion</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Tout droit réservé.</p></copyright2>
-	<country>Pays</country>
-	<create>Dupliquer</create>
+	<country js="true">Pays</country>
+	<create js="true">Créer</create>
 	<createTip>Créer des métadonnées à partir de ce template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<crs code="EPSG:4258">ETRS 89</crs>
 	<crs code="EPSG:900913">Google Mercator</crs>
-	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>	
+	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
 	<cswTest>Test CSW</cswTest>
 	<cswTestDesc>Interface de tests pour le point d'accès CSW</cswTestDesc>
 	<dataQualityTab>Qualité</dataQualityTab>
@@ -441,7 +726,7 @@
 	<decline>Refuser</decline>
 	<definition>Définition</definition>
 	<del>Supprimer</del>
-	<delete>Supprimer</delete>
+	<delete js="true">Supprimer</delete>
 	<deleteCategory>Supprimer la catégorie ?</deleteCategory>
 	<deleteConfirmationTitle>Rapport sur la suppression</deleteConfirmationTitle>
 	<deleteGroup>Supprimer le groupe ?</deleteGroup>
@@ -478,7 +763,7 @@
 	<durationYears>année(s)</durationYears>
 	<dynamic>Interactive</dynamic>
 	<eastbc>Coordonnée est de l'emprise</eastbc>
-	<edit>Editer</edit>
+	<edit js="true">Editer</edit>
 	<Editor>Éditeur</Editor>
 	<email>Email</email>
 	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
@@ -503,7 +788,7 @@
 	<firstNameMandatory js="true">Le prénom est obligatoire</firstNameMandatory>
 	<foundWords>Nombre de mots trouvés :</foundWords>
 	<freeKeyword>Mot-clés libres</freeKeyword>
-	<from>Début</from>
+	<from js="true">Début</from>
 	<fromDateSelector>Select FROM date</fromDateSelector>
 	<fuzzy>Précision</fuzzy>
 	<fuzzyImprecise>Imprécis</fuzzyImprecise>
@@ -537,7 +822,7 @@
 	<i18n>Test i18n</i18n>
 	<i18nDesc>Permet de lister les chaînes de traduction manquantes pour l'interface.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
-	<identifier>Identifiant</identifier>
+	<identifier js="true">Identifiant</identifier>
 	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
 	<imPan>Pan</imPan>
 	<import>Importer</import>
@@ -665,7 +950,7 @@
 	<noHelp>Désolé, pas d'aide disponible</noHelp>
 	<noInfo>Désolé, pas d'information disponible</noInfo>
 	<noLogin>Vous n'étes pas connecté.</noLogin>
-	<none>Aucun</none>
+	<none js="true">Aucun</none>
 	<noOwnerRights>Privilèges/Catégories bloqués: vous n'avez pas ce privilège</noOwnerRights>
 	<northbc>Coordonnée nord de l'emprise</northbc>
 	<noSelectedMd>Sélectionner au moins une métadonnée avant d\'utiliser une action.</noSelectedMd>
@@ -713,52 +998,26 @@
 	<progressChoice value="planned">prévu</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
-	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
-	<protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>	
-    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Service</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">Fichier SIG</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">Fichier SIG RASTER</protocolChoice>
-  <protocolChoice show="-" value="DB:POSTGIS">Table PostGIS</protocolChoice>
-  <protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
-    <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
+    <protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
+    <protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
+    <protocolChoice show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
+    <protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
+    <protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
+    <protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+    <protocolChoice value="WWW:LINK-1.0-http--download">Adresse Internet pour téléchargement</protocolChoice>
+    <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
+    <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
+    <protocolChoice value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</protocolChoice>
+    <protocolChoice value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</protocolChoice>
+    <protocolChoice value="OGC:WCS-http-get-capabilities">OGC-WCS Web Coverage Service</protocolChoice>
+    <protocolChoice value="OGC:WMTS-http-get-capabilities">OGC-WMTS Web Map Tile Service</protocolChoice>
+    <protocolChoice value="OGC:WMC-http-get-capabilities">OGC-WMC Web Map Context</protocolChoice>
+    <protocolChoice value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</protocolChoice>
+    <protocolChoice value="CHTOPO:specialised-geoportal">Géoportail Spécialisé</protocolChoice>
+    <protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
+    <protocolChoice show="-" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
+    <protocolChoice show="y" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
+    <protocolChoice show="-" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature MapService</protocolChoice>
 	<pubdate>Date de publication</pubdate>
 	<publicationDate>Date de diffusion</publicationDate>
 	<publisher>Diffuseur</publisher>
@@ -777,7 +1036,7 @@
 	<registrationDetails>Information sur l'inscription :</registrationDetails>
 	<remote>Recherche distante</remote>
 	<remoteType>Distant</remoteType>
-	<remove>Supprimer</remove>
+	<remove js="true">Supprimer</remove>
 	<res>résultats</res>
 	<reset>Réinitialiser</reset>
 	<resetFeedbackForm>Réinitialiser</resetFeedbackForm>
@@ -791,7 +1050,7 @@
   <visualizationService>URL du service de visualisation (WMS)</visualizationService>
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats de la recherche</resultsFreeText>
-	<resultsMatching>Nombre de résultats : </resultsMatching>
+	<resultsMatching js="true">Nombre de résultats : </resultsMatching>
 	<Reviewer>Relecteur</Reviewer>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
@@ -802,7 +1061,7 @@
 	<printSelection>Imprimer au PDF</printSelection>
 	<schema>Schéma</schema>
 	<schematronError>Erreur Schematron</schematronError>
-	<search>Rechercher</search>
+	<search js="true">Rechercher</search>
 	<searchAllText>Partout</searchAllText>
 	<searchBox>Recherche de données et information</searchBox>
 	<searchIndex>Index de recherche</searchIndex>
@@ -816,7 +1075,7 @@
 	<select>Sélectionner : </select>
 	<selectAll>Tout sélectionner</selectAll>
 	<selectAllNotPossible>Trop d'enregistrement ! Doit être inférieur à </selectAllNotPossible>
-	<selected> selectionné(s)</selected>
+	<selected js="true"> selectionné(s)</selected>
 	<selectedOnly>Afficher la sélection</selectedOnly>
 	<selection>Sélection</selection>
 	<selectNone>Unselect metadata selected</selectNone>
@@ -824,7 +1083,7 @@
 	<setAll>Tous</setAll>
 	<setOnSave>Valeur définie lors de la sauvegarde</setOnSave>
 	<shibLogin>Shib Login</shibLogin>
-	<show>Métadonnées</show>
+	<show js="true">Métadonnées</show>
 	<showFileDownloadSummary>Télécharger des fichiers ...</showFileDownloadSummary>
 	<simple>Recherche simple</simple>
 	<simpleTab>Vue par défaut</simpleTab>
@@ -834,10 +1093,10 @@
 	<siteId>Identifiant</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sort>Trier</sort>
-	<sortBy>Trier par</sortBy>
+	<sortBy js="true">Trier par</sortBy>
+	<sortByType id="revisionDate">Mise à jour des métadonnées</sortByType>
 	<sortByType id="changeDate">Date de mise à jour</sortByType>
 	<sortByType id="popularity">Popularité</sortByType>
-	<sortByType id="rating">Note</sortByType>
 	<sortByType id="relevance">Pertinence</sortByType>
 	<sortByType id="title">Titre</sortByType>
 	<southbc>Coordonnée sud de l'emprise</southbc>
@@ -856,7 +1115,7 @@
 	<systemConfigDes>Permet de modifier quelques paramètres systèmes</systemConfigDes>
 	<systemInfo>Information système</systemInfo>
 	<systemInfoDes>Consultation des informations sur le catalogue, l'index, Java, le système d'exploitation</systemInfoDes>
-	<template>Modèle</template>
+	<template js="true">Modèle</template>
 	<Term>Terme</Term>
 	<thanks>Merci</thanks>
 	<theme>Sujet ISO</theme>
@@ -865,14 +1124,14 @@
 	<timeoutChoice value="10">10 secondes</timeoutChoice>
 	<timeoutChoice value="20">20 secondes</timeoutChoice>
 	<timeoutChoice value="30">30 secondes</timeoutChoice>
-	<title>GeoNetwork - Portail pour l'information géo-spatiale</title>
-	<to>Fin</to>
+	<title>geocat.ch – Le catalogue géographique suisse</title>
+	<to js="true">Fin</to>
 	<toDateSelector>Select TO date</toDateSelector>
 	<tools>Outils</tools>
 	<topic>Sujet</topic>
 	<transferOwnership>Transfert de privilèges</transferOwnership>
 	<transferOwnershipDes>Transfert des privilèges de métadonnées pour un autre utilisateur</transferOwnershipDes>
-	<type>Type</type>
+	<type js="true">Type</type>
 	<up>Monter</up>
 	<update>Mettre à jour</update>
 	<updateCategories>Mettre à jour les catégories</updateCategories>
@@ -902,9 +1161,9 @@
 	<viewInGE>Google Earth</viewInGE>
 	<waitGetCap js="true">Chargement en cours ...</waitGetCap>
 	<westbc>Coordonnée ouest de l'emprise</westbc>
-	<what>Quoi ?</what>
-	<when>Quand ?</when>
-	<where>Où ?</where>
+	<what js="true">Quoi ?</what>
+	<when js="true">Quand ?</when>
+	<where js="true">Où ?</where>
 	<winInfo1>Cette fenêtre montre les ressources de GeoNetwork.</winInfo1>
 	<winInfo2>L'icône Besoin d'aide (?) vous donne accès à l'aide.</winInfo2>
 	<wwwlink>Liens Internet</wwwlink>
@@ -1376,6 +1635,7 @@
 	<addremove>Ajouter / Supprimer</addremove>
     <enabled>Activé</enabled>
 	<notifications>Notification de n&#339;uds distants</notifications>
+    <url>URL</url>    
 
     <cswServer>Configuration CSW</cswServer>
 	<cswServerDes>Configuration du serveur CSW</cswServerDes>

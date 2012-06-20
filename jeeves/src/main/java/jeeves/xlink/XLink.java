@@ -1,7 +1,12 @@
 package jeeves.xlink;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import org.jdom.Attribute;
+import org.jdom.Element;
 import org.jdom.Namespace;
 
 /**
@@ -69,6 +74,8 @@ public class XLink {
 	public static final String SHOW = "show";
     public static final String SHOW_REPLACE = "replace";
     public final static String SHOW_EMBED = ROLE_EMBED;
+    
+	public static final String LOCAL_PROTOCOL = "local://";
 	
 	/**
 	 * Create a simple XLink element
@@ -77,7 +84,7 @@ public class XLink {
 	 * @param title title of the document
 	 * 
 	 */
-	public XLink (URL href, String title, String role) {
+	public XLink (String href, String title, String role) {
 		this.href = href.toString();
 		this.title = title;
 		this.role = role;
@@ -131,7 +138,48 @@ public class XLink {
 	public void setActuate(String actuate) {
 		this.actuate = actuate;
 	}
+
+    public static boolean isXLink(Element elem)
+    {
+        if( elem==null ) return false;
+        return elem.getAttribute(HREF, NAMESPACE_XLINK) != null;
+    }
+
 	
+    public static void removeXLinkAttributes(Element mdWithXlinks) {
+        Iterator descendants = mdWithXlinks.getDescendants();
+
+        while(descendants.hasNext()) {
+            Object o = descendants.next();
+            if(o instanceof Element) {
+                Element e = (Element) o;
+                e.removeNamespaceDeclaration(NAMESPACE_XLINK);
+                List<Attribute> atts = new ArrayList<Attribute>(e.getAttributes());
+                for (Attribute att : atts) {
+                    if(NAMESPACE_XLINK.equals(att.getNamespace())) {
+                        e.removeAttribute(att);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Return xlink href or null 
+     */
+	public static String getHRef(Element originalElem) {
+		return originalElem.getAttributeValue(HREF,NAMESPACE_XLINK);
+	}
+
+	public Attribute getHrefAttribute() {
+		return new Attribute(XLink.HREF, href, NAMESPACE_XLINK);
+	}
 	
+	public Attribute getRoleAttribute() {
+		return new Attribute(XLink.ROLE, role, NAMESPACE_XLINK);
+	}
 	
+	public Attribute getShowAttribute() {
+		return new Attribute(XLink.SHOW, show, NAMESPACE_XLINK);
+	}
 }

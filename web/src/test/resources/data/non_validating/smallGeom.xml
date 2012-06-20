@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TRANSFER xmlns="http://www.interlis.ch/INTERLIS2.3">
+    <HEADERSECTION SENDER="ili2fme-5.2.1-20100317" VERSION="2.3">
+        <MODELS>
+            <MODEL NAME="CodeISO" VERSION="20060808" URI="http://www.kogis.ch"/>
+            <MODEL NAME="Units" VERSION="2005-06-06" URI="http://www.interlis.ch/models"/>
+            <MODEL NAME="GM03_2Core" VERSION="20081211" URI="http://www.kogis.ch"/>
+            <MODEL NAME="GM03_2Comprehensive" VERSION="20081211" URI="http://www.kogis.ch"/>
+        </MODELS>
+    </HEADERSECTION>
+    <DATASECTION>
+        <GM03_2Comprehensive.Comprehensive BID="1">
+            <GM03_2Core.Core.MD_Distribution TID="MD_Distribution_1"/>
+            <GM03_2Core.Core.MD_Metadata TID="MD_Metadata_1">
+                <language>de</language>
+                <characterSet>utf8</characterSet>
+                <dateStamp>2009-12-04</dateStamp>
+                <metadataStandardName>GM03 2+</metadataStandardName>
+                <distributionInfo REF="MD_Distribution_1"/>
+            </GM03_2Core.Core.MD_Metadata>
+            <GM03_2Core.Core.CI_Date TID="CI_Date_1">
+                <date>2009-06-30</date>
+                <dateType>creation</dateType>
+                <CI_Citation REF="CI_Citation_1"/>
+            </GM03_2Core.Core.CI_Date>
+            <GM03_2Core.Core.CI_Date TID="CI_Date_2">
+                <date>2009-06-30</date>
+                <dateType>revision</dateType>
+                <CI_Citation REF="CI_Citation_1"/>
+            </GM03_2Core.Core.CI_Date>
+            <GM03_2Core.Core.MD_Resolution TID="MD_Resolution_1">
+                <distance>40.00</distance>
+                <MD_DataIdentification REF="MD_DataIdentification_1"/>
+                <equivalentScale REF="MD_RepresentativeFraction_1"/>
+            </GM03_2Core.Core.MD_Resolution>
+            <GM03_2Core.Core.MD_RepresentativeFraction TID="MD_RepresentativeFraction_1">
+                <denominator>200000</denominator>
+            </GM03_2Core.Core.MD_RepresentativeFraction>
+            <GM03_2Core.Core.EX_GeographicBoundingBox TID="EX_GeographicBoundingBox_1">
+                <extentTypeCode>true</extentTypeCode>
+                <northBoundLatitude>47.7820350840481</northBoundLatitude>
+                <southBoundLatitude>47.0005276310588</southBoundLatitude>
+                <eastBoundLongitude>9.6239173884821</eastBoundLongitude>
+                <westBoundLongitude>8.50552497961363</westBoundLongitude>
+            </GM03_2Core.Core.EX_GeographicBoundingBox>
+            <GM03_2Core.Core.EX_ExtentgeographicElement TID="EX_ExtentgeographicElement_1">
+                <EX_Extent REF="EX_Extent_1"/>
+                <geographicElement REF="EX_GeographicBoundingBox_1"/>
+            </GM03_2Core.Core.EX_ExtentgeographicElement>
+            <GM03_2Core.Core.MD_DistributiondistributionFormat TID="MD_DistributiondistributionFormat_1">
+                <MD_Distribution REF="MD_Distribution_1"/>
+                <distributionFormat REF="MD_Format_1"/>
+            </GM03_2Core.Core.MD_DistributiondistributionFormat>
+            <GM03_2Core.Core.MD_Format TID="MD_Format_1">
+                <name>ESRI Shape</name>
+                <version>-</version>
+            </GM03_2Core.Core.MD_Format>
+            <GM03_2Core.Core.CI_Address TID="CI_Address_3">
+                <streetName>Promenadenstrasse</streetName>
+                <streetNumber>8</streetNumber>
+                <addressLine>Verwaltungsgebäude</addressLine>
+                <postalCode>8510</postalCode>
+                <city>Frauenfeld</city>
+            </GM03_2Core.Core.CI_Address>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_7">
+                <number>0041 52 724 16 11</number>
+                <numberType>mainNumber</numberType>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_3"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_8">
+                <number>0041 52 724 16 00</number>
+                <numberType>facsimile</numberType>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_3"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_9">
+                <number>0041 52 724 16 08</number>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_3"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Contact TID="CI_Contact_3">
+                <hoursOfService>Mo-Fr: 8:00-11:30 + 13:30-17:00</hoursOfService>
+            </GM03_2Core.Core.CI_Contact>
+            <GM03_2Comprehensive.Comprehensive.MD_DataIdentification TID="MD_DataIdentification_1">
+                <status>
+                    <GM03_2Core.Core.MD_ProgressCode_>
+                        <value>completed</value>
+                    </GM03_2Core.Core.MD_ProgressCode_>
+                </status>
+                <abstract>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Kantonaler Richtplan Thurgau: Übersichtskarten zu bestimmten Themen aus den Bereichen Siedlung, Landschaft, Verkehr, Versorgung und Entsorgung sowie Weitere Raumnutzungen</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </abstract>
+                <purpose>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Räumliche Festlegungen zum behördenverbindlichen Text des Richtplanes und zu den Erläuterungen</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </purpose>
+                <MD_Metadata REF="MD_Metadata_1"/>
+                <citation REF="CI_Citation_1"/>
+                <spatialRepresentationType>
+                    <GM03_2Core.Core.MD_SpatialRepresentationTypeCode_>
+                        <value>vector</value>
+                    </GM03_2Core.Core.MD_SpatialRepresentationTypeCode_>
+                </spatialRepresentationType>
+                <language>
+                    <CodeISO.LanguageCodeISO_>
+                        <value>de</value>
+                    </CodeISO.LanguageCodeISO_>
+                </language>
+                <topicCategory>
+                    <GM03_2Core.Core.MD_TopicCategoryCode_>
+                        <value>planningCadastre</value>
+                    </GM03_2Core.Core.MD_TopicCategoryCode_>
+                </topicCategory>
+            </GM03_2Comprehensive.Comprehensive.MD_DataIdentification>
+            <GM03_2Core.Core.CI_OnlineResource TID="CI_OnlineResource_1">
+                <linkage>
+                    <GM03_2Core.Core.PT_FreeURL>
+                        <URLGroup>
+                            <GM03_2Core.Core.PT_URLGroup>
+                                <language>de</language>
+                                <plainURL>http://thurgis.tg.ch</plainURL>
+                            </GM03_2Core.Core.PT_URLGroup>
+                        </URLGroup>
+                    </GM03_2Core.Core.PT_FreeURL>
+                </linkage>
+                <MD_DigitalTransferOptions REF="MD_DigitalTransferOptions_1"/>
+            </GM03_2Core.Core.CI_OnlineResource>
+            <GM03_2Core.Core.MD_DigitalTransferOptions TID="MD_DigitalTransferOptions_1">
+                <MD_Distribution REF="MD_Distribution_1"/>
+            </GM03_2Core.Core.MD_DigitalTransferOptions>
+            <GM03_2Core.Core.CI_ResponsibleParty TID="CI_ResponsibleParty_3">
+                <individualFirstName>Nuno</individualFirstName>
+                <individualLastName>Osorio</individualLastName>
+                <electronicalMailAddress>
+                    <GM03_2Core.Core.URL_>
+                        <value>nuno.osorio@tg.ch</value>
+                    </GM03_2Core.Core.URL_>
+                </electronicalMailAddress>
+                <organisationName>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Kanton Thurgau, Amt für Geoinformation</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </organisationName>
+                <positionName>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Sachbearbeiter Datenabgabe</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </positionName>
+                <organisationAcronym>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>AGI</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </organisationAcronym>
+                <linkage>
+                    <GM03_2Core.Core.PT_FreeURL>
+                        <URLGroup>
+                            <GM03_2Core.Core.PT_URLGroup>
+                                <language>de</language>
+                                <plainURL>www.geoinformation.tg.ch</plainURL>
+                            </GM03_2Core.Core.PT_URLGroup>
+                        </URLGroup>
+                    </GM03_2Core.Core.PT_FreeURL>
+                </linkage>
+                <address REF="CI_Address_3"/>
+                <contactInfo REF="CI_Contact_3"/>
+            </GM03_2Core.Core.CI_ResponsibleParty>
+            <GM03_2Comprehensive.Comprehensive.MD_Distributiondistributor TID="MD_Distributiondistributor_1">
+                <distributor REF="MD_Distributor_1"/>
+                <MD_Distribution REF="MD_Distribution_1"/>
+            </GM03_2Comprehensive.Comprehensive.MD_Distributiondistributor>
+            <GM03_2Comprehensive.Comprehensive.MD_Distributor TID="MD_Distributor_1">
+                <distributorContact REF="CI_ResponsibleParty_3">
+                    <GM03_2Comprehensive.Comprehensive.MD_DistributordistributorContact>
+                        <role>
+                            <GM03_2Core.Core.CI_RoleCode_>
+                                <value>distributor</value>
+                            </GM03_2Core.Core.CI_RoleCode_>
+                        </role>
+                    </GM03_2Comprehensive.Comprehensive.MD_DistributordistributorContact>
+                </distributorContact>
+            </GM03_2Comprehensive.Comprehensive.MD_Distributor>
+            <GM03_2Core.Core.CI_ResponsibleParty TID="CI_ResponsibleParty_2">
+                <electronicalMailAddress>
+                    <GM03_2Core.Core.URL_>
+                        <value>-</value>
+                    </GM03_2Core.Core.URL_>
+                </electronicalMailAddress>
+                <organisationName>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Kanton Thurgau, Amt für Raumplanung</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </organisationName>
+                <organisationAcronym>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>ARP</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </organisationAcronym>
+                <linkage>
+                    <GM03_2Core.Core.PT_FreeURL>
+                        <URLGroup>
+                            <GM03_2Core.Core.PT_URLGroup>
+                                <language>de</language>
+                                <plainURL>www.raumplanung.tg.ch</plainURL>
+                            </GM03_2Core.Core.PT_URLGroup>
+                        </URLGroup>
+                    </GM03_2Core.Core.PT_FreeURL>
+                </linkage>
+                <address REF="CI_Address_2"/>
+                <contactInfo REF="CI_Contact_2"/>
+            </GM03_2Core.Core.CI_ResponsibleParty>
+            <GM03_2Core.Core.MD_IdentificationpointOfContact TID="MD_IdentificationpointOfContact_1">
+                <pointOfContact REF="CI_ResponsibleParty_2"/>
+                <MD_Identification REF="MD_DataIdentification_1"/>
+                <role>
+                    <GM03_2Core.Core.CI_RoleCode_>
+                        <value>resourceProvider</value>
+                    </GM03_2Core.Core.CI_RoleCode_>
+                </role>
+            </GM03_2Core.Core.MD_IdentificationpointOfContact>
+            <GM03_2Core.Core.CI_Contact TID="CI_Contact_2">
+                <hoursOfService>Mo-Fr: 7:30-12:00 + 13:30-17:00</hoursOfService>
+            </GM03_2Core.Core.CI_Contact>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_4">
+                <number>0041 52 724 24 36</number>
+                <numberType>mainNumber</numberType>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_2"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_5">
+                <number>0041 52 724 28 64</number>
+                <numberType>facsimile</numberType>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_2"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_6">
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_2"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Address TID="CI_Address_2">
+                <streetName>Verwaltungsgebäude</streetName>
+                <postalCode>8510</postalCode>
+                <city>Frauenfeld</city>
+            </GM03_2Core.Core.CI_Address>
+            <GM03_2Core.Core.CI_ResponsibleParty TID="CI_ResponsibleParty_1">
+                <electronicalMailAddress>
+                    <GM03_2Core.Core.URL_>
+                        <value>hubert.froemelt@tg.ch</value>
+                    </GM03_2Core.Core.URL_>
+                </electronicalMailAddress>
+                <organisationName>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Kanton Thurgau, Amt für Raumplanung</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </organisationName>
+                <organisationAcronym>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>ARP</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </organisationAcronym>
+                <linkage>
+                    <GM03_2Core.Core.PT_FreeURL>
+                        <URLGroup>
+                            <GM03_2Core.Core.PT_URLGroup>
+                                <language>de</language>
+                                <plainURL>www.raumplanung.tg.ch</plainURL>
+                            </GM03_2Core.Core.PT_URLGroup>
+                        </URLGroup>
+                    </GM03_2Core.Core.PT_FreeURL>
+                </linkage>
+                <address REF="CI_Adress_1"/>
+                <contactInfo REF="CI_Contact_1"/>
+            </GM03_2Core.Core.CI_ResponsibleParty>
+            <GM03_2Core.Core.MD_Metadatacontact TID="MD_Metadatacontact_1">
+                <contact REF="CI_ResponsibleParty_1"/>
+                <MD_Metadata REF="MD_Metadata_1"/>
+                <role>
+                    <GM03_2Core.Core.CI_RoleCode_>
+                        <value>resourceProvider</value>
+                    </GM03_2Core.Core.CI_RoleCode_>
+                </role>
+            </GM03_2Core.Core.MD_Metadatacontact>
+            <GM03_2Core.Core.CI_Contact TID="CI_Contact_1">
+                <hoursOfService>Mo-Fr: 7:30-12:00 + 13:30-17:00</hoursOfService>
+            </GM03_2Core.Core.CI_Contact>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_1">
+                <number>0041 52 724 24 36</number>
+                <numberType>mainNumber</numberType>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_1"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_3">
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_1"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Telephone TID="CI_Telephone_2">
+                <number>0041 52 724 28 64</number>
+                <numberType>facsimile</numberType>
+                <CI_ResponsibleParty REF="CI_ResponsibleParty_1"/>
+            </GM03_2Core.Core.CI_Telephone>
+            <GM03_2Core.Core.CI_Address TID="CI_Address_1">
+                <streetName>Verwaltungsgebäude</streetName>
+                <postalCode>8510</postalCode>
+                <city>Frauenfeld</city>
+            </GM03_2Core.Core.CI_Address>
+            <GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformation TID="MD_MaintenanceInformation_1">
+                <maintenanceAndUpdateFrequency>irregular</maintenanceAndUpdateFrequency>
+                <maintenanceNote>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </maintenanceNote>
+                <MD_Identification REF="MD_DataIdentification_1"/>
+            </GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformation>
+            <GM03_2Comprehensive.Comprehensive.MD_LegalConstraints TID="MD_LegalConstraints_1">
+                <useLimitation>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Gemäss mitgelieferter Nutzungsvereinbarung</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </useLimitation>
+                <accessConstraints>
+                    <GM03_2Comprehensive.Comprehensive.MD_RestrictionCode_>
+                        <value>otherRestrictions</value>
+                    </GM03_2Comprehensive.Comprehensive.MD_RestrictionCode_>
+                </accessConstraints>
+                <useConstraints>
+                    <GM03_2Comprehensive.Comprehensive.MD_RestrictionCode_>
+                        <value>otherRestrictions</value>
+                    </GM03_2Comprehensive.Comprehensive.MD_RestrictionCode_>
+                </useConstraints>
+                <otherConstraints>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>In der Regel keine Abgabe von Vektordaten.</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Geodaten dürfen nur im Rahmen eines vereinbarten Verwendungszweckes benutzt werden</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </otherConstraints>
+            </GM03_2Comprehensive.Comprehensive.MD_LegalConstraints>
+            <GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID="resourceConstraintsMD_Identification_1">
+                <resourceConstraints REF="MD_LegalConstraints_1"/>
+                <MD_Identification REF="MD_DataIdentification_1"/>
+            </GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+            <GM03_2Comprehensive.Comprehensive.MD_SecurityConstraints TID="MD_SecurityConstraints_1">
+                <useLimitation>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>keine</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </useLimitation>
+                <classification>unclassified</classification>
+            </GM03_2Comprehensive.Comprehensive.MD_SecurityConstraints>
+            <GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID="resourceConstraintsMD_Identification_2">
+                <resourceConstraints REF="MD_SecurityConstraints_1"/>
+                <MD_Identification REF="MD_DataIdentification_1"/>
+            </GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+            <GM03_2Comprehensive.Comprehensive.MD_Constraints TID="MD_Constraints_1">
+                <useLimitation>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>keine</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </useLimitation>
+            </GM03_2Comprehensive.Comprehensive.MD_Constraints>
+            <GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID="resourceConstraintsMD_Identification_3">
+                <resourceConstraints REF="MD_Constraints_1"/>
+                <MD_Identification REF="MD_DataIdentification_1"/>
+            </GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+            <GM03_2Comprehensive.Comprehensive.RS_Identifier TID="RS_Identifier_1">
+                <code>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>CH1903, LV03</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </code>
+            </GM03_2Comprehensive.Comprehensive.RS_Identifier>
+            <GM03_2Core.Core.MD_ReferenceSystem TID="MD_ReferenceSystem_1">
+                <referenceSystemIdentifier REF="RS_Identifier_1"/>
+            </GM03_2Core.Core.MD_ReferenceSystem>
+            <GM03_2Core.Core.referenceSystemInfoMD_Metadata TID="referenceSystemInfoMD_Metadata_1">
+                <referenceSystemInfo REF="MD_ReferenceSystem_1"/>
+                <MD_Metadata REF="MD_Metadata_1"/>
+            </GM03_2Core.Core.referenceSystemInfoMD_Metadata>
+            <GM03_2Core.Core.LI_Lineage TID="LI_Lineage_1">
+                <statement>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Digitalisierung mit Hintergrund LK 1:200'000</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </statement>
+                <DQ_DataQuality REF="DQ_DataQuality_1"/>
+            </GM03_2Core.Core.LI_Lineage>
+            <GM03_2Core.Core.DQ_DataQuality TID="DQ_DataQuality_1">
+                <MD_Metadata REF="MD_Metadata_1"/>
+            </GM03_2Core.Core.DQ_DataQuality>
+            <GM03_2Core.Core.DQ_Scope TID="DQ_Scope_1">
+                <level>dataset</level>
+                <DQ_DataQuality REF="DQ_DataQuality_1"/>
+            </GM03_2Core.Core.DQ_Scope>
+            <GM03_2Core.Core.EX_GeographicDescription TID="EX_GeographicDescription_1">
+                <geographicIdentifier REF="MD_Identifier_2"/>
+            </GM03_2Core.Core.EX_GeographicDescription>
+            <GM03_2Core.Core.MD_Identifier TID="MD_Identifier_2">
+                <code>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>TG</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </code>
+            </GM03_2Core.Core.MD_Identifier>
+            <GM03_2Core.Core.EX_Extent TID="EX_Extent_1">
+                <description>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Thurgau</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </description>
+                <MD_DataIdentification REF="MD_DataIdentification_1"/>
+            </GM03_2Core.Core.EX_Extent>
+            <GM03_2Core.Core.MD_Identifier TID="MD_Identifier_1">
+                <code>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>69</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </code>
+            </GM03_2Core.Core.MD_Identifier>
+            <GM03_2Comprehensive.Comprehensive.CI_Citationidentifier TID="CI_Citationidentifier_1">
+                <identifier REF="MD_Identifier_1"/>
+                <CI_Citation REF="CI_Citation_1"/>
+            </GM03_2Comprehensive.Comprehensive.CI_Citationidentifier>
+            <GM03_2Comprehensive.Comprehensive.CI_Citation TID="CI_Citation_1">
+                <title>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Kantonaler Richtplan, Übersichtskarten 1:200'000 new import</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </title>
+            </GM03_2Comprehensive.Comprehensive.CI_Citation>
+            <GM03_2Core.Core.descriptiveKeywordsMD_Identification TID="descriptiveKeywordsMD_Identification_1">
+                <descriptiveKeywords REF="MD_Keywords_1"/>
+                <MD_Identification REF="MD_DataIdentification_1"/>
+            </GM03_2Core.Core.descriptiveKeywordsMD_Identification>
+            <GM03_2Core.Core.MD_Keywords TID="MD_Keywords_1">
+                <keyword>
+                    <GM03_2Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2Core.Core.PT_Group>
+                                <language>de</language>
+                                <plainText>Geodaten</plainText>
+                            </GM03_2Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2Core.Core.PT_FreeText>
+                </keyword>
+            </GM03_2Core.Core.MD_Keywords>
+        </GM03_2Comprehensive.Comprehensive>
+    </DATASECTION>
+</TRANSFER>

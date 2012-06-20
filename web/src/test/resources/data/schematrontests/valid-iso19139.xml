@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>75c32d6a-4297-41ee-af1f-00ecc648beb4</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>fra</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+    </gmd:hierarchyLevel>
+    <gmd:contact xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Service de l&apos;organisation et des systèmes d&apos;information</gco:CharacterString>
+            </gmd:organisationName>
+            <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Technicien en géomatique, resp. Métadonnées</gco:CharacterString>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                            <gmd:voice>
+                                <gco:CharacterString>+4122 327 46 94</gco:CharacterString>
+                            </gmd:voice>
+                            <gmd:facsimile>
+                                <gco:CharacterString>+4122 327 50 70</gco:CharacterString>
+                            </gmd:facsimile>
+                        </che:CHE_CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:city>
+                                <gco:CharacterString>Genève 8</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:postalCode>
+                                <gco:CharacterString>1211</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>pierre.lafontaine@etat.ge.ch</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                            <che:streetName>
+                                <gco:CharacterString>rue des Gazomètres</gco:CharacterString>
+                            </che:streetName>
+                            <che:streetNumber>
+                                <gco:CharacterString>7</gco:CharacterString>
+                            </che:streetNumber>
+                            <che:postBox>
+                                <gco:CharacterString>36</gco:CharacterString>
+                            </che:postBox>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <gmd:URL>http://etat.geneve.ch/dt/site/presidence-secretariat/geomatique/</gmd:URL>
+                            </gmd:linkage>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="originator"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>Pierre</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>Lafontaine</gco:CharacterString>
+            </che:individualLastName>
+            <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>SOSI</gco:CharacterString>
+            </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:DateTime>2009-08-20T15:22:13</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:dataSetURI xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>http://www.sitg.ch</gco:CharacterString>
+    </gmd:dataSetURI>
+    <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="DE">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="deu">German</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="IT">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita">Italian</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="EN">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng">English</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:referenceSystemInfo xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Swiss_New_Grid</gco:CharacterString>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:identificationInfo xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>CADASTRE FORESTIER</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2007-05-09</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="creation"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:identifier>
+                        <gmd:MD_Identifier>
+                            <gmd:code>
+                                <gco:CharacterString>jhlkjhkjlhlkj</gco:CharacterString>
+                            </gmd:code>
+                        </gmd:MD_Identifier>
+                    </gmd:identifier>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>La forêt couvre environ 2950 hectares de territoire cantonal. Elle est répartie entre les collectivités publiques (55 %) et les privés (45 %). Fait unique en Suisse, la forêt genevoise a depuis longtemps été introduite dans les plans de zones sous l&apos;appellation zone de bois et forêts. Or, cet état de droit n&apos;est, en de nombreux endroits, plus compatible avec la réalité de la nature des lieux; des diminutions ont été opérées (défrichements) et des accrues sont apparues (boisements compensatoires et évolution naturelle), correspondant à la définition légale de la forêt. Les incidences de cette évolution sont d&apos;autant plus importantes que la législation fédérale oblige la séparation stricte entre forêt et zone de construction. La mise à jour régulière vis-à-vis des zones de construction est garantie par une reconnaissance formelle de la nature forestière et par un levé de la lisière par un géomètre accompagnant l&apos;inspecteur cantonal des forêts.</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:status>
+                <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode" codeListValue="completed"/>
+            </gmd:status>
+            <gmd:pointOfContact>
+                <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+                    <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Service de l&apos;organisation et des systèmes d&apos;information</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Technicien en géomatique, resp. Métadonnées</gco:CharacterString>
+                    </gmd:positionName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                                    <gmd:voice>
+                                        <gco:CharacterString>+4122 327 46 94</gco:CharacterString>
+                                    </gmd:voice>
+                                    <gmd:facsimile>
+                                        <gco:CharacterString>+4122 327 50 70</gco:CharacterString>
+                                    </gmd:facsimile>
+                                </che:CHE_CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                                    <gmd:city>
+                                        <gco:CharacterString>Genève 8</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>1211</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>pierre.lafontaine@etat.ge.ch</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                    <che:streetName>
+                                        <gco:CharacterString>rue des Gazomètres</gco:CharacterString>
+                                    </che:streetName>
+                                    <che:streetNumber>
+                                        <gco:CharacterString>7</gco:CharacterString>
+                                    </che:streetNumber>
+                                    <che:postBox>
+                                        <gco:CharacterString>36</gco:CharacterString>
+                                    </che:postBox>
+                                </che:CHE_CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                        <gmd:URL>http://etat.geneve.ch/dt/site/presidence-secretariat/geomatique/</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="distributor"/>
+                    </gmd:role>
+                    <che:individualFirstName>
+                        <gco:CharacterString>Pierre</gco:CharacterString>
+                    </che:individualFirstName>
+                    <che:individualLastName>
+                        <gco:CharacterString>Lafontaine</gco:CharacterString>
+                    </che:individualLastName>
+                    <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>SOSI</gco:CharacterString>
+                    </che:organisationAcronym>
+                </che:CHE_CI_ResponsibleParty>
+            </gmd:pointOfContact>
+            <gmd:pointOfContact>
+                <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+                    <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Nature et paysage - Service des forêts</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Inspecteur cantonal des forêts</gco:CharacterString>
+                    </gmd:positionName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                                    <gmd:voice>
+                                        <gco:CharacterString>+4122 388 55 48</gco:CharacterString>
+                                    </gmd:voice>
+                                    <gmd:facsimile>
+                                        <gco:CharacterString>+4122 388 55 20</gco:CharacterString>
+                                    </gmd:facsimile>
+                                </che:CHE_CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                                    <gmd:city>
+                                        <gco:CharacterString>Genève</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>1205</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>philippe.steinmann@etat.ge.ch</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                    <che:streetName>
+                                        <gco:CharacterString>rue des Battoirs</gco:CharacterString>
+                                    </che:streetName>
+                                    <che:streetNumber>
+                                        <gco:CharacterString>7</gco:CharacterString>
+                                    </che:streetNumber>
+                                </che:CHE_CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                        <gmd:URL>http://etat.geneve.ch/dt/site/protection-nature/</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </gmd:role>
+                    <che:individualFirstName>
+                        <gco:CharacterString>Philippe</gco:CharacterString>
+                    </che:individualFirstName>
+                    <che:individualLastName>
+                        <gco:CharacterString>Steinmann</gco:CharacterString>
+                    </che:individualLastName>
+                    <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>SFO</gco:CharacterString>
+                    </che:organisationAcronym>
+                </che:CHE_CI_ResponsibleParty>
+            </gmd:pointOfContact>
+            <gmd:descriptiveKeywords>
+                <gmd:MD_Keywords>
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>administratif</gco:CharacterString>
+                    </gmd:keyword>
+                    <gmd:type>
+                        <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+                    </gmd:type>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:spatialRepresentationType>
+                <gmd:MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector"/>
+            </gmd:spatialRepresentationType>
+            <gmd:language>
+                <gco:CharacterString>fra</gco:CharacterString>
+            </gmd:language>
+            <gmd:characterSet>
+                <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+            </gmd:characterSet>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>planningCadastre</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:extent>
+                <gmd:EX_Extent xmlns:util="xalan://org.fao.geonet.util.XslUtil">
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.950667</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.313089</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.12977</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.36581</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>1</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>Projection suisse MN03GE</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+    <gmd:distributionInfo xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_Distribution>
+            <gmd:distributionFormat>
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>Shape file, Mif/mid, Dwg/dxf</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>Sur demande</gco:CharacterString>
+                    </gmd:version>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:transferOptions>
+                <gmd:MD_DigitalTransferOptions>
+                    <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <gmd:URL>http://www.sitg.ch</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:function>
+                                <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="order"/>
+                            </gmd:function>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onLine>
+                </gmd:MD_DigitalTransferOptions>
+            </gmd:transferOptions>
+        </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+</che:CHE_MD_Metadata>

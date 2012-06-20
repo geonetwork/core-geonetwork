@@ -3,7 +3,7 @@
 
     <xsl:template name="metadata-insert-common-form">
 
-        <xsl:variable name="lang" select="/root/gui/language"/>
+        <xsl:variable name="lang" select="substring(/root/gui/language/text(),0,3)"/>
 
         <!-- uuid constraints -->
         <tr id="gn.uuidAction">
@@ -86,7 +86,7 @@
                 </label>
             </th>
             <td>
-                <input class="content" type="checkbox" name="assign" id="assign"/>
+                <input class="content" type="checkbox" name="assign" id="assign" checked="true"/>
             </td>
         </tr>
 
@@ -99,9 +99,9 @@
             <td class="padded">
                 <select class="content" name="group" size="1">
                     <xsl:for-each select="/root/gui/groups/record">
-                        <xsl:sort select="label/child::*[name() = $lang]"/>
+                        <xsl:sort select="label/child::*[substring(name(),0,3) = $lang]"/>
                         <option value="{id}">
-                            <xsl:value-of select="label/child::*[name() = $lang]"/>
+                            <xsl:value-of select="label/child::*[substring(name(),0,3) = $lang]"/>
                         </option>
                     </xsl:for-each>
                 </select>
@@ -126,9 +126,9 @@
                                 <xsl:value-of select="/root/gui/strings/none"/>
                             </option>
                             <xsl:for-each select="/root/gui/categories/record">
-                                <xsl:sort select="label/child::*[name() = $lang]"/>
+                                <xsl:sort select="label/child::*[substring(name(),0,3) = $lang]"/>
                                 <option value="{id}">
-                                    <xsl:value-of select="label/child::*[name() = $lang]"/>
+                                    <xsl:value-of select="label/child::*[substring(name(),0,3) = $lang]"/>
                                 </option>
                             </xsl:for-each>
                         </select>

@@ -2,9 +2,10 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:saxon="http://saxon.sf.net/"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	extension-element-prefixes="saxon"
 	xmlns:exslt="http://exslt.org/common" 
-	exclude-result-prefixes="exslt saxon geonet">
+	exclude-result-prefixes="exslt saxon geonet xlink">
 
 	<xsl:include href="blanks/metadata-schema01.xsl"/>
 	<xsl:include href="blanks/metadata-schema02.xsl"/>
@@ -79,7 +80,7 @@
 			<!-- create button -->
 			<xsl:variable name="duplicate" select="concat(/root/gui/strings/duplicate,': ',$ltitle)"/>
 			<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
-				<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
+				<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/duplicate"/></button>
 			</xsl:if>
 
             <!-- edit button -->
@@ -110,7 +111,7 @@
 				<!-- privileges button -->
 				<xsl:if test="/root/gui/services/service/@name='metadata.admin.form'">
 					<xsl:variable name="privileges" select="concat(/root/gui/strings/privileges,': ',$ltitle)"/>
-					<button onclick="doOtherButton('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}','{$privileges}',600)"><xsl:value-of select="/root/gui/strings/privileges"/></button>
+					<button onclick="doOtherButton('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}','{$privileges}',800)"><xsl:value-of select="/root/gui/strings/privileges"/></button>
 				</xsl:if>
 				
 				<!-- categories button -->
@@ -162,8 +163,19 @@
         <xsl:param name="targetPolygon"/>
         <xsl:param name="watchedBbox"/>
         <xsl:param name="eltRef"/>
+
+        <xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
+		<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
+		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+
+        <xsl:variable name="finalEdit">
+	        <xsl:choose>
+		        <xsl:when test="$rejected or $isXLinked = 'true' or $isDisabled">false</xsl:when>
+				<xsl:otherwise><xsl:value-of select="$edit"/></xsl:otherwise>
+			</xsl:choose>
+        </xsl:variable>
         <div class="extentViewer" style="width:{/root/gui/config/map/metadata/width}; height:{/root/gui/config/map/metadata/height};" 
-            edit="{$edit}" 
+            edit="{$finalEdit}" 
             target_polygon="{$targetPolygon}" 
             watched_bbox="{$watchedBbox}" 
             elt_ref="{$eltRef}"

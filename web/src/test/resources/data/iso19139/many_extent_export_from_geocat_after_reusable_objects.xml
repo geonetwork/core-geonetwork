@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd">
+    <gmd:fileIdentifier xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                        xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:geonet="http://www.fao.org/geonetwork">
+        <gco:CharacterString>6f65b60f-e0a0-4047-8cea-e6c42c229d9e</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                  xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geonet="http://www.fao.org/geonetwork">
+        <gco:CharacterString>fra</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                      xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xmlns:geonet="http://www.fao.org/geonetwork">
+        <gmd:MD_CharacterSetCode codeListValue="utf8"
+                                 codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                        xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:geonet="http://www.fao.org/geonetwork">
+        <gmd:MD_ScopeCode codeListValue="dataset"
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                            xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns:geonet="http://www.fao.org/geonetwork">
+        <gco:CharacterString>Jeu de données</gco:CharacterString>
+    </gmd:hierarchyLevelName>
+    <gmd:contact xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                 xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geonet="http://www.fao.org/geonetwork"
+                 xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:CI_ResponsibleParty>
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </gmd:organisationName>
+            <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <gmd:CI_Telephone>
+                            <gmd:voice gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:voice>
+                            <gmd:facsimile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:facsimile>
+                        </gmd:CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <gmd:CI_Address>
+                            <gmd:city gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:city>
+                            <gmd:administrativeArea gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:postalCode>
+                            <gmd:country xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:country>
+                            <gmd:electronicMailAddress gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:electronicMailAddress>
+                        </gmd:CI_Address>
+                    </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage>
+                                <gmd:URL/>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>text/html</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:name>
+                            <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:description>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                    <gmd:hoursOfService gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </gmd:hoursOfService>
+                    <gmd:contactInstructions gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </gmd:contactInstructions>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"
+                                 codeListValue="editor"/>
+            </gmd:role>
+        </gmd:CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geonet="http://www.fao.org/geonetwork">
+        <gco:DateTime>2009-08-07T15:19:20</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                              xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                              xmlns:geonet="http://www.fao.org/geonetwork">
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                                 xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                 xmlns:geonet="http://www.fao.org/geonetwork">
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:identificationInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco"
+                            xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns:geonet="http://www.fao.org/geonetwork">
+        <gmd:MD_DataIdentification>
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Template GM03 / datasets / INSPIRE valid</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date/>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Ce template permet de</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:language>
+                <gco:CharacterString>deu</gco:CharacterString>
+            </gmd:language>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_0 Only a BBOX
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.9669</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>10.4881</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.8293</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.8065</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_1 Multisurface with 2 disjoint polygons
+                                    and 1 that intersects with the main polygon(the one with the hole). Should be
+                                    reconstructed after round trip as 1 polygon with hole and 2 polygons without hole
+                                    both should be inclusion. Also has a BBOX that should be ignored after
+                                    re-construction
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N689d125f7a994575b8a2c86e83e20b89">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N631bd5331aca4de6ab660ad9a86fcf6c">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>8.3946 47.3488 8.9927 47.3488 8.9927 46.9434 8.3946
+                                                        46.9434 8.3946 47.3488
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nfc2b30b49e7746018ec22a1bdd9e8e47">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.0657 46.671 7.4511 46.671 7.4511 47.2026 8.202
+                                                        47.2026 8.202 46.5315 7.7435 46.5315 7.7435 46.2059 7.0657
+                                                        46.2059 7.0657 46.671
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                            <gml:interior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.7036 47.0032 7.7036 46.8238 7.9096 46.8238 7.9096
+                                                        47.0032 7.7036 47.0032
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:interior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>7.0657</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>8.9926</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.2059</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.3488</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_2 A large include polygon and a small
+                                    exclude polygon that fully intersects the include polygon should be an include
+                                    polygon with a hole
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N754aaf0bcac943f087973d77bd6b33d5">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N049859e58f1f4f1783ee50430d11767b">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                            <gml:interior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.7036 47.0032 7.7036 46.8238 7.9096 46.8238 7.9096
+                                                        47.0032 7.7036 47.0032
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:interior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_3 A large include polygon and another
+                                    small include polygon that fully intersects the large polygon should result in one
+                                    inclusion polygon
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N7a939d8325a147288e1688d14c594e35">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N8e928bc0f85442b2a7209f2de29005d8">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_3 A large include polygon and another
+                                    small include polygon that fully intersects the large polygon should result in one
+                                    inclusion polygon
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Ncef0100242954ef0b6dee65f95255e7c">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N4d0930bb216b4dd48652a60ef7800c13">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_3 A large include polygon and another
+                                    small include polygon that fully intersects the large polygon should result in one
+                                    inclusion polygon
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N7a939d8325a147288e1688d14c594e35">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N8e928bc0f85442b2a7209f2de29005d8">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_3 A large include polygon and another
+                                    small include polygon that fully intersects the large polygon should result in one
+                                    inclusion polygon
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N7a939d8325a147288e1688d14c594e35">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N8e928bc0f85442b2a7209f2de29005d8">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_7 A large include polygon and another
+                                    large include polygon that fully disjoint from the large polygon should result in
+                                    two include polygons
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N4909a539853a46a98cc1d06682c7c039">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N856f937b8d6a4f90b14762be1da192a5">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>8.3946 47.3488 8.9927 47.3488 8.9927 46.9434 8.3946
+                                                        46.9434 8.3946 47.3488
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N9842ae172fb9430fa3d6797ff9712acb">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_7 A large include polygon and another
+                                    large include polygon that fully disjoint from the large polygon should result in
+                                    two include polygons
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Nde71786442a046c4bcb058153456fc63">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N855f48250c084905b7eb927ff5c0a46e">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>8.3946 47.3488 8.9927 47.3488 8.9927 46.9434 8.3946
+                                                        46.9434 8.3946 47.3488
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N032cf9d6b221446cb288ccf74ed5af0f">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_9 2 disjoint exclude polygons, 1 include
+                                    polygon that intersects both should result in one include polygon
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N53e27164240d443f87a631c3c11b6b5c">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N5573387e7fe4463baa04d22e41026486">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.0657 46.671 7.4511 46.671 7.4511 46.5315 7.7435
+                                                        46.5315 7.7435 46.2059 7.0657 46.2059 7.0657 46.671
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_2 A large include polygon and a small
+                                    exclude polygon that fully intersects the include polygon should be an include
+                                    polygon with a hole
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Nf98676a5e4244ef0bebe7c941c6ee6b8">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N25fb7782a15c433384d4727abbf24687">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.4511 47.2026 8.202 47.2026 8.202 46.5315 7.4511
+                                                        46.5315 7.4511 47.2026
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                            <gml:interior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.7036 47.0032 7.7036 46.8238 7.9096 46.8238 7.9096
+                                                        47.0032 7.7036 47.0032
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:interior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_0 Only a BBOX
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.9669</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>10.4881</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.8293</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.8065</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">EX_11 Only a BBOX
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.9999</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>7.9999</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.9999</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.4999</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_0 Only a BBOX
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.9669</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>10.4881</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.8293</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.8065</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">EX_11 Only a BBOX
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.9999</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>7.9999</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.9999</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.4999</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_0 Only a BBOX
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N43df932eb092424f87e4f3a607236259">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N0e0803fa5f41429fa85f96a7c4d61191">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>5.9669 45.8293 5.9669 47.8065 10.4881 47.8065 10.4881
+                                                        45.8293 5.9669 45.8293
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.9669</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>10.4881</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.8293</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.8065</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent>
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>EX_14
+                            Only description
+                        </gco:CharacterString>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>ausdehnungsidentifikator</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">EX_14 Merging 2 geometries should result in 2
+                                    polygons in the multipolygon
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N259049e95bee4eb19cc41212a81da074">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N78fa20e20c4c4e02a8ecbaef05315e6e">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>4.5893 47.1094 4.41 47.2979 4.8525 47.9925 6.1524
+                                                        48.5356 6.6175 48.2341 6.0811 48.1572 5.7336 48.0987 5.6823
+                                                        48.026 5.8186 47.956 6.1416 47.8881 6.173 47.6906 5.9103 47.5615
+                                                        5.6441 47.5756 5.3468 47.6966 5.1055 47.728 4.9062 47.4359
+                                                        5.2209 47.1748 6.2092 47.2771 5.5465 46.5844 4.5295 46.5629
+                                                        4.5265 47.1029 4.5893 47.1094
+                                                    </gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>4.41</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.6175</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.5629</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>48.5356</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </gmd:MD_DataIdentification>
+    </gmd:identificationInfo>
+</gmd:MD_Metadata>

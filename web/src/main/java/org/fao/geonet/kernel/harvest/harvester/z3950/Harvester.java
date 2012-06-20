@@ -344,8 +344,7 @@ class Harvester {
 					} 
 				}
 			
-				boolean indexGroup = false;
-				dataMan.indexMetadata(dbms, id$, indexGroup);
+				dataMan.indexInThreadPoolIfPossible(dbms, ""+id, false);
 
 				result.addedMetadata++;
 			}

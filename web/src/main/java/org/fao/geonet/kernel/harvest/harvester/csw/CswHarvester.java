@@ -149,7 +149,9 @@ public class CswHarvester extends AbstractHarvester
 
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
-
+		// GeoCat issue #133729
+		settingMan.add(dbms, "id:"+siteId, "outputSchema", params.outputSchema);
+		
 		//--- store search nodes
 
 		for (Search s : params.getSearches())

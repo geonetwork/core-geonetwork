@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+	<!--  
+		<codelist name="gmd:CI_DateTypeCode">
+		<entry><code></code><label></label><description></description></entry>
+		</codelist>-->
+	<codelist name="che:CHE_CI_LegislationCode">
+		<entry>
+			<code>cantonalLaw</code>
+			<label>Loi cantonale</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>nationalLaw</code>
+			<label>Loi nationale</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>nationalDecree</code>
+			<label>Ordonnance nationale</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>internationalObligation</code>
+			<label>Obligation internationale</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>otherLegalText</code>
+			<label>Autre texte législatif</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>bylawsPrivatLaw</code>
+			<label>Statuts de droit privé</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>bylawsPublicLaw</code>
+			<label>Statuts de droit public</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>communalLaw</code>
+			<label>Loi communale</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CI_NumberTypeCode">
+		<entry>
+			<code>mainNumber</code>
+			<label>Numéro principal</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>directNumber</code>
+			<label>Numéro direct</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>mobile</code>
+			<label>Numéro portable</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>facsimile</code>
+			<label>Numéro Fax</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_MD_FilmTypeCode">
+		<entry>
+			<code>BW</code>
+			<label>Noir et blanc</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>C</code>
+			<label>Couleur</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>CIR</code>
+			<label>Infrarouge couleur</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>IR</code>
+			<label>Infrarouge</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_CI_projectTypeCode">
+		<entry>
+			<code>research</code>
+			<label>Recherche</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>monitoringProgram</code>
+			<label>Programme de surveillance</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>workProgram</code>
+			<label>Programme de travail</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>inventory</code>
+			<label>Inventaire</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>planning</code>
+			<label>Planification</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:basicGeodataIDTypeCode">
+		<entry>
+			<code>communal</code>
+			<label>Communal</label>
+		</entry>
+		<entry>
+			<code>cantonal</code>
+			<label>Cantonal</label>
+		</entry>
+		<entry>
+			<code>federal</code>
+			<label>Fédéral</label>
+		</entry>
+		<entry>
+			<code>other</code>
+			<label>Autre</label>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_MD_modelTypeCode">
+		<entry>
+			<code>FeatureDescription</code>
+			<label>Description des objets</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>UMLdiagram</code>
+			<label>Diagramme UML</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>EntityRelationshipModel</code>
+			<label>Diagramme ER</label>
+			<description>Diagramme Entité-Relation</description>
+		</entry>
+		<entry>
+			<code>INTERLIS1</code>
+			<label>INTERLIS 1</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>INTERLIS2</code>
+			<label>INTERLIS 2</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>GML</code>
+			<label>GML</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>Other</code>
+			<label>Autre</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_SV_inspireServiceTypeCode">
+		<entry>
+			<code>DiscoveryService</code>
+			<label>Service de recherche</label>
+			<description>Services permettant de rechercher des séries et services de données géographiques sur la base du contenu des
+métadonnées correspondantes et d’afficher le contenu des métadonnées.</description>
+		</entry>
+		<entry>
+			<code>ViewService</code>
+			<label>Service de consultation</label>
+			<description>Service permettant au moins de visualiser, de naviguer, de zoomer en avant et en arrière, de déplacer à l’écran, ou
+de superposer des séries de données géographiques qui peuvent être consultées et d’afficher les légendes ainsi que
+tout contenu pertinent de métadonnées.</description>
+		</entry>
+		<entry>
+			<code>DownloadService</code>
+			<label>Service de téléchargement</label>
+			<description>Service permettant de télécharger des copies de séries de données géographiques, ou de parties de ces séries, et
+lorsque cela est réalisable, d’y avoir accès directement.</description>
+		</entry>
+		<entry>
+			<code>TransformationService</code>
+			<label>Service de transformation</label>
+			<description>Service permettant de transformer des séries de données géographiques en vue d’assurer l’interopérabilité.</description>
+		</entry>
+		<entry>
+			<code>InvokeSpatialDataService</code>
+			<label>Service d’appel de services de données géographiques</label>
+			<description>Service permettant de définir à la fois les données d’entrée et de sortie demandées par le service de données
+géographiques et un processus ou une chaîne de services combinant plusieurs services. Il permet aussi de définir
+une interface externe du service internet pour le processus ou la chaîne de services.</description>
+		</entry>
+		<entry>
+			<code>OtherServices</code>
+			<label>Autre services</label>
+		</entry>
+	</codelist>
+	<codelist name="gmd:CI_RoleCode">
+		<entry>
+			<code>editor</code>
+			<label>Editeur</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>partner</code>
+			<label>Partenaire</label>
+			<description></description>
+		</entry>
+	</codelist>
+	<codelist name="gmd:MD_MaintenanceFrequencyCode">
+		<entry>
+			<code>userDefined</code>
+			<label>Fréquence personnalisée</label>
+			<description>Dans ce cas l'attribut définissant une fréquence personnalisée doit être utilisée</description>
+		</entry>
+	</codelist>
+	<codelist name="gmd:MD_MediumNameCode">
+		<entry>
+		  <code>zip100</code>
+  		<label>ZIP 100</label>
+  		<description></description>
+  	</entry>
+  	<entry>
+  		<code>zip250</code>
+  		<label>ZIP 250</label>
+  		<description></description>
+  	</entry>      <entry>
+  		<code>e-mail</code>
+  		<label>E-mail</label>
+  		<description></description>
+  	</entry>      <entry>
+  		<code>zip</code>
+  		<label>ZIP</label>
+  		<description></description>
+  	</entry>      <entry>
+  		<code>jaz</code>
+  		<label>JAZ</label>
+  		<description></description>
+  	</entry>      <entry>
+  		<code>other</code>
+  		<label>Autre</label>
+  		<description></description>
+  	</entry>
+	</codelist>
+	<codelist name="gmd:MD_ScopeCode">
+		<entry>
+			<code>project</code>
+			<label>Projet</label>
+			<description>Le projet décrit le cadre organisationnel défini pour l'accomplissement d'une tâche: il intègre la description des tenants et des aboutissants du problème, les objectifs, les activités prévues, les étapes de réalisation, les délais, les ressources...</description>
+		</entry>
+		<entry>
+			<code>stationSite</code>
+			<label>Station</label>
+			<description>Cet élément décrit les activités d'acquisition de données des stations de mesure ; il ne décrit pas les données mais la manière dont elles ont été saisies (paramètres de saisie, méthodes, instruments)</description>
+		</entry>
+		<entry>
+			<code>publication</code>
+			<label>Publication</label>
+			<description>Ce sont des produits finis tels que les ouvrages, brochures, articles, rapports, matériel audiovisuel...</description>
+		</entry>
+	</codelist>
+	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
+		<entry>
+			<code>paperMap</code>
+			<label>Carte papier</label>
+			<description></description>
+		</entry>
+	</codelist>
+</codelists>
+

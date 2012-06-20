@@ -114,7 +114,7 @@ public class BatchUpdateStatus implements Service
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata, context);
 		r.processWithFastIndexing();
 
 		// -- for the moment just return the sizes - we could return the ids

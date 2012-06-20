@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fields>
+<!-- override all the schema substitutes for gco:CharacterString 
+			- we don't want any--> 
+	<field name="gco:CharacterString">
+	</field>
+
+<!-- offer just the service and data identification -->
+	<field name="gmd:AbstractMD_Identification">
+		<substitute name="che:CHE_MD_DataIdentification"/>
+		<substitute name="che:CHE_SV_ServiceIdentification"/>
+		<substitute name="srv:SV_ServiceIdentification"/>
+		<substitute name="gmd:MD_DataIdentification"/>
+	</field>
+
+	<field name="gmd:MD_Metadata">
+		<substitute name="che:CHE_MD_Metadata"/>
+	</field>
+	
+	<field name="gmd:CI_ResponsibleParty">
+		<substitute name="che:CHE_CI_ResponsibleParty"/>
+	</field>
+	
+	<field name="gmd:CI_Telephone">
+		<substitute name="che:CHE_CI_Telephone"/>
+	</field>
+	
+	<field name="gmd:CI_Address">
+		<substitute name="che:CHE_CI_Address"/>
+	</field>
+	
+	<field name="gmd:MD_MaintenanceInformation">
+		<substitute name="che:CHE_MD_MaintenanceInformation"/>
+	</field>
+	
+	<field name="gmd:MD_LegalConstraints">
+		<substitute name="CHE_MD_LegalConstraints"/>
+	</field>
+	
+	<field name="gmd:MD_SecurityConstraints">
+		<substitute name="che:CHE_MD_SecurityConstraints"/>
+	</field>
+	
+	<field name="gmd:MD_CoverageDescription">
+		<substitute name="che:CHE_MD_CoverageDescription"/>
+	</field>
+	
+	<field name="gmd:MD_FeatureCatalogueDescription">
+		<substitute name="che:CHE_MD_FeatureCatalogueDescription"/>
+	</field>
+    
+	<field name="gmd:MD_ScopeCode">
+        <substitute name="gmd:MD_ScopeCode"/>
+    </field>
+    
+    <field name="gmd:MD_Identifier">
+        <!-- We don't want RS_Identifier -->
+    </field>
+    
+</fields>

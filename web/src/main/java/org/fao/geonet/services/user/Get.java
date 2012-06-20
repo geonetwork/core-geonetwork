@@ -29,9 +29,15 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 //=============================================================================
 
@@ -59,7 +65,10 @@ public class Get implements Service
 		String id = params.getChildText(Params.ID);
 
 		UserSession usrSess = context.getUserSession();
-		if (!usrSess.isAuthenticated()) return new Element(Jeeves.Elem.RESPONSE);
+		if (!usrSess.isAuthenticated()){
+            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+            return loadSharedUser(dbms,id);
+		}
 
 		String      myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
@@ -71,6 +80,10 @@ public class Get implements Service
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 			Element elUser = dbms.select ("SELECT * FROM Users WHERE id=?", Integer.valueOf(id));
+
+			if(elUser.getChild("record") != null && elUser.getChild("record").getChildText("profile").equals(Geocat.Profile.SHARED)) {
+				return loadSharedUser(dbms, id);
+			}
 
 		//--- retrieve user groups
 
@@ -99,12 +112,61 @@ public class Get implements Service
 		//--- return data
 
 			elUser.addContent(elGroups);
+	        String[] elementsToResolve = { "organisation"};
+	        LangUtils.resolveMultiLingualElements(elUser, elementsToResolve);
+	        
 			return elUser;
 		} else {
-			throw new IllegalArgumentException("You don't have rights to do this");
+            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+			return loadSharedUser(dbms,id);
 		}
 
 	}
+
+    private Element loadSharedUser(Dbms dbms, String id) throws SQLException, IOException, JDOMException {
+
+        Element elUser = dbms.select ("SELECT * FROM Users WHERE id=? and profile=?", Integer.valueOf(id),Geocat.Profile.SHARED);
+
+        if(elUser.getChild("record")==null) {
+        	return elUser;
+        }
+        
+        Element elGroups = new Element(Geonet.Elem.GROUPS);
+
+        java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", Integer.valueOf(id)).getChildren();
+
+        for(int i=0; i<list.size(); i++)
+        {
+            String grpId = ((Element)list.get(i)).getChildText("groupid");
+
+            elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
+        }
+        
+        elUser.addContent(elGroups);
+        
+		//--- get the validity of the parent if it exists
+
+		Element parentInfoId = elUser.getChild("record").getChild("parentinfo");
+        if (parentInfoId.getTextTrim().length() > 0) {
+            Integer integer = Integer.parseInt(parentInfoId.getTextTrim());
+            Element validatedResults = dbms.select("SELECT validated FROM Users where id="+integer);
+
+            Element elValidated = validatedResults.getChild("record").getChild("validated");
+
+            if (elValidated != null){
+                elValidated.detach();
+                elValidated.setName("parentValidated");
+                elUser.addContent(elValidated);
+            }
+		}
+
+        //--- return data
+
+        String[] elementsToResolve = { "organisation", "positionname", "orgacronym","onlinename","onlinedescription", "onlineresource", Geocat.Params.CONTACTINST};
+        LangUtils.resolveMultiLingualElements(elUser, elementsToResolve);
+
+        return elUser;
+    }
 }
 
 //=============================================================================

@@ -129,7 +129,7 @@ public class Aligner
                     //--- maybe the metadata was unretrievable
 
                     if (id != null) {
-                        dataMan.indexMetadataGroup(dbms, id);
+                        dataMan.indexMetadataGroup(dbms, id, false, context);
                     }
                 }
             }
@@ -273,7 +273,7 @@ public class Aligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, changeDate, false);
+                dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, changeDate, false, false);
 
 				result.updatedMetadata++;
 			}

@@ -25,37 +25,9 @@
 	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
 	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
 	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-  <subtemplate.admin>Hallitse hakemistot</subtemplate.admin>
-  <subtemplate.admin.desc>Lisää / muokata / poistaa hakemistoja (esim. yhteystiedot hakemistot)</subtemplate.admin.desc>  
-		<surnameMandatory>Sukunimi / sukunimi on pakollista</surnameMandatory>
-	<firstnameMandatory>Etunimi on pakollinen</firstnameMandatory>
-	<emailMandatory>sähköpostiosoite on pakollinen</emailMandatory>		
-	<forgottenPassword>Unohtuiko salasana?</forgottenPassword>	
-  <selectTemplate>Select schemas</selectTemplate>
-  	<notificationsDes>Remote updates</notificationsDes>
 	<makeChanges>I really want to do this!</makeChanges>
 	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
-	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
-	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
-	<templatesSamples>Manage templates and sample data</templatesSamples>
-	<simpleSearch>Simple Search</simpleSearch>
-	<advancedSearch>Advanced Search</advancedSearch>
-	<remoteSearch>Remote Search</remoteSearch>
-	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
-  <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
-  <noServer js="true">Please select a server to search</noServer>
-	<anyWith>Any - with one of these words</anyWith>
-	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
-	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
-	<anyWithoutWords>Any - without these words</anyWithoutWords>
-	<dataDownload>Data for Download</dataDownload>
-	<addSchema>Add a metadata schema/profile</addSchema>
-	<updateSchema>Update a metadata schema/profile</updateSchema>
-	<deleteSchema>Delete a metadata schema/profile</deleteSchema>
-	<selectSchema>Select a metadata schema/profile</selectSchema>
-	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
-	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
-	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
+
 		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 		<createThesaurus>Create/Update Thesaurus</createThesaurus>
 		<thesaurusType>Thesaurus Type</thesaurusType>
@@ -304,11 +276,6 @@
 	<backToPreviousPage>Takaisin edelliselle sivulle</backToPreviousPage>
 	<batchImport>Tuo kaikki XML-dokumentit paikallisesta hakemistosta</batchImport>
 	<batchImportTitle>Tuo useita tiedostoja</batchImportTitle>
-	<batchActions>Batch actions:</batchActions>
-	<batchDeleteTitle>Batch Delete Operation</batchDeleteTitle>
-	<batchNewOwnerTitle>Batch New Owner Operation</batchNewOwnerTitle>
-	<batchUpdateCategoriesTitle>Batch Update Categories Operation</batchUpdateCategoriesTitle>
-	<batchUpdatePrivilegesTitle>Batch Update Privileges Operation</batchUpdatePrivilegesTitle>	
 	<begdate>Alkupäivä</begdate>
 	<begtime>Alkupäivä</begtime>
 	<bgFileDescChoice value="large_thumbnail">Iso näytekuva</bgFileDescChoice>
@@ -336,13 +303,8 @@
 	<categoryManagement>Kategorioiden ylläpito</categoryManagement>
 	<categoryManDes>Selaa ja päivitä kategorioita.</categoryManDes>
 	<categoryNameMandatory>Kategorialle on annettava nimi.</categoryNameMandatory>
-	<catalogueConfiguration>Catalogue settings</catalogueConfiguration>
-	<indexConfiguration>Index settings</indexConfiguration>
-	<io>Import, export &amp; harvesting</io>	
 	<changeDate>Metatietodokumentin päivitysajankohta</changeDate>
 	<checkusername>Tarkista käyttäjätunnus.</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Valitse-</choose>
 	<chooseFile>Valitse tiedosto, jonka haluat ladata.</chooseFile>
 	<chooseLargeThumbnail>Valitse iso näytekuva.</chooseLargeThumbnail>
@@ -353,7 +315,6 @@
 	<close js="true">Sulje</close>
 	<completeTab>JHS 158</completeTab>
 	<completeTabEditor>Tarkennettu editori</completeTabEditor>
-	<confirmBatchDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmBatchDelete>	
 	<confirmCancel>Haluatko varmasti poistua editorista? Menetät kaikki tallentamattomat tiedot.</confirmCancel>
     <confirmCancelCreate>Haluatko varmasti keskeyttää metatietofokumentin luonnin?</confirmCancelCreate>
 	<confirmDelete>Haluatko varmasti poistaa metatiedot tietokannasta?</confirmDelete>
@@ -372,12 +333,6 @@
 	<country>Maa</country>
 	<create>Luo kopio</create>
 	<createTip>Luo uusi metatietodokumentti tämän metatietopohjan perusteella.</createTip>
-	<crs code="EPSG:4326">WGS 84</crs>
-	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
-	<crs code="EPSG:4258">ETRS 89</crs>
-	<crs code="EPSG:900913">Google Mercator</crs>
-	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>	
 	<cswTest>CSW ISO testi</cswTest>
 	<cswTestDesc>Testikäyttöliittymä CSW ISO-luettelorajapinnan testaamiseen</cswTestDesc>
 	<dataQualityTab>Laatutiedot</dataQualityTab>
@@ -476,7 +431,6 @@
 	<harvestingManDes>Kerää aineistoja muualta Paikkatietohakemistoon (harvesting).</harvestingManDes>
 	<help>Ohje</help>
 	<helpComplete>Lisäohje</helpComplete>
-    <helpLinkTooltip js="true">Help</helpLinkTooltip>  	
 	<helperList>Ehdotukset:</helperList>
 	<hideAdvancedOptions>Piilota tarkennettu haku</hideAdvancedOptions>
 	<highlights>Suosituimmat</highlights>
@@ -544,8 +498,6 @@
 	<longitude>Pituuspiiri</longitude>
 	<longMax>pituus (max)</longMax>
 	<longMin>pituus (min)</longMin>
-	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>	
-	<reload>Reload</reload>	
 	<mainpageTitle>Tervetuloa paikkatietohakemistoon!</mainpageTitle>
 	<maintenanceTab>Ylläpitotiedot</maintenanceTab>
 	<management>Ylläpito</management>
@@ -585,7 +537,6 @@
 	<metadata-samples-add>Lisää esimerkkimetatietodokumentti.</metadata-samples-add>
 	<metadata-samples-add-failed>Esimerkkimetatietodokumentin lisäys epäonnistui.</metadata-samples-add-failed>
 	<metadata-samples-add-success>Esimerkkimetatietodokumentin lisäys onnistui.</metadata-samples-add-success>
-  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>	
 	<metadata-template-order>Järjestä mallipohjat.</metadata-template-order>
 	<metadata-template-order-desc>Järjestä mallipohjat haluamaasi järjestykseen.</metadata-template-order-desc>
 	<metadata-template-add-default>Lisää valmiit mallipohjat</metadata-template-add-default>
@@ -597,10 +548,7 @@
 	<metadataInsertResults>Metatietojen tiedostolisäyksen tulokset</metadataInsertResults>
 	<metadataJSForm>Metatiedot JS-lomakkeelta</metadataJSForm>
 	<metadataRecordsAdded>Lisättyjen metatietodokumenttien kokonaismäärä :</metadataRecordsAdded>
-  <failOnError>Fail on error</failOnError>
-	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>	
 	<min>Vähintään</min>
-    <minor>Minor edit</minor>	
 	<missing>Puuttuva tai tyhjä elementti</missing>
 	<missingSeeTab>Puuttuva elementti - Katso vasemmalla oleva välilehti: </missingSeeTab>
 	<more>lisää</more>
@@ -697,15 +645,7 @@
     <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-  <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>	
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Ladattava tiedosto (FTP-protokolla)</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-    <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>	
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Ladattava tiedosto (HTTP-protokolla)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (www-osoite)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Oman organisaation www-osoite</protocolChoice>
@@ -761,16 +701,12 @@
 	<searching>...Hakee metatietoja...</searching>
 	<searchPage>Hakusivu</searchPage>
 	<searchPageDes>Hakusivulle</searchPageDes>
-  <searchResult>Search results</searchResult>
-  <resources>Resources</resources>
-  <visualizationService>Visualization service URL (WMS)</visualizationService>	
 	<searchTemplates>Metatietopohjien haku</searchTemplates>
 	<searchText>Mitä?</searchText>
 	<searchUnused>Hae käyttämättömiä tai tyhjiä metatietodokumentteja.</searchUnused>
 	<searchUnusedTitle>Hae käyttämättömät</searchUnusedTitle>
 	<select>Valitse : </select>
 	<selectAll>Valitse kaikki metatietodokumentit</selectAll>
-	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>	
 	<selected> valittu</selected>
 	<selectedOnly>Näytä ainoastaan valittu</selectedOnly>
 	<selection>Valinta</selection>
@@ -789,7 +725,7 @@
 	<siteId>Sivuston tunniste</siteId>
 	<sizeBytes>Koko (tavuina)</sizeBytes>
 	<sortBy>Lajittele</sortBy>
-	<sortByType id="changeDate">Päivitysajankohdan mukaan</sortByType>
+	<sortByType id="date">Päivitysajankohdan mukaan</sortByType>
 	<sortByType id="popularity">Suosituimmuuden mukaan</sortByType>
 	<sortByType id="rating">Arvostelujen mukaan</sortByType>
 	<sortByType id="relevance">Relevanssin mukaan</sortByType>
@@ -808,8 +744,6 @@
 	<surName>Sukunimi</surName>
 	<systemConfig>Järjestelmäasetukset</systemConfig>
 	<systemConfigDes>Muuta järjestelmää koskevia asetuksia</systemConfigDes>
-	<systemInfo>System information</systemInfo>
-	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>	
 	<template>Pohja metatietodokumentille</template>
 	<Term>Käsite</Term>
 	<thanks>Kiitos!</thanks>
@@ -849,7 +783,6 @@
 	<usernameMandatory>Käyttäjätunnus on pakollinen.</usernameMandatory>
 	<userPw>Vaihda salasana</userPw>
 	<userPwDes>Vaihda Paikkatietohakemistossa käyttämäsi salasana.</userPwDes>
-	<usersAndGroups>Users and groups</usersAndGroups>	
 	<uuidAction>Tiedostotunniste</uuidAction>
 	<validate>Validoi</validate>
 	<assign>Assign to current catalog</assign>

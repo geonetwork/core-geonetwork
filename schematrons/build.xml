@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="geonetwork-schematron" default="inspire">
+<project name="geonetwork-schematron" default="profil-che">
 
 	<property name="schematronDir" value="." description="Schematron directory" />
 	<property name="buildDir" value=".build" description="Build directory" />
@@ -26,6 +26,9 @@
 		</ant>
 		<ant target="clean-schema-dir">
 			<property name="schema" value="iso19139" />
+		</ant>
+		<ant target="clean-schema-dir">
+			<property name="schema" value="iso19139.che" />
 		</ant>
 	</target>
 
@@ -95,7 +98,6 @@
 		<ant target="publish-schematron">
 			<property name="rules" value="inspire" />
 			<property name="schema" value="iso19139" />
-			<property name="disabled" value=".disabled" />
 		</ant>
 	</target>
 
@@ -121,6 +123,30 @@
 		<ant target="publish-schematron">
 			<property name="rules" value="iso-fra" />
 			<property name="schema" value="iso19139.fra" />
+		</ant>
+	</target>
+
+	<target name="profil-che" description="Add Profil for Swiss rules to iso19139.che schema." depends="schematron, inspire">
+		<ant target="compile-schematron">
+			<property name="rules" value="iso-che" />
+		</ant>
+
+
+		<ant target="publish-schematron">
+			<property name="rules" value="geonetwork" />
+			<property name="schema" value="iso19139.che" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="iso" />
+			<property name="schema" value="iso19139.che" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="inspire" />
+			<property name="schema" value="iso19139.che" />
+		</ant>
+		<ant target="publish-schematron">
+			<property name="rules" value="iso-che" />
+			<property name="schema" value="iso19139.che" />
 		</ant>
 	</target>
 

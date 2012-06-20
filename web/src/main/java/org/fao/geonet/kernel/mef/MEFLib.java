@@ -221,6 +221,8 @@ public class MEFLib {
 	 * 
 	 * @param dbms
 	 * @param uuid
+	 * @param removeXlinkAttribute 
+	 * @param resolveXlink 
 	 * @return
 	 */
 	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
@@ -239,7 +241,12 @@ public class MEFLib {
         record.removeChildren("data");
         boolean forEditing = false;
         boolean withEditorValidationErrors = false;
-        Element metadata = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
+		boolean elementsHide = true;
+        boolean allowDbmsClosing = false;
+        Element metadata = dm.getGeocatMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute, elementsHide, allowDbmsClosing);
+        if(resolveXlink) {
+            Processor.detachXLink(metadata, context);
+        }
         metadata.removeChild("info", Edit.NAMESPACE);
         Element mdEl = new Element("data").setText(Xml.getString(metadata));
         record.addContent(mdEl);

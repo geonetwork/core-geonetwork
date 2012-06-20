@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -269,8 +270,14 @@ public class DbLib {
         if(Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "  Loading script:" + file);
 
+        String gcFile = checkFilePath(filePath, "create-db-geocat-", getDBType(dbms));
+        Log.debug(Geonet.DB, "Geocat Database creation script is:" + gcFile);
+
 		// --- load the dbms schema
-		return Lib.text.load(servletContext, appPath, file);
+        List<String> basicSchema = new ArrayList<String>(Lib.text.load(servletContext, appPath, file));
+        basicSchema.addAll(Lib.text.load(servletContext, appPath, gcFile));
+
+		return basicSchema;
 	}
 
 	/**

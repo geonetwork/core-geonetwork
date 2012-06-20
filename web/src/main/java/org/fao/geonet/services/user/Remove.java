@@ -30,10 +30,15 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.reusable.ReusableTypes;
+import org.fao.geonet.services.reusable.Reject;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 import java.util.List;
 
@@ -44,13 +49,17 @@ import java.util.List;
 
 public class Remove implements Service
 {
-	//--------------------------------------------------------------------------
+	private Type type;
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	       this.type = Type.valueOf(params.getValue("type", "NORMAL"));
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -58,9 +67,14 @@ public class Remove implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+    public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String id = Util.getParam(params, Params.ID);
+
+        Element rejectResult = handleSharedUser(id, params, context);
+        if(rejectResult != null) {
+            return rejectResult;
+        }
 
 		UserSession usrSess = context.getUserSession();
 		String      myProfile = usrSess.getProfile();
@@ -78,7 +92,7 @@ public class Remove implements Service
 		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals("UserAdmin"))  {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
+			
 			if (myProfile.equals("UserAdmin")) {
 				Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", new Integer(myUserId), iId);
 				if (admin.getChildren().size() == 0) {
@@ -105,6 +119,27 @@ public class Remove implements Service
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
+
+    @SuppressWarnings("unchecked")
+    private Element handleSharedUser(String id, Element params, ServiceContext context) throws Exception {
+    	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
+
+    	Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        Element profileQuery = dbms.select("Select profile from users where id=?",Integer.parseInt(id));
+        
+        if(!profileQuery.getChildren().isEmpty()) {
+            for (Element e : (java.util.List<Element>) profileQuery.getChildren()) {
+                if( type == Type.NORMAL && Geocat.Profile.SHARED.equals(e.getChildTextTrim("profile")))
+                    throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
+            }
+        }
+        
+        if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+            String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+            return new Reject().reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, testing);
+        }
+        return null;
+    }
 }
 
 //=============================================================================

@@ -148,7 +148,7 @@ public class BatchExtractSubtemplates implements Service
 		Set<Integer> indexers = new HashSet<Integer>();
 		indexers.addAll(metadata);
 		indexers.addAll(subtemplates);
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, dbms, indexers);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, dbms, indexers, context);
 		r.processWithFastIndexing();
 
 		// -- for the moment just return the sizes - we could return the ids
@@ -327,7 +327,7 @@ public class BatchExtractSubtemplates implements Service
 
 		if (doChanges) {
 			boolean validate = false, ufo = false, indexImmediate = false;
-			dataMan.updateMetadata(context, dbms, id, md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true); 
+			dataMan.updateMetadata(context, dbms, id, md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true, false); 
 
 			metadata.add(new Integer(id));
 		}

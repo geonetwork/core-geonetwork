@@ -38,6 +38,27 @@
 				<td class="padded"><input id="csw.capabUrl" class="content" type="text" value="" size="30"/></td>
 			</tr>
 
+            <tr>
+                <script language="javascript">
+                function updateTextFieldOutputSchema(string)
+                {
+                   $('csw.outputSchema').value =  string;
+                }
+                </script>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/outputSchema"/></td>
+                <td class="padded">
+                    <input type="text" class="content" size="70" name="outputSchema" id="csw.outputSchema" value="http://www.geocat.ch/2008/che" />
+                    <p>Examples : </p>
+                    <ul>
+                      <li><a href="javascript:updateTextFieldOutputSchema('http://www.opengis.net/cat/csw/2.0.2')">http://www.opengis.net/cat/csw/2.0.2' for Dublin Core</a></li>
+                      <li><a href="javascript:updateTextFieldOutputSchema('http://www.isotc211.org/2005/gmd')">http://www.isotc211.org/2005/gmd' for ISO19139</a></li>
+                      <li><a href="javascript:updateTextFieldOutputSchema('http://www.geocat.ch/2008/che')">http://www.geocat.ch/2008/che' for ISO19139-CHE</a></li>
+                      <!--  issue #133730 : deactivated for now : GC subsystem is not able to handle GM03 MD yet -->
+                      <!-- <li><a href="javascript:updateTextFieldOutputSchema('http://www.geocat.ch/2008/gm03_2')">'http://www.geocat.ch/2008/gm03_2' for GM03_2</a></li>   -->
+                    </ul>
+                </td>
+            </tr>
+
 			<tr>
 				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
 				<td class="padded">

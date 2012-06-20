@@ -226,6 +226,16 @@ public class SettingInfo
 
 	private SettingManager sm;
 
+	/**
+	 * @return the characters to ignore when analysing with the Geonetwork Analyser or null if this process is not required 
+	 */
+	public char[] getAnalyzerIgnoreChars() {
+		String ignoreChars = sm.getValue("system/lucene/ignorechars");
+		if(ignoreChars == null || ignoreChars.length() == 0) {
+			return null;
+		}
+	    return ignoreChars.toCharArray();
+    }
 }
 
 //=============================================================================

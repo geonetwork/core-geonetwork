@@ -84,7 +84,7 @@ public class UpdateCategories implements Service {
 		}
 
 		//--- index metadata
-        dataMan.indexInThreadPool(context, id, dbms);
+        dataMan.indexInThreadPool(context, id, dbms, false);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

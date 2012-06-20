@@ -108,26 +108,26 @@ public abstract class JeevesException extends Exception
 
 	private static Element getStackTrace(Throwable t, int depth)
 	{
-		Element stack = new Element("stack");
+        Element stack = new Element("stack");
         boolean writing = true;
-		for (StackTraceElement ste : t.getStackTrace())
-		{
-			String clas = ste.getClassName();
-			String file = ste.getFileName();
-			String meth = ste.getMethodName();
-			String line = Integer.toString(ste.getLineNumber());
+        for (StackTraceElement ste : t.getStackTrace())
+        {
+            String clas = ste.getClassName();
+            String file = ste.getFileName();
+            String meth = ste.getMethodName();
+            String line = Integer.toString(ste.getLineNumber());
 
-			Element at = new Element("at");
+            Element at = new Element("at");
 
-			at.setAttribute("class",  (clas == null) ? "???" : clas);
-			at.setAttribute("file",   (file == null) ? "???" : file);
-			at.setAttribute("line",   (line == null) ? "???" : line);
-			at.setAttribute("method", (meth == null) ? "???" : meth);
+            at.setAttribute("class",  (clas == null) ? "???" : clas);
+            at.setAttribute("file",   (file == null) ? "???" : file);
+            at.setAttribute("line",   (line == null) ? "???" : line);
+            at.setAttribute("method", (meth == null) ? "???" : meth);
 
 
-            if (--depth >= 0 || 
-                    clas.startsWith("org.fao") || 
-                    clas.startsWith("org.wfp") || 
+            if (--depth >= 0 ||
+                    clas.startsWith("org.fao") ||
+                    clas.startsWith("org.wfp") ||
                     clas.startsWith("jeeves")  ||
                     clas.startsWith("org.geonetwork")) {
                 writing = true;
@@ -136,10 +136,10 @@ public abstract class JeevesException extends Exception
                 stack.addContent(new Element("skip").setText("..."));
                 writing = false;
             }
-		}
+        }
 
-		return stack;
-	}
+        return stack;
+    }
 
 	//--------------------------------------------------------------------------
 	//---

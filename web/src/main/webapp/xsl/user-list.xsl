@@ -46,7 +46,7 @@
 				<th class="padded" style="width:100px;"><b><xsl:value-of select="/root/gui/strings/profile"/></b></th>
 				<th class="padded"><b><xsl:value-of select="/root/gui/strings/operation"/></b></th>
 			</tr>
-			<xsl:for-each select="/root/response/record">
+			<xsl:for-each select="/root/response/record[profile != 'Shared']">
 				<xsl:sort select="username"/>
 				
 				<xsl:variable name="profileId">

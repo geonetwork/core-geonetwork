@@ -1,0 +1,2701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://www.geocat.ch/concept">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<dc:title>Keyword for geocat.ch</dc:title>
+	<dc:description></dc:description>
+	<dc:creator rdf:nodeID="node143jta0a6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node143jta0a6x1">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+	<foaf:name>swisstopo</foaf:name>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.geocat.ch/concept">
+	<dc:rights></dc:rights>
+	<dcterms:issued></dcterms:issued>
+	<dcterms:modified>2009-04-09 07:57:15</dcterms:modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">3D Simulation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Simulation 3D</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">simulazione 3D</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">3D simulation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">3D Visualisierung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Visualisation 3D</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">visualizzazione 3D</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">3D visualisation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ablagerungszone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">aire de sédimentation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">bacino di sedimentazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">deposition zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Abstandslinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ligne de comparaison</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di contorno (?)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">contour line (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Achse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Axe</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">asse</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">axis</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Administrative Einteilung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">division administrative</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">suddivisione amministrativa</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">administrative division</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Administrative Grenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">limite administrative</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine amministrativo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">administrative boundary</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#8">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Allgemeine Systematik der Wirtschaftszweige NOGA</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Nomenclature Générale des Activités économiques NOGA</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Nomenclatura generale delle attività economiche NOGA</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">General classification of economic activities NOGA</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Alpwirtschaft</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">alpage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">economia alpestre</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">alpine economy</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#10">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Alpwirtschaftszone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone alpestre</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona alpestre</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">alpine farming zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#11">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Alte Karte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Carte ancienne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta anziana</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Old map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#12">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Alter</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">âge</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">età</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">age</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#13">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Altholzinsel</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ilôt de vieux bois</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">isola di legno vecchio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">old-growth forest islet</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#14">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">amtliche Vermessung AV</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">mensuration officielle MO</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">misurazione ufficiale MU</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">cadastral surveying</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#15">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Anbaueignung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">aptitude culturale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">attitudine alla coltura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">cultivation suitability</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#16">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Anlegestelle</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">poste d&apos;amarrage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">posto d&apos;ormeggio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mooring place</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#17">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Antenne</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">antenne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">antenna</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">antenna</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#18">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Auengebiet</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone alluviale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona golenale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">alluvial site</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#19">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Autobus</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Autobus</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">autobus</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Bus</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#20">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Barriere</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">barrière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">barriera</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">barrier</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#21">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Basiskarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte de base</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta di base</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">topographic base</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#22">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Baubewilligung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">autorisation de construire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">autorizzazione di costruzione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">construction permit</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#23">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Baugrund</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Terrain de fondation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Terreno di fondazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Building land</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#24">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Baulinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">alignement</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di edificazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">building line</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#25">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Baumgruppe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">groupe d&apos;arbres</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">gruppo d&apos;alberi</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">group of trees</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#26">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Baustatistik</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">statistique de la construction et du logement</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">statistica delle costruzioni</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">housing and building statistics</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#27">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bauzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Zone à bâtir</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona edificabile</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">building zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#28">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Berghütte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Cabane de montagne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rifugio di montagna</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mountain lodge</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#29">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bergname</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Nom de montagne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome di montagna</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Mountain name</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#30">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bestockung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">tallage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">tallitura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">tillering</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#31">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bevölkerungsstatistik</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">statistique de la population</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">statistica della popolazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">population statistics</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bewegungsachse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">axe de mouvement</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">asse di movimento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">direction of movement</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#33">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bewirtschafter</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">exploitant agricole</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">operatore agricolo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">farm manager</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#34">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bezirk</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">district</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">distretto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">district</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#35">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bezirksgrenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Limite de district</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine di distretto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">District boundary</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#36">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bezugsmarkierung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">point repère</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">punto di riferimento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">fiducial mark</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#37">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bezugsrahmen, Referenzrahmen</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">cadre de référence</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Quadro di riferimento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">reference frame</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#38">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bezugssystem, Referenzsystem</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">système de référence</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">sistema di riferimento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">reference system</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#39">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bodenbedeckung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Couverture du sol</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Copertura del suolo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Land cover</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#40">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bouguer-Anomalien</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">anomalies de Bouguer</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">anomalie di Bouguer</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Bouguer-Anomalies</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#41">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Bruchkante</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Ligne de crêtes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di rottura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Breakline</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#42">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Buslinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ligne de bus</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea d&apos;autobus</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Bus network</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#43">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Chalet</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">chalet</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">chalet</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">chalet</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#44">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Datenbeschreibung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Description de données</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">descrizione di dati</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">data description</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#45">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Datendownload</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Téléchargement de données</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">download di dati</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">data download</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#46">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Datenverfügbarkeit</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">disponibilité données</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">disponibilità di dati</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">data availability</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#47">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Digitales Farborthofotomosaik</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Mosaïque d&apos;orthophotos numériques en couleur</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">mosaico di ortofoto digitali a colori</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Digital color orthophoto mosaic</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#48">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Digitales Höhenmodell DHM</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Modèle numérique d&apos;altitude MNA</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Modello digitale di elevazione DEM</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Digital elevation model DEM</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#49">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Digitales Oberflächenmodell DOM</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Modèle numérique de surface MNS</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Modello digitale di superficie DSM</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Digital surface model DSM</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#50">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Digitales Terrainmodell DTM, Geländemodell DGM</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Modèle numérique de terrain MNT</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">modello digitale del terreno DTM</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Digital terrain model DTM</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#51">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Distanzangabe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Distance routière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">indicazione della distanza</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Road distance</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#52">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Doline</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">doline</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">dolina</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">doline</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#53">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Druckleitung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Conduite forcée</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">condotta forzata</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">pressure pipe</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#54">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Durchgangsstrasse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Route de transit</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">strada di transito</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">through road</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#55">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Durchlässigkeit</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">perméabilité</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">permeabilità</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">permeability</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#56">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Eigentümer</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">propriétaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">proprietario</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">owner</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#57">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Eigentumsbeschränkung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">restrictions à la propriété</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">restrizione al diritto di proprietà</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">restriction of the right of property</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#58">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Einzelobjekte und Linienelemente</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Objets divers et éléments linéaires</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">oggetti singoli ed elementi lineari</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">single objects and linear elements</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#59">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Einzelsignatur</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Symbole individuel</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Simbolo individuale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Individual Symbol</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#60">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Eisenbahnlinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ligne de chemin de fer</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di ferrovia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">railway track</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#61">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Erdsonde</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">sonde terrestre</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">sonda terrestra</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geothermal probe</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#62">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ereigniskataster</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">cadastre des événements</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">catasto degli eventi</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">register of events</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#63">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Erhohlungszone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de détente</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona ricreativa</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">recreation zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#64">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">erratischer Block, Findling</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">bloc erratique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">materiale erratico</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">erratic</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#65">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fähre</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Bac</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">traghetto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Ferry</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#66">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fassung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Captage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">captazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">catchment</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#67">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ferienhauszone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de maisons de vacances</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di case di vacanza</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">summer cottage zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#68">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Festgestein</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">roche consolidée, roche cohérente</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">roccia coerente</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">well-consolidated rock</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#69">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fixpunkte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Points fixes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">punti fissi</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Control points</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#70">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flachbau</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">construction basse</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">costruzione bassa</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">low building</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#71">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Surface</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Surface</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#72">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flachmoor</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">bas-marais</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">palude</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">swamp</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#73">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flugplatz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">aérodrome</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">aerodromo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">airfield</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#74">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flugsicherung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">sécurité de la navigation aérienne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">sicurezza della navigazione aerea</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">safety of air navigation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#75">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flugzeug</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">avion</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">aeroplano</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">aeroplane</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#76">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flugzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Zone de vol</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di volo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Fly area</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#77">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flurname</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">nom local</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome locale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">local name (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#78">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fluss</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Rivière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">fiume</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">River</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#79">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Flusskrebs</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">écrevisse</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">gambero di fiume</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">crayfish</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#80">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fördergebiet</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone d&apos;aide</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona d&apos;aiuto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">assisted area</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#81">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Forstrevier</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">triage forestier</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">settore forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest district</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#82">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Forststrasse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">route forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">strada forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest road</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#83">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fragebogenerhebung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">relevé par questionnaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">indagine per questionario</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">survey by questionnaire</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#84">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Freihaltezone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone à maintenir libre</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona da mantenere libera da costruzioni</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">keep free zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#85">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Fruchtfolgefläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">surface d&apos;assolement</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie per l&apos;avvicendamento delle colture</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">surface of crop rotation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#86">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">GALILEO</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">GALILEO</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">GALILEO</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">GALILEO</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#87">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gebäudeadresse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">adresse de bâtiment</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">indirizzo di edificio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">building address (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#88">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gebietsname</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Nom de territoire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome di territorio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Area name</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#89">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gebirgslandeplatz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Place d&apos;atterrissage en montagne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">area di atterraggio in montagna</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mountain landing site</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#90">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gebüsch</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Buissons</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">crespuglio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Scrub</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#91">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gefahrenkarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte des dangers</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta dei pericoli</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">hazard map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#92">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gefahrenkataster</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">cadastre des dangers</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">catasto dei pericoli</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">hazard inventory</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#93">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gehölz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">bosquet</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">boschetto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">small wood</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#94">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geländedarstellung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Représentation du terrain</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rappresentazione dell terreno</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Terrain representation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#95">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gemeindegrenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Limite de commune / limite communale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine di comune, confine comunale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Municipal boundary</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#96">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Generalkarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Carte générale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Carta generale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">General map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#97">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">geodätischer Fixpunkt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">point géodésique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">punto fisso geodetico</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geodetic control point</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#98">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">geodätisches Datum</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">datum géodésique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">datum geodetico</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geodetic datum</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#99">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geoid</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">géoïde</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">geoide</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geoid</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#100">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geologische Karte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte géologique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta geologica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geologic map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#101">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geomarketing</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Géomarketing</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Geomarketing</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Geomarketing</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#102">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geophysikalische Karte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte géophysique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta geofisica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geophysical map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#103">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geoprodukt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Géo-Produit</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">geo-prodotto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geoproduct</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#104">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geotop</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">géotope</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">geotopo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">geotope</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#105">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geröll</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Pierrier</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">macereto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Scree</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#106">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geschiebe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">charriage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carico di fondo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">bed load</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#107">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geschützte Geografische Angabe GGA</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Indication géographique protégée IGP</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Indicazione geografica protetta IGP</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Protected Geographical Indication PGI</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#108">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Geschützte Ursprungsbezeichnung GUB</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Appellation d&apos;Origine Contrôlée AOC</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Denominazione d&apos;Origine Controllata DOC/DOP</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Protected Designation of Origin PDO</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#109">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gesteinsmatrix</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">matrice rocheuse</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">matrice rocciosa</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">rock matrix</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#110">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gewässerlinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Hydrographie linéaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">hidrografia linearea</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Hydrography (lines)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#111">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gewässername</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Nom de cours d&apos;eau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome di corso d&apos;acqua</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">River name</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#112">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gewässernetz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Réseau hydrographique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rete hidrografica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Hydrographic network</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#113">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gewässerschutzbereich</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">secteur de protection des eaux</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">settore di protezione delle acque</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">water protection sector</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#114">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gewerbezone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone artisanale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona artisanale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">crafts zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#115">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">GIS</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">SIG</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">GIS</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">GIS</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#116">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gleitschirm</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Parapente</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">parapendio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Paragliding</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#117">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">GLONASS</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">GLONASS</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">GLONASS</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">GLONASS</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#118">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">GNSS</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">GNSS</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">GNSS</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">GNSS</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#119">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">GPS</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">GPS</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">GPS</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">GPS</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#120">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Gravimetrie, Schweremessung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">gravimétrie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">gravimetria</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">gravimetry</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#121">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grenzlinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Ligne de frontières</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di confine</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Boundary line</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#122">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grenzpunkt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">point de limite</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">punto di confine</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">frontier point (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#123">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grossregion</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">grande région</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">grande regione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">major region</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#124">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grundbuchplan, Plan für das Grundbuch</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan cadastral, plan du registre foncier</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano catastale, piano per il registro fondiario</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Cadastral map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#125">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grundeigentum</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">propriété foncière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">proprietà fondiaria</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">landed property</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#126">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grundplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Fonds de plan</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano di base</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">basic plan (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#127">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grundstück</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">terrain</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Fondo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Site</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#128">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grundwasserschutzareal</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">périmètre de protection des eaux souterraines</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">area di protezione delle acque sotterranee</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">groundwater protection area</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#129">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grundwasserschutzzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de protection des eaux souterraines</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di protezione delle acque sotterranee</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">groundwater protection zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#130">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Grünzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de verdure</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona verde</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">green belt</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#131">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Halle</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">halle</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">capannone</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">hall</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#132">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Haltestelle öffentlicher Verkehrsbetriebe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">arrêt de transports publics</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">fermata delle aziende pubbliche</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">public transport stop</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#133">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hangmure</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">coulée boueuse de versant</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">colata detritica di versante</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">unconfined debris flow</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#134">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hangneigung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">déclivité</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">acclività</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">gradient</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#135">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hauptstrasse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Route principale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">strada principale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Main road</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#136">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Helikopter</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Hélicoptère</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">elicottero</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Helicopter</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#137">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hindernis</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Obstacle</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">ostacolo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Obstacle</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#138">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Historische Karte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Carte historique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta storica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Historic map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#139">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Historischer Verkehrsweg</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">voie de communication historique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">via di communicazione storica</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#302">
+	<skos:prefLabel xml:lang="fr">affermage</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#140">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hochmoor, Übergangsmoor</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">haut-marais, marais de transition</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">torbiera alta, torbiera di transizione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">raised bog, transitional bog</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#141">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hoheitsgrenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Limite territoriale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine territoriale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Territorial frontier</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#142">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Höhen</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Altimétrie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Altimetria</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Heigths</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#143">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Höhenkote</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Cote d&apos;altitude</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">quota altimetrica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Spot height</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#144">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Höhenkurve</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Courbe de niveau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">curva di livello</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Countour line</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#145">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Höhenpunkt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">point altimétrique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">punto quotato</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">spot elevation (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#146">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Höhentransformation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Transformation des altitudes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">trasformazione altimetrica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Height transformation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#147">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Hydrant</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Hydrant</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">idrante</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">hydrant</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#148">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Industriezone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone industrielle</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona industriale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">industrial zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#149">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Infrastruktur der Luftfahrt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">infrastructure aéronautique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">infrastruttura aeronautica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">aviation facilities</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#150">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Isophyse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Isophyse</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Isofise</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Isophysis</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#151">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Jagdbanngebiet</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">district franc</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">bandita</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">ban area (hunting)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#152">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kanton</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Canton</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Cantone</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Canton</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#153">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kantonsgrenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Limite de canton, limite cantonale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine cantonale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Cantonal boundary</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#154">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kantonsstrasse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">route cantonale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">strada statale / strada cantonale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">cantons road (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#155">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kartenprojektion</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">projection de cartes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">proiezione cartografica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">map projection</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#156">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kartografische Generalisierung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">généralisation cartographique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">generalizzazione cartografica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">cartographic generalisation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#157">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kernzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone du centre</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di nucleo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">core zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#158">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Koordinaten</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">coordonnées</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">coordinate</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">coordinates</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#159">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Korporation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">corporation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">corporazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">corporation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#160">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Kulturgüterschutz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Protection des biens culturels</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Protezione dei beni culturali</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Protection of Cultural Property</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#161">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Künstliche Objekte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Objets artificiels</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">oggetti artificiali</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Man-made Features</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#162">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landeplatz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Place d&apos;atterrissage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">area d&apos;atterramento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">landing place</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#163">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landesgrenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">frontière nationale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine nazionale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">national border</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#164">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landesgrenzvermessung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">mensuration de la frontière nationale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">misurazione del confine nazionale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">national border survey</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#165">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landeskarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Carte nationale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta nazionale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">National Map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#166">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landeskoordinaten</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Coordonnées nationales</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Coordinate nazionali</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">National coordinates</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#167">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landesvermessung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">mensuration nationale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">misurazione nazionale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">national survey</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#168">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landsat</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Landsat</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Landsat</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Landsat</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#169">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landschaftsmodell</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">modèle du territoire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">modello del territorio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Landscape model</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#170">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landwirtschaftliche Nutzfläche LN</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">surface agricole utile SAU</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie agricola utile SAU</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">usable agricultural area UAA</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#171">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landwirtschaftsgebiet</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">région agricole</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">regione agricola</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">agricultural region (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#172">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landwirtschaftsstatistik</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">statistique agricole</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">statistica agricola</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">agricultural statistics</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#173">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Landwirtschaftszone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone agricole</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona agricola</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">agricultural zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#174">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Langsamverkehr</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">trafic non motorisé</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">traffico lento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">human-powered mobility</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#175">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Längsprofil</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">profil en long</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">profilo longitudinale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">longitudinal profile</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#176">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Lärmempfindlichkeitsstufe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Degré de sensibilité au bruit</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">livello di sensibilità al rumore</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Noise sensitivity level</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#177">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Laserscanning</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Laserscanning</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Laserscanning</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Laserscanning</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#178">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Leitungskataster</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">cadastre souterrain</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">catasto delle condotte</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">pipeline cadastre</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#179">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">LIDAR</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">LIDAR</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">LIDAR</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">LIDAR</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#180">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Liegenschaften</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Biens-fonds</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Beni immobili</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Immoveable property</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#181">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Lithologie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">lithologie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">litologia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">lithology</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#182">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Lokalisierung, Positionierung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">localisation, positionnement</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">posizionamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">positioning</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#183">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Luftbildinterpretation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">interprétation de photos aériennes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">interpretazione di fotografie aeree</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">aerial photo interpretation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#184">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Luftfahrt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">navigation aérienne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">navigazione aerea</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Aviation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#185">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Markierung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">balisage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">marcatura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">marking</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#186">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Markstein</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">borne</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">termine di confine</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">marker stone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#187">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Mast</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Pylône</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">pilone</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">pylon</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#188">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Mobiltelefonie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Téléphonie mobile</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">telefonia mobile</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Mobile telecom</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#189">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Moorlandschaft</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Site marécageux</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona palustre</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mire</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#190">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Mountain Bike MTB</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">vélo tout-terrain VTT</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">mountain bike MTB</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mountain bike MTB</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#191">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Murgang</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">lave torrentielle</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">lava torrentizia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">debris flow</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#192">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Nachkontrolle</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">suivi</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">verifica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">follow-up monitoring</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#193">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">nationales Inventar</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">inventaire national</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">inventario nazionale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">national inventory</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#194">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Nationalstrasse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">route nationale</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">strada nazionale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">motorway</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#195">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Naturobjekt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">objet naturel</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">oggetto naturale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">natural feature</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#196">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Naturschutzzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone naturelle protégée</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona naturale protetta</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">protected natural zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#197">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Navigation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">navigation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">navigazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">navigation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#198">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Nummerierungsbereich</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">domaine de numérotation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">area di numerazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">numbering area</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#199">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Nutzungsplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Plan d&apos;affectation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">na</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">na</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#200">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Nutzungszone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone d&apos;affectation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di utilizzazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">use zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#201">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Oberflächenrauhigkeit</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">rugosité du terrain</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">scabrosità del terreno</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">surface roughness</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#202">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ökologisches Netz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">réseau écologique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rete ecologica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">ecological network</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#203">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ökomorphologie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">écomorphologie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">ecomorfologia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">ecomorphology</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#204">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ort</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Localité</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Località</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Place</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#205">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Orthofoto</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Orthophoto</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">ortofoto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Orthophoto</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#206">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Orthometrische Höhe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Altitude orthométrique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">quota ortometrica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Orthometric height</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#207">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ortsbild</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">site construit</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">insediamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">heritage site</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#208">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ortsbildschutz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">site construit protégé</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">insediamento protetto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">heritage site protection</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#209">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ortsname</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Nom de lieu, toponyme</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome del luogo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Place name</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#210">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ortsplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Plan de localité</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano di località</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">location plan</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#211">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ortsplanung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">aménagement local</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">pianificazione locale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">local planning and management</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#212">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Ortung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">repérage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">localizzazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">locating</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#213">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Parzelle</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">parcelle</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">parcella</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">plot</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#214">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Passnamen</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Noms de cols</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome del passo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Pass names</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#215">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Perimeter</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">périmètre</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">perimetro</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">perimeter</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#216">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Petrografie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">pétrographie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">petrografia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">petrography</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#217">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Planeinteilung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">répartition des plans</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">ripartizione dei piani</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">plan compartmentation (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#218">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Politische Grenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">découpage politique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">confine politico</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">political frontier</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#219">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Postleitzahl PLZ</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">numéro postal d&apos;acheminement NPA</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">numero postale d&apos;avviamento NPA</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">postcode</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#220">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Primärfläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Surface primaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Superficie primaria</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Primary surface</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#221">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Pufferzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone tampon</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona tampone</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">buffer zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#222">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Quartierplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan de quartier</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano di quartiere</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">quarter map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#223">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Quellfassung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">captage d&apos;une source</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">captare acqua di sorgente</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">tapping of a spring</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#224">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Querprofil</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">profil en travers</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">profilo trasversale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">transverse profile</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#225">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Randzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone suburbaine</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona periferica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">suburban zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#226">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Rasterdaten</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">données raster</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">dati in formato raster</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">raster file</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#227">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Rebbauzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone viticole</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona viticola</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">vineyard zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#228">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Regionaler Waldplan RWP</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan forestier régional PFR</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano forestale regionale PFR</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">regional forest plan RFP</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#229">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Register</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">registre</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">registro</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">register</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#230">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Reservezone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone réservée</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di riserva</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">reserved zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#231">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Richtplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan directeur</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano direttore</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">structure plan</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#232">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Rohdaten</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Données brutes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">dati originali</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">raw data</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#233">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Rohrleitung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Conduite</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">condotto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Pipeline</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#234">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Rote Zone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone rouge</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona rossa</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">red zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#235">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Rutschung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">glissement de terrain</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">franamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">slide</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#236">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Sammlungen (Archive, Bibliotheken, Museen)</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Collections (archives, bibliothèques, musées)</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Collezioni (archivi, biblioteche, musei)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Collections (archives, libraries, museums)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#237">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">SBB</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">CFF</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">FFS</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">SBB</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#238">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schaf</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">mouton</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">pecora</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">sheep</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#239">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schilfgürtel</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">roselière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">canneto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">reed bed</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#240">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schlammlawine</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">coulée boueuse</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">colata di fango</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mudflow</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#241">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schloss</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Château</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Castello</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Castle</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#242">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schummerung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Ombrage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Ombreggiatura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Hillshading</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#243">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schutt</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">détritus</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">materiale detritico</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">rock waste</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#244">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schutzareal</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">périmètre de protection</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">perimetro di protezione (?)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">protection area (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#245">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schutzbau</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ouvrage de protection</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">opera di protezione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">protection structure</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#246">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schutzwald</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">forêt à fonction protectrice</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">bosco con funzione protettiva</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">protection forest</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#247">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schutzzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de protection</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di protezione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">protection zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#248">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Schwere</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">gravité</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">gravità</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">gravity</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#249">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Seebodenkurve</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Courbe des fonds des lacs</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">quota altimetrica dei laghi</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Contour in lakes</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#250">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Seename</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Nom de lac</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome di lago</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Lake name</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#251">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Segelflug</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Vol à voile</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">volo a vela</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Glider</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#252">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Seibahn</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Téléphérique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">teleferica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">cableway</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#253">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Seilbahnstation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Station téléférique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Stazione funicolaria</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Funicular Station</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#254">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Seuchenbekämpfung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Lutte contre les épizooties</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">lotta antiepizoozia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Control of epidemics</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#255">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Siedlungsbegrenzung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">limitation de l&apos;urbanisation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">limitazione delle aree edificate</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">limitation of urbanisation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#256">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Siedlungserweiterung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">expansion du milieu bâti</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">ampliamento dell&apos;insediamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">expansion of urbanisation (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#257">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Siedlungsgebiet</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">milieu bâti</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie d’insediamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">settlement area</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#258">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Signalisierung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">signalisation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">segnalazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">signalling</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#259">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Situation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Situation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Situazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Situation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#260">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Situationsplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan de situation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano di situazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">situation plan</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#261">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Skilift</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">remontée mécanique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">risalita meccanica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">mountain lift</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#262">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Skitour</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Randonnée à ski</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">escursione con gli sci</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Ski tour</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#263">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Snowboard</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Snowboard</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Snowboard</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Snowboard</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#264">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Sömmerung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">estivage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">estivazion</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">summering</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#265">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Spezialzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone spécifique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona speciale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">special zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#266">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Stadtplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan de ville</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta di città</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">town plan</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#267">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Stadtverkehrsnetz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">réseau de transports urbains</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rete di trasporto urbano</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">urban transport network</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#268">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Standortskarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte des stations</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta delle stazioni</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">site class map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#269">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Steinbock</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">bouquetin</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">stambecco</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">ibex</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#270">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Steinschlag</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Chute de pierres, écroulement</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">caduta di sassi</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">rockfall</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#271">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Strassenkarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte routière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta stradale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">road map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#272">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Strassenkreuzung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carrefour</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">crocevia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">crossroads</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#273">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Strassenname</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">nom de rue</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">nome di strada</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">street name</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#274">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Strassenunterhaltskreis</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Arrondissement d&apos;entretien des routes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">circondario manutenzione della strada</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">street maintenance district</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#275">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Strukturlinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ligne de structure</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di struttura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">structure line (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#276">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Suone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Bisse</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Bisse</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Bisse</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#277">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">swipos</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">swipos</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">swipos</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">swipos</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#278">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Toleranzstufe</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">niveau de tolérance</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">grado di tolleranza</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">tolerance grade (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#279">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Topografie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Topographie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Topografia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Topography</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#280">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Topografische Karte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Carte topographique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta topografica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Topographic map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#281">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Toponymie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Toponymie</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">toponomastica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Toponymy</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#282">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Tram</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">tramway</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">tram</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">tramway</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#283">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Transformation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">transformation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">trasformazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">transformation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#284">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Transformator TRAFO</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">transformateur TRANSFO</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">trasformatore TRASFO</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Transformer X-FORMER</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#285">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Triangulation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">triangulation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">triangolazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">triangulation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#286">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Trockenmauer</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">mur de pierres sèches</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">muro a secco</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">dry-stone wall</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#287">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Überblenden</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Superposition</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superposizionamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Blending</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#288">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Übersarung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">épandage d&apos;alluvions</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">alluvionamento da sedimento grossolano</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">overbank sedimentation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#289">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Übersichtskarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Carte synoptique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Carta sinottica</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">General map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#290">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Übersichtsplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Plan d&apos;ensemble</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano corografico</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Overview plan (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#291">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Uferlinie</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Ligne de rives</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">linea di rive</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Shore line</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#292">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Umnutzung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">réaffectation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">cambiamento di destinazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">change of use (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#293">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Umzäunung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">clôture</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">chiusura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">fence</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#294">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Unternehmensstatistik</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Statistiques d&apos;entreprises</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Statistiche delle imprese</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Business statistics</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#295">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Unwetter</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">intempéries</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">intemperie</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">severe weather</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#296">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Urstromtal, Endmoräne</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">canal proglaciaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">canale proglaciale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">ice marginal valley</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#297">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Velo, Fahrrad</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">vélo, cycle</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">ciclo, bicicletta</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">cycle</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#298">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Vergletscherung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">glaciation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">glaciazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">glaciation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#299">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Verkehrsnetz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Réseau de transport</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rete di trasporto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Traffic network</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#300">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Verkehrszeichen</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">panneau de signalisation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">segnale stradale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">traffic sign</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#301">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Vernetzung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">mise en réseau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">interconnessione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">interconnection</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#302">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Verpachtung</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#332">
+	<skos:prefLabel xml:lang="en">feeder pipe</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#302">
+	<skos:prefLabel xml:lang="it">affitto</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">(letting on) lease</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#303">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Voralpen</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Préalpes</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Prealpi</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Lower Alps</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#304">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldentwicklung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">évolution de la forêt</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">evoluzione della foresta</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest evolution</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#305">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldfeststellung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">constatation de la nature forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">accertamento del carattere forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest ascertainment (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#306">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldfläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">surface boisée</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie boschiva</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">wooded area</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#307">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldgesellschaft</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">association forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">associazione forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest association</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#308">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldgrenze</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">limite forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">limite del bosco</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest line</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#309">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldhütte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">cabane des bois</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">capanna della foresta</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Forest House</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#310">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldkarte</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">carte forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">carta forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest map</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#311">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldkreis</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">arrondissement forestier</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">circondario forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest district</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#312">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldnutzung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Usage de la fôret</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">utilizzazione del bosco</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest use</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#313">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldrand</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">lisière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">margine forestale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest edge</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#314">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldstandort</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Station forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">stazione forestiera</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest site</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#315">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldwiese</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">prairie forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">prato boschivo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest meadow</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#316">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Waldzusammensetzung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">composition de la forêt</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">composizione della foresta</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">forest composition</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#317">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wasserbau</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">aménagement des cours d&apos;eau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">sistemazione dei corsi d&apos;acqua</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">river management</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#318">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wasseroberfläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Plan d&apos;eau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie d&apos;acqua</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">water surface</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#319">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Weg</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">chemin</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">cammino</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Path</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#320">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wegnetz</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Réseau de chemin</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">rete di cammino</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Path netwok</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#321">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wegweiser</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">poteau indicateur</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">cartello indicatore</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">fingerpost</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#322">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Weiler</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">hameau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">casale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">hamlet</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#323">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Weilerzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de hameau</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona di casali</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">hamlet zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#324">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wildbach</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">torrent</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">torrente</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">torrent</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#325">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wirtschaftszweig</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">branche économique</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">branca dell&apos;economia</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">economic branch</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#326">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wohnort</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">domicile</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">domicilio</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">residence</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#327">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wohnungsfläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Surface d&apos;habitation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie d&apos;abitazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">residential surface</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#328">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Wohnzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone d&apos;habitation</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona d&apos;abitazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">residential zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#329">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Zone für öffentliche Bauten und Anlagen</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de constructions et d&apos;installations publiques</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zona per edifici e attrezzature pubbliche</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">public construction and installation zone (?)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#330">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Zonennutzungsplan ZNPL</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Plan d&apos;affectation de zone PAZ</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Zonennutzungsplan ZNPL</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Zonennutzungsplan ZNPL</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#331">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Zonenplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Plan de zones</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piano delle zone</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">plan of zones</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#332">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="de">Zubringerleitung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Conduite d&apos;amenée</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">conduttura di alimentazione</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#302">
+	<skos:scopeNote xml:lang="fr">Définition d&apos;affermage</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#139">
+	<skos:prefLabel xml:lang="en">historic traffic route</skos:prefLabel>
+	<skos:scopeNote xml:lang="en">def</skos:scopeNote>
+</rdf:Description>
+
+</rdf:RDF>

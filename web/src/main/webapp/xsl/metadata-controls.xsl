@@ -24,12 +24,12 @@
 				<xsl:choose>
 					<xsl:when test="normalize-space($xlinkTokens[2])">
 						<a id="addXlink_{$id}" onclick="if (noDoubleClick()) {$xlinkTokens[1]}" style="display:none;">
-							<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
+							[<img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>]
 						</a>
 					</xsl:when>
 					<xsl:otherwise>
 						<a id="addXlink_{$id}" onclick="{$addXMLFragment}" style="cursor:pointer;">
-							<img src="{/root/gui/url}/images/find.png" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>
+							[<img src="{/root/gui/url}/images/plus.gif" alt="{/root/gui/strings/addXMLFragment}" title="{/root/gui/strings/addXMLFragment}"/>]
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -38,7 +38,7 @@
 			
 			<!-- add button -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($addLink)">
+				<xsl:when test="normalize-space($addLink) and not(normalize-space($addXMLFragment))">
 					<xsl:variable name="linkTokens" select="tokenize($addLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>

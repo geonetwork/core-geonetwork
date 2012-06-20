@@ -23,11 +23,16 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import java.net.URLEncoder;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -67,11 +72,12 @@ public class UpdateElement implements Service {
 		String thesaType = Util.getParam(params, "refType");
 		String prefLab = Util.getParam(params, "prefLab");
 		String lang = Util.getParam(params, "lang");
-		String definition = Util.getParam(params, "definition");
+		String definition = Util.getParam(params, "definition","");
 
 		ThesaurusManager manager = gc.getThesaurusManager();
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
-
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" + URLEncoder.encode(namespace+oldid, "UTF-8").toLowerCase() + "&locales=en,it,de,fr");
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" + URLEncoder.encode(namespace+oldid, "UTF-8") + "&locales=en,it,de,fr");
 		if (!(oldid.equals(newid))) {
 			if (thesaurus.isFreeCode(namespace, newid)) {
 				thesaurus.updateCode(namespace, oldid, newid);

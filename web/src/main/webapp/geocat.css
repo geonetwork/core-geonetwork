@@ -1,0 +1,1124 @@
+@import url("geonetwork.css");
+
+/*******************************************************************************
+general
+*******************************************************************************/
+
+
+* {
+	font-size: 100%; /* without this font sizes are not inherited correctly */
+}
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	margin: 0px;
+	color: #064377;
+}
+
+table, tr, td {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	padding: 0px;
+	vertical-align: top; /*ETJ*/
+}
+
+td.padded-content-box {
+	border-style: solid;
+	border-width: 1px;
+	padding: 4px;
+}
+
+th {
+	text-align: left;
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	font-size: 0.9em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+img {
+	border-width: 0px;
+}
+
+h1 {
+	text-transform: uppercase;
+	font: bold 10px Verdana, Arial, Geneva, Helvetica, sans-serif;
+}
+
+h2 {
+	font-size: 10px;
+	font-weight: bold;
+	/* text-transform: uppercase; */
+}
+
+a {
+	/*
+	color: #266377;
+	text-decoration: none;
+	*/
+	color: #064377;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
+a.no-help:hover {
+	text-decoration: none;
+}
+
+.arrowList ul
+{
+    list-style-type: none !important;
+    padding: 0;
+    margin: 0;
+}
+.arrowList li {
+    background-image: url('images/arrow.gif');
+    background-repeat: no-repeat;
+    background-position: 0 .2em;
+    padding-left: .6em;
+}
+
+.arrow{
+	background-image: url('images/arrow.gif');
+
+	background-repeat:no-repeat;
+
+	padding:0 0 3px 7px;
+
+}
+
+.resultsHeader {
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+    border-bottom: 1px solid gray;
+}
+
+.resultsHeader a.export-link {
+	margin: 5px;
+}
+
+#searchResults fieldset {
+    padding: 1em;
+    padding-top: 0px;
+}
+
+#searchResults td h2 a {
+    font-size: 115%;
+}
+
+#mostPopular a.arrow,
+#latestUpdates a.arrow {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+#mostPopular legend,
+#latestUpdates legend,
+#searchResults h2 {
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
+div.pop {
+    border-top: 1px dashed #0263B2;
+    border-bottom: 3px solid #0263B2;
+    border-left: 3px solid #0263B2;
+    border-right: 3px solid #0263B2;
+    background: #ffffff;
+    text-align: left;
+    position: absolute;
+    opacity: .9;
+    filter: alpha(opacity=90);
+    -moz-opacity: 0.9;
+    top:200px;
+    left:200px;
+    width:300px;
+    min-height: 150px;
+    max-height: 350px;
+    overflow: auto;
+}
+
+div.pop fieldset {
+    border: 0px;
+}
+div.pop fieldset legend {
+	color: #0263B2;
+	width: 100%;
+	font-family: Verdana;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+
+/*******************************************************************************
+banner
+*******************************************************************************/
+
+tr.deleted-reusable {
+	border: 2px solid #F6FF68;
+}
+td.deleted-reusable {
+	background: #F6FF68;
+}
+
+tr.banner {
+	/* moved to td, since IE does not accept it
+	border-bottom: 1px solid #ffffff;
+	*/
+}
+
+td.banner {
+	font-size: 8pt;
+	color: #ffffff;
+	background-image: url('images/blue-background.gif');
+	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+}
+
+.bottom_border {
+	border-bottom: 1px dotted gray;
+}
+
+td.banner-menu {
+  padding: 3px 0 3px 17px;
+  font-family: arial,helvetica,sans-serif;
+  height: 0px;
+	background: #CCCCCC;
+}
+
+td.mdmenu-active {
+    font-size: 8pt;
+    font-weight: bold;
+    background: #ffffff;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+    height: 16px;
+    vertical-align: middle;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+td.banner-menu a {
+    background: #CCCCCC;
+    color: black;
+    padding:0 3px;
+}
+
+td.banner-nav {
+    font-size:1.239em;
+    color:#FFFFFF;
+    background: #CCCCCC;
+    border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+    height: 29px;
+    vertical-align: middle;
+}
+
+td.banner-nav td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+td.banner-nav td.first a {
+    padding-left: 22px;
+}
+
+td.banner-nav a {
+    background: #01669E;
+    color:#FFFFFF;
+    border: 1px solid white;
+    border-left: none;
+    font-family:arial,helvetica,sans-serif;
+    font-weight:bold;
+    text-decoration: none;
+    padding: 5px 14px;
+    white-space: nowrap;
+}
+
+td.banner-login {
+	font-size: 8pt;
+	color: #ffffff;
+	/*
+	background-image: url('images/blue-background.gif');
+	*/
+	background: #CCCCCC;
+	padding-left: 8px;
+	padding-right: 8px;
+    border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	height: 16px;
+	vertical-align: middle;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+a.banner {
+	text-decoration: none;
+}
+
+a.banner-active {
+	color: #01669E !important;
+    background: #ffffff  !important;
+}
+
+font.banner-passive {
+	color: #a0a0a0;
+	text-decoration: none;
+}
+
+input.banner {
+	margin-right: 4px;
+	margin-left: 4px;
+	font: 7pt Verdana;
+	color: #064377;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+button.banner {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+a.palette {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a.palette:hover
+{
+	background: #064377;
+}
+
+/* added since the browser adds some margin for the form */
+form {
+	margin: 0px;
+}
+
+.simpleSearchFormItem {
+    padding-bottom: 1em;
+}
+
+fieldset.users {
+    width: 600px;
+}
+
+.users label {
+    float: left;
+    text-align: right;
+    padding-right: 10px;
+    display: block;
+    width: 150px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+br {
+    clear: left;
+}
+
+.users input, .users select {
+    float: left;
+}
+
+/*******************************************************************************
+content
+*******************************************************************************/
+
+td.content {
+	background: white;
+}
+
+.padded-content {
+	background: white;
+	padding: 5px;
+}
+
+.hit {
+	border-top: 1px solid silver;
+	padding-top: 5px;
+}
+
+td.green-content {
+	color: #ffffff;
+	background: #beb800;
+	font-weight: bold;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+td.blue-content {
+	color: #ffffff;
+	background: #266397;
+	/*
+	background-image: url('images/blue-background.gif');
+	*/
+	height: 30px;
+}
+
+tr.blue-content {
+	color: #ffffff;
+	background: #6699FF;
+}
+
+input.content, select.content, textarea.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+input[disabled] {
+    font-style: italic;
+}
+
+button[disabled] {
+    font-style:italic;
+}
+
+input.button, button.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	background-color: #e7e7e7;
+	text-shadow: gray 2px 2px 3px;
+}
+
+.left-indent {
+	margin-left: 5px;
+}
+
+input.content-small, button.content-small {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	min-width: 150px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+legend.block-legend {
+	font-weight: bold;
+}
+
+/*******************************************************************************
+footer
+*******************************************************************************/
+
+td.footer {
+	font-size: 8pt;
+	background: #beb800;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+a.footer {
+	color: #064377;
+}
+
+a.footer:hover
+{
+	text-decoration: underline;
+}
+
+/*******************************************************************************
+metadata
+*******************************************************************************/
+
+table.md {
+	font-size: 8pt;
+}
+
+th.md {
+	text-align: left;
+	/*text-transform: capitalize;*/
+}
+
+input.md, select.md, textarea.md {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #064377;
+	/* max-width: 400; */
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+input.error, textarea.error {
+	color: #ff2211;
+    border-color: #ff2211;
+}
+
+button.md {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #064377;
+	/* max-width: 400; */
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+/*******************************************************************************
+utilities
+*******************************************************************************/
+
+font.error, font.warning {
+	color: #ff4040;
+}
+
+td.box {
+	border: 2px solid #266397;
+	background: #4683b7;
+}
+
+td.separator {
+	background: #ffffff;
+	height: 4px;
+	width: 4px;
+}
+
+td.dots {
+	width: 0;
+	height: 0;
+	border-top: 1px inset #266397;
+}
+
+th.padded, td.padded {
+	padding: 2px;
+}
+
+th.padded-center {
+	text-align:  center;
+	padding: 2px;
+}
+
+a.image:hover
+{
+	background: transparent;
+}
+
+td.spacer {
+	height: 16px;
+}
+
+div.track  {
+	background: #064377;
+	margin-top:2px;
+}
+
+div.handle {
+	background: #beb800;
+	cursor:move;
+}
+
+.dots
+{
+	height: 1px;
+	width: 1px;
+	border-left: 1px solid #266397;
+}
+
+/*******************************************************************************
+Ajax styles
+*******************************************************************************/
+
+.tooltip
+{
+	position: absolute;
+	background-color: #f0f0ff;
+	border:  solid black 1px;
+	padding: 4px;
+}
+.ext-ie .tooltip {
+    width: 300px;
+}
+.tooltip .close {
+    font-size: 75%;
+    font-weight: bold;
+}
+
+.tipRow
+{
+	margin: 10px;
+	padding: 15px;
+}
+
+.tipHeader
+{
+	text-align:    left;
+	font-weight:   bold;
+	padding-left:  2px;
+	padding-right: 2px;
+}
+
+.tipCell
+{
+	text-align: left;
+}
+
+.policyGroup
+{
+	margin: 5px;
+	border-style:dashed;
+	border-width:0px 0px 1px 0px;
+}
+
+div.help {
+    background-color:white;
+    color:black;
+    margin:15px 5px 15px 5px;
+    padding:1px 1px 1px 1px;
+    font-size:80%;
+    font-style:italic;
+    opacity: .9;
+    filter: alpha(opacity=90);
+    -moz-opacity: 0.9;
+}
+
+div.help ul {
+        border: 1px solid #888;
+        margin: 2px;
+        padding: 0px;
+}
+div.help ul li {
+    margin: 0px;
+    padding: 1px;
+    cursor: pointer;
+    list-style-type:none;
+}
+div.help ul li div {
+    width:25px;
+    float:left;
+    text-align:center;
+}
+
+.validation-report fieldset {
+    margin: 5px 2px 2px 2px;
+    padding: 5px 2px 2px 2px;
+}
+
+.validation-report img {
+    vertical-align:middle;
+    height:8px;
+    width:8px;
+}
+
+.validation-report ul li {
+    margin-left:25px;
+    margin-top:3px;
+    /*list-style-type:disc;*/
+}
+.validation-report ul li ul li {
+    list-style-type: disc;
+}
+
+/*******************************************************************************
+Other action buttons
+*******************************************************************************/
+
+.oAcEle {
+    border: 1px solid #266397;
+    background-color: #e7e7e7;
+    position: absolute;
+    opacity: .9;
+    filter: alpha(opacity=90);
+    -moz-opacity: 0.9;
+}
+
+.oAcEle button {
+    text-align:left;
+    font-family: Verdana;
+    color: #064377;
+    font-size: 9pt;
+    cursor: pointer;
+    cursor: hand;
+    width:90%;
+    border-width: 0px;
+}
+.oAcEle button:hover {
+	text-decoration: underline;
+}
+
+/*******************************************************************************
+Ajax Keyword list
+*******************************************************************************/
+div.keywordSelectorFrame {
+        background: #fff;
+		position: absolute;
+		margin: 2px;
+		padding: 2px;
+		left: 300px;
+		top: 225px;
+}
+
+div.keywordSelector {
+        background: #fff;
+        border: 4px solid #064377;
+		margin: 2px;
+		padding: 5px;
+        cursor: pointer;
+        overflow: auto;
+		max-height: 200px;
+		max-width: 300px;
+}
+
+div.keywordList {
+        z-index: 1000;
+        background: #fff;
+        cursor: pointer;
+        overflow-y: auto;
+        max-height: 200px;
+        overflow-x: hidden;
+}
+
+
+div.keywordList ul {
+        border: 1px solid #888;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        list-style-type: circle;
+        cursor: pointer;
+}
+
+div.keywordList ul li {
+        margin: 0;
+        padding: 1px;
+        cursor: pointer;
+	 	list-style-type:none;
+}
+
+div.keywordList ul li * {
+}
+
+div.keywordList ul li.selected {
+        background-color: #dfe8f6;
+        cursor: pointer;
+}
+
+div.keywordList ul strong.highlight {
+        color: #800;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+}
+
+div.keywordList ul li span {
+	display :none;
+}
+
+div.keywordResults ul {
+        margin: 3px;
+        padding: 0;
+		border-style:dashed;
+		border-width:1px 0px 0px 1px;
+		list-style-type:none;
+}
+
+div.keywordResults ul li {
+        margin: 4px;
+		list-style-type:none;
+}
+
+div.legend {
+        margin: 3px;
+        padding: 3px;
+		border-style:dashed;
+		border-width:1px 1px 1px 1px;
+		font-style: italic;
+}
+div.broader {
+        background-color: #8ba4c5;
+}
+div.related {
+        background-color: #d5dfec;
+}
+div.narrower {
+        background-color: #f7faff;
+}
+
+div.important {
+	width: 70%;
+	border-style: inset;
+	border-width: 1px;
+	text-align: justify;
+	margin: 15px;
+	padding: 10px;
+}
+
+div.keywordResults ul li.selected {
+        background-color: #beb800;
+        cursor: pointer;
+}
+
+
+/* GEOGRAPHIC SEARCH */
+
+
+.geosearchmain{
+    border-bottom: 2px;
+    margin-bottom: 1px;
+
+    vertical-align: top;
+
+}
+
+.geosearch{
+    border-bottom: 2px;
+    margin-bottom: 1px;
+}
+
+.geosearchfields{
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+    margin-bottom: 10px;
+}
+
+.geosearchfields a{
+/*    text-decoration: none; */
+    margin-top: 5px;
+}
+
+td.advsearchfields {
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+/*    margin-bottom: 10px;*/
+
+    border-left: 1px solid;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/*.advsearchfields > tbody > tr > td {
+    padding-bottom: 10px;
+    border-left: 1px solid;
+    padding-left: 5px;
+
+}
+*/
+
+#coords{
+    text-align:center;
+    margin-top: 5px;
+}
+
+.IMBtn{
+	font-family: Verdana;
+	font-size: 9px;
+	color: #064377;
+	cursor: pointer;
+	padding: 2px 8px 2px 2px;
+}
+
+
+
+#openIMBtn{
+	background: url(images/arrow.gif) no-repeat right;
+}
+
+#closeIMBtn{
+	background: url(images/arrow_inv.gif) no-repeat right;
+}
+
+#closeIMBtn:hover {
+	text-decoration: underline;
+}
+
+#openIMBtn:hover {
+	text-decoration: underline;
+}
+
+imenabled {
+	color: #064377;
+	cursor: pointer;
+}
+
+imdisabled {
+	color: #434343;
+    cursor: progress;
+}
+
+div.metadata_current {
+    padding: 3px;
+    position: relative;
+}
+
+div.metadata_current table,
+div.metadata_current td
+{
+}
+
+/* This will fix some redraw problems with gn setting */
+.calendar table ,
+.calendar tr ,
+.calendar td  {
+	border-collapse: separate;
+}
+
+.ilwhiteboard {
+    position:relative;
+	border: 1px solid #266397;
+	margin: 4px;
+}
+
+/* Rating popup */
+
+button.rating
+{
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	width: 100px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	margin-bottom: 4px;
+}
+
+.ratingBox
+{
+	position: absolute;
+	background-color: #E0E0FF;
+	border:  solid black 1px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.ratingCloser
+{
+    position: absolute;
+    top:     1px;
+    right:   3px;
+    width:  16px;
+    height: 16px;
+    cursor: pointer;
+
+    z-index: 20;
+}
+
+div#error {
+	margin: 2em;
+}
+
+#stacktrace {
+	font-size: 0.75em;
+}
+
+#featured {
+	background-color: #f6fcff;
+	width: 400px;
+	margin: 10px;
+	padding: 5px;
+	border-width: 1px;
+	border-style: inset;
+}
+
+#advancedsearch {
+	margin: 20px;
+}
+
+#resultList {
+	border-top: 1px solid #2a628f;
+	padding-top: 10px;
+}
+
+#leftcolumn {
+	margin: 20px;
+	border-right: 1px solid #2a628f;
+}
+
+#sortBy.live {
+	font-weight: normal;
+	font-style: normal;
+	font-size: 0.9em;
+}
+
+/*******************************************************************************
+Refine search widget
+*******************************************************************************/
+
+ul.refineAdd {
+	padding-left: 1em;
+	list-style-type: disc;
+}
+td.refineAdd {
+	padding-bottom: 10px;
+	color: #064377;
+}
+td.refineCategory {
+	padding-top: 1em;
+	color: #064377;
+}
+td.removeAll {
+	font-weight: bold;
+	color: #064377;
+}
+ul.refineRemove {
+	padding-left: 2em;
+	list-style-type: disc;
+}
+a.removeAll, a.refineRemove {
+	text-align: right;
+	font-size: 11px;
+	text-align: right;
+	float: left;
+}
+table.refineRemove {
+	background-color: #a3d5d4;
+	width: 100%;
+}
+
+/*******************************************************************************
+Style for result mode = condensed
+*******************************************************************************/
+div.condensed {
+    position:relative;
+    z-index:1;
+    width:285px;
+    height:250px;
+    float:left;
+    padding:2px;
+    margin:5px;
+    border:dotted gray 1px;
+    text-align:center;
+}
+div.condensed p {
+    position:absolute;
+    bottom:0px;
+    text-align:center;
+}
+div.condensed img.logo {
+    position:absolute;
+    z-index:0;
+    width:32px;
+    top:-9px;
+    left:269px;
+}
+div.condensed img.thumbnail {
+    z-index:1;
+    width:150px;
+    border-width:1px;
+}
+
+a.elementHiding img {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+#toggleVisibilityEditCB {
+	padding-bottom: 4px;
+}
+
+.searchIcon {
+    background-image:url('images/gdict.png') !important;
+}
+
+tr.h-line {
+    border-bottom: 2px dotted #266397;
+    height: 10px;
+}
+
+span.monitoring_label {
+    font-weight: bold;
+}
+
+h1.monitoring_title {
+    font-size:1.1em;
+    margin-top:20px;
+}
+
+h2.monitoring_title {
+    font-size:1.0em;
+}
+
+/*******************************
+ Keywords search box
+ *******************************/
+
+.ux-mselect-item .ux-mselect-item-thesaurus {
+    color: #555;
+    font-style: italic;
+}
+
+
+.URIButtons li {
+  display: inline;
+  list-style-type: none;
+  padding-right: 20px;
+  float: left;
+}
+
+.nav li {
+  font-style: bold;
+  display: inline;
+  list-style-type: none;
+  padding-right: 10px;
+  padding-left: 10px;
+  float: left;
+}
+
+li.blue-content {
+  margin-left: 5px;
+	background: #266397;
+	/*
+	background-image: url('images/blue-background.gif');
+	*/
+	height: 20px;
+}
+li.blue-content a {
+	color: #ffffff;
+}
+
+.uriButtonMenu {
+	height: 500px;
+	overflow: auto;
+}
+
+.user-xsl-wrap {
+  padding: 5px;
+  border: 1px solid #99bbe8;
+  text-align: left;
+}
+
+.user-xsl {
+  
+}
+
+.user-xsl-selected {
+  background-color: #dddddd;
+  padding: 4px;
+}
+
+.user-xsl-over {
+  border: 1px solid #dddddd;
+}
+
+.div.user-xsl-wrap {
+  
+}
+
+.logo-over {
+	cursor: pointer;
+}
+
+.ext-gecko .x-form-text {
+	padding: 2px 0px 0px 0px !important;
+}

@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by BRGM SG/DL (BRGM SG/DL) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gfc="http://www.isotc211.org/2005/gfc"
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" targetNamespace="http://www.geocat.ch/2008/che" elementFormDefault="qualified" version="0.1">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>Extension for GM03_V2 profile</xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gfc" schemaLocation="../gfc/gfc.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmi" schemaLocation="../gmi/gmi.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/basicTypes.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmx" schemaLocation="../gmx/gmx.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/srv" schemaLocation="../srv/srv.xsd"/>
+	<!-- ########################################################################### -->
+	<!--,-->
+	<!-- =========================== L'attribut cheType ============================== -->
+	<xs:attribute name="cheType" type="xs:string"/>
+	<!-- Extension ResponsibleParty class -->
+	<xs:complexType name="CHE_CI_ResponsibleParty_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:CI_ResponsibleParty_Type">
+				<xs:sequence>
+					<xs:element name="individualFirstName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="individualLastName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="organisationAcronym" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="parentResponsibleParty" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:CI_ResponsibleParty"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_CI_ResponsibleParty" type="che:CHE_CI_ResponsibleParty_Type" substitutionGroup="gmd:CI_ResponsibleParty"/>
+	<!-- Extension Address class -->
+	<xs:complexType name="CHE_Cl_Address_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:CI_Address_Type">
+				<xs:sequence>
+					<xs:element name="streetName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="streetNumber" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="addressLine" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="postBox" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:CI_Address"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_CI_Address" type="che:CHE_Cl_Address_Type" substitutionGroup="gmd:CI_Address"/>
+	<!-- Extension Telephone class -->
+	<xs:complexType name="CHE_CI_Telephone_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:CI_Telephone_Type">
+				<xs:sequence>
+					<xs:element name="directNumber" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="mobile" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:CI_Telephone"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_CI_Telephone" type="che:CHE_CI_Telephone_Type" substitutionGroup="gmd:CI_Telephone"/>
+	<!-- MD_Legislation extension -->
+	<xs:complexType name="CHE_MD_Legislation_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="country" type="gmd:Country_PropertyType" maxOccurs="unbounded"/>
+					<xs:element name="language" type="gmd:LanguageCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="legislationType" type="che:CHE_CI_LegislationType_PropertyType" minOccurs="0"/>
+					<xs:element name="internalReference" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="title" type="gmd:CI_Citation_PropertyType"/>
+				</xs:sequence>
+				<!-- FIXME : do we need a gco:isoType for an extension of AbstractObject in profil ? -->
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_Legislation"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Legislation" type="che:CHE_MD_Legislation_Type" substitutionGroup="gco:AbstractObject"/>
+	<xs:complexType name="CHE_MD_Legislation_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_Legislation"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- TODO : add codeList -->
+	<!-- MD_LegislationType  -->
+	<xs:element name="CHE_CI_LegislationCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="CHE_CI_LegislationType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_CI_LegislationCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- MD LegalConstraints extension to legislationConstraints -->
+	<xs:complexType name="CHE_MD_LegalConstraints_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_LegalConstraints_Type">
+				<xs:sequence>
+					<xs:element name="legislationConstraints" type="che:CHE_MD_Legislation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_LegalConstraints"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_LegalConstraints" type="che:CHE_MD_LegalConstraints_Type" substitutionGroup="gmd:MD_LegalConstraints"/>
+	<!-- MD Metadata extension to legislationConstraints -->
+	<xs:complexType name="CHE_MD_Metadata_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_Metadata_Type">
+				<xs:sequence>
+					<xs:element name="legislationInformation" type="che:CHE_MD_Legislation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_Metadata"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Metadata" type="che:CHE_MD_Metadata_Type" substitutionGroup="gmd:MD_Metadata"/>
+	<!-- MD_Revision class -->
+	<xs:complexType name="CHE_MD_Revision_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="revisionScope" type="gmd:MD_ScopeCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="dateOfLastUpdate" type="gco:Date_PropertyType" minOccurs="0"/>
+					<xs:element name="revisionNote" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="revisionScopeDescription" type="gmd:MD_ScopeDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="revisionExtent" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+					<xs:element name="revisionContact" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<!-- -->
+				<xs:attribute ref="gco:isoType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Revision" type="che:CHE_MD_Revision_Type" substitutionGroup="gco:AbstractObject"/>
+	<xs:complexType name="CHE_MD_Revision_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_Revision"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_CI_projectTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="CHE_CI_projectType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_CI_projectTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--Extension MD_DataIdentification -->
+	<xs:complexType name="CHE_MD_DataIdentification_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_DataIdentification_Type">
+				<xs:sequence>
+					<xs:element name="projectType" type="che:CHE_CI_projectType_PropertyType" minOccurs="0"/>
+					<xs:element name="revision" type="che:CHE_MD_Revision_PropertyType" minOccurs="0"/>
+					<xs:element name="basicGeodataID" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="basicGeodataIDType" type="che:basicGeodataIDType_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<!-- CHEKME no or non -->
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_DataIdentification"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_DataIdentification" type="che:CHE_MD_DataIdentification_Type" substitutionGroup="gmd:AbstractMD_Identification"/>
+	<!-- ........................................................................ -->
+	<xs:element name="basicGeodataIDTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="basicGeodataIDType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:basicGeodataIDTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<!--Extension MD_MD_MaintenanceInformation-->
+	<xs:complexType name="CHE_MD_MaintenanceInformation_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_MaintenanceInformation_Type">
+				<xs:sequence>
+					<xs:element name="dateOfMonitoringState" type="gco:Date_PropertyType" minOccurs="0"/>
+					<xs:element name="historyConcept" type="che:CHE_MD_HistoryConcept_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="archiveConcept" type="che:CHE_MD_ArchiveConcept_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_MaintenanceInformation"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_MaintenanceInformation" type="che:CHE_MD_MaintenanceInformation_Type" substitutionGroup="gmd:MD_MaintenanceInformation"/>
+	<!-- che:CHE_MD_HistoryConcept -->
+	<xs:complexType name="CHE_MD_HistoryConcept_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="historyConceptCitation" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+					<xs:element name="historyConceptURL" type="gmd:URL_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_HistoryConcept" type="che:CHE_MD_HistoryConcept_Type" substitutionGroup="gco:AbstractObject"/>
+	<xs:complexType name="CHE_MD_HistoryConcept_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_HistoryConcept"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- CHE_MD_ArchiveConcept -->
+	<xs:complexType name="CHE_MD_ArchiveConcept_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="archiveConceptCitation" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+					<xs:element name="archiveConceptURL" type="gmd:URL_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_ArchiveConcept" type="che:CHE_MD_ArchiveConcept_Type" substitutionGroup="gco:AbstractObject"/>
+	<xs:complexType name="CHE_MD_ArchiveConcept_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_ArchiveConcept"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- MD_AbstractClass -->
+	<xs:complexType name="CHE_MD_AbstractClass_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="attribute" type="che:CHE_MD_Attribute_Type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="baseClass" type="che:CHE_MD_AbstractClass_PropertyType" minOccurs="0"/>
+					<xs:element name="subClass" type="che:CHE_MD_AbstractClass_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_AbstractClass_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_AbstractClass"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_AbstractClass" type="che:CHE_MD_AbstractClass_Type" substitutionGroup="gco:AbstractObject"/>
+	<!--CHE_MD_Association -->
+	<xs:complexType name="CHE_MD_Association_Type">
+		<xs:complexContent>
+			<xs:extension base="che:CHE_MD_AbstractClass_Type">
+				<xs:sequence>
+					<xs:element name="role" type="che:CHE_MD_Role_PropertyType" minOccurs="2" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Association" type="che:CHE_MD_Association_Type" substitutionGroup="che:CHE_MD_AbstractClass"/>
+	<!--MD_Class -->
+	<xs:complexType name="CHE_MD_Class_Type">
+		<xs:complexContent>
+			<xs:extension base="che:CHE_MD_AbstractClass_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Class" type="che:CHE_MD_Class_Type" substitutionGroup="che:CHE_MD_AbstractClass"/>
+	<!-- MD_CodeDomain -->
+	<xs:complexType name="CHE_MD_CodeDomain_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="type" type="che:CHE_MD_Type_Type" minOccurs="0"/>
+					<xs:element name="subDomain" type="che:CHE_MD_CodeDomain_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="baseDomain" type="che:CHE_MD_CodeDomain_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_CodeDomain_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_CodeDomain"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_CodeDomain" type="che:CHE_MD_CodeDomain_Type" substitutionGroup="gco:AbstractObject"/>
+	<!-- MD_Type  -->
+	<xs:complexType name="CHE_MD_Type_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="type" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="value" type="che:CHE_MD_CodeValue_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_Type_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_Type"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Type" type="che:CHE_MD_Type_Type" substitutionGroup="gco:AbstractObject"/>
+	<!-- MD_Attribute  -->
+	<xs:complexType name="CHE_MD_Attribute_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="namedType" type="che:CHE_MD_CodeDomain_PropertyType" minOccurs="0"/>
+					<xs:element name="anonymousType" type="che:CHE_MD_Type_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_Attribute_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_Attribute"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Attribute" type="che:CHE_MD_Attribute_Type" substitutionGroup="gco:AbstractObject"/>
+	<!-- MD_Role -->
+	<xs:complexType name="CHE_MD_Role_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="toClass" type="che:CHE_MD_AbstractClass_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_Role_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_Role"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_Role" type="che:CHE_MD_Role_Type" substitutionGroup="gco:AbstractObject"/>
+	<!-- MD_CodeValue -->
+	<xs:complexType name="CHE_MD_CodeValue_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="code" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="subValue" type="che:CHE_MD_CodeValue_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_CodeValue_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_CodeValue"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_CodeValue" type="che:CHE_MD_CodeValue_Type" substitutionGroup="gco:AbstractObject"/>
+	<!-- ================================== CHE_MD_FeatureCatalogueDescription_PropertyType ================================= -->
+	<xs:complexType name="CHE_MD_FeatureCatalogueDescription_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_FeatureCatalogueDescription_Type">
+				<xs:sequence>
+					<xs:element name="dataModel" type="che:PT_FreeURL_PropertyType" minOccurs="0"/>
+					<xs:element name="class" type="che:CHE_MD_AbstractClass_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="domain" type="che:CHE_MD_CodeDomain_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="modelType" type="che:CHE_MD_modelTypeCode_PropertyType"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_FeatureCatalogueDescription"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_FeatureCatalogueDescription_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_FeatureCatalogueDescription"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_FeatureCatalogueDescription" type="che:CHE_MD_FeatureCatalogueDescription_Type" substitutionGroup="gmd:MD_FeatureCatalogueDescription"/>
+	<!-- =======================  che:che_modelType_PropertyType=================== -->
+	<!-- che:che_modelType_PropertyType -->
+	<xs:element name="CHE_MD_modelTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="CHE_MD_modelTypeCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_modelTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ================================== CHE_MD_PortrayalCatalogueReference_PropertyType ================================= -->
+	<xs:complexType name="CHE_MD_PortrayalCatalogueReference_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_PortrayalCatalogueReference_Type">
+				<xs:sequence>
+					<xs:element name="portrayalCatalogueURL" type="che:PT_FreeURL_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_PortrayalCatalogueReference_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_PortrayalCatalogueReference"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_PortrayalCatalogueReference" type="che:CHE_MD_PortrayalCatalogueReference_Type" substitutionGroup="gmd:MD_PortrayalCatalogueReference"/>
+	<!-- =======================  CHE_MD_CoverageDescription_Type=================== -->
+	<xs:complexType name="CHE_MD_CoverageDescription_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_CoverageDescription_Type">
+				<xs:sequence>
+					<xs:element name="filmType" type="che:CHE_MD_FilmTypeCode_PropertyType" minOccurs="0"/>
+					<xs:element name="focalDistance" type="gco:Integer_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_CoverageDescription_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_CoverageDescription"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_CoverageDescription" type="che:CHE_MD_CoverageDescription_Type" substitutionGroup="gmd:MD_CoverageDescription"/>
+	<xs:complexType name="CHE_MD_ImageDescription_Type">
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_ImageDescription_Type">
+				<xs:sequence>
+					<xs:element name="filmType" type="che:CHE_MD_FilmTypeCode_PropertyType" minOccurs="0"/>
+					<xs:element name="focalDistance" type="gco:Integer_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CHE_MD_ImageDescription_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_ImageDescription"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="CHE_MD_ImageDescription" type="che:CHE_MD_ImageDescription_Type" substitutionGroup="gmd:MD_ImageDescription"/>
+	<xs:element name="CHE_MD_FilmTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="CHE_MD_FilmTypeCode_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_MD_FilmTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ========= Classes FreeURL ================================= -->
+	<xs:complexType name="PT_FreeURL_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="URLGroup" type="che:LocalisedURL_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="PT_FreeURL" type="che:PT_FreeURL_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="PT_FreeURL_PropertyType">
+		<xs:complexContent>
+			<xs:extension base="gmd:URL_PropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="che:PT_FreeURL"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="LocalisedURL_Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:anyURI">
+				<xs:attribute name="id" type="xs:ID" use="optional"/>
+				<xs:attribute name="locale" type="xs:anyURI" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="LocalisedURL" type="che:LocalisedURL_Type" substitutionGroup="gmd:URL"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="LocalisedURL_PropertyType">
+		<xs:complexContent>
+			<xs:extension base="gco:ObjectReference_PropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="che:LocalisedURL"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ============================= Services ============================================== -->
+	<!--Extension MD_DataIdentification -->
+	<xs:complexType name="CHE_SV_ServiceIdentification_Type">
+		<xs:complexContent>
+			<xs:extension base="srv:SV_ServiceIdentification_Type">
+				<xs:sequence>
+					<xs:element name="inspireServiceType" type="che:CHE_SV_inspireServiceType_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="srv:SV_ServiceIdentification"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CHE_SV_ServiceIdentification" type="che:CHE_SV_ServiceIdentification_Type" substitutionGroup="gmd:AbstractMD_Identification"/>
+	<!-- =======================  cheCHE_SV_inspireServiceType_PropertyType=================== -->
+	<!-- che:che_modelType_PropertyType -->
+	<xs:element name="CHE_SV_inspireServiceTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="CHE_SV_inspireServiceType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:CHE_SV_inspireServiceTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+</xs:schema>

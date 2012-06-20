@@ -23,6 +23,8 @@
 
 package jeeves.resources.dbms;
 
+import java.sql.Connection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,14 +34,13 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.resources.ResourceListener;
 
 import jeeves.server.resources.Stats;
 import org.apache.commons.dbcp.BasicDataSource;
-
 import org.geotools.data.DataStore;
 
 import org.geotools.data.postgis.PostgisDataStoreFactory;
-
 import org.jdom.Element;
 
 /**
@@ -61,7 +62,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 	// --------------------------------------------------------------------------
 	// ---
 	// --- API
-	// ---
+	// ---y
 	// --------------------------------------------------------------------------
 
 	/**
@@ -211,6 +212,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 
 	public void end() {
 		try {
+		  threadDbms.set(null);
 		  basicDataSource.close();
 		} catch (java.sql.SQLException e) {
 			error("Problem "+e);

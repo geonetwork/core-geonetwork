@@ -75,7 +75,8 @@ public class CswParams extends AbstractParams
             // TODO should not swallow
         }
 		icon     = Util.getParam(site, "icon",            "default.gif");
-
+		outputSchema = Util.getParam(site, "outputSchema", "http://www.opengis.net/cat/csw/2.0.2");
+		
 		addSearches(searches);
 	}
 
@@ -105,6 +106,7 @@ public class CswParams extends AbstractParams
 
 		icon     = Util.getParam(site, "icon",            icon);
 
+		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
 
@@ -133,7 +135,8 @@ public class CswParams extends AbstractParams
 
 		copy.capabUrl = capabUrl;
 		copy.icon     = icon;
-
+		copy.outputSchema = outputSchema ;
+		
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
 
@@ -168,7 +171,8 @@ public class CswParams extends AbstractParams
 
 	public String capabUrl;
 	public String icon;
-
+	public String outputSchema;
+	
 	private List<Search> alSearches = new ArrayList<Search>();
 }
 

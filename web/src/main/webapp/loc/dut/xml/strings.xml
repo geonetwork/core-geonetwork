@@ -45,7 +45,6 @@
 	<firstnameMandatory>Voornaam is vereist</firstnameMandatory>
 	<emailMandatory>e-mail adres is vereist</emailMandatory>
 	<forgottenPassword>Paswoord vergeten?</forgottenPassword>
-  <selectTemplate>Select schemas</selectTemplate>	
 	<notificationsDes>Remote Wijzigingen</notificationsDes>
 	<metadata-templates-samples-add>Toevoegen Templates en Voorbeelden</metadata-templates-samples-add>
 	<metadata-schema-select>Selecteer een schema om templates of voorbeelddata toe te voegen</metadata-schema-select>
@@ -387,8 +386,6 @@
 	<categoryNameMandatory>Een categorie moet worden ingevuld.</categoryNameMandatory>
 	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Kies-</choose>
 	<chooseFile>Kies de lokatie van het bestand dat u wilt uploaden</chooseFile>
 	<chooseLargeThumbnail>Kies de lokatie van het grote voorbeeldweergave bestand</chooseLargeThumbnail>
@@ -417,10 +414,6 @@
 	<createTip>Maak een nieuw metadatarecord aan volgens deze template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
-	<crs code="EPSG:4258">ETRS 89</crs>
-	<crs code="EPSG:900913">Google Mercator</crs>
-	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Test omgeving voor de CSW ISO Profile catalog interface</cswTestDesc>
 	<dataQualityTab>Datakwaliteit</dataQualityTab>
@@ -515,6 +508,7 @@
 	<groups>Groepen</groups>
 	<harvestingManagement>Harvesting beheer</harvestingManagement>
 	<harvestingManDes>Toevoegen/wijzigen/verwijderen/starten/stoppen van harvesting taken</harvestingManDes>
+	<help>Help</help>
 	<help>Help</help>
     <helpLinkTooltip js="true">Help</helpLinkTooltip>  
 	<helpComplete>Complete help</helpComplete>
@@ -738,11 +732,6 @@
     <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
     <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
     <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
@@ -1378,6 +1367,7 @@
     <addremove>Toevoegen / Verwijderen</addremove>
     <enabled>Ingeschakeld</enabled>
     <notifications>Kennisgeving aan externe doelen</notifications>
+    <url>URL</url>
     
     <cswServer>CSW server</cswServer>
     <cswServerDes>CSW Server configuration</cswServerDes>

@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   gco:isoType="gmd:MD_Metadata" xmlns:gmi="http://www.isotc211.org/2005/gmi">
+    <gmd:fileIdentifier xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>425b7b33-2e06-41af-8a42-3b3fcb024705</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>fra</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>Jeu de données</gco:CharacterString>
+    </gmd:hierarchyLevelName>
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.user.get?id=560&amp;schema=iso19139.che&amp;role=distributor" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </gmd:organisationName>
+            <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                            <gmd:voice gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:voice>
+                            <gmd:facsimile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:facsimile>
+                            <che:directNumber gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:directNumber>
+                            <che:mobile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:mobile>
+                        </che:CHE_CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:city gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:city>
+                            <gmd:administrativeArea gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:postalCode>
+                            <gmd:country xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:country>
+                            <gmd:electronicMailAddress gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:electronicMailAddress>
+                            <che:streetName gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:streetName>
+                            <che:streetNumber gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:streetNumber>
+                            <che:addressLine gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:addressLine>
+                            <che:postBox gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:postBox>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <gmd:URL/>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>text/html</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:name>
+                            <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:description>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                    <gmd:hoursOfService gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </gmd:hoursOfService>
+                    <gmd:contactInstructions gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </gmd:contactInstructions>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="distributor"/>
+            </gmd:role>
+            <che:individualFirstName gco:nilReason="missing">
+                <gco:CharacterString/>
+            </che:individualFirstName>
+            <che:individualLastName gco:nilReason="missing">
+                <gco:CharacterString/>
+            </che:individualLastName>
+            <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:DateTime>2009-09-03T14:21:16</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:locale xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:PT_Locale id="EN">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng">English</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:PT_Locale id="DE">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="deu">German</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:PT_Locale id="IT">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita">Italian</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:spatialRepresentationInfo xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_VectorSpatialRepresentation>
+            <gmd:topologyLevel>
+                <gmd:MD_TopologyLevelCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_TopologyLevelCode" codeListValue="geometryOnly"/>
+            </gmd:topologyLevel>
+            <gmd:geometricObjects>
+                <gmd:MD_GeometricObjects>
+                    <gmd:geometricObjectType>
+                        <gmd:MD_GeometricObjectTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_GeometricObjectTypeCode" codeListValue="surface"/>
+                    </gmd:geometricObjectType>
+                </gmd:MD_GeometricObjects>
+            </gmd:geometricObjects>
+        </gmd:MD_VectorSpatialRepresentation>
+    </gmd:spatialRepresentationInfo>
+    <gmd:referenceSystemInfo xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code>
+                        <gco:CharacterString>CH1903</gco:CharacterString>
+                    </gmd:code>
+                    <gmd:codeSpace/>
+                    <gmd:version/>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:identificationInfo xmlns:xlink="http://www.w3.org/1999/xlink">
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Template GM03 / datasets / INSPIRE valid</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">Template GM03 / datasets / INSPIRE valid</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">Template GM03 / datasets / INSPIRE valid</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Template GM03 / datasets / INSPIRE valid</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                    <gmd:date/>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Ce template permet de guider la saisie d&apos;une fiche de métadonnée présentant l&apos;ensemble des champs requis pas les recommandations INSPIRE.</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:descriptiveKeywords xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%231c469712-ee50-428e-946e-5fd3916a2203&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>boundaries</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:spatialResolution>
+                <gmd:MD_Resolution>
+                    <gmd:equivalentScale>
+                        <gmd:MD_RepresentativeFraction>
+                            <gmd:denominator>
+                                <gco:Integer>50000</gco:Integer>
+                            </gmd:denominator>
+                        </gmd:MD_RepresentativeFraction>
+                    </gmd:equivalentScale>
+                </gmd:MD_Resolution>
+            </gmd:spatialResolution>
+            <gmd:language>
+                <gco:CharacterString>deu</gco:CharacterString>
+            </gmd:language>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:extent xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=44&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">acaa3c82-f522-4dbd-96dc-72d6fddf58d5</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>5.967009325334714</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>10.488208785402445</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>45.82943878089569</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.8066586859328</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+    <gmd:distributionInfo xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_Distribution>
+            <gmd:distributionFormat xlink:href="http://localhost:8080/geonetwork/srv/eng/xml.format.get?id=74" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>-- Fichier au format ZIP --</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>asdf</gco:CharacterString>
+                    </gmd:version>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:transferOptions>
+                <gmd:MD_DigitalTransferOptions>
+                    <gmd:unitsOfDistribution gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </gmd:unitsOfDistribution>
+                    <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                                <gmd:URL>http://data.organisation.org/data.zip</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:function>
+                                <gmd:CI_OnLineFunctionCode codeListValue="information" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
+                            </gmd:function>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onLine>
+                </gmd:MD_DigitalTransferOptions>
+            </gmd:transferOptions>
+        </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+    <gmd:dataQualityInfo xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:DQ_DataQuality>
+            <gmd:scope>
+                <gmd:DQ_Scope>
+                    <gmd:level>
+                        <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+                    </gmd:level>
+                </gmd:DQ_Scope>
+            </gmd:scope>
+            <gmd:report>
+                <gmd:DQ_DomainConsistency>
+                    <gmd:result>
+                        <gmd:DQ_ConformanceResult>
+                            <gmd:specification>
+                                <gmd:CI_Citation>
+                                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>INSPIRE Implementing rules</gco:CharacterString>
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">INSPIRE Implementing rules</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2008-10-13</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:specification>
+                            <gmd:explanation xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>-- information sur le test --</gco:CharacterString>
+                            </gmd:explanation>
+                            <gmd:pass>
+                                <gco:Boolean>1</gco:Boolean>
+                            </gmd:pass>
+                        </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                    <gmd:result>
+                        <gmd:DQ_QuantitativeResult>
+                            <gmd:valueType>
+                                <gco:RecordType>type</gco:RecordType>
+                            </gmd:valueType>
+                            <gmd:valueUnit>
+                                <gml:BaseUnit gml:id="N1027D">
+                                    <gml:identifier codeSpace=""/>
+                                    <gml:unitsSystem/>
+                                </gml:BaseUnit>
+                            </gmd:valueUnit>
+                            <gmd:errorStatistic>
+                                <gco:CharacterString>Some stat data</gco:CharacterString>
+                            </gmd:errorStatistic>
+                            <gmd:value>
+                                <gco:Record>
+                                    <arbitrary>
+                                        <c1>child1Text</c1>
+                                        <another>another bit of text</another>
+                                    </arbitrary>
+                                </gco:Record>
+                            </gmd:value>
+                        </gmd:DQ_QuantitativeResult>
+                    </gmd:result>
+                </gmd:DQ_DomainConsistency>
+            </gmd:report>
+            <gmd:report>
+                <gmi:QE_Usability>
+                    <gmd:result>
+                        <gmd:DQ_ConformanceResult>
+                            <gmd:specification>
+                                <gmd:CI_Citation>
+                                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>INSPIRE Implementing rules</gco:CharacterString>
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">INSPIRE Implementing rules</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2008-10-13</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:specification>
+                            <gmd:explanation xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>-- information sur le test --</gco:CharacterString>
+                            </gmd:explanation>
+                            <gmd:pass>
+                                <gco:Boolean>1</gco:Boolean>
+                            </gmd:pass>
+                        </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                </gmi:QE_Usability>
+            </gmd:report>
+            <gmd:report>
+                <gmd:DQ_TemporalValidity>
+                    <gmd:nameOfMeasure>
+                        <gco:CharacterString>asdfas</gco:CharacterString>
+                    </gmd:nameOfMeasure>
+                    <gmd:measureIdentification>
+                        <gmd:MD_Identifier>
+                            <gmd:code>
+                                <gco:CharacterString>adsfdasdf</gco:CharacterString>
+                            </gmd:code>
+                        </gmd:MD_Identifier>
+                    </gmd:measureIdentification>
+                    <gmd:measureDescription>
+                        <gco:CharacterString>asdf</gco:CharacterString>
+                    </gmd:measureDescription>
+                    <gmd:evaluationMethodType>
+                        <gmd:DQ_EvaluationMethodTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#DQ_EvaluationMethodTypeCode" codeListValue="directInternal"/>
+                    </gmd:evaluationMethodType>
+                    <gmd:evaluationProcedure>
+                        <gmd:CI_Citation>
+                            <gmd:title>
+                                <gco:CharacterString>tt</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2009-09-15</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                        </gmd:CI_Citation>
+                    </gmd:evaluationProcedure>
+                    <gmd:dateTime>
+                        <gco:DateTime>2009-09-15T13:34:00</gco:DateTime>
+                    </gmd:dateTime>
+                    <gmd:result>
+                        <gmd:DQ_ConformanceResult>
+                            <gmd:specification>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>asdfasdf</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2009-09-08</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:specification>
+                            <gmd:explanation>
+                                <gco:CharacterString>asdfasdf</gco:CharacterString>
+                            </gmd:explanation>
+                            <gmd:pass>
+                                <gco:Boolean>0</gco:Boolean>
+                            </gmd:pass>
+                        </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                </gmd:DQ_TemporalValidity>
+            </gmd:report>
+            <gmd:lineage>
+                <gmd:LI_Lineage>
+                    <gmd:statement>
+                        <gco:CharacterString>Statement</gco:CharacterString>
+                    </gmd:statement>
+                    <gmd:processStep>
+                        <gmd:LI_ProcessStep>
+                            <gmd:description>
+                                <gco:CharacterString>asdfasf</gco:CharacterString>
+                            </gmd:description>
+                        </gmd:LI_ProcessStep>
+                    </gmd:processStep>
+                </gmd:LI_Lineage>
+            </gmd:lineage>
+        </gmd:DQ_DataQuality>
+    </gmd:dataQualityInfo>
+    <gmd:metadataConstraints xmlns:xlink="http://www.w3.org/1999/xlink">
+        <che:CHE_MD_LegalConstraints gco:isoType="gmd:MD_LegalConstraints">
+            <gmd:useLimitation gco:nilReason="missing">
+                <gco:CharacterString/>
+            </gmd:useLimitation>
+            <gmd:accessConstraints>
+                <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode" codeListValue="copyright"/>
+            </gmd:accessConstraints>
+            <che:legislationConstraints>
+                <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+                    <che:country>
+                        <gmd:Country codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country" codeListValue="CH"/>
+                    </che:country>
+                    <che:legislationType>
+                        <che:CHE_CI_LegislationCode codeList="" codeListValue="cantonalLaw"/>
+                    </che:legislationType>
+                    <che:internalReference gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </che:internalReference>
+                    <che:title>
+                        <gmd:CI_Citation>
+                            <gmd:title>
+                                <gco:CharacterString>asdfasdf</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2009-04-22</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                        </gmd:CI_Citation>
+                    </che:title>
+                </che:CHE_MD_Legislation>
+            </che:legislationConstraints>
+        </che:CHE_MD_LegalConstraints>
+    </gmd:metadataConstraints>
+    <gmd:metadataMaintenance xmlns:xlink="http://www.w3.org/1999/xlink">
+        <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
+            <gmd:maintenanceAndUpdateFrequency>
+                <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded"/>
+            </gmd:maintenanceAndUpdateFrequency>
+            <gmd:dateOfNextUpdate>
+                <gco:Date>2009-04-06</gco:Date>
+            </gmd:dateOfNextUpdate>
+        </che:CHE_MD_MaintenanceInformation>
+    </gmd:metadataMaintenance>
+</che:CHE_MD_Metadata>

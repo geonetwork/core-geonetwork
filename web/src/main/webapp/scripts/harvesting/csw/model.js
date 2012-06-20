@@ -114,6 +114,7 @@ var updateTemp =
 '      <name>{NAME}</name>'+
 '      <capabilitiesUrl>{CAPAB_URL}</capabilitiesUrl>'+
 '      <icon>{ICON}</icon>'+
+'      <outputSchema>{OUTPUTSCHEMA}</outputSchema>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+

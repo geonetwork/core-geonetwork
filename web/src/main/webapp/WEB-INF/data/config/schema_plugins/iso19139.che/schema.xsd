@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://www.geocat.ch/2008/che" elementFormDefault="qualified"
+			  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+				xmlns:srv="http://www.isotc211.org/2005/srv">
+	<xs:include schemaLocation="schema/che/che.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/srv" schemaLocation="schema/srv/srv.xsd"/>
+</xs:schema>

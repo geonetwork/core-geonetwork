@@ -308,7 +308,61 @@ OpenLayers.Layer.WMTS = OpenLayers.Class(OpenLayers.Layer.Grid, {
         // copy/set any non-init, non-simple values here
         return obj;
     },
-    
+
+    /**
+    * Method: getServerResolution
+    * Return the closest highest server-supported resolution. Throw an
+    * exception if none is found in the serverResolutions array.
+    *
+    * Parameters:
+    * resolution - {Number} The base resolution. If undefined the
+    *     map resolution is used.
+    *
+    * Returns:
+    * {Number} The closest highest server resolution value.
+    */
+    getServerResolution: function(resolution) {
+        resolution = resolution || this.map.getResolution();
+        if(this.serverResolutions &&
+           OpenLayers.Util.indexOf(this.serverResolutions, resolution) === -1) {
+            var i, serverResolution;
+            for(i=this.serverResolutions.length-1; i>= 0; i--) {
+                serverResolution = this.serverResolutions[i];
+                if(serverResolution > resolution) {
+                    resolution = serverResolution;
+                   break;
+                }
+            }
+            if(i === -1) {
+                throw 'no appropriate resolution in serverResolutions';
+            }
+        }
+        return resolution;
+    },
+
+    /**
+     * Method: getServerZoom
+     * Return the zoom value corresponding to the best zoom supported by the server
+     * resolution.
+     *
+     * Returns:
+     * {Number} The closest server supported zoom.
+     */
+    getServerZoom: function() {
+        return this.map.getZoomForResolution(this.getServerResolution());
+    },
+
+    /**
+     * Method: getIdentifier
+     * Get the current index in the matrixIds array.
+     */
+    getIdentifier: function() {
+        return this.serverResolutions != null ?
+            OpenLayers.Util.indexOf(this.serverResolutions,
+                                    this.getServerResolution()) :
+            this.getServerZoom() + this.zoomOffset;
+    },
+
     /**
      * Method: getMatrix
      * Get the appropriate matrix definition for the current map resolution.
@@ -316,7 +370,7 @@ OpenLayers.Layer.WMTS = OpenLayers.Class(OpenLayers.Layer.Grid, {
     getMatrix: function() {
         var matrix;
         if (!this.matrixIds || this.matrixIds.length === 0) {
-            matrix = {identifier: this.map.getZoom() + this.zoomOffset};
+            matrix = {identifier: this.getIdentifier()};
         } else {
             // get appropriate matrix given the map scale if possible
             if ("scaleDenominator" in this.matrixIds[0]) {
@@ -324,7 +378,7 @@ OpenLayers.Layer.WMTS = OpenLayers.Class(OpenLayers.Layer.Grid, {
                 var denom = 
                     OpenLayers.METERS_PER_INCH * 
                     OpenLayers.INCHES_PER_UNIT[this.units] * 
-                    this.map.getResolution() / 0.28E-3;
+                    this.getServerResolution() / 0.28E-3;
                 var diff = Number.POSITIVE_INFINITY;
                 var delta;
                 for (var i=0, ii=this.matrixIds.length; i<ii; ++i) {
@@ -336,7 +390,7 @@ OpenLayers.Layer.WMTS = OpenLayers.Class(OpenLayers.Layer.Grid, {
                 }
             } else {
                 // fall back on zoom as index
-                matrix = this.matrixIds[this.map.getZoom() + this.zoomOffset];
+                matrix = this.matrixIds[this.getIdentifier()];
             }
         }
         return matrix;

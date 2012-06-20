@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gcq="http://www.geocat.ch/2003/05/gateway/result" xmlns:gm03small="http://www.geocat.ch/2003/05/gateway/GM03Small" targetNamespace="http://www.geocat.ch/2003/05/gateway/result" elementFormDefault="qualified">
+	<xsd:import namespace="http://www.geocat.ch/2003/05/gateway/GM03Small" schemaLocation="gm03small.xsd"/>
+	<xsd:element name="queryResult" type="gcq:queryResultType"/>
+	<xsd:complexType name="queryResultType">
+		<xsd:choice>
+			<xsd:element name="GM03Count" type="xsd:string" minOccurs="0"/>
+			<xsd:element ref="gm03small:MD_Metadata" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:any namespace="http://www.geocat.ch/2003/05/gateway/GM03Core" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:any namespace="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:choice>
+	</xsd:complexType>
+</xsd:schema>

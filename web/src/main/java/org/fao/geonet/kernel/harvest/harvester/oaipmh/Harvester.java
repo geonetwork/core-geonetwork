@@ -268,7 +268,7 @@ class Harvester
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 		result.added++;
 	}
 
@@ -458,7 +458,7 @@ class Harvester
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false);
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false, false);
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
@@ -470,7 +470,7 @@ class Harvester
 			addCategories(id);
 
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, id);
+			dataMan.indexMetadataGroup(dbms, id, false, context);
 			result.updated++;
 		}
 	}

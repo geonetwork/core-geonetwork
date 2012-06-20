@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.csw.services.GetRecords;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.csw.services.Transaction;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.geotools.data.DataStore;
 import org.jdom.Element;
 
 import java.io.File;
@@ -62,15 +63,15 @@ public class CatalogDispatcher
 	//---
 	//---------------------------------------------------------------------------
 
-	public CatalogDispatcher(File summaryConfig, LuceneConfig luceneConfig)
+	public CatalogDispatcher(DataStore ds, File summaryConfig, LuceneConfig luceneConfig)
 	{
 		register(new DescribeRecord());
 		register(new GetCapabilities());
 		register(new GetDomain());
-		register(new GetRecordById(summaryConfig, luceneConfig));
-		register(new GetRecords(summaryConfig, luceneConfig));
+		register(new GetRecordById(ds, summaryConfig, luceneConfig));
+		register(new GetRecords(ds, summaryConfig, luceneConfig));
 		register(new Harvest());
-		register(new Transaction(summaryConfig, luceneConfig));
+		register(new Transaction(ds, summaryConfig, luceneConfig));
 	}
 
 	//---------------------------------------------------------------------------

@@ -36,7 +36,7 @@
 					localized="false" />
 				<xml name="about.fre" file="loc/fre/xml/about.xml"
 					localized="false" />
-				<xml name="about.spa" file="loc/spa/xml/about.xml"
+				<xml name="about.spa" file="loc/fre/xml/about.xml"
 					localized="false" />
 				<xml name="about.chi" file="loc/chi/xml/about.xml"
 					localized="false" />
@@ -63,7 +63,7 @@
 					localized="false" />
 				<xml name="config.fre" file="loc/fre/xml/config.xml"
 					localized="false" />
-				<xml name="config.spa" file="loc/spa/xml/config.xml"
+				<xml name="config.spa" file="loc/fre/xml/config.xml"
 					localized="false" />
 				<xml name="config.chi" file="loc/chi/xml/config.xml"
 					localized="false" />

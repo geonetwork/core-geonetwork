@@ -23,7 +23,8 @@ var mapInit = false;
 var activeIndex = 0;
 
 // print config url
-var printConfigUrl = mapfish.SERVER_BASE_URL + 'pdf/info.json';
+//var printConfigUrl = mapfish.SERVER_BASE_URL + 'pdf/info.json';
+var printConfigUrl = '';
 
 // create application
 GeoNetwork.app = function() {    // private vars:
@@ -52,6 +53,7 @@ GeoNetwork.app = function() {    // private vars:
         var options = mapOptions || {
             projection: "EPSG:4326",
             units: "degrees",
+            theme: null,
             maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
             restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90),
             controls: []
@@ -552,6 +554,7 @@ GeoNetwork.app = function() {    // private vars:
 
         toolbar.push("-");
 
+        /*
         var printItem = new Geonetwork.print.PrintAction({
                 map: map,
                 text: "",
@@ -569,6 +572,7 @@ GeoNetwork.app = function() {    // private vars:
             });
             
         toolbar.push(printItem);
+        */
         
         toolbar.push("-");
         
@@ -881,138 +885,138 @@ GeoNetwork.app = function() {    // private vars:
      * Creates the layers tree control
      *
      */
-    var createTree = function() {
-    
-        // using OpenLayers.Format.JSON to create a nice formatted string of the
-        // configuration for editing it in the UI
-        var treeConfig = new OpenLayers.Format.JSON().write([{
-            nodeType: "gx_baselayercontainer"
-        }, {
-            nodeType: "gx_overlaylayercontainer",
-            expanded: true,
-            // render the nodes inside this container with a radio button,
-            // and assign them the group "foo".
-            loader: {
-                baseAttrs: {
-                    radioGroup: "foo" /*,
-                    uiProvider: "use_radio"*/
-                }
-            }
-        }], true);
-
-        // create the tree with the configuration from above
-        tree = new Ext.tree.TreePanel({
-            title: 'Layer tree',
-            id: "toctree",
-            enableDD: true,
-            loader: new Ext.tree.TreeLoader({
-                // applyLoader has to be set to false to not interfer with loaders
-                // of nodes further down the tree hierarchy
-                applyLoader: false
-            }),
-            root: {
-                nodeType: "async",
-                // the children property of an Ext.tree.AsyncTreeNode is used to
-                // provide an initial set of layer nodes. We use the treeConfig
-                // from above, that we created with OpenLayers.Format.JSON.write.
-                children: Ext.decode(treeConfig)
-            },          
-            listeners:{
-                contextmenu:function(node,e){
-                    if ((node.attributes.nodeType != "gx_overlaylayercontainer") &&
-                         (node.attributes.nodeType != "gx_baselayercontainer"))
-                    {
-                        node.select();
-                        var c=node.getOwnerTree().contextMenu;
-                        if (node.parentNode.attributes.nodeType == "gx_baselayercontainer") {
-                            c.items.get("removeMenu").disable();
-                            c.items.get("opacityMenu").disable();
-                        } else {
-                            c.items.get("removeMenu").enable();
-                            c.items.get("opacityMenu").enable();
-                        }
-
-                        c.items.get("addMenu").hide();
-                        
-                        var layer = node.attributes.layer;
-
-                        if (layer && layer.dimensions && layer.dimensions.time) {
-                            c.items.get("wmsTimeMenu").enable();
-                        } else {
-                            c.items.get("wmsTimeMenu").disable();
-                        }
-
-                        if ((layer) && ((!layer.styles) || (layer.styles.length < 2))) {
-                            c.items.get("stylesMenu").disable();
-                        } else {
-                            c.items.get("stylesMenu").enable();
-                        }
-
-                        c.contextNode=node;
-                        c.showAt(e.getXY());
-                    } else {
-                    
-                        if (node.attributes.nodeType == "gx_overlaylayercontainer") {
-                        
-                            node.select();
-                            var c=node.getOwnerTree().contextMenu;
-                            
-                            c.items.get("addMenu").show();
-                            c.items.get("removeMenu").hide();
-                            c.items.get("opacityMenu").hide();
-                            c.items.get("wmsTimeMenu").hide();
-                            c.items.get("stylesMenu").hide();			
-                            c.items.get("metadataMenu").hide();
-            
-                            c.contextNode=node;
-                            c.showAt(e.getXY());
-                        }
-                    }
-            },scope:this},
-            contextMenu:new Ext.menu.Menu({
-                items:[{
-                    text: "Add layer",
-                    id: "addMenu",
-                    handler: function () {
-                        GeoNetwork.WindowManager.showWindow("addwms");
-                    }
-                },
-                {
-                    text:OpenLayers.i18n("removeButtonText"),
-                    id: "removeMenu",
-                    handler: removeLayerHandlerContextMenu
-                },
-                {
-                    text: "WMS information", //OpenLayers.i18n("metadataButtonText"),
-                    id: "metadataMenu",
-                    handler: metadataLayerHandlerContextMenu
-                },
-                {
-                    text: OpenLayers.i18n("opacityButtonText"),
-                    id: "opacityMenu",
-                    handler: opacityLayerHandlerContextMenu
-                },
-                {
-                    text: "Styles",
-                    id: "stylesMenu",
-                    handler: stylesLayerHandlerContextMenu
-                },
-                {
-                    text: OpenLayers.i18n('WMSTimeWindowTitle'),
-                    id: "wmsTimeMenu",
-                    disabled: true,
-                    handler: wmsTimeHandlerContextMenu
-                }
-
-            ]}),
-            tbar:  toctoolbar,
-            rootVisible: false,
-            lines: false,
-            border: false,
-            region: 'center'			
-        });
-
-    }
+//    var createTree = function() {
+//    
+//        // using OpenLayers.Format.JSON to create a nice formatted string of the
+//        // configuration for editing it in the UI
+//        var treeConfig = new OpenLayers.Format.JSON().write([{
+//            nodeType: "gx_baselayercontainer"
+//        }, {
+//            nodeType: "gx_overlaylayercontainer",
+//            expanded: true,
+//            // render the nodes inside this container with a radio button,
+//            // and assign them the group "foo".
+//            loader: {
+//                baseAttrs: {
+//                    radioGroup: "foo" /*,
+//                    uiProvider: "use_radio"*/
+//                }
+//            }
+//        }], true);
+//
+//        // create the tree with the configuration from above
+//        tree = new Ext.tree.TreePanel({
+//            title: 'Layer tree',
+//            id: "toctree",
+//            enableDD: true,
+//            loader: new Ext.tree.TreeLoader({
+//                // applyLoader has to be set to false to not interfer with loaders
+//                // of nodes further down the tree hierarchy
+//                applyLoader: false
+//            }),
+//            root: {
+//                nodeType: "async",
+//                // the children property of an Ext.tree.AsyncTreeNode is used to
+//                // provide an initial set of layer nodes. We use the treeConfig
+//                // from above, that we created with OpenLayers.Format.JSON.write.
+//                children: Ext.decode(treeConfig)
+//            },          
+//            listeners:{
+//                contextmenu:function(node,e){
+//                    if ((node.attributes.nodeType != "gx_overlaylayercontainer") &&
+//                         (node.attributes.nodeType != "gx_baselayercontainer"))
+//                    {
+//                        node.select();
+//                        var c=node.getOwnerTree().contextMenu;
+//                        if (node.parentNode.attributes.nodeType == "gx_baselayercontainer") {
+//                            c.items.get("removeMenu").disable();
+//                            c.items.get("opacityMenu").disable();
+//                        } else {
+//                            c.items.get("removeMenu").enable();
+//                            c.items.get("opacityMenu").enable();
+//                        }
+//
+//                        c.items.get("addMenu").hide();
+//                        
+//                        var layer = node.attributes.layer;
+//
+//                        if (layer && layer.dimensions && layer.dimensions.time) {
+//                            c.items.get("wmsTimeMenu").enable();
+//                        } else {
+//                            c.items.get("wmsTimeMenu").disable();
+//                        }
+//
+//                        if ((layer) && ((!layer.styles) || (layer.styles.length < 2))) {
+//                            c.items.get("stylesMenu").disable();
+//                        } else {
+//                            c.items.get("stylesMenu").enable();
+//                        }
+//
+//                        c.contextNode=node;
+//                        c.showAt(e.getXY());
+//                    } else {
+//                    
+//                        if (node.attributes.nodeType == "gx_overlaylayercontainer") {
+//                        
+//                            node.select();
+//                            var c=node.getOwnerTree().contextMenu;
+//                            
+//                            c.items.get("addMenu").show();
+//                            c.items.get("removeMenu").hide();
+//                            c.items.get("opacityMenu").hide();
+//                            c.items.get("wmsTimeMenu").hide();
+//                            c.items.get("stylesMenu").hide();			
+//                            c.items.get("metadataMenu").hide();
+//            
+//                            c.contextNode=node;
+//                            c.showAt(e.getXY());
+//                        }
+//                    }
+//            },scope:this},
+//            contextMenu:new Ext.menu.Menu({
+//                items:[{
+//                    text: "Add layer",
+//                    id: "addMenu",
+//                    handler: function () {
+//                        GeoNetwork.WindowManager.showWindow("addwms");
+//                    }
+//                },
+//                {
+//                    text:OpenLayers.i18n("removeButtonText"),
+//                    id: "removeMenu",
+//                    handler: removeLayerHandlerContextMenu
+//                },
+//                {
+//                    text: "WMS information", //OpenLayers.i18n("metadataButtonText"),
+//                    id: "metadataMenu",
+//                    handler: metadataLayerHandlerContextMenu
+//                },
+//                {
+//                    text: OpenLayers.i18n("opacityButtonText"),
+//                    id: "opacityMenu",
+//                    handler: opacityLayerHandlerContextMenu
+//                },
+//                {
+//                    text: "Styles",
+//                    id: "stylesMenu",
+//                    handler: stylesLayerHandlerContextMenu
+//                },
+//                {
+//                    text: OpenLayers.i18n('WMSTimeWindowTitle'),
+//                    id: "wmsTimeMenu",
+//                    disabled: true,
+//                    handler: wmsTimeHandlerContextMenu
+//                }
+//
+//            ]}),
+//            tbar:  toctoolbar,
+//            rootVisible: false,
+//            lines: false,
+//            border: false,
+//            region: 'center'			
+//        });
+//
+//    }
 
     /**
      * Creates the legend panel control
@@ -1041,7 +1045,7 @@ GeoNetwork.app = function() {    // private vars:
      */
     var createViewport = function() {
         createToolbars();         
-        createTree();
+        //createTree();
         createLegendPanel();
 
         var mapOverlay = createMapOverlay();
@@ -1053,37 +1057,37 @@ GeoNetwork.app = function() {    // private vars:
             layout: 'accordion',
             deferredRender:false, 
             items: [
-                tree,
-                {
-                    xtype: 'print-simple',
-                    title: OpenLayers.i18n("mf.print.print"),
-                    bodyStyle: 'padding: 7px;',
-                    formConfig: {
-                        labelWidth: 65,
-                        defaults: {
-                            width: 100,
-                            listWidth: 100
-                        }/*,
-                         items: [
-                         {
-                         xtype: 'textfield',
-                         fieldLabel:  OpenLayers.i18n("mf.print.mapTitle"),
-                         name: 'mapTitle',
-                         value: 'Map title'
-                         },
-                         {
-                         xtype: 'textarea',
-                         fieldLabel:  OpenLayers.i18n("mf.print.comment"),
-                         name: 'comment',
-                         height: 100,
-                         value: 'Some comments'
-                         }
-                         ] */
-                    },
-                    border: false,
-                    map: map,
-                    configUrl: printConfigUrl
-                }
+//                tree,
+//                {
+//                    xtype: 'print-simple',
+//                    title: OpenLayers.i18n("mf.print.print"),
+//                    bodyStyle: 'padding: 7px;',
+//                    formConfig: {
+//                        labelWidth: 65,
+//                        defaults: {
+//                            width: 100,
+//                            listWidth: 100
+//                        }/*,
+//                         items: [
+//                         {
+//                         xtype: 'textfield',
+//                         fieldLabel:  OpenLayers.i18n("mf.print.mapTitle"),
+//                         name: 'mapTitle',
+//                         value: 'Map title'
+//                         },
+//                         {
+//                         xtype: 'textarea',
+//                         fieldLabel:  OpenLayers.i18n("mf.print.comment"),
+//                         name: 'comment',
+//                         height: 100,
+//                         value: 'Some comments'
+//                         }
+//                         ] */
+//                    },
+//                    border: false,
+//                    map: map,
+//                    configUrl: printConfigUrl
+//                }
             ]
         });
        

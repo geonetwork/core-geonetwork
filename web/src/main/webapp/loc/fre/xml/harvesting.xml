@@ -31,6 +31,11 @@
 		<short>CSW/ISO 2.0</short>
 		<long>OGC CSW 2.0.2 - Profil ISO</long>
 	</info>
+
+    <info type="cgp">
+        <short>CGP</short>
+        <long>GM03 Catalog Gateway Protocol (Swiss Topo)</long>
+    </info>
 	
 	<info type="z3950">
 		<short>Z3950</short>
@@ -114,6 +119,7 @@
 	<useAccount>Compte utilisateur</useAccount>
 	<username>Nom d'utilisateur</username>
 	<password>Mot de passe</password>
+    <outputSchema>Output schema</outputSchema>
 	
 	<search>Recherche</search>
 	<siteName>Nom du site</siteName>
@@ -409,7 +415,7 @@
 		
 		<tip id="gn.host">
             L'URL doit indiquer un catalogue GeoNetwork. L'URL a la structure suivante:<br/>
-            http[s]://HOST[:port]/geonetwork
+                       http[s]://HOST[:port]/geonetwork
 		</tip>
 		
 		<tip id="gn.xslfilter">
@@ -586,6 +592,25 @@
 		<tip id="oai.prefix">
 			Choose the metadata format you want to harvest.
 		</tip>
+        <!-- CGP-GM03 harvesting type : dynamic search part -->
+        <tip id="cgp.url"> This URL must point to the remote CGP SOAP messaging handler </tip>
+
+        <tip id="cgp.addSearch"> Add one search on the remote server. If you don't add any search,
+            an unconstrained search is performed fetching all records from the remote catalogue. </tip>
+
+        <tip id="cgp.groups"> You can choose the privileges to associate to harvested metadata. </tip>
+
+        <tip id="cgp.addGroups"> Select one or more groups (using the <b>&lt;CTRL&gt;</b>
+            key) on the left panel and press this button. </tip>
+
+        <tip id="cgp.categories"> You can assign one or more categories to harvested metadata. Use
+            the <b>&lt;CTRL&gt;</b> key to select more than one category. </tip>
 	</tips>
+
+    <latNorth>Nord</latNorth>
+    <lonWest>Ouest</lonWest>
+    <latSouth>Sud</latSouth>
+    <lonEast>Est</lonEast>
+    <extent>Etendue</extent>
 </strings>
 

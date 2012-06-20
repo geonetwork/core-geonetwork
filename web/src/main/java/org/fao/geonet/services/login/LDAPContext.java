@@ -60,10 +60,10 @@ class LDAPContext
         uidAttr       = sm.getValue      (prefix +"/uidAttr");
         groupAttr     = sm.getValue      (prefix +"/userAttribs/group");
 
-		if (profileAttr.trim().length() == 0)
+		if (profileAttr != null && profileAttr.trim().length() == 0)
 			profileAttr = null;
 
-        if (groupAttr.trim().length() == 0)
+        if (groupAttr != null && groupAttr.trim().length() == 0)
 			groupAttr = null;
 
 		//--- init set of allowed profiles

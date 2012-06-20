@@ -65,7 +65,13 @@ import java.util.List;
 
 public class XmlRequest
 {
-	public enum Method { GET, POST }
+    private int statusCode;
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public enum Method { GET, POST }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -346,7 +352,7 @@ public class XmlRequest
 			if (locationHeader != null) {
 			    redirectLocation = locationHeader.getValue();
 			    httpMethod.setPath(redirectLocation);
-			    client.executeMethod(httpMethod);
+			    statusCode = client.executeMethod(httpMethod);
 			    data = httpMethod.getResponseBody();
 			}
 			return Xml.loadStream(new ByteArrayInputStream(data));

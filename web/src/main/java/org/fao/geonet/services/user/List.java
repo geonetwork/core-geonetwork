@@ -29,13 +29,14 @@ import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 //=============================================================================
 
@@ -44,13 +45,17 @@ import java.util.Set;
 
 public class List implements Service
 {
+    private Type type;
+    
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	    this.type = Type.valueOf(params.getValue("type", "NORMAL"));
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -66,13 +71,67 @@ public class List implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		Set<String> hsMyGroups = getGroups(dbms, session.getUserId(), session.getProfile());
+		String userProfile = session.getProfile();
+		Set<String> hsMyGroups = Collections.emptySet();
+		
+		if (userProfile != null) {
+		    hsMyGroups = getGroups(dbms, session.getUserId(), userProfile);
+		}
+		Set profileSet = (userProfile == null) ?
+							Collections.emptySet():context.getProfileManager().getProfilesSet(userProfile);
 
-		Set profileSet = context.getProfileManager().getProfilesSet(session.getProfile());
+        boolean sortByValidated = "true".equalsIgnoreCase(Util.getParam(params, "sortByValidated", "false"));
+        String sortBy;
+        String sortVals;
+        if(sortByValidated) {
+            sortBy = "validAsInt, lname ASC";
+            sortVals = "case when TRIM(name||surname) = '' then 'zz' else LOWER(name||surname) end as lname,case when validated = 'n' then 2 else 1 end as validAsInt,";
+        } else {
+            sortVals = "";
+            sortBy = "username";
+        }
 
-		//--- retrieve all users
+        String profilesParam = params.getChildText(Params.PROFILE);
+        String extraWhere;
+        switch(type) {
+        case NON_VALIDATED_SHARED:
+            profileSet = Collections.singleton(Geocat.Profile.SHARED);
+            extraWhere = " not validated='y' and profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        case VALIDATED_SHARED:
+            profileSet = Collections.singleton(Geocat.Profile.SHARED);
+            extraWhere = " validated='y' and profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        case SHARED:
+            profileSet = Collections.singleton(Geocat.Profile.SHARED);
+            extraWhere = " profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        default:
+            if( profilesParam!=null && profileSet.contains(profilesParam)){
+                profileSet.retainAll(Collections.singleton(profilesParam));
+            }
+            extraWhere = " not profile='"+Geocat.Profile.SHARED+"'";                
+            break;
+        }
 
-		Element elUsers = dbms.select ("SELECT * FROM Users ORDER BY username");
+        String where = "WHERE"+extraWhere;
+        String name = params.getChildText(Params.NAME);
+		Element elUsers = null;
+
+		if (name == null || name.trim().isEmpty())
+    		//--- retrieve all users
+			elUsers = dbms.select ("SELECT "+sortVals+"* FROM Users "+where+" ORDER BY " + sortBy);
+		else {
+			// TODO : Add organisation
+			elUsers = dbms.select ("SELECT "+sortVals+"* FROM Users WHERE " + extraWhere
+					+ " and (username ilike '%" + name + "%' "
+                    + "or surname ilike '%" + name + "%' "
+                    + "or email ilike '%" + name + "%' "
+                    + "or organisation ilike '%" + name + "%' "
+                    + "or orgacronym ilike '%" + name + "%' "
+					+ "or name ilike '%" + name + "%') and publicaccess = 'y' "
+					+ "ORDER BY "+sortBy);
+		}
 
 		//--- now filter them
 
@@ -88,13 +147,22 @@ public class List implements Service
 			if (!hsMyGroups.containsAll(getGroups(dbms, userId, profile)))
 				alToRemove.add(elRec);
 
-			if (!profileSet.contains(profile))
+			if (profileSet != null && !profileSet.contains(profile))
 				alToRemove.add(elRec);
 		}
 
 		//--- remove unwanted users
 
 		for (Element elem : alToRemove) elem.detach();
+
+		ArrayList<Element> toResolve = new ArrayList(elUsers.getChildren());
+
+		for (Element e : toResolve) {
+
+            String[] elementsToResolve = { "organisation", "positionname", "orgacronym","onlinename","onlinedescription" };
+            LangUtils.resolveMultiLingualElements(e, elementsToResolve);
+        }
+
 
 		//--- return result
 
@@ -123,9 +191,9 @@ public class List implements Service
 		for(Element el : list) {
 			hs.add(el.getChildText("id"));
 		}
+        return hs;
+    }
 
-		return hs;
-	}
 }
 
 //=============================================================================

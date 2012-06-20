@@ -8,6 +8,7 @@ import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.Query;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;

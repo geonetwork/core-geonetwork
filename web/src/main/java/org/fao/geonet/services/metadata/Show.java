@@ -29,6 +29,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -104,20 +106,20 @@ public class Show implements Service
 			String skip = Util.getParam(params, "skipPopularity", "n");
 			skipPopularity = skip.equals("y");
 		}
-		
+
 		if (id == null)
 			throw new MetadataNotFoundEx("Metadata not found.");
-		
+
 		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
-		
+
 		Element elMd;
-		boolean addEditing = false;
-		if (!skipInfo) {
-            boolean withValidationErrors = false, keepXlinkAttributes = false;
-            elMd = gc.getDataManager().getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
+		boolean addEditing = "true".equalsIgnoreCase(Util.getParam(params, "addEditing","false"));
+		if (!skipInfo || addEditing) {
+            boolean withValidationErrors = false, keepXLinkAttributes = false, hideElements = true, allowDbmsClosing=true;
+            elMd = gc.getDataManager().getGeocatMetadata(context, id, addEditing, withValidationErrors, keepXLinkAttributes, hideElements, allowDbmsClosing);
 		}
         else {
 			elMd = dm.getMetadataNoInfo(context, id);
@@ -125,14 +127,14 @@ public class Show implements Service
 
 		if (elMd == null) throw new MetadataNotFoundEx(id);
 
-		if (addRefs) { // metadata.show for GeoNetwork needs geonet:element 
+		if (addRefs) { // metadata.show for GeoNetwork needs geonet:element
 			elMd = dm.enumerateTree(elMd);
 		}
 
 		//
-		// setting schemaLocation - if there isn't one then use the schemaLocation 
-		// that is in the GeoNetwork schema identification and if there isn't one 
-		// of those then build one pointing to the XSD in GeoNetwork 
+		// setting schemaLocation - if there isn't one then use the schemaLocation
+		// that is in the GeoNetwork schema identification and if there isn't one
+		// of those then build one pointing to the XSD in GeoNetwork
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
@@ -142,7 +144,7 @@ public class Show implements Service
 				elMd.setAttribute(schemaLocAtt);
 				// make sure namespace declaration for schemalocation is present -
 				// remove it first (does nothing if not there) then add it
-				elMd.removeNamespaceDeclaration(schemaLocAtt.getNamespace()); 
+				elMd.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
 				elMd.addNamespaceDeclaration(schemaLocAtt.getNamespace());
 			}
 		}

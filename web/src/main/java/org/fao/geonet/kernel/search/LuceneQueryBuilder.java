@@ -113,7 +113,7 @@ public class LuceneQueryBuilder {
         _language = langCode;
     }
 
-    /**
+	/**
      * Build a Lucene query for the {@link LuceneQueryInput}.
      *
      * A AND clause is used for each search criteria and a OR clause if the content of a criteria is "this or that".
@@ -930,7 +930,7 @@ public class LuceneQueryBuilder {
         BooleanQuery groupsQuery = new BooleanQuery();
         boolean groupsQueryEmpty = true;
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-        if (!CollectionUtils.isEmpty(groups)) {
+        if (groups!=null && !groups.isEmpty()) {
             for (String group : groups) {
                 if (StringUtils.isNotBlank(group)) {
                     if (!editable) {

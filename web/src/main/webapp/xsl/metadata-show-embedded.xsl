@@ -12,7 +12,7 @@
 	-->
 	
 	<xsl:include href="main.xsl"/>
-	<xsl:include href="metadata.xsl"/>
+    <xsl:include href="metadata.xsl"/>
 
     <xsl:variable name="protocol" select="/root/gui/env/server/protocol" />
 	<xsl:variable name="host" select="/root/gui/env/server/host" />
@@ -38,7 +38,7 @@
 			<xsl:apply-templates mode="schema" select="."/>
 		</xsl:param>
 		
-		<table  width="100%" height="100%">
+		<table class="embedded" width="100%" height="100%">
 			<xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']"> <!-- just one -->
 				<tr height="100%">
 					<td class="content" valign="top">
@@ -58,7 +58,10 @@
 						</xsl:call-template>
 												
 						<table width="100%">
-							
+							 <xsl:call-template name="geocatButtons">
+							     <xsl:with-param name="metadata" select="$metadata"/>
+							     <xsl:with-param name="baseURL" select="$baseURL" /> <!-- The base URL of the local GeoNetwork site -->
+						     </xsl:call-template>
 							<xsl:if test="/root/request/control">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="buttons">

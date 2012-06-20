@@ -113,31 +113,8 @@
 	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
 	<emailMandatory>email address is Mandatory</emailMandatory>
 	<forgottenPassword>Forgot your password?</forgottenPassword>
-  <selectTemplate>Select schemas</selectTemplate>
-  	<notificationsDes>Remote updates</notificationsDes>
 	<useStopwords>L'índex Lucene utilitza paraules buides per aquests idiomes:</useStopwords>    
     <rebuildIndexMessage>Si canvieu aquests valors es recomana tornar a generar l'índex Lucene.   </rebuildIndexMessage>
-	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
-	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
-	<templatesSamples>Manage templates and sample data</templatesSamples>
-	<simpleSearch>Simple Search</simpleSearch>
-	<advancedSearch>Advanced Search</advancedSearch>
-	<remoteSearch>Remote Search</remoteSearch>
-	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
-  <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
-  <noServer js="true">Please select a server to search</noServer>
-	<anyWith>Any - with one of these words</anyWith>
-	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
-	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
-	<anyWithoutWords>Any - without these words</anyWithoutWords>
-	<dataDownload>Data for Download</dataDownload>
-	<addSchema>Add a metadata schema/profile</addSchema>
-	<updateSchema>Update a metadata schema/profile</updateSchema>
-	<deleteSchema>Delete a metadata schema/profile</deleteSchema>
-	<selectSchema>Select a metadata schema/profile</selectSchema>
-	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
-	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
-	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>	
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Mostrar HTML del servidor remot</showRemoteHTML>
 	<!-- end new strings -->
@@ -330,14 +307,8 @@
 	<categoryManagement>Gestió de categories</categoryManagement>
 	<categoryManDes>Afegir/modificar/esborrar i mostrar les categories</categoryManDes>
 	<categoryNameMandatory>Cal emplenar el nom de la categoria.</categoryNameMandatory>
-	<catalogueConfiguration>Catalogue settings</catalogueConfiguration>
-	<indexConfiguration>Index settings</indexConfiguration>
-	<io>Import, export &amp; harvesting</io>
-	
 	<changeDate>Data de modificació de les metadades</changeDate>
 	<checkusername>Verificar</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Escollir-</choose>
 	<chooseFile>Seleccionar la ubicació de l'arxiu a enviar</chooseFile>
 	<chooseLargeThumbnail>Escollir la ubicació de l'arxiu de vista prèvia gran</chooseLargeThumbnail>
@@ -366,10 +337,6 @@
 	<createTip>Afegir una nova metadada usant aquesta plantilla</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
-	<crs code="EPSG:4258">ETRS 89</crs>
-	<crs code="EPSG:900913">Google Mercator</crs>
-	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>CSW ISO Profile test</cswTest>
 	<cswTestDesc>Testejar la interfície del perfil CSW ISO</cswTestDesc>
 	<dataQualityTab>Qualitat de les dades</dataQualityTab>
@@ -534,8 +501,6 @@
 	<longitude>Longitud (entre -180 i 180) en graus</longitude>
 	<longMax>long (max)</longMax>
 	<longMin>long (min)</longMin>
-	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
-		<reload>Reload</reload>
 	<mainpageTitle>Cerca de Servidors de mapes, informació geogràfica, imatges satèl·lit i altres tipus de recursos.</mainpageTitle>
 	<maintenanceTab>Manteniment</maintenanceTab>
 	<management>Gestió</management>
@@ -587,8 +552,6 @@
 	<metadataInsertResults>Resultats de la importació de metadades</metadataInsertResults>
 	<metadataJSForm>Metadades des d'un formulari JS</metadataJSForm>
 	<metadataRecordsAdded>Número total de metadades afegides:</metadataRecordsAdded>
-  <failOnError>Fail on error</failOnError>
-	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>	
 	<min>Mínim</min>
     <minor>Minor edit</minor>
 	<missing>INEXISTENT o BUIT</missing>	
@@ -673,12 +636,6 @@
     <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
     <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-    <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>	
     <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
@@ -797,8 +754,6 @@
 	<surName>Cognom</surName>
 	<systemConfig>Configuració del sistema</systemConfig>
 	<systemConfigDes>Permet canviar alguns paràmetres del sistema</systemConfigDes>
-	<systemInfo>System information</systemInfo>
-	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>	
 	<template>Plantilla</template>
 	<Term>Terme</Term>
 	<thanks>Gràcies pel seu treball. L'equip GeoNetwork</thanks>
@@ -836,7 +791,6 @@
 	<usernameMandatory>El camp Usuari és obligatori.</usernameMandatory>
 	<userPw>Canvi de contrasenya</userPw>
 	<userPwDes>Permet als usuaris canviar la contrasenya</userPwDes>
-	<usersAndGroups>Users and groups</usersAndGroups>	
 	<uuidAction>Accions d'importació:</uuidAction>
 	<validate>Validar</validate>
 	<assign>Assign to current catalog</assign>

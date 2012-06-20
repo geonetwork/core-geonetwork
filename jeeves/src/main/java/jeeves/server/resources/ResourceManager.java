@@ -30,6 +30,7 @@ import jeeves.monitor.MonitorManager;
 import jeeves.monitor.ResourceTracker;
 import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
 import jeeves.monitor.timer.ResourceManagerWaitForResourceTimer;
+import jeeves.resources.dbms.AbstractDbmsPool;
 import jeeves.utils.Log;
 
 import org.geotools.data.DataStore;
@@ -139,7 +140,7 @@ public class ResourceManager
 		Object resource;
         TimerContext timingContext = resourceManagerWaitForResourceTimer.time();
         try {
-            resource = provider.open();
+            resource = ((AbstractDbmsPool) provider).openDirect();
         } finally {
             timingContext.stop();
         }
@@ -314,11 +315,11 @@ public class ResourceManager
 
     Map<Object, TimerContext> timerContexts = new HashMap<Object, TimerContext>();
 
-    private void openMetrics(Object resource) {
+    protected void openMetrics(Object resource) {
         timerContexts.put(resource, resourceManagerResourceIsOpenTimer.time());
     }
 
-    private void closeMetrics(Object resource) {
+    protected void closeMetrics(Object resource) {
         TimerContext context = timerContexts.get(resource);
         if(context == null) {
             Log.error(Log.DBMSPOOL, "A resource was closed that had not been marked as opened!");

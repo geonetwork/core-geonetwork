@@ -352,7 +352,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 		result.addedMetadata++;
 
 		return id;
@@ -603,7 +603,7 @@ public class Aligner
             boolean ufo = params.mefFormatFull;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false, false);
 
 			result.updatedMetadata++;
 		}
@@ -634,7 +634,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 	}
 
 	/**

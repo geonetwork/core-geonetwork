@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+<xsd:element name="timeinfo" type="timeinfoType"/>
+<xsd:complexType name="timeinfoType">
+	<xsd:choice>
+		<xsd:element ref="sngdate"/>
+		<xsd:element ref="mdattim"/>
+		<xsd:element ref="rngdates"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="sngdate" type="sngdateType"/>
+<xsd:complexType name="sngdateType">
+	<xsd:sequence>
+		<xsd:element ref="caldate"/>
+		<xsd:element ref="time" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="caldate" type="caldateType"/>
+<xsd:simpleType name="caldateType">
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="time" type="timeType"/>
+<xsd:simpleType name="timeType">
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="mdattim" type="mdattimType"/>
+<xsd:complexType name="mdattimType">
+	<xsd:sequence>
+		<xsd:element ref="sngdate" minOccurs="2" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="rngdates" type="rngdatesType"/>
+<xsd:complexType name="rngdatesType">
+	<xsd:sequence>
+		<xsd:element ref="begdate"/>
+		<xsd:element ref="begtime" minOccurs="0"/>
+		<xsd:element ref="enddate"/>
+		<xsd:element ref="endtime" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="begdate" type="begdateType"/>
+<xsd:simpleType name="begdateType">
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="begtime" type="begtimeType"/>
+<xsd:simpleType name="begtimeType">
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="enddate" type="enddateType"/>
+<xsd:simpleType name="enddateType">
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+				<xsd:enumeration value="Present"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="endtime" type="endtimeType"/>
+<xsd:simpleType name="endtimeType">
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+</xsd:schema>

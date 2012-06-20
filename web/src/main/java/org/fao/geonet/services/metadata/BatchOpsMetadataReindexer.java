@@ -19,6 +19,8 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
@@ -46,18 +48,20 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 		private final int beginIndex, count;
 		private final DataManager dm;
 		private final Dbms dbms;
+        private final ServiceContext context;
 	
-		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm, Dbms dbms) {
+		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm, Dbms dbms, ServiceContext context) {
 			this.ids = ids;
 			this.beginIndex = beginIndex;
 			this.count = count;
 			this.dm = dm;
 			this.dbms = dbms;
+			this.context = context;
 		}
 		
 		public Void call() throws Exception {
 			for(int i=beginIndex; i<beginIndex+count; i++) {
-				dm.indexMetadataGroup(dbms, ids[i]+"");
+				dm.indexMetadataGroup(dbms, ids[i]+"", false, context);
 			}
 			return null;
 		}
@@ -65,11 +69,13 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 	
   Set<Integer> metadata;
 	Dbms dbms;
+    private ServiceContext context;
 
-  public BatchOpsMetadataReindexer(DataManager dm, Dbms dbms, Set<Integer> metadata) {
+  public BatchOpsMetadataReindexer(DataManager dm, Dbms dbms, Set<Integer> metadata, ServiceContext context) {
       super(dm);
-			this.dbms = dbms;
+      this.dbms = dbms;
       this.metadata = metadata;
+      this.context = context;
   }
 
 	public void process() throws Exception {
@@ -90,7 +96,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 			int start = index;
 			int count = Math.min(perThread,ids.length-start);
 			// create threads to process this chunk of ids
-			Callable<Void> worker = new BatchOpsCallable(ids, start, count, dm, dbms);
+			Callable<Void> worker = new BatchOpsCallable(ids, start, count, dm, dbms, context);
 			Future<Void> submit = executor.submit(worker);
 			submitList.add(submit);
 			index += count;

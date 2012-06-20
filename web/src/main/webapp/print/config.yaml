@@ -1,0 +1,144 @@
+#===========================================================================
+# additional fonts
+#===========================================================================
+fonts:
+  - "${configDir}/Verdana.ttf"
+  - "${configDir}/Verdana_Bold.ttf"
+
+#===========================================================================
+# allowed DPIs
+#===========================================================================
+dpis:
+  - 150
+
+#===========================================================================
+# the allowed scales
+#===========================================================================
+scales:
+  - 25000
+  - 50000
+  - 100000
+  - 200000
+  - 500000
+  - 1000000
+  - 2500000
+  - 3000000
+
+#===========================================================================
+# the list of allowed hosts
+#===========================================================================
+hosts:
+  - !localMatch
+    dummy: true
+  - !ipMatch
+    ip: 0.0.0.0
+    mask: 0.0.0.0
+
+layouts:
+  #===========================================================================
+  A4 paysage:
+  #===========================================================================
+    mainPage:
+      rotation: false
+      pageSize: A4
+      header:
+        height: 150
+        items:
+          - !image
+            align: center
+            maxWidth: 500
+            url: "${configDir}/Banner_print.png"
+          - !text
+            font: Verdana
+            fontSize: 20
+            text: ' '
+          - !text
+            font: Verdana
+            fontSize: 20
+            text: ' '
+          - !text
+            font: Verdana
+            fontSize: 20
+            align: center
+            vertAlign: middle
+            text: '${title}'
+      items:
+        - !columns
+          width: 500
+          absoluteY: 672
+          absoluteX: 50
+          config:
+            borderWidth: 0.5
+            cells:
+              - padding: 5
+              - paddingTop: 2
+              - paddingBottom: 35
+              - backgroundColor: white
+          items:
+            - !map
+              width: 496
+              height: 400
+        # Overview map
+        #- !columns
+        #  width: 150
+        #  absoluteY: 775
+        #  absoluteX: 50
+        #  config:
+        #    borderWidth: 0.5
+        #    cells:
+        #      - padding: 2
+        #      - backgroundColor: white
+        #  items:
+        #    - !map
+        #      width: 146
+        #      height: 96
+        #      overviewMap: 2
+        #      backgroundColor: white
+        # Layertree
+        - !columns
+          width: 350
+          widths: [15,85]
+          absoluteY: 200
+          absoluteX: 50
+          condition: legends
+          config:
+            borderWidth: 0
+            cells:
+              - padding: 2
+              - backgroundColor: white
+          items:
+            - !text
+              fontSize: 10
+              font: Verdana_Bold
+              text: 'Legend:'
+              align: left
+            - !legends
+              layerSpace: 5
+        # Scales
+        - !columns
+          absoluteY: 260
+          absoluteX: 78
+          width: 467
+          items:
+              - !scalebar
+                type: bar
+                units: m
+                color: black
+                fontSize: 9
+                maxSize: 175
+                align: left
+              - !text
+                fontSize: 9
+                font: Verdana
+                text: © swisstopo
+                align: right
+        - !columns
+          absoluteY: 265
+          absoluteX: 52
+          width: 20
+          items:
+              - !image
+                maxWidth: 20
+                maxHeight: 20
+                url: "${configDir}/North.png"
+                align: left

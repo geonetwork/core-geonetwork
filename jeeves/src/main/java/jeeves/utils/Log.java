@@ -102,11 +102,10 @@ public final class Log
 
 	//---------------------------------------------------------------------------
 
-    public static void error(String module, Object message)
-    {
-        Logger.getLogger(module).error(message);
-    }
-    
+	public static void error(String module, Object message)
+	{
+		Logger.getLogger(module).error(message);
+	}
     public static void error(String module, Object message, Throwable t)
     {
         Logger.getLogger(module).error(message, t);

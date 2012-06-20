@@ -16,6 +16,7 @@
   <xsl:include href="utils.xsl"/>
   <xsl:include href="metadata-fop.xsl"/>
   <xsl:include href="metadata-fop-utils.xsl"/>
+  <xsl:include href="geocat-metadata-fop-utils.xsl"/>
 
   <xsl:variable name="server" select="/root/gui/env/server"/>
   <!--<xsl:variable name="server"
@@ -25,6 +26,9 @@
  
   <xsl:template mode="schema" match="*">
     <xsl:choose>
+      <xsl:when test="starts-with(//geonet:info/schema, 'iso19139.che')">
+        <xsl:value-of select="'iso19139.che'"/>
+      </xsl:when>
       <xsl:when test="starts-with(//geonet:info/schema, 'iso19139')">
         <xsl:value-of select="'iso19139'"/>
       </xsl:when>

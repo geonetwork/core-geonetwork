@@ -108,12 +108,12 @@ public class JeevesEngine
 	{
 		try
 		{
-			PropertyConfigurator.configure(configPath +"log4j.cfg");
+//			PropertyConfigurator.configure(configPath +"log4j.cfg");
 
             ServletContext servletContext = null;
             if(servlet != null) servletContext= servlet.getServletContext();
 
-            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servletContext, appPath);
+//            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servletContext, appPath);
 
             monitorManager = new MonitorManager(servletContext, baseUrl);
 			this.appPath = appPath;
@@ -757,6 +757,10 @@ public class JeevesEngine
 	private void warning(String message) { Log.warning(Log.ENGINE, message); }
 	private void error  (String message) { Log.error  (Log.ENGINE, message); }
 	private void fatal  (String message) { Log.fatal  (Log.ENGINE, message); }
+
+	public ServiceManager getServiceManager() {
+		return serviceMan;
+	}
 }
 
 //=============================================================================

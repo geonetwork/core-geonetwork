@@ -145,8 +145,12 @@ public class ElementLib
 
 	private String substitute(String text, Map<String, ? extends Object> vars)
 	{
-		for (String name : vars.keySet())
-			text = Util.replaceString(text, name, vars.get(name).toString());
+		
+		for (String name : vars.keySet()) {
+			String value = "";
+			if(vars.get(name) != null) value = vars.get(name).toString();
+			text = Util.replaceString(text, name, value);
+		}
 
 		return text;
 	}

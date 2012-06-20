@@ -125,6 +125,7 @@ public class Edit{
 			public static final String UUID   = "uuid";
 			public static final String MIN  = "min";
 			public static final String MAX  = "max";
+            public static final String DISABLED = "disabled";
 		}
 
 		public class Child

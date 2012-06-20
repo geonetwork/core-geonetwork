@@ -71,7 +71,7 @@ public class GetImportXSLs implements Service
 		Element elRoot = new Element("a");
 
         for (String sheet : sheets) {
-            if (sheet.endsWith(".xsl")) {
+            if (sheet.endsWith("CHE.xsl")) {
                 int pos = sheet.lastIndexOf(".xsl");
                 String name = sheet.substring(0, pos);
                 String id = sheet;

@@ -75,7 +75,7 @@ public class Remove implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 
-		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
+		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex, context);
 		s.processWithFastIndexing();
 
 		return new Element(Jeeves.Elem.RESPONSE)

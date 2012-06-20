@@ -351,7 +351,7 @@ public class FragmentHarvester {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, df.format(date), false);
+        dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, df.format(date), false, false);
 				int iId = Integer.parseInt(id);
 	
 
@@ -363,7 +363,7 @@ public class FragmentHarvester {
 
 				dataMan.setTemplateExt(dbms, iId, "s", null);
 				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-        dataMan.indexMetadataGroup(dbms, id);
+        dataMan.indexMetadataGroup(dbms, id, false, context);
 
         dbms.commit();
 
@@ -403,7 +403,7 @@ public class FragmentHarvester {
 	
 		dataMan.setTemplateExt(dbms, iId, "s", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
 
 		dbms.commit();
 		harvestSummary.fragmentsAdded ++;
@@ -557,7 +557,7 @@ public class FragmentHarvester {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
+        dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false, false);
 
 				int iId = Integer.parseInt(id);
 
@@ -567,7 +567,7 @@ public class FragmentHarvester {
         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
         addCategories(id);
 
-        dataMan.indexMetadataGroup(dbms, id);	
+        dataMan.indexMetadataGroup(dbms, id, false, context);	
 
         dbms.commit();
 				harvestSummary.recordsUpdated++;
@@ -607,10 +607,9 @@ public class FragmentHarvester {
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
-
-        if(log.isDebugEnabled())
-            log.debug("	- Commit "+id);
+		dataMan.indexMetadataGroup(dbms, id, false, context);
+		
+        if(log.isDebugEnabled()) log.debug("	- Commit "+id);
 		dbms.commit();
 		harvestSummary.recordsBuilt++;
 	}

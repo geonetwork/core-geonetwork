@@ -143,7 +143,7 @@
         <xsl:variable name="type" select="$elem/@type" />
 
 		
-		<td title="eng">
+		<td>
 			<xsl:attribute name="title">
 		          <xsl:value-of select="$string" />
 		    </xsl:attribute>
@@ -187,7 +187,7 @@
         </xsl:for-each> -->
         <!-- FIXME: This loop over languages is not really elegant too :( -->
         <td bgcolor="green"></td>
-		<td title="fre">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -200,7 +200,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.fre')]/*/*)" />
 			</xsl:call-template>
 		</td>
-		<td title="spa">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -213,7 +213,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.spa')]/*/*)" />
 			</xsl:call-template>
 		</td>
-		<td title="chi">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -226,7 +226,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.chi')])/*/*" />
 			</xsl:call-template>
 		</td>
-		<td title="ara">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -239,7 +239,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.ara')])/*/*" />
 			</xsl:call-template>
 		</td> 
-        <td title="ger">
+        <td>
             <xsl:call-template name="compare">
                 <xsl:with-param name="tag" select="$tag" />
                 <xsl:with-param name="string" select="$string" />
@@ -251,21 +251,8 @@
                 <xsl:with-param name="loctag2"
                     select="exslt:node-set(//*[name(.)=concat($file, '.ger')])/*/*" />
             </xsl:call-template>
-        </td>
-        <td title="ita">
-            <xsl:call-template name="compare">
-                <xsl:with-param name="tag" select="$tag" />
-                <xsl:with-param name="string" select="$string" />
-                <xsl:with-param name="value" select="$value" />
-                <xsl:with-param name="type" select="$type" />
-                <xsl:with-param name="id" select="$id" />
-                <xsl:with-param name="loctag1"
-                                select="exslt:node-set(//*[name(.)=concat($file, '.ita')])/*" />
-                <xsl:with-param name="loctag2"
-                                select="exslt:node-set(//*[name(.)=concat($file, '.ita')])/*/*" />
-            </xsl:call-template>
-        </td>
-        <td title="rus">
+        </td> 
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -278,7 +265,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.rus')])/*/*" />
 			</xsl:call-template>
 		</td> 
-		<td title="dut">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -291,7 +278,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.dut')])/*/*" />
 			</xsl:call-template>
 		</td> 
-		<td title="por">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -304,7 +291,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.por')])/*/*" />
 			</xsl:call-template>
 		</td> 
-		<td title="cat">
+		<td>
 			<xsl:call-template name="compare">
 				<xsl:with-param name="tag" select="$tag" />
 				<xsl:with-param name="string" select="$string" />
@@ -317,7 +304,7 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.cat')])/*/*" />
 			</xsl:call-template>
 		</td>
-        <td title="fin">
+        <td>
             <xsl:call-template name="compare">
                 <xsl:with-param name="tag" select="$tag" />
                 <xsl:with-param name="string" select="$string" />
@@ -330,7 +317,7 @@
                                 select="exslt:node-set(//*[name(.)=concat($file, '.fin')])/*/*" />
             </xsl:call-template>
         </td>
-        <td title="nor">
+        <td>
             <xsl:call-template name="compare">
                 <xsl:with-param name="tag" select="$tag" />
                 <xsl:with-param name="string" select="$string" />
@@ -410,3 +397,4 @@
 
 
 </xsl:stylesheet>
+

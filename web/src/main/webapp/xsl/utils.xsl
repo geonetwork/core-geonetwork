@@ -159,4 +159,18 @@
 			</a> 
 		</xsl:if>
 	</xsl:template>
+
+    <xsl:template name="validIndicator">
+        <xsl:param name="indicator"/>
+        <xsl:param name="class"/>
+        <xsl:choose>
+            <xsl:when test="$indicator">
+                <img src="../../images/red-ball.gif" class="{$class}" alt="{/root/gui/strings/reusable/non-validated}" title=""></img>
+            </xsl:when>
+            <xsl:otherwise>
+                <img src="../../images/green-ball.gif" class="{$class}" alt="{/root/gui/strings/reusable/validated}" title=""></img>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
 </xsl:stylesheet>

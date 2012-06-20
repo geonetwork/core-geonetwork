@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Information about the dataset</understandResource>
+  <relatedResources>Related services and linked data</relatedResources>
+  <techInfo>Technical information</techInfo>
+  <contactInfo>Contact information</contactInfo>
+  <mdContactInfo>Metadata contact</mdContactInfo>
+  <refDate>Reference date</refDate>
+  <temporalRef>Temporal information</temporalRef>
+  <constraintInfo>Access constraint information</constraintInfo>
+</strings>

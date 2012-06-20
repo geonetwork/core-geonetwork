@@ -30,7 +30,8 @@
 
 	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
-	<thesaurusType>Tipo di Thesaurus</thesaurusType>
+	<thesaurusType>Thesaurus Type</thesaurusType>
+	<thesaurusType>Thesaurus Type</thesaurusType>
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Update status</updateStatus>
@@ -385,8 +386,6 @@
 	<categoryNameMandatory>Deve essere inserito un nome per la categoria.</categoryNameMandatory>
 	<changeDate>Data di modifica del metadato</changeDate>
 	<checkusername>Verifica</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Scegli-</choose>
 	<chooseFile>Scegli la posizione del file da caricare</chooseFile>
 	<chooseLargeThumbnail>Scegli la posizione del file della miniatura grande</chooseLargeThumbnail>
@@ -531,21 +530,21 @@
 	<i18nDesc>Pagina di test dei file di localizzazione</i18nDesc>
 	<identificationTab>Identificazione</identificationTab>
 	<identifier>Identificatore</identifier>
-	<imAreaInterest>Seleziona un'area di interesse</imAreaInterest>
-	<imPan>Sposta</imPan>
+<!--	<imAreaInterest>Seleziona un'area di interesse</imAreaInterest>
+	<imPan>Sposta</imPan> -->
 	<import>Importa</import>
-	<imZoomFull>Zoom alla massima estensione</imZoomFull>
+<!--	<imZoomFull>Zoom alla massima estensione</imZoomFull>
 	<imZoomIn>Ingrandisci</imZoomIn>
 	<imZoomOut>Riduci</imZoomOut>
-	<imZoomToLayer>Zoom all'estensione del layer selezionato</imZoomToLayer>
+	<imZoomToLayer>Zoom all'estensione del layer selezionato</imZoomToLayer>-->
 	<infoTitle>Info</infoTitle>
 	<insert>Inserisci</insert>
 	<insertFileMode js="true">Carica file</insertFileMode>
 	<insertMode>Modalità d'inserimento:</insertMode>
 	<insertPasteMode>Copia/incolla</insertPasteMode>
 	<interactiveMap>Mappa interattiva</interactiveMap>
-	<interMapInfo><h1>nformazioni sulle mappe interattive</h1><p>È possibile trovare mappe interattive cercando in GeoNetwork di dati digitali con una mappa interattiva, oppure connettersi direttamente a un pre-configurato server di mappe.</p><p> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
-	<intermapSearch>Ricerca geografica</intermapSearch>
+<!--	<interMapInfo><h1>nformazioni sulle mappe interattive</h1><p>È possibile trovare mappe interattive cercando in GeoNetwork di dati digitali con una mappa interattiva, oppure connettersi direttamente a un pre-configurato server di mappe.</p><p> Supported map servers are <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a> compliant WMS Map Servers and <a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a>.</p></interMapInfo>
+	<intermapSearch>Ricerca geografica</intermapSearch>-->
 	<isoAll>ISO: Completo</isoAll>
 	<isoCore>ISO: Base</isoCore>
 	<isoMinimum>ISO: Minimo</isoMinimum>
@@ -832,9 +831,8 @@
 	<siteId>ID del sito</siteId>
 	<sizeBytes>Dimensione (bytes)</sizeBytes>
 	<sortBy>Ordina per</sortBy>
-	<sortByType id="changeDate">Data ultima modifica</sortByType>
+	<sortByType id="revisionDate">Data ultima modifica</sortByType>
 	<sortByType id="popularity">Popolarità</sortByType>
-	<sortByType id="rating">Voto</sortByType>
 	<sortByType id="relevance">Rilevanza</sortByType>
 	<sortByType id="title">Titolo</sortByType>
 	<southbc>Coordinata limite verso sud</southbc>
@@ -1364,7 +1362,9 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
     <catalogueTemplates>Modelli di metadato</catalogueTemplates>
     <addremove>Aggiungi/Rimuovi</addremove>
     <enabled>Abilitato</enabled>
-    <notifications>Notifica ai destinatari remoti</notifications>    
+    <notifications>Notifica ai destinatari remoti</notifications>
+    <url>URL</url>
+    
     <cswServer>Server CSW</cswServer>
     <cswServerDes>Descrizione server CSW</cswServerDes>
     <cswServerConfig>Configurazione server CSW</cswServerConfig>

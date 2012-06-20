@@ -59,7 +59,8 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
 	private DataSource dataSource;
 	private DataStore  dataStore;
-	
+	protected ThreadLocal<Dbms> threadDbms = new ThreadLocal<Dbms>();
+
 	// --------------------------------------------------------------------------
 	// ---
 	// --- Abstract Methods that must be overridden by extending classes
@@ -137,11 +138,30 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	 */
 
 	public synchronized Object open() throws Exception {
+		if(threadDbms.get() != null) {
+			debug("Found a dbms in  " + url);
+			return threadDbms.get();
+		}
+
 		Dbms dbms = new Dbms(dataSource, url);
+		threadDbms.set(dbms);
+		
 		String nullStr = null;
 		dbms.connect(nullStr, nullStr);
 		return dbms;
 	}
+	
+	/**
+	 * HACK so that openDirect gets new instance.  TheadLocal should
+	 * probably be in ResourceManager
+	 */
+    public synchronized Object openDirect() throws Exception {
+        Dbms dbms = new Dbms(dataSource, url);
+        
+        String nullStr = null;
+        dbms.connect(nullStr, nullStr);
+        return dbms;
+    }
 
 	// --------------------------------------------------------------------------
 	/**
@@ -157,6 +177,8 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 		try {
 			dbms.commit();
 		} finally {
+		    if(threadDbms.get() == resource)
+		        threadDbms.set(null);
 			dbms.disconnect();
 			synchronized (hsListeners) {
 				for (ResourceListener l : hsListeners)
@@ -175,6 +197,7 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 		try {
 			dbms.abort();
 		} finally {
+			threadDbms.set(null);
 			dbms.disconnect();
 			synchronized (hsListeners) {
 				for (ResourceListener l : hsListeners)

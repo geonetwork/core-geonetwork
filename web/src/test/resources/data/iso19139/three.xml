@@ -1,0 +1,2026 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>1b0f6c4f-9d32-48ea-ac00-45fa0636c886</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>fra</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>Inventaires fédéraux</gco:CharacterString>
+    </gmd:hierarchyLevelName>
+    <gmd:contact xmlns:xalan="http://xml.apache.org/xalan" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.user.get?id=581&amp;schema=iso19139.che&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Service cantonal de l&apos;aménagement du territoire</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">République et canton de Neuchâtel / Département de la gestion du territoire</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:organisationName>
+            <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Responsable de projet</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">Responsable données</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                            <gmd:voice>
+                                <gco:CharacterString>+41 32 889 4751</gco:CharacterString>
+                            </gmd:voice>
+                            <gmd:facsimile>
+                                <gco:CharacterString>+41 32 889 4752</gco:CharacterString>
+                            </gmd:facsimile>
+                            <che:directNumber>
+                                <gco:CharacterString>+41 32 889 4753</gco:CharacterString>
+                            </che:directNumber>
+                            <che:mobile>
+                                <gco:CharacterString>+41 79 889 4753</gco:CharacterString>
+                            </che:mobile>
+                        </che:CHE_CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:city>
+                                <gco:CharacterString>Neuchâtel</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:administrativeArea>
+                                <gco:CharacterString>République et canton de Neuchâtel / Département de la gestion du territoire</gco:CharacterString>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode>
+                                <gco:CharacterString>2003</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:country xsi:type="gmd:PT_FreeText_PropertyType">
+                                <gco:CharacterString>CH</gco:CharacterString>
+                            </gmd:country>
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>olivier.dehon@ne.ch</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                            <che:streetName>
+                                <gco:CharacterString>5</gco:CharacterString>
+                            </che:streetName>
+                            <che:streetNumber>
+                                <gco:CharacterString>Tivoli</gco:CharacterString>
+                            </che:streetNumber>
+                            <che:addressLine>
+                                <gco:CharacterString>Service cantonal de l&apos;aménagement du territoire</gco:CharacterString>
+                            </che:addressLine>
+                            <che:postBox>
+                                <gco:CharacterString>46</gco:CharacterString>
+                            </che:postBox>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage>
+                                <gmd:URL>http://www.ne.ch/sitn</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>text/html</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:name>
+                            <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:description>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                    <gmd:hoursOfService>
+                        <gco:CharacterString>08.00-12.00 et 13.30-17.30</gco:CharacterString>
+                    </gmd:hoursOfService>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>Olivier</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>Déhon</gco:CharacterString>
+            </che:individualLastName>
+            <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                <gco:CharacterString/>
+            </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:contact xmlns:xalan="http://xml.apache.org/xalan" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.user.get?id=571&amp;schema=iso19139.che&amp;role=resourceProvider" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Système d&apos;Information du Territoire Neuchâtelois</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">GIS-Amt Neuenburg</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:organisationName>
+            <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Responsable de projet</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                            <gmd:voice gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:voice>
+                            <gmd:facsimile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:facsimile>
+                            <che:directNumber>
+                                <gco:CharacterString>+41 32 889 47 70</gco:CharacterString>
+                            </che:directNumber>
+                            <che:mobile gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </che:mobile>
+                        </che:CHE_CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:city>
+                                <gco:CharacterString>Neuchâtel</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:administrativeArea>
+                                <gco:CharacterString>République et canton de Neuchâtel</gco:CharacterString>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode>
+                                <gco:CharacterString>2003</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:country xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:country>
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>daniel.gnerre@ne.ch</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                            <che:streetName>
+                                <gco:CharacterString>22</gco:CharacterString>
+                            </che:streetName>
+                            <che:streetNumber>
+                                <gco:CharacterString>Rue de Tivoli</gco:CharacterString>
+                            </che:streetNumber>
+                            <che:addressLine>
+                                <gco:CharacterString>SITN - Service du cadastre et de la géomatique</gco:CharacterString>
+                            </che:addressLine>
+                            <che:postBox>
+                                <gco:CharacterString>39</gco:CharacterString>
+                            </che:postBox>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage>
+                                <gmd:URL>http://www.ne.ch/sitn</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>text/html</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:name>
+                            <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                <gco:CharacterString/>
+                            </gmd:description>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                    <gmd:hoursOfService>
+                        <gco:CharacterString>08.00-12.00 et 13.00-17.00</gco:CharacterString>
+                    </gmd:hoursOfService>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="resourceProvider"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>Daniel</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>Gnerre</gco:CharacterString>
+            </che:individualLastName>
+            <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">GEONE - SITN</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">SITN</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#EN">SITN</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:DateTime>2009-06-24T12:15:50</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="DE">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="deu">German</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="IT">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita">Italian</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="EN">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng">English</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:referenceSystemInfo xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>CH1903, Système de coordonnées nationales</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">CH1903, Système de coordonnées nationales</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan">
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Cadastre de limitation d&apos;obstacle - Côtes d&apos;altitude maximum des obstacles - Surfaces</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2003-07-31</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="creation"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2004-02-04</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Informe sur la localisation des cadastres de limitation d&apos;obstacles. Ces surfaces ont pour objectif d&apos;assurer, pour chaque aérodrome ou aéroport, des zones de sécurité. Elles délimitent, en direction du sol, l&apos;espace aérien qui doit être libre d&apos;obstacle pour que la securité des vols soit assurée. Le cadastre de limitation d&apos;obstacles fixe donc les hauteurs maximums que ne devront pas dépasser les constructions et installations qui pourraient entraver, mettre en danger ou empêcher la circulation des aéronefs ou l&apos;exploitation des installations de navigation aérienne. Les données &quot;Cadastre de limitation d&apos;obstacle - Surfaces&quot; sont des polygones qui fixent ses hauteurs maximums par paliers.</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.user.get?id=581&amp;schema=iso19139.che&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
+                    <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Service cantonal de l&apos;aménagement du territoire</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">République et canton de Neuchâtel / Département de la gestion du territoire</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:organisationName>
+                    <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Responsable de projet</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Responsable données</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:positionName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                                    <gmd:voice>
+                                        <gco:CharacterString>+41 32 889 4751</gco:CharacterString>
+                                    </gmd:voice>
+                                    <gmd:facsimile>
+                                        <gco:CharacterString>+41 32 889 4752</gco:CharacterString>
+                                    </gmd:facsimile>
+                                    <che:directNumber>
+                                        <gco:CharacterString>+41 32 889 4753</gco:CharacterString>
+                                    </che:directNumber>
+                                    <che:mobile>
+                                        <gco:CharacterString>+41 79 889 4753</gco:CharacterString>
+                                    </che:mobile>
+                                </che:CHE_CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                                    <gmd:city>
+                                        <gco:CharacterString>Neuchâtel</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:administrativeArea>
+                                        <gco:CharacterString>République et canton de Neuchâtel / Département de la gestion du territoire</gco:CharacterString>
+                                    </gmd:administrativeArea>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>2003</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>CH</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>olivier.dehon@ne.ch</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                    <che:streetName>
+                                        <gco:CharacterString>5</gco:CharacterString>
+                                    </che:streetName>
+                                    <che:streetNumber>
+                                        <gco:CharacterString>Tivoli</gco:CharacterString>
+                                    </che:streetNumber>
+                                    <che:addressLine>
+                                        <gco:CharacterString>Service cantonal de l&apos;aménagement du territoire</gco:CharacterString>
+                                    </che:addressLine>
+                                    <che:postBox>
+                                        <gco:CharacterString>46</gco:CharacterString>
+                                    </che:postBox>
+                                </che:CHE_CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>http://www.ne.ch/sitn</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gco:CharacterString>text/html</gco:CharacterString>
+                                    </gmd:protocol>
+                                    <gmd:name xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:name>
+                                    <gmd:description xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                                        <gco:CharacterString/>
+                                    </gmd:description>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                            <gmd:hoursOfService>
+                                <gco:CharacterString>08.00-12.00 et 13.30-17.30</gco:CharacterString>
+                            </gmd:hoursOfService>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </gmd:role>
+                    <che:individualFirstName>
+                        <gco:CharacterString>Olivier</gco:CharacterString>
+                    </che:individualFirstName>
+                    <che:individualLastName>
+                        <gco:CharacterString>Déhon</gco:CharacterString>
+                    </che:individualLastName>
+                    <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+                        <gco:CharacterString/>
+                    </che:organisationAcronym>
+                </che:CHE_CI_ResponsibleParty>
+            </gmd:pointOfContact>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%237910512f-db07-438b-a157-3505ca70d31a&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>construction</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F544&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Fläche</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">areale di distribuzione</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">zone</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">distribution area</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23184&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Luftfahrt</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">navigazione aerea</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">navigation aérienne</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">Aviation</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23149&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Infrastruktur der Luftfahrt</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">infrastruttura aeronautica</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">infrastructure aéronautique</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">aviation facilities</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23d88d57ce-880b-4e44-9815-3ba3fee9c8f8&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>canton de Neuchâtel</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23fcb46fd3-fd1c-47ca-8f51-c2e0b7c009af&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>espace aérien</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%238bcfba49-169b-4c6a-809d-e7bf6fd7b072&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>cadastre limitation obstacles</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2375&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Flugzeug</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">aeroplano</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">avion</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">aeroplane</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23331&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Zonenplan</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">piano delle zone</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Plan de zones</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">plan of zones</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F267&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Flughafen</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">aeroporto</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">aéroport</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">airport</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F2161&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Entwicklungsplan</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">piano di sviluppo</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">plan d&apos;aménagement</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">development plan</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2373&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Flugplatz</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">aerodromo</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">aérodrome</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">airfield</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F336&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Bebauungsplan</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">piano regolatore</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">plan d&apos;affectation</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">allocation plan</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F11504&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Baugenehmigung</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">licenza edilizia</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">permis de construire</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">building permit</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F4666&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Flächenstruktur</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">assetto del territorio</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">aménagement du territoire</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">land setup</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2322&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Baubewilligung</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">autorizzazione di costruzione</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">autorisation de construire</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">construction permit</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%231608dbe5-120a-4250-8ab6-3fec1e587f3b&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>aménagement</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F335&amp;locales=en,it,de,fr" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Allokation</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">allocazione</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">affectation</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">allocation</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23fccae06f-d0e1-4f19-875f-f3a10d8aed63&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Neuenburg</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Neuchâtel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2385fb400e-160d-439a-8be9-6938e8a09457&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>fédéral</gco:CharacterString>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23fccae06f-d0e1-4f19-875f-f3a10d8aed63&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Neuenburg</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Neuchâtel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:keyword>
+                </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:spatialRepresentationType>
+                <gmd:MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector"/>
+            </gmd:spatialRepresentationType>
+            <gmd:spatialResolution>
+                <gmd:MD_Resolution>
+                    <gmd:equivalentScale>
+                        <gmd:MD_RepresentativeFraction>
+                            <gmd:denominator>
+                                <gco:Integer>5000</gco:Integer>
+                            </gmd:denominator>
+                        </gmd:MD_RepresentativeFraction>
+                    </gmd:equivalentScale>
+                </gmd:MD_Resolution>
+            </gmd:spatialResolution>
+            <gmd:language>
+                <gco:CharacterString>fra</gco:CharacterString>
+            </gmd:language>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>planningCadastre</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>structure</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>transportation</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>elevation</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=67&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.76469949416915</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.888399485030591</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>47.061599214876</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.16579920994453</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=68&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Le Locle</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Le Locle</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Le Locle</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N186f0fa2017b4953ade70ee7d6a45f8b">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nd6c011f417774d6fa2a356c8dede4573">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.858179485629643 47.1656142097045 6.861450485330625 47.16563120973062 6.888710483557636 47.13119621190398 6.886242483935361 47.123853212298776 6.8810004847353605 47.10835621313145 6.87181048568752 47.10282421336817 6.866888486501873 47.08512421432832 6.852140488145133 47.07054921508402 6.846219488765115 47.066606215258275 6.8397184892647775 47.0710882149515 6.828178490042768 47.0843852140514 6.814624491411465 47.07783621431079 6.811482491775498 47.07402221450073 6.796644493195183 47.07065721462333 6.797214493171312 47.06928421470564 6.79334149354206 47.06839021472456 6.786287494320388 47.061693215046006 6.784159494478383 47.06345321492914 6.784932494271215 47.0701862145545 6.778503494784212 47.07374721424751 6.775369495068985 47.073774214220435 6.774487495107161 47.07585621409564 6.772360495310164 47.07539421410456 6.7643594957711315 47.08859721329285 6.76836449534423 47.0916522131526 6.766567495477447 47.093153213053014 6.767782495350758 47.093943213018186 6.7772914944169695 47.09723621290926 6.787742493318491 47.10438421258996 6.804013491721975 47.10991721240984 6.804106491532783 47.11873321191188 6.792343492436189 47.12703321134629 6.796865491980509 47.1291452112637 6.805966491116828 47.13075221124725 6.807930490844808 47.13527821100734 6.815922490098948 47.13606921102803 6.81930548971123 47.13991021083845 6.82527348911201 47.142551210738084 6.828260488757888 47.146497210539344 6.830504488557337 47.14628421056987 6.839492487657709 47.15011021042746 6.840215487514595 47.153846210222056 6.849774486590155 47.15632421016073 6.858179485629643 47.1656142097045</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.7643594957711315</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.888710483557636</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>47.061693215046006</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.16563120973062</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=69&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Colombier (NE)</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Colombier (NE)</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Colombier (NE)</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.699199501708233</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.785999495136117</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>47.02279921654328</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.08869921346296</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=70&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Cortaillod</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Cortaillod</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Cortaillod</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Ndebdaa6486c143d695851924862943ee">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N3735f31577bd42f6b0dbe74bd579ff8b">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.7626524959353835 47.08818221330249 6.7643594957711315 47.08859721329285 6.772360495310164 47.07539421410456 6.774487495107161 47.07585621409564 6.775369495068985 47.073774214220435 6.778503494784212 47.07374721424751 6.784932494271215 47.0701862145545 6.784159494478383 47.06345321492914 6.786287494320388 47.061693215046006 6.779542495208001 47.048207215753834 6.7776964953714085 47.04843921572574 6.776341495538893 47.04625421583826 6.774039495749098 47.04621421582188 6.770033496233191 47.04029821612394 6.751028498141897 47.03137121647502 6.752355498080282 47.028437216651696 6.745452498814664 47.02313321689586 6.7403994991910565 47.02725821662194 6.731595499906711 47.03147721631229 6.711399501742365 47.03153121614698 6.698931502730727 47.038827215634484 6.711530501399325 47.04806521521285 6.719478500595808 47.052073215049944 6.720375500478444 47.053851214956524 6.717342500746162 47.05426421490885 6.719019500541799 47.0568382147767 6.723609500098141 47.05812621474083 6.733764499002176 47.066645214340646 6.739228498464845 47.06861221427325 6.746905497624877 47.07558521388751 6.749057497437775 47.07514821392957 6.746664497619587 47.07693321380927 6.755715496698058 47.08172821361126 6.7626524959353835 47.08818221330249</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.698931502730727</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.786287494320388</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>47.02313321689586</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.08859721329285</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=71&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Boudry</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Boudry</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Boudry</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.842099490829546</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.873899488525445</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.95579922148791</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.984099220150156</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=72&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Lac de Neuch?tel</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Lac de Neuch?tel</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Lac de Neuch?tel</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N715d2021bac945c6afc5510467f7a9a5">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nc1b3d3018d1945fb87d4749aa9a349ac">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.846581490426152 46.98394121993427 6.852628489878923 46.983882219987365 6.864062488964507 46.977886220420174 6.866134488843257 46.974640220620685 6.8700444885007785 46.974048220686285 6.872107488415019 46.96911022098227 6.8738194882684045 46.96869622101974 6.874216488492906 46.95598822174107 6.871545488726861 46.95637922169689 6.864570489261921 46.96111222137222 6.860001489731637 46.95839022148831 6.856757489978428 46.96069522133153 6.854545490218616 46.95874922142336 6.850811490527771 46.960188221311334 6.84498249096786 46.964502221019764 6.849014490525571 46.96827422083967 6.845024490848537 46.970170220699764 6.841888490997022 46.9768282202978 6.847569490462847 46.97775722029198 6.848350490328933 46.98084622012366 6.846581490426152 46.98394121993427</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.841888490997022</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.874216488492906</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.95598822174107</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.98394121993427</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=73&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">M?tiers (NE)</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">M?tiers (NE)</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">M?tiers (NE)</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.828899492661737</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.870999489264618</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.93249922269654</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.95289922188908</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=74&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Couvet</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Couvet</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Couvet</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Ncddff7bc8bfb44cdadde74333b58e702">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nc2b159658b5b45a39746702919e56062">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.828785492889191 46.94219822214757 6.832619492469061 46.945790221975955 6.847083491017131 46.95274722170126 6.867681489226559 46.949056222078916 6.871068488991022 46.945582222303024 6.8602454900466014 46.9418852224229 6.859889490101765 46.940759222483635 6.854872490557082 46.940715222444844 6.854157490659375 46.93886722254338 6.852076490836382 46.939423222494945 6.852365490835219 46.938202222566325 6.850486490979126 46.93949622247783 6.846845491326898 46.93860522249834 6.839361492128329 46.93251222278122 6.83255849267314 46.936011222528066 6.829617492846551 46.94058322224553 6.831835492618758 46.941918222188185 6.828785492889191 46.94219822214757</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.828785492889191</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.871068488991022</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.93251222278122</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.95274722170126</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=75&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Boveresse</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Boveresse</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Boveresse</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.738599500479283</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.874099488857384</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.93869922161453</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.971199220880635</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=76&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Ne9aaf2b25596461fa1ed488bb16e7680">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nb32addca5a97485ea905319cac15edb9">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.821953492925102 46.97092022046869 6.831547492127502 46.9673552207485 6.829297492349017 46.966507220778034 6.834429492017107 46.95994922119057 6.839198491534932 46.962403221090995 6.843072491253638 46.958978221316244 6.847871490825072 46.958670221373 6.850811490527771 46.960188221311334 6.854545490218616 46.95874922142336 6.856757489978428 46.96069522133153 6.860001489731637 46.95839022148831 6.864570489261921 46.96111222137222 6.871545488726861 46.95637922169689 6.874216488492906 46.95598822174107 6.87121148887409 46.95066522201708 6.871068488991022 46.945582222303024 6.867681489226559 46.949056222078916 6.847083491017131 46.95274722170126 6.832619492469061 46.945790221975955 6.828785492889191 46.94219822214757 6.825147493243333 46.94098222218662 6.813957494210849 46.94326122196647 6.810348494588532 46.94074922207913 6.805509495017263 46.941217222013215 6.804476495141447 46.93970022209061 6.797628495775234 46.93903222207273 6.784419496846668 46.94523622161493 6.78347049684098 46.94979222134968 6.781208497042478 46.949959221321876 6.773197497834513 46.94667422144271 6.772296497947255 46.94512222152317 6.767705498372935 46.9446452215131 6.760703499089851 46.94052922168915 6.753625499753571 46.939407221695426 6.749678500100312 46.939950221633 6.750895499901285 46.94438322139217 6.738431500850608 46.95339322078262 6.7426775004696875 46.95319422082797 6.751595499739853 46.9492722211214 6.755691499303389 46.95253522097005 6.762247498688455 46.953563220964845 6.7713404977613685 46.95867222074962 6.783734496602896 46.96040822075193 6.784266496500181 46.96311022060337 6.791413495827305 46.96434722059152 6.79987349510177 46.962298220775935 6.804449494648369 46.96419522070609 6.807915494350847 46.96337722078063 6.821953492925102 46.97092022046869</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.738431500850608</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.874216488492906</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.93903222207273</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.97092022046869</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=77&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.634699509100548</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>7.04969947620043</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.78449922950351</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.012199220035136</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=78&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Nbe892cb124524935b660ec853a2e2cb6">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nd91de8ee37f74c84a240cf6306f35189">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.980244477718958 47.01197221946069 6.979703477796 47.01063821953144 6.984978477351604 47.009004219668135 6.983518477452562 47.0105092195708 6.985687477251642 47.01070721957787 6.985064477330004 47.009661219631724 6.987148477156518 47.00892321969084 6.98706147711118 47.01145921954688 6.991753476709843 47.010290219652525 6.993307476607237 47.00846121976887 6.996663476378256 47.00487621999956 7.002873475821956 47.00453122007148 7.006362475551884 47.002331220225265 7.011359475099841 47.00227822027036 7.014600474751811 47.00483622015328 7.019753474282264 47.00494522019075 7.018896474459836 47.00021022045087 7.0261994737046525 47.004608220264295 7.028100473516436 47.00535322023845 7.03252347316523 47.00298522040958 7.03588247287811 47.00216022048479 7.034848472947716 47.00330822041116 7.03648947282031 47.00229922048208 7.037300472779412 47.000753220576186 7.039112472608784 47.001047220574975 7.039420472633556 46.99855622071824 7.048466472003751 46.98956522130288 7.049870471945964 46.98628722149995 7.042096472710976 46.98342722159534 7.040561472932222 46.97953522180208 7.0355194733679784 46.98053422170294 7.038955473109873 46.97801022187461 7.038330473219999 46.97548022201212 7.025605474649907 46.96231922264744 7.021733475012526 46.961748222647024 7.018801475342952 46.95865122279705 7.014066475757919 46.959309222719924 7.015552475661281 46.95749722283477 7.013722475851695 46.95632122288572 7.011199476078332 46.95640122286 7.003486476875629 46.95167722306167 7.00033147715638 46.95190822302193 6.99725847746886 46.95027722308827 6.982017479002508 46.94288622337759 6.97936847934782 46.93782022364141 6.975828479684123 46.937059223654614 6.973848479900679 46.93525222374016 6.961703481160685 46.92749222407671 6.953945481927016 46.92437422418794 6.952547482008961 46.9265272240548 6.953886481947256 46.9236552242281 6.9528304820899525 46.92138322434746 6.950239482342999 46.92047322437736 6.9430874830580604 46.91717722450382 6.942998483101768 46.91544922460064 6.9389734834772705 46.91489222459868 6.937835483618155 46.913043224693446 6.935215483867036 46.91246422470436 6.927957484592753 46.90909222483441 6.933862484095287 46.90733322498299 6.928792484606088 46.90478522508465 6.927076484734829 46.90606022499843 6.923787485081425 46.903670225106076 6.921268485338645 46.90223722516609 6.922200485197793 46.90498522501855 6.9231314850844115 46.90641122494584 6.921564485243702 46.9055492249816 6.900109487381085 46.89588822534953 6.898945487520414 46.894218225434244 6.900721487369959 46.89373222547631 6.897217487764226 46.88993722566164 6.891942488267404 46.888634225691774 6.891712488327258 46.886726225797524 6.885410488966471 46.883305225938855 6.881698489407195 46.878132226200414 6.872696490341847 46.87216022646363 6.869916490669698 46.868377226654296 6.866748490967137 46.86782122665981 6.864111491255131 46.865352226777645 6.859348491730866 46.863106226865476 6.857270492005886 46.85879622709173 6.8571884919820825 46.860325227004694 6.85438149225802 46.85921322704458 6.85590649215303 46.85760222714802 6.854734492274073 46.85684922718099 6.854121492285785 46.85900522705421 6.851435492532516 46.858793227044224 6.8429004934029045 46.85384622725384 6.844059493331718 46.8521882273569 6.8424224934831015 46.85201822735308 6.842579493445142 46.8531882272884 6.838547493820701 46.85260922728813 6.839794493758055 46.85014222743772 6.8312674946359255 46.84476222767189 6.823580495369202 46.842787227720834 6.822196495526747 46.84116022780145 6.817252495993059 46.84014422781858 6.8148174961963965 46.840967227752216 6.810617496610872 46.83919022781858 6.810112496689536 46.8375412279076 6.807625496919892 46.83724022790442 6.792736498464275 46.82717122835247 6.787407499018295 46.823498228516826 6.787972498991137 46.822304228588784 6.790128498786057 46.82283822857613 6.787758499025692 46.82153922863025 6.78682849908816 46.82261322856214 6.7845214993394345 46.82044122866615 6.786582499202216 46.81800622882028 6.78486349933181 46.81927322873475 6.786100499250163 46.81777822882933 6.784589499379891 46.81810222879881 6.784003499396178 46.81994322869013 6.767170501132711 46.80891522917724 6.760521501825114 46.80422522938848 6.753105502532471 46.802247229440766 6.746676503096689 46.803018229345746 6.741741503446827 46.807800229036005 6.737866503840442 46.805546229132304 6.729005504612527 46.806885228985784 6.724828505012533 46.80569022901992 6.719904505440037 46.80651322893411 6.69111950821749 46.797180229232396 6.667770510508749 46.787579229589795 6.659868511250645 46.78604122961436 6.653446511857288 46.784602229645024 6.651657511991066 46.786002229551976 6.648198512317529 46.785241229567625 6.643431512679296 46.78873422933286 6.645211512499321 46.78973622929012 6.64261851268184 46.79237222912091 6.639167513018557 46.791043229168885 6.639780512943618 46.792064229115965 6.636538513159219 46.796017228867086 6.634431513283355 46.799403228659244 6.6364905130152945 46.803664228434684 6.648142511867728 46.80864822824475 6.660024510653086 46.81599822792307 6.677030509025167 46.82080822778577 6.679938508723714 46.82280722769586 6.678863508803103 46.823708227636445 6.6804975086673215 46.823117227682836 6.682634508439759 46.82488522759991 6.6858215081178365 46.82665122752538 6.687650507889568 46.829875227357725 6.6926435074188495 46.830897227339534 6.702862506395999 46.83602822713095 6.707162505969935 46.837945227056885 6.716386504957766 46.84706222661539 6.724467504156937 46.850666226476356 6.7302265036209645 46.85146722647708 6.739709502628929 46.8583172261659 6.752190501395159 46.86368222596322 6.754989501006371 46.870509225599996 6.756125500833651 46.87402422541053 6.7611205002955375 46.87837122520507 6.768597499407734 46.88898522466566 6.771302499123497 46.890962224575865 6.778577498452933 46.89160722459805 6.782459497991251 46.89711722431816 6.804476495635013 46.91525922347165 6.813333494781304 46.91784522339758 6.818532494217797 46.922443223180096 6.83053649304461 46.9267352230355 6.837113492471391 46.92564622315085 6.839361492128329 46.93251222278122 6.846845491326898 46.93860522249834 6.850486490979126 46.93949622247783 6.852365490835219 46.938202222566325 6.852076490836382 46.939423222494945 6.853267490721783 46.9397622224857 6.854872490557082 46.940715222444844 6.859889490101765 46.940759222483635 6.8602454900466014 46.9418852224229 6.871068488991022 46.945582222303024 6.87121148887409 46.95066522201708 6.874216488492906 46.95598822174107 6.8738194882684045 46.96869622101974 6.873631488251278 46.97035922092429 6.875798488052849 46.97046022093642 6.87565148803523 46.97196222085041 6.878570487748563 46.97303722081358 6.880023487630484 46.97237022086336 6.883462487233226 46.976542220656086 6.894671486159739 46.97932222059168 6.895208486133725 46.97821822065836 6.903732485321064 46.980147220620005 6.907760484940528 46.98088522061165 6.913681484335318 46.9841962204736 6.913996484276894 46.98563722039504 6.921197483562158 46.98862022028621 6.922673483437094 46.988195220322446 6.9245634832302825 46.989913220241114 6.928361482913373 46.988580220348176 6.933897482385917 46.98980122032524 6.932510482495969 46.99056022027085 6.9341464823316725 46.99133122024083 6.93448548232269 46.99027222030352 6.936289482136791 46.991359220257074 6.936590482136328 46.99005622033321 6.9488854809402225 46.993959220215416 6.947515481026737 46.995770220101626 6.950900480704777 46.996486220089494 6.949366480883022 46.99460922018268 6.951296480671697 46.99635322010035 6.9557024802753995 46.996192220146234 6.958533479969563 46.9985432200372 6.957700480001639 47.000626219912455 6.968954478853106 47.00673621966168 6.970382478741804 47.00586021972319 6.966523479108789 47.00505321973624 6.970765478710895 47.005682219736315 6.975117478251871 47.00874021960017 6.972606478480688 47.008694219581564 6.980244477718958 47.01197221946069</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.634431513283355</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>7.049870471945964</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.784602229645024</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.01197221946069</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=79&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.596999514300522</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.645299510571201</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.888299223341406</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.921299221855</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=80&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Nedde8b7a5e654dcd8db92d4cb303f271">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N8d84506dd9024474b671aadc41c6dce3">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.596674514627538 46.90597522233946 6.6069215136280475 46.90964822221186 6.605994513669732 46.91182722208142 6.6135305128389055 46.91943822171016 6.616557512540416 46.92069322166302 6.619702512247963 46.92107522166604 6.622476512101969 46.91567922199303 6.628969511626112 46.90994122236856 6.641821510497975 46.90812422257243 6.645498510202561 46.906216222709375 6.630229511869129 46.891644223412875 6.627021512219387 46.888562223561856 6.6214165127241165 46.888684223511 6.611336513466703 46.897401222938896 6.609642513635378 46.896606222970654 6.605634513909206 46.901183222680416 6.602069514237725 46.90088722266925 6.600571514306258 46.904339222462255 6.598807514475093 46.90387622247471 6.596674514627538 46.90597522233946</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.596674514627538</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.645498510202561</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.888562223561856</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.92107522166604</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=81&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.60129951314753</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.661799508733124</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.90589922237992</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.96049921976903</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=82&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Ndfe0ac90aa40477494dc0680445e2299">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N9ae7736abd01410f974bc99c25c2fc01">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.6005985134046075 46.950560219848676 6.610895512368404 46.955807219632526 6.62172351132173 46.959096219531816 6.6362895099757955 46.96035121957544 6.638625509812602 46.957866219734456 6.641501509705922 46.9500152202013 6.645478509445439 46.94491522052108 6.644858509638114 46.937966220909075 6.650135509226245 46.93458422114211 6.651188509186751 46.931731221311765 6.654148508925188 46.93139222135434 6.659161508591576 46.92526422174038 6.662397508448637 46.917621222198214 6.647204509959408 46.91074422246684 6.645498510202561 46.906216222709375 6.641821510497975 46.90812422257243 6.628969511626112 46.90994122236856 6.622476512101969 46.91567922199303 6.619702512247963 46.92107522166604 6.616557512540416 46.92069322166302 6.612623512869269 46.92210422155224 6.610269512961817 46.92829422118371 6.606738513250834 46.92988722106602 6.607293513121682 46.93393922084116 6.6005985134046075 46.950560219848676</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.6005985134046075</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.662397508448637</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.906216222709375</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.96035121957544</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=83&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.562899516821925</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.616099512873984</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.90569922209165</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.950699219962424</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=84&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N3275d2d895fc4e20a22a1d5fa1fb25db">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N09d899df1db84e3abc65d21f32aa7141">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.562493516929461 46.94703621975045 6.58041151524068 46.95032021970423 6.6005985134046075 46.950560219848676 6.607293513121682 46.93393922084116 6.606738513250834 46.92988722106602 6.610269512961817 46.92829422118371 6.612623512869269 46.92210422155224 6.616557512540416 46.92069322166302 6.6135305128389055 46.91943822171016 6.605994513669732 46.91182722208142 6.6069215136280475 46.90964822221186 6.596674514627538 46.90597522233946 6.593812514887062 46.905954222318165 6.590118515149049 46.909686222078356 6.587766515376379 46.90894922210159 6.580973515919803 46.912650221839236 6.576851516182013 46.91840322148171 6.5755865161963305 46.92358422117883 6.562423517117574 46.937635220281635 6.562493516929461 46.94703621975045</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.562423517117574</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.616557512540416</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.905954222318165</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.950560219848676</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=85&amp;format=GMD_BBOX&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.568299517062981</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.620999512952403</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.878899223649064</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.912899222138435</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.extent.get?wfs=default&amp;typename=gn:non_validated&amp;id=86&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Canton de Neuch?tel</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Fleurier</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N57fbd526e38a42c6b4edcded77cbf5b3">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N78358a104f7f4c378b9ed60dc0126642">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.580973515919803 46.912650221839236 6.587766515376379 46.90894922210159 6.590118515149049 46.909686222078356 6.593812514887062 46.905954222318165 6.596674514627538 46.90597522233946 6.598807514475093 46.90387622247471 6.600571514306258 46.904339222462255 6.602069514237725 46.90088722266925 6.605634513909206 46.901183222680416 6.609642513635378 46.896606222970654 6.611336513466703 46.897401222938896 6.6214165127241165 46.888684223511 6.614225513373076 46.88876822344978 6.606225514135581 46.88677622349962 6.59846751489844 46.88363322361679 6.586742515949521 46.884131223496865 6.57040051752919 46.878881223666596 6.56820951766438 46.882147223464905 6.57232751727469 46.88303322344676 6.57214051722396 46.886540223246946 6.575085516870821 46.89104222301532 6.571646517024056 46.89922122252613 6.568156517293762 46.901623222363035 6.571994516906116 46.90370322227526 6.577128516300927 46.91095722190511 6.580973515919803 46.912650221839236</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.568156517293762</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>6.6214165127241165</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.878881223666596</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.912650221839236</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+    <gmd:distributionInfo xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_Distribution>
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://geocat0t.bgdi.admin.ch:80/geonetwork/srv/eng/xml.format.get?id=110" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>Majorité des formats SIG vectoriels standard (MapInfo.tab, ESRI.shp, AutoCAD.dxf, .sdf, etc.)</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>sur demande</gco:CharacterString>
+                    </gmd:version>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:transferOptions>
+                <gmd:MD_DigitalTransferOptions/>
+            </gmd:transferOptions>
+        </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+    <gmd:dataQualityInfo xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:DQ_DataQuality>
+            <gmd:scope>
+                <gmd:DQ_Scope>
+                    <gmd:level>
+                        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+                    </gmd:level>
+                </gmd:DQ_Scope>
+            </gmd:scope>
+            <gmd:lineage>
+                <gmd:LI_Lineage>
+                    <gmd:statement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Service cantonal de l&apos;aménagement du territoire. Digitalisation de plans papier.</gco:CharacterString>
+                    </gmd:statement>
+                </gmd:LI_Lineage>
+            </gmd:lineage>
+        </gmd:DQ_DataQuality>
+    </gmd:dataQualityInfo>
+</che:CHE_MD_Metadata>

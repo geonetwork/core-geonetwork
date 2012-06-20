@@ -60,6 +60,8 @@ class MEFExporter {
 	 * @param format
 	 *            {@link Format}
 	 * @param skipUUID
+	 * @param removeXlinkAttribute 
+	 * @param resolveXlink 
 	 * @return the path of the generated MEF file.
 	 * @throws Exception
 	 */

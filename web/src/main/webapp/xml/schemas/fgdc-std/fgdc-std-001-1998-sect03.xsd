@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+<xsd:element name="spdoinfo" type="spdoinfoType"/>
+<xsd:complexType name="spdoinfoType">
+	<xsd:sequence>
+		<xsd:element ref="indspref" minOccurs="0"/>
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="direct"/>
+			<xsd:choice minOccurs="0">
+				<xsd:element ref="ptvctinf"/>
+				<xsd:element ref="rastinfo"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="indspref" type="indsprefType"/>
+<xsd:simpleType name="indsprefType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="direct" type="directType"/>
+<xsd:simpleType name="directType">
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Point"/>
+		<xsd:enumeration value="Vector"/>
+		<xsd:enumeration value="Raster"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="ptvctinf" type="ptvctinfType"/>
+<xsd:complexType name="ptvctinfType">
+	<xsd:choice>
+		<xsd:element ref="sdtsterm" maxOccurs="unbounded"/>
+		<xsd:element ref="vpfterm"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="sdtsterm" type="sdtstermType"/>
+<xsd:complexType name="sdtstermType">
+	<xsd:sequence>
+		<xsd:element ref="sdtstype"/>
+		<xsd:element ref="ptvctcnt" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="sdtstype" type="sdtstypeType"/>
+<xsd:simpleType name="sdtstypeType">
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Point"/>
+		<xsd:enumeration value="Entity point"/>
+		<xsd:enumeration value="Label point"/>
+		<xsd:enumeration value="Area point"/>
+		<xsd:enumeration value="Node, planar graph"/>
+		<xsd:enumeration value="Node, network"/>
+		<xsd:enumeration value="String"/>
+		<xsd:enumeration value="Link"/>
+		<xsd:enumeration value="Complete chain"/>
+		<xsd:enumeration value="Area chain"/>
+		<xsd:enumeration value="Network chain, planar graph"/>
+		<xsd:enumeration value="Network chain, nonplanar graph"/>
+		<xsd:enumeration value="Circular arc, three point center"/>
+		<xsd:enumeration value="Elliptical arc"/>
+		<xsd:enumeration value="Uniform B-spline"/>
+		<xsd:enumeration value="Piecewise Bezier"/>
+		<xsd:enumeration value="Ring with mixed composition"/>
+		<xsd:enumeration value="Ring composed of strings"/>
+		<xsd:enumeration value="Ring composed of chains"/>
+		<xsd:enumeration value="Ring composed of arcs"/>
+		<xsd:enumeration value="G-polygon"/>
+		<xsd:enumeration value="GT-polygon composed of rings"/>
+		<xsd:enumeration value="GT-polygon composed of chains"/>
+		<xsd:enumeration value="Universe polygon composed of rings"/>
+		<xsd:enumeration value="Universe polygon composed of chains"/>
+		<xsd:enumeration value="Void polygon composed of rings"/>
+		<xsd:enumeration value="Void polygon composed of chains"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="ptvctcnt" type="ptvctcntType"/>
+<xsd:simpleType name="ptvctcntType">
+	<xsd:restriction base="xsd:integer">
+		<xsd:minExclusive value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="vpfterm" type="vpftermType"/>
+<xsd:complexType name="vpftermType">
+	<xsd:sequence>
+		<xsd:element ref="vpflevel"/>
+		<xsd:element ref="vpfinfo" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vpflevel" type="vpflevelType"/>
+<xsd:simpleType name="vpflevelType">
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="0"/>
+		<xsd:maxInclusive value="3"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="vpfinfo" type="vpfinfoType"/>
+<xsd:complexType name="vpfinfoType">
+	<xsd:sequence>
+		<xsd:element ref="vpftype"/>
+		<xsd:element ref="ptvctcnt" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vpftype" type="vpftypeType"/>
+<xsd:simpleType name="vpftypeType">
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Node"/>
+		<xsd:enumeration value="Edge"/>
+		<xsd:enumeration value="Face"/>
+		<xsd:enumeration value="Text"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="rastinfo" type="rastinfoType"/>
+<xsd:complexType name="rastinfoType">
+	<xsd:sequence>
+		<xsd:element ref="rasttype"/>
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="rowcount"/>
+			<xsd:element ref="colcount"/>
+			<xsd:element ref="vrtcount" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="rasttype" type="rasttypeType"/>
+<xsd:simpleType name="rasttypeType">
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Point"/>
+		<xsd:enumeration value="Pixel"/>
+		<xsd:enumeration value="Grid Cell"/>
+		<xsd:enumeration value="Voxel"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="rowcount" type="rowcountType"/>
+<xsd:simpleType name="rowcountType">
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+<xsd:element name="colcount" type="colcountType"/>
+<xsd:simpleType name="colcountType">
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+<xsd:element name="vrtcount" type="vrtcountType"/>
+<xsd:simpleType name="vrtcountType">
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+</xsd:schema>

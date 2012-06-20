@@ -151,7 +151,7 @@
 			<xsl:choose>
 				<xsl:when test="not(/root/request/modal)">
 					<td class="padded-content" width="{$indent}"/>
-					<td class="dots"/>
+    				<td class="dots"/>
 					<td class="padded-content" align="center">
 						<xsl:copy-of select="$content"/>
 					</td>

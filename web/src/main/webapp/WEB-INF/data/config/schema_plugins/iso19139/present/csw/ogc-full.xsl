@@ -9,7 +9,8 @@
 										xmlns:srv="http://www.isotc211.org/2005/srv"
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:ows="http://www.opengis.net/ows"
-										exclude-result-prefixes="gmd srv gco">
+					                    xmlns:java="java:org.fao.geonet.util.XslUtil"
+										exclude-result-prefixes="gmd srv gco java">
 
 	<xsl:param name="displayInfo"/>
 	<xsl:param name="lang"/>
@@ -253,6 +254,25 @@
 					</xsl:if>
 				</xsl:for-each>
 				 
+			</xsl:for-each>
+			
+			<xsl:variable name="title">
+				<xsl:apply-templates mode="localised" select="$identification//gmd:citation/gmd:CI_Citation/gmd:title">
+					<xsl:with-param name="langId" select="$langId"/>
+				</xsl:apply-templates>
+			</xsl:variable>
+
+			<!-- Adding related services URL -->
+			<xsl:for-each select="//wmsuri">
+				<xsl:variable name="uuid" select="java:takeUntil(string(.), '###')"/>
+				<xsl:variable name="remainingString" select="substring(string(.),string-length($uuid)+4)"/>
+				<xsl:variable name="layerName" select="java:takeUntil($remainingString,'###')"/>
+				<xsl:if test="$uuid = $info/uuid">
+					<xsl:variable name="serviceUrl" select="substring($remainingString,string-length($layerName)+4)"/>
+					<dc:URI protocol="WMS" name="{$layerName}" title="{$title[1]} ({$layerName})">
+						<xsl:value-of select="$serviceUrl"/>
+					</dc:URI>
+				</xsl:if>
 			</xsl:for-each>
 			
 			

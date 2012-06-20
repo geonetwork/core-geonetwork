@@ -26,6 +26,8 @@ package org.fao.geonet.kernel.search;
 import org.fao.geonet.kernel.LocaleUtil;
 import org.jdom.Element;
 
+import bak.pcj.map.ObjectKeyIntMapIterator;
+
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,10 +39,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
+public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>
 {
     
-
+public static class SummaryElement {
+    public final String name;
+    public final int count;
+    public SummaryElement( ObjectKeyIntMapIterator next ) {
+        this.name = (String) next.getKey();
+        this.count = next.getValue();
+    }
+}
     public enum Type
     {
         STRING
@@ -168,12 +177,12 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         _locale = LocaleUtil.toLocale(langCode);
     }
 
-    public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2)
+    public int compare(SummaryElement me1, SummaryElement me2)
     {
-        String key1 = (String) me1.getKey();
-        String key2 = (String) me2.getKey();
-        Integer count1 = (Integer) me1.getValue();
-        Integer count2 = (Integer) me2.getValue();
+        String key1 = me1.name;
+        String key2 = me2.name;
+        int count1 = me1.count;
+        int count2 = me2.count;
         switch (_option)
         {
         case NAME:
@@ -194,9 +203,9 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         }
     }
 
-    private int compareCount(Integer count1, Integer count2)
+    private int compareCount(int count1, int count2)
     {
-        int cmp = count2.compareTo(count1);
+        int cmp = count2 - count1;
         if (cmp != 0)
             return cmp;
         else
