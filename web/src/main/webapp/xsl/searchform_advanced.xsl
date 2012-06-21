@@ -577,14 +577,14 @@
 					</input>
 				</td>
 				<td>
-					<input name="dynamic" id="dynamic" type="checkbox">
+					<input name="dynamic" id="dynamic" type="checkbox" value="true">
 					  <xsl:if test="/root/gui/searchDefaults/dynamic='true'">
 						<xsl:attribute name="checked">CHECKED</xsl:attribute>
 					</xsl:if>
 						<label for="dynamic"><xsl:value-of select="/root/gui/strings/dynamic"/></label>
 					</input>
 					<br/>
-					<input name="download" id="download" type="checkbox">
+					<input name="download" id="download" type="checkbox" value="true">
 						<xsl:if test="/root/gui/searchDefaults/download='true'">
 							<xsl:attribute name="checked">CHECKED</xsl:attribute>
 						</xsl:if>
