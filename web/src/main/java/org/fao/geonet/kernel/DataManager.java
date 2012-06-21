@@ -2743,12 +2743,6 @@ public class DataManager {
             Boolean isTemplate = rec != null && !rec.getChildText("istemplate").equals("n");
 
             // don't process templates
-            if(isTemplate) {
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
-                return md;
-            }
-            else {
                 uuid = uuid == null ? rec.getChildText("uuid") : uuid;
 
                 //--- setup environment
@@ -2773,12 +2767,15 @@ public class DataManager {
                 env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
                 result.addContent(env);
                 // apply update-fixed-info.xsl
-                String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+                String styleSheet;
+                if(isTemplate) {
+                    styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_TEMPLATE_FIXED_INFO;
+                } else {
+                    styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+                }
                 result = Xml.transform(result, styleSheet);
                 return result;
-            }
-        }
-        else {
+        } else {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
             return md;

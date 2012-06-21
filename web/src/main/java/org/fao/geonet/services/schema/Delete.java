@@ -35,8 +35,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
 import java.util.List;
@@ -64,68 +62,29 @@ public class Delete implements Service {
 
 		String schema = Util.getParam(params, Params.SCHEMA);
 
-		// see if the schema to be deleted actually exists
 		Element response = new Element("response");
-		if (!scm.existsSchema(schema)) {
-			response.setAttribute("status", "error");
-			response.setAttribute("message", "Schema does not exist");
-			return response;
-		}
+		if (scm.existsSchema(schema)) {
+			List<String> dependsOnMe = scm.getSchemasThatDependOnMe(schema);
+			if (dependsOnMe.size() > 0) {
+				String errStr = "Cannot remove schema "+schema+" because the following schemas list it as a dependency: "+dependsOnMe;
 
-		// fast search to see if any records are present that use this schema
-		ServiceConfig config = new ServiceConfig();
-
-    SearchManager searchMan = gc.getSearchmanager();
-		Element searchParams = new Element("parameters");	
-    searchParams.addContent(new Element("_schema").setText(schema));
-
-   	MetaSearcher  searcher  = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
-		try {
-   		searcher.search(context, searchParams, config);
-			int results = searcher.getSize();
-			if (results == 0) { // check for templates
-    		searchParams.addContent(new Element("_isTemplate").setText("y"));
-   			searcher.search(context, searchParams, config);
-				results = searcher.getSize();
-			}
-    	if (results > 0) {
-				String errStr = "Cannot remove schema "+schema+" because there are records that belong to this schema in the catalog";
 				context.error(errStr);
 				response.setAttribute("status", "error");
 				response.setAttribute("message", errStr);
-				return response;
+			} else {
+				try {
+					scm.deletePluginSchema(schema);
+					response.setAttribute("status", "ok");
+					response.setAttribute("message", "Schema "+schema+" deleted");
+				} catch (Exception e) {
+					e.printStackTrace();
+					response.setAttribute("status", "error");
+					response.setAttribute("message", "Could not delete schema, error if any was "+e.getMessage());
+				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			String errStr = "Cannot remove schema "+schema+" because the search for records that belong to this schema FAILED ("+e.getMessage()+")";
-      context.error(errStr);
-      response.setAttribute("status", "error");
-      response.setAttribute("message", errStr);
-      return response;
-		} finally {
-   		searcher.close();
-		}
-
-		// check for any schemas that may be dependent on the schema to be deleted
-		List<String> dependsOnMe = scm.getSchemasThatDependOnMe(schema);
-		if (dependsOnMe.size() > 0) {
-			String errStr = "Cannot remove schema "+schema+" because the following schemas list it as a dependency: "+dependsOnMe;
-
-			context.error(errStr);
+		} else {
 			response.setAttribute("status", "error");
-			response.setAttribute("message", errStr);
-			return response;
-		}
-
-		// finally, try to delete the schema
-		try {
-			scm.deletePluginSchema(schema);
-			response.setAttribute("status", "ok");
-			response.setAttribute("message", "Schema "+schema+" deleted");
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setAttribute("status", "error");
-			response.setAttribute("message", "Could not delete schema, error if any was "+e.getMessage());
+			response.setAttribute("message", "Schema does not exist");
 		}
 		return response;
 	}

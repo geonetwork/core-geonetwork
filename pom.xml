@@ -836,6 +836,7 @@
     <module>jeeves</module> 
     <module>oaipmh</module>
     <module>sde</module>
+    <module>web-client</module>
     <module>web</module>
   </modules>
   
