@@ -837,8 +837,6 @@
     <module>oaipmh</module>
     <module>sde</module>
     <module>web</module>
-    <module>web-client</module>
-<!--    <module>web-itest</module> -->
   </modules>
   
   <profiles>

@@ -3469,15 +3469,6 @@
                 </xsl:call-template>
               </xsl:for-each>                        
             </xsl:when>
-            <xsl:when test="gco:*">
-              <xsl:for-each select="gco:*">
-                <xsl:call-template name="getElementText">
-                  <xsl:with-param name="schema" select="$schema" />
-                  <xsl:with-param name="edit" select="true()" />
-                  <xsl:with-param name="class" select="$class" />
-                </xsl:call-template>
-              </xsl:for-each>                        
-            </xsl:when>
             <xsl:when test="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]">
               <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]">
                 <xsl:call-template name="getElementText">

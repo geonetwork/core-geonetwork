@@ -106,7 +106,7 @@ GeoNetwork.lang.en = {
     'gazetteerAddressField1Label': "Postcode",
     'gazetteerAddressField2Label': "Street",
     'gazetteerAddressField3Label': "Place",
-    'gazetteerAddressField4Label': "'Gemeente'",
+    'gazetteerAddressField4Label': "Municipality",
     'gazetteerAddressField5Label': "House number",
     'searchOptionButton': "Search",
     'GazetteerWindowTitle': "Search for address",
