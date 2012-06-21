@@ -4,9 +4,6 @@
 [submodule "gast"]
 	path = gast
 	url = git://github.com/geonetwork/core-gast.git
-[submodule "maven_repo"]
-	path = maven_repo
-	url = git://github.com/geonetwork/core-maven-repo.git
 [submodule "release"]
 	path = release
 	url = git://github.com/geonetwork/core-release.git
