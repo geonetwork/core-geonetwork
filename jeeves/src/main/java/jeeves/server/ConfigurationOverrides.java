@@ -752,12 +752,7 @@ public class ConfigurationOverrides {
                         if (file.exists()) {
                             in = new FileInputStream(file);
                         } else {
-                        	file = new File(resource.replace('/', '\\'));
-                        	if(file.exists()) {
-                        		in = new FileInputStream(file);
-                        	} else {
-                        		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource: " + url + ".  Perhaps a leading / was forgotten?");
-                        	}
+                            throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource: " + url + ".  Perhaps a leading / was forgotten?");
                         }
                     } else {
                         in = url.openStream();
