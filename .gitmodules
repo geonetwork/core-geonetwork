@@ -13,3 +13,6 @@
 [submodule "geoserver"]
 	path = geoserver
 	url = git://github.com/geonetwork/core-geoserver.git
+[submodule "maven_repo"]
+	path = maven_repo
+	url = git://github.com/geonetwork/core-maven-repo.git
