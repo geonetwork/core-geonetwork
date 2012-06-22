@@ -19,7 +19,14 @@
 	<xsl:template mode="script" match="/">
 	
         <!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
-        <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+        <xsl:choose>
+            <xsl:when test="/root/request/debug">
+                <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+            </xsl:when>
+            <xsl:otherwise>
+              <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>      
+            </xsl:otherwise>
+        </xsl:choose>
     
 		<xsl:call-template name="geoHeader"/>
 		
