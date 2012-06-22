@@ -68,28 +68,6 @@
           <stripVersion>true</stripVersion>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-scm-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <id>checkout test framework</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>checkout</goal>
-              <goal>update</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <checkoutDirectory>${webspecsDir}</checkoutDirectory>
-          <connectionUrl>scm:git:git://github.com/camptocamp/webspecs.git</connectionUrl>
-          <skipCheckoutIfExists>true</skipCheckoutIfExists>
-          <workingDirectory>${webspecsDir}</workingDirectory>
-          <basedir>${basedir}</basedir>
-        </configuration>
-      </plugin>
       <!-- start jetty before integration tests and shut it down after -->
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
