@@ -168,7 +168,7 @@ public class AccessManager {
 		UserSession usrSess = context.getUserSession();
 
         // build group list
-		Set<String>  groups = getUserGroups(dbms, usrSess, ip);
+		Set<String>  groups = getUserGroups(dbms, usrSess, ip, false);
 		StringBuffer groupList = new StringBuffer();
 
 		for (Iterator i = groups.iterator(); i.hasNext(); ) {
@@ -185,7 +185,7 @@ public class AccessManager {
 		query.append("FROM   OperationAllowed ");
 		query.append("WHERE  groupId IN (");
 		query.append(groupList.toString());
-		query.append(") AND    metadataId = ?");
+		query.append(") AND  metadataId = ?");
 		
 		Element operations = dbms.select(query.toString(), new Integer(mdId));
 
@@ -213,10 +213,11 @@ public class AccessManager {
      * @param dbms
      * @param usrSess
      * @param ip
+     * @param editingGroupsOnly TODO
      * @return
      * @throws Exception
      */
-	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception {
+	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip, boolean editingGroupsOnly) throws Exception {
 		Set<String> hs = new HashSet<String>();
 
 		// add All (1) network group
@@ -242,7 +243,12 @@ public class AccessManager {
                 }
 			}
 			else {
-				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",usrSess.getUserIdAsInt());
+				StringBuffer query = new StringBuffer("SELECT distinct(groupId) FROM UserGroups WHERE ");
+				if (editingGroupsOnly) {
+					query.append("profile='Editor' AND ");
+				}
+				query.append("userId=?");
+				Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
 
 				List list = elUserGrp.getChildren();
 
@@ -368,7 +374,7 @@ public class AccessManager {
 		if (info.groupOwner == null)
 			return false;
 
-		for (String userGroup : getUserGroups(dbms, us, null)) {
+		for (String userGroup : getUserGroups(dbms, us, null, true)) {
 			if (userGroup.equals(info.groupOwner))
 				return true;
 		}

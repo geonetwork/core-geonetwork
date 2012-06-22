@@ -766,6 +766,7 @@
 
 			<output sheet="user-update.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="groupsAndProfiles" class=".guiservices.groups.GetMineWithProfiles" />
 				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
 		</service>
