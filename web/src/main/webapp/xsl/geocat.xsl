@@ -23,14 +23,7 @@
     <xsl:template mode="script" match="/">
     
         <!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loaded before ExtJs -->
-        <xsl:choose>
-            <xsl:when test="/root/request/debug">
-                <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
-            </xsl:when>
-            <xsl:otherwise>
-              <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>      
-            </xsl:otherwise>
-        </xsl:choose>
+        <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
     
         <xsl:call-template name="geoHeader"/>
         <xsl:call-template name="mapfish_script_includes"/>
