@@ -138,14 +138,10 @@
 				  <button onclick="load('{/root/gui/locService}/metadata.duplicate.form?uuid={$metadata/geonet:info/uuid}&amp;child=y')"><xsl:value-of select="/root/gui/strings/createChild"/></button>
 				</xsl:if>	
 
-				<!-- Create/Update thesaurus option and extract register elements 
-				     only for iso19135 metadata -->
+				<!-- Create/Update thesaurus option only for iso19135 metadata -->
+				<xsl:variable name="createThesaurus" select="concat(/root/gui/strings/createThesaurus,': ',$ltitle)"/>
 				<xsl:if test="contains(geonet:info/schema, 'iso19135')">
-					<xsl:variable name="createThesaurus" select="concat(/root/gui/strings/createThesaurus,': ',$ltitle)"/>
 				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.create.thesaurus.form?uuid={$metadata/geonet:info/uuid}','{$createThesaurus}',600,150)"><xsl:value-of select="/root/gui/strings/createThesaurus"/></button>
-
-					<xsl:variable name="extractRegisterItems" select="concat(/root/gui/strings/extractRegisterItems,': ',$ltitle)"/>
-				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.batch.extract.subtemplates?uuid={$metadata/geonet:info/uuid}&amp;xpath=/grg:RE_Register/grg:containedItem/gnreg:RE_RegisterItem&amp;extractTitle={/root/gui/schemalist/name[text()='iso19135']/@schemaConvertDirectory}extract-title.xsl&amp;category=_none_&amp;doChanges=on','{$extractRegisterItems}',600,150)"><xsl:value-of select="/root/gui/strings/extractRegisterItems"/></button>
 				</xsl:if>	
 			</div>
 		</xsl:if>

@@ -203,10 +203,6 @@ class Harvester
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);
 
-        if (params.useAccount) {
-            req.setCredentials(params.username, params.password);
-        }
-
         xml = req.execute();
 
 		//-----------------------------------------------------------------------

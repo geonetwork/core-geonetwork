@@ -113,10 +113,6 @@ public class Params {
     public static final String INFO = "info";
     public static final String STATUS = "status";
     public static final String CHANGE_MESSAGE = "changeMessage";
-    public static final String XPATH = "xpath";
-    public static final String XPATH_TITLE = "xpathTitle";
-		public static final String EXTRACT_TITLE = "extractTitle";
-    public static final String DOCHANGES = "doChanges";
 
     /**
      * TODO javadoc.

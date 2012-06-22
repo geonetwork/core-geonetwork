@@ -8,24 +8,8 @@
 	<field name="gmd:otherCitationDetails">
 		<suggest name="gco:CharacterString"/>
 		<suggest name="gmx:FileName"/>
-		<suggest name="gmx:Anchor"/>
 	</field>
 	
-	<field name="gmd:keyword">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmx:Anchor"/>
-	</field>
-	
-	<field name="gmx:Anchor">
-		<suggest name="xlink:href"/>
-	</field>
-	
-	<field name="gmd:code">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmx:FileName"/>
-		<suggest name="gmx:Anchor"/>
-	</field>
-
 	<field name="gmd:language">
 		<suggest name="gco:CharacterString"/>
 		<suggest name="gmd:LanguageCode"/>
@@ -220,6 +204,4 @@
     <suggest name="gmd:classification"/>
     <suggest name="gmd:useLimitation"/>
   </field>
-
-
 </fields>

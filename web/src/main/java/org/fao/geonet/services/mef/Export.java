@@ -98,6 +98,12 @@ public class Export implements Service {
 
 		UserSession session = context.getUserSession();
 
+		// Use current selction if no uuid provided.
+		if (uuid != null) {
+			SelectionManager.getManager(session).addSelection(
+					SelectionManager.SELECTION_METADATA, uuid);
+		}
+
 		Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
 		SelectionManager selectionManger = SelectionManager.getManager(session);
 		Set<String> uuids = selectionManger

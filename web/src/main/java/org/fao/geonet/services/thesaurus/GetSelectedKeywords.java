@@ -54,7 +54,7 @@ public class GetSelectedKeywords implements Service {
 		KeywordsSearcher searcher = (KeywordsSearcher)session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);		
 		
 		// get the results
-		response.addContent(searcher.getSelectedKeywordsAsXml());
+		response.addContent(searcher.getSelectedKeywords());
 
 		return response;
 	}

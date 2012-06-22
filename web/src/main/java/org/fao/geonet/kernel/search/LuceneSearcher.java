@@ -526,7 +526,7 @@ public class LuceneSearcher extends MetaSearcher {
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE, "XML QUERY:\n"+ Xml.getString(xmlQuery));
-				_query = LuceneSearcher.makeLocalisedQuery(xmlQuery, SearchManager.getAnalyzer(_language, true), _tokenizedFieldSet, _luceneConfig.getNumericFields(), _language, requestedLanguageOnly);
+				_query = LuceneSearcher.makeLocalisedQuery(xmlQuery, SearchManager.getAnalyzer(_language), _tokenizedFieldSet, _luceneConfig.getNumericFields(), _language, requestedLanguageOnly);
 			} 
             else {
 		        // Construct Lucene query (Java)
@@ -534,7 +534,7 @@ public class LuceneSearcher extends MetaSearcher {
                     Log.debug(Geonet.LUCENE, "LuceneSearcher constructing Lucene query (LQB)");
                 LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
                 luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
-                _query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), SearchManager.getAnalyzer(_language, true), _language).build(luceneQueryInput);
+                _query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), SearchManager.getAnalyzer(_language), _language).build(luceneQueryInput);
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
 

@@ -42,6 +42,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.extent.ExtentHelper;
 import org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode;
 import org.geotools.gml3.GMLConfiguration;
@@ -909,6 +910,13 @@ public final class XslUtil {
 
 		return langCode.toLowerCase();
 	}
+    public static String twoCharLangCode(String langCode) throws Exception {
+        if (langCode.length() == 2){
+            return langCode;
+        } else {
+            return IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(langCode);
+        }
+    }
 
 	public static boolean match(Object src, Object pattern) {
 		if (src == null || src.toString().trim().isEmpty()) {

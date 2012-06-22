@@ -153,7 +153,7 @@ public class LuceneIndexWriterFactory {
                 throw new Error("Unable to create index directory: " + indexDir);
             }
             
-            writer = new IndexWriter(FSDirectory.open(indexDir), SearchManager.getAnalyzer(locale, false), IndexWriter.MaxFieldLength.UNLIMITED);
+            writer = new IndexWriter(FSDirectory.open(indexDir), SearchManager.getAnalyzer(locale), IndexWriter.MaxFieldLength.UNLIMITED);
             writer.setRAMBufferSizeMB(_luceneConfig.getRAMBufferSize());
             writer.setMergeFactor(_luceneConfig.getMergeFactor());
             _writers.put(locale, writer);

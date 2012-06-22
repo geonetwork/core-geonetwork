@@ -13,6 +13,22 @@
     extension-element-prefixes="saxon"
 	exclude-result-prefixes="geonet saxon">
 
+	<xsl:template name="geocat-js">
+		<xsl:if test="/root/request/debug">
+	        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-geocat-editor.js"></script>
+	        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/geocat.edit.js"></script>
+	        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/geocat.edit.Contact.js"></script>
+	        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/geocat.edit.Extent.js"></script>
+	        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/geocat.edit.Format.js"></script>
+	        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/geocat.edit.Keyword.js"></script>
+        </xsl:if>
+		<script type="text/javascript">
+			geocat.edit.contactRoles = [];
+			<xsl:for-each select="/root/gui/schemas/iso19139/codelists/codelist[@name='gmd:CI_RoleCode']/entry">
+				geocat.edit.contactRoles.push(['<xsl:value-of select="code"/>', '<xsl:value-of select="label"/>']);
+			</xsl:for-each>
+		</script>
+	</xsl:template>
 	<xsl:template name="geocat-hidden-inputs">
 	     <xsl:variable name="locales" select="//gmd:locale"/>
          <xsl:variable name="localesValue">

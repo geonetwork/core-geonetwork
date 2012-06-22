@@ -121,59 +121,6 @@
 
 	<retrieve>Palauta</retrieve>
 	<warn>Palautus on mahdollista ainoastaan, jos sivuston osa on täytetty.</warn>
-
-  <at>Run at</at>
-  <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-  <interval>Will run again every</interval>
-
-  <hourintervals>
-      <hour label="Each hour">1</hour>
-      <hour label="3 hours">3</hour>
-      <hour label="6 hours">6</hour>
-      <hour label="12 hours">12</hour>
-      <hour label="N/A">undefined</hour>
-  </hourintervals>
-  <dayofweek>
-      <day label="Monday">MON</day>
-      <day label="Tuesday">TUE</day>
-      <day label="Wednesday">WED</day>
-      <day label="Thursday">THU</day>
-      <day label="Friday">FRI</day>
-      <day label="Saturday">SAT</day>
-      <day label="Sunday">SUN</day>
-  </dayofweek>
-  <hours>
-      <hour label="0">0</hour>
-      <hour label="1">1</hour>
-      <hour label="2">2</hour>
-      <hour label="3">3</hour>
-      <hour label="4">4</hour>
-      <hour label="5">5</hour>
-      <hour label="6">6</hour>
-      <hour label="7">7</hour>
-      <hour label="8">8</hour>
-      <hour label="9">9</hour>
-      <hour label="10">10</hour>
-      <hour label="11">11</hour>
-      <hour label="12">12</hour>
-      <hour label="13">13</hour>
-      <hour label="14">14</hour>
-      <hour label="15">15</hour>
-      <hour label="16">16</hour>
-      <hour label="17">17</hour>
-      <hour label="18">18</hour>
-      <hour label="19">19</hour>
-      <hour label="20">20</hour>
-      <hour label="21">21</hour>
-      <hour label="22">22</hour>
-      <hour label="23">23</hour>
-  </hours>
-  <minutes>
-      <minute label="00">0</minute>
-      <minute label="15">15</minute>
-      <minute label="30">30</minute>
-      <minute label="45">45</minute>
-  </minutes>
 	
 	<options>Vainhtoehdot</options>
 	<everySpec>(päivää : tuntia : minuuttia)</everySpec>
@@ -355,9 +302,7 @@
 		</tip>
 		
 		<tip id="gn.host">
-            The given URL must point to a geonetwork server. The format of a
-            URL is like this:<br/>
-            http[s]://HOST[:port]/geonetwork
+			Etäpalvelin, johon yhteys otetaan.
 		</tip>
 		
 		<tip id="gn.xslfilter">

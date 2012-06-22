@@ -4,7 +4,7 @@
 	>
     <xsl:import  href="translate-widget.xsl"/>
     <xsl:import  href="utils.xsl"/>
-	<xsl:output method="html"/>
+	<xsl:output method="xml"/>
 	
     
 	<!-- Return a list of user to be use
@@ -12,17 +12,11 @@
 	-->
 	<xsl:template match="/">
 		<ul>
-			<xsl:for-each select="/root/response/record">                     
+			<xsl:for-each select="/root/response/record">
 				<li xlink:href="local://xml.format.get?id={id}">
-                    <xsl:text> </xsl:text>
-                    <xsl:call-template name="validIndicator">
-                        <xsl:with-param name="indicator" select="normalize-space(translate(validated,$LOWER,$UPPER)) = 'N'" />
-                        <xsl:with-param name="class" select="'Bt'" />
-                    </xsl:call-template>
-                    <xsl:text> </xsl:text>
- 					<xsl:value-of select="name"/> 
-					<xsl:text> </xsl:text>
-					<xsl:if test="version != ''">[<xsl:value-of select="version"/>]</xsl:if>
+  			  <displayText><xsl:value-of select="normalize-space(name)"/><xsl:if test="version != ''"><xsl:text> </xsl:text>[<xsl:value-of select="version"/>]</xsl:if></displayText>
+  				<valid><xsl:value-of select="normalize-space(translate(validated,$LOWER,$UPPER)) != 'N'"/></valid>
+  				<href>local://xml.format.get?id=<xsl:value-of select="id"/></href>
 				</li>
 			</xsl:for-each>
 		</ul>

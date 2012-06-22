@@ -770,7 +770,7 @@ public class Aligner
 		request.addParam("uuid",   uuid);
 		request.addParam("format", (params.mefFormatFull ? "full" : "partial"));
 
-		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
+		request.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 
 		File tempFile = File.createTempFile("temp-", ".dat");
 		request.executeLarge(tempFile);

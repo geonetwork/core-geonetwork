@@ -82,9 +82,24 @@
 
 	<xsl:template name="options-Filesystem">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
-		<xsl:call-template name="schedule-widget">
-			<xsl:with-param name="type">filesystem</xsl:with-param>
-		</xsl:call-template>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="filesystem.every.days"  class="content" type="text" size="2"/> :
+					<input id="filesystem.every.hours" class="content" type="text" size="2"/> :
+					<input id="filesystem.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
+				<td class="padded"><input id="filesystem.oneRunOnly" type="checkbox" value=""/></td>
+			</tr>
+		</table>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -128,15 +143,4 @@
 	
 	<!-- ============================================================================================= -->	
 	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

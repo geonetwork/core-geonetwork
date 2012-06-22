@@ -78,9 +78,7 @@ var updateTemp =
     
 '    <options>'+
 '      <clearConfig>{CLEARCONFIG}</clearConfig>'+
-
 '      <every>{EVERY}</every>'+
-
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '    </options>'+
 

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+	<ContactSelectionTitle js="true">Sélection du contacte</ContactSelectionTitle>
+	<FormatSelectionTitle js="true">Sélection du format</FormatSelectionTitle>
+	<ExtentSelectionTitle js="true">Sélection de l’étendue</ExtentSelectionTitle>
 	<refine.titles js="true">Titre</refine.titles>
 	<refine.keyword js="true">Mot-clé</refine.keyword>
 	<refine.resolution js="true">Résolution spatiale</refine.resolution>
@@ -170,21 +173,27 @@ Votre équipe geocat.ch</msg>
     <contactinstructions>Instructions pour le contact</contactinstructions>
     <mostPopular>Les plus populaires</mostPopular>
 
-    <popXlink.about>Rechercher un objet existant ou utiliser le bouton 'Nouveau' si vous n'en trouvez pas.</popXlink.about>
-    <popXlink.contact.search>Rechercher dans la liste de valeur un contact</popXlink.contact.search>
-    <popXlink.contact.role>Renseigner le rôle de ce contact</popXlink.contact.role>
-    <popXlink.contact.action>Ajouter cet élément à la fiche de métadonnée, ou proposer une nouvelle entrée (soumise à modération) si vous ne trouvez pas l'élément désiré.</popXlink.contact.action>
-    <extentBbox>BBOX seulement</extentBbox>
-    <extentPolygon>Polygone seulement</extentPolygon>
-    <extentBboxAndPolygon>Polygone et BBOX</extentBboxAndPolygon>
+    <popXlink.about js="true">Rechercher un objet existant ou utiliser le bouton 'Nouveau' si vous n'en trouvez pas.</popXlink.about>
+    <popXlink.contact.search js="true">Rechercher dans la liste de valeur un contact</popXlink.contact.search>
+    <popXlink.contact.role js="true">Renseigner le rôle de ce contact</popXlink.contact.role>
+    <popXlink.add.action.tooltip js="true">Ajouter l’élément sélectionné dans le document de métadonnées</popXlink.add.action.tooltip>
+    <popXlink.create.action.tooltip js="true">Proposer un nouvel élément, si l’élément recherché n’est pas trouvé</popXlink.create.action.tooltip>
+    <popXlink.extent.search js="true">Rechercher une étendue dans la liste</popXlink.extent.search>
+    <popXlink.format.search js="true">Recherche d’un format dans la liste</popXlink.format.search>
+    <extentBbox js="true">BBOX seulement</extentBbox>
+    <extentPolygon js="true">Polygone seulement</extentPolygon>
+    <extentBboxAndPolygon js="true">Polygone et BBOX</extentBboxAndPolygon>
     <boolean value="1" context="">Vrai</boolean>
     <boolean value="0" context="">Faux</boolean>
     <boolean value="1" context="gmd:extentTypeCode">Inclusion</boolean>
     <boolean value="0" context="gmd:extentTypeCode">Exclusion</boolean>
     <boolean value="true" context="gmd:extentTypeCode">Inclusion</boolean>
     <boolean value="false" context="gmd:extentTypeCode">Exclusion</boolean>
+    <extentTypeCode js="true">Autorité Code</extentTypeCode>
+    <inclusion js="true">Inclusion</inclusion>
+    <exclusion js="true">Exclusion</exclusion>
     <xlink.new js="true">Nouveau</xlink.new>
-    <xlink.newGeographic>Nouvelle étendue géographique</xlink.newGeographic>
+    <xlink.newGeographic js="true">Nouvelle étendue géographique</xlink.newGeographic>
     <noXlink js="true">Elément choisi non valide.</noXlink>
 
 	<displayValidationReport>Rapport de validation</displayValidationReport>
@@ -361,7 +370,7 @@ Votre équipe geocat.ch</msg>
 	<schemaFileName>Chemin vers l'archive ZIP</schemaFileName>
 	<schemaUrl>URL de l'archive ZIP</schemaUrl>
 	<schemaUuid>Identifiant (UUID) d'une métadonnée locale avec l'URL du schéma (GeoNetwork Metadata Schema Archive-GMSA URL) dans la section ressource en ligne</schemaUuid>
-	<add>Ajouter</add>
+	<add js="true">Ajouter</add>
 	<schemaOps>Gestion des schémas de métadonnées</schemaOps>
 	<enterSchema>Nom du schéma à ajouter</enterSchema>
 	<selectSchemaOperations>Nom du schéma source :</selectSchemaOperations>
@@ -862,7 +871,7 @@ Votre équipe geocat.ch</msg>
 	<legend>Légende</legend>
 	<link>Lien</link>
 	<links>Liens</links>
-	<loading>Chargement en cours ...</loading>
+	<loading js="true">Chargement en cours ...</loading>
 	<local>Recherche local</local>
 	<localiz>Internationalisation</localiz>
 	<localizationHelp>Pour traduire les nouvelles valeurs, aller dans la page d'<a href="admin">administration</a> section <a href="localization">internationalisation</a>.</localizationHelp>

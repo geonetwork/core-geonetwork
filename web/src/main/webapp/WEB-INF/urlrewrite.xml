@@ -105,16 +105,6 @@
 
     <rule>
         <note>
-            The metadata formatted with a specific formatter.
-            Example URL: http://localhost:8080/geonetwork/metadata/eng/clean/da165110-88fd-11da-a88f-000d939bc5d8.html
-            Example URL: http://localhost:8080/geonetwork/metadata/eng/summary/da165110-88fd-11da-a88f-000d939bc5d8.xml
-        </note>
-        <from>^/metadata/(.*)/(.*)/(.*).(xml|html)$</from>
-        <to type="forward">/srv/$1/metadata.formatter.$4?uuid=$3&amp;xsl=$4</to>
-    </rule>
-
-    <rule>
-        <note>
             Retrieves html format for a metadata.
             Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8
 

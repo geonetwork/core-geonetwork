@@ -115,9 +115,7 @@ var updateTemp =
 '    </site>'+
     
 '    <options>'+
-
 '      <every>{EVERY}</every>'+
-
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
 '      <lang>{LANG}</lang>'+
 '      <query>{QUERY}</query>'+

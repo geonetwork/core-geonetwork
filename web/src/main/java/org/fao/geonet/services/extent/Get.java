@@ -23,7 +23,6 @@
 package org.fao.geonet.services.extent;
 
 import static java.lang.String.format;
-import static java.lang.String.valueOf;
 import static org.fao.geonet.services.extent.ExtentHelper.reducePrecision;
 
 import java.io.ByteArrayOutputStream;

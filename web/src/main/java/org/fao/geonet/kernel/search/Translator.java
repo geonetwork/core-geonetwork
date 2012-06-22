@@ -54,10 +54,10 @@ public abstract class Translator
         if( translatorString == null || translatorString.length()==0){
             return Translator.PASS_THROUGH;
         }
-        
+        String key = translatorString + langCode;
         synchronized (cache) {
-            if(cache.containsKey(translatorString)) {
-                return cache.get(translatorString);
+            if(cache.containsKey(key)) {
+                return cache.get(key);
             }
         }
 
@@ -72,13 +72,15 @@ public abstract class Translator
         if( type.equals("codelist") ){
             translator = new CodeListTranslator(schemaDir, langCode, param);
         } else if( dbms != null && type.equals("db") ){
-            translator = new DbDescTranslator(dbms, langCode, param);
+            // do not cache
+            return new DbDescTranslator(dbms, langCode, param);
         } else {
             throw new AssertionError(type+" is not a recognized type of translator");
         }
         
         synchronized (cache) {
-            return cache.put(translatorString, translator);
+            cache.put(key, translator);
+            return translator;
         }
     }
 

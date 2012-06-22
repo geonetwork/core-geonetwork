@@ -51,7 +51,10 @@ function init()
 		{ id:'z3950.repositories',type:'length',   minSize :1,  maxSize :200 },
 		{ id:'z3950.query',       type:'length',   minSize :1,  maxSize :200 },
 		{ id:'z3950.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'z3950.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'z3950.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'z3950.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'z3950.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'z3950.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
 	shower = new Shower('z3950.useAccount', 'z3950.account');

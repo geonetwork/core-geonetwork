@@ -55,7 +55,10 @@ function init()
 		{ id:'ogcwxs.capabUrl',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'ogcwxs.capabUrl',    type:'url' },
 		{ id:'ogcwxs.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'ogcwxs.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'ogcwxs.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'ogcwxs.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'ogcwxs.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'ogcwxs.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 	shower = new Shower('ogcwxs.useAccount', 'ogcwxs.account');
 

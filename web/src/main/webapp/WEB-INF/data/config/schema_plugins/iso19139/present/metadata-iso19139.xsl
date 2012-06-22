@@ -393,7 +393,7 @@
     <xsl:param name="validator" />
 
     <xsl:choose>
-      <xsl:when test="gmd:PT_FreeText">
+      <xsl:when test="not(gco:*)">
         <xsl:for-each select="gmd:PT_FreeText">
           <xsl:call-template name="getElementText">
             <xsl:with-param name="edit" select="$edit" />
@@ -406,7 +406,7 @@
           </xsl:for-each>
         </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each select="gco:*|gmx:*">
+        <xsl:for-each select="gco:*">
           <xsl:call-template name="getElementText">
             <xsl:with-param name="edit" select="$edit" />
             <xsl:with-param name="schema" select="$schema" />
@@ -1047,33 +1047,6 @@
 		</xsl:choose>
 	</xsl:template>
 	
- 	<!-- gmx:Anchor is a substitute of gco:CharacterString and 
-	     could be use to create a hyperlink for an element.
-	   -->
-	<xsl:template mode="iso19139" match="*[gmx:Anchor]" priority="99">
-	     <xsl:param name="schema" />
-	     <xsl:param name="edit" />
-	     
-	     <xsl:apply-templates mode="complexElement" select=".">
-	       <xsl:with-param name="schema"   select="$schema"/>
-	       <xsl:with-param name="edit"     select="$edit"/>
-	       <xsl:with-param name="content">
-	         <xsl:choose>
-	           <xsl:when test="$edit=true()">
-	             <!-- existing content -->
-	             <xsl:apply-templates mode="simpleElement" select="gmx:Anchor/.">
-	               <xsl:with-param name="schema" select="$schema"/>
-	               <xsl:with-param name="edit"   select="$edit"/>
-	             </xsl:apply-templates>
-	           </xsl:when>
-	           <xsl:otherwise>
-	             <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>    
-	           </xsl:otherwise> 
-	         </xsl:choose>
-	       </xsl:with-param>  
-	     </xsl:apply-templates>
-	</xsl:template>
-
 	<!-- ============================================================================= -->
 	<!-- descriptiveKeywords -->
 	<!-- ============================================================================= -->
@@ -1130,12 +1103,6 @@
 						<xsl:variable name="value">
 							<xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
 								<xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
-								<xsl:choose>
-                  <xsl:when test="gmx:Anchor">
-                    <a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
-                  </xsl:when>
-                  <xsl:otherwise>
-
 							  <xsl:call-template name="translatedString">
 							    <xsl:with-param name="schema" select="$schema"/>
 							    <xsl:with-param name="langId">
@@ -1145,10 +1112,6 @@
 				            </xsl:call-template>
 							    </xsl:with-param>
 							  </xsl:call-template>
-
-									</xsl:otherwise>
-							</xsl:choose>
-
 							</xsl:for-each>
 							<xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
 								<xsl:text> (</xsl:text>
@@ -1160,21 +1123,18 @@
 						<table width="100%">
 							<tr>
 								<td colspan="2">
-									<xsl:copy-of select="$value"/>
+									<!-- Clean new lines which may be added by formatting. -->
+									<xsl:value-of select="normalize-space($value)"/>
 								</td>
 							</tr>
-							<xsl:variable name="thesaurusTitle" select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:title/*[1]"/>
-							<xsl:for-each select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/gmx:Anchor[starts-with(string(),'geonetwork.thesaurus')]">
+							<xsl:for-each select="gmd:MD_Keywords/gmd:thesaurusName/*/gmd:otherCitationDetails/gmx:FileName">
 								<tr>
 									<td width="20%">
 										<xsl:value-of select="/root/gui/strings/thesaurus/thesaurus"/>
 									</td>
 									<td>
-										<a href="{@xlink:href}">
+										<a href="{@src}">
 											<xsl:choose>
-												<xsl:when test="normalize-space($thesaurusTitle)!=''">
-													<xsl:value-of select="$thesaurusTitle"/>
-												</xsl:when>
 												<xsl:when test="normalize-space()!=''">
 													<xsl:value-of select="text()"/>
 												</xsl:when>
@@ -1197,7 +1157,7 @@
 	<!-- place keyword; only called in edit mode (see descriptiveKeywords template) -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:keyword[following-sibling::gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place' and not(following-sibling::gmd:thesaurusName/*/gmd:identifier/*/gmd:code/gmx:Anchor[starts-with(string(),'geonetwork.thesaurus')])]">
+	<xsl:template mode="iso19139" match="gmd:keyword[following-sibling::gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		

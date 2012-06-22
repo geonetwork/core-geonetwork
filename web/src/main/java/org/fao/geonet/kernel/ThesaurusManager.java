@@ -46,14 +46,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 //=============================================================================
 
-public class ThesaurusManager implements ThesaurusFinder {
+public class ThesaurusManager {
 
 	public synchronized static ThesaurusManager getInstance(String appPath, DataManager dm, ResourceManager rm, String thesauriRepository) throws Exception { 
 	 	if (_instance == null){ 
@@ -312,12 +310,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 		return thesauriDirectory;
 	}
 	
-	@Override
-    public Map<String, Thesaurus> getThesauriMap() {
-		return Collections.unmodifiableMap(thesauriMap);
+	public ConcurrentHashMap<String, Thesaurus> getThesauriMap() {
+		return thesauriMap;
 	}
 
-    @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriMap.get(thesaurusName);
 	}	
@@ -326,8 +322,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param name
 	 * @return
 	 */
-	@Override
-    public boolean existsThesaurus(String name) {
+	public boolean existsThesaurus(String name) {
 		return (thesauriMap.get(name) != null);
 	}
 

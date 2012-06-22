@@ -31,15 +31,14 @@
         <xsl:choose>
             <xsl:when test="/root/request/debug">
                 <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-geocat-editor.js"></script>
+		        <xsl:call-template name="geocat-js"/> 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
             </xsl:when>
             <xsl:otherwise>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
-        <!-- metadata-geocat-editor.js is not included in gn.editor.js as gn.editor.js is used in other pages where the dom elements used by metadata-geocat-editor.js dont exist -->
-        <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-geocat-editor.js"></script> 
             </xsl:otherwise>
         </xsl:choose>
+		<xsl:call-template name="geocat-js"/>
     
         <xsl:call-template name="edit-header"/>
         

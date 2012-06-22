@@ -75,12 +75,6 @@
                                              select="//gfc:FC_FeatureType"/>
                     </xsl:with-param>
                 </xsl:call-template>
-              
-              
-              <span class="madeBy">
-                <xsl:value-of select="/root/gui/strings/changeDate"/><xsl:value-of select="substring-before(gfc:versionDate, 'T')"/> | 
-                <xsl:value-of select="/root/gui/strings/uuid"/>&#160;<xsl:value-of select="@uuid"/>
-              </span>
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -103,7 +97,7 @@
             <xsl:with-param name="content">
                 <xsl:apply-templates mode="iso19110-simple"
                                      select="
-          gmd:CI_ResponsibleParty/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
+          gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/descendant::node()[(gco:CharacterString and normalize-space(gco:CharacterString)!='')]
           "/>
 
                 <xsl:for-each

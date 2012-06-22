@@ -236,7 +236,6 @@
 			<label>Autor</label>
 			<description>Verfasser der Ressource</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>editor</code>
 			<label>Editor</label>
@@ -246,7 +245,7 @@
 			<code>partner</code>
 			<label>Partner</label>
 			<description>Beiteiligter bei der Erstellung der Ressource</description>
-		</entry> -->
+		</entry>
 	</codelist>
 
 	<!-- ==================================================== -->
@@ -1299,7 +1298,7 @@
 			<code>other</code>
 			<label>Anderes</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_ObligationCode">
@@ -1575,7 +1574,6 @@
 			<label>Kachel</label>
 			<description>Information gilt für eine räumliche Untereinheit von geographischen Daten</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>initiative</code>
 			<label>Initiative</label>
@@ -1626,7 +1624,6 @@
 				outside of the transfer context, but which does not pertains to a specific aggregate
 				type.</description>
 		</entry>
-		-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
@@ -1670,12 +1667,11 @@
 			<label>Video</label>
 			<description>Szene einer Videoaufnahme</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>paperMap</code>
 			<label>Karte</label>
 			<description>Gedruckte Karte</description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 

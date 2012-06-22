@@ -45,8 +45,11 @@ function init()
 	[
 		{ id:'filesystem.name', type:'length',   minSize :1,  maxSize :200 },
 		{ id:'filesystem.directoryname',     type:'length',   minSize :1,  maxSize :500 },
-		{ id:'filesystem.recurse',     type:'length',   minSize :1,  maxSize :10 },
-		{ id:'filesystem.nodelete',    type:'length',   minSize :1,  maxSize :10 }
+		{ id:'filesystem.recurse',     type:'length',   minSize :1,  maxSize :10 },		
+		{ id:'filesystem.nodelete',    type:'length',   minSize :1,  maxSize :10 },		
+		{ id:'filesystem.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'filesystem.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'filesystem.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
 }

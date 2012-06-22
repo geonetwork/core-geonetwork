@@ -34,10 +34,20 @@
 			</tr>
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/url"/></td>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/host"/></td>
 				<td class="padded"><input id="gn.host" class="content" type="text" value="" size="30"/></td>
 			</tr>
 
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/port"/></td>
+				<td class="padded"><input id="gn.port" class="content" type="text" value="" size="30"/></td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/servlet"/></td>
+				<td class="padded"><input id="gn.servlet" class="content" type="text" value="" size="30"/></td>
+			</tr>
+		  
 		  <tr>
 		    <td class="padded"><xsl:value-of select="/root/gui/harvesting/createRemoteCategory"/></td>
 		    <td class="padded"><input id="gn.createRemoteCategory" type="checkbox"/></td>
@@ -99,9 +109,24 @@
 
 	<xsl:template name="options-GN">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
-		<xsl:call-template name="schedule-widget">
-			<xsl:with-param name="type">gn</xsl:with-param>
-		</xsl:call-template>
+
+		<table border="0">
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
+				<td class="padded">
+					<input id="gn.every.days"  class="content" type="text" size="2"/> :
+					<input id="gn.every.hours" class="content" type="text" size="2"/> :
+					<input id="gn.every.mins"  class="content" type="text" size="2"/>
+					&#160;
+					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
+				<td class="padded"><input id="gn.oneRunOnly" type="checkbox" value=""/></td>
+			</tr>
+		</table>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -156,15 +181,4 @@
 	
 	<!-- ============================================================================================= -->
 	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

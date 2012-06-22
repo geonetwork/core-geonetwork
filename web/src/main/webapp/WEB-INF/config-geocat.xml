@@ -123,7 +123,7 @@
                 <param name="type" value="SHARED"/>
             </class>
 
-            <output sheet="shared-user/user-list-xml.xsl" />
+            <output sheet="shared-user/user-list-xml.xsl" contentType="application/xml; charset=UTF-8"/>
 
         </service>
 
@@ -140,7 +140,7 @@
         <!-- returns the results as one <ul> long list -->
         <service name="extent.search.list">
             <class name=".services.extent.Search" />
-            <output sheet="extent-list.xsl" />
+            <output sheet="extent-list.xsl" contentType="text/xml; charset=UTF-8"/>
         </service>
 
         <!-- returns the results paginated and nice.  Has edit and view modes -->
@@ -421,7 +421,7 @@
                 <param name="xml" />
             </class>
 
-            <output sheet="format-list.xsl"/>
+            <output sheet="format-list.xsl" contentType="text/xml; charset=UTF-8" />
 
         </service>
 

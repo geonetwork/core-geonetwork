@@ -360,9 +360,7 @@
 		</tip>
 		
 		<tip id="gn.host">
-            The given URL must point to a geonetwork server. The format of a
-            URL is like this:<br/>
-            http[s]://HOST[:port]/geonetwork
+			L'host remoto a cui connettersi
 		</tip>
 
 		<tip id="gn.xslfilter">

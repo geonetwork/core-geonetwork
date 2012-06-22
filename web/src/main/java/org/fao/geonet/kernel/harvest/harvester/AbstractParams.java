@@ -23,22 +23,16 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobBuilder.newJob;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
-import jeeves.utils.QuartzSchedulerUtils;
 import jeeves.utils.Util;
-
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -76,14 +70,13 @@ public abstract class AbstractParams
 		username   = Util.getParam(account, "username", "");
 		password   = Util.getParam(account, "password", "");
 
-		every      = Util.getParam(opt, "every",      "0 0 0 * * ?" );
-		
+		every      = Util.getParam(opt, "every",      90   );
 		oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
-		
-		getTrigger();
 
 		importXslt = Util.getParam(content, "importxslt", "none");
 		validate = Util.getParam(content, "validate", false);
+
+		checkEvery(every);
 
 		addPrivileges(node.getChild("privileges"));
 		addCategories(node.getChild("categories"));
@@ -112,10 +105,10 @@ public abstract class AbstractParams
 		every      = Util.getParam(opt, "every",      every);
 		oneRunOnly = Util.getParam(opt, "oneRunOnly", oneRunOnly);
 
-		getTrigger();
-		
 		importXslt = Util.getParam(content, "importxslt", importXslt);
 		validate = Util.getParam(content, "validate", validate);
+
+		checkEvery(every);
 
 		if (privil != null)
 			addPrivileges(privil);
@@ -161,13 +154,13 @@ public abstract class AbstractParams
 		copy.node = node;
 	}
 
-	public JobDetail getJob() {
-    	return newJob(HarvesterJob.class).withIdentity(uuid, AbstractHarvester.HARVESTER_GROUP_NAME).usingJobData(HarvesterJob.ID_FIELD, uuid).build();
-    }
-    
-    public Trigger getTrigger() {
-    	return QuartzSchedulerUtils.getTrigger(uuid, AbstractHarvester.HARVESTER_GROUP_NAME, every, MAX_EVERY);
-    }
+	//---------------------------------------------------------------------------
+
+	protected void checkEvery(int every) throws BadParameterEx
+	{
+		if (every <1 || every > MAX_EVERY)
+			throw new BadParameterEx("every", every);
+	}
 
 	//---------------------------------------------------------------------------
 
@@ -292,7 +285,7 @@ public abstract class AbstractParams
 	public String  username;
 	public String  password;
 
-	String  every;
+	public int     every;
 	public boolean oneRunOnly;
 
 	public boolean validate;
@@ -309,7 +302,7 @@ public abstract class AbstractParams
 
 	//---------------------------------------------------------------------------
 
-	private static final long MAX_EVERY = Integer.MAX_VALUE;
+	private static final int MAX_EVERY = 1000000;
 }
 
 //=============================================================================

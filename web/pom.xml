@@ -620,6 +620,12 @@
                 <include>${geonetwork.build.dir}/scripts/editor/simpletooltip.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/metadata-editor.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/metadata-show.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/geocat.edit.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/geocat.edit.Format.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/geocat.edit.Extent.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/geocat.edit.Contact.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/geocat.edit.Keyword.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/metadata-geocat-editor.js</include>
               </includes>
             </aggregation>
             <aggregation>

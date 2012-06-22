@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
@@ -37,11 +36,9 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
-import org.quartz.SchedulerException;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -66,8 +63,7 @@ public class HarvestManager
 		dataMan    = dm;
 
 		AbstractHarvester.staticInit(context);
-		AbstractHarvester.getScheduler().getListenerManager().addJobListener(new HarversterJobListener(this), jobGroupEquals(AbstractHarvester.HARVESTER_GROUP_NAME));
-		
+
 		Element entries = settingMan.get("harvesting", -1).getChild("children");
 
 		if (entries != null)
@@ -106,20 +102,10 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public void shutdown() 
+	protected void finalize()
 	{
-		for (AbstractHarvester ah : hmHarvesters.values()) {
-	        try {
-                ah.shutdown();
-            } catch (SchedulerException e) {
-               Log.error(Geonet.HARVEST_MAN, "Error shutting down"+ah.getID(), e);
-            }
-		}
-        try {
-            AbstractHarvester.shutdownScheduler();
-        } catch (SchedulerException e) {
-           Log.error(Geonet.HARVEST_MAN, "Error shutting down harvester scheduler");
-        }
+		for (AbstractHarvester ah : hmHarvesters.values())
+			ah.shutdown();
 	}
 
 	//---------------------------------------------------------------------------
@@ -232,7 +218,7 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException, SchedulerException
+	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
@@ -277,7 +263,7 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public OperResult start(Dbms dbms, String id) throws SQLException, SchedulerException
+	public OperResult start(Dbms dbms, String id) throws SQLException
 	{
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Starting harvesting with id : "+ id);
@@ -292,7 +278,7 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public OperResult stop(Dbms dbms, String id) throws SQLException, SchedulerException
+	public OperResult stop(Dbms dbms, String id) throws SQLException
 	{
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
@@ -307,7 +293,7 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public OperResult run(Dbms dbms, String id) throws SQLException, SchedulerException {
+	public OperResult run(Dbms dbms, String id) throws SQLException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
 

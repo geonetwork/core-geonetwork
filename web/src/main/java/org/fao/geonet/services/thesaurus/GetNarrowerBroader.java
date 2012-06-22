@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -33,9 +34,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
-import org.fao.geonet.kernel.search.keyword.KeywordRelation;
-import org.fao.geonet.kernel.search.keyword.KeywordSort;
-import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 
 /**
@@ -55,6 +53,7 @@ public class GetNarrowerBroader implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		Element response = new Element(Jeeves.Elem.RESPONSE);
+		UserSession session = context.getUserSession();
 
 		KeywordsSearcher searcher = null;
 		
@@ -72,21 +71,21 @@ public class GetNarrowerBroader implements Service {
 		if (request.equals("broader") 
 				|| request.equals("narrower")
 				|| request.equals("related")) {
-		    KeywordRelation reqType;
+			String reqType;
 			
 			if(request.equals("broader"))		// If looking for broader search concept in a narrower element
-				reqType = KeywordRelation.NARROWER;
+				reqType = "narrower";
 			else if(request.equals("narrower"))
-				reqType = KeywordRelation.BROADER;
+				reqType = "broader";
 			else 
-				reqType = KeywordRelation.RELATED;
+				reqType = "related";
 			
-			searcher.searchForRelated(params, reqType, context.getLanguage());
+			searcher.searchBN(context, params, reqType);
 		
-			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
+			searcher.sortResults("label");
 			
 			// Build response
-			Element keywordType = new Element(reqType.name);
+			Element keywordType = new Element(reqType);
 			keywordType.addContent(searcher.getResults());
 			response.addContent(keywordType);
 		}else  

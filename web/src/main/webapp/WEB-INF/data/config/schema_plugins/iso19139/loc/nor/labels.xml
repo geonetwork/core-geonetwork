@@ -2440,12 +2440,4 @@ NOTE! Det vil være overlapp mellom disse overordnede kategoriene. Et tema kan d
         <label>Source URL</label>
         <description>URL of the document.</description>
     </element>
-		<element name="gmx:Anchor">
-				<label>Anchor</label>
-				<description>Supports hyper-linking capabilities and ensures a web-like implementation of CharacterStrings</description>
-		</element>
-		<element name="xlink:href">
-			<label>Link href</label>
-			<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
-		</element>
 </labels>

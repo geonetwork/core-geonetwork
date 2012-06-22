@@ -18,7 +18,7 @@ INSERT INTO isolanguages (id, code, shortcode) VALUES (501,	'fra',	'fr');
 INSERT INTO isolanguages (id, code, shortcode) VALUES (137,	'fre',	'fr');
 INSERT INTO isolanguages (id, code, shortcode) VALUES (150,	'ger',	'de');
 INSERT INTO isolanguages (id, code, shortcode) VALUES (500,	'deu',	'de');
-INSERT INTO isolanguages (id, code, shortcode) VALUES (358,	'roa',	'rm');
+INSERT INTO isolanguages (id, code, shortcode) VALUES (358,	'roh',	'rm');
 
 --
 -- Data for Name: isolanguagesdes; Type: TABLE DATA; Schema: public; Owner: www-data
@@ -54,12 +54,12 @@ INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (150,   	'eng',	'Germa
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (150,   	'ger',	'Deutsch');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (150,   	'deu',	'Deutsch');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (150,   	'ita',	'Tedesco');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'eng',	'Romanische');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'ita',	'Romanische');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'ger',	'Romanische');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'deu',	'Romanische');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'fra',	'Romanische');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'fre',	'Romanische');
+INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'eng',	'Rumantsch');
+INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'ita',	'Rumantsch');
+INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'ger',	'Rumantsch');
+INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'deu',	'Rumantsch');
+INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'fra',	'Rumantsch');
+INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (358,   	'fre',	'Rumantsch');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (124,   	'fra',	'Italien');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (124,   	'fre',	'Italien');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (124,   	'ita',	'Italiano');

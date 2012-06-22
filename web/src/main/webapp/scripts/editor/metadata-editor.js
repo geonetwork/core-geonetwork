@@ -460,6 +460,8 @@ function doSaveAction(action,validateAction)
 {
 	disableEditForm();
 
+	geocat.edit.resetAll();
+
 	// if we are doing a validation then enable display of errors in editor 
 	// - by default false
 	if (typeof validateAction != 'undefined') {

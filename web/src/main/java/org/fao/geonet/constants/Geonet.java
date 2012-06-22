@@ -55,6 +55,7 @@ public class Geonet {
 		public static final String SEARCH_Z3950_CLIENT = "z3950Client.xsl";
 		public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
 		public static final String UPDATE_FIXED_INFO   = "update-fixed-info.xsl";
+		public static final String UPDATE_TEMPLATE_FIXED_INFO   = "update-template-fixed-info.xsl";
 		public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
 		public static final String EXTRACT_UUID        = "extract-uuid.xsl";
 		public static final String EXTRACT_SKOS_FROM_ISO19135 = "xml_iso19135ToSKOS.xsl";
@@ -73,7 +74,6 @@ public class Geonet {
 		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
 		public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
-		public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
 		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
@@ -483,6 +483,7 @@ public class Geonet {
 		public static final String SUMMARY_CONFIG   = "summaryConfig";
 		public static final String LUCENE_CONFIG    = "luceneConfig";
 		public static final String GUI_CONFIG       = "guiConfig";
+		public static final String JZKITCONFIG      = "jzkitConfig";
 		public static final String PREFERRED_SCHEMA = "preferredSchema";
 		public static final String STAT_LOG_SPATIAL_OBJECTS  = "statLogSpatialObjects";
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";

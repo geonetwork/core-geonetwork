@@ -57,11 +57,14 @@
 				</xsl:choose>
 			</td>
 
-			<!-- Interval -->
-           
-
-			<td class="padded" id="{@id}.node.at"><xsl:value-of select="options/every"/></td>
-			<td class="padded" id="{@id}.node.atInterval"/>
+			<!-- Every - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<xsl:variable name="every" select="options/every"/>
+			<xsl:variable name="mins"  select="$every mod 60"/>
+			<xsl:variable name="hours" select="($every - $mins) div 60 mod 24"/>
+			<xsl:variable name="days"  select="($every - $mins - $hours * 60) div 1440"/>
+			
+			<td class="padded" id="node.every"><xsl:value-of select="concat($days, ':', $hours, ':', $mins)"/></td>
 			
 			<!-- Last run - - - - - - - - - - - - - - - - - - - - - -->
 			

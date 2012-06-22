@@ -40,8 +40,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -74,9 +72,9 @@ class Harvester
 
 	public GeonetResult harvest() throws Exception
 	{
-		XmlRequest req = new XmlRequest(new URL(params.host));
+		XmlRequest req = new XmlRequest(params.host, params.port);
 
-        Lib.net.setupProxy(context, req);
+		Lib.net.setupProxy(context, req);
 
 		//--- login
 
@@ -84,7 +82,7 @@ class Harvester
 		{
 			log.info("Login into : "+ params.name);
 
-			req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
+			req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_LOGIN);
 			req.addParam("username", params.username);
 			req.addParam("password", params.password);
 
@@ -98,7 +96,7 @@ class Harvester
 
 		log.info("Retrieving information from : "+ params.host);
 
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_INFO);
+		req.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "sources");
 		req.addParam("type", "groups");
@@ -164,7 +162,7 @@ class Harvester
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_SEARCH);
+		request.setAddress("/"+ params.servlet +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 		
 		try
 		{
@@ -212,7 +210,7 @@ class Harvester
 	//---------------------------------------------------------------------------
 
 	private void updateSources(Dbms dbms, Set<RecordInfo> records,
-										Map<String, String> remoteSources) throws SQLException, MalformedURLException
+										Map<String, String> remoteSources) throws SQLException
 	{
 		log.info("Aligning source logos from for : "+ params.name);
 
@@ -233,7 +231,7 @@ class Harvester
 				String sourceName = remoteSources.get(sourceUuid);
 
 				if (sourceName != null)
-					Lib.sources.retrieveLogo(context, params.host, sourceUuid);
+					Lib.sources.retrieveLogo(context, params.host, params.port, params.servlet, sourceUuid);
 				else
 				{
 					sourceName = "(unknown)";

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+	<ContactSelectionTitle js="true">Kontaktauswahl</ContactSelectionTitle>
+	<FormatSelectionTitle js="true">Formatauswahl</FormatSelectionTitle>
+	<ExtentSelectionTitle js="true">Ausdehnungsauswahl</ExtentSelectionTitle>
 	<refine.titles js="true">Title</refine.titles>
 	<refine.keyword js="true">Struktur der räumlichen Daten</refine.keyword>
 	<refine.resolution js="true">Räumliche Auflösung</refine.resolution>
@@ -173,21 +176,27 @@ Ihr geocat.ch-Team</msg>
     <contactinstructions>Ergänzende Hinweise</contactinstructions>
     <mostPopular>Meistbesuchte Metadaten</mostPopular>
 
-    <popXlink.about> Suche nach einem existierenden Objekt oder Klick auf "Neu", wenn nichts passendes gefunden wurde.</popXlink.about>
-    <popXlink.contact.search>Suchen nach einem Kontakt in der Liste</popXlink.contact.search>
-    <popXlink.contact.role>Wählen Sie die Rolle des Kontakts</popXlink.contact.role>
-    <popXlink.contact.action>Diesen Eintrag hinzufügen, oder einen neuen Eintrag (unter Moderation) erstellen, wenn Sie das gewünschte Element nicht finden</popXlink.contact.action>
-    <extentBbox>Nur Begrenzungsrechteck</extentBbox>
-    <extentPolygon>Nur Polygon</extentPolygon>
-    <extentBboxAndPolygon>Begrenzungsrechteck und Polygon</extentBboxAndPolygon>
+    <popXlink.about js="true"> Suche nach einem existierenden Objekt oder Klick auf "Neu", wenn nichts passendes gefunden wurde.</popXlink.about>
+    <popXlink.contact.search js="true">Suchen nach einem Kontakt in der Liste</popXlink.contact.search>
+    <popXlink.contact.role js="true">Wählen Sie die Rolle des Kontakts</popXlink.contact.role>
+    <popXlink.add.action.tooltip js="true">Das ausgewählte Element im Metadatendokument zufügen</popXlink.add.action.tooltip>
+    <popXlink.create.action.tooltip js="true">Falls das gesuchte Element nicht gefunden wird, ein neues Element vorschlagen</popXlink.create.action.tooltip>
+    <popXlink.extent.search js="true">Suche nach einer Ausdehnung in der Liste</popXlink.extent.search>
+    <popXlink.format.search js="true">Formatsuche in der Liste</popXlink.format.search>
+    <extentBbox js="true">Nur Begrenzungsrechteck</extentBbox>
+    <extentPolygon js="true">Nur Polygon</extentPolygon>
+    <extentBboxAndPolygon js="true">Begrenzungsrechteck und Polygon</extentBboxAndPolygon>
     <boolean value="1" context="">Ja</boolean>
     <boolean value="0" context="">Nein</boolean>
     <boolean value="1" context="gmd:extentTypeCode">Einschliessend</boolean>
     <boolean value="0" context="gmd:extentTypeCode">Ausschliessend</boolean>
     <boolean value="true" context="gmd:extentTypeCode">Einschliessend</boolean>
     <boolean value="false" context="gmd:extentTypeCode">Ausschliessend</boolean>
+    <extentTypeCode js="true">Zuständige Stelle Code</extentTypeCode>
+    <inclusion js="true">Einschliessend</inclusion>
+    <exclusion js="true">Ausschliessend</exclusion>
     <xlink.new js="true">Neu</xlink.new>
-    <xlink.newGeographic>Neu (nur geografisch)</xlink.newGeographic>
+    <xlink.newGeographic js="true">Neu (nur geografisch)</xlink.newGeographic>
     <noXlink js="true">Das selektierte Element ist ungültig.</noXlink>
 
 	<displayValidationReport>Validierungsbericht</displayValidationReport>
@@ -345,7 +354,7 @@ Ihr geocat.ch-Team</msg>
 	<schemaFileName>Ein Schema als Zip-Archiv</schemaFileName>
 	<schemaUrl>URL zum Schema Zip-Archiv</schemaUrl>
 	<schemaUuid>UUID eines lokalen Metadatensatzes mit GeoNetwork Metadata Schema Archive (URL) als online resource</schemaUuid>
-	<add>Hinzufügen</add>
+	<add js="true">Hinzufügen</add>
 	<schemaOps>Metadaten Schema Operationen</schemaOps>
 	<enterSchema>Namen des hinzuzufügenden Schemas angeben</enterSchema>
 	<selectSchemaOperations>Quelle des Schema Zip-Archivs:</selectSchemaOperations>
@@ -834,7 +843,7 @@ Ihr geocat.ch-Team</msg>
 	<legend>Legende</legend>
 	<link>Link</link>
 	<links>Links</links>
-	<loading>Laden ...</loading>
+	<loading js="true">Laden ...</loading>
 	<local>Lokale Suche</local>
 	<localiz>Sprachdefinitionen</localiz>
 	<localizationHelp>Wichtig! Dieses Forumlar erlaubt das hinzufügen von Schlüsselwerten in die Datenbank. Der Schlüsselwert darf keine Leerzeichen enthalten.<br/> Nach dem hinzufügen von Schlüsselwerten, wählen Sie im Menu-Punkt "Sprachdefinitionen, um die Werte einzugeben, die auf der Webseite in den verschiedenen Sprachen erscheinen sollen.</localizationHelp>

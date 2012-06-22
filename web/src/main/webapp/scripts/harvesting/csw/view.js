@@ -50,7 +50,10 @@ function init()
 		{ id:'csw.capabUrl',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.capabUrl',    type:'url' },
 		{ id:'csw.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'csw.every.days',  type:'integer',  minValue:0, maxValue:99 },
+		{ id:'csw.every.hours', type:'integer',  minValue:0, maxValue:23 },
+		{ id:'csw.every.mins',  type:'integer',  minValue:0, maxValue:59 }
 	]);
 
 	shower = new Shower('csw.useAccount', 'csw.account');

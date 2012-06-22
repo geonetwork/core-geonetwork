@@ -144,33 +144,6 @@
 	<content>Geharvesteter Inhalt</content>
 	<importxslt>Dieses XSLT auf geharvestete Metadaten anwenden</importxslt>
 
-	<at>Ausf�hren um</at>
-    <atSpec>( Stunde : Minute z.B. 23:15 )</atSpec>
-    <interval>Wird ausgef�hrt</interval>
-    <hourintervals>
-        <hour label="st�ndlich">1</hour>
-        <hour label="alle 3 Stunden">3</hour>
-        <hour label="alle 6 Stunden">6</hour>
-        <hour label="alle 12 Stunden">12</hour>
-        <hour label="N/A">undefined</hour>
-    </hourintervals>
-    <hourintervals>
-        <hour label="st�ndlich">1</hour>
-        <hour label="alle 3 Stunden">3</hour>
-        <hour label="alle 6 Stunden">6</hour>
-        <hour label="alle 12 Stunden">12</hour>
-        <hour label="t�glich">24</hour>
-    </hourintervals>
-    <dayofweek>
-        <day label="Montag">MON</day>
-        <day label="Dienstag">TUE</day>
-        <day label="Mittwoch">WED</day>
-        <day label="Donnerstag">THU</day>
-        <day label="Freitag">FRI</day>
-        <day label="Samstag">SAT</day>
-        <day label="Sonntag">SUN</day>
-    </dayofweek>
-    
 	<options>Optionen</options>
 	<everySpec>(Tage : Stunden : Minuten)</everySpec>
 	<oneRun>Nur einmalig</oneRun>
@@ -388,9 +361,7 @@
 		</tip>
 		
 		<tip id="gn.host">
-            The given URL must point to a geonetwork server. The format of a
-            URL is like this:<br/>
-            http[s]://HOST[:port]/geonetwork
+			Der entfernte Knoten, mit dem Sie verbinden wollen
 		</tip>
 		
 		<tip id="gn.xslfilter">

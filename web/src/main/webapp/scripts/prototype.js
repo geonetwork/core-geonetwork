@@ -6,10 +6,6 @@
  *
  *--------------------------------------------------------------------------*/
 
-/* NOTE: This file has been changed to remove a clash with extjs
- * Search for GEONETWORK to find the change below
- */
-
 var Prototype = {
 
   Version: '1.7',
@@ -3851,7 +3847,7 @@ Element.addMethods({
       var position = element.getStyle('position');
       if (position !== 'static') return proceed(element);
 
-      var offsetParent = element.getOffsetParent();
+      var offsetParent = (element.parent) ? element.getOffsetParent() : 0;
       if (offsetParent && offsetParent.getStyle('position') === 'fixed')
         hasLayout(offsetParent);
 
@@ -5834,13 +5830,7 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   function pollDoScroll() {
     try { document.documentElement.doScroll('left'); }
     catch(e) {
-			//**********************************************************
-			// GEONETWORK - remove clash with extjs - use delay instead
-			// of defer - see:
-			// https://prototype.lighthouseapp.com/projects/8886/tickets/1018-prototype-161-conflict-with-ext-js-causing-stack-overflow-error
-			//**********************************************************
-			//timer = pollDoScroll.defer();
-      timer = pollDoScroll.delay(0.01);
+      timer = pollDoScroll.defer();
       return;
     }
     fireContentLoadedEvent();
@@ -5851,13 +5841,7 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   } else {
     document.observe('readystatechange', checkReadyState);
     if (window == top)
-			//**********************************************************
-			// GEONETWORK - remove clash with extjs - use delay instead
-			// of defer - see:
-			// https://prototype.lighthouseapp.com/projects/8886/tickets/1018-prototype-161-conflict-with-ext-js-causing-stack-overflow-error
-			//**********************************************************
-			//timer = pollDoScroll.defer();
-      timer = pollDoScroll.delay(0.01);
+      timer = pollDoScroll.defer();
   }
 
   Event.observe(window, 'load', fireContentLoadedEvent);

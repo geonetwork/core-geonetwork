@@ -81,7 +81,6 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
@@ -115,7 +114,6 @@ public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
 	private String 				path;				
 	private SearchManager 		searchMan;
-	private HarvestManager 		harvestMan;
 	private ThesaurusManager 	thesaurusMan;
 	private MetadataNotifierControl metadataNotifierControl;
 	private ThreadPool        threadPool;
@@ -247,7 +245,7 @@ public class Geonetwork implements ApplicationHandler {
 			logger.info("     Repositories file built from template.");
 
 			try {
-				app_context = new  ClassPathXmlApplicationContext( Geonet.File.JZKITAPPLICATIONCONTEXT );
+				app_context = new  ClassPathXmlApplicationContext( handlerConfig.getMandatoryValue( Geonet.Config.JZKITCONFIG )   );
 
 				// to have access to the GN context in spring-managed objects
 				ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
@@ -374,7 +372,7 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize iso languages mapper
          */
-        IsoLanguagesMapper.getInstance().init(dbms);
+        IsoLanguagesMapper.init(dbms);
         
         /**
          * Initialize language detector
@@ -393,7 +391,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Harvest manager...");
 
-		harvestMan = new HarvestManager(context, settingMan, dataMan);
+		HarvestManager harvestMan = new HarvestManager(context, settingMan, dataMan);
 		dataMan.setHarvestManager(harvestMan);
 
 		//------------------------------------------------------------------------
@@ -555,20 +553,12 @@ public class Geonetwork implements ApplicationHandler {
 		) {
 			logger.info("      Webapp version = Database version, no migration task to apply.");
 		} else {
+			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+			String dbType = Lib.db.getDBType(dbms);
+			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
+			
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
-			
-            try {
-            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
-            } catch (Exception e) {
-                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                e.printStackTrace();
-                anyMigrationError = true;
-            }
-
-			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-			String dbType = DatabaseType.lookup(dbms).toString();
-			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
             @SuppressWarnings(value = "unchecked")
@@ -580,29 +570,17 @@ public class Geonetwork implements ApplicationHandler {
                     @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
-                    	if(file.getName().equals("java")) {
-	                        try {
-	                        	settingMan.refresh(dbms);
-	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
-	                            task.update(settingMan, dbms);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	} else {
-	                        String filePath = path + file.getAttributeValue("path");
-	                        String filePrefix = file.getAttributeValue("filePrefix");
-	                        anyMigrationAction = true;
-	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-	                        try {
-	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	}
+                        String filePath = path + file.getAttributeValue("path");
+                        String filePrefix = file.getAttributeValue("filePrefix");
+                        anyMigrationAction = true;
+                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+                        try {
+                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+                        } catch (Exception e) {
+                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                            e.printStackTrace();
+                            anyMigrationError = true;
+                        }
                     }
                 }
             }
@@ -832,10 +810,6 @@ public class Geonetwork implements ApplicationHandler {
 			logger.error("  Message   : " +e.getMessage());
 			logger.error("  Stack     : " +Util.getStackTrace(e));
 		}
-
-			
-		logger.info("  - Harvest Manager...");
-		harvestMan.shutdown();
 
 		logger.info("  - Z39.50...");
 		Server.end();

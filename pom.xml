@@ -63,15 +63,15 @@
   <!-- TODO developer part-->
   <developers>
     <developer>
-      <name/>
-      <id/>
-      <organization/>
-      <organizationUrl/>
-      <email/>
+      <name></name>
+      <id></id>
+      <organization></organization>
+      <organizationUrl></organizationUrl>
+      <email></email>
       <roles>
-        <role/>
+        <role></role>
       </roles>
-      <timezone/>
+      <timezone></timezone>
     </developer>
   </developers>
   
@@ -851,17 +851,6 @@
       <id>itests</id>
       <modules>
         <module>web-itest</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>gast</id>
-      <activation>
-        <file>
-          <exists>gast/pom.xml</exists>
-        </file>
-      </activation>
-      <modules>
-        <module>gast</module>
       </modules>
     </profile>
   </profiles>

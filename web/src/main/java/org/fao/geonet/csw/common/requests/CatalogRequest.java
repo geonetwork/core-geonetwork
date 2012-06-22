@@ -79,20 +79,12 @@ public abstract class CatalogRequest
 
 	public CatalogRequest(ServiceContext context, String host) { this(context, host, 80); }
 
-    //---------------------------------------------------------------------------
-
-    public CatalogRequest(ServiceContext context, String host, int port)
-    {
-        this(context, host, port, "http");
-    }
-
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest(ServiceContext context, String host, int port, String protocol)
+	public CatalogRequest(ServiceContext context, String host, int port)
 	{
 		this.host    = host;
 		this.port    = port;
-        this.protocol= protocol;
 
 		setMethod(Method.POST);
         Cookie cookie = new Cookie();
@@ -112,7 +104,6 @@ public abstract class CatalogRequest
 
 	public String getHost()         { return host;         }
 	public int    getPort()         { return port;         }
-    public String getProtocol()     { return protocol;     }
 	public String getAddress()      { return address;      }
 	public Method getMethod()       { return method;       }
 	public String getSentData()     { return sentData;     }
@@ -148,13 +139,6 @@ public abstract class CatalogRequest
 		this.port = port;
 	}
 
-    //---------------------------------------------------------------------------
-
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
-
 	//---------------------------------------------------------------------------
 
 	public void setAddress(String address)
@@ -173,7 +157,6 @@ public abstract class CatalogRequest
 	{
 		this.host    = url.getHost();
 		this.port    = url.getPort();
-        this.protocol= url.getProtocol();
 		this.address = url.toString();
 		this.path = url.getPath();
 		
@@ -191,7 +174,7 @@ public abstract class CatalogRequest
 		}
 
 		if (this.port == -1) {
-			this.port = url.getDefaultPort();
+			this.port = 80;
 		}
 	}
 
@@ -457,7 +440,7 @@ public abstract class CatalogRequest
 
 	private Element doExecute(HttpMethodBase httpMethod) throws IOException, JDOMException
 	{
-		client.getHostConfiguration().setHost(host, port, protocol);
+		client.getHostConfiguration().setHost(host, port, "http");
 
 		byte[] data = null;
 
@@ -630,7 +613,6 @@ public abstract class CatalogRequest
 
 	private String  host;
 	private int     port;
-    private String  protocol;
 	private String  address;
 	private String  path;
 	private String  loginAddr;

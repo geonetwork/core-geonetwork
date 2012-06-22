@@ -4,8 +4,7 @@
 	>
     <xsl:import  href="../translate-widget.xsl"/>
     <xsl:import  href="../utils.xsl"/>
-	<xsl:output method="html"/>
-    
+	<xsl:output method="xml"/>
 
     <xsl:variable name="langCode">
     	<xsl:choose>
@@ -21,6 +20,7 @@
 	-->
 	<xsl:template match="/">
 		<ul>
+			<results><xsl:value-of select="count(/root/response/record)"/></results>
 			<xsl:for-each select="/root/response/record">
                 
                 <xsl:variable name="org">
@@ -55,17 +55,15 @@
                     </xsl:choose>
                 </xsl:variable>
 
-                <xsl:variable name="valid">
-                    <xsl:call-template name="validIndicator">
-                        <xsl:with-param name="indicator" select="normalize-space(translate(validated,$LOWER,$UPPER)) = 'N'" />
-                    </xsl:call-template>
-                </xsl:variable>
-
-				<li xlink:href="local://xml.user.get?id={id}">
-                    <xsl:copy-of select="$valid"/><xsl:text> </xsl:text>
+				<xsl:variable name="displayText">
 					<xsl:value-of select="name"/><xsl:text> </xsl:text><xsl:value-of select="surname"/> 
 					<xsl:text> </xsl:text>
-                    <xsl:value-of select="$organization"/>
+          <xsl:value-of select="$organization"/>
+				</xsl:variable>
+				<li>
+					<displayText><xsl:value-of select="normalize-space($displayText)"/></displayText>
+					<valid><xsl:value-of select="normalize-space(translate(validated,$LOWER,$UPPER)) != 'N'"/></valid>
+					<href>local://xml.user.get?id=<xsl:value-of select="id"/></href>
 				</li>
 			</xsl:for-each>
 		</ul>

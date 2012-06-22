@@ -1215,11 +1215,7 @@
     <xsl:param name="id" select="generate-id(.)"/>
     <xsl:param name="visible" select="true()"/>
 
-    <!-- When element is a child of an element having an XLink, the 
-          element is in readonly mode except for gmx:Anchor.
-    -->
-    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0
-                    and (name(.) != 'gmx:Anchor' and name(..) != 'gmx:Anchor')"/>
+    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
     <xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
 
     <tr id="{$id}">
@@ -1741,8 +1737,7 @@
     <xsl:variable name="edit" select="xs:boolean($edit)"/>
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
-    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0
-                                            and $name != 'gmx:Anchor'"/>
+    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
     <xsl:choose>
       <!-- list of values -->
       <xsl:when test="geonet:element/geonet:text">

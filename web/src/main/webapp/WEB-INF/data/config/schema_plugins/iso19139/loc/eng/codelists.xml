@@ -244,7 +244,6 @@
 			<label>Author</label>
 			<description>Party who authored the resource</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY 
 		<entry>
 			<code>editor</code>
 			<label>Editor</label>
@@ -254,7 +253,7 @@
 			<code>partner</code>
 			<label>Partner</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
@@ -1050,13 +1049,11 @@
 			<label>Unknown</label>
 			<description>Frequency of maintenance for the data is not known</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>userDefined</code>
 			<label>User defined</label>
 			<description></description>
 		</entry>
-		-->
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_MediumFormatCode">
@@ -1206,8 +1203,6 @@
 			<label>Hardcopy</label>
 			<description>Pamphlet or leaflet giving descriptive information</description>
 		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- ISO PROFIL CHE ONLY 
 		<entry>
 			<code>zip100</code>
 			<label>Zip100</label>
@@ -1233,7 +1228,7 @@
 			<code>other</code>
 			<label>Other</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_ObligationCode">
@@ -1495,7 +1490,6 @@
 			<description>Information applies to a tile, a spatial subset of geographic
 			data</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>project</code>
 			<label>Project</label>
@@ -1510,7 +1504,7 @@
 			<code>publication</code>
 			<label>Publication</label>
 			<description>Publication</description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
@@ -1550,12 +1544,11 @@
 			<label>Video</label>
 			<description>Scene from a video recording</description>
 		</entry>
-		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>paperMap</code>
 			<label>Paper map</label>
 			<description></description>
-		</entry>-->
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">

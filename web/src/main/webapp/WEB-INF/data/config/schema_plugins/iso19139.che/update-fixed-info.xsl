@@ -3,10 +3,11 @@
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 						xmlns:gml="http://www.opengis.net/gml"
 						xmlns:srv="http://www.isotc211.org/2005/srv"
+						xmlns:java="java:org.fao.geonet.util.XslUtil"
 						xmlns:gco="http://www.isotc211.org/2005/gco"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd"
 						xmlns:che="http://www.geocat.ch/2008/che"
-						>
+						exclude-result-prefixes="java">
 
 	<!-- ================================================================= -->
 	
@@ -69,10 +70,7 @@
 	<!-- Set local identifier to the first 2 letters of iso code. Locale ids
 	are used for multilingual charcterString -->
 	<xsl:template match="gmd:PT_Locale">
-		<xsl:variable name="id" select="translate(
-			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2), 
-			'abcdefghijklmnopqrstuvwxyz',
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+		<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 
 		<xsl:choose>
 			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">
@@ -86,7 +84,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
 	
 	<!-- ================================================================= -->
 	<!-- Do not allow to expand operatesOn sub-elements 

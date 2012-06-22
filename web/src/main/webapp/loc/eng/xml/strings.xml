@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<!-- GEOCAT Strings -->
+	<ContactSelectionTitle js="true">Contact Selection</ContactSelectionTitle>
+	<FormatSelectionTitle js="true">Format Selection</FormatSelectionTitle>
+	<ExtentSelectionTitle js="true">Extent Selection</ExtentSelectionTitle>
 	<refine.titles js="true">Title</refine.titles>
 	<refine.keyword js="true">Keyword(s)</refine.keyword>
 	<refine.resolution js="true">Spatial Resolution</refine.resolution>
@@ -8,7 +12,6 @@
 	<refine.organisationName js="true">Organisation</refine.organisationName>
 	<refine.serviceType js="true">Service Type</refine.serviceType>
 	<refine.type js="true">Type</refine.type>
-	<!-- GEOCAT Strings -->
 	<skipPrivilegesImport>Skip Privileges Import</skipPrivilegesImport>
 	<unpublishReport>Unpublish CSV Report</unpublishReport>
 	<unpublishReportDes>Download the CSV Report of the metadata publish/unpublishing for the last weeks</unpublishReportDes>
@@ -180,21 +183,27 @@
     <contactinstructions>Contact instructions</contactinstructions>
     <mostPopular>Most popular</mostPopular>    
 
-    <popXlink.about>Search for an existing object or press 'New' if unable to locate a match.</popXlink.about>
-    <popXlink.contact.search>Search for a contact in the list</popXlink.contact.search>
-    <popXlink.contact.role>Fill the role of this contact</popXlink.contact.role>
-    <popXlink.contact.action>Add this item to the form of metadata, or suggest a new entry (subject to moderation) if you do not find the needed item</popXlink.contact.action>
-    <extentBbox>Bounding box only</extentBbox>
-    <extentPolygon>Polygon only</extentPolygon>
-    <extentBboxAndPolygon>Bounding box and bounding polygon</extentBboxAndPolygon>
+    <popXlink.about js="true">Search for an existing object or press 'New' if unable to locate a match.</popXlink.about>
+    <popXlink.contact.search js="true">Search for a contact in the list</popXlink.contact.search>
+    <popXlink.contact.role js="true">Fill the role of this contact</popXlink.contact.role>
+    <popXlink.add.action.tooltip js="true">Add the selected item to the metadata document</popXlink.add.action.tooltip>
+    <popXlink.create.action.tooltip js="true">Suggest a new entry (subject to moderation) if you cannot find the needed item</popXlink.create.action.tooltip>
+    <popXlink.extent.search js="true">Search for an extent in the list</popXlink.extent.search>
+    <popXlink.format.search js="true">Search for a Format in the list</popXlink.format.search>
+    <extentBbox js="true">Bounding box only</extentBbox>
+    <extentPolygon js="true">Polygon only</extentPolygon>
+    <extentBboxAndPolygon js="true">Bounding box and bounding polygon</extentBboxAndPolygon>
     <boolean value="1" context="">True</boolean>
     <boolean value="0" context="">False</boolean>
     <boolean value="1" context="gmd:extentTypeCode">Include</boolean>
     <boolean value="0" context="gmd:extentTypeCode">Exclude</boolean>
     <boolean value="true" context="gmd:extentTypeCode">Include</boolean>
     <boolean value="false" context="gmd:extentTypeCode">Exclude</boolean>
+    <extentTypeCode js="true">Extent Type Code</extentTypeCode>
+    <inclusion js="true">Include</inclusion>
+    <exclusion js="true">Exclude</exclusion>
     <xlink.new js="true">New</xlink.new>
-    <xlink.newGeographic>New (Geographic only)</xlink.newGeographic>
+    <xlink.newGeographic js="true">New (Geographic only)</xlink.newGeographic>
     <noXlink js="true">Invalid selected element.</noXlink>
 
 	<displayValidationReport>Validation report</displayValidationReport>
@@ -363,7 +372,7 @@
 	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
 	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
 	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
-	<add>Add</add>
+	<add js="true">Add</add>
 	<schemaOps>Metadata Schema Operations</schemaOps>
 	<enterSchema>Enter a name for the schema to be added</enterSchema>
 	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
@@ -862,7 +871,7 @@
 	<legend>Legend</legend>
 	<link>Link</link>
 	<links>Links</links>
-	<loading>Loading ...</loading>
+	<loading js="true">Loading ...</loading>
 	<local>Local search</local>
 	<localiz>Localization</localiz>
 	<localizationHelp>Important! This form allows you to add a Key value to the database. The key can not have spaces.<br/> After adding your key values, use the "Localization" form in the Administration panel to provide the actual name you want to be displayed on the website for the different languages.</localizationHelp>
