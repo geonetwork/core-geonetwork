@@ -30,6 +30,7 @@ rm -f $COOKIE_FILE
 
 RESPONSE="Health checks pass"
 EXIT=$STATE_OK
+STATUS="OK"
 if [ "x$CODE" != "x200" ]; then
     # Add line to file so that last line is processed by while loop
     echo "" >> $OUT
@@ -43,9 +44,16 @@ if [ "x$CODE" != "x200" ]; then
         fi
     done < $OUT
     
+    ISWARNING=`grep -q "/warninghealthcheck" <<< $CHECK`
+    if [ "x$ISWARNING" != "x" ]; then
+        STATUS="WARNING"
+        EXIT=$STATE_WARNING
+    else
+        STATUS="CRITICAL"
+        EXIT=$STATE_CRITICAL
+    fi
     RESPONSE=$FAILURE
-    EXIT=$STATE_CRITICAL
 fi
 
-echo $RESPONSE
+echo "$STATUS: $RESPONSE"
 exit $EXIT
