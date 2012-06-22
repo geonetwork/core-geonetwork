@@ -27,10 +27,9 @@ curl -s -c $COOKIE_FILE "$HOST/geonetwork/srv/eng/user.login?username=$USERNAME&
 CODE=`curl -sL --cookie $COOKIE_FILE -w "%{http_code}\\n" "$HOST/$CHECK" -o $OUT`
 rm -f $COOKIE_FILE
 
-if [ "x$CODE" = "x200" ]; then 
-    exit $STATE_OK
-else
-    
+EXIT=$STATE_OK
+RESPONSE="Health checks pass"
+if [ "x$CODE" != "x200" ]; then
     # Add line to file so that last line is processed by while loop
     echo "" >> $OUT
 
@@ -43,6 +42,9 @@ else
         fi
     done < $OUT
     
-    echo $FAILURE
-    exit $STATE_CRITICAL
+    EXIT=$STATE_CRITICAL
+    RESPONSE=$FAILURE
 fi
+
+echo $EXIT
+exit $RESPONSE
