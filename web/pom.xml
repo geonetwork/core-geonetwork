@@ -506,6 +506,7 @@
               <!-- files to include, path relative to output's directory or absolute path-->
               <includes>
                 <include>${geonetwork.build.dir}/scripts/sarissa.js</include>
+                <include>${geonetwork.build.dir}/scripts/prototype.js</include>
               </includes>
             </aggregation>
 			 <aggregation>

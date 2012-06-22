@@ -22,14 +22,14 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"></script>
             </xsl:when>
             <xsl:otherwise>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
+                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>    
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="geoCssHeader">ß
+    <xsl:template name="geoCssHeader">
         <link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css" />
         <link rel="stylesheet" type="text/css" href="../../scripts/openlayers/theme/geonetwork/style.css"/>
