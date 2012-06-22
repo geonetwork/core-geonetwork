@@ -421,3 +421,16 @@ dl.xml {
 dl.xml * dd {
   padding-left : 2px;
 }
+div.facets h1 {
+    margin: 0px;
+    padding: 0px;
+    border-top: 1px solid #555;
+    font-size: 85%;
+}
+div.facets h2 {
+    margin-left: 15px;
+    font-size: 70%;
+}
+div.breadcrumb h1 {
+    
+}

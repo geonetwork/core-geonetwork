@@ -122,6 +122,7 @@
             "GeoNetwork/widgets/SearchFormPanel.js",
             "GeoNetwork/widgets/MetadataResultsView.js",
             "GeoNetwork/widgets/MetadataResultsToolbar.js",
+            "GeoNetwork/widgets/FacetsPanel.js",
             "GeoNetwork/widgets/TagCloudView.js",
             "GeoNetwork/widgets/admin/AdminTools.js",
             "GeoNetwork/widgets/admin/MetadataInsertPanel.js",
