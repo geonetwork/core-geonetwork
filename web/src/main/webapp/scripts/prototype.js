@@ -446,6 +446,7 @@ Object.extend(Function.prototype, (function() {
     curry:               curry,
     delay:               delay,
     defer:               defer,
+    ptdefer:             defer,
     wrap:                wrap,
     methodize:           methodize
   }
@@ -1521,7 +1522,7 @@ Ajax.Request = Class.create(Ajax.Base, {
       this.transport.open(this.method.toUpperCase(), this.url,
         this.options.asynchronous);
 
-      if (this.options.asynchronous) this.respondToReadyState.bind(this).defer(1);
+      if (this.options.asynchronous) this.respondToReadyState.bind(this).ptdefer(1);
 
       this.transport.onreadystatechange = this.onStateChange.bind(this);
       this.setRequestHeaders();
@@ -2048,7 +2049,7 @@ Element.Methods = {
         element.innerHTML = content.stripScripts();
       }
 
-      content.evalScripts.bind(content).defer();
+      content.evalScripts.bind(content).ptdefer();
       return element;
     }
 
@@ -2062,7 +2063,7 @@ Element.Methods = {
       content = Object.toHTML(content);
       var range = element.ownerDocument.createRange();
       range.selectNode(element);
-      content.evalScripts.bind(content).defer();
+      content.evalScripts.bind(content).ptdefer();
       content = range.createContextualFragment(content.stripScripts());
     }
     element.parentNode.replaceChild(content, element);
@@ -2099,7 +2100,7 @@ Element.Methods = {
       if (position == 'top' || position == 'after') childNodes.reverse();
       childNodes.each(insert.curry(element));
 
-      content.evalScripts.bind(content).defer();
+      content.evalScripts.bind(content).ptdefer();
     }
 
     return element;
@@ -2790,7 +2791,7 @@ if ('outerHTML' in document.documentElement) {
     }
     else element.outerHTML = content.stripScripts();
 
-    content.evalScripts.bind(content).defer();
+    content.evalScripts.bind(content).ptdefer();
     return element;
   };
 }
@@ -5830,7 +5831,7 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   function pollDoScroll() {
     try { document.documentElement.doScroll('left'); }
     catch(e) {
-      timer = pollDoScroll.defer();
+      timer = pollDoScroll.ptdefer();
       return;
     }
     fireContentLoadedEvent();
@@ -5841,7 +5842,7 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   } else {
     document.observe('readystatechange', checkReadyState);
     if (window == top)
-      timer = pollDoScroll.defer();
+      timer = pollDoScroll.ptdefer();
   }
 
   Event.observe(window, 'load', fireContentLoadedEvent);
