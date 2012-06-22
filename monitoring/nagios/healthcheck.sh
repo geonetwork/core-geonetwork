@@ -14,18 +14,19 @@ USERNAME=$3
 PASSWORD=$4
 
 OUT=/tmp/$(echo $CHECK|sed 's|/|_|g')
+COOKIE_FILE=/tmp/curl_cookies
 
-
-if [ "$HOST" == "" ] || [ "$CHECK" == "" ] || [ "$USERNAME" == "" ] || [ "$PASSWORD" == "" ] ; then
+if [ "x$HOST" = "x" ] || [ "x$CHECK" = "x" ] || [ "x$USERNAME" = "x" ] || [ "x$PASSWORD" = "x" ] ; then
     echo "Usage:   healthcheck.sh <protocol://host:port> <urlpath> <username> <password>"
     echo "Example: healthcheck.sh http://localhost:8080 geonetwork/criticalhealthcheck monitor monitor"
     exit 1
 fi
 
-curl -s -c /tmp/cookie "$HOST/geonetwork/srv/eng/user.login?username=$USERNAME&password=$PASSWORD" -o /dev/null
+curl -s -c $COOKIE_FILE "$HOST/geonetwork/srv/eng/user.login?username=$USERNAME&password=$PASSWORD" -o /dev/null
 
-CODE=`curl -sL --cookie /tmp/cookie -w "%{http_code}\\n" "$HOST/$CHECK" -o $OUT`
-if [ "$CODE" == "200" ]; then 
+CODE=`curl -sL --cookie $COOKIE_FILE -w "%{http_code}\\n" "$HOST/$CHECK" -o $OUT`
+if [ "x$CODE" = "x200" ]; then 
+    rm -f $COOKIE_FILE
     exit $STATE_OK
 else
     
@@ -40,5 +41,6 @@ else
     done < $OUT
     
     echo $FAILURE
+    rm -f $COOKIE_FILE
     exit $STATE_CRITICAL
 fi
