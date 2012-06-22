@@ -76,7 +76,7 @@ public class PrepareBatchUpdatePrivileges implements Service
 		Element elOper = Lib.local.retrieve(dbms, "Operations").setName(Geonet.Elem.OPERATIONS);
 
 		//--- retrieve groups operations
-		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 
