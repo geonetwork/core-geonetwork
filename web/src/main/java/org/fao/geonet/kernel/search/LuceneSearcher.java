@@ -1208,13 +1208,7 @@ public class LuceneSearcher extends MetaSearcher {
 		for (String key : summaryConfigValues.keySet()) {
 			Map<String,Object> config = summaryConfigValues.get(key);
 			
-			int max = MAX_SUMMARY_KEY_DEFAULT_NUMBER;
-			try {
-				max = Integer.parseInt((String) config.get("max"));
-			} catch (Exception e) {
-				Log.warning(Geonet.SEARCH_ENGINE, "Facet configuration contains wrong integer max value for facet " + key + "." +
-						"Check summary configuration. Error is " + e.getMessage());
-			}
+			int max = (Integer) config.get("max");
 			
 			CountFacetRequest facetRequest = new CountFacetRequest(
 					new CategoryPath(key), max);

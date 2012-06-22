@@ -87,7 +87,7 @@ public class LuceneIndexWriterFactory {
             }
         }
     }
-    
+
     public synchronized void addDocument(String locale, Document doc, List<CategoryPath> categories) throws Exception {
         // Add taxonomy first
         try {
@@ -209,7 +209,7 @@ public class LuceneIndexWriterFactory {
             //writer = new IndexWriter(FSDirectory.open(indexDir), SearchManager.getAnalyzer(locale, false), IndexWriter.MaxFieldLength.UNLIMITED);
             // TODO : Check deprecated
             writer.setRAMBufferSizeMB(_luceneConfig.getRAMBufferSize());
-            writer.setMergeFactor(_luceneConfig.getMergeFactor());
+            //writer.setMergeFactor(_luceneConfig.getMergeFactor());
             _writers.put(locale, writer);
         }
         

@@ -55,7 +55,6 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.lf5.viewer.categoryexplorer.CategoryPath;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
@@ -65,8 +64,14 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.document.NumericField;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
+import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyReader;
+import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyWriter;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Filter;
@@ -1404,12 +1409,12 @@ public class SearchManager {
 		boolean hasLocaleField = false;
         for (Object o : xml.getChildren()) {
             Element field = (Element) o;
-            String name = field.getAttributeValue(LuceneFieldAttribute.NAME.name());
-            String string = field.getAttributeValue(LuceneFieldAttribute.STRING.name()); // Lower case field is handled by Lucene Analyzer.
+            String name = field.getAttributeValue(LuceneFieldAttribute.NAME.toString());
+            String string = field.getAttributeValue(LuceneFieldAttribute.STRING.toString()); // Lower case field is handled by Lucene Analyzer.
             if(name.equals(Geonet.LUCENE_LOCALE_KEY)) hasLocaleField = true;
             if (string.trim().length() > 0) {
-            	String sStore = field.getAttributeValue(LuceneFieldAttribute.STORE.name());
-                String sIndex = field.getAttributeValue(LuceneFieldAttribute.INDEX.name());
+            	String sStore = field.getAttributeValue(LuceneFieldAttribute.STORE.toString());
+                String sIndex = field.getAttributeValue(LuceneFieldAttribute.INDEX.toString());
 
                 boolean bStore = sStore != null && sStore.equals("true");
                 boolean bIndex = sIndex != null && sIndex.equals("true");
