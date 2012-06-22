@@ -33,6 +33,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import java.util.ArrayList;
@@ -131,17 +132,19 @@ public class LDAPUtil
 				if (values == null)
 				{
 					values = new ArrayList<Object>();
+					Log.debug(Geonet.LDAP, "  info :"+ id + "->" + values);
 					info.put(id, values);
 				}
 
 				//--- loop on all attribute's values
 
 				NamingEnumeration valueEnum = attr.getAll();
-
+				Log.debug(Geonet.LDAP, "  info :"+ id + "->" + valueEnum.toString());
 				while (valueEnum.hasMore())
 					values.add(valueEnum.next());
 			}
 
+			
 			return info;
 		}
 		catch(NamingException e)

@@ -15,7 +15,7 @@
     <spa>Español</spa> <!-- Do not translate! -->
 
     <anyLanguage>Any language</anyLanguage>
-
+	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>

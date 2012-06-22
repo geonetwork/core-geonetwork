@@ -95,7 +95,7 @@ public class GetAdminOper implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve groups operations
 
-		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 

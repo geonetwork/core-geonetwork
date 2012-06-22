@@ -66,34 +66,14 @@
 						alert("<xsl:value-of select="/root/gui/strings/emailMandatory"/>");
 						return;
 				}
-
-				// check at least one group selected
-				if ($F('groups') == '')
-					if ($F('user.profile') != 'Administrator')
-					{
-						alert("<xsl:value-of select="/root/gui/strings/userAtLeastOneGroup"/>");
-						return;
-					}
+				
 				
 				// all ok, proceed
 				document.userupdateform.submit();
 			}//update
-
-			function profileChanged()
-			{
-				var profile = $F('user.profile');
-
-				if (profile == 'Administrator')
-					Element.hide('group.list');
-				else
-					Element.show('group.list');
-			}
-			
-			function init()
-			{
-				profileChanged();
-			}
 </script>
+		
+		<xsl:call-template name="user-admin-js"/>
 	</xsl:template>
 	
 	<!--
