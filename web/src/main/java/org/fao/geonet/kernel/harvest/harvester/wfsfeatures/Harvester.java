@@ -239,7 +239,8 @@ class Harvester
 	    if (!params.stylesheet.trim().equals("")) {
 	    	xml = Xml.transform(xml, stylesheetDirectory + "/" + params.stylesheet);
 	    }
-	    
+	   
+		 	log.info("Applying "+stylesheetDirectory + "/" + params.stylesheet);
 	    harvest(xml, fragmentHarvester);
     }
 
