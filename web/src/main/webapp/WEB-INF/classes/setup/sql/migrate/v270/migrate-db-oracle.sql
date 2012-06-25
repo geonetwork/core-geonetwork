@@ -9,9 +9,7 @@ CREATE TABLE HarvestHistory
     deleted        char(1) default 'n' not null,
     info           varchar(2000),
     params         clob,
-
     primary key(id)
-
   );
 
 CREATE INDEX HarvestHistoryNDX1 ON HarvestHistory(harvestDate);
