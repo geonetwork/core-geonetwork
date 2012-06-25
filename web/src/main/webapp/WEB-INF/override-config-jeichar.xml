@@ -24,7 +24,6 @@
         </replaceXML>
     </file>
     <textFile name=".*/WEB-INF/classes/setup/sql/.+/data-db-default.sql">
-        <update linePattern="(INSERT INTO Users VALUES .*)d033e22ae348aeb566fc214aec3585c4da997(.*)">$1fe35f7a6044ba4492be92237a585c9683e50d49d$2</update>
         <!-- enable xLinks -->
         <update linePattern="(INSERT INTO Settings VALUES \(231,230,'enable',')false(.*)">$1true$2</update>
         <!-- enable german -->

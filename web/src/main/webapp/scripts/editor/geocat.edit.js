@@ -192,7 +192,7 @@ geocat.edit.doXLinkNewElementAjax = function(index, metadataId, thisElement) {
             $('editorOverlay').setStyle({display: "none"});
 
             if (index > 0) {
-                doXLinkNewElementAjax(index - 1,metadataId,thisElement);
+            	geocat.edit.doXLinkNewElementAjax(index - 1,metadataId,thisElement);
             }
 
             var html = req.responseText;
