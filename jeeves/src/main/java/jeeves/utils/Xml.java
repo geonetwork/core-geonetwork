@@ -83,6 +83,19 @@ public class Xml
 	//---
 	//--------------------------------------------------------------------------
 
+    private static SAXBuilder getSAXBuilderWithoutXMLResolver(boolean validate) {
+        SAXBuilder builder = new SAXBuilder(validate);
+        builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        return builder;
+    }
+
+    /**
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     * @throws JDOMException
+     */
 	public static Element loadFile(String file) throws IOException, JDOMException
 	{
 		return loadFile(new File(file));
@@ -93,7 +106,7 @@ public class Xml
 	
 	public static Element loadFile(URL url) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
 		Document   jdoc    = builder.build(url);
 
 		return (Element) jdoc.getRootElement().detach();
@@ -116,7 +129,7 @@ public class Xml
 			out.print(getString(xmlQuery));
 			out.close();
 
-			SAXBuilder builder = new SAXBuilder();
+			SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
 			Document   jdoc    = builder.build(connection.getInputStream());
 
 			result = (Element)jdoc.getRootElement().detach();
@@ -133,7 +146,7 @@ public class Xml
 
 	public static Element loadFile(File file) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
 		Document   jdoc    = builder.build(file);
 
 		return (Element) jdoc.getRootElement().detach();
@@ -145,7 +158,7 @@ public class Xml
 	public static Element loadString(String data, boolean validate)
 												throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder(validate);
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate);//new SAXBuilder(validate);
 		Document   jdoc    = builder.build(new StringReader(data));
 
 		return (Element) jdoc.getRootElement().detach();
@@ -156,7 +169,7 @@ public class Xml
 
 	public static Element loadStream(InputStream input) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
 		builder.setFeature("http://apache.org/xml/features/validation/schema",false);
 		builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
 		Document   jdoc    = builder.build(input);
@@ -358,8 +371,13 @@ public class Xml
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Writes an xml element to a stream */
-
+    /**
+     * Writes an xml element to a stream.
+     *
+     * @param doc
+     * @param out
+     * @throws IOException
+     */
 	public static void writeResponse(Document doc, OutputStream out) throws IOException
 	{
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
@@ -367,8 +385,13 @@ public class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Converts an xml element to a string */
 
+    /**
+     * Converts an xml element to a string.
+     *
+     * @param data
+     * @return
+     */
 	public static String getString(Element data)
 	{
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
@@ -398,7 +421,16 @@ public class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Retrieves a single XML element given a simple xpath (like "a/b/c") */
+
+    /**
+     * Retrieves a single XML element given a simple xpath (like "a/b/c").
+     *
+     * @param xml
+     * @param xpath
+     * @param theNSs
+     * @return
+     * @throws JDOMException
+     */
 	public static Object selectSingle(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
 
 		XPath xp = prepareXPath(xml, xpath, theNSs);
@@ -407,13 +439,30 @@ public class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Retrieves a single XML element as a JDOM element given a simple xpath */
+
+    /**
+     * Retrieves a single XML element as a JDOM element given a simple xpath.
+     *
+     * @param xml
+     * @param xpath
+     * @return
+     * @throws JDOMException
+     */
 	public static Element selectElement(Element xml, String xpath) throws JDOMException {
 		return selectElement(xml, xpath, new ArrayList<Namespace>());
 	}
 
 	//---------------------------------------------------------------------------
-	/** Retrieves a single XML element as a JDOM element given a simple xpath */
+
+    /**
+     * Retrieves a single XML element as a JDOM element given a simple xpath.
+     *
+     * @param xml
+     * @param xpath
+     * @param theNSs
+     * @return
+     * @throws JDOMException
+     */
 	public static Element selectElement(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
 		Object result = selectSingle(xml, xpath, theNSs);
 		if (result == null) {
@@ -428,26 +477,59 @@ public class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Evaluates an XPath expression on an element and returns Elements */
-	public static List selectNodes(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
+
+    /**
+     * Evaluates an XPath expression on an element and returns Elements.
+     *
+     * @param xml
+     * @param xpath
+     * @param theNSs
+     * @return
+     * @throws JDOMException
+     */
+	public static List<?> selectNodes(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
 		XPath xp = prepareXPath(xml, xpath, theNSs);
 		return xp.selectNodes(xml);
 	}
 		
 	//---------------------------------------------------------------------------
-	/** Evaluates an XPath expression on an element and returns Elements */
-	public static List selectNodes(Element xml, String xpath) throws JDOMException {
+
+    /**
+     * Evaluates an XPath expression on an element and returns Elements.
+     * @param xml
+     * @param xpath
+     * @return
+     * @throws JDOMException
+     */
+	public static List<?> selectNodes(Element xml, String xpath) throws JDOMException {
 		return selectNodes(xml, xpath, new ArrayList<Namespace>());
 	}
 		
 	//---------------------------------------------------------------------------
-	/** Evaluates an XPath expression on an element and returns string result */
+
+    /**
+     * Evaluates an XPath expression on an element and returns string result.
+     *
+     * @param xml
+     * @param xpath
+     * @return
+     * @throws JDOMException
+     */
 	public static String selectString(Element xml, String xpath) throws JDOMException {
 		return selectString(xml, xpath, new ArrayList<Namespace>());
 	}
 
 	//---------------------------------------------------------------------------
-	/** Evaluates an XPath expression on an element and returns string result */
+
+    /**
+     * Evaluates an XPath expression on an element and returns string result.
+     *
+     * @param xml
+     * @param xpath
+     * @param theNSs
+     * @return
+     * @throws JDOMException
+     */
 	public static String selectString(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
 
 		XPath xp = prepareXPath(xml, xpath, theNSs);
@@ -456,14 +538,31 @@ public class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Evaluates an XPath expression on an element and returns true/false */
+
+    /**
+     * Evaluates an XPath expression on an element and returns true/false.
+     *
+     * @param xml
+     * @param xpath
+     * @return
+     * @throws JDOMException
+     */
 	public static boolean selectBoolean(Element xml, String xpath) throws JDOMException {
 		String result = selectString(xml, xpath, new ArrayList<Namespace>());
 		return result.length() > 0;
 	}
 
 	//---------------------------------------------------------------------------
-	/** Evaluates an XPath expression on an element and returns true/false */
+
+    /**
+     * Evaluates an XPath expression on an element and returns true/false.
+     *
+     * @param xml
+     * @param xpath
+     * @param theNSs
+     * @return
+     * @throws JDOMException
+     */
 	public static boolean selectBoolean(Element xml, String xpath, List<Namespace> theNSs) throws JDOMException {
 		return selectString(xml, xpath, theNSs).length() > 0;
 	}
@@ -484,8 +583,11 @@ public class Xml
 	}
 
 	//---------------------------------------------------------------------------
-	/** Error handler that collects up validation errors */
 
+    /**
+     * Error handler that collects up validation errors.
+     *
+     */
 	public static class ErrorHandler extends DefaultHandler {
 
 		private int errorCount = 0;
@@ -599,6 +701,16 @@ public class Xml
 		validateRealGuts(schema, xml, eh);
 	}
 
+	//---------------------------------------------------------------------------
+
+    /**
+     * Validates an xml document with respect to an xml schema described by .xsd file path.
+     *
+     * @param schemaPath
+     * @param xml
+     * @return
+     * @throws Exception
+     */
 	public static Element validateInfo(String schemaPath, Element xml) throws Exception
 	{
 		ErrorHandler eh = new ErrorHandler();
@@ -610,6 +722,17 @@ public class Xml
 		}
 	}
 
+	//---------------------------------------------------------------------------
+
+    /**
+     * Validates an xml document with respect to an xml schema described by .xsd file path using supplied error handler.
+     *
+     * @param schemaPath
+     * @param xml
+     * @param eh
+     * @return
+     * @throws Exception
+     */
 	public static Element validateInfo(String schemaPath, Element xml, ErrorHandler eh)
 			throws Exception {
 		validateGuts(schemaPath, xml, eh);
@@ -620,6 +743,16 @@ public class Xml
 		}
 	}
 	
+	//---------------------------------------------------------------------------
+
+    /**
+     * Called by validation methods that supply an xml schema described by .xsd file path.
+     *
+     * @param schemaPath
+     * @param xml
+     * @param eh
+     * @throws Exception
+     */
 	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
 		StreamSource schemaFile = new StreamSource(new File(schemaPath));
 		Schema schema = factory().newSchema(schemaFile);
@@ -640,6 +773,3 @@ public class Xml
 
 
 }
-
-//=============================================================================
-
