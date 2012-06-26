@@ -34,8 +34,6 @@
     <!--<file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vie-"/> Draft to be improved-->
     <!-- ca missing from 2.6.x -->
     <!-- tr missing from 2.6.x -->
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-"/>
-    <file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_"/>
   </data>
   <migrate>
     <version id="243">

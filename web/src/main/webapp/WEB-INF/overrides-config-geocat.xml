@@ -84,6 +84,13 @@
         <addXml xpath="data">
         	<file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
 		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-countries-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-gemeindenBB-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-kantoneBB-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-non_validated-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-publish_tracking-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-xlinks-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_columns-"/>		    
         </addXml>
     </file>
     <file name=".*/WEB-INF/user-profiles.xml">
