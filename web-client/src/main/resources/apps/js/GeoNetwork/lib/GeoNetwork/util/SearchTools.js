@@ -380,6 +380,8 @@ GeoNetwork.util.SearchTools = {
                         (cur.postfix ? cur.postfix : '');
                     }
                 } else if (cur.isXType('multislider')) {
+                } else if (cur.isXType('gn_categorytree')) {
+                	result[cur.getName()] = cur.getSearchedCat();
                 } else {
                     if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue();
