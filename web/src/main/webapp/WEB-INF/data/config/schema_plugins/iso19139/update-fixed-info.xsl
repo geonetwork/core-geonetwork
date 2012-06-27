@@ -147,7 +147,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:apply-templates select="gco:CharacterString"/>
-			<xsl:copy-of select="*[name(.)!='gco:CharacterString']"/>
+			<xsl:apply-templates select="*[not(self::gco:CharacterString)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -302,6 +302,30 @@
 				</gmd:PT_Locale>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
+	<xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
+	<xsl:template  match="gmd:LocalisedCharacterString">
+		<xsl:copy>
+			<xsl:variable name="currentLocale" select="replace(normalize-space(@locale), '^#', '')"/>
+			<xsl:variable name="ptLocale" select="$language[@id=string($currentLocale)]"/>
+			<xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
+			<xsl:copy-of select="@*[not(name()='locale')]"/>
+			<xsl:choose>
+				<xsl:when test="@locale and $currentLocale!='' and currentLocale=$id">
+					<xsl:copy-of select="."/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:attribute name="locale">
+						<xsl:value-of select="concat('#',$id)"/>
+					</xsl:attribute>
+					<xsl:copy-of select="node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:apply-templates select="gmd:LocalisedCharacterString"/>
+			<xsl:apply-templates select="*[not(self::gmd:LocalisedCharacterString)]"/>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ================================================================= -->
