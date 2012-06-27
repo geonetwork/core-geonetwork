@@ -71,9 +71,9 @@ cat.list = function() {
 		                    '</tpl>',
 		                '</div>',
 		                '<div class="md-links">',
+		               		'<div class="md-action-menu">' + OpenLayers.i18n('mdMenu') + '</div>',
 		                	'<div class="wmsMenu"><span class="icon"></span>Menu WMS<span class="list-icon"></span></div>',
 		                	'<div class="downloadMenu"><span class="icon"></span>Menu Download<span class="list-icon"></span></div>',
-			                '<div class="md-action-menu">' + OpenLayers.i18n('mdMenu') + '</div>',
 
 	                    // FIXME : this call require the catalogue to be named catalogue, static call ?
 	                    // FIXME : ref to app

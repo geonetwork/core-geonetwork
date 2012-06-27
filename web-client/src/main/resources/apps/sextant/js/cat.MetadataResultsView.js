@@ -3,22 +3,8 @@ Ext.namespace('cat');
 
 cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	
-	/** Menu containing all download link of the MD **/
-	downloadMenu: undefined,
+	curMenu: undefined,
 	
-	/** Menu containing all WMS link of the MD **/
-	wmsMenu: undefined,
-	
-	wmsMenuInit: function(idx, node){
-        this.wmsAcMenu = Ext.get(Ext.DomQuery.selectNode('div.wmsMenu', node));
-        if(this.wmsAcMenu) {
-	        this.wmsAcMenu.on('click', function(){
-	            this.createLinksMenu(idx, this, node);
-	            this.wmsMenu.showAt([this.wmsAcMenu.getX(), this.wmsAcMenu.getY() + this.wmsAcMenu.getHeight()]);
-	        }.bind(this));
-        }
-    },
-    
     /**
      * Get the element by the given type class (ex: 'wms' will get div.wmsMenu element)
      * and add a click event that will show the menu.
@@ -28,9 +14,10 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         if(menuElt) {
         	menuElt.on('click', function(){
 
-	            var extMenu = this.createLinksMenu(idx, this, node, type);
-	            if(extMenu) {
-	            	extMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
+        		if(this.curMenu) this.curMenu.destroy();
+	            this.curMenu = this.createLinksMenu(idx, this, node, type);
+	            if(this.curMenu) {
+	            	this.curMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
 	            }
 	        }.bind(this));
         }
@@ -97,10 +84,6 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             this.linkMenuInit(idx, node, 'wms');
             this.linkMenuInit(idx, node, 'download');
         }, this);
-		
-//		this.addListener('afterrender', function(it){
-//            alert('render');
-//        }, this);
 		
         cat.MetadataResultsView.superclass.initComponent.call(this);
 	}

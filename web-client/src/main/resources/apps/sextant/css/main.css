@@ -236,7 +236,7 @@
 	border: 1px solid #AAAAAA;
 	border-radius: 4px 4px 4px 4px;
 	text-shadow: none;
-	width: auto !important;
+	width: 97% !important;
 	cursor:default;
 }
 
@@ -273,7 +273,7 @@
 }
 
 .result-list li.md-full div.md-links {
-    padding-top:8px;
+    padding-top:14px;
     padding-bottom:8px;
     float:right;
     padding-right:15px;
@@ -305,9 +305,11 @@
     background-image: url("../images/icons/view.png");
     margin-right: 4px;
 }
-.result-list li.md-full div.wmsMenu:hover span.icon{
-    background-position: -16px 0;
+.result-list li.md-full div.wmsMenu:hover span.icon,
+.result-list li.md-full div.downloadMenu:hover span.icon {
+	background-position: -16px 0;
 }
+
 .result-list li.md-full div.downloadMenu span.icon{
     background-image: url("../images/icons/cart-add.png");
     margin-right: 4px;

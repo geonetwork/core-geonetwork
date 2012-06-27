@@ -248,7 +248,12 @@ cat.app = function() {
 			catalogue : catalogue,
 			displaySerieMembers : true,
 			autoScroll : true,
-			tpl : cat.list.getTemplate(),
+			templates : {
+	            SIMPLE: GeoNetwork.Templates.SIMPLE,
+	            THUMBNAIL: GeoNetwork.Templates.THUMBNAIL,
+	            FULL: cat.list.getTemplate()
+	        },
+	        tpl: cat.list.getTemplate(),
 			featurecolor : GeoNetwork.Settings.results.featurecolor,
 			colormap : GeoNetwork.Settings.results.colormap,
 			featurecolorCSS : GeoNetwork.Settings.results.featurecolorCSS
