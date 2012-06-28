@@ -18,6 +18,7 @@ INSERT INTO CategoriesDes VALUES (9,'dut','Catalogi');
 INSERT INTO CategoriesDes VALUES (10,'dut','Andere informatie bronnen');
 INSERT INTO CategoriesDes VALUES (11,'dut','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'dut','Registers');
+INSERT INTO CategoriesDes VALUES (13,'dut','Physical Samples');
 
 INSERT INTO GroupsDes VALUES (-1,'dut','Gast');
 INSERT INTO GroupsDes VALUES (0,'dut','Intranet');
