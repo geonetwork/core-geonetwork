@@ -519,14 +519,18 @@ public class DataManager {
 
             // get privileges
             List operations = dbms
-                                .select("SELECT groupId, operationId FROM OperationAllowed WHERE metadataId = ? ORDER BY operationId ASC", id$)
-                                    .getChildren();
+                              .select("SELECT groupId, operationId, g.name FROM OperationAllowed o, groups g WHERE g.id = o.groupId AND metadataId = ? ORDER BY operationId ASC", id$)
+                                 .getChildren();
 
             for (Object operation1 : operations) {
                 Element operation = (Element) operation1;
                 String groupId = operation.getChildText("groupid");
                 String operationId = operation.getChildText("operationid");
                 moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
+                if(operationId.equals("0")) {
+                	String name = operation.getChildText("name");
+                	moreFields.add(SearchManager.makeField("_groupPublished", name, true, true));
+                }
             }
             // get categories
             List categories = dbms
