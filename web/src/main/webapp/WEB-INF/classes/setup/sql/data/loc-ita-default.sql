@@ -18,6 +18,7 @@ INSERT INTO CategoriesDes VALUES (9,'ita','Archivi');
 INSERT INTO CategoriesDes VALUES (10,'ita','Altre risorse di informazione');
 INSERT INTO CategoriesDes VALUES (11,'ita','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'ita','Registri');
+INSERT INTO CategoriesDes VALUES (13,'ita','campioni fisici');
 
 INSERT INTO GroupsDes VALUES (-1,'ita','Visitatore');
 INSERT INTO GroupsDes VALUES (0,'ita','Intranet');
