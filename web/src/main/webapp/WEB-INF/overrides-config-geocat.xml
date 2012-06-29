@@ -84,6 +84,7 @@
         <addXml xpath="data">
         	<file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
 		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-"/>
+            <file path="WEB-INF/classes/setup/sql/data" filePrefix="geocat-data-db-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-countries-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-gemeindenBB-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-kantoneBB-"/>
