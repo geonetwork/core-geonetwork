@@ -42,6 +42,8 @@ Ext.namespace("GeoNetwork.util");
  */
 GeoNetwork.util.SearchFormTools = {
 
+    groupField: null,
+
     /** api:method[getSimpleFormFields]
      *  :param services: Optional GeoNetwork services URL used for OpenSearch suggestion URL. If not defined, no suggestion fields.
      *  :return: A GeoNetwork simple form
@@ -212,7 +214,7 @@ GeoNetwork.util.SearchFormTools = {
         
         // Admin option
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl);
-        var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups);
+        this.groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField();
         var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories, null, true);
         
@@ -220,7 +222,7 @@ GeoNetwork.util.SearchFormTools = {
         
         fields.push(fullTextField, advancedTextField, titleField, abstractField, themekeyField, orgNameField, 
                         geoFields, types, mapTypes, denominatorField, when, 
-                        catalogueField, groupField, metadataTypeField, categoryField, options, accuracySettings);
+                        catalogueField, this.groupField, metadataTypeField, categoryField, options, accuracySettings);
         
         return fields;
     },
@@ -497,6 +499,8 @@ GeoNetwork.util.SearchFormTools = {
      *  Create a combo for group field
      */
     getGroupField: function(url, multi){
+        if (this.groupField != null) return this.groupField;
+
         var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var groupStore = GeoNetwork.data.GroupStore(url),
@@ -520,6 +524,17 @@ GeoNetwork.util.SearchFormTools = {
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {
             return new Ext.form.ComboBox(config);
+        }
+    },
+    /**
+     * api:method[refreshGroupFieldValues]
+     *
+     *  Refreshes the group field values. Used after login/logout to refresh the groups for the user
+     */
+    refreshGroupFieldValues: function() {
+        if (this.groupField != null) {
+            this.groupField.store.removeAll();
+            this.groupField.store.reload();
         }
     },
     /** api:method[getMetadataTypeField]
