@@ -47,6 +47,7 @@
 
         <Document locale="{$isoLangId}">
             <xsl:apply-templates mode="xlinks"/>
+            <xsl:apply-templates mode="broken-xlinks"/>
             <Field name="_locale" string="{$isoLangId}" store="true" index="true" token="false"/>
 
             <Field name="_docLocale" string="{$isoLangId}" store="true" index="true" token="false"/>
@@ -510,11 +511,6 @@
 		<Field name="xlink_deleted" string="{@xlink:href}" store="true" index="true" token="false"/>
 	</xsl:template>
 
-	<xsl:template match="*[@xlink:href and count(./*) = 0]" mode="xlinks" priority="100">
-		<Field name="xlink_unresolved" string="{@xlink:href}" store="true" index="true" token="false"/>
-		<Field name="metadata_broken_xlink" string="1" store="true" index="true" token="false"/>
-	</xsl:template>
-
 	<xsl:template match="*[@xlink:href and @xlink:role = 'http://www.geonetwork.org/non_valid_obj']" mode="xlinks">
 		<xsl:apply-templates select="." mode="non-valid-xlink"/>
 	</xsl:template>
@@ -562,5 +558,13 @@
 	</xsl:template>
 	<xsl:template match="text()" mode="valid-xlink">
 	</xsl:template>
+
+	<xsl:template match="*[@xlink:href and count(./*) = 0]" mode="broken-xlinks" priority="100">
+		<Field name="xlink_unresolved" string="{@xlink:href}" store="true" index="true" token="false"/>
+		<Field name="metadata_broken_xlink" string="1" store="true" index="true" token="false"/>
+	</xsl:template>
+
+	<xsl:template match="text()" mode="broken-xlinks">
+	</xsl:template>	
 
 </xsl:stylesheet>

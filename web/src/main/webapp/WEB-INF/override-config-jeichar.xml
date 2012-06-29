@@ -1,10 +1,6 @@
 <overrides>
     <import file="/WEB-INF/overrides-config-geocat.xml"/>
 
-	<logging>
-      <logFile>/WEB-INF/log4j.cfg</logFile>
-      <logFile>/WEB-INF/log4j-jeichar.cfg</logFile>
-  </logging>
 	  <!-- properties allow some properties to be defined that will be substituted -->
     <!-- into text or attributes where ${property} is the substitution pattern -->
     <!-- The properties can reference other properties -->
@@ -15,12 +11,12 @@
         <serverStage>jeichar</serverStage>
     </properties>
     <file name=".*/WEB-INF/config-gui.xml">
-        <replaceText xpath="geoserver.url">http://localhost:8081/geoserver</replaceText>
+        <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver</replaceText>
         <replaceXML xpath="mapSearch/layers">
-                <layer server="http://ec2-46-51-142-140.eu-west-1.compute.amazonaws.com/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+                <layer server="http://tc-geocat0i.bgdi.admin.ch/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
         </replaceXML>
         <replaceXML xpath="mapViewer/layers">
-                <layer server="http://ec2-46-51-142-140.eu-west-1.compute.amazonaws.com/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+                <layer server="http://tc-geocat0i.bgdi.admin.ch/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
         </replaceXML>
     </file>
     <textFile name=".*/WEB-INF/classes/setup/sql/.+/data-db-default.sql">
