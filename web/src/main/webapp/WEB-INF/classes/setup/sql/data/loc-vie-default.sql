@@ -18,6 +18,7 @@ INSERT INTO CategoriesDes VALUES (9,'vie','Directories');
 INSERT INTO CategoriesDes VALUES (10,'vie','Other information resources');
 INSERT INTO CategoriesDes VALUES (11,'vie','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'vie','Registers');
+INSERT INTO CategoriesDes VALUES (13,'vie','Physical Samples');
 
 INSERT INTO GroupsDes VALUES (-1,'vie','Guest');
 INSERT INTO GroupsDes VALUES (0,'vie','Intranet');

@@ -18,6 +18,7 @@ INSERT INTO CategoriesDes VALUES (9,'ger','Verzeichnisse');
 INSERT INTO CategoriesDes VALUES (10,'ger','Andere Resourcen');
 INSERT INTO CategoriesDes VALUES (11,'ger','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'ger','Registers');
+INSERT INTO CategoriesDes VALUES (13,'ger','Physischen Proben');
 
 INSERT INTO GroupsDes VALUES (-1,'ger','Gast');
 INSERT INTO GroupsDes VALUES (0,'ger','Intranet');
