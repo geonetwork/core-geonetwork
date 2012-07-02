@@ -1,0 +1,36 @@
+<overrides>
+	<import file="/WEB-INF/config-overrides-sextant-props-c2cpc55.xml"/>
+	<file name=".*/WEB-INF/config-gui.xml">
+		<replaceAtt xpath="client" attName="widget" value="true"/>
+		<replaceAtt xpath="client" attName="url" value="${widget.url}"/>
+		<replaceAtt xpath="client" attName="createParameter" value="#create"/>
+		<replaceAtt xpath="client" attName="stateId" value="s"/>
+		<replaceAtt xpath="client" attName="parameters" value="${widget.parameters}"/>
+		<replaceXML xpath="map/proj">
+			<crs code="EPSG:4326" default="1" edit="1"/>
+			<crs code="EPSG:2154" def="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"/>
+			<crs code="EPSG:900913" def="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs "/>
+			<crs code="EPSG:3035" def="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"/>
+		</replaceXML>
+	</file>
+	<file name=".*/WEB-INF/config.xml">
+		<replaceText xpath="general/uploadDir">../../temp/</replaceText>
+		<replaceText xpath="general/maxUploadSize">100</replaceText>
+		<replaceXML xpath="resources">
+			<resource enabled="true">
+				<name>main-db</name>
+				<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+				<config>
+					<user>${db.user}</user>
+					<password>${db.pass}</password>
+					<driver>${db.driver}</driver>
+					<url>${db.url}</url>
+					<poolSize>20</poolSize>
+					<minIdle>0</minIdle>
+					<maxIdle>10</maxIdle>
+					<validationQuery>SELECT 1</validationQuery>
+				</config>
+			</resource>
+		</replaceXML>
+	</file>
+</overrides>
