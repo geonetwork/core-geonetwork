@@ -4,6 +4,8 @@
     main mapfish includes
     -->
     <xsl:template name="mapfish_script_includes">
+        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
+        <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
     
          <xsl:choose>
             <xsl:when test="/root/request/debug">           
@@ -70,8 +72,6 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
             </xsl:when>
             <xsl:otherwise>             
-                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>
 
                 <!-- Editor JS is still required here at least for batch operation -->

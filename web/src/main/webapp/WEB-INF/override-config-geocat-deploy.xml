@@ -11,6 +11,8 @@
 
       <wfs.host>@WFS_HOST@</wfs.host>
       <wfs.port>@WFS_PORT@</wfs.port>
+      <host>@HOST@</host>
+      <port>@PORT@</port>
       <datadir>@DATA_DIR@</datadir>
       <serverStage>@STAGE@</serverStage>    
     </properties>

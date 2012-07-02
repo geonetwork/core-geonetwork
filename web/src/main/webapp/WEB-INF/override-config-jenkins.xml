@@ -5,12 +5,12 @@
     <!-- into text or attributes where ${property} is the substitution pattern -->
     <!-- The properties can reference other properties -->
     <properties>
-        <postgis.db>geocat2_trunk</postgis.db>
+        <postgis.db>geocat</postgis.db>
         <postgis.max.active>10</postgis.max.active>
         <postgis.max.idle>5</postgis.max.idle>
-        <serverStage>jeichar</serverStage>
-        <host>localhost</host>
-        <port>8190</port>
+        <serverStage>jenkins</serverStage>
+        <host>jenkins0.bgdi.admin.ch</host>
+        <port>80</port>
     </properties>
     <file name=".*/WEB-INF/config-gui.xml">
         <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver</replaceText>

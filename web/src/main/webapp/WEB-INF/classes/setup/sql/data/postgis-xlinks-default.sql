@@ -2,11 +2,11 @@
 -- PostgreSQL database dump
 --
 
+SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
 
 SET search_path = public, pg_catalog;
 
@@ -39,9 +39,10 @@ ALTER TABLE public.xlinks OWNER TO "www-data";
 --
 
 CREATE SEQUENCE xlinks_gid_seq
+    START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -65,12 +66,14 @@ SELECT pg_catalog.setval('xlinks_gid_seq', 296, true);
 -- Name: gid; Type: DEFAULT; Schema: public; Owner: www-data
 --
 
-ALTER TABLE xlinks ALTER COLUMN gid SET DEFAULT nextval('xlinks_gid_seq'::regclass);
+ALTER TABLE ONLY xlinks ALTER COLUMN gid SET DEFAULT nextval('xlinks_gid_seq'::regclass);
 
 
 --
 -- Data for Name: xlinks; Type: TABLE DATA; Schema: public; Owner: www-data
 --
+
+
 
 --
 -- Name: xlinks_pkey; Type: CONSTRAINT; Schema: public; Owner: www-data; Tablespace: 

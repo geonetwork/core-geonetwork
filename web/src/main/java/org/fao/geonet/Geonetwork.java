@@ -679,7 +679,7 @@ public class Geonetwork implements ApplicationHandler {
                 Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
 	        }
 	        dbms.commit();
-            
+
 			// Copy logo
 			String uuid = UUID.randomUUID().toString();
 			initLogo(servletContext, dbms, uuid, context.getAppPath());
