@@ -83,7 +83,7 @@
 		</xsl:variable>
 		<xsl:variable name="langCode">
 			<xsl:choose>
-				<xsl:when test="normalize-string(gmd:languageCode/gmd:LanguageCode/@codeList) != ''">
+				<xsl:when test="normalize-space(gmd:languageCode/gmd:LanguageCode/@codeList) != ''">
 					<xsl:copy-of select="gmd:languageCode"/>
 				</xsl:when>
 				<xsl:otherwise>
