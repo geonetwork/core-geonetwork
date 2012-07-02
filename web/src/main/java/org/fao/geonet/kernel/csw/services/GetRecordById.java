@@ -33,7 +33,6 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
-import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -47,16 +46,17 @@ import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.gm03.ISO19139CHEtoGM03;
+import org.fao.geonet.services.gm03.ISO19139CHEtoGM03Base;
 import org.geotools.data.DataStore;
-import org.jdom.Element;
 import org.jdom.Document;
-//=============================================================================
+import org.jdom.Element;
+import org.jdom.input.DOMBuilder;
 import org.jdom.output.DOMOutputter;
 
 /**
@@ -181,13 +181,10 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 							// PMT GeoCat2 : Backport from old geocat version. GM03_profile should be activated later,
 							// For now leaving it commented out.
 							
-				            //ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03(null, context.getAppPath() + "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
-				            //org.w3c.dom.Document domOut = toGm03.convert(domIn);
-				            //DOMBuilder builder = new DOMBuilder();
-				            //md = builder.build(domOut).getRootElement();
-							
-							// TODO : backport the previous classes and remove following line once finished
-							md = elMd;
+				            ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03(null, context.getAppPath() + "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
+				            org.w3c.dom.Document domOut = toGm03.convert(domIn);
+				            DOMBuilder builder = new DOMBuilder();
+				            md = builder.build(domOut).getRootElement();
 							
 				        } catch (Exception e) {
 				            throw new NoApplicableCodeEx("Error transforming metadata ISO 19139.CHE into GM03_2Record "+ e.getMessage());

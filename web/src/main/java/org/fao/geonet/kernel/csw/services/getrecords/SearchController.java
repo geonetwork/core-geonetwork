@@ -324,7 +324,10 @@ public class SearchController {
         if (outputSchema == OutputSchema.OGC_CORE) {
             prefix = "ogc";
         }
-        else if (outputSchema == OutputSchema.ISO_PROFILE) {
+        else if (outputSchema == OutputSchema.ISO_PROFILE ||
+                    outputSchema == OutputSchema.CHE_PROFILE ||
+                    outputSchema == OutputSchema.GM03_PROFILE ||
+                    outputSchema == OutputSchema.OWN) {
             prefix = "iso";
         }
         else {
@@ -625,7 +628,7 @@ public class SearchController {
             schema = "iso19139";
         }
 
-        if (fullSchema.equals("iso19139.che")) {
+        if (outSchema != OutputSchema.GM03_PROFILE && fullSchema.equals("iso19139.che")) {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("lang", context.getLanguage());
             params.put("includeInfo", "true");
