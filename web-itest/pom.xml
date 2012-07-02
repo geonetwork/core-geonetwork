@@ -119,7 +119,6 @@
           <name>maven.test.failure.ignore</name>
         </property>
       </activation>
-      <properties>
       <build>
         <plugins>
           <!-- execute integration tests -->
@@ -172,7 +171,6 @@
           <name>!maven.test.failure.ignore</name>
         </property>
       </activation>
-      <properties>
       <build>
         <plugins>
           <!-- execute integration tests -->
