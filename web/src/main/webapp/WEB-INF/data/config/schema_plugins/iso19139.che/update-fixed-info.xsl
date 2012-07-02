@@ -81,14 +81,28 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+		<xsl:variable name="langCode">
+			<xsl:choose>
+				<xsl:when test="normalize-string(gmd:languageCode/gmd:LanguageCode/@codeList) != ''">
+					<xsl:copy-of select="gmd:languageCode"/>
+				</xsl:when>
+				<xsl:otherwise>
+				  <gmd:languageCode>
+				    <gmd:LanguageCode codeList="#LanguageCode" codeListValue="{gmd:languageCode/gmd:LanguageCode/@codeListValue}">
+				    	<xsl:value-of select="gmd:languageCode/gmd:LanguageCode"/>
+				    </gmd:LanguageCode>
+  				</gmd:languageCode>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
 		<gmd:PT_Locale>
 			<xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
-			<xsl:copy-of select="gmd:languageCode"/>
+			<xsl:copy-of select="$langCode"/>
 			<xsl:copy-of select="$charset"/>
 		</gmd:PT_Locale>
 	</xsl:template>
-	
+
 	<!-- ================================================================= -->
 	<!-- Do not allow to expand operatesOn sub-elements 
 		and constrain users to use uuidref attribute to link
