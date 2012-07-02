@@ -17,3 +17,5 @@ web/src/main/webapp/WEB-INF/metadata_subversion/
 schematrons/.build
 docs/*/users/build
 .props/
+web-client/src/main/resources/apps/js/GeoNetwork-mini*
+web-client/src/main/resources/apps/*/js/App-mini.js
