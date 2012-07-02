@@ -71,18 +71,22 @@
 	are used for multilingual charcterString -->
 	<xsl:template match="gmd:PT_Locale">
 		<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
-
-		<xsl:choose>
-			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">
-				<xsl:copy-of select="."/>
-			</xsl:when>
-			<xsl:otherwise>
-				<gmd:PT_Locale>
-					<xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
-					<xsl:copy-of select="./*"/>
-				</gmd:PT_Locale>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:variable name="charset">
+			<xsl:choose>
+				<xsl:when test="gmd:MD_CharacterSetCode">
+					<xsl:copy-of select="gmd:MD_CharacterSetCode"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<gmd:PT_Locale>
+			<xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+			<xsl:copy-of select="gmd:languageCode"/>
+			<xsl:copy-of select="$charset"/>
+		</gmd:PT_Locale>
 	</xsl:template>
 	
 	<!-- ================================================================= -->
