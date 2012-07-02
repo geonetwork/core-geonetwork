@@ -505,14 +505,16 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
 
             if (owner != null) {
-            	 String userQuery = "SELECT username, surname, name, profile FROM Users WHERE id = ?";
-
-                 Element user = dbms.select(userQuery,  new Integer(owner)).getChild("record");
-
-                 moreFields.add(SearchManager.makeField("_userinfo", 
-                		 user.getChildText("username") + "|" + user.getChildText("surname") + "|" +
-                		 user.getChildText("name") + "|" + user.getChildText("profile")
-                		 , true, false));
+                String userQuery = "SELECT username, surname, name, profile FROM Users WHERE id = ?";
+                
+                Element user = dbms.select(userQuery,  new Integer(owner)).getChild("record");
+                
+                if (user != null) {
+                    moreFields.add(SearchManager.makeField("_userinfo", 
+                           user.getChildText("username") + "|" + user.getChildText("surname") + "|" +
+                           user.getChildText("name") + "|" + user.getChildText("profile"), 
+                           true, false));
+                }
             }
             if (groupOwner != null)
                 moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
