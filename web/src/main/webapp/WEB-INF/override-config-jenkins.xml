@@ -1,0 +1,24 @@
+<overrides>
+    <import file="/WEB-INF/overrides-config-geocat.xml"/>
+
+	  <!-- properties allow some properties to be defined that will be substituted -->
+    <!-- into text or attributes where ${property} is the substitution pattern -->
+    <!-- The properties can reference other properties -->
+    <properties>
+        <postgis.db>geocat</postgis.db>
+        <postgis.max.active>10</postgis.max.active>
+        <postgis.max.idle>5</postgis.max.idle>
+        <serverStage>jenkins</serverStage>
+        <host>jenkins0.bgdi.admin.ch</host>
+        <port>80</port>
+    </properties>
+    <file name=".*/WEB-INF/config-gui.xml">
+        <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver</replaceText>
+        <replaceXML xpath="mapSearch/layers">
+                <layer server="http://tc-geocat0i.bgdi.admin.ch/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+        </replaceXML>
+        <replaceXML xpath="mapViewer/layers">
+                <layer server="http://tc-geocat0i.bgdi.admin.ch/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
+        </replaceXML>
+    </file>
+</overrides>
