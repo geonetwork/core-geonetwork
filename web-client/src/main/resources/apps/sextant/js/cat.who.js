@@ -7,13 +7,14 @@ cat.who = function() {
 			
 			var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
 
-			return new Ext.form.FormPanel({
+			return new Ext.Panel({
 			    title: OpenLayers.i18n('who'),
 			    autoHeight: true,
 			    autoWidth: true,
 			    collapsible: true,
 			    collapsed: true,
 			    defaultType: 'checkbox',
+			    layout: 'form',
 			    defaults: {
 			        width: 160
 			    },

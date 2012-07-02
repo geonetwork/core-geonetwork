@@ -382,64 +382,36 @@ cat.app = function() {
 
 		// Manage header click event to toggle advanced or simple search
 		// criteria mode
-		searchForm
-				.on(
-						'afterrender',
-						function(cpt) {
-							cpt.advanced = false;
-							cpt.addEvents('advancedmode', 'simplemode');
-							cpt.header.on('click', function() {
-								if (this.advanced) {
-									this.fireEvent('simplemode', this);
-									this.advanced = false;
-								} else {
-									this.fireEvent('advancedmode', this);
-									this.advanced = true;
-								}
-							}, cpt);
+		searchForm.on('afterrender',function(cpt) {
+			cpt.advanced = false;
+			cpt.addEvents('advancedmode', 'simplemode');
+			cpt.header.on('click', function() {
+				if (this.advanced) {
+					this.fireEvent('simplemode', this);
+					this.advanced = false;
+				} else {
+					this.fireEvent('advancedmode', this);
+					this.advanced = true;
+				}
+			}, cpt);
 
-							cpt
-									.on(
-											'advancedmode',
-											function(cpt) {
-												Ext
-														.each(
-																advandcedField,
-																function(item) {
-																	item
-																			.setVisible(true);
-																	whatForm.body
-																			.removeClass('hidden');
-																});
-												cpt.header
-														.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers
-														.i18n('search-header-criteria-advanced');
-												cpt.header
-														.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers
-														.i18n('search-header-simple');
-											});
-							cpt
-									.on(
-											'simplemode',
-											function() {
-												Ext
-														.each(
-																advandcedField,
-																function(item) {
-																	item
-																			.setVisible(false);
-																	whatForm.body
-																			.addClass('hidden');
-																});
-												cpt.header
-														.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers
-														.i18n('search-header-criteria-simple');
-												cpt.header
-														.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers
-														.i18n('search-header-advanced');
-
-											});
-						});
+			cpt.on('advancedmode',function(cpt) {
+				Ext.each(advandcedField,function(item) {
+					item.setVisible(true);
+					whatForm.body.removeClass('hidden');
+				});
+				cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-advanced');
+				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
+			});
+			cpt.on('simplemode',function() {
+				Ext.each(advandcedField,function(item) {
+					item.setVisible(false);
+					whatForm.body.addClass('hidden');
+				});
+				cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-simple');
+				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
+			});
+		});
 		return searchForm;
 	}
 

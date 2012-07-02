@@ -5,7 +5,7 @@ cat.where = function() {
 	return {
 		createCmp : function() {
 			
-			return new Ext.form.FormPanel({
+			return new Ext.Panel({
 			    title: OpenLayers.i18n('where'),
 			    autoHeight: true,
 			    autoWidth: true,
@@ -17,12 +17,12 @@ cat.where = function() {
 			        height: 227
 			    },
 			    items: GeoNetwork.util.SearchFormTools.getSimpleMap(
-			            GeoNetwork.map.BACKGROUND_LAYERS,
-			            GeoNetwork.map.MAP_OPTIONS,
-			            true,
-			            {
-			            	cls: 'where-toolbar'
-			            })
+					GeoNetwork.map.BACKGROUND_LAYERS,
+					GeoNetwork.map.MAP_OPTIONS,
+					true,
+					{
+						cls: 'where-toolbar'
+					})
 			});
 		}
 	}

@@ -37,12 +37,13 @@ cat.what = function() {
 			});
 			advancedFields.push(categoryTree, catalogueField);
 			
-			return new Ext.form.FormPanel({
+			return new Ext.Panel({
 			    title: OpenLayers.i18n('what'),
 			    autoHeight: true,
 			    autoWidth: true,
 			    collapsible: true,
 			    collapsed: false,
+			    layout: 'form',
 			    defaultType: 'checkbox',
 			    bodyCssClass: 'hidden',
 			    defaults: {

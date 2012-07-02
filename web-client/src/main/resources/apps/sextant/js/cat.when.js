@@ -5,7 +5,7 @@ cat.when = function() {
 	return {
 		createCmp : function() {
 			
-			return new Ext.form.FormPanel({
+			return new Ext.Panel({
 			    title: OpenLayers.i18n('when'),
 			    autoHeight: true,
 			    autoWidth: true,
@@ -13,7 +13,7 @@ cat.when = function() {
 			    collapsed: true,
 			    defaultType: 'datefield',
 			    cls: 'search-form-panel',
-			    
+			    layout: 'form',
 			    defaults: {
 			        width: 160
 			    },
