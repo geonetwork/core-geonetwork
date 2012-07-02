@@ -13,6 +13,8 @@
         <postgis.min.idle>0</postgis.min.idle>
         <wfs.host>localhost</wfs.host>
         <wfs.port>8700</wfs.port>
+        <host>localhost</host>
+        <port>8080</port>
         <serverStage>production</serverStage>
     </properties>
     <file name=".*/WEB-INF/config.xml">
@@ -257,4 +259,20 @@
            <layer server="http://${wfs.host}:${wfs.port}/geoserver/wms" tocName="Kantone"  params="{layers: 'chtopo:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
         </replaceXML>
     </file>
+    <textFile name=".*/WEB-INF/classes/setup/sql/.+/data-db-default.sql">
+        <!-- enable xLinks -->
+        <update linePattern="(INSERT INTO Settings VALUES \(231,230,'enable',')false(.*)">$1true$2</update>
+        <!-- enable german -->
+        <update linePattern="(INSERT INTO Settings VALUES \(818,816,'selected',')false(.*)">$1true$2</update>
+        <!-- enable french -->
+        <update linePattern="(INSERT INTO Settings VALUES \(815,813,'selected',')false(.*)">$1true$2</update>
+        <!-- enable italian -->
+        <update linePattern="(INSERT INTO Settings VALUES \(824,822,'selected',')false(.*)">$1true$2</update>
+        <!-- enable inspire -->
+        <update linePattern="(INSERT INTO Settings VALUES \(721,720,'enable',')false(.*)">$1true$2</update>
+        <!-- enable set host in settings -->
+        <update linePattern="(INSERT INTO Settings VALUES \(21,20,'host',')localhost(.*)">$1${host}$2</update>
+        <!-- enable set port in settings -->
+        <update linePattern="(INSERT INTO Settings VALUES \(22,20,'port',')8090(.*)">$1${port}$2</update>
+    </textFile>
 </overrides>

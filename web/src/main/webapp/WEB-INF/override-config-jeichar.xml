@@ -9,6 +9,8 @@
         <postgis.max.active>10</postgis.max.active>
         <postgis.max.idle>5</postgis.max.idle>
         <serverStage>jeichar</serverStage>
+        <host>localhost</host>
+        <port>8190</port>
     </properties>
     <file name=".*/WEB-INF/config-gui.xml">
         <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver</replaceText>
@@ -19,16 +21,4 @@
                 <layer server="http://tc-geocat0i.bgdi.admin.ch/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
         </replaceXML>
     </file>
-    <textFile name=".*/WEB-INF/classes/setup/sql/.+/data-db-default.sql">
-        <!-- enable xLinks -->
-        <update linePattern="(INSERT INTO Settings VALUES \(231,230,'enable',')false(.*)">$1true$2</update>
-        <!-- enable german -->
-        <update linePattern="(INSERT INTO Settings VALUES \(818,816,'selected',')false(.*)">$1true$2</update>
-        <!-- enable french -->
-        <update linePattern="(INSERT INTO Settings VALUES \(815,813,'selected',')false(.*)">$1true$2</update>
-        <!-- enable italian -->
-        <update linePattern="(INSERT INTO Settings VALUES \(824,822,'selected',')false(.*)">$1true$2</update>
-        <!-- enable inspire -->
-        <update linePattern="(INSERT INTO Settings VALUES \(721,720,'enable',')false(.*)">$1true$2</update>
-    </textFile>
 </overrides>
