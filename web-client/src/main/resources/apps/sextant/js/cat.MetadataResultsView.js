@@ -56,7 +56,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     
     resultsLoaded: function(view, records, options){
     	
-    	cat.MetadataResultsView.superclass.resultsLoaded.call(this);
+    	cat.MetadataResultsView.superclass.resultsLoaded.apply(this, arguments);
     	
         var lis = Ext.DomQuery.jsSelect('li.md-full', this.el.dom);
 
