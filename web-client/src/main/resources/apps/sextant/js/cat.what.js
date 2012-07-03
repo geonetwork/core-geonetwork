@@ -38,7 +38,7 @@ cat.what = function() {
 			advancedFields.push(categoryTree, catalogueField);
 			
 			return new Ext.Panel({
-			    title: OpenLayers.i18n('what'),
+			    title: OpenLayers.i18n('What'),
 			    autoHeight: true,
 			    autoWidth: true,
 			    collapsible: true,
@@ -48,6 +48,14 @@ cat.what = function() {
 			    bodyCssClass: 'hidden',
 			    defaults: {
 			        itemCls: 'search_label'
+			    },
+			    listeners: {
+			    	'afterrender': function(o) {
+			    		o.header.on('click', function() {
+			    			if(o.collapsed) o.expand();
+			    			else o.collapse();
+			    		});
+			    	}
 			    },
 			    items: [searchField, sep1, catalogueField, sep2, categoryTree]
 			});

@@ -6,7 +6,7 @@ cat.where = function() {
 		createCmp : function() {
 			
 			return new Ext.Panel({
-			    title: OpenLayers.i18n('where'),
+			    title: OpenLayers.i18n('Where'),
 			    autoHeight: true,
 			    autoWidth: true,
 			    collapsible: false,
