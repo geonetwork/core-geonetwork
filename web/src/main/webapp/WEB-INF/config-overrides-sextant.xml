@@ -1,5 +1,5 @@
 <overrides>
-	<import file="/WEB-INF/config-overrides-sextant-props-c2cpc55.xml"/>
+	<import file="/WEB-INF/config-overrides-sextant-props-c2cp55.xml"/>
 	<file name=".*/WEB-INF/config-gui.xml">
 		<replaceAtt xpath="client" attName="widget" value="true"/>
 		<replaceAtt xpath="client" attName="url" value="${widget.url}"/>
