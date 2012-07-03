@@ -273,10 +273,11 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
 					TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency = new TreeSet<SummaryComparator.SummaryElement>(valuesComparator);
 		            ObjectKeyIntMapIterator entries = duplicateValues.entries();
-		            do {
+		            
+		            while(entries.hasNext()) {
 		                sortedValuesFrequency.add(new SummaryComparator.SummaryElement(entries));
 		                entries.next();
-		            } while(entries.hasNext());
+		            }
 
 
 					if (freq)
