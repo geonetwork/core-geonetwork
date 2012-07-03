@@ -76,10 +76,10 @@ public final class Log
 	//---
 	//---------------------------------------------------------------------------
 
-	public static void debug(String module, Object message)
-	{
-		Logger.getLogger(module).debug(message);
-	}
+    public static void debug(String module, Object message)
+    {
+        Logger.getLogger(module).debug(message);
+    }
 
     public static void debug(String module, Object message, Exception e)
     {
@@ -90,7 +90,23 @@ public final class Log
         return Logger.getLogger(module).isDebugEnabled();
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+
+    public static void trace(String module, Object message)
+    {
+        Logger.getLogger(module).trace(message);
+    }
+
+    public static void trace(String module, Object message, Exception e)
+    {
+        Logger.getLogger(module).trace(message,e);
+    }
+
+    public static boolean isTraceEnabled(String module) {
+        return Logger.getLogger(module).isTraceEnabled();
+    }
+
+    //---------------------------------------------------------------------------
 
 	public static void info(String module, Object message)
 	{
