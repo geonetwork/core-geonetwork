@@ -37,10 +37,54 @@
 	<!-- Add custom CSW service -->
 	<file name=".*/WEB-INF/config-csw-servers.xml">
 		<addXML xpath="services">
-		<!-- TODO : add one CSW entry point for each existing Sextant group -->
 			<service name="csw-inspire">
 				<class name=".services.main.CswDiscoveryDispatcher">
 					<param name="filter" value="+inspirerelated:on"/>
+				</class>
+			</service>
+			<service name="csw-HUMBOLDT">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:HUMBOLDT"/>
+				</class>
+			</service>
+			<service name="csw-NATURA2000">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:NATURA2000"/>
+				</class>
+			</service>
+			<service name="csw-INTERRISK">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:INTERRISK"/>
+				</class>
+			</service>
+			<service name="csw-GRANULATS">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:GRANULATS"/>
+				</class>
+			</service>
+			<service name="csw-SINPMER">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:SINPMER"/>
+				</class>
+			</service>
+			<service name="csw-MEDBENTH">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:MEDBENTH"/>
+				</class>
+			</service>
+			<service name="csw-PHOTOS_ANCIENNES">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:PHOTOS_ANCIENNES"/>
+				</class>
+			</service>
+			<service name="csw-REBENT">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:REBENT"/>
+				</class>
+			</service>
+			<service name="csw-CATALOGUE">
+				<class name=".services.main.CswDiscoveryDispatcher">
+					<param name="filter" value="+group_public:CATALOGUE"/>
 				</class>
 			</service>
 		</addXML>
@@ -48,6 +92,15 @@
 	<file name=".*/WEB-INF/user-profiles.xml">
 		<addXML xpath="profile[@name='Guest']">
 			<allow service="csw-inspire"/>
+			<allow service="csw-HUMBOLDT"/>
+			<allow service="csw-NATURA2000"/>
+			<allow service="csw-INTERRISK"/>
+			<allow service="csw-GRANULATS"/>
+			<allow service="csw-SINPMER"/>
+			<allow service="csw-MEDBENTH"/>
+			<allow service="csw-PHOTOS_ANCIENNES"/>
+			<allow service="csw-REBENT"/>
+			<allow service="csw-CATALOGUE"/>
 		</addXML>
 	</file>
 	
