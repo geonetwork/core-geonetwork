@@ -145,6 +145,10 @@
       <artifactId>lucene-queries</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-facet</artifactId>
+    </dependency>
+    <dependency>
         <groupId>pcj</groupId>
         <artifactId>pcj</artifactId>
     </dependency>    

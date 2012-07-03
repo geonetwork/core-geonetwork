@@ -138,8 +138,8 @@ public class LuceneConfig {
 	private boolean trackMaxScore = false;
 	private boolean docsScoredInOrder = false;
 
-	private Version LUCENE_VERSION = Version.LUCENE_30;
-	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_30;
+	private Version LUCENE_VERSION = Version.LUCENE_34;
+	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_34;
 
 	
     /**
@@ -655,8 +655,8 @@ public class LuceneConfig {
 		return RAMBufferSizeMB;
 	}
 
-	public String getLuceneVersion() {
-        return LUCENE_VERSION.toString();
+	public Version getLuceneVersion() {
+        return LUCENE_VERSION;
     }
 
 	/**
@@ -665,7 +665,7 @@ public class LuceneConfig {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Lucene configuration:\n");
-		sb.append(" * Version: " + getLuceneVersion() + "\n");
+		sb.append(" * Version: " + getLuceneVersion().toString() + "\n");
         sb.append(" * RAMBufferSize: " + getRAMBufferSize() + "\n");
 		sb.append(" * MergeFactor: " + getMergeFactor() + "\n");
 		sb.append(" * Default analyzer: " + getDefaultAnalyzerClass() + "\n");

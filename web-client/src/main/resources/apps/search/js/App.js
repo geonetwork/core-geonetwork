@@ -31,8 +31,8 @@ GeoNetwork.app = function(){
     /**
      * An interactive map panel for data visualization
      */
-    var iMap, searchForm, resultsPanel, metadataResultsView, tBar, bBar,
-        mainTagCloudViewPanel, tagCloudViewPanel, infoPanel,
+    var iMap, searchForm, facetsPanel, resultsPanel, metadataResultsView, tBar, bBar,
+        mainTagCloudViewPanel, infoPanel,
         visualizationModeInitialized = false;
     
     // private function:
@@ -371,16 +371,12 @@ GeoNetwork.app = function(){
     
     function initPanels(){
         var infoPanel = Ext.getCmp('infoPanel'), 
-        resultsPanel = Ext.getCmp('resultsPanel'),
-        tagCloudPanel = Ext.getCmp('tagCloudPanel');
+        resultsPanel = Ext.getCmp('resultsPanel');
         if (infoPanel.isVisible()) {
             infoPanel.hide();
         }
         if (!resultsPanel.isVisible()) {
             resultsPanel.show();
-        }
-        if (!tagCloudPanel.isVisible()) {
-            tagCloudPanel.show();
         }
         
         // Init map on first search to prevent error
@@ -561,25 +557,6 @@ GeoNetwork.app = function(){
         });
         catalogue.kvpSearch(GeoNetwork.Settings.latestQuery, null, null, null, true, latestView.getStore());
     }
-    /**
-     * Extra tag cloud to displayed current search summary TODO : not really a
-     * narrow your search component.
-     *
-     * @return
-     */
-    function createTagCloud(){
-        var tagCloudView = new GeoNetwork.TagCloudView({
-            catalogue: catalogue
-        });
-        
-        return new Ext.Panel({
-            id: 'tagCloudPanel',
-            border: true,
-            hidden: true,
-            baseCls: 'md-view',
-            items: tagCloudView
-        });
-    }
     
     function edit(metadataId, create, group, child){
         
@@ -673,7 +650,6 @@ GeoNetwork.app = function(){
             // Extra stuffs
             infoPanel = createInfoPanel();
             helpPanel = createHelpPanel();
-            tagCloudViewPanel = createTagCloud();
             
             createHeader();
             
@@ -693,7 +669,9 @@ GeoNetwork.app = function(){
             // Register events on the catalogue
             
             var margins = '35 0 0 0';
-            
+            facetsPanel = new GeoNetwork.FacetsPanel({
+                searchForm: searchForm
+            });
             var viewport = new Ext.Viewport({
                 layout: 'border',
                 id: 'vp',
@@ -714,7 +692,7 @@ GeoNetwork.app = function(){
                     layoutConfig: {
                         animate: true
                     },
-                    items: [searchForm, tagCloudViewPanel]
+                    items: [searchForm, facetsPanel]
                 }, {
                     region: 'center',
                     id: 'center',
@@ -804,7 +782,7 @@ GeoNetwork.app = function(){
         loadResults: function(response){
             
             initPanels();
-            
+            facetsPanel.refresh(response);
             // FIXME : result panel need to update layout in case of slider
             // Ext.getCmp('resultsPanel').syncSize();
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
