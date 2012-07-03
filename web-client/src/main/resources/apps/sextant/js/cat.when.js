@@ -6,7 +6,7 @@ cat.when = function() {
 		createCmp : function() {
 			
 			return new Ext.Panel({
-			    title: OpenLayers.i18n('when'),
+			    title: OpenLayers.i18n('When'),
 			    autoHeight: true,
 			    autoWidth: true,
 			    collapsible: true,
@@ -16,6 +16,14 @@ cat.when = function() {
 			    layout: 'form',
 			    defaults: {
 			        width: 160
+			    },
+			    listeners: {
+			    	'afterrender': function(o) {
+			    		o.header.on('click', function() {
+			    			if(o.collapsed) o.expand();
+			    			else o.collapse();
+			    		});
+			    	}
 			    },
 			    items: GeoNetwork.util.SearchFormTools.getTemporalExtentField(false)
 			});

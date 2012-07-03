@@ -61,7 +61,8 @@
     background-repeat: repeat-x;
 }
 .search-form-panel .x-panel-header {
-    background: url("../images/ui-bg_inset-hard_75_999999_1x100.png") repeat-x scroll 50% 50% #999999;    
+    background: url("../images/ui-bg_inset-hard_75_999999_1x100.png") repeat-x scroll 50% 50% #999999;
+    cursor: pointer;    
 }
 .search-form-panel-collapsed .x-panel-header {
     background: url("../images/ui-bg_glass_60_eeeeee_1x400.png") repeat-x scroll 50% 50% #EEEEEE;

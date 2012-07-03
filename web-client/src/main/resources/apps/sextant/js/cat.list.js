@@ -72,8 +72,8 @@ cat.list = function() {
 		                '</div>',
 		                '<div class="md-links">',
 		               		'<div class="md-action-menu">' + OpenLayers.i18n('mdMenu') + '</div>',
-		                	'<div class="wmsMenu"><span class="icon"></span>Menu WMS<span class="list-icon"></span></div>',
-		                	'<div class="downloadMenu"><span class="icon"></span>Menu Download<span class="list-icon"></span></div>',
+		                	'<div class="downloadMenu"><span class="icon"></span>' + OpenLayers.i18n('result-list-download') + '<span class="list-icon"></span></div>',
+		                	'<div class="wmsMenu"><span class="icon"></span>' + OpenLayers.i18n('result-list-view') + '<span class="list-icon"></span></div>',
 
 	                    // FIXME : this call require the catalogue to be named catalogue, static call ?
 	                    // FIXME : ref to app
