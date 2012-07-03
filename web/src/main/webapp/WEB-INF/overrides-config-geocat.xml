@@ -150,11 +150,6 @@
             <allow service="metadata.formatter.files"/>
             <allow service="metadata.formatter.edit"/>
 
-            <!-- Monitoring services -->
-            <allow service="monitoring.indexing"/>
-            <allow service="monitoring.report"/>
-            <allow service="monitoring"/>
-            
             <!-- shared user services -->
 	        <allow service="shared.user.edit"/>
 	        <allow service="validated.shared.user.admin"/>
