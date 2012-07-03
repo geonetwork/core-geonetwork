@@ -81,6 +81,10 @@ public final class Log
 		Logger.getLogger(module).debug(message);
 	}
 
+    public static void debug(String module, Object message, Exception e)
+    {
+        Logger.getLogger(module).debug(message,e);
+    }
 
     public static boolean isDebugEnabled(String module) {
         return Logger.getLogger(module).isDebugEnabled();
