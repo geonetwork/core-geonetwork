@@ -1,4 +1,7 @@
-<overrides>
+<overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+  xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
+  xsi:noNamespaceSchemaLocation="config-overrides.xsd">
 	<import file="/WEB-INF/config-overrides-sextant-props-c2cpc55.xml"/>
 	<file name=".*/WEB-INF/config-gui.xml">
 		<replaceAtt xpath="client" attName="widget" value="true"/>
@@ -16,6 +19,7 @@
 	<file name=".*/WEB-INF/config.xml">
 		<replaceText xpath="general/uploadDir">../../temp/</replaceText>
 		<replaceText xpath="general/maxUploadSize">100</replaceText>
+		<replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
 		<replaceXML xpath="resources">
 			<resource enabled="true">
 				<name>main-db</name>
