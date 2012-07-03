@@ -3,7 +3,7 @@
     <db.user>www-data</db.user>
     <db.pass>www-data</db.pass>
     <db.driver>org.postgis.DriverWrapper</db.driver>
-    <db.url>jdbc:postgresql_postGIS://localhost:5432/sextantV5</db.url>
+    <db.url>jdbc:postgresql_postGIS://localhost:5432/geonetwork_sextant</db.url>
     <widget.url>../../apps/sextant/index_debug.html</widget.url>
     <widget.parameters>hl=fre</widget.parameters>
   </properties>
