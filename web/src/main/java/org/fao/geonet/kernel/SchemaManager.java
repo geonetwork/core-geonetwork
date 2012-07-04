@@ -78,7 +78,7 @@ import java.util.zip.ZipInputStream;
 public class SchemaManager {
 	private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
 	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
-    private String[] xslUriSuffix = { "", "-edit"};
+    private String[] xslUriSuffix = { "", "-edit", "-rdf"};
 	private String   schemaPluginsDir;
 	private String   schemaPluginsCat;
 	private String	 defaultLang;
