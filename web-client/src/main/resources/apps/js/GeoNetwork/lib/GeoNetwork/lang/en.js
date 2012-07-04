@@ -233,6 +233,7 @@ GeoNetwork.lang.en = {
     'view': 'View',
     'zoomTo': 'Zoom to',
     'saveXml': 'Save as XML',
+    'saveRdf': 'Save as RDF',
     'exportCsv': 'Export (CSV)',
     'exportZip': 'Export (ZIP)',
     'printSel': 'Export (PDF)',
