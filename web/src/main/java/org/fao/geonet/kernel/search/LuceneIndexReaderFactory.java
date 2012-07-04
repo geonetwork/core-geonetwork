@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -77,7 +78,31 @@ public class LuceneIndexReaderFactory {
                 }
                 reader.incRef();
             }
-            return new MultiReader(orderedReaders.toArray(new IndexReader[orderedReaders.size()]), false);
+            return new MultiReader(orderedReaders.toArray(new IndexReader[orderedReaders.size()]), false) {
+                private String id = "n/a";
+                {
+                    if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
+                        id = UUID.randomUUID().toString();
+                         Log.debug(Geonet.LUCENE_TRACKING, "opening lucene reader "+id);
+                    }
+                }
+                @Override
+                public synchronized void decRef() throws IOException {
+                    super.decRef();
+                    if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
+                        if(getRefCount() > 0) {
+                            Log.debug(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id+", new ref count is "+getRefCount());
+                        } else {
+                            Log.debug(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)");
+                        }
+                        if(getRefCount() > 0) {
+                            Log.trace(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id, new DecrementingReaderTracking());
+                        } else {
+                            Log.trace(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)", new CloseReaderTracking());
+                        }
+                    }
+                }
+            };
         } finally {
             lock.unlock();
         }
@@ -142,7 +167,7 @@ public class LuceneIndexReaderFactory {
             for( IndexReader indexReader : subReaders.values() ) {
                 otherReaders.remove(indexReader);
             }
-            return sameNumReaders && otherReaders.isEmpty();
+            return multiReader.getRefCount() > 0 && sameNumReaders && otherReaders.isEmpty();
         } finally {
             lock.unlock();
         }
@@ -189,5 +214,14 @@ public class LuceneIndexReaderFactory {
                 }
             }
         }
+    }
+    
+    private static class DecrementingReaderTracking extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        
+    }    
+    private static class CloseReaderTracking extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        
     }
 }
