@@ -128,8 +128,8 @@
 							<xsl:if test="/root/gui/session/profile!='Administrator'">
 								<xsl:attribute name="disabled"/>
 							</xsl:if>
-						</input><label for="isadmin">Is admin ? Main profile is:</label>
-						<input type="text" id="user.profile" name="profile" value="{/root/response/record/profile}"/>
+						</input><label for="isadmin"><xsl:value-of select="/root/gui/strings/isAdmin"/></label>
+						<input type="hidden" id="user.profile" name="profile" value="{/root/response/record/profile}"/>
 						
 						<br/>
 						<div id="group.list">
