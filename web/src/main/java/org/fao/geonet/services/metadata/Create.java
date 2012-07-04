@@ -86,7 +86,7 @@ public class Create implements Service
 		
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
-		if (user.getProfile() != Geonet.Profile.ADMINISTRATOR) {
+		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 			java.util.List list = dbms.select("SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?", 
 						Integer.valueOf(user.getUserId()),
 						Integer.valueOf(groupOwner)).getChildren();

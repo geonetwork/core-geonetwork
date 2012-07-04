@@ -238,7 +238,7 @@ ConfigView.prototype.setData = function(data)
     $('metadata.enableXmlView').checked = data['METADATA_XML_VIEW'] == 'true';
     $('metadata.defaultView').value = data['METADATA_DEFAULT_VIEW'];
     
-    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'];
+    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'] == 'true';
     
     $('harvester.enableEditing').checked = data['HARVESTER'] == 'true';
 

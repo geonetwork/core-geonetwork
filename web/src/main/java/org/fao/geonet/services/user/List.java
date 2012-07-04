@@ -77,12 +77,10 @@ public class List implements Service
 		//--- now filter them
 
 		java.util.List<Element> alToRemove = new ArrayList<Element>();
-System.out.println(hsMyGroups.toString());
-System.out.println(profileSet.toString());
+
 		if (!session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 			for(Iterator i=elUsers.getChildren().iterator(); i.hasNext(); )
 			{
-				System.out.println("---");
 				Element elRec = (Element) i.next();
 	
 				String userId = elRec.getChildText("id");
@@ -104,10 +102,6 @@ System.out.println(profileSet.toString());
 				if (!profileSet.contains(profile))
 					alToRemove.add(elRec);
 				
-				
-				System.out.println(userGroups.toString());
-				System.out.println(profile.toString());
-	
 			}
 		}
 		//--- remove unwanted users
