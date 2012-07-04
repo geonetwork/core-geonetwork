@@ -274,7 +274,7 @@ CREATE TABLE UserGroups
     groupId  int,
     profile varchar(32),
 
-    primary key(userId,groupId, profile),
+    primary key(userId,groupId,profile),
 
     foreign key(userId) references Users(id),
     foreign key(groupId) references Groups(id)
