@@ -93,7 +93,6 @@ public class Update implements Service
 		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
 				myProfile.equals(Geonet.Profile.USER_ADMIN) ||
 				myUserId.equals(id)) {
-			// TODO : if USER_ADMIN in user group
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
@@ -183,13 +182,10 @@ public class Update implements Service
 		String[] profiles = {Geonet.Profile.USER_ADMIN, Geonet.Profile.REVIEWER, Geonet.Profile.EDITOR, Geonet.Profile.REGISTERED_USER};
 		java.util.Set<Integer> editingGroups = new java.util.HashSet<Integer>();
 		int userId = new Integer(id);
-		System.out.println("---");
 		for (String profile : profiles) {
 			java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
-			System.out.println("---" + profile);
 			for(Element userGroup : userGroups) {
 				String group = userGroup.getText();
-				System.out.println("---  * " + group);
 				if (!group.equals("")) {
 					int groupId = new Integer(group);
 					

@@ -552,7 +552,9 @@
 
 		<service name="metadata.xmlinsert.form">
 			<output sheet="metadata-insert-form.xsl">
-				<call name="groups"  class=".guiservices.groups.GetMine"/>
+				<call name="groups"  class=".guiservices.groups.GetMine">
+					<param name="profile" value="Editor"/>
+				</call>
 				<call name="categories"        class=".services.category.List"/>
 				<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs"/>
 			</output>
