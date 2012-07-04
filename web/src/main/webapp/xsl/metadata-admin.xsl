@@ -15,8 +15,11 @@
 			<xsl:with-param name="content">
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
+				<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
+				<xsl:variable name="isNotReviewer" select="not(/root/response/groups/group[id=$groupOwner and userProfile='Reviewer'])"/>
 				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
-
+				
+				
 				<div id="privileges">
 					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
 					<table>
@@ -41,9 +44,6 @@
 							Disabled if user is not an administrator
 							or if user is not a reviewer of the metadata group.
 						-->
-						<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
-						<xsl:variable name="isNotReviewer" select="not(/root/response/groups/group[id=$groupOwner and userProfile='Reviewer'])"/>
-						
 						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
 							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>

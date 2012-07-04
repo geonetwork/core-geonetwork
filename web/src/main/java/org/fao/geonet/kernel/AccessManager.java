@@ -245,7 +245,7 @@ public class AccessManager {
 			else {
 				StringBuffer query = new StringBuffer("SELECT distinct(groupId) FROM UserGroups WHERE ");
 				if (editingGroupsOnly) {
-					query.append("profile='Editor' AND ");
+					query.append("profile='"+Geonet.Profile.EDITOR+"' AND ");
 				}
 				query.append("userId=?");
 				Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
@@ -431,7 +431,7 @@ public class AccessManager {
 				"JOIN UserGroups ug on m.groupOwner = ug.groupId "+
 				"JOIN Users u on u.id = ug.userId "+
 				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
-				"AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
+				"AND ug.profile = '"+Geonet.Profile.REVIEWER+"' "+
 				"ORDER BY u.id";
 
         return dbms.select(query);
@@ -476,8 +476,13 @@ public class AccessManager {
 		UserSession us = context.getUserSession();
 		if (!us.isAuthenticated())
 			return false;
+		
+		
 		//--- check if the user is an editor and has edit rights over the metadata record
-		if (us.getProfile().equals(Geonet.Profile.EDITOR)) {
+		String isEditorQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Element isEditorRes = dbms.select(isEditorQuery, Integer.parseInt(us.getUserId()), Geonet.Profile.EDITOR);
+		if (isEditorRes.getChildren().size() != 0) {
 			Set<String> hsOper = getOperations(context, id, context.getIpAddress());
 			if (hsOper.contains(OPER_EDITING)) return true;
 		}

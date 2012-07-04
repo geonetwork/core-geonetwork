@@ -2338,7 +2338,7 @@ public class DataManager {
 			// Reserved groups
 			if (grpId <= 1) {
 				//  If user is reviewer, user can change operation for groups -1, 0, 1
-				String isReviewerQuery = "SELECT groupId AS total FROM UserGroups WHERE userId=? AND profile=?";
+				String isReviewerQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
 				Element isReviewerRes = dbms.select(isReviewerQuery, userId, Geonet.Profile.REVIEWER);
 				if (isReviewerRes.getChildren().size() == 0) {
 					throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a Reviewer of any group.");
