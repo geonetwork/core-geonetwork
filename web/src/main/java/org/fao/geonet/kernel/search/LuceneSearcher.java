@@ -1118,10 +1118,8 @@ public class LuceneSearcher extends MetaSearcher {
             Document doc = null;
             try {
                 doc = reader.document(sdoc.doc, keySelector);
-            }
-            catch (Exception e) {
-                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc);
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc, e);
             }
 
             for (String key : summaryMaps.keySet()) {

@@ -47,7 +47,7 @@ if [[ $2 != [0-9].[0-9].[0-9] ]]; then
 fi
 
 # Note: In MacOS (darwin10.0) sed requires -i .bak as option to work properly
-if [[ $OSTYPE == 'darwin10.0' ]]; then
+if grep -q "darwin" <<< $OSTYPE ; then
 	sedopt='-i .bak'
 else
 	sedopt='-i'

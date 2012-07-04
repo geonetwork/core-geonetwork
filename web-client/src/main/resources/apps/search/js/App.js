@@ -328,11 +328,13 @@ GeoNetwork.app = function(){
             Ext.each(adminFields, function(item){
                 item.setVisible(true);
             });
+            GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
         });
         catalogue.on('afterLogout', function(){
             Ext.each(adminFields, function(item){
                 item.setVisible(false);
             });
+            GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
         });
         
         

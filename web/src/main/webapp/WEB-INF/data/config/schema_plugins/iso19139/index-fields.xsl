@@ -93,23 +93,23 @@
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date">
-					<Field name="revisionDate" string="{string(gco:Date|gco:DateTime)}" store="false" index="true"/>
+					<Field name="revisionDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
-						<Field name="tempExtentBegin" string="{string(gco:Date|gco:DateTime)}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
 					</xsl:if>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date">
-					<Field name="createDate" string="{string(gco:Date|gco:DateTime)}" store="true" index="true"/>
+					<Field name="createDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
-						<Field name="tempExtentBegin" string="{string(gco:Date|gco:DateTime)}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
 					</xsl:if>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date">
-					<Field name="publicationDate" string="{string(gco:Date|gco:DateTime)}" store="false" index="true"/>
+					<Field name="publicationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
-						<Field name="tempExtentBegin" string="{string(gco:Date|gco:DateTime)}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
 					</xsl:if>
 				</xsl:for-each>
 
@@ -415,7 +415,7 @@
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date">
-				<Field name="specificationDate" string="{string(gco:Date|gco:DateTime)}" store="false" index="true"/>
+				<Field name="specificationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">

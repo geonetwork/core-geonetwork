@@ -829,7 +829,6 @@
     <module>sde</module>
     <module>web-client</module>
     <module>web</module>
-    <module>geoserver</module>
   </modules>
   
   <profiles>
@@ -848,6 +847,17 @@
       </activation>
       <modules>
         <module>gast</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>geoserver</id>
+      <activation>
+        <file>
+          <exists>geoserver/pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>geoserver</module>
       </modules>
     </profile>
   </profiles>
