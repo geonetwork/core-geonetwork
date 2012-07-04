@@ -67,7 +67,7 @@ public class Sitemap implements Service
 
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+        Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
 
         String query = "SELECT DISTINCT id, uuid, schemaId, changeDate FROM Metadata, OperationAllowed "+
                             "WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (";
