@@ -683,11 +683,13 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.12</version>
       </dependency>
+			<!-- Not permitted under oracle licensing rules
       <dependency>
         <groupId>ojdbc</groupId>
         <artifactId>ojdbc</artifactId>
         <version>14</version>
       </dependency>
+			-->
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
         <artifactId>izpack-standalone-compiler</artifactId>
