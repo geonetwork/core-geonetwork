@@ -48,47 +48,47 @@
 			</service>
 			<service name="csw-HUMBOLDT">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:HUMBOLDT"/>
+					<param name="filter" value="+_groupPublished:HUMBOLDT"/>
 				</class>
 			</service>
 			<service name="csw-NATURA2000">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:NATURA2000"/>
+					<param name="filter" value="+_groupPublished:NATURA2000"/>
 				</class>
 			</service>
 			<service name="csw-INTERRISK">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:INTERRISK"/>
+					<param name="filter" value="+_groupPublished:INTERRISK"/>
 				</class>
 			</service>
 			<service name="csw-GRANULATS">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:GRANULATS"/>
+					<param name="filter" value="+_groupPublished:GRANULATS"/>
 				</class>
 			</service>
 			<service name="csw-SINPMER">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:SINPMER"/>
+					<param name="filter" value="+_groupPublished:SINPMER"/>
 				</class>
 			</service>
 			<service name="csw-MEDBENTH">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:MEDBENTH"/>
+					<param name="filter" value="+_groupPublished:MEDBENTH"/>
 				</class>
 			</service>
 			<service name="csw-PHOTOS_ANCIENNES">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:PHOTOS_ANCIENNES"/>
+					<param name="filter" value="+_groupPublished:PHOTOS_ANCIENNES"/>
 				</class>
 			</service>
 			<service name="csw-REBENT">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:REBENT"/>
+					<param name="filter" value="+_groupPublished:REBENT"/>
 				</class>
 			</service>
 			<service name="csw-CATALOGUE">
 				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+group_public:CATALOGUE"/>
+					<param name="filter" value="+_groupPublished:CATALOGUE"/>
 				</class>
 			</service>
 		</addXML>
