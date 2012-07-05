@@ -257,22 +257,35 @@
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
 	<xsl:template match="gmd:PT_Locale">
+		<xsl:element name="gmd:{local-name()}">
 			<xsl:variable name="id" select="upper-case(
 				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2))"/>
 
-		<xsl:choose>
-			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">
-				<xsl:copy-of select="."/>
-			</xsl:when>
-			<xsl:otherwise>
-				<gmd:PT_Locale>
-					<xsl:attribute name="id">
-						<xsl:value-of select="$id"/>
-					</xsl:attribute>
-					<xsl:copy-of select="./*"/>
-				</gmd:PT_Locale>
-			</xsl:otherwise>
-		</xsl:choose>
+			<xsl:apply-templates select="@*"/>
+			<xsl:if test="@id and (normalize-space(@id)='' or normalize-space(@id)!=$id)">
+				<xsl:attribute name="id">
+					<xsl:value-of select="$id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="node()"/>
+		</xsl:element>
+	</xsl:template>
+
+	<!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
+	<xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
+	<xsl:template  match="gmd:LocalisedCharacterString">
+		<xsl:element name="gmd:{local-name()}">
+			<xsl:variable name="currentLocale" select="replace(normalize-space(@locale), '^#', '')"/>
+			<xsl:variable name="ptLocale" select="$language[@id=string($currentLocale)]"/>
+			<xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2))"/>
+			<xsl:apply-templates select="@*"/>
+			<xsl:if test="$currentLocale='' or @locale!=concat('#', $id)">
+				<xsl:attribute name="locale">
+					<xsl:value-of select="concat('#',$id)"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="node()"/>
+		</xsl:element>
 	</xsl:template>
 
 	<!-- ================================================================= -->
