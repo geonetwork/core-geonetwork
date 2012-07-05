@@ -275,11 +275,11 @@
 	<xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
 	<xsl:template  match="gmd:LocalisedCharacterString">
 		<xsl:element name="gmd:{local-name()}">
-			<xsl:variable name="currentLocale" select="replace(normalize-space(@locale), '^#', '')"/>
+			<xsl:variable name="currentLocale" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
 			<xsl:variable name="ptLocale" select="$language[@id=string($currentLocale)]"/>
 			<xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 2))"/>
 			<xsl:apply-templates select="@*"/>
-			<xsl:if test="$currentLocale='' or @locale!=concat('#', $id)">
+			<xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
 				<xsl:attribute name="locale">
 					<xsl:value-of select="concat('#',$id)"/>
 				</xsl:attribute>
