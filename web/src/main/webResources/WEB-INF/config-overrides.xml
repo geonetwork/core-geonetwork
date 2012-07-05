@@ -1,5 +1,0 @@
-<overrides>
-	<override>${system.specific.overrides}</override>
-	<override>${web.xml.main.config.overrides}</override>
-	<override>${web.xml.widget.config.overrides}</override>
-</overrides>
