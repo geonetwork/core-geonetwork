@@ -500,13 +500,19 @@ class Harvester
 		boolean loaded 		= false;
 		
 		if (params.ogctype.substring(0,3).equals("WMS")) {
-
+			Element name;
 			if (params.ogctype.substring(3,8).equals("1.3.0")) {
 				Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
-				reg.name 	= layer.getChild ("Name", wms).getValue ();
+				name = layer.getChild ("Name", wms);
 			} else {
-				reg.name 	= layer.getChild ("Name").getValue ();
+				name = layer.getChild ("Name");
 			}
+			//--- For the moment, skip non-requestable category layers
+			if (name == null || name.getValue().trim().equals("")) {
+				log.info("  - skipping layer with no name element");
+				return null;
+			}
+			reg.name = name.getValue();
 		} else if (params.ogctype.substring(0,3).equals("WFS")) {
 			Namespace wfs = Namespace.getNamespace("http://www.opengis.net/wfs");
 			reg.name 	= layer.getChild ("Name", wfs).getValue ();
