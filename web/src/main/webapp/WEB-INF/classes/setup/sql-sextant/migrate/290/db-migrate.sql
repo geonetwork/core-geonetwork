@@ -233,6 +233,16 @@ ALTER TABLE Metadata ALTER COLUMN createDate TYPE varchar(30);
 ALTER TABLE Metadata ALTER COLUMN changeDate TYPE varchar(30);
 ALTER TABLE Metadata ADD doctype varchar(255);
 
+
+INSERT INTO Settings VALUES (250,1,'searchStats',NULL);
+INSERT INTO Settings VALUES (251,250,'enable','false');
+
+INSERT INTO Settings VALUES (900,1,'harvester',NULL);
+INSERT INTO Settings VALUES (901,900,'enableEditing','false');
+
+INSERT INTO Settings VALUES (722,720,'enableSearchPanel','false');
+
+
 INSERT INTO Settings VALUES (910,1,'metadata',NULL);
 INSERT INTO Settings VALUES (911,910,'enableSimpleView','true');
 INSERT INTO Settings VALUES (912,910,'enableIsoView','true');
