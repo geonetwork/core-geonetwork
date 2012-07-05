@@ -369,7 +369,9 @@ public class Aligner
 			String name = localCateg.getName(catId);
 
 			if (name == null)
+			{
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
+			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
@@ -602,8 +604,9 @@ public class Aligner
             boolean validate = false;
             boolean ufo = params.mefFormatFull;
             boolean index = false;
+            boolean updateDateStamp = true;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, updateDateStamp);
 
 			result.updatedMetadata++;
 		}
@@ -675,7 +678,9 @@ public class Aligner
 									InputStream is, Element files) throws IOException
 	{
 		if (files == null)
+		{
             if(log.isDebugEnabled()) log.debug("  - No file found in info.xml. Cannot update file:" + file);
+		}
 		else
 		{
 			removeOldFile(id, files, dir);
