@@ -18,6 +18,7 @@
 -- !!! WARNING !!!: Remove harvesting configuration (ie ID >= 722 in Settings table) 
 -- before update. After migration, start the catalog and add the harvesting configuration
 -- back.
+-- DELETE FROM SETTINGS WHERE ID >= 722
 
 
 --SET search_path = geonetwork;
