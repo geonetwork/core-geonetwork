@@ -438,11 +438,6 @@
  
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>2.5.3</version>
-      </dependency>
-      <dependency>
         <groupId>org.dspace</groupId>
         <artifactId>cql-java</artifactId>
         <version>1.0</version>
@@ -707,6 +702,38 @@
             <version>1.2.0</version>
         </dependency>
         <!-- end language detection -->
+
+         <!-- Spring dependencies -->
+         <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-context</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-core</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-cas</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-config</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-ldap</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-web</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -733,7 +760,6 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
-     
   </dependencies>
 
   <!-- ================================================================== -->
@@ -876,6 +902,7 @@
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>2.7.4</geotools.version>
     <lucene.version>3.0.2</lucene.version>
+    <spring.version>3.1.0.RELEASE </spring.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
   </properties>
