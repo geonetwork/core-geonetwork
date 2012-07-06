@@ -26,6 +26,9 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.server.resources.ResourceManager;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import jeeves.xlink.Processor;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -51,13 +54,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 //=============================================================================
 
 public class ThesaurusManager implements ThesaurusFinder {
 
-	public synchronized static ThesaurusManager getInstance(String appPath, DataManager dm, ResourceManager rm, String thesauriRepository) throws Exception { 
+	public synchronized static ThesaurusManager getInstance(ServiceContext context, String appPath, DataManager dm, ResourceManager rm, String thesauriRepository) throws Exception { 
 	 	if (_instance == null){ 
-	 	_instance = new ThesaurusManager(appPath, dm, rm, thesauriRepository); 
+	 	_instance = new ThesaurusManager(context, appPath, dm, rm, thesauriRepository); 
 	 	} 
 	 	return _instance; 
 	}
@@ -80,13 +86,14 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 	/**
 	 * 
+	 * @param context ServiceContext used to check when servlet is up only
 	 * @param appPath to find conversion XSLTs etc
 	 * @param DataManager to retrieve metadata to convert to SKOS
 	 * @param resourceManager for database connections
 	 * @param thesauriRepository
 	 * @throws Exception
 	 */
-	private ThesaurusManager(String appPath, DataManager dm, ResourceManager rm, String thesauriRepository)
+	private ThesaurusManager(ServiceContext context, String appPath, DataManager dm, ResourceManager rm, String thesauriRepository)
 			throws Exception {
 		// Get Sesame interface
 		service = Sesame.getService();
@@ -101,28 +108,64 @@ public class ThesaurusManager implements ThesaurusFinder {
 		this.dm = dm;
 		this.rm = rm;
  		THESAURUS_MANAGER_NOTIFIER_ID = UUID.randomUUID().toString();
-		initThesauriTable(thesauriDir);
+
+		batchBuildTable(context, thesauriDir);
 	}
 	
-	/**
-	 * Build thesaurus file path according to thesaurus configuration (ie. codelist directory location).
-	 * If directory does not exist, it will create it.
-	 * 
-	 * @param fname
-	 * @param type
-	 * @param dname
-	 * 
-	 * @return the thesaurus file path.
-	 */
-	public String buildThesaurusFilePath(String fname, String type, String dname) {
-		String dirPath = thesauriDirectory + File.separator + type + File.separator + Geonet.CodeList.THESAURUS + File.separator + dname;
-		File dir = new File(dirPath);
-		if (!dir.exists()) {
-			dir.mkdirs();
+  /**
+   * Start task to build thesaurus table once the servlet is up. 
+   *
+	 * @param context ServiceContext used to check when servlet is up only
+	 * @param thesauriDir directory containing thesauri
+   */
+	private void batchBuildTable(ServiceContext context, File thesauriDir) {
+		ExecutorService executor = Executors.newFixedThreadPool(1);
+		try {
+			Runnable worker = new InitThesauriTableTask(context, thesauriDir);
+			executor.execute(worker);
+		} finally {
+			executor.shutdown();
 		}
-		return dirPath + File.separator + fname;
-	}	
-	
+	}
+
+  /**
+   * A Task to build the thesaurus table once the servlet is up. 
+	 * Since thesauri can be metadata records (registers) they can also have 
+	 * xlinks. These may not be resolveable until the servlet is up. Hence
+	 * we start a thread that waits until the servlet is up before reading
+	 * the thesauri and creating the thesaurus table.
+   */
+  final class InitThesauriTableTask implements Runnable {
+
+		private final ServiceContext context;
+		private final File thesauriDir;
+
+		InitThesauriTableTask(ServiceContext context, File thesauriDir) {
+			this.context = context;
+			this.thesauriDir = thesauriDir;
+		}
+
+		public void run() {
+			context.setAsThreadLocal();
+			try {
+				// poll context to see whether servlet is up yet
+				while (!context.isServletInitialized()) {
+					if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+						Log.debug(Geonet.THESAURUS_MAN, "Waiting for servlet to finish initializing..");
+					Thread.sleep(10000); // sleep 10 seconds
+				}
+				try {
+					initThesauriTable(thesauriDir);
+				} catch (Exception e) {
+					Log.error(Geonet.THESAURUS_MAN, "Error rebuilding thesaurus table : "+e.getMessage()+"\n"+ Util.getStackTrace(e));
+				} 
+			} catch (Exception e) {
+				Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception");
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * 
 	 * @param thesauriDirectory
@@ -236,6 +279,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 			String id = dm.getMetadataId(dbms, uuid);
 			Element md = dm.getMetadata(dbms, id);
+			Processor.detachXLink(md);
 			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
 			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(), "");
 	
@@ -250,6 +294,25 @@ public class ThesaurusManager implements ThesaurusFinder {
 			if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
 		}
 	}
+
+	/**
+	 * Build thesaurus file path according to thesaurus configuration (ie. codelist directory location).
+	 * If directory does not exist, it will create it.
+	 * 
+	 * @param fname
+	 * @param type
+	 * @param dname
+	 * 
+	 * @return the thesaurus file path.
+	 */
+	public String buildThesaurusFilePath(String fname, String type, String dname) {
+		String dirPath = thesauriDirectory + File.separator + type + File.separator + Geonet.CodeList.THESAURUS + File.separator + dname;
+		File dir = new File(dirPath);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		return dirPath + File.separator + fname;
+	}	
 
 	/**
 	 * 
