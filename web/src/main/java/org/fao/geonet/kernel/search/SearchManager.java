@@ -1645,9 +1645,21 @@ public class SearchManager {
             _lock.lock();
             try {
             	Parser filterParser = getFilterParser(filterVersion);
-            	FeatureSource<SimpleFeatureType,SimpleFeature> featureSource = _writer.getFeatureSource();
-                SpatialIndex index = _writer.getIndex();
-                return OgcGenericFilters.create(query, filterExpr, featureSource, index, filterParser);
+                Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new  Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex>(){
+                    @Override
+                    public FeatureSource<SimpleFeatureType, SimpleFeature> one() {
+                        return _writer.getFeatureSource();
+                    }
+                    @Override
+                    public SpatialIndex two() {
+                        try {
+                            return _writer.getIndex();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                };
+                return OgcGenericFilters.create(query, filterExpr, accessor , filterParser);
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).

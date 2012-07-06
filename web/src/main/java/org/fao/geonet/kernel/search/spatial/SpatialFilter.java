@@ -91,25 +91,22 @@ public abstract class SpatialFilter extends Filter
 		GeometryFactory fac = new GeometryFactory();
 		WORLD_BOUNDS = fac.toGeometry(new Envelope(-180,180,-90,90));
 	}
+	protected Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor;
     protected final Geometry      _geom;
-    protected final FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource;
-    protected final SpatialIndex    _index;
 
     protected final FilterFactory2  _filterFactory;
     protected       Query                 _query;
-    protected final FieldSelector _selector;
     private org.opengis.filter.Filter _spatialFilter;
+    protected final FieldSelector _selector;
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
 
 
-    protected SpatialFilter(Query query, Geometry geom,
-            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
+    protected SpatialFilter(Query query, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
         _query = query;
         _geom = geom;
-        _featureSource = featureSource;
-        _index = index;
+        this.sourceAccessor = sourceAccessor;
         _filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools
                 .getDefaultHints());
 
@@ -123,10 +120,9 @@ public abstract class SpatialFilter extends Filter
 				};
     }
 
-    protected SpatialFilter(Query query, Envelope bounds,
-            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
+    protected SpatialFilter(Query query, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        this(query,JTS.toGeometry(bounds),featureSource,index);
+        this(query,JTS.toGeometry(bounds),sourceAccessor);
     }
 
     public DocIdSet getDocIdSet(final IndexReader reader) throws IOException
@@ -185,6 +181,7 @@ public abstract class SpatialFilter extends Filter
         processCachedFeatures(jcs, matches, docIndexLookup, bits);
 
         Id fidFilter = _filterFactory.id(matches);
+        FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
         String ftn = _featureSource.getSchema().getName().getLocalPart();
         String[] geomAtt = {_featureSource.getSchema().getGeometryDescriptor().getLocalName()};
         FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
@@ -256,7 +253,7 @@ public abstract class SpatialFilter extends Filter
     private synchronized org.opengis.filter.Filter getFilter()
     {
         if (_spatialFilter == null) {
-            _spatialFilter = createFilter(_featureSource);
+            _spatialFilter = createFilter(sourceAccessor.one());
         }
 
         return _spatialFilter;
@@ -287,7 +284,7 @@ public abstract class SpatialFilter extends Filter
             }
 
             @SuppressWarnings("unchecked")
-            List<Pair<FeatureId,String>> fids = _index.query(geom.getEnvelopeInternal());
+            List<Pair<FeatureId,String>> fids = sourceAccessor.two().query(geom.getEnvelopeInternal());
             _unrefinedMatches = new HashMap<String,FeatureId>();
             for (Pair<FeatureId, String> match : fids) {
                 _unrefinedMatches.put(match.two(), match.one());
