@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
 import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
@@ -70,6 +71,8 @@ import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1208,15 +1211,15 @@ public class SearchManager
             _lock.lock();
             try {
             	Parser filterParser = getFilterParser(filterVersion);
-            	FeatureSource featureSource = _writer.getFeatureSource();
-                SpatialIndex index = _writer.getIndex();
-                return OgcGenericFilters.create(query, filterExpr,
-                        featureSource, index, filterParser);
-            } catch (Exception e) {
-            	// TODO Handle NPE creating spatial filter (due to constraint language version). 
-    			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " + 
-            			filterVersion + "):" + Xml.getString(filterExpr) + ". Error is: " + e.toString());
-            } finally {
+                Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
+                return OgcGenericFilters.create(query, filterExpr, accessor , filterParser);
+            }
+            catch (Exception e) {
+            	// TODO Handle NPE creating spatial filter (due to constraint language version).
+    			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " + filterVersion + "):" +
+                        Xml.getString(filterExpr) + ". Error is: " + e.toString());
+            }
+            finally {
                 _lock.unlock();
             }
         }
@@ -1238,12 +1241,9 @@ public class SearchManager
                 String relation = Util.getParam(request,
                         Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
-                SpatialIndexWriter writer = writerNoLocking();
-                SpatialIndex index = writer.getIndex();
-                FeatureSource featureSource = writer.getFeatureSource();
-                return _types.get(relation).newInstance(query, request, geom,
-                        featureSource, index);
-            } finally {
+                return _types.get(relation).newInstance(query, geom, new SpatialIndexAccessor());
+            }
+            finally {
                 _lock.unlock();
             }
         }
@@ -1295,7 +1295,25 @@ public class SearchManager
 			return new Parser(config);
 		}
 
-        /**
+        private final class SpatialIndexAccessor
+				extends
+				Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> {
+			@Override
+			public FeatureSource<SimpleFeatureType, SimpleFeature> one() {
+			    return _writer.getFeatureSource();
+			}
+
+			@Override
+			public SpatialIndex two() {
+			    try {
+			        return _writer.getIndex();
+			    } catch (IOException e) {
+			        throw new RuntimeException(e);
+			    }
+			}
+		}
+
+		/**
          * TODO javadoc.
          *
          */
@@ -1331,10 +1349,9 @@ public class SearchManager
      * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    private static Constructor<? extends SpatialFilter> constructor(
-            Class<? extends SpatialFilter> clazz) throws SecurityException, NoSuchMethodException {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class, Element.class, Geometry.class,
-                FeatureSource.class, SpatialIndex.class);
-}
+    private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
+            throws SecurityException, NoSuchMethodException {
+        return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, Pair.class);
+    }
 
 }

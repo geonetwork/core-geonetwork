@@ -627,9 +627,32 @@
     <module>oaipmh</module>
     <module>sde</module>
     <module>web</module>
-    <module>geoserver</module>
-    <module>gast</module>
   </modules>
+  
+  <profiles>
+    <profile>
+      <id>gast</id>
+      <activation>
+        <file>
+          <exists>gast/pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>gast</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>geoserver</id>
+      <activation>
+        <file>
+          <exists>geoserver/pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>geoserver</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <distributionManagement>
     <snapshotRepository>

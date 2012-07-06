@@ -18,8 +18,10 @@ import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.feature.type.Name;
 import org.opengis.filter.And;
 import org.opengis.filter.BinaryLogicOperator;
 import org.opengis.filter.Filter;
@@ -64,12 +66,31 @@ class Reproject {
 public class OgcGenericFilters
 {
 
+    /**
+     * 
+     * @param query
+     * @param filterExpr
+     * @param sourceAccessor
+     *            A lazy pair object that will obtain the required objects as
+     *            needed. It is critical they do not directly reference the
+     *            objects, especially the SpatialIndex because it changes
+     *            frequently and can be a source of memory leakage. So it should
+     *            Reference a singleton object capable of accessing the most
+     *            current instance. The case is a LuceneSearcher being put on
+     *            the UserSession with a spatial filter. The spatial filter
+     *            references the current instance of SpatialIndex. This means if
+     *            a new index is generated the filter will have an outdated
+     *            version as well as keep reference to this potentially very
+     *            large object.
+     * @param parser
+     * @return
+     * @throws Exception
+     */
     @SuppressWarnings("serial")
     public static SpatialFilter create(Query query,
-            Element filterExpr, FeatureSource featureSource,
-            SpatialIndex index, Parser parser) throws Exception
+            Element filterExpr, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Parser parser) throws Exception
     {
-				// -- parse Filter and report any validation issues
+		// -- parse Filter and report any validation issues
         String string = Xml.getString(filterExpr);
 				Log.debug(Geonet.SEARCH_ENGINE,"Filter string is :\n"+string);
 
@@ -115,8 +136,7 @@ public class OgcGenericFilters
         
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
-            return new FullScanFilter(query, bounds,
-                    featureSource, index){
+            return new FullScanFilter(query, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource source)
                 {
@@ -124,8 +144,7 @@ public class OgcGenericFilters
                 }
             };
         }else{
-            return new SpatialFilter(query, bounds,
-                    featureSource, index){
+            return new SpatialFilter(query, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource source)
                 {

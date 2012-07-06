@@ -23,9 +23,11 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.HitCollector;
@@ -44,10 +46,9 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.SpatialOperator;
 
-import java.io.IOException;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * This filter filters out all documents that do not intersect the requested
@@ -61,16 +62,16 @@ public class FullScanFilter extends SpatialFilter
     private static final long serialVersionUID = 1114543251684147194L;
     private Set<String>       _matches;
 
-    public FullScanFilter(Query query, Element request, Geometry geom,
-            FeatureSource<FeatureType, Feature> featureSource, SpatialIndex index) throws IOException
+    public FullScanFilter(Query query, Geometry geom,
+            Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, geom, featureSource, index);
+        super(query, geom, sourceAccessor);
     }
 
     protected FullScanFilter(Query query, Envelope bounds,
-            FeatureSource featureSource, SpatialIndex index) throws IOException
+            Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, bounds, featureSource, index);
+        super(query, bounds, sourceAccessor);
     }
 
     public BitSet bits(final IndexReader reader) throws IOException
@@ -109,7 +110,8 @@ public class FullScanFilter extends SpatialFilter
     {
         if (_matches == null) {
 
-            FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
+            FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
+            FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource 
                     .getFeatures(createFilter(_featureSource));
             FeatureIterator<SimpleFeature> iterator = features.features();
 

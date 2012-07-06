@@ -246,7 +246,7 @@ public class Processor {
 		theNss.add(XLink.NAMESPACE_XLINK);
 		List<Attribute> xlinks = new ArrayList();
 		try {
-			xlinks = Xml.selectNodes(md, xpath, theNss);
+			xlinks = (List<Attribute>) Xml.selectNodes(md, xpath, theNss);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.error(Log.XLINK_PROCESSOR, e.getMessage());
