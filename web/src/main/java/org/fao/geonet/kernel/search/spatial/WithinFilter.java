@@ -47,10 +47,9 @@ public class WithinFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public WithinFilter(Query query, Geometry geom,
-            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
+    public WithinFilter(Query query, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, geom, featureSource, index);
+        super(query, geom, sourceAccessor);
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
