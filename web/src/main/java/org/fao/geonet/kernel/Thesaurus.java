@@ -26,6 +26,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.openrdf.model.BNode;
@@ -105,8 +106,7 @@ public class Thesaurus {
 		this.thesaurusFile = thesaurusFile; 
 		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
 		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
-		
-        retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
+    retrieveThesaurusTitle(thesaurusFile, dname + "." + fname);
 
 	}
 
@@ -608,6 +608,12 @@ public class Thesaurus {
      *
      */
     private void retrieveThesaurusTitle(File thesaurusFile, String defaultTitle) {
+				// set defaults as in the case of a local thesaurus file, this info
+				// may not be present yet
+				this.title = defaultTitle;
+        this.date = new ISODate().toString();
+				this.version = "unknown"; // not really acceptable!
+
         try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
