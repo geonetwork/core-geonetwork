@@ -27,15 +27,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Properties;
 
-import jeeves.server.ConfigurationOverrides;
-import jeeves.server.sources.http.JeevesServlet;
-
 import javax.servlet.ServletContext;
+
+import jeeves.server.ConfigurationOverrides;
 
 //=============================================================================
 
@@ -52,9 +52,13 @@ public class ServerLib
 		this.appPath = appPath;
 
 		serverProps = new Properties();
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(appPath + SERVER_PROPS), "UTF-8"));
+		
+		InputStream stream = servletContext.getResourceAsStream(SERVER_PROPS);
+		if (stream == null) {
+			stream = new FileInputStream(appPath + SERVER_PROPS);
+		}
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+		
 		try {
 			List<String> lines = ConfigurationOverrides.loadTextFileAndUpdate(
                     SERVER_PROPS, servletContext, appPath, reader);

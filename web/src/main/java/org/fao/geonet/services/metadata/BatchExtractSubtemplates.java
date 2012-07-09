@@ -111,7 +111,6 @@ public class BatchExtractSubtemplates implements Service
 		String category = Util.getParam(params, Params.CATEGORY);
 		String changeParam = Util.getParam(params, Params.DOCHANGES, "off");
 		boolean doChanges = changeParam.equals("on");
-		System.out.println("Do changes is "+doChanges);
 
 		if (!(category.equals("_none_")) && category.startsWith("_")) {
 			category = category.substring(1);

@@ -145,6 +145,7 @@
 		<allow service="logo.set"/>
 
         <allow service="debug.openconnection.accessors"/>
+        <allow service="debug.filehandles"/>
 	</profile>
 
 	<!-- ====================================================================== -->
