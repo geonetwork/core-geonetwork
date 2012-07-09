@@ -73,6 +73,8 @@ public class Thesaurus {
 
     private String date;
 
+		private String version;
+
     private String downloadUrl;
 
     private String keywordUrl;
