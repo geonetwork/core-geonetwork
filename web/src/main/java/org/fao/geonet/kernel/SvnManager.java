@@ -271,7 +271,7 @@ public class SvnManager {
 
 		if (!exists(id)) return null; // not in repo so exit
 
-    String filePath = id + "/metadata.xml";
+    String filePath = id + "/" + file;
     SVNRepository repo = getRepository();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     repo.getFile(filePath, -1, new SVNProperties(), baos);
@@ -305,27 +305,36 @@ public class SvnManager {
       SvnUtils.addDir(editor, id);
         if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
             Log.debug(Geonet.SVN_MANAGER, "Directory for metadata "+id+" was added");
-        editor.closeDir();
-        editor.closeEdit();
-			// Add the id/metadata.xml item to the repository
-    	logMessage = sessionToLogMessage(context)+" adding initial version of metadata "+id;
-    	editor = getEditor(logMessage);
-			editor.openRoot(-1);
-    	SvnUtils.addFile(editor,
-												id+"/metadata.xml", 
-												Xml.getString(md).getBytes());
-
-        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
-            Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was added");
-        editor.closeDir();
-        SVNCommitInfo commitInfo = editor.closeEdit();
-        if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
-            Log.debug(Geonet.SVN_MANAGER, "Commit returned "+commitInfo);
+      editor.closeDir();
+      editor.closeEdit();
     } catch (SVNException svne) {
       editor.abortEdit();
       svne.printStackTrace();
       throw svne;
     }
+
+
+		// Add the id/metadata.xml item plus properties to the repository
+		Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+		try {
+
+    	logMessage = sessionToLogMessage(context)+" adding initial version of metadata "+id;
+    	editor = getEditor(logMessage);
+			editor.openRoot(-1);
+			commitMetadata(dbms, id, editor);
+      if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+        Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was added");
+      editor.closeDir();
+      SVNCommitInfo commitInfo = editor.closeEdit();
+      if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
+        Log.debug(Geonet.SVN_MANAGER, "Commit returned "+commitInfo);
+    } catch (SVNException svne) {
+      editor.abortEdit();
+      svne.printStackTrace();
+      throw svne;
+    } finally {
+			context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+		}
 	}	
 
 		/**
@@ -528,22 +537,25 @@ public class SvnManager {
 
 		// get categories from the database
 		Element categs = dataMan.getCategories(dbms, id);
+		String now = Xml.getString(categs);
 
 		if (exists(id+"/categories.xml")) {
 			// Update the id/categories.xml item in the repository
 			Element categsPrevVersion = getFile(id, "categories.xml");
-
-    	SvnUtils.modifyFile(editor, 
+			String old = Xml.getString(categsPrevVersion);
+			if (!old.equals(now)) {
+    		SvnUtils.modifyFile(editor, 
 												id+"/categories.xml", 
-												Xml.getString(categsPrevVersion).getBytes(), 
-												Xml.getString(categs).getBytes());
+												old.getBytes(), 
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Categories of metadata "+id+" updated");
+			}
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/categories.xml", 
-												Xml.getString(categs).getBytes());
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Categories of metadata "+id+" added");
 
@@ -561,24 +573,32 @@ public class SvnManager {
      */
 	private void commitMetadataStatus(ISVNEditor editor, String id, Dbms dbms, DataManager dataMan) throws Exception {
 
-		// get status from the database
+		// get current status from the database
 		Element status = dataMan.getStatus(dbms, new Integer(id));
+		if (status == null) return;
+		List<Element> statusKids = status.getChildren();
+		if (statusKids.size() == 0) return;
+		status = (Element)status.getChildren().get(0);
+		String now = Xml.getString(status);
 
 		if (exists(id+"/status.xml")) {
 			// Update the id/status.xml item in the repository
 			Element statusPrevVersion = getFile(id, "status.xml");
+			String old = Xml.getString(statusPrevVersion);
+			if (!old.equals(now)) {
 
-    	SvnUtils.modifyFile(editor, 
+    		SvnUtils.modifyFile(editor, 
 												id+"/status.xml", 
-												Xml.getString(statusPrevVersion).getBytes(), 
-												Xml.getString(status).getBytes());
+												old.getBytes(), 
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Status of metadata "+id+" was updated");
+			}
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/status.xml", 
-												Xml.getString(status).getBytes());
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Status of metadata "+id+" was added");
 
@@ -596,20 +616,26 @@ public class SvnManager {
 	private void commitMetadataChanges(ISVNEditor editor, String id, Dbms dbms, DataManager dataMan) throws Exception {
 		// get metadata record from database
 		Element md = dataMan.getMetadata(dbms, id);
+		String now = Xml.getString(md);
 
 		if (exists(id+"/metadata.xml")) {
 			Element mdPrevVersion = getFile(id, "metadata.xml");
+			String old = Xml.getString(mdPrevVersion);
+			if (!old.equals(now)) {
 
-			// Update the id/metadata.xml item in the repository
-    	SvnUtils.modifyFile(editor, 
+				// Update the id/metadata.xml item in the repository
+    		SvnUtils.modifyFile(editor, 
 												id+"/metadata.xml", 
-												Xml.getString(mdPrevVersion).getBytes(), 
-												Xml.getString(md).getBytes());
+												old.getBytes(), 
+												now.getBytes());
 
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Metadata "+id+" was updated");
+			}
 		} else {
-			throw new IllegalArgumentException("Initial version of metadata "+id+" was not in the repository");
+    	SvnUtils.addFile(editor,
+												id+"/metadata.xml", 
+												now.getBytes());
 		}
 	}
 
@@ -628,22 +654,26 @@ public class SvnManager {
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(new Integer(id));
 		Element owner = accessMan.getOwners(dbms, ids);
+		String now = Xml.getString(owner);
 
 		if (exists(id+"/owner.xml")) {
 			// Update the id/owner.xml item in the repository
 			Element ownerPrevVersion = getFile(id, "owner.xml");
+			String old = Xml.getString(ownerPrevVersion);
+			if (!old.equals(now)) {
 
-    	SvnUtils.modifyFile(editor, 
+    		SvnUtils.modifyFile(editor, 
 												id+"/owner.xml", 
-												Xml.getString(ownerPrevVersion).getBytes(), 
-												Xml.getString(owner).getBytes());
+												old.getBytes(), 
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata "+id+" was updated");
+			}
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/owner.xml", 
-												Xml.getString(owner).getBytes());
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata "+id+" was added");
 
@@ -670,23 +700,27 @@ public class SvnManager {
     query.append("ORDER BY o.id                                           ");
 
     Element privs = dbms.select(query.toString(), new Integer(id));	
+		String now = Xml.getString(privs);
 
 		if (exists(id+"/privileges.xml")) {
 			// Update the id/privileges.xml item in the repository
 			Element privsPrevVersion = getFile(id, "privileges.xml");
+			String old = Xml.getString(privsPrevVersion);
+			if (!old.equals(now)) {
 
-    	SvnUtils.modifyFile(editor, 
+    		SvnUtils.modifyFile(editor, 
 												id+"/privileges.xml", 
-												Xml.getString(privsPrevVersion).getBytes(), 
-												Xml.getString(privs).getBytes());
+												old.getBytes(), 
+												now.getBytes());
 
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata "+id+" were updated");
+			}
 		} else {
 			// Add the id/owner.xml item to the repository
     	SvnUtils.addFile(editor, 
 												id+"/privileges.xml", 
-												Xml.getString(privs).getBytes());
+												now.getBytes());
             if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata "+id+" were added");
 		}
