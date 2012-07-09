@@ -172,10 +172,12 @@ label + span {
 
 .metadata * input[type='radio'] {
   border-width: 0px;
+  width: auto;
 }
 
 .metadata * select {
-  max-width : 200px
+  max-width : 200px;
+  background-color: #FFF;
 }
 
 .metadata * input.error,

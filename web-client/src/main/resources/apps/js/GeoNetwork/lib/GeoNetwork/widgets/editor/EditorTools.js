@@ -212,7 +212,6 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
                 Ext.getCmp('editorPanel').save();
                 return;
             }
-            
             if (what == 'replace') {
                 Ext.DomHelper.insertHtml('afterEnd', thisElement.dom, html);
                 thisElement.remove();
@@ -228,11 +227,6 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
                 Ext.MessageBox.alert("doNewElementAjax: invalid what: " + what +
                 " should be one of replace, after or before.");
             }
-            
-            // Init map if spatial extent editing - usually bounding box or
-            // bounding polygon
-            //			if (name == 'gmd:geographicElement' || name == 'gmd:polygon')
-            //				GeoNetwork.map.ExtentMap.initMapDiv();
             
             Ext.getCmp('editorPanel').metadataLoaded();
             
