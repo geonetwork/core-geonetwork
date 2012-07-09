@@ -511,5 +511,9 @@
             <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
         </service>
 
+        <service name="keywords.duplicate">
+            <class name=".services.metadata.IndexServiceMonitor"/>
+        </service>
+
     </services>
 </geonet>
