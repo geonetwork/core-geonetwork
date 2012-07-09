@@ -73,11 +73,13 @@
 		<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 		<xsl:variable name="charset">
 			<xsl:choose>
-				<xsl:when test="gmd:MD_CharacterSetCode">
-					<xsl:copy-of select="gmd:MD_CharacterSetCode"/>
+				<xsl:when test="gmd:characterEncoding/gmd:MD_CharacterSetCode/@codeListValue">
+					<xsl:copy-of select="gmd:characterEncoding"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+					<gmd:characterEncoding>
+						<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+					</gmd:characterEncoding>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
