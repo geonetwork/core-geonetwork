@@ -44,7 +44,7 @@ if (Env.lang) {
     OpenLayers.Lang.setCode(getOpenlayersLangCode());
     var s = document.createElement("script");
     s.type = 'text/javascript';
-    s.src = Env.url + "/scripts/ext/locale/ext-lang-"+Env.lang+".js";
+    s.src = Env.url + "/scripts/ext/locale/ext-lang-"+getOpenlayersLangCode()+".js";
     document.getElementsByTagName("head")[0].appendChild(s);
 } else {
     OpenLayers.Lang.setCode(GeoNetwork.defaultLocale);
