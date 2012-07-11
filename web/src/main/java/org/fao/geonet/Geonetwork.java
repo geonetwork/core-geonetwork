@@ -36,17 +36,14 @@ import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
-import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.ProxyInfo;
 import jeeves.utils.Util;
@@ -249,11 +246,7 @@ public class Geonetwork implements ApplicationHandler {
 				{
 					logger.info("     Server is Enabled.");
 		
-					UserSession session = new UserSession();
-					session.authenticate(null, "z39.50", "", "", "Guest", "");
-					context.setUserSession(session);
-					context.setIpAddress("127.0.0.1");
-					Server.init(host, z3950port, path, context, app_context);
+					Server.init(z3950port, app_context);
 				}	
 			} catch (Exception e) {
 				logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work. Error is:" + e.getMessage());

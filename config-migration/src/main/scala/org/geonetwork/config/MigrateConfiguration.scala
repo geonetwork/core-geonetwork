@@ -27,7 +27,32 @@ class MigrateConfiguration {
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <!-- <debug/> -->
+    <!-- <sec:debug/> -->
+	<sec:http pattern="/apps/**" security="none" create-session="stateless"/>
+    <sec:http pattern="/" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/*.html" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/*.jsp" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/*.css" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/images/**" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/htmlcache/**" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
+
+	<sec:http auto-config='true' access-decision-manager-ref="accessDecisionManager" realm="Geonetwork">
+        <sec:anonymous granted-authority="ROLE_Guest"/>
+        {(original \ "profile") map interceptUrls }
+		<sec:intercept-url pattern="/monitor/**" access="ROLE_Monitor"/>
+		<sec:intercept-url pattern="/*healthcheck" access="ROLE_Monitor"/>
+		<sec:intercept-url pattern="/**" access="ROLE_REJECT_ALL"/>
+		<sec:logout delete-cookies="JSESSIONID" />
+	</sec:http>
+
+    <sec:authentication-manager>
+        <sec:authentication-provider ref="geonetworkAuthenticationProvider"/>
+    </sec:authentication-manager>
+
+    <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider">
+      <constructor-arg value="system-wide-password-salt-please-customize-this" />
+    </bean>
 	￼￼
     <bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
       <property name="hierarchy">
@@ -53,12 +78,7 @@ class MigrateConfiguration {
         </list>
        </property>
     </bean>
-	<sec:http auto-config='true' access-decision-manager-ref="accessDecisionManager" realm="Geonetwork">
-        <sec:anonymous granted-authority="ROLE_GUEST"/>
-        {(original \ "profile") map interceptUrls }
-		<sec:intercept-url pattern="/**" access="REJECT_ALL"/>
-		<sec:logout delete-cookies="JSESSIONID" />
-	</sec:http>
+
 </beans>
 
       write(springSecFile, springSecXml)
@@ -77,7 +97,7 @@ class MigrateConfiguration {
   def interceptUrls(profile: Node) = {
     val role = "ROLE_"+(profile att "name")
     profile \ "allow" map {allow => 
-        <intercept-url pattern={"/srv/*/"+(allow att "service")} access={role}/>
+        <sec:intercept-url pattern={"/srv/*/"+(allow att "service")} access={role}/>
     }
   }
     

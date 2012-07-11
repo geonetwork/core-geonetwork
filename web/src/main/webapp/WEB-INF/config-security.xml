@@ -1,0 +1,391 @@
+<beans 
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+    <!-- <sec:debug/> -->
+    <sec:http pattern="/apps/**" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/*.html" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/*.jsp" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/*.css" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/images/**" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/htmlcache/**" create-session="stateless" security="none"></sec:http>
+    <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
+    <sec:http access-decision-manager-ref="accessDecisionManager" auto-config="true" realm="Geonetwork">
+        <sec:anonymous granted-authority="ROLE_Guest"></sec:anonymous>
+        <sec:intercept-url pattern="/srv/*/group.remove" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/group.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/category.remove" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/category.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/notifications.list" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/notifications.save" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/localization" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.group.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.category.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.operation.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.region.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/util.import" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/util.ping" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/util.empty" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/util.select" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.templates.list" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.templates.displayorder.save" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.templates.add.default" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.samples.add" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.schema.add" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.schema.add.form" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.schema.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.schema.update.form" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.schema.delete" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.schema.delete.form" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/help.edit.form" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/help.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batchimport.form" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.searchunused.form" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.searchunused" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/harvesting" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.get" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.add" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.remove" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.start" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.stop" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.run" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.info" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.harvesting.clone" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/harvesting.history.full" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/harvesting.history" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/harvesting.history.delete" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.admin" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.edit" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.update" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.upload" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.thesaurus.upload" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.download" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.delete" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.editelement" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.addelement" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.deleteelement" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.updateelement" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.add" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.add.register" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.activate" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/config" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.config.get" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.config.info" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/config.info" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.config.set" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.config.doActions" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/lucene.config.reload" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/sequential.execution.set" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.admin.index.rebuild" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.admin.index.rebuildxlinks" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.admin.index.optimize" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.main" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.numberOfSearchByMonth" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.searchesNoHit" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.uniqueIP" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.graphByDate" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.lastMonthSummary" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.mostSearchedKeyword" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.mostSearchedCategory" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.simpleAdvancedSearch" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.mdPopularity" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.requests.csv" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.params.csv" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.tagCloud" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.groupPopularity" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.categoryPopularity" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.catalogPopularity" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.deleteTmpGraphics" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/stat.tableExport" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csw.config.get" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csw.config.set" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csw-publication" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csw.customelementset.get" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csw.customelementset.set" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/test.i18n" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/test.i18n.xml" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/logo" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/logo.add" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/logo.delete" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/logo.set" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/debug.openconnection.accessors" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/debug.filehandles" access="ROLE_Administrator"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.get" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.resetpw" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.edit" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.list" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.remove" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.update" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/transfer.ownership" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.ownership.editors" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.ownership.groups" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.ownership.transfer" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.newowner" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.newowner.form" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.usergroups.list" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.processing" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.register" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.remove" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.download" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.admin" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.update" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.files" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.edit" access="ROLE_UserAdmin"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/group.list" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/group.get" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.category" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.category.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/category.list" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/category.get" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.category.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.update.categories" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.status" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.status.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.status.set" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.status.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.update.status" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.add" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.add.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.admin" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.admin.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.admin.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.update.privileges" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.version" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.version" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.quiet.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.duplicate.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.create.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.create.thesaurus.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.create" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.create.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.create.edit" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.edit" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.elem.add.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.elem.add" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.elem.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.elem.delete.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.elem.down" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.elem.up" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.attr.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.update" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.update.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.update.finish" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.update.forget" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.update.forget.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.update.forgetandfinish" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.children.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.update.children" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.validate" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.suggestion" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.validate" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.processing" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.processing.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.processing" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.extract.subtemplates.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.batch.extract.subtemplates" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.user.metadata" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.xmlinsert.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.insert" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.insert.paste" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/file.upload" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.upload" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.upload.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.prepare.upload" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.del" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.del.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.thumbnail.form" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.thumbnail.set" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.thumbnail.set.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.thumbnail.unset" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.thumbnail.unset.new" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.insert" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.user.list" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/mef.import" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/mef.import.ui" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.relation.insert" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.relation.delete" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/geoserver.publisher" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/subtemplate.types" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/subtemplate.admin" access="ROLE_Editor"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/admin" access="ROLE_RegisteredUser"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.pwedit" access="ROLE_RegisteredUser"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.pwupdate" access="ROLE_RegisteredUser"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.infoedit" access="ROLE_RegisteredUser"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.infoupdate" access="ROLE_RegisteredUser"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/home" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.home" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.error" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.main.error" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.searchform.simple.embedded" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.searchform.advanced.embedded" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.searchform.remote.embedded" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.search.embedded" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.search.suggest" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.present" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/main.present.embedded" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.show" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.thumbnail" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.relation" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.relation" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.show.embedded" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/remote.show" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/rating.popup" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.login" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.logout" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/shib.user.login" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.privileges.error" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/res" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/help" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/links" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/about" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/feedback" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/feedback.insert" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/file.download" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/file.disclaimer" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/feedback.download.insert" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.get.archive" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/prepare.file.download" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/external.getmetadata" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/resources.getgraphover" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/graphover.show" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.select" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/selection.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/pdf.selection.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/pdf.present" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/pdf" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/intermap.wmc.setWmcContext" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.user.login" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.user.logout" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.search.keywords" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadocument.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadocument.snippet" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.info" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.forward" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.region.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.keyword.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.file.disclaimer" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.file.download" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.status.values.list" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.status.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/view" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/edit" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/q" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.opensearch" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.search.keywords" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.search.credits" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.search.present" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.present" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.full" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.latest.updated" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.featured" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.categories" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.sources" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.sitemap" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/pdf.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_dublin-core" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_dublin-coreTooai_dc" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_fgdc-std" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_fgdc-stdTooai_dc" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19115to19139" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19115toarccatalog8" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19115Tooai_dc" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19139" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19139Tooai_dc" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19110" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_iso19110Tooai_dc" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_csw-record" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml_csw-recordTooai_dc" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/rss.latest" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/rss.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/rss.present" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.latest.updated" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csv.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csv.present" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/google.kml" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.group.list" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/csw" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/oaipmh" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/mef.export" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.relation.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.schema.info" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.metadata.rate" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/keywords.select" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/keywords.editsearch" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/keywords.getselected" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.list" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/thesaurus.view" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.thesaurus.getList" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/crs.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/crs.types" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/crs.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/portal.sru" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/test.csw" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.register.get" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/user.register.submit" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.password.emaillink" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/xml.password.change" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/password.forgotten.form" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/password.forgotten.submit" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/password.change.form" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/password.change.submit" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/contacts.search" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/contacts.sort" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/contacts.select" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/contacts.editsearch" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/contacts.getselected" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/contacts.getRole" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/subtemplate" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/isolanguages" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.html" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.xml" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.resource" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/srv/*/metadata.formatter.list" access="ROLE_Guest"></sec:intercept-url>
+        <sec:intercept-url pattern="/monitor/**" access="ROLE_Monitor"></sec:intercept-url>
+        <sec:intercept-url pattern="/*healthcheck" access="ROLE_Monitor"></sec:intercept-url>
+        <sec:intercept-url pattern="/**" access="ROLE_REJECT_ALL"></sec:intercept-url>
+        <sec:logout delete-cookies="JSESSIONID"></sec:logout>
+    </sec:http>
+    <sec:authentication-manager>
+        <sec:authentication-provider ref="geonetworkAuthenticationProvider"></sec:authentication-provider>
+    </sec:authentication-manager>
+    <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider">
+        <constructor-arg value="system-wide-password-salt-please-customize-this"></constructor-arg>
+    </bean>
+    ￼￼
+    <bean class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl" id="roleHierarchy">
+        <property name="hierarchy">
+            <value>
+                ROLE_Administrator > ROLE_UserAdmin
+ROLE_Administrator > ROLE_Monitor
+ROLE_UserAdmin > ROLE_Reviewer
+ROLE_Reviewer > ROLE_Editor
+ROLE_Editor > ROLE_RegisteredUser
+ROLE_RegisteredUser > ROLE_Guest
+ROLE_Monitor > ROLE_RegisteredUser
+            </value>
+        </property>
+    </bean>
+    <bean class="org.springframework.security.access.vote.AffirmativeBased" id="accessDecisionManager">
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.springframework.security.access.vote.RoleHierarchyVoter">
+                    <constructor-arg ref="roleHierarchy"></constructor-arg>
+                </bean>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"></bean>
+            </list>
+        </property>
+    </bean>
+</beans>

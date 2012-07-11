@@ -27,29 +27,6 @@
 
 package jeeves.server;
 
-import jeeves.constants.ConfigFile;
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.interfaces.Activator;
-import jeeves.interfaces.ApplicationHandler;
-import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.TransformerFactoryFactory;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.apache.log4j.PropertyConfigurator;
-import org.jdom.Element;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.xml.transform.TransformerConfigurationException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,6 +38,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.xml.transform.TransformerConfigurationException;
+
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.ConfigFile;
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.BadInputEx;
+import jeeves.interfaces.Activator;
+import jeeves.interfaces.ApplicationHandler;
+import jeeves.interfaces.Logger;
+import jeeves.monitor.MonitorManager;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.resources.ProviderManager;
+import jeeves.server.resources.ResourceManager;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.http.JeevesServlet;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import jeeves.utils.TransformerFactoryFactory;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
+import org.apache.log4j.PropertyConfigurator;
+import org.jdom.Element;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================
 
@@ -163,6 +168,10 @@ public class JeevesEngine
 			info("Initializing profiles...");
 			serviceMan.loadProfiles(servletContext, profilesFile);
             
+			 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
+			 // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
+			 jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
+			 
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
 

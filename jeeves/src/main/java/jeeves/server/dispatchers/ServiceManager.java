@@ -406,15 +406,6 @@ public class ServiceManager
 
 				String profile = ProfileManager.GUEST;
 
-				if (session.isAuthenticated())
-					profile = session.getProfile();
-
-				if (!profilMan.hasAccessTo(profile, srvName))
-				{
-					error("Service not allowed : "+ srvName);
-					throw new ServiceNotAllowedEx(srvName);
-				}
-
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
 				    response = srvInfo.execServices(req.getParams(), context);

@@ -26,6 +26,8 @@ package jeeves.server.resources;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PreDestroy;
+
 import jeeves.monitor.MonitorManager;
 import jeeves.monitor.ResourceTracker;
 import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
@@ -262,7 +264,7 @@ public class ResourceManager
 	//--------------------------------------------------------------------------
 	/** Closes all resources doing a commit
 	  */
-
+	@PreDestroy
 	public synchronized void close() throws Exception
 	{
 		release(true);

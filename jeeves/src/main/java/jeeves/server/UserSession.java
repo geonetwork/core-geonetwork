@@ -23,8 +23,20 @@
 
 package jeeves.server;
 
-import javax.servlet.http.HttpSession;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Hashtable;
+
+import javax.servlet.http.HttpSession;
+
+import jeeves.guiservices.session.JeevesUser;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 //=============================================================================
 
@@ -35,12 +47,6 @@ public class UserSession
 {
 	private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
 
-	private String  sUserId;
-	private String  sUsername;
-	private String  sName;
-	private String  sSurname;
-	private String  sProfile;
-	private String  sEmailAddr;
 	private HttpSession sHttpSession;
 
 	//--------------------------------------------------------------------------
@@ -101,42 +107,98 @@ public class UserSession
      * Clears user session properties and authentication.
      */
     public void clear() {
-        authenticate(null, null, null, null, null, null);
-
         htProperties = new Hashtable(10, .75f);
     }
+/*	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr) {
+		JeevesUser user = new JeevesUser()
+			.setId(userId)
+			.setUsername(username)
+			.setName(name)
+			.setProfile(profile)
+			.setEmail(emailAddr);
+		
+		Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_"+profile));
+		Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities ) ;
+		secContext().setAuthentication(authentication);
+	}*/
 
 	//--------------------------------------------------------------------------
-	/**
-     * Says that the user is authenticated and this id and profile must be used.
-	 */
-	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr)
-	{
-		sUserId    = userId;
-		sUsername  = username;
-		sName      = name;
-		sSurname   = surname;
-		sProfile   = profile;
-		sEmailAddr = emailAddr;
+
+	public boolean isAuthenticated() {
+		return auth() != null && auth().isAuthenticated();
 	}
 
 	//--------------------------------------------------------------------------
 
-	public boolean isAuthenticated()
-	{
-		return sUserId != null;
+	public String getUserId() { 
+		JeevesUser userDetails = getUserDetails();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getId();
+		}
+	}
+	public String getUsername() {
+		JeevesUser userDetails = getUserDetails();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getUsername();
+		}
+	}
+	public String getName() {
+		JeevesUser userDetails = getUserDetails();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getName();
+		}
+	}
+	public String getSurname() { 
+		Authentication auth = auth();
+		if (auth == null) {
+			return null;   
+		} else {
+			return auth.getName();
+		}
+	}
+	public String getProfile() {
+		JeevesUser userDetails = getUserDetails();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getProfile();
+		}
+	}
+	public String getEmailAddr() {
+		JeevesUser userDetails = getUserDetails();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getEmail();
+		}
 	}
 
-	//--------------------------------------------------------------------------
+	public int getUserIdAsInt()  { return Integer.parseInt(getUserId()); }
+	
+	private SecurityContext secContext() { return SecurityContextHolder.getContext(); }
+	private Authentication auth() {
+		SecurityContext secContext = secContext();
+		if (secContext == null) {
+			return null;
+		} else {
+			return secContext.getAuthentication(); 
+		}
+	}
+	public JeevesUser getUserDetails() {
+		Authentication auth = auth();
+		if (auth == null) {
+			return null;
+		} else {
+			return (JeevesUser) auth.getDetails(); 
+		}
+	}
 
-	public String getUserId()    { return sUserId;   }
-	public String getUsername()  { return sUsername; }
-	public String getName()      { return sName;     }
-	public String getSurname()   { return sSurname;  }
-	public String getProfile()   { return sProfile;  }
-	public String getEmailAddr() { return sEmailAddr;  }
-
-	public int getUserIdAsInt()  { return Integer.parseInt(sUserId); }
 }
 
 //=============================================================================

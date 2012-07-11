@@ -24,6 +24,7 @@
 package org.fao.geonet.services.login;
 
 import jeeves.exceptions.UserLoginEx;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
@@ -32,11 +33,18 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -123,16 +131,19 @@ public class ShibLogin implements Service
 		if (list.size() == 0)
 			throw new UserLoginEx(username);
 
-		Element user = (Element) list.get(0);
+		Element userEl = (Element) list.get(0);
+	
+		GeonetworkUser user = new GeonetworkUser(username, userEl);
+		Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_"+ProfileManager.ADMIN));
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities ) ;
+		authentication.setDetails(user);
 
-		String sId       = user.getChildText(Geonet.Elem.ID);
-		String sName     = user.getChildText(Geonet.Elem.NAME);
-		String sSurname  = user.getChildText(Geonet.Elem.SURNAME);
-		String sProfile  = user.getChildText(Geonet.Elem.PROFILE);
-		String sEmailAdd = user.getChildText(Geonet.Elem.EMAIL);
+		if(SecurityContextHolder.getContext() == null) {
+			SecurityContextHolder.createEmptyContext();
+		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		context.info("User '"+ username +"' logged in as '"+ sProfile +"'");
-		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile, sEmailAdd);
+		context.info("User '"+ username +"' logged in as '"+ user.getProfile() +"'");
 
 		return new Element("ok");
 	}
