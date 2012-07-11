@@ -2149,7 +2149,13 @@ public class DataManager {
 		Element env = new Element("env");
 		env.addContent(new Element("file").setText(file));
 		env.addContent(new Element("ext").setText(ext));
-
+		
+		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
+		String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
+		
+		env.addContent(new Element("host").setText(host));
+		env.addContent(new Element("port").setText(port));
+		
 		manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL);
 	}
 
