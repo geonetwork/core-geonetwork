@@ -31,7 +31,8 @@
             Plugins
             TextResponse -->
     <logLevel>Error,Warning</logLevel>
-    <jettyPort>8010</jettyPort>
+    <jettyPort>9624</jettyPort>
+    <jetty.stop.port>9620</jetty.stop.port>
     <testServer>localhost:${jettyPort}</testServer>
     <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
     <webspecsDir>${basedir}/webspecs</webspecsDir>
@@ -85,7 +86,7 @@
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>
           <stopKey>GEONETWORK_ITEST_STOP</stopKey>
-          <stopPort>8011</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
         <executions>
           <execution>
