@@ -852,6 +852,7 @@
 <!--    <module>docs</module> -->
 
     <module>cachingxslt</module>
+    <module>config-migration</module>
     <module>jeeves</module> 
     <module>oaipmh</module>
     <module>sde</module>

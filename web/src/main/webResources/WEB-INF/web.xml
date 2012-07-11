@@ -6,6 +6,24 @@
             version="2.4">
 
     <display-name>geonetwork</display-name>
+	<context-param>
+		<param-name>contextClass</param-name>
+ 		<param-value>
+	          jeeves.config.springutil.JeevesApplicationContext
+	      </param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/config-security.xml</param-value>
+	</context-param>
+    <listener>
+        <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+	    <listener-class>
+	        org.springframework.web.context.request.RequestContextListener
+	    </listener-class>
+    </listener>
     <!--<context-param>-->
         <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
         <!--<param-value>Joe</param-value>-->
