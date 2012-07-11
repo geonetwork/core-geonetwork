@@ -945,8 +945,8 @@
   </reporting>
 
   <properties>
-    <geonetwork_version>${project.version}</geonetwork_version>
-    <geonetwork_subversion>SNAPSHOT</geonetwork_subversion>
+    <geonetwork.version>${project.version}</geonetwork.version>
+    <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
