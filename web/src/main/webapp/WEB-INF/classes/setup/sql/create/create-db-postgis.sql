@@ -127,7 +127,7 @@ CREATE TABLE Users
   (
     id            int,
     username      varchar(256)    not null,
-    password      varchar(40)    not null,
+    password      varchar(120)    not null,
     surname       varchar(32),
     name          varchar(32),
     profile       varchar(32)    not null,
@@ -139,6 +139,7 @@ CREATE TABLE Users
     email         varchar(128),
     organisation  varchar(128),
     kind          varchar(16),
+    security      varchar(128) default '',
 
     primary key(id),
     unique(username)

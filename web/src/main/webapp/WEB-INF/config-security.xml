@@ -359,8 +359,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <sec:intercept-url pattern="/srv/*/metadata.formatter.xml" access="permitAll"></sec:intercept-url>
         <sec:intercept-url pattern="/srv/*/metadata.formatter.resource" access="permitAll"></sec:intercept-url>
         <sec:intercept-url pattern="/srv/*/metadata.formatter.list" access="permitAll"></sec:intercept-url>
-        <sec:intercept-url pattern="/monitor/**" access="hasRole('ROLE_Monitor')"></sec:intercept-url>
-        <sec:intercept-url pattern="/*healthcheck" access="hasRole('ROLE_Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/monitor/**" access="hasRole('Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
         <sec:intercept-url pattern="/**" access="denyAll"></sec:intercept-url>
     </sec:http>
     <sec:authentication-manager>
