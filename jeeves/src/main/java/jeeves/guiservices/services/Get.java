@@ -43,12 +43,7 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String profile = ProfileManager.GUEST;
-
-		if (context.getUserSession().isAuthenticated())
-			profile = context.getUserSession().getProfile();
-
-		return context.getProfileManager().getAccessibleServices(profile);
+		return context.getProfileManager().getAccessibleServices();
 	}
 }
 

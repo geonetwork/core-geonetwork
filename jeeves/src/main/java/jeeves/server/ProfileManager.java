@@ -23,20 +23,26 @@
 
 package jeeves.server;
 
-import jeeves.constants.Jeeves;
-import jeeves.constants.Profiles;
-import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Element;
-
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.Jeeves;
+import jeeves.constants.Profiles;
+import jeeves.utils.Xml;
+
+import org.jdom.Element;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 
 //=============================================================================
 
@@ -49,6 +55,7 @@ public class ProfileManager
 	public static final String ADMIN = "Administrator";
 
 	private Hashtable<String, Element> htProfiles;
+	private JeevesApplicationContext applicationContext;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -167,51 +174,24 @@ public class ProfileManager
 	/** Returns all services accessible by the given profile
 	  */
 
-	@SuppressWarnings("unchecked")
-	public Element getAccessibleServices(String profile)
+	public Element getAccessibleServices()
 	{
-		HashSet<String>   hs = new HashSet<String>();
-		ArrayList<String> al = new ArrayList<String>();
-
-		al.add(profile);
-
-		while(!al.isEmpty())
-		{
-			profile = (String) al.get(0);
-			al.remove(0);
-
-			Element elProfile = (Element) htProfiles.get(profile);
-
-			//--- scan allow list
-
-			List<Element> allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
-
-			for (Element elAllow : allowList) {
-				String  sService = elAllow.getAttributeValue(Profiles.Attr.SERVICE);
-				hs.add(sService);
-			}
-
-			//--- ops, no allow found. Try an ancestor (if any)
-
-			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
-
-			if (extend != null)
-			{
-				StringTokenizer st = new StringTokenizer(extend, ",");
-
-				while(st.hasMoreTokens())
-					al.add(st.nextToken().trim());
+		Collection<DefaultSecurityFilterChain> chains = applicationContext.getBeansOfType(DefaultSecurityFilterChain.class).values();
+		
+		for (SecurityFilterChain chain : chains) {
+			List<Filter> filters = chain.getFilters();
+			for (Filter filter : filters) {
+				System.out.println(filter);
 			}
 		}
-
 		//--- build proper result
 
 		Element elRes = new Element(Jeeves.Elem.SERVICES);
-
-		for (String service : hs) {
-			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
-					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
-		}
+//
+//		for (String service : hs) {
+//			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
+//					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
+//		}
 
 		return elRes;
 	}
@@ -259,6 +239,10 @@ public class ProfileManager
 		}
 
 		return false;
+	}
+
+	public void setApplicationContext(JeevesApplicationContext jeevesAppContext) {
+		this.applicationContext = jeevesAppContext;
 	}
 }
 

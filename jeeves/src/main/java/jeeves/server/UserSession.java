@@ -107,18 +107,6 @@ public class UserSession
        	SecurityContextHolder.clearContext();
        	sHttpSession.invalidate();
     }
-/*	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr) {
-		JeevesUser user = new JeevesUser()
-			.setId(userId)
-			.setUsername(username)
-			.setName(name)
-			.setProfile(profile)
-			.setEmail(emailAddr);
-		
-		Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_"+profile));
-		Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities ) ;
-		secContext().setAuthentication(authentication);
-	}*/
 
 	//--------------------------------------------------------------------------
 
@@ -129,7 +117,7 @@ public class UserSession
 	//--------------------------------------------------------------------------
 
 	public String getUserId() { 
-		JeevesUser userDetails = getUserDetails();
+		JeevesUser userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -137,7 +125,7 @@ public class UserSession
 		}
 	}
 	public String getUsername() {
-		JeevesUser userDetails = getUserDetails();
+		JeevesUser userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -145,7 +133,7 @@ public class UserSession
 		}
 	}
 	public String getName() {
-		JeevesUser userDetails = getUserDetails();
+		JeevesUser userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -161,7 +149,7 @@ public class UserSession
 		}
 	}
 	public String getProfile() {
-		JeevesUser userDetails = getUserDetails();
+		JeevesUser userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -169,7 +157,7 @@ public class UserSession
 		}
 	}
 	public String getEmailAddr() {
-		JeevesUser userDetails = getUserDetails();
+		JeevesUser userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -191,10 +179,10 @@ public class UserSession
 			return authentication;
 		}
 	}
-	public JeevesUser getUserDetails() {
+	public JeevesUser getPrincipal() {
 		Authentication auth = auth();
-		if (auth != null && auth.getDetails() instanceof JeevesUser) {
-			return (JeevesUser) auth.getDetails(); 
+		if (auth != null && auth.getPrincipal() instanceof JeevesUser) {
+			return (JeevesUser) auth.getPrincipal(); 
 		}
 		return null;
 	}

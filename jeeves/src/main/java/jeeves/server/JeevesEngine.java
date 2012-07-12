@@ -171,6 +171,7 @@ public class JeevesEngine
 			 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 			 // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
 			 jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
+			 profileManager.setApplicationContext(jeevesAppContext);
 			 jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
 			 
 			//--- handlers must be started here because they may need the context

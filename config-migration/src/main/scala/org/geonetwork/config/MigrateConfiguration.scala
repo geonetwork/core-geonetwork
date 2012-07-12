@@ -48,8 +48,8 @@ class MigrateConfiguration {
         </sec:session-management>
 
         {(original \ "profile") map interceptUrls }
-        <sec:intercept-url pattern="/monitor/**" access="hasRole('ROLE_Monitor')"></sec:intercept-url>
-        <sec:intercept-url pattern="/*healthcheck" access="hasRole('ROLE_Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/monitor/**" access="hasRole('Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
         <sec:intercept-url pattern="/**" access="denyAll"></sec:intercept-url>
     </sec:http>
 

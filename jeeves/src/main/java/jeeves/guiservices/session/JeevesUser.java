@@ -38,25 +38,25 @@ public class JeevesUser implements UserDetails {
 		ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
 		if (profile != null) {
 			for (String p : profileManager.getProfilesSet(profile)) {
-				auths.add(new SimpleGrantedAuthority("ROLE_"+p));
+				auths.add(new SimpleGrantedAuthority(p));
 			}
 		}
-		return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+profile));
+		return auths;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
