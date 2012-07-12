@@ -23,14 +23,18 @@
 
 package org.fao.geonet.services.login;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 import jeeves.exceptions.UserLoginEx;
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.GeonetworkUser;
@@ -38,15 +42,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 //=============================================================================
 
@@ -133,9 +129,8 @@ public class ShibLogin implements Service
 
 		Element userEl = (Element) list.get(0);
 	
-		GeonetworkUser user = new GeonetworkUser(username, userEl);
-		Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_"+ProfileManager.ADMIN));
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities ) ;
+		GeonetworkUser user = new GeonetworkUser(context.getProfileManager(), username, userEl);
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
 		authentication.setDetails(user);
 
 		if(SecurityContextHolder.getContext() == null) {

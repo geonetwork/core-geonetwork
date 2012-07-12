@@ -133,7 +133,7 @@
 				<xsl:choose>
 					<xsl:when test="string(/root/gui/session/userId)!=''">
 						<td align="right" class="banner-login">
-							<form name="logout" action="{/root/gui/locService}/user.logout" method="post">
+							<form name="logout" action="{/root/gui/url}/j_spring_security_logout" method="post">
 								<xsl:value-of select="/root/gui/strings/user"/>
 								<xsl:text>: </xsl:text>
 								<xsl:value-of select="/root/gui/session/name"/>
@@ -146,7 +146,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<td align="right" class="banner-login">
-							<form name="login" action="{/root/gui/locService}/user.login" method="post">
+							<form name="login" action="{/root/gui/url}/j_spring_security_check" method="post">
 								<xsl:if test="string(/root/gui/env/shib/use)='true'">
 									<a class="banner" href="{/root/gui/env/shib/path}">
 										<xsl:value-of select="/root/gui/strings/shibLogin"/>

@@ -1,7 +1,10 @@
 package jeeves.guiservices.session;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+
+import jeeves.server.ProfileManager;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,12 +26,21 @@ public class JeevesUser implements UserDetails {
 	private String password;
 	private String kind;
 	private String id;
+	private ProfileManager profileManager;
 
-	public JeevesUser(){}
+	public JeevesUser(ProfileManager profileManager){
+		this.profileManager = profileManager;
+	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		String profile = getProfile();
+		ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+		if (profile != null) {
+			for (String p : profileManager.getProfilesSet(profile)) {
+				auths.add(new SimpleGrantedAuthority("ROLE_"+p));
+			}
+		}
 		return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+profile));
 	}
 

@@ -126,9 +126,10 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public void loadProfiles(ServletContext servletContext, String file) throws Exception
+	public ProfileManager loadProfiles(ServletContext servletContext, String file) throws Exception
 	{
 		profilMan = new ProfileManager(servletContext, appPath, appPath + Jeeves.Path.WEBINF + file);
+		return profilMan;
 	}
 
 	//---------------------------------------------------------------------------
@@ -911,6 +912,7 @@ public class ServiceManager
 	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
+	public ProfileManager getProfileManager() { return profilMan; }
 }
 
 //=============================================================================

@@ -139,15 +139,14 @@ public class LocalJeeves
 
 			// Make session with all permissions
 			session = new UserSession();
-			JeevesUser user = new JeevesUser()
+			JeevesUser user = new JeevesUser(jeeves.getProfileManager())
 			.setId("0")
 			.setUsername("local")
 			.setName("local")
 			.setProfile(ProfileManager.ADMIN)
 			.setEmail( "local@localhost");
 		
-		Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_"+ProfileManager.ADMIN));
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities ) ;
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
 		authentication.setDetails(user);
 
 		if(SecurityContextHolder.getContext() == null) {

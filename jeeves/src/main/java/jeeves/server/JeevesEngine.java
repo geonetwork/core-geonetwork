@@ -166,11 +166,12 @@ public class JeevesEngine
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
 			info("Initializing profiles...");
-			serviceMan.loadProfiles(servletContext, profilesFile);
+			ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
             
 			 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 			 // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
 			 jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
+			 jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
 			 
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
@@ -766,6 +767,8 @@ public class JeevesEngine
 	private void warning(String message) { Log.warning(Log.ENGINE, message); }
 	private void error  (String message) { Log.error  (Log.ENGINE, message); }
 	private void fatal  (String message) { Log.fatal  (Log.ENGINE, message); }
+
+	public ProfileManager getProfileManager() { return serviceMan.getProfileManager(); }
 }
 
 //=============================================================================

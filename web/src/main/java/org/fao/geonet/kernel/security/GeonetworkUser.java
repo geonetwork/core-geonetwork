@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.security;
 
 import jeeves.guiservices.session.JeevesUser;
+import jeeves.server.ProfileManager;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -8,7 +9,8 @@ import org.jdom.Element;
 public class GeonetworkUser extends JeevesUser {
 	private static final long serialVersionUID = 1279946739116277388L;
 
-	public GeonetworkUser(String username, Element userXml) {
+	public GeonetworkUser(ProfileManager profileManager, String username, Element userXml) {
+		super(profileManager);
 		setUsername(username);
 		setId(userXml.getChildTextTrim(Geonet.Elem.ID));
 		setPassword(userXml.getChildTextTrim("password"));
@@ -23,6 +25,8 @@ public class GeonetworkUser extends JeevesUser {
 		setCity(userXml.getChildTextTrim("country"));
 		setOrganisation(userXml.getChildTextTrim("organisation"));
 		setKind(userXml.getChildTextTrim("kind"));
+		
+		
 	}
 
 }

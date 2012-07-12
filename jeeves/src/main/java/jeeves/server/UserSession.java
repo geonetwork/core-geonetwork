@@ -23,18 +23,14 @@
 
 package jeeves.server;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpSession;
 
 import jeeves.guiservices.session.JeevesUser;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -108,6 +104,8 @@ public class UserSession
      */
     public void clear() {
         htProperties = new Hashtable(10, .75f);
+       	SecurityContextHolder.clearContext();
+       	sHttpSession.invalidate();
     }
 /*	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr) {
 		JeevesUser user = new JeevesUser()
@@ -125,7 +123,7 @@ public class UserSession
 	//--------------------------------------------------------------------------
 
 	public boolean isAuthenticated() {
-		return auth() != null && auth().isAuthenticated();
+		return !(auth() instanceof AnonymousAuthenticationToken);
 	}
 
 	//--------------------------------------------------------------------------
@@ -179,7 +177,9 @@ public class UserSession
 		}
 	}
 
-	public int getUserIdAsInt()  { return Integer.parseInt(getUserId()); }
+	public int getUserIdAsInt()  { 
+		String id = getUserId();
+		return id == null? -1 : Integer.parseInt(getUserId()); }
 	
 	private SecurityContext secContext() { return SecurityContextHolder.getContext(); }
 	private Authentication auth() {
@@ -187,16 +187,16 @@ public class UserSession
 		if (secContext == null) {
 			return null;
 		} else {
-			return secContext.getAuthentication(); 
+			Authentication authentication = secContext.getAuthentication();
+			return authentication;
 		}
 	}
 	public JeevesUser getUserDetails() {
 		Authentication auth = auth();
-		if (auth == null) {
-			return null;
-		} else {
+		if (auth != null && auth.getDetails() instanceof JeevesUser) {
 			return (JeevesUser) auth.getDetails(); 
 		}
+		return null;
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.security;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 
@@ -14,16 +15,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
-	private StandardPasswordEncoder encoder;
+	private PasswordEncoder encoder;
 	
-	public GeonetworkAuthenticationProvider(CharSequence salt) {
-		this.encoder = new StandardPasswordEncoder(salt);
+	public GeonetworkAuthenticationProvider(PasswordEncoder encoder) {
+		this.encoder = encoder;
 	}
 
 	@Override
@@ -54,7 +56,8 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			Element selectRequest = dbms.select("SELECT * FROM Users where username=?", username);
 			Element userXml = selectRequest.getChild("record");
 			if (userXml != null) {
-				GeonetworkUser userDetails = new GeonetworkUser(username, userXml);
+				ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
+				GeonetworkUser userDetails = new GeonetworkUser(profileManager, username, userXml);
 				return userDetails;
 			}
 		} catch (Exception e) {
@@ -68,7 +71,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 				}
 			}
 		}
-		return null;
+		throw new UsernameNotFoundException(username+" is not a valid username");
 	}
 
 	@Override
