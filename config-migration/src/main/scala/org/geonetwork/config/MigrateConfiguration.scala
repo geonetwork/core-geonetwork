@@ -39,12 +39,12 @@ class MigrateConfiguration {
     <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
 
     <sec:http use-expressions="true" realm="Geonetwork">
-<sec:form-login password-parameter="password" username-parameter="username"/>
-          <sec:http-basic />
+        <sec:form-login password-parameter="password" username-parameter="username" login-page="/srv/eng/home"/>
+        <sec:http-basic />
         <sec:logout delete-cookies="JSESSIONID"></sec:logout>
         <!-- <sec:remember-me /> -->
-        <sec:session-management invalid-session-url="/timeout.jsp">
-            <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+        <sec:session-management invalid-session-url="/index.html">
+            <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="false" />
         </sec:session-management>
 
         {(original \ "profile") map interceptUrls }

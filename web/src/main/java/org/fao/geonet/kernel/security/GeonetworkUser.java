@@ -18,6 +18,7 @@ public class GeonetworkUser extends JeevesUser {
 	public static final long serialVersionUID = 1279946739116277388L;
 	public static final String SECURITY_FIELD = "security";
 	public static final String HASH_UPDATE_REQUIRED = "update_hash_required";
+	public static final String USERNAME_COLUMN = "username";
 
 	public GeonetworkUser(ProfileManager profileManager, String username, Element userXml) {
 		super(profileManager);

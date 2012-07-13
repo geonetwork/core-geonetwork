@@ -301,8 +301,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             fileDisclaimer: serviceUrl + 'file.disclaimer',
             fileDownload: serviceUrl + 'file.download',
             geopublisher: serviceUrl + 'geoserver.publisher',
-            login: serviceUrl + 'xml.user.login',
-            logout: serviceUrl + 'xml.user.logout',
+            login: this.URL + '/j_spring_security_check',
+            logout: this.URL + '/j_spring_security_logout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',
             pdf: serviceUrl + 'pdf.selection.search',
@@ -333,6 +333,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
             metadataMassiveNewOwner: serviceUrl + 'metadata.batch.newowner',
+            getMyInfo: serviceUrl + 'xml.info?type=me',
             getGroups: serviceUrl + 'xml.info?type=groups',
             getRegions: serviceUrl + 'xml.info?type=regions',
             getSources: serviceUrl + 'xml.info?type=sources',
@@ -1043,26 +1044,31 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     /** api: method[isLoggedIn]
      * 
-     *  Check a service available only for identified user. If user is not identified
-     *  response status is 403. If catalogue URL is wrong, response status is 404 (check catalogue URL).
+     *  Get the xml.info for me. If user is not identified
+     *  response xml will have a me element with an authenticated attribute. 
+     *  If catalogue URL is wrong, response status is 404 (check catalogue URL).
      *  In case of exception continue catalogue connection validation
      *  using the xml.main.error service (@see checkError).
      */
     isLoggedIn: function(){
         var response = OpenLayers.Request.GET({
-            url: this.services.admin, // FIXME : add a ping user info service in GeoNetwork
+            url: this.services.getMyInfo,
             async: false
-        }), exception;
+        }), exception, authenticated, me;
+       
+       me = response.responseXML.getElementsByTagName('me')[0];
+       authenticated = me.getAttribute('authenticated') == 'true';
        
         // Check status and also check than an Exception is not described in the HTML response
         // in case of bad startup
         exception = response.responseText.indexOf('Exception') !== -1;
         
-        if (response.status === 200 && !exception) {
+        if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                firstName: '',
-                surName: '',
-                role: ''
+                username: me.getElementsByTagName('username')[0].innerText,
+                firstName: me.getElementsByTagName('name')[0].innerText,
+                surName: me.getElementsByTagName('surname')[0].innerText,
+                role: me.getElementsByTagName('profile')[0].innerText
             };
             this.onAfterLogin();
             return true;
@@ -1094,24 +1100,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     login: function(username, password){
         var app = this, user;
-
-        OpenLayers.Request.GET({
-            url: this.services.login,
-            params: {
-                username: username,
-                password: password,
-                info: 'true'
-            },
+		OpenLayers.Request.POST({
+		    url: this.services.login,
+		    data: OpenLayers.Util.getParameterString({username: username,password: password}),
+		    headers: {
+		        "Content-Type": "application/x-www-form-urlencoded"
+		    },
             success: function(response){
-                user = response.responseXML.getElementsByTagName('record')[0];
-                
-                app.identifiedUser = {
-                    username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '-',
-                    name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '-',
-                    surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '-',
-                    role: user ? user.getElementsByTagName('profile')[0].firstChild.nodeValue : 'guest'
-                };
-                app.onAfterLogin();
+            	app.isLoggedIn();  // will get the user information and trigger after login event
             },
             failure: function(response){
                 app.identifiedUser = undefined;

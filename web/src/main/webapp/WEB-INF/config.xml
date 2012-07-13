@@ -41,12 +41,6 @@
 	    <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
 
-		<!-- service not found -->
-
-		<error id="service-not-found" sheet="error.xsl" statusCode="404">
-			<xml name="error" file="xml/service-not-found-error.xml" />
-		</error>
-
 		<!-- no privileges to access the service -->
 
 		<error id="service-not-allowed" sheet="error.xsl" statusCode="403">
@@ -949,14 +943,8 @@
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.login">
-			<class name=".services.login.Login" />
-
-			<output forward="home" />
-
-			<error id="user-login" sheet="error.xsl" statusCode="401">
-				<xml name="error" file="xml/login-error.xml" />
-			</error>
+		<service name="login.form">
+			<output page="login-form.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1180,19 +1168,6 @@
 			</error>
 
 			<output forward="metadata.edit" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- XML services -->
-
-		<service name="xml.user.login">
-			<class name=".services.login.Login" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.user.logout">
-			<class name=".services.login.Logout" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -13,11 +13,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <sec:http pattern="/htmlcache/**" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
     <sec:http use-expressions="true" realm="Geonetwork">
-        <sec:form-login username-parameter="username" password-parameter="password"></sec:form-login>
+        <sec:form-login username-parameter="username" password-parameter="password" login-page="/srv/eng/home"></sec:form-login>
         <sec:http-basic></sec:http-basic>
         <sec:logout delete-cookies="JSESSIONID"></sec:logout>
         <!-- <sec:remember-me /> -->
-        <sec:session-management invalid-session-url="/timeout.jsp">
+        <sec:session-management invalid-session-url="/index.html">
             <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="true"></sec:concurrency-control>
         </sec:session-management>
         <sec:intercept-url pattern="/srv/*/group.remove" access="hasRole('Administrator')"></sec:intercept-url>

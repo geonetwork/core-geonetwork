@@ -10,6 +10,7 @@
   <xsl:template match="/">
     <html>
       <head>
+      	<meta name="location" content="home"/>
         <script language="Javascript1.5" type="text/javascript">
           // Redirect according to config-gui.xml client configuration
           var search = window.location.search;

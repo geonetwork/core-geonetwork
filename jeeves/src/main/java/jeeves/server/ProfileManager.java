@@ -41,8 +41,10 @@ import jeeves.constants.Profiles;
 import jeeves.utils.Xml;
 
 import org.jdom.Element;
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 //=============================================================================
 
@@ -176,13 +178,18 @@ public class ProfileManager
 
 	public Element getAccessibleServices()
 	{
-		Collection<DefaultSecurityFilterChain> chains = applicationContext.getBeansOfType(DefaultSecurityFilterChain.class).values();
+		Collection<FilterSecurityInterceptor> chains = applicationContext.getBeansOfType(FilterSecurityInterceptor.class).values();
 		
-		for (SecurityFilterChain chain : chains) {
-			List<Filter> filters = chain.getFilters();
-			for (Filter filter : filters) {
-				System.out.println(filter);
+		for (FilterSecurityInterceptor chain : chains) {
+			System.out.println(chain);
+			Collection<ConfigAttribute> allConfigAttributes = chain.getSecurityMetadataSource().getAllConfigAttributes();
+			for (ConfigAttribute configAttribute : allConfigAttributes) {
+				System.out.println(configAttribute);
 			}
+//			List<Filter> filters = chain.getFilters();
+//			for (Filter filter : filters) {
+//				System.out.println(filter);
+//			}
 		}
 		//--- build proper result
 
