@@ -124,7 +124,7 @@
 					<xsl:variable name="metadataId"   select="/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()" />
 					<xsl:variable name="serverHost"   select="/root/env/host" />
 					<xsl:variable name="serverPort"   select="/root/env/port" />
-					<xsl:variable name="serverPrefix" select="concat('http://',$serverHost,':',$serverPort,'/geonetwork/srv/fr/resources.get?')"/>
+					<xsl:variable name="serverPrefix" select="concat('http://',$serverHost,':',$serverPort,'/geonetwork/srv/eng/resources.get?')"/>
 					<gco:CharacterString>
 						<xsl:value-of select="$serverPrefix"/><xsl:text>uuid=</xsl:text><xsl:value-of select="$metadataId" /><xsl:text>&amp;fname=</xsl:text><xsl:value-of select="/root/env/file"/>
 					</gco:CharacterString>
