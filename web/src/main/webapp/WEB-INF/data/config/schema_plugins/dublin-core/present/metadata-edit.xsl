@@ -73,7 +73,7 @@
             <td class="main">
               <span class="WWWDOWNLOAD icon">
                 <xsl:value-of
-                  select="/root/gui/strings/protocolChoice[@value = 'WWW:DOWNLOAD-1.0-http--download']"
+                  select="/root/gui/strings/download"
                 />
               </span>
             </td>
