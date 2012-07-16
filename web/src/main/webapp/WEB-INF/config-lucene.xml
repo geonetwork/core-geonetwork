@@ -163,6 +163,7 @@
 
     <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
     <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
   </fieldSpecificAnalyzer>
   
   <fieldSpecificSearchAnalyzer>
