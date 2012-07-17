@@ -1,0 +1,1029 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
+  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
+  xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx">
+  <element name="gmd:featureTypes" id="237.0">
+    <label>Types d'objet</label>
+    <description>Sous-ensemble de types d'objets, tirés du catalogue d'objets cité, intervenant dans le jeu de données</description>
+    <help><![CDATA[Sous-ensemble des types d'objets du catalogue cité, présents dans le jeu de données.
+      <a target="_blank" href="http://proj.badc.rl.ac.uk/csml/browser/Documentation/trunk/CSMLUsersManual.pdf">Info CSMLUsersManual</a>
+      ]]>
+    </help>
+    <condition/>
+    
+  </element>
+  <element name="gco:Measure" id="100.0" context="gmd:resolution">
+    <label>Temps</label>
+    <description>Name of the test applied to the data</description>
+  </element>
+  <element name="gmd:CI_OnlineResource" id="396.0">
+    <label>Accès et commandes des produits</label>
+    <description>Type de données pour l'information sur les sources en ligne, grâce auxquelles les
+      éléments de métadonnées étendus sur le jeu de données, la spécification ou le profil peuvent
+      être obtenus</description>
+    <help>Type de données contenant des informations relatives à la possibilité et dans
+      l'affirmative, à la manière d'accéder en ligne au jeu de données.</help>
+    <condition/>
+  </element>
+  <element name="gmd:EX_GeographicBoundingBox" id="343.0">
+    <label>Emprise</label>
+    <description>Type de données pour la description de la position géographique du jeu de données.
+      Il s'agit ici d'une référence approximative de telle sorte qu''il n''est pas nécessaire de
+      spécifier le système de coordonnées</description>
+    <help>Type de données destiné à la description de la position géographique du jeu de données. Il
+      s'agit ici de la définition d'une enveloppe sommaire (délimitation en latitude et en
+      longitude). Des informations supplémentaires peuvent être trouvées sous EX_Extent et
+      EX_GeographicExtent.</help>
+    <condition>Obligatoire</condition>
+  </element>
+
+  <element name="gmd:MD_Distributor" id="279.0">
+    <label>Centre de distribution des données</label>
+    <description>Classe avec l'information sur le distributeur</description>
+    <help>Classe contenant les informations relatives au distributeur des données (nom, rôle,
+      adresse, etc.). d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+    <condition/>
+
+  </element>
+  <element name="gmd:MD_ScopeDescription" id="149.0">
+    <label>Paramètres (SDN P011)</label>
+    <description>Description de la classe d'information concernée par les informations</description>
+    <help>Description du domaine auquel se rapporte une information. Ces indications sont utilisées
+      pour les informations de qualité (DQ_Quality) et les informations de mise à jour
+      (MD_Maintenance) lorsque les caractéristiques ne sont pas homogènes sur l'ensemble du jeu de
+      données décrit. l'un au moins de ces attributs doit être saisi. Exemple de la MO, jeu de
+      données décrit : "Lot". La couche des biens-fonds est mise à jour en permanence, la couche de
+      la nomenclature n''est quant à elle actualisée qu''au besoin. Si la mise à jour de la couche
+      des biens-fonds est décrite, l'option "Biens-fonds" est entrée pour les propriétés. Les
+      informations de qualité sont gérées sur le même modèle. Vous trouverez d'autres informations
+      sous MD_MaintenanceInformation et DQ_DataQuality.</help>
+    <condition>Il faut saisir un des attributs suivants: Attributs, Objets Géométriques, Occurences
+      d'objets, Occurences d'attributs, Jeu de données, Autre.</condition>
+  </element>
+  <element name="gmd:URL" id="608.0">
+    <label>URL libre</label>
+    <description>Classe destinée à la description d'un élément de métadonnées URL libre
+      multilingue</description>
+    <help>Classe destinée à la description d'un élément de métadonnées URL libre multilingue. Le
+      type de données PT_FreeText permet de gérer des informations textuelles en plusieurs
+      langues.</help>
+    <condition/>
+  </element>
+  <element name="gmd:abstract" id="25.0">
+    <label>Court résumé</label>
+    <description>Court résumé explicatif du contenu des ressources</description>
+    <help>Court résumé descriptif du contenu du jeu de données. Cet attribut est du type PT_FreeText
+      et est géré dans la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:attributes" id="150.0">
+    <label>Paramètre</label>
+    <description>Attributs sur lesquels l'information s'applique</description>
+    <help>Attributs auxquels les informations se rapportent.</help>
+    <condition>Ne pas remplir ce champs, remplir uniquement le champ nom du paramètre</condition>
+  </element>
+
+
+
+  <element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
+    <label>Nom court du jeu de données (SDN Local Product-ID)</label>
+    <description>Valeur alphanumérique pour l'identification d'une occurrence dans le domaine de
+      valeurs</description>
+    <help>Code alphanumérique de l'identifiant. Ces informations sont du type PT_FreeText et sont
+      gérées dans la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+    <helper></helper>
+  </element>
+  <element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
+    <label>Centre de collecte = auteur de la métadonnée</label>
+    <description>Organisme responsable pour les informations que contiennent les
+      métadonnées.</description>
+    <help>Rôle (propriétaire, prestataire, gestionnaire, etc.) de la personne ou du service
+      compétent pouvant être sélectionné dans la liste présentée ici. Cet attribut renvoie à la
+      classe CI_ResponsibleParty dans laquelle les informations relatives au service ou à la
+      personne concernée sont gérées. Cet attribut est du type CI_ResponsibleParty et est géré dans
+      la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+
+  <element name="gmd:date" id="362.0" context="gmd:CI_Citation">
+    <label>Date</label>
+    <description>Date de référence pour la ressource en question</description>
+    <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création,
+      publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe
+      du même nom.</help>
+    <condition/>
+
+  </element>
+  <element name="gmd:date" id="394.0" context="gmd:CI_Date">
+    <label>Date</label>
+    <description>Date de référence pour la ressource en question</description>
+    <help>Date de référence (jj.mm.aaaa)</help>
+    <condition/>
+
+  </element>
+  <element name="gmd:dateStamp" id="9.0">
+    <label>Date de création de la métadonnée</label>
+    <description>Date de création des métadonnées</description>
+    <help>Date de création des métadonnées. Elle est automatiquement attribuée par
+      l'application.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:denominator" id="57.0">
+    <label>Echelle maximum d'utilisation</label>
+    <description>Le dénominateur de l'échelle (le chiffre en dessous de la barre de
+      fraction)</description>
+    <help>La valeur se trouvant sous la barre de fraction. Il s'agit ici de l'échelle : dans le cas
+      d'une carte à l'échelle du 1:25000, seul le terme "25000" est entré. Cette valeur peut
+      également représenter une indication de précision dans le cas d'un jeu de données
+      vectorielles. Exemple : des limites saisies à une échelle de 1:25'000 et présentant ce niveau
+      de précision.</help>
+    <condition>Il faut saisir ou une échelle ou une distance</condition>
+    <helper>
+      <option value="5000">1:5´000</option>
+      <option value="10000">1:10´000</option>
+      <option value="25000">1:25´000</option>
+      <option value="50000">1:50´000</option>
+      <option value="100000">1:100´000</option>
+      <option value="200000">1:200´000</option>
+      <option value="300000">1:300´000</option>
+      <option value="500000">1:500´000</option>
+      <option value="1000000">1:1´000´000</option>
+    </helper>
+  </element>
+  <element name="gmd:densityUnits" id="294.0">
+    <label>Unité de densité</label>
+    <description>Unité de mesure pour la densité d'enregistrement</description>
+    <help>Unité de mesure de la densité d'écriture.</help>
+    <condition/>
+  </element>
+  <element name="gmd:description" id="87.0" context="LI_ProcessStep">
+    <label>Description</label>
+    <description>Description de l'événement, incluant les paramètres ou tolérances y
+      relatifs</description>
+    <help>Description du processus (étape de traitement) pouvant inclure la description de
+      paramètres ou de tolérances.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:description" id="561.0">
+    <label>Description</label>
+    <description>Description</description>
+  </element>
+  <element name="gmd:description" id="561.0" context="gmd:MD_AbstractClass">
+    <label>Description</label>
+    <description>Description</description>
+  </element>
+  <element name="gmd:description" id="93.0" context="LI_Source">
+    <label>Description</label>
+    <description>Description détaillée de l'état des données sources</description>
+  </element>
+  <element name="gmd:descriptiveKeywords" id="33.0">
+    <label>Mots clés descriptifs</label>
+    <description>Catégorie, type et source de référence des mots clés</description>
+    <help> En Europe, si la ressource est une série de données géographiques ou un ensemble de
+      séries de données géographiques, il convient de fournir au moins un mot clé du thésaurus
+      multilingue de l’environnement (GEMET, General Environ­mental Multi-lingual Thesaurus)
+      décrivant le thème dont relèvent les données géographiques, conformément aux définitions des
+      annexes I, II ou III de la directive 2007/2/CE. <!-- [2] --> Catégorie du mot clé, décrivant
+      si ce dernier concerne la discipline, le lieu, la couche, l'intervalle de temps, ou le thème.
+      Ces informations sont gérées dans la classe MD_Keywords.</help>
+    <condition/>
+
+  </element>
+
+  <element name="gmd:distance" id="61.0">
+    <label>Distance au sol</label>
+    <description>Distance de référence, mesurée au sol</description>
+    <help>Résolution au sol</help>
+    <condition>Saisir une distance si pas d'échelle</condition>
+    <helper/>
+  </element>
+
+  <element name="gmd:distributionFormat" id="271.0">
+    <label>Format de distribution</label>
+    <description>Description du format de distribution</description>
+    <help>Description du format de distribution. Ces informations sont gérées dans la classe
+      MD_Format.</help>
+    <condition/>
+
+  </element>
+
+  <element name="gmd:distributorContact" id="280.0">
+    <label>Centre de distribution des données</label>
+    <description>Services depuis lesquels la ressource peut être obtenue. Cette liste n''a pas
+      besoin d'être exhaustive</description>
+    <help>Personne ou organisation compétente auprès de laquelle le jeu de données peut être obtenu.
+      Une seule information est permise. La référence est du type de données CI_ResponsibleParty et
+      est gérée dans la classe du même nom.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:fileName" id="49.0">
+    <label>Nom de l'illustration</label>
+    <description>Nom du fichier qui contient le graphique contenant une illustration du jeu de
+      données</description>
+    <help>Nom du fichier contenant une représentation figurative du jeu de données.</help>
+    <condition/>
+
+  </element>
+  <element name="gmd:graphicOverview" id="31.0">
+    <label>Vue générale graphique</label>
+    <description>Vue générale graphique illustrant les ressources (y inclus une
+      légende)</description>
+    <help>Vue d'ensemble graphique de la ressource (légende incluse). Ces informations sont gérées
+      dans la classe MD_BrowseGraphic.</help>
+    <condition/>
+
+  </element>
+  <element name="gmd:hierarchyLevel" id="6.0">
+    <label>Niveau hiérarchique</label>
+    <description>Domaine auquel les métadonnées s'appliquent (voir l'annexe C pour plus
+      d'information au sujet des niveaux de hiérarchie des métadonnées)</description>
+    <help>Domaine auquel les métadonnées se rapportent. La catégorie d'informations à laquelle
+      l'entité se réfère peut être indiquée dans la liste des codes (exemple : attributs, objets
+      géométriques, jeu de données, etc.). "Jeu de données" est le paramètre par défaut.</help>
+    <condition>Par défaut: "jeu de données"</condition>
+  </element>
+  <element name="gmd:hierarchyLevelName" id="7.0">
+    <label>Type de catalogue</label>
+    <description>Nom du niveau de hiérarchie pour lequel les métadonnées sont
+      produites</description>
+    <help>Nom du niveau hiérarchique auquel les métadonnées se rapportent. Il peut par exemple
+      s'agir du nom d'une série.</help>
+    <condition>Condition</condition>
+  </element>
+  <element name="gmd:identifier" id="365.0">
+    <label>Identificateur de provenance</label>
+    <description>Identificateur de l'indication de provenance</description>
+    <help>Identificateur de l'indication de provenance. La classe MD_Identifier permet d'affecter
+      une indication de provenance à un registre existant.</help>
+    <condition>Condition</condition>
+    <helper/>
+  </element>
+
+  <element name="gmd:language" id="3.0" context="gmd:MD_Metadata">
+    <label>Langue de la métadonnée</label>
+    <description>Langue utilisée pour documenter les métadonnées</description>
+    <help>Langue utilisée pour la documentation des métadonnées. La sélection s'opère dans la liste
+      des langues ISO. Exemple : "fr" pour le français, "de" pour l'allemand, "en" pour l'anglais,
+      "it" pour l'italien, "rm" pour le romanche, ...</help>
+    <condition>Obligatoire</condition>
+  </element>
+  <element name="gmd:lineage" id="81.0">
+    <label>Qualité de la provenance</label>
+    <description>Informations de qualité concernant la provenance des données</description>
+    <help>Informations relatives à la provenance, à la filiation ou au processus de génération.
+      Elles sont gérées dans la classe LI_Lineage. "+lineage" est obligatoire si
+      "scope.DQ_Scope.level" = "Jeu de données".</help>
+    <condition>Condition</condition>
+  </element>
+  <element name="gmd:measureDescription" id="102.0"
+    context="gmd:DQ_NonQuantitativeAttributeAccuracy">
+    <label>Biaisé pour la sécurité nautique</label>
+    <description>Description of the measure being determined</description>
+  </element>
+  <element name="gmd:name" id="285.0" context="gmd:MD_Format">
+    <label>Format de distribution</label>
+    <description>Nom des formats de transfert des données</description>
+    <help>Nom du format de transfert de données, par exemple TIFF, ZIP, etc.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:nameOfMeasure" id="100.0">
+    <label>Nom du test</label>
+    <description>Nom des tests qui ont été appliqués aux données</description>
+    <help>Nom du test appliqué aux données.</help>
+    <condition/>
+
+  </element>
+
+  <element name="gmd:obligation" id="311.0">
+    <label>Obligation</label>
+    <description>Obligation de l'élément étendu</description>
+    <help>Niveau d'obligation associé à l'élément étendu (obligatoire, optionnel ou obligatoire sous
+      certaines conditions).</help>
+    <condition/>
+  </element>
+
+  <element name="gmd:onLine" id="277.0">
+    <label>Site Web</label>
+    <description>Information sur les sources en ligne depuis lesquelles la ressource peut être
+      obtenue</description>
+    <help>Informations relatives à la source en ligne via laquelle le jeu de données peut être
+      acquis. Ces informations sont du type CI_OnlineRessource et sont gérées dans la classe du même
+      nom.</help>
+    <condition/>
+
+  </element>
+
+  <element name="gmd:organisationName" id="376.0">
+    <label>Organisation</label>
+    <description>Nom de l'organisation responsable(Inscrire le code EDMO et le nom de
+      l'organisation. Par exemple, SDN:EDMO::EDMO id = EDMO name) </description>
+    <help>Nom de l'organisation responsable, s'il s'agit d'une personne isolée ou nom de
+      l'organisation au sein de laquelle cette personne est employée. Ces informations sont du type
+      PT_FreeText et sont gérées dans la classe du même nom.</help>
+    <condition>Condition</condition>
+  </element>
+
+  <element name="gmd:otherConstraints" id="72.0">
+    <label>Autres contraintes (Insérer les références ici)</label>
+    <description>Autres restrictions et prérequis légaux pour accéder et utiliser les ressources où
+      de métadonnées</description>
+    <help>Autres restrictions et conditions préalables de nature juridique concernant l'accès et
+      l'utilisation de la ressource ou des métadonnées. Ce champ doit être complété dès lors que
+      l'un des deux champs précédents (accessConstraints, useConstraints) porte la mention "Autres
+      restrictions".</help>
+    <condition>Condition</condition>
+    <helper></helper>
+  </element>
+
+  <element name="gmd:pass" id="132.0">
+    <label>Réussi</label>
+    <description>Indication sur le résultat de conformance où 0 = échoué et 1= réussi</description>
+    <help>Indication du résultat du test de concordance (0 = échec, 1= succès).</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:phone" id="407.0">
+    <label>Téléphone</label>
+    <description>Type de données pour le numéro de téléphone de la personne ou du service
+      responsable</description>
+    <help>Type de données pour les numéros de téléphone.</help>
+    <condition/>
+
+  </element>
+
+  <element name="gmd:pointInPixel" id="167.0">
+    <label>Position de la valeur dans la cellule</label>
+    <description>Point d'un pixel correspondant à la location terrestre du pixel</description>
+    <help>Point d'un pixel correspondant à la localisation du pixel dans le système
+      terrestre.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+  <element name="gmd:pointOfContact" id="29.0">
+    <label>Point de contact</label>
+    <description>Identification, et mode de communication avec, des personnes ou des organisations
+      associées aux ressources</description>
+    <help>Identification de la personne (voire des personnes) ou de l'organisation (voire des
+      organisations) responsable du jeu de données décrit et mode de communication avec elle. Cette
+      personne ou ce service endosse un rôle (propriétaire, prestataire, gestionnaire, etc.) bien
+      spécifique pouvant être sélectionné dans la liste proposée. Les données correspondantes de la
+      personne ou du service sont gérées dans la classe CI_ResponsibleParty. Ce rôle peut également
+      servir à l'affectation d'un jeu de données à une commune. Exemple : le rôle de "propriétaire"
+      permet ici d'affecter un lot de la MO à la commune correspondante.</help>
+    <condition/>
+
+  </element>
+
+
+  <element name="gmd:referenceSystemInfo" id="13.0">
+    <label>Système de référence de coordonnées(CRS)</label>
+    <description>Description des références spatiale et temporelle utilisées dans le jeu de
+      données</description>
+    <help>Description des systèmes de référence spatiale et temporelle utilisés dans le jeu de
+      données. Ces informations sont gérées dans la classe MD_ReferenceSystem.</help>
+    <condition/>
+
+  </element>
+
+  <element name="gmd:resourceConstraints" id="35.0">
+    <label>Contraintes sur la ressource</label>
+    <description>Informations sur les contraites concernant les ressources</description>
+    <help>Informations relatives aux restrictions s'appliquant aux ressources. Ces informations sont
+      gérées dans la classe MD_Constraints.</help>
+    <condition/>
+
+  </element>
+
+
+  <element name="gmd:statement" id="83.0">
+    <label>Description</label>
+    <description>Explication générale sur les connaissances du producteur de données au sujet de la
+      filiation du jeu de données</description>
+    <help>Explication générale de la filiation du jeu de données fournie par le créateur des
+      données. Dans le cas de données de la MO, il peut s'agir de l'indication des bases
+      (MO93/MD93). Pour des données tramées, il peut s'agir de l'indication du fait qu''elles
+      dérivent de prises de vues aériennes.</help>
+    <condition>Condition</condition>
+  </element>
+
+  <element name="gmd:title" id="360.0">
+    <label>Nom du jeu de données</label>
+    <description>Nom avec lequel la ressource en question est connue</description>
+    <help>
+      <!-- [2] --> Nom caractéristique et souvent unique sous lequel la ressource est connue.
+      Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même
+      nom.</help>
+    <condition>Obligatoire</condition>
+
+  </element>
+
+  <element name="gmd:toneGradation" id="265.0">
+    <label>Nombre de tons de gris</label>
+    <description>Nombre de valeurs numériques discrètes dans les données raster</description>
+    <help>Nombre de valeurs numériques discrètes dans les données tramées.</help>
+    <condition/>
+
+  </element>
+  <element name="gmd:topicCategory" id="41.0">
+    <label>Thématique</label>
+    <description>Thème(s) principal(aux) du jeu de données</description>
+    <help>Thème principal (ou thèmes principaux) du jeu de données. Ce thème ou groupe de thèmes
+      permet de trouver un jeu de données. Cet attribut se fondant sur une liste de codes de la
+      norme ISO (MD_TopicCategoryCode), une recherche standardisée par thèmes est possible au plan
+      international. Les thèmes suivants sont répertoriés : agriculture, biologie, limites,
+      climatologie et météorologie, économie, indications altimétriques, environnement, sciences de
+      la Terre, santé, images et cartes de base, armée et renseignement, cours d'eau intérieurs,
+      indications de lieux, mers et océans, aménagement du territoire et cadastre, société,
+      subdivisions, transport, infrastructures de transport. </help>
+    <condition>Obligatoire si "jeu de données"</condition>
+  </element>
+
+
+
+  <element name="gco:Record">
+    <label>Valeur quantitative</label>
+    <description>Valeur estimée en mètre (2 sigma)</description>
+    <help/>
+    <condition/>
+
+  </element>
+
+  <element name="gco:CharacterString" context="gmd:language">
+    <label>Langue de la métadonnée</label>
+    <description>Langue utilisée pour documenter la métadonnée</description>
+    <condition>conditional</condition>
+  </element>
+  <element name="gco:CharacterString" context="gmd:alternateTitle">
+    <label>Nom client du produit</label>
+    <description>Short name or other language name by which the cited information is known. Example:
+      "DCW" as an alternative title for "Digital Chart of the World</description>
+  </element>
+  <element name="gco:Distance" context="gmd:distance">
+    <label>Résolution moyenne horizontale</label>
+    <description>Ground sample distance</description>
+  </element>
+  <element name="gco:Real" context="gmd:minimumValue">
+    <label>Profondeur minimum</label>
+    <description>Lowest vertical extent contained in the dataset</description>
+  </element>
+  <element name="gco:Real" context="gmd:maximumValue">
+    <label>Profondeur maximum</label>
+    <description>Highest vertical extent contained in the dataset</description>
+  </element>
+  <element name="gmd:CI_OnlineResource" context="gmd:onlineResource">
+    <label>Site web</label>
+    <description>On-line information that can be used to contact the individual or
+      organisation</description>
+  </element>
+
+  <element name="gco:CharacterString" context="gmd:useLimitation">
+    <label>Limitation d'utilisation</label>
+    <description>Limitation d'utilisation de la ressource où de métadonnées. Exemple: "ne pas
+      utiliser pour la navigation"</description>
+  </element>
+  <element name="gco:CharacterString" context="gmd:otherConstraints">
+    <label>Autres contraintes (Insérer les références ici)</label>
+    <description>Autres restrictions et prérequis légaux pour accéder et utiliser les ressources où
+      de métadonnées</description>
+  </element>
+  <element name="gml:identifier" context="gml:VerticalDatum">
+    <label>Données verticales</label>
+    <description>Référence vertical de la profondeur de l'eau</description>
+  </element>
+
+  <element name="uuidref">
+    <label>Name parameter</label>
+    <description>Unique identifier</description>
+    <helper/>
+  </element>
+  <element name="uom">
+    <label>Unit</label>
+    <description/>
+    <helper>
+      <option value="SDN:P061:38:UMKS = 10^-8 * Cubic metres per kilogram (10^-8m^3kg-1)"
+        >SDN:P061:38:UMKS = 10^-8 * Cubic metres per kilogram (10^-8m^3kg-1)</option>
+      <option value="SDN:P061:38:UAQU = Angstrom squared per quantum (A^2/Q)">SDN:P061:38:UAQU =
+        Angstrom squared per quantum (A^2/Q)</option>
+      <option value="SDN:P061:38:UAMN = Arc minutes (arc_min)">SDN:P061:38:UAMN = Arc minutes
+        (arc_min)</option>
+      <option value="SDN:P061:38:UBQK = Bequerels per kilogram (Bq/kg)">SDN:P061:38:UBQK = Bequerels
+        per kilogram (Bq/kg)</option>
+      <option value="SDN:P061:38:UBQL = Bequerels per litre (Bq/l)">SDN:P061:38:UBQL = Bequerels per
+        litre (Bq/l)</option>
+      <option value="SDN:P061:38:UYGA = Billions of years before present (Gyr)">SDN:P061:38:UYGA =
+        Billions of years before present (Gyr)</option>
+      <option value="SDN:P061:38:BYTE = Bytes (Bytes)">SDN:P061:38:BYTE = Bytes (Bytes)</option>
+      <option value="SDN:P061:38:ULCM = Centimetres (cm)">SDN:P061:38:ULCM = Centimetres
+        (cm)</option>
+      <option value="SDN:P061:38:UVBB = Centimetres per second (cm/s)">SDN:P061:38:UVBB =
+        Centimetres per second (cm/s)</option>
+      <option value="SDN:P061:38:UCKA = Centimetres per thousand years (cm/kyr)">SDN:P061:38:UCKA =
+        Centimetres per thousand years (cm/kyr)</option>
+      <option value="SDN:P061:38:UCPS = Counts per second (counts/s)">SDN:P061:38:UCPS = Counts per
+        second (counts/s)</option>
+      <option value="SDN:P061:38:MCUB = Cubic metres (m^3)">SDN:P061:38:MCUB = Cubic metres
+        (m^3)</option>
+      <option value="SDN:P061:38:CMPS = Cubic metres per second (m^3/s)">SDN:P061:38:CMPS = Cubic
+        metres per second (m^3/s)</option>
+      <option value="SDN:P061:38:MCS2 = Cubic metres per second squared (m^3/s^2)">SDN:P061:38:MCS2
+        = Cubic metres per second squared (m^3/s^2)</option>
+      <option value="SDN:P061:38:UMCU = Cubic micrometres (microns) (um^3)">SDN:P061:38:UMCU = Cubic
+        micrometres (microns) (um^3)</option>
+      <option value="SDN:P061:38:UCCM = Cubic microns per cubic metre (um^3/m^3)">SDN:P061:38:UCCM =
+        Cubic microns per cubic metre (um^3/m^3)</option>
+      <option value="SDN:P061:38:UNVH = Cubic microns per individual per hour (um^3/ind/h)"
+        >SDN:P061:38:UNVH = Cubic microns per individual per hour (um^3/ind/h)</option>
+      <option value="SDN:P061:38:UCUM = Cubic microns per millilitre (um^3/ml)">SDN:P061:38:UCUM =
+        Cubic microns per millilitre (um^3/ml)</option>
+      <option value="SDN:P061:38:UTAA = Days (d)">SDN:P061:38:UTAA = Days (d)</option>
+      <option value="SDN:P061:38:UPDB = Decibars (dbar)">SDN:P061:38:UPDB = Decibars (dbar)</option>
+      <option value="SDN:P061:38:UDBL = Decibels (dB)">SDN:P061:38:UDBL = Decibels (dB)</option>
+      <option value="SDN:P061:38:UDBZ = Decibels of Z (dBZ)">SDN:P061:38:UDBZ = Decibels of Z
+        (dBZ)</option>
+      <option value="SDN:P061:38:UAAA = Degrees (deg)">SDN:P061:38:UAAA = Degrees (deg)</option>
+      <option value="SDN:P061:38:UPAA = Degrees Celsius (degC)">SDN:P061:38:UPAA = Degrees Celsius
+        (degC)</option>
+      <option value="SDN:P061:38:UPCC = Degrees Celsius per metre (degC/m)">SDN:P061:38:UPCC =
+        Degrees Celsius per metre (degC/m)</option>
+      <option value="SDN:P061:38:UCSS = Degrees Celsius squared per second (degC^2/s)"
+        >SDN:P061:38:UCSS = Degrees Celsius squared per second (degC^2/s)</option>
+      <option value="SDN:P061:38:DEGE = Degrees east (degree_east)">SDN:P061:38:DEGE = Degrees east
+        (degree_east)</option>
+      <option value="SDN:P061:38:UPKA = Degrees Kelvin (K)">SDN:P061:38:UPKA = Degrees Kelvin
+        (K)</option>
+      <option value="SDN:P061:38:DKPM = Degrees Kelvin per metre (degK/m)">SDN:P061:38:DKPM =
+        Degrees Kelvin per metre (degK/m)</option>
+      <option value="SDN:P061:38:DEGN = Degrees north (degree_north)">SDN:P061:38:DEGN = Degrees
+        north (degree_north)</option>
+      <option value="SDN:P061:38:DGPS = Degrees per second (deg/s)">SDN:P061:38:DGPS = Degrees per
+        second (deg/s)</option>
+      <option value="SDN:P061:38:UABB = Degrees True (deg T)">SDN:P061:38:UABB = Degrees True (deg
+        T)</option>
+      <option value="SDN:P061:38:UUUU = Dimensionless (Dmnless)">SDN:P061:38:UUUU = Dimensionless
+        (Dmnless)</option>
+      <option value="SDN:P061:38:UPFM = Femtomoles per litre (fmol/l)">SDN:P061:38:UPFM = Femtomoles
+        per litre (fmol/l)</option>
+      <option value="SDN:P061:38:UFFU = Fluorescein Fluorescence Units (FFU)">SDN:P061:38:UFFU =
+        Fluorescein Fluorescence Units (FFU)</option>
+      <option value="SDN:P061:38:UGCC = Grams per cubic centimetre (g/cm^3)">SDN:P061:38:UGCC =
+        Grams per cubic centimetre (g/cm^3)</option>
+      <option value="SDN:P061:38:UGMC = Grams per cubic metre (g/m^3)">SDN:P061:38:UGMC = Grams per
+        cubic metre (g/m^3)</option>
+      <option value="SDN:P061:38:UGKG = Grams per kilogram (g/kg)">SDN:P061:38:UGKG = Grams per
+        kilogram (g/kg)</option>
+      <option value="SDN:P061:38:UGMS = Grams per square metre (g/m^2)">SDN:P061:38:UGMS = Grams per
+        square metre (g/m^2)</option>
+      <option value="SDN:P061:38:UYAD = Gregorian calendar years anno Domini (AD)">SDN:P061:38:UYAD
+        = Gregorian calendar years anno Domini (AD)</option>
+      <option value="SDN:P061:38:UYBC = Gregorian calendar years before Christ (BC)"
+        >SDN:P061:38:UYBC = Gregorian calendar years before Christ (BC)</option>
+      <option value="SDN:P061:38:UYMD = Gregorian date (yyyymmdd) (yyyymmdd)">SDN:P061:38:UYMD =
+        Gregorian date (yyyymmdd) (yyyymmdd)</option>
+      <option value="SDN:P061:38:HPAH = Hectopascals per hour (hPa/h)">SDN:P061:38:HPAH =
+        Hectopascals per hour (hPa/h)</option>
+      <option value="SDN:P061:38:UTHZ = Hertz (Hz)">SDN:P061:38:UTHZ = Hertz (Hz)</option>
+      <option value="SDN:P061:38:UHOR = Hours (h)">SDN:P061:38:UHOR = Hours (h)</option>
+      <option value="SDN:P061:38:UHMS = Hours Minutes Seconds (hh24miss)">SDN:P061:38:UHMS = Hours
+        Minutes Seconds (hh24miss)</option>
+      <option value="SDN:P061:38:TISO = ISO8601 (ISO8601)">SDN:P061:38:TISO = ISO8601
+        (ISO8601)</option>
+      <option value="SDN:P061:38:JPKG = Joules per kilogram (J/kg)">SDN:P061:38:JPKG = Joules per
+        kilogram (J/kg)</option>
+      <option value="SDN:P061:38:JKGK = Joules per kilogram per Kelvin (J/kg/K)">SDN:P061:38:JKGK =
+        Joules per kilogram per Kelvin (J/kg/K)</option>
+      <option value="SDN:P061:38:JMSQ = Joules per square metre (J/m^2)">SDN:P061:38:JMSQ = Joules
+        per square metre (J/m^2)</option>
+      <option value="SDN:P061:38:KMTX = Kelvin metres (K.m)">SDN:P061:38:KMTX = Kelvin metres
+        (K.m)</option>
+      <option value="SDN:P061:38:KMTS = Kelvin metres per second (K.m/s)">SDN:P061:38:KMTS = Kelvin
+        metres per second (K.m/s)</option>
+      <option value="SDN:P061:38:KPAS = Kelvin Pascals per second (K.Pa/s)">SDN:P061:38:KPAS =
+        Kelvin Pascals per second (K.Pa/s)</option>
+      <option value="SDN:P061:38:KPMT = Kelvin per metre (K/m)">SDN:P061:38:KPMT = Kelvin per metre
+        (K/m)</option>
+      <option value="SDN:P061:38:KPRS = Kelvin per second (K/s)">SDN:P061:38:KPRS = Kelvin per
+        second (K/s)</option>
+      <option value="SDN:P061:38:KSXX = Kelvin second (K.s)">SDN:P061:38:KSXX = Kelvin second
+        (K.s)</option>
+      <option value="SDN:P061:38:KMSS = Kelvin square metres per kilogram per second (K.m^2/kg/s)"
+        >SDN:P061:38:KMSS = Kelvin square metres per kilogram per second (K.m^2/kg/s)</option>
+      <option value="SDN:P061:38:KLSQ = Kelvin squared (K^2)">SDN:P061:38:KLSQ = Kelvin squared
+        (K^2)</option>
+      <option value="SDN:P061:38:KGPS = Kilogram per second (kg/s)">SDN:P061:38:KGPS = Kilogram per
+        second (kg/s)</option>
+      <option value="SDN:P061:38:KGXX = Kilograms (kg)">SDN:P061:38:KGXX = Kilograms (kg)</option>
+      <option value="SDN:P061:38:UKMC = Kilograms per cubic metre (kg/m^3)">SDN:P061:38:UKMC =
+        Kilograms per cubic metre (kg/m^3)</option>
+      <option value="SDN:P061:38:KSP3 = Kilograms per cubic metre per second (kg/m^3/s)"
+        >SDN:P061:38:KSP3 = Kilograms per cubic metre per second (kg/m^3/s)</option>
+      <option value="SDN:P061:38:KMPS = Kilograms per metre per second (kg/m/s)">SDN:P061:38:KMPS =
+        Kilograms per metre per second (kg/m/s)</option>
+      <option value="SDN:P061:38:KMP2 = Kilograms per square metre (kg/m^2)">SDN:P061:38:KMP2 =
+        Kilograms per square metre (kg/m^2)</option>
+      <option value="SDN:P061:38:KSP2 = Kilograms per square metre per second (kg/m^2/s)"
+        >SDN:P061:38:KSP2 = Kilograms per square metre per second (kg/m^2/s)</option>
+      <option value="SDN:P061:38:KGS2 = Kilograms squared per second squared (kg^2/s^2)"
+        >SDN:P061:38:KGS2 = Kilograms squared per second squared (kg^2/s^2)</option>
+      <option value="SDN:P061:38:ULKM = Kilometres (km)">SDN:P061:38:ULKM = Kilometres (km)</option>
+      <option value="SDN:P061:38:KMDY = Kilometres per day (km/d)">SDN:P061:38:KMDY = Kilometres per
+        day (km/d)</option>
+      <option value="SDN:P061:38:KIPA = Kilopascals (kPa)">SDN:P061:38:KIPA = Kilopascals
+        (kPa)</option>
+      <option value="SDN:P061:38:UYKA = Kiloyears before present (kyr)">SDN:P061:38:UYKA = Kiloyears
+        before present (kyr)</option>
+      <option value="SDN:P061:38:UKNT = Knots (nautical miles per hour) (Knots)">SDN:P061:38:UKNT =
+        Knots (nautical miles per hour) (Knots)</option>
+      <option value="SDN:P061:38:ULIT = Litres (l)">SDN:P061:38:ULIT = Litres (l)</option>
+      <option value="SDN:P061:38:ULKG = Litres per kilogram (l/kg)">SDN:P061:38:ULKG = Litres per
+        kilogram (l/kg)</option>
+      <option value="SDN:P061:38:ULPM = Litres per minute (l/min)">SDN:P061:38:ULPM = Litres per
+        minute (l/min)</option>
+      <option value="SDN:P061:38:UCGS = Magnetic susceptibility cgs units (MScgs)">SDN:P061:38:UCGS
+        = Magnetic susceptibility cgs units (MScgs)</option>
+      <option value="SDN:P061:38:UCGG = Magnetic susceptibility cgs units per gram (Mscgs/g)"
+        >SDN:P061:38:UCGG = Magnetic susceptibility cgs units per gram (Mscgs/g)</option>
+      <option value="SDN:P061:38:USIS = Magnetic susceptibility SI units (MSSI)">SDN:P061:38:USIS =
+        Magnetic susceptibility SI units (MSSI)</option>
+      <option value="SDN:P061:38:MBYT = Megabytes (MByte)">SDN:P061:38:MBYT = Megabytes
+        (MByte)</option>
+      <option value="SDN:P061:38:ULAA = Metres (m)">SDN:P061:38:ULAA = Metres (m)</option>
+      <option value="SDN:P061:38:UVAA = Metres per second (m/s)">SDN:P061:38:UVAA = Metres per
+        second (m/s)</option>
+      <option value="SDN:P061:38:MPS2 = Metres per second squared (m/s^2)">SDN:P061:38:MPS2 = Metres
+        per second squared (m/s^2)</option>
+      <option value="SDN:P061:38:M4S1 = metres to the power four per second (m^4/s)"
+        >SDN:P061:38:M4S1 = metres to the power four per second (m^4/s)</option>
+      <option value="SDN:P061:38:UATM = Microatmospheres (uatm)">SDN:P061:38:UATM = Microatmospheres
+        (uatm)</option>
+      <option value="SDN:P061:38:UUBQ = Microbequerels per litre (uBq/l)">SDN:P061:38:UUBQ =
+        Microbequerels per litre (uBq/l)</option>
+      <option value="SDN:P061:38:UMEC = MicroEinsteins per cubic metre per second (uE/m^3/s)"
+        >SDN:P061:38:UMEC = MicroEinsteins per cubic metre per second (uE/m^3/s)</option>
+      <option value="SDN:P061:38:UMES = MicroEinsteins per square metre per second (uE/m^2/s)"
+        >SDN:P061:38:UMES = MicroEinsteins per square metre per second (uE/m^2/s)</option>
+      <option value="SDN:P061:38:UEQL = MicroEquivalents per litre (uEquiv/l)">SDN:P061:38:UEQL =
+        MicroEquivalents per litre (uEquiv/l)</option>
+      <option value="SDN:P061:38:UGPM = MicroGals per metre (uGal/m)">SDN:P061:38:UGPM = MicroGals
+        per metre (uGal/m)</option>
+      <option value="SDN:P061:38:UGUG = Micrograms (ug)">SDN:P061:38:UGUG = Micrograms (ug)</option>
+      <option value="SDN:P061:38:MCUG = Micrograms per cubic metre (ug/m^3)">SDN:P061:38:MCUG =
+        Micrograms per cubic metre (ug/m^3)</option>
+      <option value="SDN:P061:38:UGM3 = Micrograms per cubic metre per hour (ug/m^3/h)"
+        >SDN:P061:38:UGM3 = Micrograms per cubic metre per hour (ug/m^3/h)</option>
+      <option value="SDN:P061:38:UUKG = Micrograms per kilogram (ug/kg)">SDN:P061:38:UUKG =
+        Micrograms per kilogram (ug/kg)</option>
+      <option value="SDN:P061:38:UGPL = Micrograms per litre (ug/l)">SDN:P061:38:UGPL = Micrograms
+        per litre (ug/l)</option>
+      <option value="SDN:P061:38:UUGS = Micrograms per millilitre of wet sediment (ug/ml wet)"
+        >SDN:P061:38:UUGS = Micrograms per millilitre of wet sediment (ug/ml wet)</option>
+      <option value="SDN:P061:38:UUDX = Micrograms per square metre per day (ug/m^2/d)"
+        >SDN:P061:38:UUDX = Micrograms per square metre per day (ug/m^2/d)</option>
+      <option value="SDN:P061:38:UUML = Microlitres per litre (ul/l)">SDN:P061:38:UUML = Microlitres
+        per litre (ul/l)</option>
+      <option value="SDN:P061:38:UMIC = Micrometres (microns) (um)">SDN:P061:38:UMIC = Micrometres
+        (microns) (um)</option>
+      <option value="SDN:P061:38:UMUB = Micromole per micromole of biomass per day (um/um/d)"
+        >SDN:P061:38:UMUB = Micromole per micromole of biomass per day (um/um/d)</option>
+      <option value="SDN:P061:38:KGUM = Micromoles per kilogram (umol/kg)">SDN:P061:38:KGUM =
+        Micromoles per kilogram (umol/kg)</option>
+      <option value="SDN:P061:38:UPOX = Micromoles per litre (umol/l)">SDN:P061:38:UPOX = Micromoles
+        per litre (umol/l)</option>
+      <option value="SDN:P061:38:UMMD = Micromoles per litre per day (umol/l/d)">SDN:P061:38:UMMD =
+        Micromoles per litre per day (umol/l/d)</option>
+      <option value="SDN:P061:38:UMMH = Micromoles per litre per hour (umol/l/h)">SDN:P061:38:UMMH =
+        Micromoles per litre per hour (umol/l/h)</option>
+      <option value="SDN:P061:38:UMPM = Micromoles per mole (umol/mol)">SDN:P061:38:UMPM =
+        Micromoles per mole (umol/mol)</option>
+      <option value="SDN:P061:38:UUUD = Micromoles per square metre per day (umol/m^2/d)"
+        >SDN:P061:38:UUUD = Micromoles per square metre per day (umol/m^2/d)</option>
+      <option value="SDN:P061:38:UMFX = Micromoles per square metre per hour (umol/m^2/h)"
+        >SDN:P061:38:UMFX = Micromoles per square metre per hour (umol/m^2/h)</option>
+      <option value="SDN:P061:38:USEC = Microseconds (us)">SDN:P061:38:USEC = Microseconds
+        (us)</option>
+      <option value="SDN:P061:38:UMAM = Milliamps (mA)">SDN:P061:38:UMAM = Milliamps (mA)</option>
+      <option value="SDN:P061:38:UPBB = Millibars (mBar)">SDN:P061:38:UPBB = Millibars
+        (mBar)</option>
+      <option value="SDN:P061:38:UMBQ = Millibequerels per litre (mBq/l)">SDN:P061:38:UMBQ =
+        Millibequerels per litre (mBq/l)</option>
+      <option value="SDN:P061:38:MBQF = Millibequerels per square metre per day (mBq/m^2/d)"
+        >SDN:P061:38:MBQF = Millibequerels per square metre per day (mBq/m^2/d)</option>
+      <option value="SDN:P061:38:MGAL = MilliGals (mGal)">SDN:P061:38:MGAL = MilliGals
+        (mGal)</option>
+      <option
+        value="SDN:P061:38:UCLC = Milligrams of carbon per (microEinstein per square metre per second) per milligram of chlorophyll per hour (mgC/(uE/m^2/s)/mgChl/h)"
+        >SDN:P061:38:UCLC = Milligrams of carbon per (microEinstein per square metre per second) per
+        milligram of chlorophyll per hour (mgC/(uE/m^2/s)/mgChl/h)</option>
+      <option
+        value="SDN:P061:38:UCCL = Milligrams of carbon per milligram of chlorophyll per hour (mgC/mgChl/hr)"
+        >SDN:P061:38:UCCL = Milligrams of carbon per milligram of chlorophyll per hour
+        (mgC/mgChl/hr)</option>
+      <option value="SDN:P061:38:UMMC = Milligrams per cubic metre (mg/m^3)">SDN:P061:38:UMMC =
+        Milligrams per cubic metre (mg/m^3)</option>
+      <option value="SDN:P061:38:UGDC = Milligrams per cubic metre per day (mg/m^3/d)"
+        >SDN:P061:38:UGDC = Milligrams per cubic metre per day (mg/m^3/d)</option>
+      <option value="SDN:P061:38:UGLH = Milligrams per cubic metre per hour (mg/m^3/h)"
+        >SDN:P061:38:UGLH = Milligrams per cubic metre per hour (mg/m^3/h)</option>
+      <option value="SDN:P061:38:UMKG = Milligrams per kilogram (mg/kg)">SDN:P061:38:UMKG =
+        Milligrams per kilogram (mg/kg)</option>
+      <option value="SDN:P061:38:UMGL = Milligrams per litre (mg/l)">SDN:P061:38:UMGL = Milligrams
+        per litre (mg/l)</option>
+      <option value="SDN:P061:38:UMMS = Milligrams per square metre (mg/m^2)">SDN:P061:38:UMMS =
+        Milligrams per square metre (mg/m^2)</option>
+      <option
+        value="SDN:P061:38:UGDX = Milligrams per square metre per day (mg/m^2/d)                  	"
+        >SDN:P061:38:UGDX = Milligrams per square metre per day (mg/m^2/d) </option>
+      <option value="SDN:P061:38:MGSQ = Milligrams per square metre per hour (mg/m^2/h)"
+        >SDN:P061:38:MGSQ = Milligrams per square metre per hour (mg/m^2/h)</option>
+      <option
+        value="SDN:P061:38:UM2D = Milligrams per square metre per incubation duration (mg/m^2/inc)"
+        >SDN:P061:38:UM2D = Milligrams per square metre per incubation duration
+        (mg/m^2/inc)</option>
+      <option value="SDN:P061:38:UMCH = Millilitres cleared per individual per hour (ml/ind/h)"
+        >SDN:P061:38:UMCH = Millilitres cleared per individual per hour (ml/ind/h)</option>
+      <option value="SDN:P061:38:MPM3 = Millilitres per cubic metre (ml/m^3)">SDN:P061:38:MPM3 =
+        Millilitres per cubic metre (ml/m^3)</option>
+      <option value="SDN:P061:38:UMLL = Millilitres per litre (ml/l)">SDN:P061:38:UMLL = Millilitres
+        per litre (ml/l)</option>
+      <option value="SDN:P061:38:CCPM = Millilitres per minute (ml/min)">SDN:P061:38:CCPM =
+        Millilitres per minute (ml/min)</option>
+      <option value="SDN:P061:38:MSMD = Millilitres per square metre per day (ml/m^2/d)"
+        >SDN:P061:38:MSMD = Millilitres per square metre per day (ml/m^2/d)</option>
+      <option value="SDN:P061:38:UXMM = Millimetres (mm)">SDN:P061:38:UXMM = Millimetres
+        (mm)</option>
+      <option value="SDN:P061:38:MMPD = Millimetres per day (mm/d)">SDN:P061:38:MMPD = Millimetres
+        per day (mm/d)</option>
+      <option value="SDN:P061:38:MMPH = Millimetres per hour (mm/h)">SDN:P061:38:MMPH = Millimetres
+        per hour (mm/h)</option>
+      <option value="SDN:P061:38:UMMM = Millimetres per minute (mm/min)">SDN:P061:38:UMMM =
+        Millimetres per minute (mm/min)</option>
+      <option value="SDN:P061:38:UVCC = Millimetres per second (mm/s)">SDN:P061:38:UVCC =
+        Millimetres per second (mm/s)</option>
+      <option value="SDN:P061:38:MMPL = Millimoles per litre (mmol/l)">SDN:P061:38:MMPL = Millimoles
+        per litre (mmol/l)</option>
+      <option value="SDN:P061:38:MMOM = Millimoles per mole (mmol/mol)">SDN:P061:38:MMOM =
+        Millimoles per mole (mmol/mol)</option>
+      <option value="SDN:P061:38:UMDX = Millimoles per square metre per day (mmol/m^2/d)"
+        >SDN:P061:38:UMDX = Millimoles per square metre per day (mmol/m^2/d)</option>
+      <option value="SDN:P061:38:UYMA = Millions of years before present (Myr)">SDN:P061:38:UYMA =
+        Millions of years before present (Myr)</option>
+      <option value="SDN:P061:38:MRAD = Millirads per hour (mRad/hr)">SDN:P061:38:MRAD = Millirads
+        per hour (mRad/hr)</option>
+      <option value="SDN:P061:38:UMSC = Milliseconds (ms)">SDN:P061:38:UMSC = Milliseconds
+        (ms)</option>
+      <option value="SDN:P061:38:UUMV = Millivolts (mV)">SDN:P061:38:UUMV = Millivolts (mV)</option>
+      <option
+        value="SDN:P061:38:MWSR = milliwatts per square centimetre per micrometre per steradian (mW/cm^2/um/sr)"
+        >SDN:P061:38:MWSR = milliwatts per square centimetre per micrometre per steradian
+        (mW/cm^2/um/sr)</option>
+      <option value="SDN:P061:38:UMIN = Minutes (min)">SDN:P061:38:UMIN = Minutes (min)</option>
+      <option value="SDN:P061:38:MOLE = Moles (mol)">SDN:P061:38:MOLE = Moles (mol)</option>
+      <option value="SDN:P061:38:MLM3 = Moles per cubic metre (mol/m^3)">SDN:P061:38:MLM3 = Moles
+        per cubic metre (mol/m^3)</option>
+      <option value="SDN:P061:38:MM3S = Moles per cubic metre per second (mol/m^3/s)"
+        >SDN:P061:38:MM3S = Moles per cubic metre per second (mol/m^3/s)</option>
+      <option value="SDN:P061:38:UMPE = Moles per Einstein (mol/E)">SDN:P061:38:UMPE = Moles per
+        Einstein (mol/E)</option>
+      <option value="SDN:P061:38:MLKG = Moles per kilogram (mol/kg)">SDN:P061:38:MLKG = Moles per
+        kilogram (mol/kg)</option>
+      <option value="SDN:P061:38:MLPS = Moles per second (mol/s)">SDN:P061:38:MLPS = Moles per
+        second (mol/s)</option>
+      <option value="SDN:P061:38:M2MS = Moles per square metre per second (mol/m^2/s)"
+        >SDN:P061:38:M2MS = Moles per square metre per second (mol/m^2/s)</option>
+      <option value="SDN:P061:38:M2MM = Moles per square metre per second per metre (mol/m^2/s/m)"
+        >SDN:P061:38:M2MM = Moles per square metre per second per metre (mol/m^2/s/m)</option>
+      <option
+        value="SDN:P061:38:M2SR = Moles per square metre per second per metre per steradian (mol/m^2/s/m/sr)"
+        >SDN:P061:38:M2SR = Moles per square metre per second per metre per steradian
+        (mol/m^2/s/m/sr)</option>
+      <option
+        value="SDN:P061:38:M3SR = Moles per square metre per second per steradian (mol/m^2/s/sr)"
+        >SDN:P061:38:M3SR = Moles per square metre per second per steradian (mol/m^2/s/sr)</option>
+      <option value="SDN:P061:38:UNBQ = Nanobequerels per litre (nBq/l)">SDN:P061:38:UNBQ =
+        Nanobequerels per litre (nBq/l)</option>
+      <option value="SDN:P061:38:UNPI = Nanograms (ng)">SDN:P061:38:UNPI = Nanograms (ng)</option>
+      <option value="SDN:P061:38:UNID = Nanograms per day (ng/d)">SDN:P061:38:UNID = Nanograms per
+        day (ng/d)</option>
+      <option value="SDN:P061:38:UNIM = Nanograms per individual per minute (ng/ind/min)"
+        >SDN:P061:38:UNIM = Nanograms per individual per minute (ng/ind/min)</option>
+      <option value="SDN:P061:38:UNGL = Nanograms per litre (ng/l)">SDN:P061:38:UNGL = Nanograms per
+        litre (ng/l)</option>
+      <option value="SDN:P061:38:UXNM = Nanometres (nm)">SDN:P061:38:UXNM = Nanometres (nm)</option>
+      <option value="SDN:P061:38:KGNM = Nanomoles per kilogram (nmol/kg)">SDN:P061:38:KGNM =
+        Nanomoles per kilogram (nmol/kg)</option>
+      <option value="SDN:P061:38:UPNM = Nanomoles per litre (nmol/l)">SDN:P061:38:UPNM = Nanomoles
+        per litre (nmol/l)</option>
+      <option value="SDN:P061:38:UNMD = Nanomoles per litre per day (nmol/l/d)">SDN:P061:38:UNMD =
+        Nanomoles per litre per day (nmol/l/d)</option>
+      <option value="SDN:P061:38:UNMH = Nanomoles per litre per hour (nmol/l/h)">SDN:P061:38:UNMH =
+        Nanomoles per litre per hour (nmol/l/h)</option>
+      <option value="SDN:P061:38:NMGH = Nanomoles per microgram per hour (nmol/ug/h)"
+        >SDN:P061:38:NMGH = Nanomoles per microgram per hour (nmol/ug/h)</option>
+      <option value="SDN:P061:38:NSQD = Nanomoles per square metre per day (nmol/m^2/d)"
+        >SDN:P061:38:NSQD = Nanomoles per square metre per day (nmol/m^2/d)</option>
+      <option value="SDN:P061:38:UMAA = Nanoteslas (nT)">SDN:P061:38:UMAA = Nanoteslas (nT)</option>
+      <option value="SDN:P061:38:USTU = Nephelometric Turbidity Units (NTU)">SDN:P061:38:USTU =
+        Nephelometric Turbidity Units (NTU)</option>
+      <option value="SDN:P061:38:NCUM = Newtons per cubic metre (N/m^3)">SDN:P061:38:NCUM = Newtons
+        per cubic metre (N/m^3)</option>
+      <option value="SDN:P061:38:UNSM = Newtons per square metre (N/m^2)">SDN:P061:38:UNSM = Newtons
+        per square metre (N/m^2)</option>
+      <option value="SDN:P061:38:UKWN = Not known (Unknown)">SDN:P061:38:UKWN = Not known
+        (Unknown)</option>
+      <option value="SDN:P061:38:USPC = Not specified (Unspec.)">SDN:P061:38:USPC = Not specified
+        (Unspec.)</option>
+      <option value="SDN:P061:38:UPMM = Number per cubic metre (#/m^3)">SDN:P061:38:UPMM = Number
+        per cubic metre (#/m^3)</option>
+      <option value="SDN:P061:38:UNPG = Number per gram (#/g)">SDN:P061:38:UNPG = Number per gram
+        (#/g)</option>
+      <option value="SDN:P061:38:UNAH = Number per individual per hour (#/ind/h)">SDN:P061:38:UNAH =
+        Number per individual per hour (#/ind/h)</option>
+      <option value="SDN:P061:38:UCPL = Number per litre (#/l)">SDN:P061:38:UCPL = Number per litre
+        (#/l)</option>
+      <option value="SDN:P061:38:UCUL = Number per microlitre (#/ul)">SDN:P061:38:UCUL = Number per
+        microlitre (#/ul)</option>
+      <option value="SDN:P061:38:UCML = Number per millilitre (#/ml)">SDN:P061:38:UCML = Number per
+        millilitre (#/ml)</option>
+      <option value="SDN:P061:38:UCNL = Number per nanolitre (#/nl)">SDN:P061:38:UCNL = Number per
+        nanolitre (#/nl)</option>
+      <option value="SDN:P061:38:UVAY = Number per square centimetre per thousand years (#/cm^2/ka)"
+        >SDN:P061:38:UVAY = Number per square centimetre per thousand years (#/cm^2/ka)</option>
+      <option value="SDN:P061:38:NPKM = Number per square kilometre (#/km^2)">SDN:P061:38:NPKM =
+        Number per square kilometre (#/km^2)</option>
+      <option value="SDN:P061:38:UPMS = Number per square metre (#/m^2)">SDN:P061:38:UPMS = Number
+        per square metre (#/m^2)</option>
+      <option value="SDN:P061:38:UNDX = Number per square metre per day (#/m^2/d)">SDN:P061:38:UNDX
+        = Number per square metre per day (#/m^2/d)</option>
+      <option value="SDN:P061:38:OHMM = Ohm metres (ohm.m)">SDN:P061:38:OHMM = Ohm metres
+        (ohm.m)</option>
+      <option value="SDN:P061:38:UOHM = Ohms (ohm)">SDN:P061:38:UOHM = Ohms (ohm)</option>
+      <option value="SDN:P061:38:UPPB = Parts per billion (ppb)">SDN:P061:38:UPPB = Parts per
+        billion (ppb)</option>
+      <option value="SDN:P061:38:UBLV = Parts per billion by volume (ppbv)">SDN:P061:38:UBLV = Parts
+        per billion by volume (ppbv)</option>
+      <option value="SDN:P061:38:UPPM = Parts per million (ppm)">SDN:P061:38:UPPM = Parts per
+        million (ppm)</option>
+      <option value="SDN:P061:38:UMLV = Parts per million by volume (ppmv)">SDN:P061:38:UMLV = Parts
+        per million by volume (ppmv)</option>
+      <option value="SDN:P061:38:UPPT = Parts per thousand (ppt)">SDN:P061:38:UPPT = Parts per
+        thousand (ppt)</option>
+      <option value="SDN:P061:38:UPTH = Parts per thousand per hour (ppt/h)">SDN:P061:38:UPTH =
+        Parts per thousand per hour (ppt/h)</option>
+      <option value="SDN:P061:38:UTRV = Parts per trillion by volume (pptrv)">SDN:P061:38:UTRV =
+        Parts per trillion by volume (pptrv)</option>
+      <option value="SDN:P061:38:PAMT = Pascal metres (Pa.m)">SDN:P061:38:PAMT = Pascal metres
+        (Pa.m)</option>
+      <option value="SDN:P061:38:PAMS = Pascal metres per second (Pa.m/s)">SDN:P061:38:PAMS = Pascal
+        metres per second (Pa.m/s)</option>
+      <option value="SDN:P061:38:PAM2 = Pascal metres per second squared (Pa.m/s^2)"
+        >SDN:P061:38:PAM2 = Pascal metres per second squared (Pa.m/s^2)</option>
+      <option value="SDN:P061:38:PASS = Pascal seconds (Pa.s)">SDN:P061:38:PASS = Pascal seconds
+        (Pa.s)</option>
+      <option value="SDN:P061:38:PPS2 = Pascal squared per second squared (Pa^2/s^2)"
+        >SDN:P061:38:PPS2 = Pascal squared per second squared (Pa^2/s^2)</option>
+      <option value="SDN:P061:38:PASX = Pascals (Pa)">SDN:P061:38:PASX = Pascals (Pa)</option>
+      <option value="SDN:P061:38:PAPM = Pascals per metre (Pa/m)">SDN:P061:38:PAPM = Pascals per
+        metre (Pa/m)</option>
+      <option value="SDN:P061:38:PAPS = Pascals per second (Pa/s)">SDN:P061:38:PAPS = Pascals per
+        second (Pa/s)</option>
+      <option value="SDN:P061:38:PCUM = per cubic metre (/m^3)">SDN:P061:38:PCUM = per cubic metre
+        (/m^3)</option>
+      <option value="SDN:P061:38:M3PS = per cubic metre per second (/m^3/s)">SDN:P061:38:M3PS = per
+        cubic metre per second (/m^3/s)</option>
+      <option value="SDN:P061:38:UPDY = per day (/d)">SDN:P061:38:UPDY = per day (/d)</option>
+      <option value="SDN:P061:38:UFPD = per female per day (#/fem/d)">SDN:P061:38:UFPD = per female
+        per day (#/fem/d)</option>
+      <option value="SDN:P061:38:UPRM = per metre (/m)">SDN:P061:38:UPRM = per metre (/m)</option>
+      <option value="SDN:P061:38:UMNX = per metre per nanometre (/m/nm)">SDN:P061:38:UMNX = per
+        metre per nanometre (/m/nm)</option>
+      <option value="SDN:P061:38:UMNS = per metre per nanometre per steradian (/m/nm/sr)"
+        >SDN:P061:38:UMNS = per metre per nanometre per steradian (/m/nm/sr)</option>
+      <option value="SDN:P061:38:PMPS = per metre per second (/m/s)">SDN:P061:38:PMPS = per metre
+        per second (/m/s)</option>
+      <option value="SDN:P061:38:PMSR = per metre per steradian (/m/sr)">SDN:P061:38:PMSR = per
+        metre per steradian (/m/sr)</option>
+      <option value="SDN:P061:38:PMSC = per millisecond (/ms)">SDN:P061:38:PMSC = per millisecond
+        (/ms)</option>
+      <option value="SDN:P061:38:PPPS = per Pascal per second (/Pa/s)">SDN:P061:38:PPPS = per Pascal
+        per second (/Pa/s)</option>
+      <option value="SDN:P061:38:PRSC = per second (/s)">SDN:P061:38:PRSC = per second (/s)</option>
+      <option value="SDN:P061:38:UPSS = per second squared (/s^2)">SDN:P061:38:UPSS = per second
+        squared (/s^2)</option>
+      <option value="SDN:P061:38:PMSQ = per square metre (/m^2)">SDN:P061:38:PMSQ = per square metre
+        (/m^2)</option>
+      <option value="SDN:P061:38:M2S2 = per square metre per second (/m^2/s)">SDN:P061:38:M2S2 = per
+        square metre per second (/m^2/s)</option>
+      <option value="SDN:P061:38:PSTR = per steradian (/sr)">SDN:P061:38:PSTR = per steradian
+        (/sr)</option>
+      <option value="SDN:P061:38:UPCT = Percent (%)">SDN:P061:38:UPCT = Percent (%)</option>
+      <option value="SDN:P061:38:UPCD = Percent per day (%/d)">SDN:P061:38:UPCD = Percent per day
+        (%/d)</option>
+      <option value="SDN:P061:38:UPCH = Percent per hour (%/h)">SDN:P061:38:UPCH = Percent per hour
+        (%/h)</option>
+      <option value="SDN:P061:38:UPOP = Percent per metre (%/m)">SDN:P061:38:UPOP = Percent per
+        metre (%/m)</option>
+      <option value="SDN:P061:38:UPDS = Percentage of dry sediment (% dry sed)">SDN:P061:38:UPDS =
+        Percentage of dry sediment (% dry sed)</option>
+      <option value="SDN:P061:38:UUPH = pH units (pH units)">SDN:P061:38:UUPH = pH units (pH
+        units)</option>
+      <option value="SDN:P061:38:UPHI = phi units (phi units)">SDN:P061:38:UPHI = phi units (phi
+        units)</option>
+      <option value="SDN:P061:38:UGPG = Picograms (pg)">SDN:P061:38:UGPG = Picograms (pg)</option>
+      <option value="SDN:P061:38:UPMA = Picomoles per cubic metre (pmol/m^3)">SDN:P061:38:UPMA =
+        Picomoles per cubic metre (pmol/m^3)</option>
+      <option value="SDN:P061:38:UPVT = Picomoles per cubic metre per second (pmol/m^3/s)"
+        >SDN:P061:38:UPVT = Picomoles per cubic metre per second (pmol/m^3/s)</option>
+      <option value="SDN:P061:38:KGPM = Picomoles per kilogram (pmol/kg)">SDN:P061:38:KGPM =
+        Picomoles per kilogram (pmol/kg)</option>
+      <option value="SDN:P061:38:UPML = Picomoles per litre (pmol/l)">SDN:P061:38:UPML = Picomoles
+        per litre (pmol/l)</option>
+      <option value="SDN:P061:38:UPMH = Picomoles per litre per hour (pmol/l/h)">SDN:P061:38:UPMH =
+        Picomoles per litre per hour (pmol/l/h)</option>
+      <option value="SDN:P061:38:UPVW = Picomoles per metre per watt per second (pmol/m/W/s)"
+        >SDN:P061:38:UPVW = Picomoles per metre per watt per second (pmol/m/W/s)</option>
+      <option value="SDN:P061:38:UPMD = Picomoles per square metre per day (pmol/m^2/d)"
+        >SDN:P061:38:UPMD = Picomoles per square metre per day (pmol/m^2/d)</option>
+      <option value="SDN:P061:38:PMLD = picomoles/litre/day (pmol/l/d)">SDN:P061:38:PMLD =
+        picomoles/litre/day (pmol/l/d)</option>
+      <option value="SDN:P061:38:URAD = Radians (rad)">SDN:P061:38:URAD = Radians (rad)</option>
+      <option value="SDN:P061:38:UTBB = Seconds (s)">SDN:P061:38:UTBB = Seconds (s)</option>
+      <option value="SDN:P061:38:UECA = Siemens per metre (S/m)">SDN:P061:38:UECA = Siemens per
+        metre (S/m)</option>
+      <option value="SDN:P061:38:UCMS = Square centimetres per second (cm^2/s)">SDN:P061:38:UCMS =
+        Square centimetres per second (cm^2/s)</option>
+      <option value="SDN:P061:38:SQKM = Square kilometres (km^2)">SDN:P061:38:SQKM = Square
+        kilometres (km^2)</option>
+      <option value="SDN:P061:38:M2SX = Square metre seconds (m^2.s)">SDN:P061:38:M2SX = Square
+        metre seconds (m^2.s)</option>
+      <option value="SDN:P061:38:M2RD = Square metre seconds per radian (m2.s/rad)">SDN:P061:38:M2RD
+        = Square metre seconds per radian (m2.s/rad)</option>
+      <option value="SDN:P061:38:UMSQ = Square metres (m^2)">SDN:P061:38:UMSQ = Square metres
+        (m^2)</option>
+      <option value="SDN:P061:38:UMSG = Square metres per gram of dry sediment (m^2/g dry)"
+        >SDN:P061:38:UMSG = Square metres per gram of dry sediment (m^2/g dry)</option>
+      <option value="SDN:P061:38:UMHZ = Square metres per Hertz (m^2/Hz)">SDN:P061:38:UMHZ = Square
+        metres per Hertz (m^2/Hz)</option>
+      <option value="SDN:P061:38:SQMS = Square metres per second (m^2/s)">SDN:P061:38:SQMS = Square
+        metres per second (m^2/s)</option>
+      <option value="SDN:P061:38:SQM2 = Square metres per second squared (m^2/s^2)">SDN:P061:38:SQM2
+        = Square metres per second squared (m^2/s^2)</option>
+      <option value="SDN:P061:38:UMTN = Square metres per squared hertz (m^2/Hz^2)">SDN:P061:38:UMTN
+        = Square metres per squared hertz (m^2/Hz^2)</option>
+      <option value="SDN:P061:38:UMTD = Square metres.cubic Hertz (m^2.Hz^3)">SDN:P061:38:UMTD =
+        Square metres.cubic Hertz (m^2.Hz^3)</option>
+      <option value="SDN:P061:38:UMTB = Square metres.Hertz (m^2.Hz)">SDN:P061:38:UMTB = Square
+        metres.Hertz (m^2.Hz)</option>
+      <option value="SDN:P061:38:UMTC = Square Metres.Hertz squared (m^2.Hz^2)">SDN:P061:38:UMTC =
+        Square Metres.Hertz squared (m^2.Hz^2)</option>
+      <option value="SDN:P061:38:UMTE = Square metres.Hertz^4 (m^2*Hz^4)">SDN:P061:38:UMTE = Square
+        metres.Hertz^4 (m^2*Hz^4)</option>
+      <option value="SDN:P061:38:USUM = Square microns per millilitre (um^2/ml)">SDN:P061:38:USUM =
+        Square microns per millilitre (um^2/ml)</option>
+      <option value="SDN:P061:38:USVD = Sverdrup (Sv)">SDN:P061:38:USVD = Sverdrup (Sv)</option>
+      <option value="SDN:P061:38:THSC = thousandths of a second (10^-3s)">SDN:P061:38:THSC =
+        thousandths of a second (10^-3s)</option>
+      <option value="SDN:P061:38:UUTU = Tritium units (10**18H/Tr) (TU)">SDN:P061:38:UUTU = Tritium
+        units (10**18H/Tr) (TU)</option>
+      <option value="SDN:P061:38:UVLT = Volts (V)">SDN:P061:38:UVLT = Volts (V)</option>
+      <option value="SDN:P061:38:WSMM = Watt seconds per square metre (W.s/m^2)">SDN:P061:38:WSMM =
+        Watt seconds per square metre (W.s/m^2)</option>
+      <option value="SDN:P061:38:WATT = Watts (W)">SDN:P061:38:WATT = Watts (W)</option>
+      <option value="SDN:P061:38:UWCM = Watts per cubic metre (W/m^3)">SDN:P061:38:UWCM = Watts per
+        cubic metre (W/m^3)</option>
+      <option value="SDN:P061:38:WAPM = Watts per metre (W/m)">SDN:P061:38:WAPM = Watts per metre
+        (W/m)</option>
+      <option value="SDN:P061:38:WAPK = Watts per metre per Kelvin (W/m/K)">SDN:P061:38:WAPK = Watts
+        per metre per Kelvin (W/m/K)</option>
+      <option value="SDN:P061:38:UFAA = Watts per square metre (W/m^2)">SDN:P061:38:UFAA = Watts per
+        square metre (W/m^2)</option>
+      <option value="SDN:P061:38:WM2M = Watts per square metre per metre (W/m^2/m)">SDN:P061:38:WM2M
+        = Watts per square metre per metre (W/m^2/m)</option>
+      <option value="SDN:P061:38:WM2S = Watts per square metre per metre per steradian (W/m^2/m/sr)"
+        >SDN:P061:38:WM2S = Watts per square metre per metre per steradian (W/m^2/m/sr)</option>
+      <option value="SDN:P061:38:UWNM = Watts per square metre per nanometre (W/m^2/nm)"
+        >SDN:P061:38:UWNM = Watts per square metre per nanometre (W/m^2/nm)</option>
+      <option
+        value="SDN:P061:38:UWNS = Watts per square metre per nanometre per steradian (W/m^2/nm/sr)"
+        >SDN:P061:38:UWNS = Watts per square metre per nanometre per steradian
+        (W/m^2/nm/sr)</option>
+      <option value="SDN:P061:38:WMSS = Watts per square metre per steradian (W/m^2/sr)"
+        >SDN:P061:38:WMSS = Watts per square metre per steradian (W/m^2/sr)</option>
+      <option value="SDN:P061:38:UYRS = Years (yr)">SDN:P061:38:UYRS = Years (yr)</option>
+      <option value="SDN:P061:38:UYBP = Years before present (BP)">SDN:P061:38:UYBP = Years before
+        present (BP)</option>
+      <option value="SDN:P061:38:UDTM = yyyymmddhh24miss.dd (Date+Time)">SDN:P061:38:UDTM =
+        yyyymmddhh24miss.dd (Date+Time)</option>
+    </helper>
+  </element>
+  <element name="gmx:Anchor">
+    <label>Anchor</label>
+    <description>Commonly used word(s) or formalised word(s) or phrase(s) used to describe the
+      subject</description>
+  </element>
+</labels>

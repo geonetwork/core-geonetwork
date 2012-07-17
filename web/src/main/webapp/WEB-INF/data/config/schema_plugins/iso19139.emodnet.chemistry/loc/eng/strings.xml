@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <tab>EMODNET view</tab>
+    <emodnet.chemistryTab>EMODNET view</emodnet.chemistryTab>
+    <DisseminationLevelTitle>Disseminaton level</DisseminationLevelTitle>
+    <ParamsMeasuredTitle>Parameters in dataset (SDN Discovery par. P021 list)</ParamsMeasuredTitle>
+    <PositioningInstrsTitle>Positioning instruments (SDN L56)</PositioningInstrsTitle>
+    <MeasuringInstrsTitle>Measuring Instruments (SDN L54)</MeasuringInstrsTitle>
+    <DimensionsTitle>Dimensions</DimensionsTitle>
+    <nbLinesTitle>Number of lines</nbLinesTitle>
+    <nbColumnsTitle>Number of columns</nbColumnsTitle>
+    <abstractTitle>Abstract</abstractTitle>
+    <detailedDescTitle>Detailed description</detailedDescTitle>
+    <processingSoftwareTitle>Processing software</processingSoftwareTitle>
+    <vertAccuracyTitle>Vert. accuracy</vertAccuracyTitle>
+    <horAccuracyTitle>Hor. accuracy</horAccuracyTitle>
+    <creationDateTitle>Creation date of dataset</creationDateTitle>
+    <revisionDateTitle>Revision date of dataset</revisionDateTitle>
+    <spatialResTitle>Spatial resolution</spatialResTitle>
+    <longitudeTitle>X axis (Longitude)</longitudeTitle>
+    <latitudeTitle>Y axis (Latitude)</latitudeTitle>
+    <geoAreaNameTitle>Geographical area name</geoAreaNameTitle>
+    <depthTitle>Depth (in meters)</depthTitle>
+    <userCRSTitle>User defined projected Coordinate Reference System (CRS)</userCRSTitle>
+    <geodeticSystemAndProjectionTitle>Geodetic system /
+        projection</geodeticSystemAndProjectionTitle>
+    <tempResolutionTitle>Temporal resolution</tempResolutionTitle>
+    <originatorTitle>Originator</originatorTitle>
+    <dataHoldingCenterTitle>Data Holding Center</dataHoldingCenterTitle>
+    <distriFormatTitle>Distribution format</distriFormatTitle>
+    <metadataInfoTitle>Metadata information</metadataInfoTitle>
+    <identificationTitle>Identification</identificationTitle>
+    <whatTitle>What</whatTitle>
+    <dataSourcesTitle>Description of processed data sources :</dataSourcesTitle>
+    <dataProcessingTitle>Description of data processing :</dataProcessingTitle>
+    <qualityTitle>Quality / Accuracy / Calibration :</qualityTitle>
+    <suitabilityTitle>Suitability, Expected type of users / uses and limitations
+        :</suitabilityTitle>
+    <intellectualPropertyTitle>Intellectual property :</intellectualPropertyTitle>
+    <whereTitle>Where</whereTitle>
+    <whenTitle>When</whenTitle>
+    <whoTitle>Who</whoTitle>
+    <whereToFindTitle>Where to find</whereToFindTitle>
+    <projectName>Project Name</projectName>
+    <ParamsMeasuredTitle>Parameters in dataset (SDN Discovery par. P021 list)</ParamsMeasuredTitle>
+</strings>
