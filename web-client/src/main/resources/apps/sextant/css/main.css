@@ -1,3 +1,9 @@
+.emodnet\.chemistry * legend, .emodnet\.hydrography * legend {
+    background-color: #FFFF99;
+    width: 100%;
+    text-align: center;
+}
+
 #main-viewport {
     background-color: white;
     height: 100%;
