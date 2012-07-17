@@ -482,20 +482,11 @@ GeoNetwork.Lang.de = {
 'Poweredby':'Bereitgestellt von',
 'About':'Uber',
 'org':'Organisation',
-'keyword':'Schlagwort',
 'When':'Wenn',
 'Where':'Wo',
 'What':'Wass',
-'advancedSearchOptions':'Erweiterte Suchoptionen',
-'hitsPerPage':'Treffer pro Seite',
 'Searchforspatialdataon':'Suche nach Geodaten über',
-'search':'Suchen',
-'fullTextSearch':'Volltextsuche',
-'reset':'Zurückseten',
-'resetSearchForm':'Suchformular zurücksetzen',
 'Advanced':'Erweitert',
-'newWindow':'Neues Fenster',
-'mdEditor':'Metadaten-Editor',
 'List':'Liste'
 };
 
