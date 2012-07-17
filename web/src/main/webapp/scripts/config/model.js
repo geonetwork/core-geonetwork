@@ -83,6 +83,9 @@ ConfigModel.prototype.getConfig_OK = function(node)
             LDAP_ATTR_UID     : xml.evalXPath(node, 'ldap/uidAttr'),
 			LDAP_DN_BASE      : xml.evalXPath(node, 'ldap/distinguishedNames/base'),
 			LDAP_DN_USERS     : xml.evalXPath(node, 'ldap/distinguishedNames/users'),
+			LDAP_ANON_BIND    : xml.evalXPath(node, 'ldap/anonBind'),
+			LDAP_DN_BIND      : xml.evalXPath(node, 'ldap/bind/bindDn'),
+			LDAP_PW_BIND      : xml.evalXPath(node, 'ldap/bind/bindPw'),
 			LDAP_ATTR_NAME    : xml.evalXPath(node, 'ldap/userAttribs/name'),
 			LDAP_ATTR_PROFILE : xml.evalXPath(node, 'ldap/userAttribs/profile'),
 
@@ -220,6 +223,11 @@ ConfigModel.updateTemp =
 '			<base>{LDAP_DN_BASE}</base>'+
 '			<users>{LDAP_DN_USERS}</users>'+
 '		</distinguishedNames>'+
+'		<anonBind>{LDAP_ANON_BIND}</anonBind>'+
+'		<bind>'+
+'			<bindDn>{LDAP_DN_BIND}</bindDn>'+
+'			<bindPw>{LDAP_PW_BIND}</bindPw>'+
+'		</bind>'+
 '		<userAttribs>'+
 '			<name>{LDAP_ATTR_NAME}</name>'+
 '			<profile>{LDAP_ATTR_PROFILE}</profile>'+
