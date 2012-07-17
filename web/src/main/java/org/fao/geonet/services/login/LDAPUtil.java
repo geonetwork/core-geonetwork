@@ -74,6 +74,31 @@ public class LDAPUtil
 		}
 	}
 
+	public static String findUserDN(String url, String uidFilter, String userDN, String bindDN, String bindPW) throws NamingException
+	{
+		DirContext connection = null ; 
+		try 
+		{
+			connection = openContext(url, bindDN, bindPW) ; 
+		} 
+		catch (NamingException e) 
+		{
+			Log.warning(Geonet.LDAP, "Cannot bind to directory using : " + bindDN) ; 
+			throw e ; 
+		}
+
+		try
+		{
+			return findUserDN(connection, uidFilter, userDN) ; 
+		}
+		catch(NamingException e)
+		{
+			// we don't have anything to add to the log message emitted 
+			// by the function in the try block.
+			throw e;
+		}
+	}
+
 	public static String findUserDN(String url, String uidFilter, String userDN) throws NamingException
 	{
 		try
@@ -82,6 +107,18 @@ public class LDAPUtil
 			DirContext dc = new InitialDirContext(env);
 			DirContext connection = (DirContext) dc.lookup(url);
 
+			return findUserDN(connection, uidFilter, userDN) ; 
+		}
+		catch(NamingException e)
+		{
+			throw e;
+		}
+	}
+
+	private static String findUserDN(DirContext connection, String uidFilter, String userDN) throws NamingException
+	{
+		try
+		{
 			NamingEnumeration<SearchResult> results = connection.search(userDN, uidFilter, null);
 
 
@@ -92,9 +129,10 @@ public class LDAPUtil
 
 			return usersRealDN;
 		}
-		catch(NamingException e)
+		catch (NamingException e)
 		{
-			throw e;
+			Log.warning(Geonet.LDAP, "Unable to locate user with filter : " + uidFilter) ;
+			throw e ; 
 		}
 	}
 
