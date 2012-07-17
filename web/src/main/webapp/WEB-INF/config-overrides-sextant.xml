@@ -2,115 +2,124 @@
   xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
   xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
   xsi:noNamespaceSchemaLocation="config-overrides.xsd">
-	<import file="/WEB-INF/config-overrides-sextant-props-c2cpc55.xml"/>
-	<file name=".*/WEB-INF/config-gui.xml">
-		<replaceAtt xpath="client" attName="widget" value="true"/>
-		<replaceAtt xpath="client" attName="url" value="${widget.url}"/>
-		<replaceAtt xpath="client" attName="createParameter" value="#create"/>
-		<replaceAtt xpath="client" attName="stateId" value="s"/>
-		<replaceAtt xpath="client" attName="parameters" value="${widget.parameters}"/>
-		<replaceXML xpath="map/proj">
-			<crs code="EPSG:4326" default="1" edit="1"/>
-			<crs code="EPSG:2154" def="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"/>
-			<crs code="EPSG:900913" def="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs "/>
-			<crs code="EPSG:3035" def="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"/>
-		</replaceXML>
-	</file>
-	<file name=".*/WEB-INF/config.xml">
-		<replaceText xpath="general/uploadDir">../../temp/</replaceText>
-		<replaceText xpath="general/maxUploadSize">100</replaceText>
-		<replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
-		<replaceXML xpath="resources">
-			<resource enabled="true">
-				<name>main-db</name>
-				<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-				<config>
-					<user>${db.user}</user>
-					<password>${db.pass}</password>
-					<driver>${db.driver}</driver>
-					<url>${db.url}</url>
-					<poolSize>20</poolSize>
-					<minIdle>0</minIdle>
-					<maxIdle>10</maxIdle>
-					<validationQuery>SELECT 1</validationQuery>
-				</config>
-			</resource>
-		</replaceXML>
-	</file>
-	
-	<!-- Add custom CSW service -->
-	<file name=".*/WEB-INF/config-csw-servers.xml">
-		<addXML xpath="services">
-			<service name="csw-inspire">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+inspirerelated:on"/>
-				</class>
-			</service>
-			<service name="csw-HUMBOLDT">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:HUMBOLDT"/>
-				</class>
-			</service>
-			<service name="csw-NATURA2000">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:NATURA2000"/>
-				</class>
-			</service>
-			<service name="csw-INTERRISK">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:INTERRISK"/>
-				</class>
-			</service>
-			<service name="csw-GRANULATS">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:GRANULATS"/>
-				</class>
-			</service>
-			<service name="csw-SINPMER">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:SINPMER"/>
-				</class>
-			</service>
-			<service name="csw-MEDBENTH">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:MEDBENTH"/>
-				</class>
-			</service>
-			<service name="csw-PHOTOS_ANCIENNES">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:PHOTOS_ANCIENNES"/>
-				</class>
-			</service>
-			<service name="csw-REBENT">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:REBENT"/>
-				</class>
-			</service>
-			<service name="csw-CATALOGUE">
-				<class name=".services.main.CswDiscoveryDispatcher">
-					<param name="filter" value="+_groupPublished:CATALOGUE"/>
-				</class>
-			</service>
-		</addXML>
-	</file>
-	<file name=".*/WEB-INF/user-profiles.xml">
-		<addXML xpath="profile[@name='Guest']">
-			<allow service="csw-inspire"/>
-			<allow service="csw-HUMBOLDT"/>
-			<allow service="csw-NATURA2000"/>
-			<allow service="csw-INTERRISK"/>
-			<allow service="csw-GRANULATS"/>
-			<allow service="csw-SINPMER"/>
-			<allow service="csw-MEDBENTH"/>
-			<allow service="csw-PHOTOS_ANCIENNES"/>
-			<allow service="csw-REBENT"/>
-			<allow service="csw-CATALOGUE"/>
-		</addXML>
-	</file>
-	
-	<!-- Configure CSW Capabilities -->
-	<!-- TODO : to be checked by ifremer for keywords mainly -->
-	<file name=".*/xml/csw/capabilities_inspire.xml">
+  <import file="/WEB-INF/config-overrides-sextant-props-c2cpc55.xml"/>
+  <file name=".*/WEB-INF/config-gui.xml">
+    <replaceAtt xpath="client" attName="widget" value="true"/>
+    <replaceAtt xpath="client" attName="url" value="${widget.url}"/>
+    <replaceAtt xpath="client" attName="createParameter" value="#create"/>
+    <replaceAtt xpath="client" attName="stateId" value="s"/>
+    <replaceAtt xpath="client" attName="parameters" value="${widget.parameters}"/>
+    <replaceXML xpath="map/proj">
+      <crs code="EPSG:4326" default="1" edit="1"/>
+      <crs code="EPSG:2154"
+        def="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"/>
+      <crs code="EPSG:900913"
+        def="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs "/>
+      <crs code="EPSG:3035"
+        def="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"
+      />
+    </replaceXML>
+    <addXML xpath="metadata-tab">
+      <emodnet.chemistry flat="true"/>
+      <emodnet.hydrography flat="true"/>
+    </addXML>
+
+  </file>
+  <file name=".*/WEB-INF/config.xml">
+    <replaceText xpath="general/uploadDir">../../temp/</replaceText>
+    <replaceText xpath="general/maxUploadSize">100</replaceText>
+    <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
+    <replaceXML xpath="resources">
+      <resource enabled="true">
+        <name>main-db</name>
+        <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+        <config>
+          <user>${db.user}</user>
+          <password>${db.pass}</password>
+          <driver>${db.driver}</driver>
+          <url>${db.url}</url>
+          <poolSize>20</poolSize>
+          <minIdle>0</minIdle>
+          <maxIdle>10</maxIdle>
+          <validationQuery>SELECT 1</validationQuery>
+        </config>
+      </resource>
+    </replaceXML>
+  </file>
+
+  <!-- Add custom CSW service -->
+  <file name=".*/WEB-INF/config-csw-servers.xml">
+    <addXML xpath="services">
+      <service name="csw-inspire">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+inspirerelated:on"/>
+        </class>
+      </service>
+      <service name="csw-HUMBOLDT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:HUMBOLDT"/>
+        </class>
+      </service>
+      <service name="csw-NATURA2000">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:NATURA2000"/>
+        </class>
+      </service>
+      <service name="csw-INTERRISK">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:INTERRISK"/>
+        </class>
+      </service>
+      <service name="csw-GRANULATS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:GRANULATS"/>
+        </class>
+      </service>
+      <service name="csw-SINPMER">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:SINPMER"/>
+        </class>
+      </service>
+      <service name="csw-MEDBENTH">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MEDBENTH"/>
+        </class>
+      </service>
+      <service name="csw-PHOTOS_ANCIENNES">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:PHOTOS_ANCIENNES"/>
+        </class>
+      </service>
+      <service name="csw-REBENT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:REBENT"/>
+        </class>
+      </service>
+      <service name="csw-CATALOGUE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:CATALOGUE"/>
+        </class>
+      </service>
+    </addXML>
+  </file>
+  <file name=".*/WEB-INF/user-profiles.xml">
+    <addXML xpath="profile[@name='Guest']">
+      <allow service="csw-inspire"/>
+      <allow service="csw-HUMBOLDT"/>
+      <allow service="csw-NATURA2000"/>
+      <allow service="csw-INTERRISK"/>
+      <allow service="csw-GRANULATS"/>
+      <allow service="csw-SINPMER"/>
+      <allow service="csw-MEDBENTH"/>
+      <allow service="csw-PHOTOS_ANCIENNES"/>
+      <allow service="csw-REBENT"/>
+      <allow service="csw-CATALOGUE"/>
+    </addXML>
+  </file>
+
+  <!-- Configure CSW Capabilities -->
+  <!-- TODO : to be checked by ifremer for keywords mainly -->
+  <file name=".*/xml/csw/capabilities_inspire.xml">
     <replaceXML xpath="ows:OperationsMetadata/inspire_ds:ExtendedCapabilities">
       <inspire_common:ResourceLocator>
         <inspire_common:URL>$PROTOCOL://$HOST:$PORT$SERVLET/srv/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_common:URL>
@@ -125,8 +134,11 @@
         <inspire_common:DateOfPublication>2011-12-01T00:00:00</inspire_common:DateOfPublication>
       </inspire_common:TemporalReference>
       <inspire_common:Conformity>
-        <inspire_common:Specification xsi:type="inspire_common:citationInspireInteroperabilityRegulation_eng">
-          <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_common:Title>
+        <inspire_common:Specification
+          xsi:type="inspire_common:citationInspireInteroperabilityRegulation_eng">
+          <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010
+            implementing Directive 2007/2/EC of the European Parliament and of the Council as
+            regards interoperability of spatial data sets and services</inspire_common:Title>
           <inspire_common:DateOfPublication>2010-12-08</inspire_common:DateOfPublication>
           <inspire_common:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URI>
           <inspire_common:ResourceLocator>
@@ -134,7 +146,7 @@
             <inspire_common:MediaType>application/pdf</inspire_common:MediaType>
           </inspire_common:ResourceLocator>
         </inspire_common:Specification>
-<inspire_common:Degree>notEvaluated</inspire_common:Degree>
+        <inspire_common:Degree>notEvaluated</inspire_common:Degree>
       </inspire_common:Conformity>
       <inspire_common:MetadataPointOfContact>
         <inspire_common:OrganisationName>$ORG_NAME</inspire_common:OrganisationName>
@@ -150,14 +162,16 @@
           <inspire_common:Title>GEMET - INSPIRE themes</inspire_common:Title>
           <inspire_common:DateOfPublication>2008-06-01</inspire_common:DateOfPublication>
         </inspire_common:OriginatingControlledVocabulary>
-      <inspire_common:KeywordValue>Area management/restriction/regulation zones and reporting units</inspire_common:KeywordValue>
+        <inspire_common:KeywordValue>Area management/restriction/regulation zones and reporting
+          units</inspire_common:KeywordValue>
       </inspire_common:Keyword>
       <inspire_common:Keyword xsi:type="inspire_common:inspireTheme_eng">
         <inspire_common:OriginatingControlledVocabulary>
           <inspire_common:Title>GEMET - INSPIRE themes</inspire_common:Title>
           <inspire_common:DateOfPublication>2008-06-01</inspire_common:DateOfPublication>
         </inspire_common:OriginatingControlledVocabulary>
-        <inspire_common:KeywordValue>Oceanographic geographical features</inspire_common:KeywordValue>
+        <inspire_common:KeywordValue>Oceanographic geographical
+          features</inspire_common:KeywordValue>
       </inspire_common:Keyword>
       <inspire_common:Keyword xsi:type="inspire_common:inspireTheme_eng">
         <inspire_common:OriginatingControlledVocabulary>
@@ -178,7 +192,8 @@
           <inspire_common:Title>GEMET - INSPIRE themes</inspire_common:Title>
           <inspire_common:DateOfPublication>2008-06-01</inspire_common:DateOfPublication>
         </inspire_common:OriginatingControlledVocabulary>
-        <inspire_common:KeywordValue>Environmental monitoring facilities</inspire_common:KeywordValue>
+        <inspire_common:KeywordValue>Environmental monitoring
+          facilities</inspire_common:KeywordValue>
       </inspire_common:Keyword>
       <inspire_common:Keyword xsi:type="inspire_common:inspireTheme_eng">
         <inspire_common:OriginatingControlledVocabulary>
@@ -197,5 +212,5 @@
       </inspire_common:ResponseLanguage>
     </replaceXML>
   </file>
-	
+
 </overrides>
