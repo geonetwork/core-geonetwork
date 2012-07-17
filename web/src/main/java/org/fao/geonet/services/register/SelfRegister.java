@@ -23,19 +23,11 @@
 
 package org.fao.geonet.services.register;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -44,12 +36,22 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
+
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -63,7 +65,6 @@ public class SelfRegister implements Service {
 	private static final String PROFILE = "RegisteredUser";
 	private static final String PROTOCOL = "smtp";
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
 	private static final String PASSWORD_EMAIL_XSLT = "registration-pwd-email.xsl";
 	private static final String PROFILE_EMAIL_XSLT = "registration-prof-email.xsl";
@@ -75,7 +76,6 @@ public class SelfRegister implements Service {
 	// --------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -139,13 +139,11 @@ public class SelfRegister implements Service {
 				+ "address, city, state, zip, country, email, organisation, kind) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		dbms.execute(query, new Integer(id), username, Util
-				.scramble(password), surname, name, PROFILE, address,
+		String passwordHash = PasswordUtil.encode(context, password);
+		dbms.execute(query, new Integer(id), username, passwordHash , surname, name, PROFILE, address,
 				city, state, zip, country, email, organ, kind);
 
-		dbms.execute(
-				"INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
-				new Integer(id), new Integer(group));
+		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", new Integer(id), new Integer(group));
 
 		// Send email to user confirming registration
 

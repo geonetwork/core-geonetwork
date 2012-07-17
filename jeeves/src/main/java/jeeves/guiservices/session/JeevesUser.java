@@ -2,7 +2,6 @@ package jeeves.guiservices.session;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import jeeves.server.ProfileManager;
 
@@ -69,6 +68,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setUsername(String username) {
+		if (username==null) username = "Guest";
 		this.username = username;
 		return this;
 	}
@@ -78,6 +78,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setEmail(String email) {
+		if (email==null) email = "";
 		this.email = email;
 		return this;
 	}
@@ -87,6 +88,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setName(String name) {
+		if (name==null) name = "Guest";
 		this.name = name;
 		return this;
 	}
@@ -96,6 +98,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setSurname(String surname) {
+		if (surname==null) surname = "";
 		this.surname = surname;
 		return this;
 	}
@@ -105,6 +108,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setProfile(String profile) {
+		if (profile==null) profile = "Guest";
 		this.profile = profile;
 		return this;
 	}
@@ -114,6 +118,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setAddress(String address) {
+		if (address==null) address = "";
 		this.address = address;
 		return this;
 	}
@@ -123,6 +128,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setCity(String city) {
+		if (city==null) city = "";
 		this.city = city;
 		return this;
 	}
@@ -132,6 +138,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setState(String state) {
+		if (state==null) state = "";
 		this.state = state;
 		return this;
 	}
@@ -141,6 +148,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setZip(String zip) {
+		if (zip==null) zip = "";
 		this.zip = zip;
 		return this;
 	}
@@ -150,6 +158,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setCountry(String country) {
+		if (country==null) country = "";
 		this.country = country;
 		return this;
 	}
@@ -159,6 +168,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setOrganisation(String organisation) {
+		if (organisation==null) organisation = "";
 		this.organisation = organisation;
 		return this;
 	}
@@ -169,6 +179,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setPassword(String password) {
+		if (password==null) password = "";
 		this.password = password;
 		return this;
 	}
@@ -178,6 +189,7 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setKind(String kind) {
+		if (kind==null) kind = "";
 		this.kind = kind;
 		return this;
 	}
@@ -187,9 +199,8 @@ public class JeevesUser implements UserDetails {
 	}
 
 	public JeevesUser setId(String id) {
+		if (id==null) id = "-1";
 		this.id = id;
 		return this;
 	}
-	
-
 }

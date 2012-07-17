@@ -23,7 +23,7 @@
 
 package org.fao.geonet.util;
 
-import jeeves.utils.Util;
+import jeeves.utils.PasswordUtil;
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ public class Sha1Encoder
 	 */
 	public static String encodeString(String input)
 	{
-		return Util.scramble(input);
+		return PasswordUtil.unsaltedScramble(input);
 	}
 
 }

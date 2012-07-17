@@ -27,7 +27,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.apache.commons.httpclient.HttpClient;
@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -264,7 +265,7 @@ class Harvester
 		localGroups = new GroupMapper (dbms);
 
 		// md5 the full capabilities URL
-		String uuid = Util.scramble (this.capabilitiesUrl); // is the service identifier
+		String uuid = Sha1Encoder.encodeString (this.capabilitiesUrl); // is the service identifier
 		
 		//--- Loading stylesheet
 		String styleSheet = schemaMan.getSchemaDir(params.outputSchema) + 
@@ -527,7 +528,7 @@ class Harvester
 		log.info ("  - Loading layer: " + reg.name);
 		
 		//--- md5 the full capabilities URL + the layer, coverage or feature name
-		reg.uuid = Util.scramble (this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
+		reg.uuid = Sha1Encoder.encodeString(this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
 	
 		//--- Trying loading metadataUrl element
 		if (params.useLayerMd && !params.ogctype.substring(0,3).equals("WMS")) {

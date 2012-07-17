@@ -1,13 +1,12 @@
 package org.fao.geonet.kernel.security;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
+import jeeves.utils.PasswordUtil;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -28,10 +27,6 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 
 	private ApplicationContext applicationContext;
 	private PasswordEncoder encoder;
-	
-	public GeonetworkAuthenticationProvider(PasswordEncoder encoder) {
-		this.encoder = encoder;
-	}
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -61,7 +56,9 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			Element selectRequest = dbms.select("SELECT * FROM Users where username=?", username);
 			Element userXml = selectRequest.getChild("record");
 			if (userXml != null) {
-				updatePasswordHash(username, authentication, dbms, userXml);
+				String oldPassword = authentication.getCredentials().toString();
+				Integer iUserId = new Integer(userXml.getChildText(Geonet.Elem.ID));
+				userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
 
 				ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
 				GeonetworkUser userDetails = new GeonetworkUser(profileManager, username, userXml);
@@ -90,43 +87,11 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 		throw new UsernameNotFoundException(username+" is not a valid username");
 	}
 
-	/**
-	 * The security column contains a note to update the hash from the old Geonetwork hashing to the more secure spring hashing.
-	 */
-	private void updatePasswordHash(String username,
-			UsernamePasswordAuthenticationToken authentication, Dbms dbms,
-			Element userXml) throws SQLException {
-		String security = userXml.getChildText(GeonetworkUser.SECURITY_FIELD);
-		if(security.contains(GeonetworkUser.HASH_UPDATE_REQUIRED)) {
-			String hash = userXml.getChildTextTrim(GeonetworkUser.PASSWORD_COLUMN);
-
-			String password = authentication.getCredentials().toString();
-			if(Util.scramble(password).equals(hash) || Util.oldScramble(password).equals(hash) 
-					|| encoder.matches(password, hash)) {
-				StringBuilder newSec = new StringBuilder();
-				for (String seg: security.split(",")) {
-					if(newSec.length() > 0){
-						newSec.append(',');
-					}
-					if(!seg.trim().equals(GeonetworkUser.HASH_UPDATE_REQUIRED)){
-						newSec.append(seg);
-					}
-				}
-				dbms.execute("UPDATE Users SET "+GeonetworkUser.SECURITY_FIELD+"=? where username=?", newSec.toString(), username);
-				if(Util.scramble(password).equals(hash) || Util.oldScramble(password).equals(hash)) {
-					String newPass = encoder.encode(password);
-					dbms.execute("UPDATE Users SET "+GeonetworkUser.PASSWORD_COLUMN+"=? where username=?", newPass, username);
-					userXml.getChild(GeonetworkUser.PASSWORD_COLUMN).setText(newPass);
-				}
-			}
-		}
-	}
-
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext; 
-		
+		this.encoder = (PasswordEncoder) applicationContext.getBean(PasswordUtil.ENCODER_ID);
 	}
 
 }

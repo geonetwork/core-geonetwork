@@ -29,12 +29,15 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
 import java.util.ArrayList;
+
+import javax.servlet.ServletContext;
 
 //=============================================================================
 
@@ -134,7 +137,7 @@ public class Update implements Service
 							"address, city, state, zip, country, email, organisation, kind) "+
 							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				dbms.execute(query, new Integer(id), username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
+				dbms.execute(query, new Integer(id), username, PasswordUtil.encode(context, password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
 
 			//--- add groups
 
@@ -150,7 +153,7 @@ public class Update implements Service
 				if (operation.equals(Params.Operation.FULLUPDATE)) {
 					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
 
-					dbms.execute (query, username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					dbms.execute (query, username, PasswordUtil.encode(context,password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
 
 					//--- add groups
 
@@ -175,8 +178,8 @@ public class Update implements Service
 
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
-					String query = "UPDATE Users SET password=? WHERE id=?";
-					dbms.execute (query, Util.scramble(password),new Integer(id));
+					ServletContext servletContext = context.getServlet().getServletContext();
+					PasswordUtil.updatePasswordWithNew(false, null, password, new Integer(id), servletContext, dbms);
 				} else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}

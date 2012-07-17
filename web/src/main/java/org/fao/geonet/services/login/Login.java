@@ -23,21 +23,11 @@
 
 package org.fao.geonet.services.login;
 
-import jeeves.exceptions.UserLoginEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.List;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -119,75 +109,75 @@ public class Login implements Service
 	}
 
 	//--------------------------------------------------------------------------
-
-	private boolean isAdmin(Dbms dbms, String username) throws SQLException
-	{
-		String query = "SELECT id FROM Users WHERE username=? AND profile=?";
-
-		List list = dbms.select(query, username, "Administrator").getChildren();
-
-		return (list.size() != 0);
-	}
-
-	//--------------------------------------------------------------------------
-
-	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException
-	{
-        boolean groupProvided = ((info.group != null) && (!(info.group.equals(""))));
-        int groupId = -1;
-        int userId = -1;
-
-        //--- Create group retrieved from LDAP if it's new
-        if (groupProvided) {
-            String query = "SELECT id FROM Groups WHERE name=?";
-            List list  = dbms.select(query, info.group).getChildren();
-
-            if (list.isEmpty()) {
-                groupId = context.getSerialFactory().getSerial(dbms, "Groups");
-			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                dbms.execute(query, groupId, info.group);
-                Lib.local.insert(dbms, "Groups", groupId, info.group);
-            } else {
-                String gi = ((Element) list.get(0)).getChildText("id");
-                groupId = new Integer(gi).intValue();
-            }
-        }
-
-		//--- update user information into the database
-
-		String query = "UPDATE Users SET password=?, name=?, profile=? WHERE username=?";
-
-		int res = dbms.execute(query, Util.scramble(info.password), info.name, info.profile, info.username);
-
-		//--- if the user was not found --> add it
-
-		if (res == 0)
-		{
-			userId = context.getSerialFactory().getSerial(dbms, "Users");
-
-			query = 	"INSERT INTO Users(id, username, password, surname, name, profile) "+
-						"VALUES(?,?,?,?,?,?)";
-
-			dbms.execute(query, userId, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile);
-
-            //--- Associate user and group retrieved from LDAP
-            if (groupProvided) {
-                String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";
-                List list  = dbms.select(query2, groupId, userId).getChildren();
-
-                String count = ((Element) list.get(0)).getChildText("numr");
-
-                if (count.equals("0")) {
-                    query = 	"INSERT INTO UserGroups(userId, groupId) "+
-                                "VALUES(?,?)";
-
-                    dbms.execute(query, userId, groupId);
-                }
-            }
-		}
-
-		dbms.commit();
-	}
+//
+//	private boolean isAdmin(Dbms dbms, String username) throws SQLException
+//	{
+//		String query = "SELECT id FROM Users WHERE username=? AND profile=?";
+//
+//		List list = dbms.select(query, username, "Administrator").getChildren();
+//
+//		return (list.size() != 0);
+//	}
+//
+//	//--------------------------------------------------------------------------
+//
+//	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException
+//	{
+//        boolean groupProvided = ((info.group != null) && (!(info.group.equals(""))));
+//        int groupId = -1;
+//        int userId = -1;
+//
+//        //--- Create group retrieved from LDAP if it's new
+//        if (groupProvided) {
+//            String query = "SELECT id FROM Groups WHERE name=?";
+//            List list  = dbms.select(query, info.group).getChildren();
+//
+//            if (list.isEmpty()) {
+//                groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+//			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+//                dbms.execute(query, groupId, info.group);
+//                Lib.local.insert(dbms, "Groups", groupId, info.group);
+//            } else {
+//                String gi = ((Element) list.get(0)).getChildText("id");
+//                groupId = new Integer(gi).intValue();
+//            }
+//        }
+//
+//		//--- update user information into the database
+//
+//		String query = "UPDATE Users SET password=?, name=?, profile=? WHERE username=?";
+//
+//		int res = dbms.execute(query, Util.unsaltedScramble(info.password), info.name, info.profile, info.username);
+//
+//		//--- if the user was not found --> add it
+//
+//		if (res == 0)
+//		{
+//			userId = context.getSerialFactory().getSerial(dbms, "Users");
+//
+//			query = 	"INSERT INTO Users(id, username, password, surname, name, profile) "+
+//						"VALUES(?,?,?,?,?,?)";
+//
+//			dbms.execute(query, userId, info.username, Util.unsaltedScramble(info.password), "(LDAP)", info.name, info.profile);
+//
+//            //--- Associate user and group retrieved from LDAP
+//            if (groupProvided) {
+//                String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";
+//                List list  = dbms.select(query2, groupId, userId).getChildren();
+//
+//                String count = ((Element) list.get(0)).getChildText("numr");
+//
+//                if (count.equals("0")) {
+//                    query = 	"INSERT INTO UserGroups(userId, groupId) "+
+//                                "VALUES(?,?)";
+//
+//                    dbms.execute(query, userId, groupId);
+//                }
+//            }
+//		}
+//
+//		dbms.commit();
+//	}
 }
 
 //=============================================================================

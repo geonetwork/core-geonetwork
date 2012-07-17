@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.security;
 
 import jeeves.guiservices.session.JeevesUser;
 import jeeves.server.ProfileManager;
+import jeeves.utils.PasswordUtil;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -14,17 +15,14 @@ public class GeonetworkUser extends JeevesUser {
 	public static final String STATE_COLUMN = "state";
 	public static final String CITY_COLUMN = "city";
 	public static final String ADDRESS_COLUMN = "address";
-	public static final String PASSWORD_COLUMN = "password";
 	public static final long serialVersionUID = 1279946739116277388L;
-	public static final String SECURITY_FIELD = "security";
-	public static final String HASH_UPDATE_REQUIRED = "update_hash_required";
 	public static final String USERNAME_COLUMN = "username";
 
 	public GeonetworkUser(ProfileManager profileManager, String username, Element userXml) {
 		super(profileManager);
 		setUsername(username);
 		setId(userXml.getChildTextTrim(Geonet.Elem.ID));
-		setPassword(userXml.getChildTextTrim(PASSWORD_COLUMN));
+		setPassword(userXml.getChildTextTrim(PasswordUtil.PASSWORD_COLUMN));
 		setEmail(userXml.getChildTextTrim(Geonet.Elem.EMAIL));
 		setName(userXml.getChildTextTrim(Geonet.Elem.NAME));
 		setSurname(userXml.getChildTextTrim(Geonet.Elem.SURNAME));

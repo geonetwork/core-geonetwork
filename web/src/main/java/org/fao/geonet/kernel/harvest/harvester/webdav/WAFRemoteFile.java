@@ -23,12 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.utils.Util;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Element;
 import java.net.URL;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ class WAFRemoteFile implements RemoteFile {
 			Element xml = Xml.loadFile(new URL(url));
 			
 			// md5 the full capabilities URL
-			String uuid = Util.scramble (url); // is the service identifier
+			String uuid = Sha1Encoder.encodeString (url); // is the service identifier
 			
 			Map<String, String> param = new HashMap<String, String>();
 			param.put("uuid", uuid);

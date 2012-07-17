@@ -52,6 +52,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
@@ -112,7 +113,7 @@ public class Change implements Service {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
-		String expectedKey = Util.scramble(scrambledPassword+todaysDate);
+		String expectedKey = PasswordUtil.unsaltedScramble(scrambledPassword+todaysDate);
 
 		//check change key
 		if (!changeKey.equals(expectedKey))
@@ -137,7 +138,7 @@ public class Change implements Service {
 		}
 		
 		// All ok so update password
-		dbms.execute ( "UPDATE Users SET password=? WHERE username=?", Util.scramble(password), username);
+		dbms.execute ( "UPDATE Users SET password=? WHERE username=?", PasswordUtil.unsaltedScramble(password), username);
 
 		// generate email details using customisable stylesheet
 		//TODO: allow internationalised emails

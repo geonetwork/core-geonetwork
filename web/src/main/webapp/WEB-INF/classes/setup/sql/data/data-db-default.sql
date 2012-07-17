@@ -1009,3 +1009,4 @@ INSERT INTO Settings VALUES (955,952,'ignored','true');
 -- ======================================================================
 
 INSERT INTO Users VALUES  (1,'admin','d033e22ae348aeb566fc214aec3585c4da997','admin','admin','Administrator','','','','','','','','','update_hash_required,test');
+INSERT INTO Users VALUES  (2,'developer','d033e22ae348aeb566fc214aec3585c4da997','developer','developer','Developer','','','','','','','','','update_hash_required,test');

@@ -48,6 +48,7 @@ class MigrateConfiguration {
         </sec:session-management>
 
         {(original \ "profile") map interceptUrls }
+        <sec:intercept-url pattern="/srv/*/*!" access="hasRole('Developer')"></sec:intercept-url>
         <sec:intercept-url pattern="/monitor/**" access="hasRole('Monitor')"></sec:intercept-url>
         <sec:intercept-url pattern="/*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
         <sec:intercept-url pattern="/**" access="denyAll"></sec:intercept-url>
@@ -57,18 +58,16 @@ class MigrateConfiguration {
         <sec:authentication-provider ref="geonetworkAuthenticationProvider"/>
     </sec:authentication-manager>
 
-    <bean id="encoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder">
-        <constructor-arg value="SHA-256"/>
-        <constructor-arg value="secret-hash-salt="/>
+    <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
+    <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
+        <constructor-arg value="SHA-256"></constructor-arg>
+        <constructor-arg value="secret-hash-salt="></constructor-arg>
     </bean>
-
-    <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider">
-      <constructor-arg ref="encoder" />
-    </bean>
+    <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider"/>
 </beans>
 
       write(springSecFile, springSecXml)
-      write(userProfiles, <profiles>{original \ "profile" map { _.asInstanceOf[Elem].copy(child=Nil)}}</profiles>)
+      write(userProfiles, <profiles><profile name="Developer" extends="Administrator"/>{original \ "profile" map { _.asInstanceOf[Elem].copy(child=Nil)}}</profiles>)
     }
   }
 
