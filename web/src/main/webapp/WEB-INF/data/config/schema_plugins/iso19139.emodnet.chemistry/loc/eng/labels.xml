@@ -3,7 +3,19 @@
     xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
     xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:gmx="http://www.isotc211.org/2005/gmx">
-    
+    <element name="gmd:protocol" id="398.0">
+        <label>Protocol</label>
+        <description>Connection protocol to be used</description>
+        <helper>
+            <option value="WWW:LINK-1.0-http--link">Web link (URL)</option>                                                                      
+            <option value="FILE">File</option>
+            <option value="COPYFILE">Copying files (no GDAL/OGR interaction)</option>
+            <option value="DB">Database</option>
+            <option value="OGC:WMS-1.1.1-http-get-map">Web Map Service (OGC)</option>
+            <option value="WFS">Web Feature Service (OGC)</option>
+            <option value="WCS">Web Coverage Service (OGC)</option>
+        </helper>
+    </element>
     <element name="gmd:featureTypes" id="237.0">
         <label>Feature types</label>
         <description>Subset of feature types from cited feature catalogue occurring in
