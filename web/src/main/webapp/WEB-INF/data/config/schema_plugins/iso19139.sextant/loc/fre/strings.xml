@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <tab>Vue Sextant</tab>
+    <sextantTab>Vue Sextant</sextantTab>
+    
+    <metadataInfoTitle>Informations sur la métadonnée</metadataInfoTitle>
+    <identificationTitle>Identification des données</identificationTitle>
+    <keywordTitle>Thématique et mots clés</keywordTitle>
+    <geoLocationTitle>Localisation géographique</geoLocationTitle>
+    <tempRefTitle>Référence temporelle</tempRefTitle>
+    <qualityTitle>Qualité des données</qualityTitle>
+    <conformityTitle>Conformité à la directive Inspire</conformityTitle>
+    <limitationsTitle>Contraintes d'accès et d'utilisation des données</limitationsTitle>
+    <respOrgaTitle>Contacts sur la donnée</respOrgaTitle>
+    <inspireTheme>Thème Inspire</inspireTheme>
+    <accessUseConstraints>Conditions applicables à l’accès et à l’utilisation//Contraintes légales</accessUseConstraints>
+    <publicAccessConstraints>Restrictions concernant l’accès public//Contraintes sur la ressource</publicAccessConstraints>
+</strings>

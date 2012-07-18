@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <tab>Sextant view</tab>
+    <sextantTab>Sextant view</sextantTab>
+    
+    <metadataInfoTitle>Metadata information</metadataInfoTitle>
+    <identificationTitle>Data identification</identificationTitle>
+    <keywordTitle>INSPIRE theme and keywords</keywordTitle>
+    <geoLocationTitle>Geographic location</geoLocationTitle>
+    <tempRefTitle>Temporal reference</tempRefTitle>
+    <qualityTitle>Quality and validity</qualityTitle>
+    <conformityTitle>Inspire conformity</conformityTitle>
+    <limitationsTitle>Limitations on public access</limitationsTitle>
+    <respOrgaTitle>Responsible organisation</respOrgaTitle>
+    <inspireTheme>Inspire theme</inspireTheme>
+    <accessUseConstraints>Condition to access and use</accessUseConstraints>
+    <publicAccessConstraints>Limitation on public access</publicAccessConstraints>
+</strings>
