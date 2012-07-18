@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <tab>EMODNET view</tab>
-    <emodnet.hydrographyTab>EMODNET view</emodnet.chemistryTab>
+    <emodnet.hydrographyTab>EMODNET view</emodnet.hydrographyTab>
     <DisseminationLevelTitle>Disseminaton level</DisseminationLevelTitle>
     <ParamsMeasuredTitle>Parameters in dataset (SDN Discovery par. P021 list)</ParamsMeasuredTitle>
     <PositioningInstrsTitle>Positioning instruments (SDN L56)</PositioningInstrsTitle>
