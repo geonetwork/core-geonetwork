@@ -234,13 +234,13 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: 'Type',
                         boxLabel: OpenLayers.i18n('large'),
                         name: 'type',
-                        value: 'large'
+                        inputValue: 'large'
                     }, {
                         xtype: 'radio',
                         fieldLabel: '',
                         boxLabel: OpenLayers.i18n('small'),
                         name: 'type',
-                        value: 'small'
+                        inputValue: 'small'
                     }, {
                         xtype: 'sliderfield',
                         fieldLabel: OpenLayers.i18n('scalingFactor'),
