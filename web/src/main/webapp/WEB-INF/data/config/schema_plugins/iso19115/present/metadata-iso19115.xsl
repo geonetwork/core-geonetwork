@@ -1212,45 +1212,6 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-
-	<!--
-	protocol
-	-->
-	<xsl:template mode="iso19115" match="protocol">
-		<xsl:param name="schema"/>
-		<xsl:param name="edit"/>
-		
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="text">
-						<xsl:variable name="value" select="string(.)"/>
-						<select name="_{geonet:element/@ref}" size="1">
-							<xsl:if test="string(.)=''">
-								<option value=""/>
-							</xsl:if>
-							<xsl:for-each select="/root/gui/strings/protocolChoice[@value]">
-								<option>
-									<xsl:if test="string(@value)=$value">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="string(@value)"/></xsl:attribute>
-									<xsl:value-of select="string(.)"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="element" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="false()"/>
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
 	
 	<!--
 	graphOver

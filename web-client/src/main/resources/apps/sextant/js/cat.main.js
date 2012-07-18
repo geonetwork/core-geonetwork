@@ -3,12 +3,12 @@ Ext.namespace('cat');
 
 var catalogue;
 var app;
+var cookie;
 
 cat.app = function() {
 
 	var geonetworkUrl;
 	var searching = false;
-	var cookie;
 
 	/**
 	 * Application parameters are :
@@ -435,8 +435,7 @@ cat.app = function() {
 				expires : new Date(new Date().getTime()
 						+ (1000 * 60 * 60 * 24 * 365))
 			});
-			Ext.state.Manager.setProvider(cookie);
-
+			
 			// Create connexion to the catalogue
 			catalogue = new GeoNetwork.Catalogue({
 				statusBarId : 'info',

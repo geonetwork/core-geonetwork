@@ -524,9 +524,7 @@
             <!-- Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get
             prefix of the protocol to set the CSS icon class-->
             <span class="{translate(substring-before(current-grouping-key(), '-'), ':', '')} icon">
-              <xsl:value-of
-                select="/root/gui/strings/protocolChoice[@value=normalize-space(current-grouping-key())]"
-              />
+                <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'gmd:protocol']/helper/option[@value=normalize-space(current-grouping-key())]"/>
             </span>
           </td>
           <td>
