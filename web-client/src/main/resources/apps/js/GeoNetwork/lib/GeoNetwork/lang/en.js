@@ -389,7 +389,7 @@ GeoNetwork.lang.en = {
     'deleteConfirm': 'Are you sure to delete this metadata record?',
     'deleteRecordSuccess': 'Metadata deleted.', 
     'deleteRecordFailure': 'Error when deleting metadata record.',
-    'advancedSearchOptions': 'Advanced criteria',
+    'advancedSearchOptions': 'Advanced Search Options',
     'relatedservices': 'Related service',
     'relatedchildren': 'Children',
     'relatedfcats': 'Related feature catalogue',
@@ -435,7 +435,6 @@ GeoNetwork.lang.en = {
     'focusOnAny': 'Move focus to the full text search field.',
     'hideSearchForm': 'Hide or display search form.',
     'switchMode': 'Switch visualization mode.',
-    'resetSearchForm': 'Reset search form.',
     'focusOnLogin': 'Focus on the login form to access catalogue administration or logout if already logged in.',
     'openAdmin': 'Go to administration',
     'displayInfoPanel': 'Display the information panel.',
@@ -492,26 +491,16 @@ GeoNetwork.lang.en = {
     'copyTplElTT': 'Create a new entry in the directory from the current selection.',
     'delTplElTT': 'Remove selected entry from the directory.',
     'language': 'Language',
-	
-	//tabbed search
-	'Home': "Home",
-	'Map': "Map",
-	'Poweredby': "Powered by",
-	'About': "About",
-	'org': "Organisation",
-	'keyword': "keyword",
-	'when': "when",
-	'advancedSearchOptions': "Advanced Search Options",
-	'hitsPerPage': "Hits Per Page",
-	'Searchforspatialdataon': "Search for spatial data on",
-	'search': "search",
-	'fullTextSearch': "Full Text Search",
-	'reset': "reset",
-	'resetSearchForm': "Reset Search Form",
-	'Advanced': "Advanced",
-	'newWindow': "New Window",
-	'mdEditor': "Metadata editor",
-	'List': "List"
+    
+    'Home': "Home",
+    'Map': "Map",
+    'Poweredby': "Powered by",
+    'About': "About",
+    'org': "Organisation",
+    'when': "when",
+    'Searchforspatialdataon': "Search for spatial data on",
+    'Advanced': "Advanced",
+    'List': "List"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);
