@@ -81,7 +81,16 @@
 		<xsl:param name="type" />
 		<xsl:param name="file" />
 		
-		<xsl:variable name="urlImg" select="concat(/root/gui/locService,'/resources.get?id=', /root/thumbnail/id, '&amp;fname=', $file, '&amp;access=public')"/>
+		<xsl:variable name="urlImg" >
+			<xsl:choose>
+				<xsl:when test="contains($file, 'http://')">
+					<xsl:value-of select="$file" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=', /root/thumbnail/id, '&amp;fname=', $file, '&amp;access=public')"/>
+				</xsl:otherwise>
+			</xsl:choose> 
+		</xsl:variable>
 		<xsl:variable name="urlAnc" select="concat(/root/gui/locService,'/graphover.show?id=', /root/thumbnail/id, '&amp;fname=', $file, '&amp;access=public')"/>
 		
 		<form name="present_{$type}" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.thumbnail.unset" method="post">
