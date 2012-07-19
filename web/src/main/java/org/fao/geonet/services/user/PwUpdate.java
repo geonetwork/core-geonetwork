@@ -68,12 +68,11 @@ public class PwUpdate implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		UserSession session = context.getUserSession();
-		String      userId  = session.getUserId();
+		String      currentUserId  = session.getUserId();
 
-		if (userId == null) throw new UserNotFoundEx(null);
+		if (currentUserId == null) throw new UserNotFoundEx(null);
 
-		
-		int iUserId = Integer.parseInt(userId);
+		int iUserId = Integer.parseInt(currentUserId);
 		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, servletContext, dbms);
 
 		return new Element(Jeeves.Elem.RESPONSE);

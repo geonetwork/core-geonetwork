@@ -58,7 +58,9 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			if (userXml != null) {
 				String oldPassword = authentication.getCredentials().toString();
 				Integer iUserId = new Integer(userXml.getChildText(Geonet.Elem.ID));
-				userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
+				if(PasswordUtil.hasOldHash(userXml)) {
+					userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
+				}
 
 				ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
 				GeonetworkUser userDetails = new GeonetworkUser(profileManager, username, userXml);

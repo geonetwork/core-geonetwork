@@ -128,7 +128,7 @@ public class SendLink implements Service {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
-		String changeKey = PasswordUtil.unsaltedScramble(scrambledPassword+todaysDate);
+		String changeKey = PasswordUtil.encode(context, scrambledPassword+todaysDate);
 
 		// generate email details using customisable stylesheet
 		// TODO: allow internationalised emails

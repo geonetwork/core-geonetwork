@@ -200,6 +200,7 @@ public class PasswordUtil {
 		if (elUser.getChildren().size() == 0) {
 			throw new UserNotFoundEx(""+iUserId);
 		}
+		elUser = elUser.getChild("record");
 		String hash = elUser.getChildText(PASSWORD_COLUMN);
 		if (hasOldHash(elUser)) {
 			if ((matchOldPassword || oldPassword != null) && !matchesOldHash(hash , oldPassword)) {
