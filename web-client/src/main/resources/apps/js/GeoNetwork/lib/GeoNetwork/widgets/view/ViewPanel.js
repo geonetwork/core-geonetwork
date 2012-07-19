@@ -64,6 +64,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          */
         printDefaultForTabs: false,
         printMode: undefined,
+        printUrl: 'print.html',
         /** api: config[permalink]
          *  Define if permalink button should be displayed or not. Default is false.
          */
@@ -257,7 +258,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             tooltip: OpenLayers.i18n('printTT'),
             listeners: {
                 click: function(c, pressed){
-                	window.open('print.html?uuid=' + this.metadataUuid + '&currTab=' + this.printMode + "&hl=" + this.lang);
+                	window.open(this.printUrl + '?uuid=' + this.metadataUuid + '&currTab=' + this.printMode + "&hl=" + this.lang);
                 },
                 scope: this
             }
