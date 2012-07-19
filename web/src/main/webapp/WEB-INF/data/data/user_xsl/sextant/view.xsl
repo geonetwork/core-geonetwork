@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
+	xmlns:che="http://www.geocat.ch/2008/che" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+
+	<!-- Load labels. -->
+	<xsl:variable name="label" select="/root/schemas/iso19139" />
+	<xsl:template xmlns:geonet="http://www.fao.org/geonetwork"
+		mode="iso19139" match="geonet:info" />
+	<!-- Root element matching. -->
+	<xsl:template match="/" priority="5">
+		<html>
+			<!-- Set some vars. -->
+			<xsl:variable name="title"
+				select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString" />
+
+			<head>
+			
+				<title>
+					Metadata:
+					<xsl:value-of select="$title" />
+				</title>
+			</head>
+			<body>
+			
+			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/reset.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/jquery-ui-1.8.2.custom.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/main.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/default.css"/>
+			
+			<div class="ui-layout-content">
+				<div>
+					<div class="result-metadata-modal-tabs">
+						<ul>
+							<li>
+								<h4>
+									<a href="#result-metadata-modal-tab-1">Essentielles</a>
+								</h4>
+							</li>
+							<li>
+								<h4>
+									<a href="#result-metadata-modal-tab-2">Complete</a>
+								</h4>
+							</li>
+						</ul>
+						<div id="result-metadata-modal-tab-1">
+							<div class="toolbar ui-helper-clearfix">
+								<a class="button button-icon-solo ui-state-default" title="PDF"
+									href="#">
+									<span class="icon file-pdf">
+									</span>
+									PDF
+								</a>
+								<a class="button button-icon-solo ui-state-default" title="ISO19139"
+									href="#">
+									<span class="icon file-xml">
+									</span>
+									ISO19139
+								</a>
+							</div>
+							<h5>Description</h5>
+							<div class="result-metadata-modal-content">
+								<xsl:apply-templates mode="iso19139" 
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox" />
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
+							</div>
+							
+							<h5>Conditions d'accès</h5>
+							<div class="result-metadata-modal-content">
+							
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:distributionInfo" />
+								<hr/>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints" />
+									<p></p>
+							</div>
+							
+							<h5>Contact</h5>
+							<div class="result-metadata-modal-content">
+								<p></p>
+								<ul>
+									<xsl:apply-templates mode="iso19139"
+										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact" />
+								</ul>
+							</div>
+						</div>
+						<div id="result-metadata-modal-tab-2">
+							<xsl:apply-templates mode="iso19139"
+										select="/root/gmd:MD_Metadata/*" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript" src="{/root/resourceUrl}/js/jquery-1.4.2.min.js"></script>
+			<script type="text/javascript" src="{/root/resourceUrl}/js/jquery-ui-1.8.2.all.min.js"></script>
+			<script type="text/javascript" src="{/root/resourceUrl}/js/main.js"></script>
+			
+			</body>
+		</html>
+	</xsl:template>
+
+	<!--  DESCRIPTION PART -->
+	
+	<!--  Display the thumbnail and Geographic BBox -->
+	<xsl:template mode="iso19139" match="gmd:EX_GeographicBoundingBox">
+		
+		<div class="result-metadata-modal-title">
+			<table>
+				<tr>
+					<td></td>
+					<td>
+						<xsl:value-of select="gmd:northBoundLatitude/gco:Decimal" />
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal" /></td>
+					<td>
+						<img class="result-photo">
+							<xsl:attribute name="src">
+								<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString" />
+							</xsl:attribute>
+						</img>
+					</td>
+					<td><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><xsl:value-of select="gmd:southBoundLatitude/gco:Decimal" /></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+	
+	<!--  Abstract & Statement : Display Title and <p> with text -->
+	<xsl:template mode="iso19139" match="gmd:abstract|gmd:statement"
+		priority="3">
+		<xsl:variable name="name" select="name(.)" />
+		<xsl:variable name="title">
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name" select="$name" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<hr/>
+		<div class="result-metadata-modal-resume">
+			<h6><xsl:value-of select="$title" /></h6>
+			<div class="result-metadata-modal-content">
+				<p><xsl:value-of select="gco:CharacterString" />
+				</p></div>
+		</div>
+	</xsl:template>
+
+	<!-- ACCESS PART  -->
+	
+	<!-- Hide transfer option in Distribution Info tag -->
+	<xsl:template mode="iso19139"
+		match="gmd:transferOptions">
+    </xsl:template>
+    
+    <!--  GENERIC (Access & Contact) -->
+    
+    <!-- Display in bold the title of a section -->
+	<xsl:template mode="iso19139"
+		match="gmd:locale|gmd:contact|gmd:identificationInfo|gmd:descriptiveKeywords|
+        gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints|gmd:MD_Constraints|
+        gmd:resourceConstraints|
+        gmd:distributionInfo">
+
+		<xsl:variable name="name" select="name(.)" />
+		<xsl:variable name="title">
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name" select="$name" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<p><b><xsl:value-of select="$title" /></b></p>
+		<ul><xsl:apply-templates mode="iso19139" /></ul>
+		
+	</xsl:template>
+
+	<!-- Display characterString -->
+	<xsl:template mode="iso19139"
+		match="gmd:*[gco:CharacterString or gmd:PT_FreeText]|
+        srv:*[gco:CharacterString or gmd:PT_FreeText]|
+        gco:aName[gco:CharacterString]"
+		priority="2">
+		<xsl:variable name="name" select="name(.)" />
+		<xsl:variable name="title">
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name" select="$name" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:if test="gco:CharacterString!=''">
+			<li>
+				<b><xsl:value-of select="$title" /> : </b>
+				<xsl:value-of select="gco:CharacterString" />
+			</li>
+		</xsl:if>
+		<!-- Here you could display translation using PT_FreeText -->
+	</xsl:template>
+
+
+	<!-- Get title from che profil if exist, if not default to iso. -->
+	<xsl:template name="getTitle">
+		<xsl:param name="name" />
+		<xsl:variable name="title"
+			select="string($label/labels/element[@name=$name]/label)" />
+		<xsl:choose>
+			<xsl:when test="normalize-space($title)">
+				<xsl:value-of select="$title" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="string($label/labels/element[@name=$name]/label)" />
+			</xsl:otherwise>
+		</xsl:choose>
+
+	</xsl:template>
+
+
+</xsl:stylesheet>

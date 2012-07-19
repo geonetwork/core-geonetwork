@@ -1,0 +1,10 @@
+If a formatter requires localization that cannot be found in strings or schema 
+localization the format bundle can have a loc subfolder containing translations.
+
+The xml document created will have the xml files from loc/<currentLoc>/ added to
+xml documentation under the /root/resources tag.
+
+If a localization folder is not found then the default language will be used.  
+if the default language also does not exist then the first localization will be used
+but it is recommended to always have the default language localization
+(unless language is fixed in the config.properties)
