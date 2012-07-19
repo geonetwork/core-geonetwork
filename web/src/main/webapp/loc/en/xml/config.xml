@@ -132,6 +132,7 @@
 	<distNames>Distinguished names</distNames>
 	<baseDN>Base</baseDN>
 	<usersDN>Users</usersDN>
+	<bindInfo>LDAP Bind Credentials</bindInfo>
 	<anonBind>Anonymous Bind</anonBind>
 	<bindDN>Bind DN</bindDN>
 	<bindPW>Bind Password</bindPW>

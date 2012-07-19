@@ -251,7 +251,7 @@ ConfigView.prototype.getData = function()
         LDAP_ATTR_UID      : $F('ldap.uidAttr'),                
 		LDAP_DN_BASE       : $F('ldap.baseDN'),
 		LDAP_DN_USERS      : $F('ldap.usersDN'),
-		LDAP_ANON_BIND     : $F('ldap.anonBind').checked,
+		LDAP_ANON_BIND     : $('ldap.anonBind').checked,
 		LDAP_DN_BIND       : $F('ldap.bindDN'),
 		LDAP_PW_BIND       : $F('ldap.bindPW'),
 		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
