@@ -33,6 +33,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class LDAPUtil
 		}
 	}
 
-	public static String findUserDN(String url, String uidFilter, String userDN, String bindDN, String bindPW) throws NamingException
+	public static String findUserDN(String url, String uidFilter, String userDN, SearchControls scope, String bindDN, String bindPW) throws NamingException
 	{
 		DirContext connection = null ; 
 		try 
@@ -89,7 +90,7 @@ public class LDAPUtil
 
 		try
 		{
-			return findUserDN(connection, uidFilter, userDN) ; 
+			return findUserDN(connection, scope, uidFilter, userDN) ; 
 		}
 		catch(NamingException e)
 		{
@@ -99,7 +100,7 @@ public class LDAPUtil
 		}
 	}
 
-	public static String findUserDN(String url, String uidFilter, String userDN) throws NamingException
+	public static String findUserDN(String url, String uidFilter, String userDN, SearchControls scope) throws NamingException
 	{
 		try
 		{
@@ -107,7 +108,7 @@ public class LDAPUtil
 			DirContext dc = new InitialDirContext(env);
 			DirContext connection = (DirContext) dc.lookup(url);
 
-			return findUserDN(connection, uidFilter, userDN) ; 
+			return findUserDN(connection, scope, uidFilter, userDN) ; 
 		}
 		catch(NamingException e)
 		{
@@ -115,11 +116,11 @@ public class LDAPUtil
 		}
 	}
 
-	private static String findUserDN(DirContext connection, String uidFilter, String userDN) throws NamingException
+	private static String findUserDN(DirContext connection, SearchControls scope, String uidFilter, String userDN) throws NamingException
 	{
 		try
 		{
-			NamingEnumeration<SearchResult> results = connection.search(userDN, uidFilter, null);
+			NamingEnumeration<SearchResult> results = connection.search(userDN, uidFilter, scope);
 
 
 			String usersRealDN = "";

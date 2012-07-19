@@ -132,6 +132,7 @@
 	<distNames>Distinguished names</distNames>
 	<baseDN>Base</baseDN>
 	<usersDN>Users</usersDN>
+	<subtree>Search Subtree</subtree>
 	<bindInfo>LDAP Bind Credentials</bindInfo>
 	<anonBind>Anonymous Bind</anonBind>
 	<bindDN>Bind DN</bindDN>
@@ -346,6 +347,9 @@
 		</tip>
 		<tip id="ldap.bindPW">
 			Password to use for initial connection to LDAP.
+		</tip>
+		<tip id="ldap.subtree">
+			When set, searches for users in the entire subtree rooted at the location specified by the distinguished names.
 		</tip>
 	</tips>
 	<data.dir>Data directory:</data.dir>

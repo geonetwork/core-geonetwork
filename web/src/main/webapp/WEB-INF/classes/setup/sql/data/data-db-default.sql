@@ -8116,6 +8116,7 @@ INSERT INTO Settings VALUES (122,120,'contactId',NULL);
 INSERT INTO Settings VALUES (131,120,'metadataPublic','false');
 INSERT INTO Settings VALUES (140,89,'bindDn','cn=fake.name,ou=people,dc=fao,dc=org');
 INSERT INTO Settings VALUES (141,89,'bindPw','fake_password');
+INSERT INTO Settings VALUES (150,80,'subtree','false');
 INSERT INTO Settings VALUES (170,1,'shib',NULL);
 INSERT INTO Settings VALUES (171,170,'use','false');
 INSERT INTO Settings VALUES (172,170,'path','/geonetwork/srv/en/shib.user.login');

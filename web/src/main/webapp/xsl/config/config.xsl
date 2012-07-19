@@ -609,6 +609,11 @@
 				<td class="padded"><xsl:value-of select="/root/gui/config/usersDN"/></td>
 				<td class="padded"><input id="ldap.usersDN" class="content" type="text" value="" size="20"/></td>
 			</tr>
+			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/subtree"/></td>
+				<td class="padded"><input id="ldap.subtree" class="content" type="checkbox" value="false" size="20"/></td>
+			</tr>
 		</table>
 	</xsl:template>
 	

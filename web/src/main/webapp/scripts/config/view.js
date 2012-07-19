@@ -154,6 +154,7 @@ ConfigView.prototype.setData = function(data)
     $('ldap.uidAttr')     .value = data['LDAP_ATTR_UID'];
 	$('ldap.baseDN')      .value = data['LDAP_DN_BASE'];
 	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
+	$('ldap.subtree')   .checked = data['LDAP_SUBTREE'] == 'true' ;
 	$('ldap.anonBind')  .checked = data['LDAP_ANON_BIND'] == 'true' ; 
 	$('ldap.bindDN')      .value = data['LDAP_DN_BIND'];
 	$('ldap.bindPW')      .value = data['LDAP_PW_BIND'];
@@ -251,6 +252,7 @@ ConfigView.prototype.getData = function()
         LDAP_ATTR_UID      : $F('ldap.uidAttr'),                
 		LDAP_DN_BASE       : $F('ldap.baseDN'),
 		LDAP_DN_USERS      : $F('ldap.usersDN'),
+		LDAP_SUBTREE       : $('ldap.subtree').checked,
 		LDAP_ANON_BIND     : $('ldap.anonBind').checked,
 		LDAP_DN_BIND       : $F('ldap.bindDN'),
 		LDAP_PW_BIND       : $F('ldap.bindPW'),
