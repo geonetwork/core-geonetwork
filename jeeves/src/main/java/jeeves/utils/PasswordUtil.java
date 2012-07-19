@@ -94,13 +94,23 @@ public class PasswordUtil {
 	 * 
 	 * @param text	password to digest
 	 * @return	the hexadecimal encoded string
+	 * @deprecated
 	 */
-	public static String unsaltedScramble(String text)
+	private static String unsaltedScramble(String text)
 	{
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1") ;
 			md.update(text.getBytes("UTF-8"));
-			return PasswordUtil.getHex(md.digest());
+			byte[] raw = md.digest();
+			if (raw == null) {
+				return null;
+			}
+			final StringBuilder hex = new StringBuilder(2 * raw.length);
+			for (final byte b : raw) {
+				hex.append("0123456789abcdef".charAt((b & 0xF0) >> 4)).append(
+						"0123456789abcdef".charAt((b & 0x0F)));
+			}
+			return hex.toString();
 		}
 		catch (UnsupportedEncodingException e) { return null; }
 		catch (NoSuchAlgorithmException e)     { return null; }
@@ -111,8 +121,9 @@ public class PasswordUtil {
 	 * 
 	 * @param text
 	 * @return	the hexadecimal encoded string with missing leading 0
+	 *  @deprecated
 	 */
-	public static String oldScramble(String text)
+	private static String oldScramble(String text)
 	{
 		try
 		{
@@ -130,25 +141,6 @@ public class PasswordUtil {
 		catch (UnsupportedEncodingException e) { return null; }
 		catch (NoSuchAlgorithmException e)     { return null; }
 	}
-	/**
-	 * Convert byte array in hexadecimal encoded string
-	 * 
-	 * @param raw
-	 * @return the hexadecimal encoded string
-	 */
-	private static String getHex(byte[] raw) {
-		if (raw == null) {
-			return null;
-		}
-		final StringBuilder hex = new StringBuilder(2 * raw.length);
-		for (final byte b : raw) {
-			hex.append(PasswordUtil.HEXES.charAt((b & 0xF0) >> 4)).append(
-					PasswordUtil.HEXES.charAt((b & 0x0F)));
-		}
-		return hex.toString();
-	}
-	//---------------------------------------------------------------------------
-	private static final String HEXES = "0123456789abcdef";
 	/**
 	 * Obtain the pasword encoder from the spring application context.
 	 * @param servletContext 
