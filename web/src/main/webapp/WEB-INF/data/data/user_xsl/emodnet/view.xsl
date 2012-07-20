@@ -25,133 +25,129 @@
 			</head>
 			<body>
 
-				<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/reset.css" />
-				<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/main.css" />
-				<link rel="stylesheet" type="text/css"
-					href="{/root/resourceUrl}/css/emodnet.css" />
+				<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/reset.css" />
+				<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/emodnet.css" />
+				<div class="tpl-emodnet">
+					<div class="ui-layout-content">
+						<table class="print_table" border="0" cellpadding="0"
+							cellspacing="0">
+							<tbody>
+								<tr valign="top">
+									<td class="print_ttl">Metadata information</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:fileIdentifier|root/gmd:MD_Metadata/gmd:language" />
 
-				<div class="ui-layout-content">
-					<table class="print_table" border="0" cellpadding="0"
-						cellspacing="0">
-						<tbody>
-							<tr valign="top">
-								<td class="print_ttl">Metadata information</td>
-								<td class="print_data">
-								</td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:fileIdentifier|root/gmd:MD_Metadata/gmd:language" />
-
-							<tr valign="top">
-								<td class="print_ttl">Identification</td>
-								<td class="print_data">
-								</td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title|
+								<tr valign="top">
+									<td class="print_ttl">Identification</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title|
 											/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier|
 											/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName[1]" />
 
-							<tr valign="top">
-								<td class="print_ttl">What ?</td>
-								<td class="print_data">
-								</td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType" />
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution" />
+								<tr valign="top">
+									<td class="print_ttl">What ?</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType" />
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution" />
 
-							<tr valign="top">
-								<td class="print_ttl">Abstract</td>
-								<td class="print_data">
-								</td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|
+								<tr valign="top">
+									<td class="print_ttl">Abstract</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|
 									/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date" />
 
-							<tr valign="top">
-								<td class="print_ttl_h1">Description of processed data sources</td>
-								<td class="print_data"></td>
-							</tr>
-							<tr valign="top">
-								<td class="print_ttl_h1">Description of data processing</td>
-								<td class="print_data"></td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata//gmd:statement" />
+								<tr valign="top">
+									<td class="print_ttl_h1">Description of processed data sources</td>
+									<td class="print_data"></td>
+								</tr>
+								<tr valign="top">
+									<td class="print_ttl_h1">Description of data processing</td>
+									<td class="print_data"></td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata//gmd:statement" />
 
-							<tr valign="top">
-								<td class="print_ttl_h1">Quality / Accuracy / Calibration</td>
-								<td class="print_data"></td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata//gmd:resourceConstraints//gmd:useLimitation" />
+								<tr valign="top">
+									<td class="print_ttl_h1">Quality / Accuracy / Calibration</td>
+									<td class="print_data"></td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata//gmd:resourceConstraints//gmd:useLimitation" />
 
-							<tr valign="top">
-								<td class="print_ttl_h1">Intellectual property</td>
-								<td class="print_data"></td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata//gmd:accessConstraints" />
+								<tr valign="top">
+									<td class="print_ttl_h1">Intellectual property</td>
+									<td class="print_data"></td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata//gmd:accessConstraints" />
 
-							<tr valign="top">
-								<td class="print_ttl">Where ?</td>
-								<td class="print_data">
-								</td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata//gmd:EX_GeographicBoundingBox" />
+								<tr valign="top">
+									<td class="print_ttl">Where ?</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata//gmd:EX_GeographicBoundingBox" />
 
-							<tr valign="top">
-								<td class="print_ttl_h1">Coordinate Reference System</td>
-								<td class="print_data"></td>
-							</tr>
+								<tr valign="top">
+									<td class="print_ttl_h1">Coordinate Reference System</td>
+									<td class="print_data"></td>
+								</tr>
 
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata//gmd:referenceSystemInfo//gmd:RS_Identifier" />
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata//gmd:referenceSystemInfo//gmd:RS_Identifier" />
 
-							<tr valign="top">
-								<td class="print_ttl">When ?</td>
-								<td class="print_data">
-								</td>
-							</tr>
+								<tr valign="top">
+									<td class="print_ttl">When ?</td>
+									<td class="print_data">
+									</td>
+								</tr>
 
-							<tr valign="top">
-								<td class="print_ttl">Who ?</td>
-								<td class="print_data">
-								</td>
-							</tr>
+								<tr valign="top">
+									<td class="print_ttl">Who ?</td>
+									<td class="print_data">
+									</td>
+								</tr>
 
-							<tr valign="top">
-								<td class="print_ttl">Where to find ?</td>
-								<td class="print_data">
-								</td>
-							</tr>
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata//gmd:transferOptions//gmd:linkage" />
-								
-							<tr valign="top">
-								<td class="print_ttl_h1">Data distributor center</td>
-								<td class="print_data"></td>
-							</tr>
+								<tr valign="top">
+									<td class="print_ttl">Where to find ?</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata//gmd:transferOptions//gmd:linkage" />
 
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:distributionInfo//gmd:distributorContact//gmd:organisationName" />
-								
-							<tr valign="top">
-								<td class="print_ttl_h1">Collating center</td>
-								<td class="print_data"></td>
-							</tr>
+								<tr valign="top">
+									<td class="print_ttl_h1">Data distributor center</td>
+									<td class="print_data"></td>
+								</tr>
 
-							<xsl:apply-templates mode="iso19139"
-								select="/root/gmd:MD_Metadata/gmd:identificationInfo//gmd:pointOfContact" />
-							
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:distributionInfo//gmd:distributorContact//gmd:organisationName" />
 
-						</tbody>
-					</table>
+								<tr valign="top">
+									<td class="print_ttl_h1">Collating center</td>
+									<td class="print_data"></td>
+								</tr>
 
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo//gmd:pointOfContact" />
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</body>
 		</html>

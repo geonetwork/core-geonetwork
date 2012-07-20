@@ -88,6 +88,28 @@ cat.app = function() {
 		}
 	}
 	
+	function showMD(uuid, record, url, maximized, width, height) {
+		
+		var bd = Ext.getBody();
+		var style = urlParameters.style || 'sextant';
+		
+		var win = new cat.view.ViewWindow({
+            serviceUrl: style == 'sextant' ? this.services.mdShow + '?uuid=' + escape(uuid) : null,
+            formatterServiceUrl: this.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style,
+            lang: this.lang,
+            currTab: GeoNetwork.defaultViewMode || 'simple',
+            printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+            catalogue: this,
+            maximized: maximized || false,
+            metadataUuid: uuid,
+            record: record,
+            viewMode: style, 
+            resultsView: this.resultsView
+            });
+        win.show(this.resultsView);
+        win.alignTo(bd, 'tr-tr');
+	}
+	
 	function edit(metadataId, create, group, child) {
 
 		if (!this.editorWindow) {
@@ -123,12 +145,9 @@ cat.app = function() {
 						closeAction : 'hide',
 						collapsible : true,
 						collapsed : false,
-						// Unsuported. Needs some kind of component to store
-						// minimized windows
 						maximizable : false,
 						maximized : true,
 						resizable : true,
-						// constrain: true,
 						width : 980,
 						height : 800
 					});
@@ -446,7 +465,8 @@ cat.app = function() {
 				metadataStore : GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore()	: GeoNetwork.data.MetadataResultsStore(), metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
 				summaryStore : GeoNetwork.data.MetadataSummaryStore(),
 				editMode : 2,
-				metadataEditFn: edit
+				metadataEditFn: edit,
+				metadataShowFn: showMD
 			});
 
 			// Extra stuffs

@@ -26,80 +26,52 @@
 			</head>
 			<body>
 			
-			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/reset.css"/>
+			<!-- <link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/reset.css"/>
 			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/jquery-ui-1.8.2.custom.css"/>
 			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/main.css"/>
-			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/default.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/default.css"/> -->
 			
-			<div class="ui-layout-content">
-				<div>
-					<div class="result-metadata-modal-tabs">
-						<ul>
-							<li>
-								<h4>
-									<a href="#result-metadata-modal-tab-1">Essentielles</a>
-								</h4>
-							</li>
-							<li>
-								<h4>
-									<a href="#result-metadata-modal-tab-2">Complete</a>
-								</h4>
-							</li>
-						</ul>
-						<div id="result-metadata-modal-tab-1">
-							<div class="toolbar ui-helper-clearfix">
-								<a class="button button-icon-solo ui-state-default" title="PDF"
-									href="#">
-									<span class="icon file-pdf">
-									</span>
-									PDF
-								</a>
-								<a class="button button-icon-solo ui-state-default" title="ISO19139"
-									href="#">
-									<span class="icon file-xml">
-									</span>
-									ISO19139
-								</a>
-							</div>
-							<h5>Description</h5>
-							<div class="result-metadata-modal-content">
-								<xsl:apply-templates mode="iso19139" 
-									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox" />
-								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
-							</div>
-							
-							<h5>Conditions d'accès</h5>
-							<div class="result-metadata-modal-content">
-							
-								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:distributionInfo" />
-								<hr/>
-								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints" />
-									<p></p>
-							</div>
-							
-							<h5>Contact</h5>
-							<div class="result-metadata-modal-content">
-								<p></p>
-								<ul>
+			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/reset.css"/>
+			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
+			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/main.css"/>
+			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/default.css"/>
+			<div class="tpl-sextant">
+				<div class="ui-layout-content">
+					<div>
+						<div class="result-metadata-modal-tabs">
+							<div id="result-metadata-modal-tab-1">
+								<h5>Description</h5>
+								<div class="result-metadata-modal-content">
+									<xsl:apply-templates mode="iso19139" 
+										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox" />
 									<xsl:apply-templates mode="iso19139"
-										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact" />
-								</ul>
+										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
+								</div>
+								
+								<h5>Conditions d'accès</h5>
+								<div class="result-metadata-modal-content">
+								
+									<xsl:apply-templates mode="iso19139"
+										select="/root/gmd:MD_Metadata/gmd:distributionInfo" />
+									<hr/>
+									<xsl:apply-templates mode="iso19139"
+										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints" />
+										<p></p>
+								</div>
+								
+								<h5>Contact</h5>
+								<div class="result-metadata-modal-content">
+									<p></p>
+									<ul>
+										<xsl:apply-templates mode="iso19139"
+											select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact" />
+									</ul>
+								</div>
 							</div>
-						</div>
-						<div id="result-metadata-modal-tab-2">
-							<xsl:apply-templates mode="iso19139"
-										select="/root/gmd:MD_Metadata/*" />
 						</div>
 					</div>
 				</div>
 			</div>
-			<script type="text/javascript" src="{/root/resourceUrl}/js/jquery-1.4.2.min.js"></script>
-			<script type="text/javascript" src="{/root/resourceUrl}/js/jquery-ui-1.8.2.all.min.js"></script>
-			<script type="text/javascript" src="{/root/resourceUrl}/js/main.js"></script>
-			
 			</body>
 		</html>
 	</xsl:template>
