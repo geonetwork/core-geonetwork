@@ -29,6 +29,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ class LDAPContext
         defGroup      = sm.getValue      (prefix +"/defaultGroup");
 		baseDN        = sm.getValue      (prefix +"/distinguishedNames/base");
 		usersDN       = sm.getValue      (prefix +"/distinguishedNames/users");
+		subtree       = sm.getValueAsBool(prefix +"/distinguishedNames/subtree") ; 
         anonBind      = sm.getValueAsBool(prefix +"/anonBind") ; 
         bindDN        = sm.getValue      (prefix +"/bind/bindDn") ; 
         bindPW        = sm.getValue      (prefix +"/bind/bindPw") ; 
@@ -63,6 +65,17 @@ class LDAPContext
         uidAttr       = sm.getValue      (prefix +"/uidAttr");
         groupAttr     = sm.getValue      (prefix +"/userAttribs/group");
         
+
+		// Configure a SearchControls object consistent with the configuration settings.
+		scope = new SearchControls() ; 
+		if (subtree) 
+		{
+			scope.setSearchScope(SearchControls.SUBTREE_SCOPE) ; 
+		}
+		else
+		{
+			scope.setSearchScope(SearchControls.ONELEVEL_SCOPE) ; 
+		}
 
 		if (profileAttr.trim().length() == 0)
 			profileAttr = null;
@@ -101,13 +114,13 @@ class LDAPContext
 				if (anonBind) { 
 					// if the directory allows anonymous searches, don't bother
 					// providing credentials.
-					path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN);
+					path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN, scope);
 				}
 				else
 				{
 					// search the directory using the credentials provided
 					// in the configuration.
-					path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN, bindDN, bindPW) ; 
+					path = LDAPUtil.findUserDN(getUrl(), uidFilter, usersBaseDN, scope, bindDN, bindPW) ; 
 				}
             } catch (NamingException ex) {
                 Log.warning(Geonet.LDAP, ex.getMessage());
@@ -208,6 +221,7 @@ class LDAPContext
 
 	private boolean use;
 	private boolean anonBind ; 
+	private boolean subtree ; 
 	private String  host;
 	private Integer port;
 	private String  defProfile;
@@ -221,7 +235,7 @@ class LDAPContext
     private String  uidAttr;
     private String  groupAttr;
     private String  defGroup;
-
+	private SearchControls scope ; 
 
 	private HashSet<String> profiles = new HashSet<String>();
 }
