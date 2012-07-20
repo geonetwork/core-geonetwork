@@ -122,7 +122,6 @@
 			
 				<!-- status button -->
 				<xsl:if test="java:isAccessibleService('metadata.status.form')">
-				<xsl:if test="java:isAccessibleService('metadata.status.form')">
 					<xsl:variable name="statusTitle" select="concat(/root/gui/strings/status,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.status.form?id={$metadata/geonet:info/id}','{$statusTitle}',300)"><xsl:value-of select="/root/gui/strings/status"/></button>
 				</xsl:if>
