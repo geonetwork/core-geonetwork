@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="geonet exslt">
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+	xmlns:geonet="http://www.fao.org/geonetwork" 
+	xmlns:exslt="http://exslt.org/common" 
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="geonet exslt java">
 	
 	<xsl:include href="utils.xsl"/>
 	<xsl:include href="text-utilities.xsl"/>
@@ -126,50 +131,48 @@
 						</button>
 		
 						<div id="oAcOsEle" name="oAcOsEle" class="oAcEle" style="display:none;" onClick="oActions('oAcOs');">
-							<xsl:if test="/root/gui/services/service[starts-with(@name,'metadata.batch')]">
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.delete'">
-									<button onclick="batchOperation('metadata.batch.delete','{/root/gui/strings/batchDeleteTitle}',600,
-									    replaceStringParams('{/root/gui/strings/confirmBatchDelete}',[$('nbselected').innerHTML]))">
-										<xsl:value-of select="/root/gui/strings/delete"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.newowner'">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.newowner.form','{/root/gui/strings/batchNewOwnerTitle}',800)">
-										<xsl:value-of select="/root/gui/strings/newOwner"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.categories' and /root/gui/config/category">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.category.form','{/root/gui/strings/batchUpdateCategoriesTitle}',300, null, 400)">
-										<xsl:value-of select="/root/gui/strings/updateCategories"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.privileges'">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.admin.form','{/root/gui/strings/batchUpdatePrivilegesTitle}',800, null, 400)">
-										<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.update.status'">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.status.form','{/root/gui/strings/batchUpdateStatusTitle}',800, null)">
-										<xsl:value-of select="/root/gui/strings/updateStatus"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.version' and /root/gui/svnmanager/enabled='true'">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.version','{/root/gui/strings/batchStartVersionTitle}',600, null)">
-										<xsl:value-of select="/root/gui/strings/startVersion"/>
-									</button>
-								</xsl:if>
-								<xsl:if test="/root/gui/services/service/@name='metadata.batch.extract.subtemplates'">
-								<!--xsl:text>&#160;</xsl:text-->
-									<button onclick="batchOperation('metadata.batch.extract.subtemplates.form','{/root/gui/strings/batchExtractSubtemplatesTitle}',800, null)">
-										<xsl:value-of select="/root/gui/strings/extractSubtemplates"/>
-									</button>
-								</xsl:if>
-							</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.delete')">
+							<button onclick="batchOperation('metadata.batch.delete','{/root/gui/strings/batchDeleteTitle}',600,
+							    replaceStringParams('{/root/gui/strings/confirmBatchDelete}',[$('nbselected').innerHTML]))">
+								<xsl:value-of select="/root/gui/strings/delete"/>
+							</button>
+						</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.newowner')">
+						<!--xsl:text>&#160;</xsl:text-->
+							<button onclick="batchOperation('metadata.batch.newowner.form','{/root/gui/strings/batchNewOwnerTitle}',800)">
+								<xsl:value-of select="/root/gui/strings/newOwner"/>
+							</button>
+						</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.update.categories') and /root/gui/config/category">
+						<!--xsl:text>&#160;</xsl:text-->
+							<button onclick="batchOperation('metadata.batch.category.form','{/root/gui/strings/batchUpdateCategoriesTitle}',300, null, 400)">
+								<xsl:value-of select="/root/gui/strings/updateCategories"/>
+							</button>
+						</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.update.privileges')">
+						<!--xsl:text>&#160;</xsl:text-->
+							<button onclick="batchOperation('metadata.batch.admin.form','{/root/gui/strings/batchUpdatePrivilegesTitle}',800, null, 400)">
+								<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
+							</button>
+						</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.update.status')">
+						<!--xsl:text>&#160;</xsl:text-->
+							<button onclick="batchOperation('metadata.batch.status.form','{/root/gui/strings/batchUpdateStatusTitle}',800, null)">
+								<xsl:value-of select="/root/gui/strings/updateStatus"/>
+							</button>
+						</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.version') and /root/gui/svnmanager/enabled='true'">
+						<!--xsl:text>&#160;</xsl:text-->
+							<button onclick="batchOperation('metadata.batch.version','{/root/gui/strings/batchStartVersionTitle}',600, null)">
+								<xsl:value-of select="/root/gui/strings/startVersion"/>
+							</button>
+						</xsl:if>
+						<xsl:if test="java:isAccessibleService('metadata.batch.extract.subtemplates')">
+						<!--xsl:text>&#160;</xsl:text-->
+							<button onclick="batchOperation('metadata.batch.extract.subtemplates.form','{/root/gui/strings/batchExtractSubtemplatesTitle}',800, null)">
+								<xsl:value-of select="/root/gui/strings/extractSubtemplates"/>
+							</button>
+						</xsl:if>
 							<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
 							<button onclick="runPdfSearch(true);" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"><xsl:value-of select="/root/gui/strings/printSelection"/></button>
 							<button onclick="load('{/root/gui/locService}/mef.export?uuid=&amp;format=full&amp;version=2')"><xsl:value-of select="/root/gui/strings/export"/></button>

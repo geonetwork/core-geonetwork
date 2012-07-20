@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="#all">
 
 	<xsl:variable name="modal" select="count(/root/gui/config/search/use-modal-box-for-banner-functions)"/>
 
@@ -26,7 +29,7 @@
 					<a class="banner" href="{/root/gui/locService}/home"><xsl:value-of select="/root/gui/strings/home"/></a>
 					|
 					<xsl:if test="$modal">
-						<xsl:if test="/root/gui/services/service/@name='metadata.add.form'">
+						<xsl:if test="java:isAccessibleService('metadata.add.form')">
 							<a class="banner" href="javascript:void(0)" onclick="doBannerButton('{/root/gui/locService}/metadata.create.form','{/root/gui/strings/newMetadata}',{$modal}, 600);"><xsl:value-of select="/root/gui/strings/newMetadata"/></a>
 						|
 						</xsl:if>
