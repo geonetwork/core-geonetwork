@@ -56,6 +56,6 @@ public class Resource extends AbstractFormatService {
             throw new BadParameterEx(Params.FNAME, fileName+" does not identify a file");
         }
         
-        return BinaryFile.encode(200, desiredFile.getAbsolutePath(), fileName, true);
+        return BinaryFile.encode(200, desiredFile.getAbsolutePath(), fileName, false);
     }
 }
