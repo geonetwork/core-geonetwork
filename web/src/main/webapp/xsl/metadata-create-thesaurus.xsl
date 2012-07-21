@@ -3,7 +3,8 @@
 	
 	<xsl:import href="modal.xsl"/>
 
-	
+	<xsl:key name="schemaName" match="/root/gui/schemas/*/codelists/codelist[@name='gmd:MD_KeywordTypeCode']/entry" use="." />
+
 	<!--
 	page content
 	-->
@@ -21,7 +22,7 @@
 									<td class="padded" align="left"><xsl:value-of select="/root/gui/strings/thesaurusType"/></td>
 									<td class="padded" align="left">
 										<select class="md" name="type">
-											<xsl:for-each select="/root/gui/schemas/iso19139/codelists/codelist[@name='gmd:MD_KeywordTypeCode']/entry">
+											<xsl:for-each select="/root/gui/schemas/*/codelists/codelist[@name='gmd:MD_KeywordTypeCode']/entry[generate-id()=generate-id(key('schemaName',.)[1])]">
 												<option value="{code}">
 													<xsl:value-of select="concat(label,':: ',description)"/>
 												</option>
