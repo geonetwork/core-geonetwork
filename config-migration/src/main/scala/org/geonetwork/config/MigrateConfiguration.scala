@@ -37,6 +37,8 @@ class MigrateConfiguration {
     <sec:http pattern="/images/**" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/htmlcache/**" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
+      <sec:http pattern="/pdf/**" create-session="stateless" security="none"></sec:http>
+      <sec:http pattern="/loc/**" create-session="stateless" security="none"></sec:http>
 
     <sec:http use-expressions="true" realm="Geonetwork">
         <sec:form-login password-parameter="password" username-parameter="username" login-page="/srv/eng/home"/>
