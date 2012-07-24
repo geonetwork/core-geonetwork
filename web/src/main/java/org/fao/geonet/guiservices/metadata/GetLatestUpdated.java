@@ -84,7 +84,7 @@ public class GetLatestUpdated implements Service
 
 		 Element _request = new Element(Jeeves.Elem.REQUEST);
 		_request.addContent(new Element("query").setText(""));
-		_request.addContent(new Element("sortBy").setText("dateStamp"));
+		_request.addContent(new Element("sortBy").setText("changeDate"));
 		_request.addContent(new Element("from").setText("1"));
 		_request.addContent(new Element("to")  .setText(""));
 

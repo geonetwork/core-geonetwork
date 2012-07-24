@@ -419,7 +419,7 @@
 		</xsl:for-each>
 
 		<xsl:for-each select="gmd:dateStamp/gco:DateTime">
-			<Field name="dateStamp" string="{string(.)}" store="true" index="true"/>
+			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Reference system info === -->		
