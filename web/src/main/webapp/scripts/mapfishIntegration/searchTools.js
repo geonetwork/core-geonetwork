@@ -273,6 +273,7 @@ var searchTools = {
         relevance: {name:'relevance', order: 'DESC'},
         popularity: {name: 'popularity', order: 'DESC'},
         revisionDate: {name: '_revisionDate', order: 'DESC'},
+        dateStamp: {name: 'dateStamp', order: 'DESC'},
         title: {name: '_title', order: 'A'}
     },
 

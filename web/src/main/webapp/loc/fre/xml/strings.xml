@@ -1091,8 +1091,7 @@ Votre équipe geocat.ch</msg>
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sort>Trier</sort>
 	<sortBy js="true">Trier par</sortBy>
-	<sortByType id="revisionDate">Mise à jour des métadonnées</sortByType>
-	<sortByType id="changeDate">Date de mise à jour</sortByType>
+	<sortByType id="dateStamp">Mise à jour des métadonnées</sortByType>
 	<sortByType id="popularity">Popularité</sortByType>
 	<sortByType id="relevance">Pertinence</sortByType>
 	<sortByType id="title">Titre</sortByType>

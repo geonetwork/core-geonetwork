@@ -1115,7 +1115,7 @@
 	<siteId>Site ID</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
 	<sortBy js="true">Sort by</sortBy>
-	<sortByType id="revisionDate">Metadata Revision</sortByType>
+	<sortByType id="dateStamp">Metadata Revision</sortByType>
 	<sortByType id="popularity">Popularity</sortByType>
 	<sortByType id="relevance">Relevance</sortByType>
 	<sortByType id="title">Title</sortByType>

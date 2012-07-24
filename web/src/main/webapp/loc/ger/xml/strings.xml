@@ -1067,7 +1067,7 @@ Ihr geocat.ch-Team</msg>
 	<siteId>Seiten ID</siteId>
 	<sizeBytes>Grösse (Bytes)</sizeBytes>
 	<sortBy js="true">Geordnet nach</sortBy>
-	<sortByType id="revisionDate">Aktualisierung Metadaten</sortByType>
+	<sortByType id="dateStamp">Aktualisierung Metadaten</sortByType>
 	<sortByType id="popularity">Popularität</sortByType>
 	<sortByType id="relevance">Relevanz</sortByType>
 	<sortByType id="title">Title</sortByType>

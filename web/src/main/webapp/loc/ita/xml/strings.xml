@@ -1120,7 +1120,7 @@
 	<siteId>ID del sito</siteId>
 	<sizeBytes>Dimensione (bytes)</sizeBytes>
 	<sortBy>Ordina per</sortBy>
-	<sortByType id="revisionDate">Data ultima modifica</sortByType>
+	<sortByType id="dateStamp">Data ultima modifica</sortByType>
 	<sortByType id="popularity">Popolarità</sortByType>
 	<sortByType id="relevance">Rilevanza</sortByType>
 	<sortByType id="title">Titolo</sortByType>
