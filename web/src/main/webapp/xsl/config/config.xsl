@@ -716,6 +716,17 @@
 					<td class="padded"><xsl:call-template name="ldapDistNames"/></td>
 				</tr>
 							
+				<!-- bind credentials -->
+							
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/bindInfo"/></td>
+					<td/>
+				</tr>
+				<tr>
+					<td/>
+					<td class="padded"><xsl:call-template name="ldapBindInfo"/></td>
+				</tr>
+							
 				<!-- user's attributes -->
 							
 				<tr>
@@ -786,9 +797,35 @@
 				<td class="padded"><xsl:value-of select="/root/gui/config/usersDN"/></td>
 				<td class="padded"><input id="ldap.usersDN" class="content" type="text" value="" size="20"/></td>
 			</tr>
+			
+			<tr>
+				<td class="padded"><xsl:value-of select="/root/gui/config/subtree"/></td>
+				<td class="padded"><input id="ldap.subtree" class="content" type="checkbox" value="false" size="20"/></td>
+			</tr>
 		</table>
 	</xsl:template>
 	
+	<!-- ============================================================================================= -->
+	
+	<xsl:template name="ldapBindInfo">
+		<table>
+			<tr>
+				<td class="padded" width="60px"><label for="ldap.anonBind"><xsl:value-of select="/root/gui/config/anonBind"/></label></td>
+				<td class="padded"><input id="ldap.anonBind" class="content" type="checkbox"/></td>
+			</tr>
+			
+			<tr>
+				<td class="padded" width="60px"><label for="ldap.bindDN"><xsl:value-of select="/root/gui/config/bindDN"/></label></td>
+				<td class="padded"><input id="ldap.bindDN" class="content" type="text" value="" size="20"/></td>
+			</tr>
+			
+			<tr>
+				<td class="padded" width="60px"><label for="ldap.bindPW"><xsl:value-of select="/root/gui/config/bindPW"/></label></td>
+				<td class="padded"><input id="ldap.bindPW" class="content" type="password" value="" size="20"/></td>
+			</tr>
+		</table>
+	</xsl:template>
+
 	<!-- ============================================================================================= -->
 	
 	<xsl:template name="ldapUserAttribs">
