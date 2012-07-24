@@ -73,7 +73,7 @@
 		<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 		<xsl:variable name="charset">
 			<xsl:choose>
-				<xsl:when test="gmd:characterEncoding/gmd:MD_CharacterSetCode/@codeListValue">
+				<xsl:when test="normalize-space(gmd:characterEncoding/gmd:MD_CharacterSetCode/@codeListValue) != ''">
 					<xsl:copy-of select="gmd:characterEncoding"/>
 				</xsl:when>
 				<xsl:otherwise>
