@@ -78,7 +78,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<gmd:characterEncoding>
-						<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+						<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
 					</gmd:characterEncoding>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -90,7 +90,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 				  <gmd:languageCode>
-				    <gmd:LanguageCode codeList="#LanguageCode" codeListValue="{gmd:languageCode/gmd:LanguageCode/@codeListValue}">
+				    <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="{gmd:languageCode/gmd:LanguageCode/@codeListValue}">
 				    	<xsl:value-of select="gmd:languageCode/gmd:LanguageCode"/>
 				    </gmd:LanguageCode>
   				</gmd:languageCode>

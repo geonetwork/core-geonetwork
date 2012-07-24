@@ -19,4 +19,4 @@ if [ ! $? -eq 0 ]; then
     exit -1
 fi
 cd ../web
-mvn jetty:run -Penv-dev,widgets-tab $@
+mvn jetty:run -Penv-dev,widgets $@
