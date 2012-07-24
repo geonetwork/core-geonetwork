@@ -2808,7 +2808,7 @@
     <id><xsl:value-of select="geonet:info/id"/></id>
     <uuid><xsl:value-of select="geonet:info/uuid"/></uuid>
     <title>
-      <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
+      <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
     </title>
