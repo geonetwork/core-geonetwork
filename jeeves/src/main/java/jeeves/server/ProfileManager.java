@@ -157,6 +157,9 @@ public class ProfileManager
 			hs.add(profile);
 
 			Element elProfile = htProfiles.get(profile);
+			if (elProfile == null) {
+				return null;
+			}
 
 			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
 
