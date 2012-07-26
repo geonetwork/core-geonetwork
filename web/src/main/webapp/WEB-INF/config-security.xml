@@ -366,13 +366,83 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <sec:intercept-url pattern="/*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
         <sec:intercept-url pattern="/**" access="denyAll"></sec:intercept-url>
     </sec:http>
+    
+    
+    
+    <!-- GeoNetwork user database configuration-->
     <sec:authentication-manager>
-        <sec:authentication-provider ref="geonetworkAuthenticationProvider"></sec:authentication-provider>
+        <sec:authentication-provider ref="geonetworkAuthenticationProvider"/>
     </sec:authentication-manager>
+    
     <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
     <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
-        <constructor-arg value="SHA-256"></constructor-arg>
-        <constructor-arg value="secret-hash-salt="></constructor-arg>
+        <constructor-arg value="SHA-256"/>
+        <constructor-arg value="secret-hash-salt="/>
     </bean>
+    
     <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider"/>
+    
+    
+    
+    <!-- LDAP configuration-->
+    <sec:authentication-manager>
+        <sec:authentication-provider ref="ldapAuthProvider"/>
+    </sec:authentication-manager>
+    
+    <bean id="contextSource"
+        class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="ldap://localhost:389/dc=ifremer,dc=fr"/>
+        <!-- For non anonymous binding add:
+            <property name="userDn" value="cn=admin,dc=fr"/>
+            <property name="password" value="ldap"/>-->
+    </bean>
+    
+    <bean id="ldapAuthProvider"
+        class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+        <constructor-arg>
+            <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userDnPatterns">
+                    <list><value>uid={0},ou=annuaire</value></list>
+                </property>
+            </bean>
+        </constructor-arg>
+        <property name="userDetailsContextMapper" ref="ldapUserContextMapper" />
+    </bean>
+    
+    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.GeoNetworkLDAPUserDetailsContextMapper">
+        <!-- TODO : here it could be better to have 
+        a map of ldapAttributeKey with attributeName and defaultValue -->
+        <property name="nameAttribute" value="cn" />
+        <property name="surnameAttribute" value="givenName" />
+        <property name="mailAttribute" value="mail" />
+        <property name="organisationAttribute" value="" />
+        <property name="kindAttribute" value="" />
+        <property name="addressAttribute" value="" />
+        <property name="zipAttribute" value="" />
+        <property name="stateAttribute" value="" />
+        <property name="cityAttribute" value="" />
+        <property name="countryAttribute" value="" />
+        
+        <!-- Privileges extraction
+         * current trunk only support one group.
+         * here we support more than one group
+         * and we may support profile/group setup with this proposal http://trac.osgeo.org/geonetwork/wiki/proposals/UserProfileByGroup
+        -->
+        <!-- Attribute defining user profile if not using a privilege pattern -->
+        <property name="profileAttribute" value="" />
+        
+        <!-- Attribute defining group or a combination of group and profile. -->
+        <property name="privilegeAttribute" value="listesiteweb" />
+        <property name="privilegePattern" value="SXT_(.*)_(.*)" />
+        <property name="groupIndexInPattern" value="1"/>
+        <property name="profilIndexInPattern" value="2"/>
+        
+        <property name="defaultPrivileges">
+            <list>
+                <value>SXT_*_Guest</value>
+            </list>
+        </property>
+    </bean>
+    
 </beans>
