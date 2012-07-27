@@ -14,6 +14,7 @@ import jeeves.utils.PasswordUtil;
 
 import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.user.Update;
 import org.jdom.Element;
 
@@ -32,7 +33,7 @@ public class LDAPUtils {
 	 * @param dbms
 	 * @throws Exception 
 	 */
-	static void saveUser(LDAPUser user, Dbms dbms) throws Exception {
+	static void saveUser(LDAPUser user, Dbms dbms, boolean createNonExistingLdapGroup) throws Exception {
 		Element selectRequest = dbms.select("SELECT * FROM Users where username=?", user.getUsername());
 		Element userXml = selectRequest.getChild("record");
 		String id;
@@ -79,11 +80,22 @@ public class LDAPUtils {
 				// Retrieve group id
 				Element groupIdRequest = dbms.select("SELECT id FROM Groups WHERE name = ?", privilege.one());
 				Element groupRecord = groupIdRequest.getChild("record");
-				if (groupRecord != null) {
-					Update.addGroup(dbms, id, groupRecord.getChildText("id"));
+				String groupId;
+				
+				if (groupRecord == null && createNonExistingLdapGroup) {
+					// If LDAP group does not exist in local database, create it
+					Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Groups");
+					groupId = nextIdRequest.getChild("record").getChildText("max");
+					//groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+					String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+					dbms.execute(query, new Integer(groupId), privilege.one());
+					Lib.local.insert(dbms, "Groups", new Integer(groupId), privilege.one());
 				} else {
-					// TODO : If group does not exist, create it
-					
+					groupId = groupRecord.getChildText("id");
+				}
+				
+				if (groupRecord != null || createNonExistingLdapGroup) {
+					Update.addGroup(dbms, id, groupId);
 				}
 			}
 		}

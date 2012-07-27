@@ -52,6 +52,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 	private int groupIndexInPattern;
 	private int profilIndexInPattern;
 	private String[] defaultPrivileges;
+	private boolean createNonExistingLdapGroup = true;
 	
 	private ApplicationContext applicationContext;
 
@@ -124,7 +125,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		Dbms dbms = null;
 		try {
 			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
-			LDAPUtils.saveUser(userDetails, dbms);
+			LDAPUtils.saveUser(userDetails, dbms, createNonExistingLdapGroup);
 		} catch (Exception e) {
 			try {
 				resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
@@ -298,5 +299,13 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 
 	public void setProfileAttribute(String profileAttribute) {
 		this.profileAttribute = profileAttribute;
+	}
+
+	public boolean isCreateNonExistingLdapGroup() {
+		return createNonExistingLdapGroup;
+	}
+
+	public void setCreateNonExistingLdapGroup(boolean createNonExistingLdapGroup) {
+		this.createNonExistingLdapGroup = createNonExistingLdapGroup;
 	}
 }
