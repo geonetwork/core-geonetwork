@@ -1,9 +1,19 @@
 <beans 
 xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd" 
+          xmlns:sec="http://www.springframework.org/schema/security"
+          xmlns:ctx="http://www.springframework.org/schema/context"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns="http://www.springframework.org/schema/beans">
     <!-- <sec:debug/> -->
+    
+    <ctx:property-placeholder location="WEB-INF/config.properties"/>
+    <ctx:property-override location="WEB-INF/config-override.properties"/>
+    
     <sec:http pattern="/apps/**" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/*.html" create-session="stateless" security="none"></sec:http>
@@ -22,6 +32,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <sec:session-management invalid-session-url="/index.html">
             <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="true"></sec:concurrency-control>
         </sec:session-management>
+
         <sec:intercept-url pattern="/srv/*/group.remove" access="hasRole('Administrator')"></sec:intercept-url>
         <sec:intercept-url pattern="/srv/*/group.update" access="hasRole('Administrator')"></sec:intercept-url>
         <sec:intercept-url pattern="/srv/*/category.remove" access="hasRole('Administrator')"></sec:intercept-url>
@@ -369,10 +380,15 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     
     
     
-    <!-- GeoNetwork user database configuration-->
+    <!-- GeoNetwork authentication -->
     <sec:authentication-manager>
         <sec:authentication-provider ref="geonetworkAuthenticationProvider"/>
+        <sec:authentication-provider ref="ldapAuthProvider"/>
     </sec:authentication-manager>
+    
+    
+    
+    <!-- GeoNetwork user database configuration-->
     
     <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
     <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
@@ -385,16 +401,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     
     
     <!-- LDAP configuration-->
-    <sec:authentication-manager>
-        <sec:authentication-provider ref="ldapAuthProvider"/>
-    </sec:authentication-manager>
-    
     <bean id="contextSource"
         class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-        <constructor-arg value="ldap://localhost:389/dc=ifremer,dc=fr"/>
-        <!-- For non anonymous binding add:
-            <property name="userDn" value="cn=admin,dc=fr"/>
-            <property name="password" value="ldap"/>-->
+        <constructor-arg value="${ldap.base.provider.url}/${ldap.base.dn}"/>
+        <!-- For non anonymous binding -->
+        <property name="userDn" value="${ldap.security.principal}"/>
+        <property name="password" value="${ldap.security.credentials}"/>
     </bean>
     
     <bean id="ldapAuthProvider"
@@ -403,7 +415,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
             <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
                 <constructor-arg ref="contextSource"/>
                 <property name="userDnPatterns">
-                    <list><value>uid={0},ou=annuaire</value></list>
+                    <list><value>${ldap.base.dn.pattern}</value></list>
                 </property>
             </bean>
         </constructor-arg>
@@ -411,40 +423,20 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     </bean>
     
     <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.GeoNetworkLDAPUserDetailsContextMapper">
-        <!-- TODO : here it could be better to have 
-        a map of ldapAttributeKey with attributeName and defaultValue -->
-        <property name="nameAttribute" value="cn" />
-        <property name="surnameAttribute" value="givenName" />
-        <property name="mailAttribute" value="mail" />
-        <property name="organisationAttribute" value="employeeNumber" />
-        <property name="kindAttribute" value="employeeNumber" />
-        <property name="addressAttribute" value="employeeNumber" />
-        <property name="zipAttribute" value="uidNumber" />
-        <property name="stateAttribute" value="uidNumber" />
-        <property name="cityAttribute" value="uidNumber" />
-        <property name="countryAttribute" value="uidNumber" />
+        <property name="mapping">
+            <map/>
+         </property>
         
         <!-- Privileges extraction
          * current trunk only support one group.
          * here we support more than one group
          * and we may support profile/group setup with this proposal http://trac.osgeo.org/geonetwork/wiki/proposals/UserProfileByGroup
         -->
-        <!-- Attribute defining user profile if not using a privilege pattern -->
-        <property name="profileAttribute" value="" />
-        
-        <!-- Attribute defining group or a combination of group and profile. -->
-        <property name="privilegeAttribute" value="listesiteweb" />
         <property name="privilegePattern" value="SXT_(.*)_(.*)" />
         <property name="groupIndexInPattern" value="1"/>
         <property name="profilIndexInPattern" value="2"/>
         
         <property name="createNonExistingLdapGroup" value="true" />
-        
-        <property name="defaultPrivileges">
-            <list>
-                <value>SXT_*_Guest</value>
-            </list>
-        </property>
     </bean>
     
 </beans>

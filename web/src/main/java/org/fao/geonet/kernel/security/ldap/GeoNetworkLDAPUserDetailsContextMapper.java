@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
@@ -28,30 +26,19 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
  * 
  * Create the GeoNetworkUser in local database on first login.
  * 
- * TODO : update group and profile information after login
  * TODO : add LDAP/DB synchronisation task
  * 
  * @author francois
  */
 public class GeoNetworkLDAPUserDetailsContextMapper implements
 		UserDetailsContextMapper, ApplicationContextAware {
-
-	private String nameAttribute;
-	private String surnameAttribute;
-	private String mailAttribute;
-	private String kindAttribute;
-	private String organisationAttribute;
-	private String countryAttribute;
-	private String zipAttribute;
-	private String stateAttribute;
-	private String cityAttribute;
-	private String addressAttribute;
-	private String profileAttribute;
-	private String privilegeAttribute;
+	
+	Map<String, String[]> mapping;
+	
 	private String privilegePattern;
 	private int groupIndexInPattern;
 	private int profilIndexInPattern;
-	private String[] defaultPrivileges;
+	
 	private boolean createNonExistingLdapGroup = true;
 	
 	private ApplicationContext applicationContext;
@@ -62,7 +49,6 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 	@Override
 	public UserDetails mapUserFromContext(DirContextOperations userCtx,
 			String username, Collection<? extends GrantedAuthority> authorities) {
-
 		ResourceManager resourceManager = applicationContext.getBean(ResourceManager.class);
 		ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
 
@@ -70,39 +56,37 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				.getAll());
 		
 		LDAPUser userDetails = new LDAPUser(profileManager, username);
-		userDetails.setName(getUserInfo(userInfo, nameAttribute))
-			.setSurname(getUserInfo(userInfo, surnameAttribute))
-			.setEmail(getUserInfo(userInfo, mailAttribute))
-			.setOrganisation(getUserInfo(userInfo, organisationAttribute))
-			.setAddress(getUserInfo(userInfo, addressAttribute))
-			.setState(getUserInfo(userInfo, stateAttribute))
-			.setZip(getUserInfo(userInfo, zipAttribute))
-			.setCity(getUserInfo(userInfo, cityAttribute))
-			.setCountry(getUserInfo(userInfo, countryAttribute));
-		// TODO Add info in the DB that this user is from LDAP ?
-		// userDetails.save();
+		userDetails.setName(getUserInfo(userInfo, "name"))
+			.setSurname(getUserInfo(userInfo, "surname"))
+			.setEmail(getUserInfo(userInfo, "mail"))
+			.setOrganisation(getUserInfo(userInfo, "organisation"))
+			.setAddress(getUserInfo(userInfo, "address"))
+			.setState(getUserInfo(userInfo, "state"))
+			.setZip(getUserInfo(userInfo, "zip"))
+			.setCity(getUserInfo(userInfo, "city"))
+			.setCountry(getUserInfo(userInfo, "country"));
 		
 		// Set privileges for the user:
 		if ("".equals(privilegePattern)) {
 			// 1. no privilegePattern defined. In that case the user 
 			// has the same profile for all groups. The list of groups 
 			// is retreived from the privilegeAttribute content
-			userDetails.setProfile(getUserInfo(userInfo, profileAttribute));
-			for (String group : userInfo.get(privilegeAttribute)) {
+			userDetails.setProfile(getUserInfo(userInfo, mapping.get("profile")[0]));
+			for (String group : userInfo.get(mapping.get("privilege")[0])) {
 				userDetails.addPrivilege(group, userDetails.getProfile());
 			}
 			
 			// Set default privileges
 			if (userDetails.getPrivileges().size() == 0) {
-				for (String defaultPrivilege : defaultPrivileges) {
-					userDetails.addPrivilege(defaultPrivilege, userDetails.getProfile());
-				}
+				userDetails.addPrivilege(mapping.get("privilege")[1], mapping.get("profile")[1]);
 			}
 		} else {
 			// 2. a privilegePattern is defined which define a 
 			// combination of group and profile pair.
 			Pattern p = Pattern.compile(privilegePattern);
-			for (String privilegeDefinition : userInfo.get(privilegeAttribute)) {
+			ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
+			
+			for (String privilegeDefinition : privileges) {
 				Matcher m = p.matcher(privilegeDefinition);
 				boolean b = m.matches();
 				if (b) {
@@ -150,162 +134,87 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		return userDetails;
 	}
 	private String getUserInfo (Map<String, ArrayList<String>> userInfo, String attributeName) {
-		return getUserInfo(userInfo, attributeName, null);
+		return getUserInfo(userInfo, attributeName, "");
 	}
+	/**
+	 * Return the first element of userInfo corresponding to the attribute name.
+	 * If attributeName mapping is not defined, return empty string.
+	 * If no value found in LDAP user info, return default value.
+	 * 
+	 * @param userInfo
+	 * @param attributeName
+	 * @param defaultValue
+	 * @return
+	 */
 	private String getUserInfo (Map<String, ArrayList<String>> userInfo, String attributeName, String defaultValue) {
-		if (userInfo.get(attributeName) != null ) {
-			return userInfo.get(attributeName).get(0);
-		} else if (defaultValue != null ){
-			return defaultValue;
+		String[] attributeMapping = mapping.get(attributeName);
+		String value = "";
+		
+		if (attributeMapping != null ) {
+			String ldapAttributeName = attributeMapping[0];
+			String configDefaultValue = attributeMapping[1];
+			
+			if (ldapAttributeName != null && userInfo.get(ldapAttributeName) != null && userInfo.get(ldapAttributeName).get(0) != null) {
+				value = userInfo.get(ldapAttributeName).get(0);
+			} else if (configDefaultValue != null) {
+				value = configDefaultValue;
+			} else {
+				value = defaultValue;
+			}
 		} else {
-			return "";
+			value = defaultValue;
 		}
+		
+		if (Log.isDebugEnabled(Log.JEEVES)){
+			Log.debug(Log.JEEVES, "LDAP attribute '" + attributeName + "' = " + value);
+		}
+		return value;
 	}
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-
-	public String getDefaultRole() {
-		return privilegePattern;
-	}
-
-	public void setDefaultRole(String defaultRole) {
-		this.privilegePattern = defaultRole;
-	}
-
-	public String[] getDefaultPrivileges() {
-		return defaultPrivileges;
-	}
-
-	public void setDefaultPrivileges(String[] defaultPrivileges) {
-		this.defaultPrivileges = defaultPrivileges;
-	}
-
-	public String getNameAttribute() {
-		return nameAttribute;
-	}
-
-	public void setNameAttribute(String nameAttribute) {
-		this.nameAttribute = nameAttribute;
-	}
-
-	public String getSurnameAttribute() {
-		return surnameAttribute;
-	}
-
-	public void setSurnameAttribute(String surnameAttribute) {
-		this.surnameAttribute = surnameAttribute;
-	}
-
-	public String getKindAttribute() {
-		return kindAttribute;
-	}
-
-	public void setKindAttribute(String kindAttribute) {
-		this.kindAttribute = kindAttribute;
-	}
-
-	public String getOrganisationAttribute() {
-		return organisationAttribute;
-	}
-
-	public void setOrganisationAttribute(String organisationAttribute) {
-		this.organisationAttribute = organisationAttribute;
-	}
-
-	public String getCountryAttribute() {
-		return countryAttribute;
-	}
-
-	public void setCountryAttribute(String countryAttribute) {
-		this.countryAttribute = countryAttribute;
-	}
-
-	public String getZipAttribute() {
-		return zipAttribute;
-	}
-
-	public void setZipAttribute(String zipAttribute) {
-		this.zipAttribute = zipAttribute;
-	}
-
-	public String getStateAttribute() {
-		return stateAttribute;
-	}
-
-	public void setStateAttribute(String stateAttribute) {
-		this.stateAttribute = stateAttribute;
-	}
-
-	public String getCityAttribute() {
-		return cityAttribute;
-	}
-
-	public void setCityAttribute(String cityAttribute) {
-		this.cityAttribute = cityAttribute;
-	}
-
-	public String getAddressAttribute() {
-		return addressAttribute;
-	}
-
-	public void setAddressAttribute(String addressAttribute) {
-		this.addressAttribute = addressAttribute;
-	}
-
-	public String getPrivilegeAttribute() {
-		return privilegeAttribute;
-	}
-
-	public void setPrivilegeAttribute(String privilegeAttribute) {
-		this.privilegeAttribute = privilegeAttribute;
-	}
 	public String getPrivilegePattern() {
 		return privilegePattern;
 	}
-
+	
 	public void setPrivilegePattern(String privilegePattern) {
 		this.privilegePattern = privilegePattern;
 	}
-
-	public String getMailAttribute() {
-		return mailAttribute;
-	}
-
-	public void setMailAttribute(String mailAttribute) {
-		this.mailAttribute = mailAttribute;
-	}
-
+	
 	public int getGroupIndexInPattern() {
 		return groupIndexInPattern;
 	}
-
+	
 	public void setGroupIndexInPattern(int groupIndexInPattern) {
 		this.groupIndexInPattern = groupIndexInPattern;
 	}
-
+	
 	public int getProfilIndexInPattern() {
 		return profilIndexInPattern;
 	}
-
+	
 	public void setProfilIndexInPattern(int profilIndexInPattern) {
 		this.profilIndexInPattern = profilIndexInPattern;
 	}
-
-	public String getProfileAttribute() {
-		return profileAttribute;
-	}
-
-	public void setProfileAttribute(String profileAttribute) {
-		this.profileAttribute = profileAttribute;
-	}
-
+	
 	public boolean isCreateNonExistingLdapGroup() {
 		return createNonExistingLdapGroup;
 	}
-
+	
 	public void setCreateNonExistingLdapGroup(boolean createNonExistingLdapGroup) {
 		this.createNonExistingLdapGroup = createNonExistingLdapGroup;
+	}
+	
+	public String[] getMappingValue(String key) {
+		return mapping.get(key);
+	}
+	
+	public void setMapping(Map<String, String[]> mapping) {
+		this.mapping = mapping;
+	}
+	
+	public Map<String, String[]> getMapping() {
+		return mapping;
 	}
 }
