@@ -8,14 +8,18 @@ import java.util.regex.Pattern;
 
 
 import jeeves.guiservices.session.JeevesUser;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 
+import org.fao.geonet.constants.Geonet;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
@@ -64,40 +68,84 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		Map<String, ArrayList<String>> userInfo = LDAPUtils.convertAttributes(userCtx.getAttributes()
 				.getAll());
 		
-		JeevesUser userDetails = new JeevesUser(profileManager)
-			.setUsername(username)
-			.setName(getUserInfo(userInfo, nameAttribute))
+		LDAPUser userDetails = new LDAPUser(profileManager, username);
+		userDetails.setName(getUserInfo(userInfo, nameAttribute))
 			.setSurname(getUserInfo(userInfo, surnameAttribute))
 			.setEmail(getUserInfo(userInfo, mailAttribute))
 			.setOrganisation(getUserInfo(userInfo, organisationAttribute))
 			.setAddress(getUserInfo(userInfo, addressAttribute))
+			.setState(getUserInfo(userInfo, stateAttribute))
 			.setZip(getUserInfo(userInfo, zipAttribute))
 			.setCity(getUserInfo(userInfo, cityAttribute))
 			.setCountry(getUserInfo(userInfo, countryAttribute));
 		// TODO Add info in the DB that this user is from LDAP ?
 		// userDetails.save();
 		
-		// Set privileges
+		// Set privileges for the user:
 		if ("".equals(privilegePattern)) {
+			// 1. no privilegePattern defined. In that case the user 
+			// has the same profile for all groups. The list of groups 
+			// is retreived from the privilegeAttribute content
 			userDetails.setProfile(getUserInfo(userInfo, profileAttribute));
+			for (String group : userInfo.get(privilegeAttribute)) {
+				userDetails.addPrivilege(group, userDetails.getProfile());
+			}
 			
-			// TODO : set default privileges
+			// Set default privileges
+			if (userDetails.getPrivileges().size() == 0) {
+				for (String defaultPrivilege : defaultPrivileges) {
+					userDetails.addPrivilege(defaultPrivilege, userDetails.getProfile());
+				}
+			}
 		} else {
+			// 2. a privilegePattern is defined which define a 
+			// combination of group and profile pair.
 			Pattern p = Pattern.compile(privilegePattern);
 			for (String privilegeDefinition : userInfo.get(privilegeAttribute)) {
 				Matcher m = p.matcher(privilegeDefinition);
 				boolean b = m.matches();
-				String group = m.group(groupIndexInPattern);
-				String profil = m.group(profilIndexInPattern);
-				System.out.println("   - " + group + " as " + profil);
+				if (b) {
+					String group = m.group(groupIndexInPattern);
+					String profil = m.group(profilIndexInPattern);
+					
+					// TODO : skip undeclared profil
+					if (group != null && profil != null) {
+						userDetails.setProfile(profil);
+						userDetails.addPrivilege(group, profil);
+					}
+				} else {
+					System.out.println("LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
+				}
 				
-				// TODO : skip undeclared profil
-				if (group != null && profil != null) {
-					userDetails.setProfile(profil);
-					// TODO populate groups in DB
+			}
+		}
+		
+		
+		Dbms dbms = null;
+		try {
+			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
+			LDAPUtils.saveUser(userDetails, dbms);
+		} catch (Exception e) {
+			try {
+				resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
+				dbms = null;
+			} catch (Exception e2) {
+				e.printStackTrace();
+				Log.error(Log.JEEVES, "Error closing dbms" + dbms, e2);
+			}
+			Log.error(Log.JEEVES, "Unexpected error while saving/updating LDAP user in database", e);
+			throw new AuthenticationServiceException("Unexpected error while saving/updating LDAP user in database", e);
+		} finally {
+			if (dbms != null){
+				try {
+					resourceManager.close(Geonet.Res.MAIN_DB, dbms);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Log.error(Log.JEEVES, "Error closing dbms" + dbms, e);
 				}
 			}
 		}
+		
 		return userDetails;
 	}
 	private String getUserInfo (Map<String, ArrayList<String>> userInfo, String attributeName) {
@@ -105,7 +153,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 	}
 	private String getUserInfo (Map<String, ArrayList<String>> userInfo, String attributeName, String defaultValue) {
 		if (userInfo.get(attributeName) != null ) {
-			return userInfo.get(nameAttribute).get(0);
+			return userInfo.get(attributeName).get(0);
 		} else if (defaultValue != null ){
 			return defaultValue;
 		} else {

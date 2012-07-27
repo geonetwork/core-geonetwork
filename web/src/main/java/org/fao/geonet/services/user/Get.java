@@ -85,7 +85,7 @@ public class Get implements Service
 				elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
 			}
 
-			if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
+			if (!(myUserId.equals(id)) && "UserAdmin".equals(myProfile)) {
 			
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info

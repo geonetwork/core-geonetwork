@@ -416,13 +416,13 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="nameAttribute" value="cn" />
         <property name="surnameAttribute" value="givenName" />
         <property name="mailAttribute" value="mail" />
-        <property name="organisationAttribute" value="" />
-        <property name="kindAttribute" value="" />
-        <property name="addressAttribute" value="" />
-        <property name="zipAttribute" value="" />
-        <property name="stateAttribute" value="" />
-        <property name="cityAttribute" value="" />
-        <property name="countryAttribute" value="" />
+        <property name="organisationAttribute" value="employeeNumber" />
+        <property name="kindAttribute" value="employeeNumber" />
+        <property name="addressAttribute" value="employeeNumber" />
+        <property name="zipAttribute" value="uidNumber" />
+        <property name="stateAttribute" value="uidNumber" />
+        <property name="cityAttribute" value="uidNumber" />
+        <property name="countryAttribute" value="uidNumber" />
         
         <!-- Privileges extraction
          * current trunk only support one group.
