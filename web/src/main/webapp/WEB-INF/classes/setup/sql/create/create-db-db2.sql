@@ -123,6 +123,7 @@ CREATE TABLE Users
     organisation  varchar(128),
     kind          varchar(16),
     security      varchar(128) default '',
+    authtype      varchar(32),
     primary key(id),
     unique(username)
   );

@@ -48,11 +48,11 @@ public class LDAPUtils {
 			id = nextIdRequest.getChild("record").getChildText("max");
 			
 			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
-						"address, city, state, zip, country, email, organisation, kind) "+
-						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						"address, city, state, zip, country, email, organisation, kind, authtype) "+
+						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			dbms.execute(query, new Integer(id), user.getUsername(), "", user.getSurname(), user.getName(), 
 					user.getProfile(), user.getAddress(), user.getCity(), user.getState(), user.getCity(), 
-					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind());
+					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), LDAPConstants.LDAP_FLAG);
 		} else {
 			// Update existing LDAP user
 			

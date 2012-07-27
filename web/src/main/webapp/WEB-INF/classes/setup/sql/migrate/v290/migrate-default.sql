@@ -1,4 +1,5 @@
 ALTER TABLE Users ADD security varchar(128);
+ALTER TABLE Users ADD authtype varchar(32);
 
 UPDATE Users SET security='update_hash_required';
 
