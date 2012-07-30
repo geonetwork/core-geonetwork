@@ -5,9 +5,9 @@
 .viewmd-panel big, .viewmd-panel cite, .viewmd-panel code,
 .viewmd-panel del, .viewmd-panel dfn, .viewmd-panel em, .viewmd-panel font, .viewmd-panel img, .viewmd-panel ins, .viewmd-panel kbd, .viewmd-panel q, .viewmd-panel s, .viewmd-panel samp,
 .viewmd-panel small, .viewmd-panel strike, strong, sub, sup, tt, var,
-.viewmd-panel .viewmd-panel b,.viewmd-panel  u, .viewmd-panel i, .viewmd-panel center,
-.viewmd-panel .viewmd-panel dl, .viewmd-panel dt, .viewmd-panel dd, .viewmd-panel ol,.viewmd-panel ul, .viewmd-panel li,
-.viewmd-panel .viewmd-panel fieldset, .viewmd-panel form, .viewmd-panel label, .viewmd-panel legend,
+.viewmd-panel b,.viewmd-panel  u, .viewmd-panel i, .viewmd-panel center,
+.viewmd-panel dl, .viewmd-panel dt, .viewmd-panel dd, .viewmd-panel ol,.viewmd-panel ul, .viewmd-panel li,
+.viewmd-panel fieldset, .viewmd-panel form, .viewmd-panel label, .viewmd-panel legend,
 .viewmd-panel table, .viewmd-panel caption, .viewmd-panel tbody, .viewmd-panel tfoot, .viewmd-panel thead, .viewmd-panel tr, .viewmd-panel th, .viewmd-panel td {
 	margin: 0;
 	padding: 0;
@@ -19,6 +19,10 @@
 	text-decoration: none;
 }
 
+body {
+	height : 100%;
+	
+}
 .viewmd-panel ol, .viewmd-panel ul {
 	list-style: none;
 }

@@ -78,3 +78,7 @@ body {
 #result-metadata-modal-tab-2-content * legend a {
     color: #ffffff !important;
 }
+
+#result-metadata-modal-tab-2-content * table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td * td {
+    padding: 4px 0 0 12px !important;
+}

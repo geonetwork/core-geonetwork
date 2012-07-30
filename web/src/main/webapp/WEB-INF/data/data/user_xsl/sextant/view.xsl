@@ -26,15 +26,10 @@
 			</head>
 			<body>
 			
-			<!-- <link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/reset.css"/>
-			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/jquery-ui-1.8.2.custom.css"/>
-			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/main.css"/>
-			<link rel="stylesheet" type="text/css" href="{/root/resourceUrl}/css/default.css"/> -->
-			
-			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/reset.css"/>
-			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
-			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/main.css"/>
-			<link rel="stylesheet" type="text/css" href="http://localhost:8080/geonetwork/apps/sextant/css/schema/default.css"/>
+			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/reset.css"/>
+			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
+			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/main.css"/>
+			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/default.css"/>
 			<div class="tpl-sextant">
 				<div class="ui-layout-content">
 					<div>

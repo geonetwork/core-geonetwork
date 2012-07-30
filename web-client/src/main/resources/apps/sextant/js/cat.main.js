@@ -100,14 +100,22 @@ cat.app = function() {
             currTab: GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
             catalogue: this,
-            maximized: maximized || false,
+            maximized: false,
             metadataUuid: uuid,
             record: record,
             viewMode: style, 
-            resultsView: this.resultsView
+            resultsView: this.resultsView,
+            modal: true,
+            draggable: false,
+            movable: false,
+            resizable: false,
+            width: Ext.getBody().getViewSize().width-250,
+            height: Ext.getBody().getViewSize().height-150,
+            cls: 'view-win',
+            bodyStyle:'padding:10px'
             });
         win.show(this.resultsView);
-        win.alignTo(bd, 'tr-tr');
+        //win.alignTo(bd, 'tl-br',[30,30,30,30]);
 	}
 	
 	function edit(metadataId, create, group, child) {
@@ -285,6 +293,7 @@ cat.app = function() {
 			searchFormCmp : Ext.getCmp('searchForm'),
 			sortByCmp : Ext.getCmp('E_sortBy'),
 			metadataResultsView : metadataResultsView,
+			permalinkProvider: permalinkProvider,
 			config : {
 				selectAction : false,
 				sortByAction : true,
@@ -521,6 +530,21 @@ cat.app = function() {
 					items : [ infoPanel, resultsPanel ]
 				} ]
 			});
+			
+			if (urlParameters.mode) {
+                app.switchMode(urlParameters.mode, false);
+            }
+            if (urlParameters.edit !== undefined && urlParameters.edit !== '') {
+                catalogue.metadataEdit(urlParameters.edit);
+            }
+            if (urlParameters.create !== undefined) {
+                resultPanel.getTopToolbar().createMetadataAction.fireEvent('click');
+            }
+            if (urlParameters.uuid !== undefined) {
+                catalogue.metadataShow(urlParameters.uuid, true);
+            } else if (urlParameters.id !== undefined) {
+                catalogue.metadataShowById(urlParameters.id, true);
+            }
 
 			if (GeoNetwork.searchDefault.activeMapControlExtent) {
 				Ext.getCmp('geometryMap').setExtent();

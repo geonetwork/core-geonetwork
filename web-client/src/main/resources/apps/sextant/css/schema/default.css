@@ -1,8 +1,52 @@
-
+.tpl-sextant .ui-layout-content { 	
+	height: 100% !important;
+}
 div.ui-dialog-titlebar .ui-state-hover, div.ui-dialog-titlebar .ui-state-active, div.ui-dialog-titlebar .ui-state-focus {
   border: none;
   background: none;
   background-image: none;
+}
+
+.mdshow-tabpanel {
+	padding: 6px 12px;
+}
+.mdshow-tabpanel .x-tab-panel-header{
+	background-color: white !important;
+	border-bottom: medium none;
+}
+.mdshow-tabpanel span.x-tab-strip-text {
+	font-family: Arial,​Helvetica,​sans-serif !important;
+	font-size: 12px !important;
+	font-weight: bold !important;
+	color: #616161 !important;
+	line-height: 15.6px !important;
+	padding: 7px 11px 4px 8px !important;
+}
+.mdshow-tabpanel .x-tab-strip-active span.x-tab-strip-text {
+	color: #FFFFFF !important;
+}
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-right,
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-left,
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-strip-inner {
+	background: url("../../images/ui-bg_inset-hard_75_999999_1x100.png") repeat-x scroll 50% 50% #999999 !important;
+}
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-right {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-left {
+	border-top-right-radius: 4px;
+}
+.mdshow-tabpanel ul.x-tab-strip-top {
+	background-color: white !important;
+	border-top-left-radius: 4px !important;
+}
+.mdshow-tabpanel ul.x-tab-strip-top {
+	border-bottom: none;
+}
+.mdshow-tabpanel ul.x-tab-strip li{
+	margin-right:2px;
+	margin-left:0;
 }
 
 div.ui-dialog-content {
@@ -156,18 +200,28 @@ div.result-metadata-modal-content table td {
 }
 
 
-.file-pdf {
-  background-image:url("../metadata.formatter.resource?id=sextant&fname=/img/default/icons/file-pdf.png");
-  height:18px;
-  width:18px;
-  border: none;
+.mdshow-tabpanel .file-pdf {
+  background-image:url("../../images/icons/file-pdf.png");
+  border: medium none;
+    height: 16px;
+    position: absolute;
+    right: 30px;
+    top: 14px;
+    width: 16px;
+    z-index: 5000;
+    cursor:pointer;
 }
 
-.file-xml {
-  background-image:url("../metadata.formatter.resource?id=sextant&fname=/img/default/icons/file-xml.png");
-  height:18px;
-  width:18px;
-  border: none;
+.mdshow-tabpanel .file-xml {
+  background-image:url("../../images/icons/file-xml.png");
+  border: medium none;
+    height: 16px;
+    position: absolute;
+    right: 60px;
+    top: 14px;
+    width: 16px;
+    z-index: 5000;
+    cursor:pointer;
 }
 
 .ui-widget-content .button {
