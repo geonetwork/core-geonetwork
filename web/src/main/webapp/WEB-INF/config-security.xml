@@ -9,7 +9,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           xmlns:ctx="http://www.springframework.org/schema/context"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
           xmlns="http://www.springframework.org/schema/beans">
-    <!-- <sec:debug/> -->
+     <sec:debug/> 
     
     <ctx:property-placeholder location="WEB-INF/config.properties"/>
     <ctx:property-override location="WEB-INF/config-override.properties"/>
@@ -439,4 +439,36 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="createNonExistingLdapGroup" value="true" />
     </bean>
     
+    <bean id="scheduler"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+    </bean>
+    
+    <bean name="ldapSynchronizer" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.fao.geonet.kernel.security.ldap.LDAPSynchronizerJob"/>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="contextSource" value-ref="contextSource" />
+                <entry key="ldapSearchBase" value="${ldap.sync.user.search.base}" />
+                <entry key="ldapSearchFilter" value="${ldap.sync.user.search.filter}" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="ldapSynchronizer" />
+        <property name="cronExpression" value="${ldap.sync.cron}" />
+        <property name="startDelay" value="${ldap.sync.startDelay}"/>
+    </bean>
+    
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory">
+            <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
+        </property>
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
 </beans>

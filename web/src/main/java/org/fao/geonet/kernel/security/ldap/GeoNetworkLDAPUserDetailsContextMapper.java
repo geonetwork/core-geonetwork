@@ -26,8 +26,6 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
  * 
  * Create the GeoNetworkUser in local database on first login.
  * 
- * TODO : add LDAP/DB synchronisation task
- * 
  * @author francois
  */
 public class GeoNetworkLDAPUserDetailsContextMapper implements

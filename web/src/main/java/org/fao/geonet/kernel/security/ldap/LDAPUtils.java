@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel.security.ldap;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,6 @@ import javax.naming.directory.Attribute;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
-import jeeves.utils.PasswordUtil;
 
 import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.search.spatial.Pair;
