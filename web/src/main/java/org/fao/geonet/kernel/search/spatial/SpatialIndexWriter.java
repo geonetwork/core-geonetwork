@@ -69,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
 
@@ -94,8 +95,12 @@ public class SpatialIndexWriter implements FeatureListener
     private FeatureStore<SimpleFeatureType, SimpleFeature> _featureStore;
     private STRtree                                   _index;
     private static int                                _writes;
+    private Map<String, String> errorMessage;
+    public Map getErrorMessage() {
+		return errorMessage;
+	}
 
-    private Name _idColumn;
+	private Name _idColumn;
     private Name _geomColumn;
     private boolean _autocommit;
 
@@ -147,8 +152,9 @@ public class SpatialIndexWriter implements FeatureListener
         _lock.lock();
         try {
             _index = null;
+            errorMessage = new HashMap<String, String>();
             Geometry geometry = extractGeometriesFrom(
-                    schemaDir, metadata, _parser);
+                    schemaDir, metadata, _parser, errorMessage);
 
             if (geometry != null) {
                 FeatureCollection<SimpleFeatureType, SimpleFeature> features = FeatureCollections.newCollection();
@@ -273,7 +279,7 @@ public class SpatialIndexWriter implements FeatureListener
      * testing access.
      */
     static MultiPolygon extractGeometriesFrom(String schemaDir, 
-            Element metadata, Parser parser) throws Exception
+            Element metadata, Parser parser, Map errorMessage) throws Exception
     {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
                 .setLevel(Level.SEVERE);
@@ -303,6 +309,7 @@ public class SpatialIndexWriter implements FeatureListener
 							allPolygons.add((Polygon) jts.getGeometryN(i));
             }
           } catch (Exception e) {
+            errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
             Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
 						e.printStackTrace();
             // continue
@@ -319,6 +326,7 @@ public class SpatialIndexWriter implements FeatureListener
 
 
             } catch (Exception e) {
+                errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
                 Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: "+allPolygons);
 								e.printStackTrace();
                 // continue

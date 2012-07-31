@@ -58,6 +58,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.document.AbstractField;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
@@ -116,6 +117,8 @@ import com.vividsolutions.jts.index.SpatialIndex;
  * Indexes metadata using Lucene.
  */
 public class SearchManager {
+	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
+	private static final String INDEXING_ERROR_FIELD = "_indexingError";
 	public static final int LUCENE = 1;
 	public static final int Z3950 = 2;
 	public static final int UNUSED = 3;
@@ -686,6 +689,11 @@ public class SearchManager {
                       String title) throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
+        
+        // Update spatial index first and if error occurs, record it to Lucene index
+        indexGeometry(schemaDir, metadata, id, moreFields);
+        
+        // Update Lucene index
         _indexWriter.openWriter();
         try {
             List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
@@ -700,7 +708,24 @@ public class SearchManager {
                 Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
             _indexWriter.closeWriter();
 		}
-		_spatial.writer().index(schemaDir, id, metadata);
+	}
+	
+    private void indexGeometry(String schemaDir, Element metadata, String id,
+            List<Element> moreFields) throws Exception {
+        try {
+            _spatial.writer().index(schemaDir, id, metadata);
+        } catch (Exception e) {
+            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage());
+            moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
+            moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
+        }
+        Map<String, String> errors = _spatial.writer().getErrorMessage();
+        if (errors.size() > 0) {
+            for (Entry<String, String> e : errors.entrySet()) {
+            moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
+            moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEO|" + e.getKey() + "|" + e.getValue(), true, false));
+            }
+        }
 	}
 
     /**
@@ -727,13 +752,16 @@ public class SearchManager {
      */
     public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                            String title) throws Exception {
+        
+        indexGeometry(schemaDir, metadata, id, moreFields);
+        
+        // Update Lucene index
         List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title,
                 true);
         for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
             _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
         }
-        _spatial.writer().index(schemaDir, id, metadata);
-	}
+    }
 
     /**
      * TODO javadoc.
@@ -1142,8 +1170,8 @@ public class SearchManager {
         catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage() + "\n\t Marking the metadata as _indexingError=1 in index");
             Element xmlDoc = new Element("Document");
-            SearchManager.addField(xmlDoc, "_indexingError", "1", true, true);
-            SearchManager.addField(xmlDoc, "_indexingErrorMsg", e.getMessage(), true, false);
+            SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
+            SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
             StringBuilder sb = new StringBuilder();
             allText(xml, sb);
             SearchManager.addField(xmlDoc, "any", sb.toString(), false, true);
@@ -1438,11 +1466,29 @@ public class SearchManager {
                 if (!bIndex) {
                     index = Field.Index.NO;
                 }
-                if (isNumeric) {
-                	addNumericField(doc, name, string, store, bIndex);
-                } else {
-                    Field f = new Field(name, string, store, index);
-
+                
+                    AbstractField f;
+                    if (isNumeric) {
+                        try {
+                            f = addNumericField(name, string, store, bIndex);
+                        } catch (Exception e) {
+                            String msg = "Invalid value. Field '" + name + "' is not added to the document. Error is: " + e.getMessage();
+                            
+                            Field idxError = new Field(INDEXING_ERROR_FIELD, "1", Field.Store.YES, Field.Index.NOT_ANALYZED);
+                            Field idxMsg = new Field(INDEXING_ERROR_MSG, "GNIDX-BADNUMVALUE|" + name + "|" +  e.getMessage(), Field.Store.YES, Field.Index.NO);
+                            
+                            doc.add(idxError);
+                            doc.add(idxMsg);
+                            
+                            Log.warning(Geonet.INDEX_ENGINE, msg);
+                            // If an exception occur, the field is not added to the document
+                            // and to the taxonomy
+                            continue;
+                        }
+                    } else {
+                        f = new Field(name, string, store, index);
+                    }
+                    
                     // Boost a particular field according to Lucene config. 
                     Float boost = _luceneConfig.getFieldBoost(name);
                     if (boost != null) {
@@ -1451,14 +1497,14 @@ public class SearchManager {
                         f.setBoost(boost);
                     }
                     doc.add(f);
-                }
-                
-                if(_summaryConfigValues.get(name) != null) {
-                    if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                        Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
+                    
+                    // Add value to the taxonomy
+                    if(_summaryConfigValues.get(name) != null) {
+                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                            Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
+                        }
+                        categories.add(new CategoryPath(name, string));
                     }
-                    categories.add(new CategoryPath(name, string));
-                }
             }
         }
         
@@ -1489,8 +1535,9 @@ public class SearchManager {
 	 * @param store
 	 * @param index
 	 * @return
+	 * @throws Exception 
 	 */
-	private void addNumericField(Document doc, String name, String string, Store store, boolean index) {
+	private AbstractField addNumericField(String name, String string, Store store, boolean index) throws Exception {
 		LuceneConfigNumericField fieldConfig = _luceneConfig.getNumericField(name);
 		// string = cleanNumericField(string);
 		NumericField field = new NumericField(name, fieldConfig.getPrecisionStep(), store, index);
@@ -1515,10 +1562,11 @@ public class SearchManager {
 				int i = Integer.valueOf(string);
 				field.setIntValue(i);
 			}
-			doc.add(field);
+			return field;
 		}
         catch (Exception e) {
-			Log.warning(Geonet.INDEX_ENGINE, "Failed to index numeric field: " + name + " with value: " + string + ", error is:" + e.getMessage());
+			Log.warning(Geonet.INDEX_ENGINE, "Failed to index numeric field: " + name + " with value: " + string + ", error is: " + e.getMessage());
+			throw e;
 		}
 	}
 
