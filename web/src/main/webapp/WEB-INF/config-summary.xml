@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 	Configuration of the taxonomy index used for faceting.
+	
+	When an item is modified or added, the index MUST be rebuild.
 -->
 <summary>
 	<def>
 		<hits>
 			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string"
 				max="100"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" order="name" type="string" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" order="name"
 				type="number" max="10"/>
 			<item name="spatialRepresentation" plural="spatialRepresentations"
 				indexKey="spatialRepresentation" type="string" order="freq" max="10"/>
 			<item name="organizationName" plural="organizationNames" indexKey="orgName" order="freq"
-				type="string" max="10"/>
+				type="string" max="50"/>
+			<item name="metadataAuthor" plural="metadataAuthors" indexKey="metadataPOC" order="freq"
+				type="string" max="50"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType" order="freq"
 				type="string" max="10"/>
 			<item name="type" plural="types" indexKey="type" order="freq" type="string" max="10"/>

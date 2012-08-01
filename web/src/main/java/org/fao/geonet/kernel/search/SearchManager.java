@@ -134,7 +134,6 @@ public class SearchManager {
 
 	private final File _stylesheetsDir;
     private static File _stopwordsDir;
-	private final Element _summaryConfig;
 	Map<String, Map<String,Object>> _summaryConfigValues = null;
 
 	private LuceneConfig _luceneConfig;
@@ -486,20 +485,8 @@ public class SearchManager {
                          SchemaManager scm, ServletContext servletContext) throws Exception {
 		_scm = scm;
 		_thesauriDir = thesauriDir;
-		_summaryConfig = Xml.loadStream(new FileInputStream(new File(appPath,summaryConfigXmlFile)));
-    	try {
-    		// TODO : be able to reload summary config like lucene config
-    		// TODO : hits is one type, we should merge all type of summary
-    		_summaryConfigValues = LuceneSearcher.getSummaryConfig(_summaryConfig, "hits");
-    	} catch (Exception e) {
-			// TODO: handle exception
-    		e.printStackTrace();
-		}
-		if (servletContext != null) {
-			ConfigurationOverrides.updateWithOverrides(summaryConfigXmlFile, servletContext, appPath, _summaryConfig);
-		}
-
 		_luceneConfig = lc;
+		_summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
         _settingInfo = si;
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
@@ -629,7 +616,7 @@ public class SearchManager {
      */
 	public MetaSearcher newSearcher(int type, String stylesheetName) throws Exception {
 		switch (type) {
-			case LUCENE: return new LuceneSearcher(this, stylesheetName, _summaryConfig, _luceneConfig);
+			case LUCENE: return new LuceneSearcher(this, stylesheetName, _luceneConfig);
 			case Z3950: return new Z3950Searcher(this, _scm, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 			default: throw new Exception("unknown MetaSearcher type: " + type);
@@ -1359,11 +1346,10 @@ public class SearchManager {
 			if (_spatial != null) _spatial.writer().reset();
 			_indexWriter.createDefaultLocale();
 			
-
-			  if (!_luceneTaxonomyDir.exists()) {
-				  _luceneTaxonomyDir.mkdirs();
-			  }
-			  
+			
+			if (!_luceneTaxonomyDir.exists()) {
+				_luceneTaxonomyDir.mkdirs();
+			}
 			TaxonomyWriter taxoWriter = new LuceneTaxonomyWriter(FSDirectory.open(_luceneTaxonomyDir), OpenMode.CREATE);
 			taxoWriter.close();
 		}
@@ -1396,21 +1382,23 @@ public class SearchManager {
      * @return
      * @throws Exception
      */
-	public boolean rebuildIndex(ServiceContext context, boolean xlinks) throws Exception {
+	public boolean rebuildIndex(ServiceContext context, boolean xlinks, boolean reset) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
+		
 		try {
 			if (_indexWriter.isOpen()) {
 				throw new Exception("Cannot rebuild index while it is being updated - please wait till later");
 			}
+			if (reset) {
+				setupIndex(false);
+			}
 			if (!xlinks) {
 				setupIndex(true);
 				dataMan.init(context, dbms, true);
-			}
-            else {
+			} else {
 				dataMan.rebuildIndexXLinkedMetadata(context);
 			}
 			return true;
@@ -1499,7 +1487,8 @@ public class SearchManager {
                     doc.add(f);
                     
                     // Add value to the taxonomy
-                    if(_summaryConfigValues.get(name) != null) {
+                    // TODO : Add all facets whatever the types
+                    if(_luceneConfig.getTaxonomy().get("hits").get(name) != null) {
                         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                             Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
                         }

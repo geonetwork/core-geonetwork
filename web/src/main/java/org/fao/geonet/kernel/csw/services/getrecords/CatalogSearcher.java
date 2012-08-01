@@ -203,7 +203,7 @@ public class CatalogSearcher {
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
 					maxHits, 0, maxHits, _lang, 
-					ResultType.RESULTS.toString(), _summaryConfig, _reader, 
+					_luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, 
 					_query, _filter, _sort, null, false, _luceneConfig.isTrackDocScores(),
 					_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
 			);
@@ -487,7 +487,7 @@ public class CatalogSearcher {
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(
 				numHits, startPosition - 1, maxRecords, _lang, 
-				resultType.toString(), _summaryConfig, _reader, 
+				_luceneConfig.getTaxonomy().get(resultType.toString()), _reader, 
 				query, cFilter, sort, null, buildSummary, _luceneConfig.isTrackDocScores(),
 				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()		
 		);

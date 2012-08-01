@@ -64,12 +64,16 @@ public class LuceneIndexWriterFactory {
     public synchronized void closeWriter() throws Exception {
         Log.info(Geonet.INDEX_ENGINE, "Closing Index_writer, ref _count " + _count);
 
-
         // lower reference count, close if count reaches zero
         if (_count > 0) {
             _count--;
             if (_count == 0) {
                 commit();
+                // Similarly, before a writer close()s the IndexWriter, it must close() the TaxonomyWriter.
+                if (_taxoIndexWriter != null) {
+                    _taxoIndexWriter.close();
+                    _taxoIndexWriter = null;
+                }
                 for( Map.Entry<String, IndexWriter> entry : _writers.entrySet() ) {
                     String locale = entry.getKey();
                     IndexWriter writer = entry.getValue();
@@ -78,10 +82,6 @@ public class LuceneIndexWriterFactory {
                     writer.close();
                 }
                 _writers.clear();
-                if (_taxoIndexWriter != null) {
-                    _taxoIndexWriter.close();
-                    _taxoIndexWriter = null;
-                }
             } else {
                 commit();
             }
@@ -114,6 +114,8 @@ public class LuceneIndexWriterFactory {
      * @throws Exception
      */
     public synchronized void commit() throws Exception {
+        // Before a writer commit()s the IndexWriter, it must commit() the TaxonomyWriter. 
+        // Nothing should be added to the index between these two commit()s.
         if (true || isOpen()) {
             if (_taxoIndexWriter != null) {
                 try {

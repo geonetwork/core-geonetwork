@@ -27,6 +27,8 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -60,7 +62,7 @@ public class IndexRebuild implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		boolean xlinks = false;
-
+		boolean reset = "yes".equals(Util.getParam(params, "reset", "no"));
 		String rebuildXLinkIndex = _config.getValue("rebuildxlinkindex");
 		if (rebuildXLinkIndex != null) {
 			xlinks = rebuildXLinkIndex.equals("yes");
@@ -70,7 +72,7 @@ public class IndexRebuild implements Service
 
 		SearchManager searchMan = gc.getSearchmanager();
 		
-		boolean info = searchMan.rebuildIndex(context, xlinks);
+		boolean info = searchMan.rebuildIndex(context, xlinks, reset);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("status").setText((info?"true":"false")));

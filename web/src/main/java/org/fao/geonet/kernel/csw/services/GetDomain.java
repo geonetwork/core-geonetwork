@@ -213,7 +213,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( 
 						maxRecords, 0, maxRecords, context.getLanguage(), 
-						"results", new Element("summary"), reader, 
+						null, reader, 
 						query, filter, sort, null, false, false,
 						false, false	// Scoring is useless for GetDomain operation
 				);

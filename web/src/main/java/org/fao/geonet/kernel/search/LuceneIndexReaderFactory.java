@@ -116,7 +116,7 @@ public class LuceneIndexReaderFactory {
      * @throws IOException
      */
     public TaxonomyReader getTaxonomyReader() {
-        if (currentTaxoReader == null)
+        if (currentTaxoReader == null) {
             try {
                 currentTaxoReader = new LuceneTaxonomyReader(
                         FSDirectory.open(taxoDir));
@@ -128,6 +128,7 @@ public class LuceneIndexReaderFactory {
                     + taxoDir.getPath() + ". Error is " + e.getMessage());
                 e.printStackTrace();
             }
+        }
         return currentTaxoReader;
     }
 
@@ -191,7 +192,8 @@ public class LuceneIndexReaderFactory {
 
     private void maybeReopen() throws InterruptedException, IOException {
         Set<String> indices = listIndices();
-
+        boolean reopened = false;
+        
         if(indices.isEmpty()) throw new AssertionError("No lucene indices exist.  Need to regenerate");
 
         for( String indexDirName : indices ) {
@@ -202,6 +204,7 @@ public class LuceneIndexReaderFactory {
                 subReaders.put(indexDirName, reader);
             } else {
                 final IndexReader newReader = reader.reopen();
+                reopened = true;
                 if (newReader != reader) {
                     if(reader.getRefCount() > 0) {
                         reader.decRef();    // it will be closed when refCount is 0 - this could
@@ -213,6 +216,12 @@ public class LuceneIndexReaderFactory {
                         Log.debug(Geonet.SEARCH_ENGINE, "Thread " + Thread.currentThread().getId() + ": reopened IndexReader");
                 }
             }
+        }
+        
+        // After a reopen() on the IndexReader, refresh() the TaxonomyReader. 
+        // No search should be performed on the new IndexReader until refresh() has finished.
+        if (reopened) {
+            getTaxonomyReader().refresh();
         }
     }
     

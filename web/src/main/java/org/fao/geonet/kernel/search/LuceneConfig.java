@@ -54,11 +54,21 @@ public class LuceneConfig {
 
 	private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
-    private static final int DOC_BOOST_CLASS = 3;
+	private static final int DOC_BOOST_CLASS = 3;
 
+	private static final int MAX_SUMMARY_KEY = 1000;
+	private static final int MAX_SUMMARY_KEY_DEFAULT_NUMBER = 10;
+	
 	private File configurationFile;
+	private File taxonomyConfigurationFile;
 	private String appPath;
-
+	
+	/**
+	 * List of taxonomy by taxonomy types (hits, hits_with_summary
+	 * for each field (eg. denominator) and its configuration (eg. sort).
+	 */
+	private Map<String, Map<String,Map<String,Object>>> taxonomy;
+	
 	/**
 	 * Lucene numeric field configuration
 	 */
@@ -155,6 +165,9 @@ public class LuceneConfig {
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load(servletContext, luceneConfigXmlFile);
+		String taxonomyConfig = "WEB-INF/config-summary.xml";
+		this.taxonomyConfigurationFile = new File(appPath + taxonomyConfig);
+		this.loadTaxonomy(servletContext, taxonomyConfig);
 	}
 
 	private void load(ServletContext servletContext, String luceneConfigXmlFile) {
@@ -362,6 +375,81 @@ public class LuceneConfig {
 					"Failed to load Lucene configuration XML file. Error is: "
 							+ e.getMessage());
 		}
+	}
+	
+	private void loadTaxonomy(ServletContext servletContext,
+			String taxonomyConfigFile) {
+		try {
+			Element taxonomyConfig = Xml.loadStream(new FileInputStream(
+					this.taxonomyConfigurationFile));
+			if (servletContext != null) {
+				ConfigurationOverrides.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
+			}
+			
+			taxonomy = new HashMap<String, Map<String,Map<String,Object>>>();
+			Element definitions = taxonomyConfig.getChild("def");
+			if (definitions != null) {
+				for (Object e : definitions.getChildren()) {
+					if (e instanceof Element) {
+						Element config = (Element) e;
+						taxonomy.put(config.getName(), getSummaryConfig(config));
+					}
+				}
+			}
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+    /**
+     * TODO javadoc.
+     *
+     * @param summaryConfig
+     * @param resultType
+     * @return
+     * @throws Exception
+     */
+	private Map<String,Map<String,Object>> getSummaryConfig(Element resultTypeConfig) {
+		Map<String, Map<String,Object>> results = new HashMap<String, Map<String, Object>>();
+
+		for (Object obj : resultTypeConfig.getChildren()) {
+			if(obj instanceof Element) {
+				Element summaryElement = (Element) obj;
+				String name = summaryElement.getAttributeValue("name");
+				String plural = summaryElement.getAttributeValue("plural");
+				String key = summaryElement.getAttributeValue("indexKey");
+				String order = summaryElement.getAttributeValue("order");
+				String maxString = summaryElement.getAttributeValue("max");
+				String type = summaryElement.getAttributeValue("type");
+				if (order == null) {
+					order = "freq";
+				}
+				int max;
+				if (maxString == null) {
+					max = MAX_SUMMARY_KEY_DEFAULT_NUMBER;
+				} else {
+					max = Integer.parseInt(maxString);
+				}
+				
+				max = Math.min(MAX_SUMMARY_KEY, max);
+				if( type==null ){
+					type = "string";
+				}
+	
+				Map<String,Object> values = new HashMap<String,Object>();
+				values.put("name", name);
+				values.put("plural", plural);
+				values.put("max", max);
+				values.put("order", order);
+				values.put("type", type);
+				// TODO values.put("typeConfig", summaryConfig.getChild("typeConfig"));
+				results.put(key,values);
+			}
+		}
+		return results;
 	}
 
 	private void loadAnalyzerConfig(String configRootName, Map<String, String> fieldAnalyzer) {
@@ -687,6 +775,19 @@ public class LuceneConfig {
 		sb.append("  * trackDocScores: " + isTrackDocScores() + " \n");
 		sb.append("  * trackMaxScore: " + isTrackMaxScore() + " \n");
 		sb.append("  * docsScoredInOrder: " + isDocsScoredInOrder() + " \n");
+		sb.append("Taxonomy configuration: "
+				+ getTaxonomy().keySet().toString() + "\n");
+		for (String key : getTaxonomy().keySet()) {
+			sb.append("  * type: " + key + "\n");
+			Map<String,Map<String,Object>> facetsConfig = getTaxonomy().get(key);
+			for (String field :facetsConfig.keySet()) {
+				sb.append("    * field: " + field+ "\n");
+				Map<String,Object> fieldConfig = facetsConfig.get(field);
+				for (String prop : fieldConfig.keySet()) {
+					sb.append("      * " + prop + ": " + fieldConfig.get(prop) + "\n");
+				}
+			}
+		}
 		return sb.toString();
 	}
 
@@ -732,5 +833,13 @@ public class LuceneConfig {
 	 */
 	public boolean isDocsScoredInOrder() {
 		return docsScoredInOrder;
+	}
+
+	public Map<String, Map<String,Map<String,Object>>> getTaxonomy() {
+		return taxonomy;
+	}
+
+	public void setTaxonomy(Map<String, Map<String,Map<String,Object>>> taxonomy) {
+		this.taxonomy = taxonomy;
 	}
 }
