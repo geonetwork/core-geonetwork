@@ -53,17 +53,17 @@
 
 	<xsl:template mode="script" match="/"/>
 	<xsl:template mode="css" match="/"/>
-    
-    <xsl:template mode="loading" match="/" priority="1">
-        <script>
-           Event.observe(window, 'load', function() {
-                if ($("content_container")) {
-                    $("content_container").show();
-                }
-            });
-        </script>
-    </xsl:template>
-    
+
+	<xsl:template mode="loading" match="/" priority="1">
+		<script>
+			Event.observe(window, 'load', function() {
+				if ($("content_container")) {
+					 $("content_container").show();
+				}
+			});
+		</script>
+	</xsl:template>
+
 	<xsl:template name="formLayout">
 		<xsl:param name="title"/>
 		<xsl:param name="content"/>
@@ -199,8 +199,8 @@
 		</tr>
 	</xsl:template>
 
-  <!-- when displaying a page using modalbox, it makes no sense to have 
-	     a back button so copy everything in the supplied buttons except
+	<!-- when displaying a page using modalbox, it makes no sense to have 
+		 a back button so copy everything in the supplied buttons except
 			 the back button -->
 
 	<xsl:variable name="backButtonName" select="/root/gui/strings/back"/>
