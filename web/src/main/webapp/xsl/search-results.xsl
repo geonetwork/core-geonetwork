@@ -19,7 +19,7 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css"/>
 
 		<script language="JavaScript" type="text/javascript">
 			var translations = {
