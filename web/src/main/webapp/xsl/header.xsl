@@ -63,7 +63,7 @@
 					}
 				};
 			</xsl:if>
-		</script>
+		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- stylesheet -->
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
