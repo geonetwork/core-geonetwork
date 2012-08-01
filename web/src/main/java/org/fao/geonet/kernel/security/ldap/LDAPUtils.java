@@ -10,6 +10,7 @@ import javax.naming.directory.Attribute;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
 
 import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -30,9 +31,10 @@ public class LDAPUtils {
 	 * 
 	 * @param user
 	 * @param dbms
+	 * @param serialFactory 
 	 * @throws Exception 
 	 */
-	static void saveUser(LDAPUser user, Dbms dbms, boolean createNonExistingLdapGroup) throws Exception {
+	static void saveUser(LDAPUser user, Dbms dbms, SerialFactory serialFactory, boolean createNonExistingLdapGroup) throws Exception {
 		Element selectRequest = dbms.select("SELECT * FROM Users where username=?", user.getUsername());
 		Element userXml = selectRequest.getChild("record");
 		String id;
@@ -44,13 +46,13 @@ public class LDAPUtils {
 			if (Log.isDebugEnabled(Log.JEEVES)){
 				Log.debug(Log.JEEVES, "  - Create LDAP user " + user.getUsername() + " in local database.");
 			}
-			
+			 
 			// FIXME : how to access to the serial factory ?
 			// When clustering GeoNetwork proposal is committed, only a UUID will be required
 			// so it will be easier.
-			// id = context.getSerialFactory().getSerial(dbms, "Users") +"";
-			Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Users");
-			id = nextIdRequest.getChild("record").getChildText("max");
+//			Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Users");
+//			id = nextIdRequest.getChild("record").getChildText("max");
+			id = serialFactory.getSerial(dbms, "Users") + "";
 			
 			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
 						"address, city, state, zip, country, email, organisation, kind, authtype) "+
@@ -98,9 +100,9 @@ public class LDAPUtils {
 					}
 					
 					// If LDAP group does not exist in local database, create it
-					Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Groups");
-					groupId = nextIdRequest.getChild("record").getChildText("max");
-					//groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+//					Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Groups");
+//					groupId = nextIdRequest.getChild("record").getChildText("max");
+					groupId = serialFactory.getSerial(dbms, "Groups") + "";
 					String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
 					dbms.execute(query, new Integer(groupId), groupName);
 					Lib.local.insert(dbms, "Groups", new Integer(groupId), groupName);

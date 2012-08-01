@@ -10,6 +10,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Profile;
@@ -50,7 +51,8 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			String username, Collection<? extends GrantedAuthority> authorities) {
 		ResourceManager resourceManager = applicationContext.getBean(ResourceManager.class);
 		ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
-		
+		SerialFactory serialFactory = applicationContext.getBean(SerialFactory.class);
+
 		String defaultProfile = (mapping.get("profile")[1] != null ? mapping.get("profile")[1] : Profile.GUEST);
 		
 		Map<String, ArrayList<String>> userInfo = LDAPUtils.convertAttributes(userCtx.getAttributes()
@@ -113,7 +115,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		Dbms dbms = null;
 		try {
 			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
-			LDAPUtils.saveUser(userDetails, dbms, createNonExistingLdapGroup);
+			LDAPUtils.saveUser(userDetails, dbms, serialFactory, createNonExistingLdapGroup);
 		} catch (Exception e) {
 			try {
 				resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
