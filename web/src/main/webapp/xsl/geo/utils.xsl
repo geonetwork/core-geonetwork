@@ -47,8 +47,8 @@
 	JS files are compressed using jsbuild tool (see jsbuild directory).
 	-->
 	<xsl:template name="geoHeader">
-		<script src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js" type="text/javascript"/><xsl:text>&#10;</xsl:text>
-		<script src="{/root/gui/url}/scripts/geo/proj4js-compressed.js" type="text/javascript"/><xsl:text>&#10;</xsl:text>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/><xsl:text>&#10;</xsl:text>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"/><xsl:text>&#10;</xsl:text>
 		<xsl:if test="count(/root/gui/config/map/proj/crs) &gt; 1">
 		</xsl:if>
 		
@@ -119,7 +119,7 @@
 		if (backgroundLayersMapSearch.length == 0) backgroundLayersMapSearch = backgroundLayers;
 		</script><xsl:text>&#10;</xsl:text>
 
-		<script type="text/javascript" src="{/root/gui/url}scripts/geo/extentMap.js"/><xsl:text>&#10;</xsl:text>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/geo/extentMap.js"/><xsl:text>&#10;</xsl:text>
 
 		<xsl:apply-templates mode="proj4init" select="/root/gui/config/map/proj"/>
 
@@ -129,7 +129,7 @@
 	</xsl:template>
 
 	<xsl:template name="ext-ux-css">
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
 	</xsl:template>
 
 	<xsl:template name="ext-ux">
