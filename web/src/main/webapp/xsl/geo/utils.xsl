@@ -15,16 +15,16 @@
 
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
-				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/><xsl:text>&#10;</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"/><xsl:text>&#10;</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -47,55 +47,55 @@
 	JS files are compressed using jsbuild tool (see jsbuild directory).
 	-->
 	<xsl:template name="geoHeader">
-		<script src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js" type="text/javascript"/>
-		<script src="{/root/gui/url}/scripts/geo/proj4js-compressed.js" type="text/javascript"/>
+		<script src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js" type="text/javascript"/><xsl:text>&#10;</xsl:text>
+		<script src="{/root/gui/url}/scripts/geo/proj4js-compressed.js" type="text/javascript"/><xsl:text>&#10;</xsl:text>
 		<xsl:if test="count(/root/gui/config/map/proj/crs) &gt; 1">
 		</xsl:if>
 		
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/geoext/resources/css/geoext-all-debug.css"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all-debug.js" />
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js" />
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fr.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/no.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all-debug.js" /><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js" /><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fr.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/no.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/><xsl:text>&#10;</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>     
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/><xsl:text>&#10;</xsl:text>
 
 				<!-- For now using standard OpenLayers.js and GeoExt.js compressed files.  TODO: Change to use gn.geo.libs.js -->  
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.geo.libs.js"></script--> 
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fr.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/no.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fr.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/es.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/no.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"/><xsl:text>&#10;</xsl:text>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/GeoExt.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/GeoExt.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/><xsl:text>&#10;</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 
@@ -117,9 +117,9 @@
 
 		// If no layers defined for search map, use the layers defined for map viewer
 		if (backgroundLayersMapSearch.length == 0) backgroundLayersMapSearch = backgroundLayers;
-		</script>
+		</script><xsl:text>&#10;</xsl:text>
 
-		<script type="text/javascript" src="{/root/gui/url}/scripts/geo/extentMap.js"/>
+		<script type="text/javascript" src="{/root/gui/url}scripts/geo/extentMap.js"/><xsl:text>&#10;</xsl:text>
 
 		<xsl:apply-templates mode="proj4init" select="/root/gui/config/map/proj"/>
 
@@ -129,14 +129,14 @@
 	</xsl:template>
 
 	<xsl:template name="ext-ux-css">
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
 	</xsl:template>
 
 	<xsl:template name="ext-ux">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/><xsl:text>&#10;</xsl:text>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"/><xsl:text>&#10;</xsl:text>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"/><xsl:text>&#10;</xsl:text>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"/><xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 	<!-- Insert required JS and CSS for Ext selection panel (ie KeywordSelectionPanel) -->
@@ -147,19 +147,19 @@
 			 If not, they are part of gn.editor.js -->
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
-				<!-- <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/> -->
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/csw.SearchTools.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.SearchField.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.KeywordSelectionPanel.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.CRSSelectionPanel.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/LogoSelectionPanel.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.LinkedMetadataSelectionPanel.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.GeoPublisherPanel.js"/>
+				<!-- <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/><xsl:text>&#10;</xsl:text> -->
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/csw.SearchTools.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.SearchField.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.KeywordSelectionPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.CRSSelectionPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/LogoSelectionPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.LinkedMetadataSelectionPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.GeoPublisherPanel.js"/><xsl:text>&#10;</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- 
 					editor libs is already loaded in all page due to lots of dependencies
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/><xsl:text>&#10;</xsl:text>
 				-->
 			</xsl:otherwise>
 		</xsl:choose>
@@ -194,7 +194,7 @@
 			<xsl:for-each select="crs[@def!='']">
 				Proj4js.defs["<xsl:value-of select="@code"/>"] = "<xsl:value-of select="@def"/>";                
 			</xsl:for-each>
-		</script>
+		</script><xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 	<!-- Init all maps. -->
