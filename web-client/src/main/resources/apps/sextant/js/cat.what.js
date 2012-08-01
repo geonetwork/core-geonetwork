@@ -20,6 +20,8 @@ cat.what = function() {
 			
 			var categoryTree = new GeoNetwork.CategoryTree({
 				url : services.getCategories,
+				rootVisible: false,
+				label: OpenLayers.i18n('Theme'),
 				width: 250
 			});
 			
@@ -30,7 +32,7 @@ cat.what = function() {
 				width: 160,
 			    minChars: 2,
 			    loadingText: '...',
-			    fieldLabel: 'Full-text search',
+			    fieldLabel: OpenLayers.i18n('fullTextSearch'),
 			    hideLabel: false,
 			    hideTrigger: true,
 			    url: services.opensearchSuggest

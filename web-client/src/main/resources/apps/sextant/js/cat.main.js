@@ -343,9 +343,10 @@ cat.app = function() {
 		});
 
 		var formItems = [];
-		formItems.push(whereForm, whatForm, whenForm, whoForm,
-				GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
-						undefined));
+		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
+				undefined);
+		optionsPanel.setVisible(false);
+		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel);
 
 		// Add advanced mode criteria to simple form - end
 		var advandcedField = [];
@@ -507,6 +508,7 @@ cat.app = function() {
 				items : [ {
 					region : 'west',
 					id : 'west',
+					bodyCssClass: 'west-panel-body',
 					split : true,
 					border : true,
 					frame : false,

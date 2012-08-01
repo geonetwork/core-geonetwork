@@ -35,8 +35,9 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         iconCls: 'search_tree_noicon',
         enableDD:false,
         containerScroll: true,
-        rootVisible: true,
+        rootVisible: false,
         autoHeight: true,
+        bodyCssClass: 'x-form-item search_label', 
         root: new Ext.tree.TreeNode({
             expanded: true,
             text: 'Categories'
@@ -56,6 +57,15 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         	callback: this.loadCategories,
         	scope: this
         });
+        if(this.label) {
+	        this.on('afterrender', function(c) {
+	        	c.body.insertFirst({
+	        		tag: 'label',
+	        		html: this.label+' :',
+	        		cls: 'x-form-item-label cat-root-node'
+	        	})
+	        });
+        }
     },
     
     /**

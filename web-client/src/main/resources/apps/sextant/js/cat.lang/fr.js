@@ -9,6 +9,12 @@ cat.lang.fr = {
     "result-list-view": "Visualiser",
     "result-list-download": "Télécharger",
     "essentielle": "Métadonnées essentielles",
-    "complete": "Métadonnées complètes"
+    "complete": "Métadonnées complètes",
+    "fullTextSearch": "Recherche libre",
+    "reset": "Effacer",
+    'What': "Quoi",
+    "beginDate": "Date de début",
+    "endDate": "Date de fin",
+    "group": "Organismes"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

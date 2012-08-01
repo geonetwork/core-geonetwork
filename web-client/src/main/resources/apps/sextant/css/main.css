@@ -42,10 +42,11 @@
 .search-panel .x-panel-header-text a:hover{
 	color: #FF7930;
 }
-.search-panel .olMap {
-	border-bottom-color: #D0D0D0;
-	border-style: solid;
-    border-width: 0 1px 1px 1px;
+.search-form-panel .olMap {
+    border-radius: 0;
+}
+.search-form-panel .where-toolbar .x-toolbar {
+    border: none;
 }
 .search-form-panel {
 	margin-bottom: 5px;
@@ -136,6 +137,9 @@
 .search_tree_noicon {
 	display : none;
 	background-image:url('ext/resources/images/default/s.gif') !important;
+}
+.search_label .cat-root-node{
+	float: none !important;
 }
 .result-panel .x-toolbar {
 	background-image:none;
@@ -381,6 +385,9 @@
 }
 .view-win .x-window-header .x-tool-close-over {
     background-image: url("../images/ui-icons_616161_256x240.png")
+}
+.west-panel-body {
+	background-color: #DFDFDF;
 }
 
 hr {

@@ -831,7 +831,7 @@ GeoNetwork.util.SearchFormTools = {
     getDateRangeFields: function(nameFrom, labelFrom, idFrom, nameTo, labelTo, idTo, anyTime){
         GeoNetwork.util.SearchFormTools.registerDateVtype();
         var changeCb = function(field, newValue, oldValue){
-                    if (this && newValue !== '') {
+                    if (this && this!= field && newValue !== '') {
                         this.setValue(false);
                     }
                 };
