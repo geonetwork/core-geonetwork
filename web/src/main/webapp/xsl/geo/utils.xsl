@@ -30,9 +30,9 @@
 	</xsl:template>
 
 	<xsl:template name="geoCssHeader">
-		<link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css"/>
-		<link rel="stylesheet" type="text/css" href="../../scripts/openlayers/theme/geonetwork/style.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/geonetwork/style.css"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css"/>
 	</xsl:template>
 
@@ -47,17 +47,17 @@
 	JS files are compressed using jsbuild tool (see jsbuild directory).
 	-->
 	<xsl:template name="geoHeader">
-		<script src="../../scripts/ext/adapter/ext/ext-base.js" type="text/javascript"/>
-		<script src="../../scripts/geo/proj4js-compressed.js" type="text/javascript"/>
+		<script src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js" type="text/javascript"/>
+		<script src="{/root/gui/url}/scripts/geo/proj4js-compressed.js" type="text/javascript"/>
 		<xsl:if test="count(/root/gui/config/map/proj/crs) &gt; 1">
 		</xsl:if>
 		
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
-				<link rel="stylesheet" type="text/css" href="../../scripts/geoext/resources/css/geoext-all-debug.css"/>
-				<script type="text/javascript" src="../../scripts/ext/ext-all-debug.js" />
+				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/geoext/resources/css/geoext-all-debug.css"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all-debug.js" />
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js" />
-				<script type="text/javascript" src="../../scripts/openlayers/lib/OpenLayers.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"/>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"/>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"/>
@@ -119,7 +119,7 @@
 		if (backgroundLayersMapSearch.length == 0) backgroundLayersMapSearch = backgroundLayers;
 		</script>
 
-		<script type="text/javascript" src="../../scripts/geo/extentMap.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/geo/extentMap.js"/>
 
 		<xsl:apply-templates mode="proj4init" select="/root/gui/config/map/proj"/>
 
@@ -129,14 +129,14 @@
 	</xsl:template>
 
 	<xsl:template name="ext-ux-css">
-		<link rel="stylesheet" type="text/css" href="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
 	</xsl:template>
 
 	<xsl:template name="ext-ux">
-		<script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/>
-		<script type="text/javascript" src="../../scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"/>
-		<script type="text/javascript" src="../../scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"/>
-		<script type="text/javascript" src="../../scripts/map/Ext.ux/form/DateTime.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/MultiselectItemSelector-3.0/DDView.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"/>
 	</xsl:template>
 
 	<!-- Insert required JS and CSS for Ext selection panel (ie KeywordSelectionPanel) -->
@@ -147,19 +147,19 @@
 			 If not, they are part of gn.editor.js -->
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
-				<!-- <script type="text/javascript" src="../../scripts/editor/metadata-editor.js"/> -->
-				<script type="text/javascript" src="../../scripts/editor/csw.SearchTools.js"/>
-				<script type="text/javascript" src="../../scripts/editor/app.SearchField.js"/>
-				<script type="text/javascript" src="../../scripts/editor/app.KeywordSelectionPanel.js"/>
-				<script type="text/javascript" src="../../scripts/editor/app.CRSSelectionPanel.js"/>
-				<script type="text/javascript" src="../../scripts/editor/LogoSelectionPanel.js"/>
-				<script type="text/javascript" src="../../scripts/editor/app.LinkedMetadataSelectionPanel.js"/>
-				<script type="text/javascript" src="../../scripts/editor/app.GeoPublisherPanel.js"/>
+				<!-- <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/> -->
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/csw.SearchTools.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.SearchField.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.KeywordSelectionPanel.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.CRSSelectionPanel.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/LogoSelectionPanel.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.LinkedMetadataSelectionPanel.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/app.GeoPublisherPanel.js"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- 
 					editor libs is already loaded in all page due to lots of dependencies
-				<script type="text/javascript" src="../../scripts/lib/gn.editor.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/>
 				-->
 			</xsl:otherwise>
 		</xsl:choose>
