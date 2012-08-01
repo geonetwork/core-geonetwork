@@ -25,7 +25,7 @@
 			var translations = {
 				<xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
 			};
-		</script>
+		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
 		<xsl:choose>
