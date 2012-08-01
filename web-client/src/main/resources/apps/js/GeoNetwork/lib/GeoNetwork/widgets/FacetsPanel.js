@@ -54,6 +54,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
     afterFacetClick: function(){
         
     },
+    
     refresh: function (response) {
         var facets = response.responseXML.childNodes[0].childNodes[1],
             zappette = '<div id="breadcrumb"></div>', store = this.facetsStore, recId = 0;

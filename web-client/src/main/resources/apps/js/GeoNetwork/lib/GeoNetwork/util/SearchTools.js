@@ -96,7 +96,7 @@ GeoNetwork.util.SearchTools = {
                     if (isCatalogueSStore) {
 	                    var summary = currentRecords.summary;
                         // added check for summary.keywords.keyword otherwise if result has no keywords the loadData on store fails
-                        if (summary && summary.count > 0 && summary.keywords.keyword && summaryStore) {
+                        if (summary && summary.count > 0 && summary.keywords && summary.keywords.keyword && summaryStore) {
 	                        summaryStore.loadData(summary);
 	                    }
                     }
@@ -391,5 +391,38 @@ GeoNetwork.util.SearchTools = {
             return true;
         });
         return result;
+    },
+    parseFacets: function(response) {
+        var facets = response.responseXML.childNodes[0].childNodes[1];
+        var store = new Ext.data.ArrayStore({
+            // store configs
+            autoDestroy: true,
+            storeId: 'myStore',
+            // reader configs
+            idIndex: 0,  
+            fields: [
+               'facet',
+               'name',
+               'count'
+            ]
+        });
+        if (facets.nodeName === 'summary') {
+             Ext.each(facets.childNodes, function(facet) {
+                 if (facet.nodeName != '#text' && facet.childNodes.length > 0) {
+                     Ext.each(facet.childNodes, function(node) {
+                        if (node.getAttribute) {
+                            var data = {
+                                facet : node.nodeName,
+                                name : node.getAttribute('name'),
+                                count : node.getAttribute('count')
+                            };
+                            var r = new store.recordType(data); 
+                            store.add(r);
+                        }
+                     });
+                 }
+            });
+        }
+        return store;
     }
 };
