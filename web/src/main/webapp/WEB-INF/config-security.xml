@@ -412,12 +412,26 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <bean id="ldapAuthProvider"
         class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
         <constructor-arg>
-            <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+            <!--
+                A PasswordComparisonAuthenticator
+            <bean class="org.springframework.security.ldap.authentication.PasswordComparisonAuthenticator">
                 <constructor-arg ref="contextSource"/>
                 <property name="userDnPatterns">
                     <list><value>${ldap.base.dn.pattern}</value></list>
                 </property>
+                <property name="passwordAttributeName" value="userPassword"/>
+                <property name="passwordEncoder">
+                   <!- - <bean class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>- ->
+                    <bean class="org.springframework.security.authentication.encoding.LdapShaPasswordEncoder"/>
+                </property>
             </bean>
+        -->
+        <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userDnPatterns">
+                    <list><value>${ldap.base.dn.pattern}</value></list>
+                </property>
+        </bean>
         </constructor-arg>
         <property name="userDetailsContextMapper" ref="ldapUserContextMapper" />
     </bean>

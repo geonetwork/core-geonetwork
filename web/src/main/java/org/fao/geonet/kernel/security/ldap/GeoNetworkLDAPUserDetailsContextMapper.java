@@ -12,6 +12,7 @@ import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Profile;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -49,7 +50,9 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			String username, Collection<? extends GrantedAuthority> authorities) {
 		ResourceManager resourceManager = applicationContext.getBean(ResourceManager.class);
 		ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
-
+		
+		String defaultProfile = (mapping.get("profile")[1] != null ? mapping.get("profile")[1] : Profile.GUEST);
+		
 		Map<String, ArrayList<String>> userInfo = LDAPUtils.convertAttributes(userCtx.getAttributes()
 				.getAll());
 		
@@ -76,7 +79,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			
 			// Set default privileges
 			if (userDetails.getPrivileges().size() == 0) {
-				userDetails.addPrivilege(mapping.get("privilege")[1], mapping.get("profile")[1]);
+				userDetails.addPrivilege(mapping.get("privilege")[1], defaultProfile);
 			}
 		} else {
 			// 2. a privilegePattern is defined which define a 
@@ -99,10 +102,13 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				} else {
 					System.out.println("LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 				}
-				
 			}
 		}
 		
+		// Assign default profile if not set by LDAP info
+		if (userDetails.getProfile() == null) {
+			userDetails.setProfile(defaultProfile);
+		}
 		
 		Dbms dbms = null;
 		try {
