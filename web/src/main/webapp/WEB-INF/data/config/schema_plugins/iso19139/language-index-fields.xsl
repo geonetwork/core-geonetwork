@@ -8,21 +8,21 @@
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										>
 
-	<!-- This file defines what parts of the metadata are indexed by Lucene
-	     Searches can be conducted on indexes defined here.
-	     The Field@name attribute defines the name of the search variable.
-		 If a variable has to be maintained in the user session, it needs to be
-		 added to the GeoNetwork constants in the Java source code.
-		 Please keep indexes consistent among metadata standards if they should
-		 work accross different metadata resources -->
+	<!--This file defines what parts of the metadata are indexed by Lucene
+		Searches can be conducted on indexes defined here.
+		The Field@name attribute defines the name of the search variable.
+		If a variable has to be maintained in the user session, it needs to be
+		added to the GeoNetwork constants in the Java source code.
+		Please keep indexes consistent among metadata standards if they should
+		work accross different metadata resources -->
 	<!-- ========================================================================================= -->
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no" />
-		<xsl:include href="convert/functions.xsl"/>
+	<xsl:include href="convert/functions.xsl"/>
 
 	<!-- ========================================================================================= -->
 	<xsl:variable name="isoDocLangId">
-	  <xsl:call-template name="langId19139"/>
+		<xsl:call-template name="langId19139"/>
 	</xsl:variable>
 
 	<xsl:template match="/">
@@ -31,31 +31,31 @@
 			<xsl:for-each select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale">
 				<xsl:variable name="langId" select="@id" />
 				<!--<xsl:variable name="isoLangId" select="java:twoCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))" />-->
-                <xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
+				<xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
 				<xsl:if test="$isoLangId!=$isoDocLangId">
 					<Document locale="{$isoLangId}">
 
-					<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
-					<Field name="_docLocale" string="{$isoDocLangId}" store="true" index="true"/>
+						<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
+						<Field name="_docLocale" string="{$isoDocLangId}" store="true" index="true"/>
 
-					<xsl:variable name="poundLangId" select="concat('#',$langId)" />
-					<xsl:variable name="_defaultTitle">
-						<xsl:call-template name="defaultTitle">
-							<xsl:with-param name="isoDocLangId" select="$isoLangId"/>
-						</xsl:call-template>
-					</xsl:variable>
-					<!-- not tokenized title for sorting -->
-					<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" />
+						<xsl:variable name="poundLangId" select="concat('#',$langId)" />
+						<xsl:variable name="_defaultTitle">
+							<xsl:call-template name="defaultTitle">
+								<xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<!-- not tokenized title for sorting -->
+						<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" />
 
-					<xsl:variable name="title" 
-						select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
+						<xsl:variable name="title"
+							select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
 
-					<!-- not tokenized title for sorting -->
-					<Field name="_title" string="{string($title)}" store="true" index="true" />
+						<!-- not tokenized title for sorting -->
+						<Field name="_title" string="{string($title)}" store="true" index="true" />
 
-					<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
-						<xsl:with-param name="langId" select="$poundLangId"/>
-					</xsl:apply-templates>
+						<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
+							<xsl:with-param name="langId" select="$poundLangId"/>
+						</xsl:apply-templates>
 
 					</Document>
 				</xsl:if>
@@ -70,7 +70,7 @@
 		<!-- === Data or Service Identification === -->
 
 		<!-- the double // here seems needed to index MD_DataIdentification when
-           it is nested in a SV_ServiceIdentification class -->
+			it is nested in a SV_ServiceIdentification class -->
 
 		<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
 							gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
@@ -83,10 +83,10 @@
 					<Field name="identifier" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
-                <!-- not tokenized title for sorting -->
-                <Field name="_defaultTitle" string="{string(gmd:title/gco:CharacterString)}" store="true" index="true"/>
-                <!-- not tokenized title for sorting -->
-                <Field name="_title" string="{string(gmd:title//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
+				<!-- not tokenized title for sorting -->
+				<Field name="_defaultTitle" string="{string(gmd:title/gco:CharacterString)}" store="true" index="true"/>
+				<!-- not tokenized title for sorting -->
+				<Field name="_title" string="{string(gmd:title//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
 
 				<xsl:for-each select="gmd:title//gmd:LocalisedCharacterString[@locale=$langId]">
 					<Field name="title" string="{string(.)}" store="true" index="true"/>
