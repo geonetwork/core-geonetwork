@@ -113,7 +113,6 @@ import java.util.TreeSet;
 public class LuceneSearcher extends MetaSearcher {
 	private static SearchManager _sm;
 	private String        _styleSheetName;
-	private Element       _summaryConfig;
 
 	private Query         _query;
 	private Filter        _filter;
@@ -133,8 +132,6 @@ public class LuceneSearcher extends MetaSearcher {
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
 
-	private static final int MAX_SUMMARY_KEY = 1000;
-	private static final int MAX_SUMMARY_KEY_DEFAULT_NUMBER = 10;
 	
 	/**
      * Filter geometry object WKT, used in the logger ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
@@ -150,10 +147,9 @@ public class LuceneSearcher extends MetaSearcher {
      * @param summaryConfig
      * @param luceneConfig
      */
-	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, LuceneConfig luceneConfig) {
+	public LuceneSearcher (SearchManager sm, String styleSheetName, LuceneConfig luceneConfig) {
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
-		_summaryConfig  = summaryConfig;
 		_selector = new FieldSelector() {
 			public final FieldSelectorResult accept(String name) {
 				if (name.equals("_id")) return FieldSelectorResult.LOAD;
@@ -180,15 +176,16 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+		// Open the IndexReader first, and then the TaxonomyReader.
 		_reader = _sm.getIndexReader(srvContext.getLanguage());
-		
+		_taxonomyReader = _sm.getIndexTaxonomyReader();
+
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher search()");
         
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
-		_taxonomyReader = _sm.getIndexTaxonomyReader();
-
+		
 		
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
@@ -698,7 +695,7 @@ public class LuceneSearcher extends MetaSearcher {
 		}
 		
 		Pair<TopDocs,Element> results = doSearchAndMakeSummary( endHit, startHit, endHit, 
-				_language, _resultType, _summaryConfig, _reader, 
+				_language, _luceneConfig.getTaxonomy().get(_resultType), _reader, 
 				_query, _filter, _sort, _taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(),
 				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
 		);
@@ -1021,58 +1018,6 @@ public class LuceneSearcher extends MetaSearcher {
             return query;
         }
 
-    /**
-     * TODO javadoc.
-     *
-     * @param summaryConfig
-     * @param resultType
-     * @return
-     * @throws Exception
-     */
-	static Map<String,Map<String,Object>> getSummaryConfig(Element summaryConfig, String resultType) throws Exception {
-
-//		static HashMap<String,HashMap<String,Object>> getSummaryConfig(Element summaryConfig, String resultType, int maxSummaryKeys) throws Exception {
-
-		Map<String, Map<String,Object>> results = new HashMap<String, Map<String, Object>>();
-
-		Element resultTypeConfig = summaryConfig.getChild("def").getChild(resultType);
-        @SuppressWarnings(value = "unchecked")
-		List<Element> elements = resultTypeConfig.getChildren();
-
-		for (Element summaryElement : elements) {
-			String name = summaryElement.getAttributeValue("name");
-			String plural = summaryElement.getAttributeValue("plural");
-			String key = summaryElement.getAttributeValue("indexKey");
-			String order = summaryElement.getAttributeValue("order");
-			String maxString = summaryElement.getAttributeValue("max");
-			String type = summaryElement.getAttributeValue("type");
-			if (order == null) {
-				order = "freq";
-			}
-			int max;
-			if (maxString == null) {
-				max = MAX_SUMMARY_KEY_DEFAULT_NUMBER;
-			} else {
-				max = Integer.parseInt(maxString);
-			}
-			
-			max = Math.min(MAX_SUMMARY_KEY, max);
-			if( type==null ){
-				type = "string";
-			}
-
-			Map<String,Object> values = new HashMap<String,Object>();
-			values.put("name", name);
-			values.put("plural", plural);
-			values.put("max", max);
-			values.put("order", order);
-			values.put("type", type);
-			values.put("typeConfig", summaryConfig.getChild("typeConfig"));
-			results.put(key,values);
-		}
-
-		return results;
-	}
 
 	
 	/**
@@ -1082,7 +1027,6 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @param startHit	the start hit to return in the TopDocs if not building summary
 	 * @param endHit	the end hit to return in the TopDocs if not building summary
 	 * @param langCode	the language code used by SummaryComparator
-	 * @param resultType	the resultType is used to define the type of summary to build according to summary configuration in config-summary.xml.
 	 * @param summaryConfig	the summary configuration
 	 * @param reader  reader
 	 * @param query   query
@@ -1099,7 +1043,7 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @throws Exception hmm
 	 */
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
-			String resultType, Element summaryConfig, IndexReader reader, 
+			Map<String, Map<String, Object>> summaryConfig, IndexReader reader, 
 			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
 			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
 	{
@@ -1122,17 +1066,14 @@ public class LuceneSearcher extends MetaSearcher {
 
         if (taxonomyReader != null && buildSummary) {
         	// configure facets from configuration file
-        	Map<String, Map<String,Object>> summaryConfigValues = getSummaryConfig(summaryConfig, resultType);
-        				
-        				
-        	FacetSearchParams fsp = buildFacetSearchParams(summaryConfigValues);
+        	FacetSearchParams fsp = buildFacetSearchParams(summaryConfig);
         	FacetsCollector facetCollector = new FacetsCollector(fsp,
         			reader, taxonomyReader);
         	
         	searcher.search(query, cFilter, MultiCollector.wrap(tfc, facetCollector));
         	try {
 
-            	buildFacetSummary(elSummary, summaryConfigValues, facetCollector);
+            	buildFacetSummary(elSummary, summaryConfig, facetCollector);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Log.warning(Geonet.SEARCH_ENGINE, "buildFacetSummary error. " + e.getMessage());
@@ -1142,7 +1083,7 @@ public class LuceneSearcher extends MetaSearcher {
             searcher.search(query, cFilter, tfc);
         }
 		elSummary.setAttribute("count", tfc.getTotalHits()+"");
-		elSummary.setAttribute("type", "local");        
+		elSummary.setAttribute("type", "local");
 
 		TopDocs tdocs = tfc.topDocs(startHit, endHit);
 
@@ -1161,37 +1102,43 @@ public class LuceneSearcher extends MetaSearcher {
 			Map<String, Map<String, Object>> summaryConfigValues,
 			FacetsCollector facetCollector) throws IOException {
 		StringBuffer facetsInfo = new StringBuffer("Facets: ");
-		facetsInfo.append(facetCollector.getFacetResults().size());
-		
-		for (Iterator<FacetResult> iterator = facetCollector.getFacetResults().iterator(); iterator.hasNext();) {
-			FacetResult result = (FacetResult) iterator.next();
-			String label = result.getFacetResultNode().getLabel().toString();
+		try {
+			facetsInfo.append(facetCollector.getFacetResults().size());
 			
-			facetsInfo.append("\n  label: ");
-			facetsInfo.append(label);
-			facetsInfo.append("\n  subresults: ");
-			facetsInfo.append(result.getFacetResultNode().getNumSubResults());
-			
-			Map<String, Object> config = summaryConfigValues.get(label);
-			Element facets = new Element(config.get("plural").toString());
-			FacetResultNode frn = result.getFacetResultNode();
-			if (frn.getNumSubResults() != 0) {
-				for (Iterator subresults = frn.getSubResults().iterator(); subresults.hasNext();) {
-					FacetResultNode node = (FacetResultNode) subresults.next();
-					facetsInfo.append("\n   * ");
-					facetsInfo.append(node.toString());
-					
-					Element facet = new Element(config.get("name").toString());
-					int count = (int) node.getValue();
-					facet.setAttribute("count", count + "");
-					facet.setAttribute("name", node.getLabel().lastComponent());
-					facets.addContent(facet);
+			for (Iterator<FacetResult> iterator = facetCollector.getFacetResults().iterator(); iterator.hasNext();) {
+				FacetResult result = (FacetResult) iterator.next();
+				String label = result.getFacetResultNode().getLabel().toString();
+				
+				facetsInfo.append("\n  label: ");
+				facetsInfo.append(label);
+				facetsInfo.append("\n  subresults: ");
+				facetsInfo.append(result.getFacetResultNode().getNumSubResults());
+				
+				Map<String, Object> config = summaryConfigValues.get(label);
+				Element facets = new Element(config.get("plural").toString());
+				FacetResultNode frn = result.getFacetResultNode();
+				if (frn.getNumSubResults() != 0) {
+					for (Iterator subresults = frn.getSubResults().iterator(); subresults.hasNext();) {
+						FacetResultNode node = (FacetResultNode) subresults.next();
+						facetsInfo.append("\n   * ");
+						facetsInfo.append(node.toString());
+						
+						Element facet = new Element(config.get("name").toString());
+						int count = (int) node.getValue();
+						facet.setAttribute("count", count + "");
+						facet.setAttribute("name", node.getLabel().lastComponent());
+						facets.addContent(facet);
+					}
+				}
+				elSummary.addContent(facets);
+				if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+					Log.debug(Geonet.SEARCH_ENGINE, facetsInfo);
 				}
 			}
-			elSummary.addContent(facets);
-			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
-				Log.debug(Geonet.SEARCH_ENGINE, facetsInfo);
-			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			Log.error(Geonet.SEARCH_ENGINE, "Check facet configuration. This may happen when a facet is configured"
+					+ " but does not exist in the taxonomy index. Error is: " + e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
 
