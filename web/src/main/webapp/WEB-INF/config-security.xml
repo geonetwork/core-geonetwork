@@ -446,6 +446,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
          * here we support more than one group
          * and we may support profile/group setup with this proposal http://trac.osgeo.org/geonetwork/wiki/proposals/UserProfileByGroup
         -->
+        <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
         <property name="privilegePattern" value="${ldap.privilege.pattern}" />
         <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
         <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>

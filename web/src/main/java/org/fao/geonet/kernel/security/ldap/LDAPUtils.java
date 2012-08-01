@@ -12,6 +12,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
@@ -34,17 +35,17 @@ public class LDAPUtils {
 	 * @param serialFactory 
 	 * @throws Exception 
 	 */
-	static void saveUser(LDAPUser user, Dbms dbms, SerialFactory serialFactory, boolean createNonExistingLdapGroup) throws Exception {
+	static void saveUser(LDAPUser user, Dbms dbms, SerialFactory serialFactory, boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup) throws Exception {
 		Element selectRequest = dbms.select("SELECT * FROM Users where username=?", user.getUsername());
 		Element userXml = selectRequest.getChild("record");
 		String id;
-		if (Log.isDebugEnabled(Log.JEEVES)){
-			Log.debug(Log.JEEVES, "LDAP user sync for " + user.getUsername() + " ...");
+		if (Log.isDebugEnabled(Geonet.LDAP)){
+			Log.debug(Geonet.LDAP, "LDAP user sync for " + user.getUsername() + " ...");
 		}
 		// FIXME : this part of the code is a bit redundant with update user code.
 		if (userXml == null) {
-			if (Log.isDebugEnabled(Log.JEEVES)){
-				Log.debug(Log.JEEVES, "  - Create LDAP user " + user.getUsername() + " in local database.");
+			if (Log.isDebugEnabled(Geonet.LDAP)){
+				Log.debug(Geonet.LDAP, "  - Create LDAP user " + user.getUsername() + " in local database.");
 			}
 			 
 			// FIXME : how to access to the serial factory ?
@@ -67,8 +68,8 @@ public class LDAPUtils {
 			Element nextIdRequest = dbms.select("SELECT id FROM Users WHERE username = ?", user.getUsername());
 			id = nextIdRequest.getChild("record").getChildText("id");
 
-			if (Log.isDebugEnabled(Log.JEEVES)){
-				Log.debug(Log.JEEVES, "  - Update LDAP user " + user.getUsername() + " (" + id + ") in local database.");
+			if (Log.isDebugEnabled(Geonet.LDAP)){
+				Log.debug(Geonet.LDAP, "  - Update LDAP user " + user.getUsername() + " (" + id + ") in local database.");
 			}
 			
 			// User update
@@ -79,11 +80,13 @@ public class LDAPUtils {
 					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), new Integer(id));
 			
 			// Delete user groups
-			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+			if (importPrivilegesFromLdap) {
+				dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+			}
 		}
 
 		// Add user groups
-		if (!Profile.ADMINISTRATOR.equals(user.getProfile())) {
+		if (importPrivilegesFromLdap && !Profile.ADMINISTRATOR.equals(user.getProfile())) {
 			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
 			for(Pair<String, String> privilege : user.getPrivileges()) {
 				// TODO : add profile info if multiple profile proposal pass the CFV
@@ -95,8 +98,8 @@ public class LDAPUtils {
 				String groupId;
 				
 				if (groupRecord == null && createNonExistingLdapGroup) {
-					if (Log.isDebugEnabled(Log.JEEVES)){
-						Log.debug(Log.JEEVES, "  - Add non existing group '" + groupName + "' in local database.");
+					if (Log.isDebugEnabled(Geonet.LDAP)){
+						Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
 					}
 					
 					// If LDAP group does not exist in local database, create it
@@ -110,8 +113,8 @@ public class LDAPUtils {
 					groupId = groupRecord.getChildText("id");
 				}
 				
-				if (Log.isDebugEnabled(Log.JEEVES)){
-					Log.debug(Log.JEEVES, "  - Add LDAP group " + groupName + " for user.");
+				if (Log.isDebugEnabled(Geonet.LDAP)){
+					Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
 				}
 				
 				if (groupRecord != null || createNonExistingLdapGroup) {
