@@ -22,7 +22,8 @@
 		
 	</xsl:template>
 
-	<xsl:template mode="extraTab" match="/">
+
+	<xsl:template name="iso19139.emodnet.hydrographyExtraTab">
 		<xsl:param name="tabLink"/>
 		<xsl:param name="schema"/>
 		
@@ -51,11 +52,29 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
 
-		<xsl:apply-templates mode="iso19139" select=".">
-			<xsl:with-param name="schema" select="$schema"/>
-			<xsl:with-param name="edit" select="$edit"/>
-			<xsl:with-param name="embedded" select="$embedded"/>
-		</xsl:apply-templates>
+		<!-- process in profile mode first -->
+		<xsl:variable name="profileElements">
+			<xsl:apply-templates mode="iso19139.emodnet.hydrography" select=".">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="edit" select="$edit"/>
+				<xsl:with-param name="embedded" select="$embedded"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		
+		<xsl:choose>
+			<!-- if we got a match in profile mode then show it -->
+			<xsl:when test="count($profileElements/*)>0">
+				<xsl:copy-of select="$profileElements"/>
+			</xsl:when>
+			<!-- otherwise process in base iso19139 mode -->
+			<xsl:otherwise> 
+				<xsl:apply-templates mode="iso19139" select="." >
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="embedded" select="$embedded" />
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 
@@ -78,13 +97,12 @@
     Redirection template for profil fra in order to process 
     extraTabs.
   -->
-	<xsl:template mode="iso19139" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
+	<xsl:template mode="iso19139.emodnet.hydrography" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
 		priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:param name="embedded"/>
 
-		
 		<xsl:variable name="dataset"
 			select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' or normalize-space(gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=''"/>
 		<xsl:choose>

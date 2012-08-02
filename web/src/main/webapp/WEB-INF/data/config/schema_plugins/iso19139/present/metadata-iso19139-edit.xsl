@@ -10,8 +10,10 @@
   xmlns:gml="http://www.opengis.net/gml"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:saxon="http://saxon.sf.net/"
   xmlns:exslt="http://exslt.org/common"
-  exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
+  extension-element-prefixes="saxon"
+  exclude-result-prefixes="#all">
 
   <xsl:include href="metadata-iso19139-utils.xsl"/>
   <xsl:include href="metadata-iso19139-geo.xsl"/>
@@ -3164,7 +3166,7 @@
     </xsl:if>
     </xsl:template>
   -->
-  <xsl:template mode="extraTab" match="/"/>
+  <xsl:template name="iso19139ExtraTab"/>
   
   
   <!-- ============================================================================= -->
@@ -3187,10 +3189,11 @@
     </xsl:if>
     
     <!-- To define profil specific tabs -->
-    <xsl:apply-templates mode="extraTab" select="/">
+    <xsl:variable name="tabTemplate" select="concat($schema,'ExtraTab')"/>
+    <saxon:call-template name="{$tabTemplate}">
       <xsl:with-param name="tabLink" select="$tabLink"/>
       <xsl:with-param name="schema" select="$schema"/>
-    </xsl:apply-templates>
+    </saxon:call-template>
     
     <xsl:if test="/root/gui/env/metadata/enableIsoView = 'true'">
       <xsl:call-template name="mainTab">
