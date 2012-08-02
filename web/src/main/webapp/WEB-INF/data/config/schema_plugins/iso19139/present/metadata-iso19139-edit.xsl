@@ -3154,20 +3154,6 @@
     </xsl:choose>
   </xsl:template>
   
-  <!-- In order to add profil specific tabs 
-    add a template in this mode.
-    
-    To add some more tabs.
-    <xsl:template mode="extraTab" match="iso19139.fraCompleteTab">
-    <xsl:param name="tabLink"/>
-    <xsl:param name="schema"/>
-    <xsl:if test="$schema='iso19139.fra'">
-    ...
-    </xsl:if>
-    </xsl:template>
-  -->
-  <xsl:template name="iso19139ExtraTab"/>
-  
   
   <!-- ============================================================================= -->
   <!-- iso19139 complete tab template  -->
@@ -3187,13 +3173,6 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    
-    <!-- To define profil specific tabs -->
-    <xsl:variable name="tabTemplate" select="concat($schema,'ExtraTab')"/>
-    <saxon:call-template name="{$tabTemplate}">
-      <xsl:with-param name="tabLink" select="$tabLink"/>
-      <xsl:with-param name="schema" select="$schema"/>
-    </saxon:call-template>
     
     <xsl:if test="/root/gui/env/metadata/enableIsoView = 'true'">
       <xsl:call-template name="mainTab">

@@ -12,7 +12,7 @@
 	</xsl:template>
 
 	<!-- EMODNET template / start -->
-	<xsl:template mode="iso19139" match="gmd:distance" priority="2">
+	<xsl:template mode="iso19139.emodnet.chemistry" match="gmd:distance" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:apply-templates mode="iso19139">
@@ -20,19 +20,6 @@
 			<xsl:with-param name="edit" select="$edit"/>
 		</xsl:apply-templates>
 		
-	</xsl:template>
-
-	<xsl:template name="iso19139.emodnet.chemistryExtraTab">
-		<xsl:param name="tabLink"/>
-		<xsl:param name="schema"/>
-		
-		<xsl:call-template name="mainTab">
-			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/tab"/>
-			<xsl:with-param name="default">emodnet.chemistry</xsl:with-param>
-			<xsl:with-param name="menu">
-				<item label="emodnet.chemistryTab">emodnet.chemistry</item>
-			</xsl:with-param>
-		</xsl:call-template>
 	</xsl:template>
 
 	<!-- EMODNET template / end -->
@@ -53,11 +40,13 @@
 
 		<!-- process in profile mode first -->
 		<xsl:variable name="profileElements">
-			<xsl:apply-templates mode="iso19139.emodnet.chemistry" select=".">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="edit" select="$edit"/>
-				<xsl:with-param name="embedded" select="$embedded"/>
-			</xsl:apply-templates>
+			<xsl:if test="$currTab='emodnet.chemistry'">
+				<xsl:apply-templates mode="iso19139.emodnet.chemistry" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit" select="$edit"/>
+					<xsl:with-param name="embedded" select="$embedded"/>
+				</xsl:apply-templates>
+			</xsl:if>
 		</xsl:variable>
 		
 		<xsl:choose>
@@ -84,6 +73,15 @@
 		<xsl:call-template name="iso19139CompleteTab">
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 			<xsl:with-param name="schema" select="$schema"/>
+		</xsl:call-template>
+		
+		
+		<xsl:call-template name="mainTab">
+			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/tab"/>
+			<xsl:with-param name="default">emodnet.chemistry</xsl:with-param>
+			<xsl:with-param name="menu">
+				<item label="emodnet.chemistryTab">emodnet.chemistry</item>
+			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
 
