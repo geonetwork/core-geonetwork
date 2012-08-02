@@ -3,7 +3,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
-    <!-- <sec:debug/> -->
+    <sec:debug/>
     <sec:http pattern="/apps/**" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/" create-session="stateless" security="none"></sec:http>
     <sec:http pattern="/*.html" create-session="stateless" security="none"></sec:http>

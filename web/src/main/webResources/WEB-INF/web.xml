@@ -12,6 +12,17 @@
 	          jeeves.config.springutil.JeevesApplicationContext
 	      </param-value>
 	</context-param>
+	<!-- comma separated list of classes that implement 
+		 org.springframework.beans.factory.config.BeanPostProcessor
+
+		 This is an additional method of overriding the spring configuration
+		 besides multiple bean configuration files with overriding beans by using
+		 same id in multiple files. 
+		  -->
+	<context-param>
+		<param-name>applicationContextPostProcessors</param-name>
+		<param-value></param-value>
+	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/config-security.xml</param-value>
