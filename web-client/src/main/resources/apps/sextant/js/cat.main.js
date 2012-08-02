@@ -88,6 +88,36 @@ cat.app = function() {
 		}
 	}
 	
+	function showMD(uuid, record, url, maximized, width, height) {
+		
+		var bd = Ext.getBody();
+		var style = urlParameters.style || 'sextant';
+		
+		var win = new cat.view.ViewWindow({
+            serviceUrl: style == 'sextant' ? this.services.mdShow + '?uuid=' + escape(uuid) : null,
+            formatterServiceUrl: this.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style,
+            lang: this.lang,
+            currTab: GeoNetwork.defaultViewMode || 'simple',
+            printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+            catalogue: this,
+            maximized: false,
+            metadataUuid: uuid,
+            record: record,
+            viewMode: style, 
+            resultsView: this.resultsView,
+            modal: true,
+            draggable: false,
+            movable: false,
+            resizable: false,
+            width: Ext.getBody().getViewSize().width-250,
+            height: Ext.getBody().getViewSize().height-150,
+            cls: 'view-win',
+            bodyStyle:'padding:10px'
+            });
+        win.show(this.resultsView);
+        //win.alignTo(bd, 'tl-br',[30,30,30,30]);
+	}
+	
 	function edit(metadataId, create, group, child) {
 
 		if (!this.editorWindow) {
@@ -123,12 +153,9 @@ cat.app = function() {
 						closeAction : 'hide',
 						collapsible : true,
 						collapsed : false,
-						// Unsuported. Needs some kind of component to store
-						// minimized windows
 						maximizable : false,
 						maximized : true,
 						resizable : true,
-						// constrain: true,
 						width : 980,
 						height : 800
 					});
@@ -266,6 +293,7 @@ cat.app = function() {
 			searchFormCmp : Ext.getCmp('searchForm'),
 			sortByCmp : Ext.getCmp('E_sortBy'),
 			metadataResultsView : metadataResultsView,
+			permalinkProvider: permalinkProvider,
 			config : {
 				selectAction : false,
 				sortByAction : true,
@@ -446,7 +474,8 @@ cat.app = function() {
 				metadataStore : GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore()	: GeoNetwork.data.MetadataResultsStore(), metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
 				summaryStore : GeoNetwork.data.MetadataSummaryStore(),
 				editMode : 2,
-				metadataEditFn: edit
+				metadataEditFn: edit,
+				metadataShowFn: showMD
 			});
 
 			// Extra stuffs
@@ -501,6 +530,21 @@ cat.app = function() {
 					items : [ infoPanel, resultsPanel ]
 				} ]
 			});
+			
+			if (urlParameters.mode) {
+                app.switchMode(urlParameters.mode, false);
+            }
+            if (urlParameters.edit !== undefined && urlParameters.edit !== '') {
+                catalogue.metadataEdit(urlParameters.edit);
+            }
+            if (urlParameters.create !== undefined) {
+                resultPanel.getTopToolbar().createMetadataAction.fireEvent('click');
+            }
+            if (urlParameters.uuid !== undefined) {
+                catalogue.metadataShow(urlParameters.uuid, true);
+            } else if (urlParameters.id !== undefined) {
+                catalogue.metadataShowById(urlParameters.id, true);
+            }
 
 			if (GeoNetwork.searchDefault.activeMapControlExtent) {
 				Ext.getCmp('geometryMap').setExtent();

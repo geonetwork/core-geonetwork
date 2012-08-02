@@ -54,6 +54,11 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         });
     },
     
+    
+    /**
+     * Called after the ListView is rendered
+     * Check if there are some WMS or Download links. Display buttons if needed
+     */
     resultsLoaded: function(view, records, options){
     	
     	cat.MetadataResultsView.superclass.resultsLoaded.apply(this, arguments);

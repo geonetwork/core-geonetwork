@@ -7,6 +7,8 @@ cat.lang.fr = {
     "search-header-simple": "simples",
     "search-header-advanced": "avancés",
     "result-list-view": "Visualiser",
-    "result-list-download": "Télécharger"
+    "result-list-download": "Télécharger",
+    "essentielle": "Métadonnées essentielles",
+    "complete": "Métadonnées complètes"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);
