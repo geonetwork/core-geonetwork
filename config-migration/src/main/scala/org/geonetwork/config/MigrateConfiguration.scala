@@ -40,7 +40,7 @@ class MigrateConfiguration {
       <sec:http pattern="/pdf/**" create-session="stateless" security="none"></sec:http>
       <sec:http pattern="/loc/**" create-session="stateless" security="none"></sec:http>
 
-    <sec:http use-expressions="true" realm="Geonetwork">
+    <sec:http use-expressions="true" realm="Geonetwork" request-matcher="regex">
         <sec:form-login password-parameter="password" username-parameter="username" login-page="/srv/eng/home"/>
         <sec:http-basic />
         <sec:logout delete-cookies="JSESSIONID"></sec:logout>
@@ -50,10 +50,9 @@ class MigrateConfiguration {
         </sec:session-management>
 
         {(original \ "profile") map interceptUrls }
-        <sec:intercept-url pattern="/srv/*/*!" access="hasRole('Developer')"></sec:intercept-url>
-        <sec:intercept-url pattern="/monitor/**" access="hasRole('Monitor')"></sec:intercept-url>
-        <sec:intercept-url pattern="/*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
-        <sec:intercept-url pattern="/**" access="denyAll"></sec:intercept-url>
+        <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/.+healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
     </sec:http>
 
     <sec:authentication-manager>
@@ -85,7 +84,7 @@ class MigrateConfiguration {
     val role = (profile att "name")
     profile \ "allow" map {allow =>
       val access = if (role == "Guest") "permitAll" else "hasRole('"+role+"')"
-      <sec:intercept-url pattern={"/srv/*/"+(allow att "service")} access={access}/>        
+      <sec:intercept-url pattern={"/srv/.*/"+(allow att "service")+"!?.*"} access={access}/>        
     }
   }
   

@@ -58,10 +58,10 @@ class MigrateConfigTest {
   }
   def assertConfigSecurity(configData: Elem) {
     def containsAccess(url: Node, expected: String*) = expected forall (url att "access" contains _) 
-	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" endsWith "/home") && (url att "access" equalsIgnoreCase "permitAll")} nonEmpty)
-	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" endsWith "/admin") && (url att "access" equalsIgnoreCase "hasRole('RegisteredUser')")} nonEmpty)
-	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" endsWith "/metadata.edit") && (url att "access" equalsIgnoreCase "hasRole('Editor')")} nonEmpty)
-	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" equals "/**") && (url att "access" equalsIgnoreCase "denyAll")} nonEmpty)
+	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" endsWith "/home!?.*") && (url att "access" equalsIgnoreCase "permitAll")} nonEmpty)
+	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" endsWith "/admin!?.*") && (url att "access" equalsIgnoreCase "hasRole('RegisteredUser')")} nonEmpty)
+	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" endsWith "/metadata.edit!?.*") && (url att "access" equalsIgnoreCase "hasRole('Editor')")} nonEmpty)
+	  assertTrue(configData \\ "intercept-url" find {url => (url att "pattern" equals "/.*") && (url att "access" equalsIgnoreCase "denyAll")} nonEmpty)
   }
   def childrenByAtt(e: NodeSeq, childName: Symbol, attName: Symbol, attValue: String) =
     e \ childName.name filter (n => (n att attName.name) == attValue)
