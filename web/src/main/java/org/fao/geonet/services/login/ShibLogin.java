@@ -57,6 +57,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class ShibLogin implements Service
 {
+	private static final String VIA_SHIBBOLETH = "Via Shibboleth";
+	private static final String SHIBBOLETH_FLAG = "SHIBBOLETH";
+
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -185,9 +189,9 @@ public class ShibLogin implements Service
         }
 		//--- update user information into the database
 
-		String query = "UPDATE Users SET name=?, surname=?, profile=?, password=? WHERE username=?";
+		String query = "UPDATE Users SET name=?, surname=?, profile=?, password=?, authtype=? WHERE username=?";
 
-		int res = dbms.execute(query, firstname, surname, profile, "Via Shibboleth", username);
+		int res = dbms.execute(query, firstname, surname, profile, VIA_SHIBBOLETH, SHIBBOLETH_FLAG, username);
 
 		//--- if the user was not found --> add it
 
@@ -195,10 +199,10 @@ public class ShibLogin implements Service
 		{
 			userId = context.getSerialFactory().getSerial(dbms, "Users");
 
-			query = 	"INSERT INTO Users(id, username, name, surname, profile, password) "+
-						"VALUES(?,?,?,?,?,?)";
+			query = 	"INSERT INTO Users(id, username, name, surname, profile, password, authtype) "+
+						"VALUES(?,?,?,?,?,?,?)";
 
-			dbms.execute(query, userId, username, firstname, surname, profile, "Via Shibboleth");
+			dbms.execute(query, userId, username, firstname, surname, profile, VIA_SHIBBOLETH, SHIBBOLETH_FLAG);
 
             if (groupProvided) {
                 String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";

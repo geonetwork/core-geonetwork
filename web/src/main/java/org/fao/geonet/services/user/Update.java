@@ -200,7 +200,7 @@ public class Update implements Service
 	/** Adds a user to a group
 	  */
 
-	private void addGroup(Dbms dbms, String user, String group) throws Exception
+	public static void addGroup(Dbms dbms, String user, String group) throws Exception
 	{
 		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
 						 new Integer(user), new Integer(group));

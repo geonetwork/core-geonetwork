@@ -1065,10 +1065,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         
         if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                username: me.getElementsByTagName('username')[0].innerText,
-                firstName: me.getElementsByTagName('name')[0].innerText,
-                surName: me.getElementsByTagName('surname')[0].innerText,
-                role: me.getElementsByTagName('profile')[0].innerText
+                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent,
+                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent,
+                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent,
+                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent
             };
             this.onAfterLogin();
             return true;

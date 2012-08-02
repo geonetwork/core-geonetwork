@@ -53,7 +53,8 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 		try {
 			resourceManager = applicationContext.getBean(ResourceManager.class);
 			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
-			Element selectRequest = dbms.select("SELECT * FROM Users where username=?", username);
+			// Only check user with local db user (ie. authtype is '')
+			Element selectRequest = dbms.select("SELECT * FROM Users WHERE username=? AND authtype IS NULL", username);
 			Element userXml = selectRequest.getChild("record");
 			if (userXml != null) {
 				String oldPassword = authentication.getCredentials().toString();

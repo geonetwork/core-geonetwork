@@ -122,6 +122,7 @@ CREATE TABLE Users
     organisation  varchar2(128),
     kind          varchar2(16),
     security      varchar(128) default '',
+    authtype      varchar(32),
     primary key(id),
     unique(username)
   );
