@@ -7,10 +7,10 @@
 	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:gml="http://www.opengis.net/gml"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common"
-	exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
+	exclude-result-prefixes="#all">
 
 	<xsl:include href="metadata-iso19139-utils.xsl"/>
 	<xsl:include href="metadata-iso19139-geo.xsl"/>
@@ -3485,16 +3485,26 @@
 		add a template in this mode.
 		
 		To add some more tabs.
-		<xsl:template mode="extraTab" match="/">
+		<xsl:template name="iso19139.profileIdCompleteTab">
 		<xsl:param name="tabLink"/>
 		<xsl:param name="schema"/>
-		<xsl:if test="$schema='iso19139.fra'">
-		...
-		</xsl:if>
+		
+		Load iso19139 complete tab if needed
+		<xsl:call-template name="iso19139CompleteTab">
+		<xsl:with-param name="tabLink" select="$tabLink"/>
+		<xsl:with-param name="schema" select="$schema"/>
+		</xsl:call-template>
+		
+		Add Extra tabs
+		<xsl:call-template name="mainTab">
+		<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/tab"/>
+		<xsl:with-param name="default">profileId</xsl:with-param>
+		<xsl:with-param name="menu">
+		<item label="profileIdTab">profileId</item>
+		</xsl:with-param>
+		</xsl:call-template>
 		</xsl:template>
 	-->
-	<xsl:template mode="extraTab" match="/"/>
-	
 	
 	<!-- ============================================================================= -->
 	<!-- iso19139 complete tab template	-->
@@ -3511,14 +3521,8 @@
 				<xsl:with-param name="text"    select="/root/gui/strings/inspireTab"/>
 				<xsl:with-param name="tabLink" select="$tabLink"/>
 			</xsl:call-template>
-		</xsl:if>
+        </xsl:if>
 		
-		<!-- To define profil specific tabs -->
-		<xsl:apply-templates mode="extraTab" select="/">
-			<xsl:with-param name="tabLink" select="$tabLink"/>
-			<xsl:with-param name="schema" select="$schema"/>
-		</xsl:apply-templates>
-
         <xsl:if test="/root/gui/env/metadata/enableIsoView = 'true'">
 			<xsl:call-template name="displayTab">
 				<xsl:with-param name="tab"     select="'groups'"/> <!-- just a non-existing tab -->
