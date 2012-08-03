@@ -115,7 +115,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             var tplDescription = function(value, p, record){
                 return String.format(
                         '<span class="tplTitle">{0}</span><div class="tplDesc">{1}</div>',
-                        record.data.title, record.data.abstract);
+                        record.data.title, record.data['abstract']);
             };
             var tplType = function(value, p, record){
                 var label = OpenLayers.i18n(record.data.type) || '';
