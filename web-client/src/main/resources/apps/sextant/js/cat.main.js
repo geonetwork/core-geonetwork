@@ -181,13 +181,6 @@ cat.app = function() {
 		if (!resultsPanel.isVisible()) {
 			resultsPanel.show();
 		}
-
-		// Init map on first search to prevent error
-		// when user add WMS layer without initializing
-		// Visualization mode
-		// if (GeoNetwork.MapModule && !visualizationModeInitialized) {
-		// initMap();
-		// }
 	}
 
 	function createInfoPanel() {
@@ -241,7 +234,6 @@ cat.app = function() {
 				id : 'info'
 			} ]
 		});
-
 	}
 
 	function createResultsPanel(permalinkProvider) {
@@ -287,7 +279,7 @@ cat.app = function() {
 		});
 
 		catalogue.resultsView = metadataResultsView;
-
+		
 		tBar = new GeoNetwork.MetadataResultsToolbar({
 			catalogue : catalogue,
 			searchFormCmp : Ext.getCmp('searchForm'),
@@ -300,6 +292,13 @@ cat.app = function() {
 				templateView : true,
 				otherActions : false
 			},
+			sortByStore : new Ext.data.ArrayStore({
+	            id: 0,
+	            fields: ['id', 'name'],
+	            data: [['relevance#', OpenLayers.i18n('relevance')], 
+	                    ['title#reverse', OpenLayers.i18n('title')], 
+	                    ['changeDate#', OpenLayers.i18n('changeDate')]]
+	        }),
 			items : [ previousAction, '|', nextAction, '|', {
 				xtype : 'tbtext',
 				text : '',
@@ -345,7 +344,7 @@ cat.app = function() {
 		var formItems = [];
 		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
 				undefined);
-		optionsPanel.setVisible(false);
+		//optionsPanel.setVisible(false);
 		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel);
 
 		// Add advanced mode criteria to simple form - end

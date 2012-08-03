@@ -5,7 +5,16 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	
 	curMenu: undefined,
 	
-    /**
+	layer_style_hover: new OpenLayers.Style({
+        fillColor: "#000000",
+        fillOpacity: 0,
+        strokeColor: "blue",
+        strokeWidth: 2, 
+        strokeOpacity: 1,
+        graphicZIndex: 5000
+    }),
+    
+	/**
      * Get the element by the given type class (ex: 'wms' will get div.wmsMenu element)
      * and add a click event that will show the menu.
      */
@@ -43,6 +52,8 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         return new Ext.menu.Menu({
         	floating: true,
             resultsView: dv,
+            showSeparator: false,
+            cls: 'no-icon-menu',
             items: its,
             listeners: {
             	mouseout: {

@@ -12,7 +12,8 @@ cat.lang.en = {
     "complete": "Métadonnées complètes",
     "beginDate": "Begin date",
     "endDate": "End date",
-    "group": "Companies"
+    "group": "Companies",
+    "administrer": "Admin"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

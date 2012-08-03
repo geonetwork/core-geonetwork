@@ -15,6 +15,7 @@ cat.lang.fr = {
     'What': "Quoi",
     "beginDate": "Date de début",
     "endDate": "Date de fin",
-    "group": "Organismes"
+    "group": "Organismes",
+    "administrer": "Administrer"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

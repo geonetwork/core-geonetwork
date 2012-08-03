@@ -262,6 +262,7 @@
 .result-list li .content div.md-contact span {
     font-size: 11.4px !important;
     font-style: normal !important;
+    color: #808080 !important;
 }
 .result-list li .content h1 {
     color: #F28033;
@@ -275,6 +276,11 @@
 }
 .result-list li .content h1 a:hover {
     text-decoration: none;
+}
+.result-list li .content hr {
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+    height: 1px;
 }
 .result-list li.md-full div.thumbnail {
     padding-left:10px !important;
@@ -330,6 +336,10 @@
     margin-left:4px;
     background-image: url("../images/ui-icons_f28033_256x240.png");
     background-position: 0 -2px;
+}
+
+div.no-icon-menu a.x-menu-item {
+    padding-left: 3px;
 }
 
 .view-win .x-window-tl,
