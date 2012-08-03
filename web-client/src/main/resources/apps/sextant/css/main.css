@@ -315,8 +315,13 @@
     cursor:pointer;
 }
 .result-list li.md-full div.wmsMenu span,
-.result-list li.md-full div.downloadMenu span{
+.result-list li.md-full div.downloadMenu span,
+.result-list li.md-full div.md-action-menu span {
 	padding-left:16px;
+}
+.result-list li.md-full div.md-action-menu span.icon{
+    background-image: url("../images/icons/wrench.png");
+    margin-right: 4px;
 }
 .result-list li.md-full div.wmsMenu span.icon{
     background-image: url("../images/icons/view.png");
@@ -332,7 +337,8 @@
     margin-right: 4px;
 }
 .result-list li.md-full div.wmsMenu span.list-icon,
-.result-list li.md-full div.downloadMenu span.list-icon {
+.result-list li.md-full div.downloadMenu span.list-icon,
+.result-list li.md-full div.md-action-menu span.list-icon {
     margin-left:4px;
     background-image: url("../images/ui-icons_f28033_256x240.png");
     background-position: 0 -2px;

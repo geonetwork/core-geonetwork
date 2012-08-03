@@ -146,9 +146,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         if(this.config.selectAction){
         	cmp.push(this.createTemplateMenu());
         }
-        if(this.config.otherActions){
-        	cmp.push(this.createOtherActionMenu());
-        }
+
+        cmp.push(this.createOtherActionMenu());
+        
         
         // Permalink
         if(this.permalinkProvider) {
@@ -435,7 +435,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         this.actionOnSelectionMenu = new Ext.Button({
             text: OpenLayers.i18n('otherActions'),
-            menu: this.actionMenu
+            menu: this.actionMenu,
+            visible: this.config.otherActions
         });
         
         return this.actionOnSelectionMenu;

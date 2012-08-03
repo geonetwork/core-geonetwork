@@ -13,9 +13,11 @@ cat.lang.fr = {
     "fullTextSearch": "Recherche libre",
     "reset": "Effacer",
     'What': "Quoi",
+    'Who': 'Qui',
+    'Themes': 'Thèmes',
     "beginDate": "Date de début",
     "endDate": "Date de fin",
-    "group": "Organismes",
+    "orgs": "Organismes",
     "administrer": "Administrer"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

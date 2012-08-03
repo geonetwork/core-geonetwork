@@ -266,6 +266,7 @@ cat.app = function() {
 		metadataResultsView = new cat.MetadataResultsView({
 			catalogue : catalogue,
 			displaySerieMembers : true,
+			displayContextualMenu : false,
 			autoScroll : true,
 			templates : {
 	            SIMPLE: GeoNetwork.Templates.SIMPLE,
@@ -344,7 +345,7 @@ cat.app = function() {
 		var formItems = [];
 		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
 				undefined);
-		//optionsPanel.setVisible(false);
+		optionsPanel.setVisible(false);
 		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel);
 
 		// Add advanced mode criteria to simple form - end
@@ -407,7 +408,7 @@ cat.app = function() {
 			},
 			items : formItems
 		});
-
+		
 		// Manage header click event to toggle advanced or simple search
 		// criteria mode
 		searchForm.on('afterrender',function(cpt) {
@@ -633,4 +634,9 @@ Ext.onReady(function() {
 	/* Focus on full text search field */
 	Ext.getDom('E_any').focus(true);
 
+	// Should be in Search field configuration
+	Ext.get('E_any').setWidth(254);
+	Ext.get('E_any').setHeight(30);
+	
+	initShortcut();
 });

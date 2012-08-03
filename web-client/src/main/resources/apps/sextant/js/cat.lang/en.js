@@ -13,7 +13,9 @@ cat.lang.en = {
     "beginDate": "Begin date",
     "endDate": "End date",
     "group": "Companies",
-    "administrer": "Admin"
+    "administrer": "Manage",
+    "Themes": "Themes",
+    "orgs": "Companies"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

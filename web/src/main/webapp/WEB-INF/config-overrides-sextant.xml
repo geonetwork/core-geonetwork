@@ -29,6 +29,9 @@
     <replaceText xpath="general/uploadDir">../../temp/</replaceText>
     <replaceText xpath="general/maxUploadSize">100</replaceText>
     <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
+    
+    <replaceAtt xpath="//service[@name = 'main.search.suggest']/class/param[@name='threshold']" attName="value" value="1"/>
+    
     <replaceXML xpath="resources">
       <resource enabled="true">
         <name>main-db</name>

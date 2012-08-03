@@ -2,6 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
  <xsl:output method="text" indent="no" media-type="application/json"/>
 
+ <xsl:include href="utils.xsl"/>
+
  <xsl:variable name="siteURL"
   select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port, /root/gui/locService)"/>
 
@@ -10,7 +12,15 @@
   <!-- Add Completions (required) -->
   , 
     [<xsl:for-each
-     select="/root/items/item"> "<xsl:value-of select="@term"/>" <xsl:if test="position()!=last()"
+      select="/root/items/item">
+      <xsl:variable name="value">
+        <xsl:call-template name="replaceString">
+          <xsl:with-param name="expr"        select="@term"/>
+          <xsl:with-param name="pattern"     select="'&quot;'"/>
+          <xsl:with-param name="replacement" select="'\&quot;'"/>
+        </xsl:call-template>
+      </xsl:variable>
+      "<xsl:value-of select="$value"/>" <xsl:if test="position()!=last()"
       >,</xsl:if>
     </xsl:for-each> ]
   <!-- Add Descriptions (not required) 
