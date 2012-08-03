@@ -239,6 +239,13 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return '';
         }
     }
+    function getSpatialRepresentationType(v, record){
+        if (record['spatialRepresentationType']) {
+            return record['spatialRepresentationType'][0].value;
+        } else {
+            return '';
+        }
+    }
     function getEdit(v, record){
         if (record.geonet_info && record.geonet_info.edit) {
             return record.geonet_info.edit[0].value;
@@ -273,6 +280,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             name: 'subject',
             mapping: 'keyword',
             defaultValue: ''
+        }, {
+            name: 'spatialRepresentationType',
+            convert: getSpatialRepresentationType
         }, {
             name: 'uuid',
             mapping: 'geonet_info.uuid[0].value',
