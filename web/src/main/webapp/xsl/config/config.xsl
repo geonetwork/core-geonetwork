@@ -799,7 +799,7 @@
 			</tr>
 			
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/subtree"/></td>
+				<td class="padded"><label for="ldap.subtree"><xsl:value-of select="/root/gui/config/subtree"/></label></td>
 				<td class="padded"><input id="ldap.subtree" class="content" type="checkbox" value="false" size="20"/></td>
 			</tr>
 		</table>
