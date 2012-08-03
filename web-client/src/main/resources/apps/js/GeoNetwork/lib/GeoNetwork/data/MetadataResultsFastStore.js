@@ -136,6 +136,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return '';
         }
     }
+
+    function getCredit(v, record){
+        if (record.credit) {
+            return record.credit[0].value;
+        } else {
+            return '';
+        }
+    }
     
     function getPopularity(v, record){
         if (record.popularity) {
@@ -290,6 +298,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'contact',
             convert: getContact
+        }, {
+            name: 'credit',
+            convert: getCredit
         }, {
             name: 'thumbnail',
             convert: getThumbnails
