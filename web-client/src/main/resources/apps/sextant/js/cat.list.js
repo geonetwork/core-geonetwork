@@ -48,7 +48,7 @@ cat.list = function() {
 	                '</td>',
 	                '<td id="{uuid}" class="content">',
 	                    cat.Templates.TITLE,
-	                    '<p class="abstract">{[Ext.util.Format.ellipsis(values.abstract, 50)]}</p>',    // FIXME : 250 as parameters
+	                    '<p class="abstract">{[Ext.util.Format.ellipsis(values.abstract, 350)]}</p>',    // FIXME : 250 as parameters
 	                    '<div class="md-contact">',
 	                    '<tpl if="credit!=\'\'">',
 	                    '<span>',
@@ -78,7 +78,9 @@ cat.list = function() {
 		                '<hr/>',
 		                '<div class="md-links">',
 		               		'<div class="md-action-menu">&nbsp;<span class="icon"></span>' + OpenLayers.i18n('administrer') + '</div>',
+		               		'<div class="btn-separator">&nbsp;</div>',
 		                	'<div class="downloadMenu"><span class="icon"></span>' + OpenLayers.i18n('result-list-download') + '<span class="list-icon"></span></div>',
+		                	'<div class="btn-separator">&nbsp;</div>',
 		                	'<div class="wmsMenu"><span class="icon"></span>' + OpenLayers.i18n('result-list-view') + '<span class="list-icon"></span></div>',
 
 	                    // FIXME : this call require the catalogue to be named catalogue, static call ?

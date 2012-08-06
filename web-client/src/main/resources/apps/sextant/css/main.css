@@ -348,12 +348,14 @@
 .result-list li.md-full div.mdHiddenMenu {
     display:none !important;
 }
+.result-list li.md-full div.mdHiddenBtn {
+    visibility: hidden !important;
+}
 
 .result-list li.md-full div.md-links div.wmsMenu, 
 .result-list li.md-full div.md-links div.downloadMenu, 
 .result-list li.md-full div.md-links div.md-action-menu {
     display:inline;
-	margin-left:10px;
     border: 1px solid #BBBBBB;
     border-radius: 4px 4px 4px 4px;
     color: #333333;
@@ -363,6 +365,14 @@
     font-weight: 700;
     background-color:#F8F8F8;
     cursor:pointer;
+}
+
+.result-list li.md-full div.md-links div.btn-separator {
+    background-image: url("../images/icons/button-separator.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: inline;
+    padding: 6px 12px;
 }
 .result-list li.md-full div.wmsMenu span,
 .result-list li.md-full div.downloadMenu span,
@@ -382,6 +392,10 @@
 	background-position: -16px 0;
 }
 
+.result-list li.md-full div.one-elt span.list-icon {
+	visibility: hidden;
+}
+
 .result-list li.md-full div.downloadMenu span.icon{
     background-image: url("../images/icons/cart-add.png");
     margin-right: 4px;
@@ -392,6 +406,14 @@
     margin-left:4px;
     background-image: url("../images/ui-icons_f28033_256x240.png");
     background-position: 0 -2px;
+}
+.result-list li.md-full div.unabled {
+	opacity: 0.35 !important;
+	background-image: none !important;
+	cursor: default !important;
+}
+.result-list li.md-full div.unabled:hover span.icon {
+	background-position: 0 0 !important;
 }
 
 div.no-icon-menu a.x-menu-item {
