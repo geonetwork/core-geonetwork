@@ -139,7 +139,7 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
 
     function getCredit(v, record){
         if (record.credit) {
-            return record.credit[0].value;
+            return record.credit;
         } else {
             return '';
         }
