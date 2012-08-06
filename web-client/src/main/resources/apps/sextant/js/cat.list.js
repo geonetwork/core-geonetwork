@@ -53,7 +53,7 @@ cat.list = function() {
 	                    '<tpl if="credit!=\'\'">',
 	                    '<span>',
 	                    	OpenLayers.i18n('result-list-source'),
-	                    '&nbsp;{credit}</span>',
+	                    '&nbsp;<tpl for="credit">{value}{[xindex==xcount?"":", "]}</tpl></span>',
 	                    '</tpl>',
 //		                    '<tpl for="contact">',
 //		                        '<tpl if="applies==\'resource\'">',
