@@ -317,8 +317,10 @@ cat.app = function() {
             tooltip: OpenLayers.i18n('printSel'),
             handler: function(){
                 // Select all and print selection
-                this.catalogue.metadataSelectAll();
-                this.catalogue.pdfExport();
+                this.catalogue.metadataSelectAll(function(){
+                    this.catalogue.pdfExport();
+                });
+                
             },
             scope: this
         }));
