@@ -436,7 +436,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.actionOnSelectionMenu = new Ext.Button({
             text: OpenLayers.i18n('otherActions'),
             menu: this.actionMenu,
-            visible: this.config.otherActions
+            hidden: !this.config.otherActions
         });
         
         return this.actionOnSelectionMenu;

@@ -75,9 +75,13 @@ cat.app = function() {
 		// Register events to set cookie values
 		catalogue.on('afterLogin', function() {
 			cookie.set('user', catalogue.identifiedUser);
+			Ext.getCmp('newMdAction').setVisible(catalogue.identifiedUser ? true : false);
+			Ext.getCmp('adminAction').setVisible(catalogue.identifiedUser ? true : false);
 		});
 		catalogue.on('afterLogout', function() {
 			cookie.set('user', undefined);
+			Ext.getCmp('newMdAction').setVisible(false);
+			Ext.getCmp('adminAction').setVisible(false);
 		});
 
 		// Refresh login form if needed
@@ -145,6 +149,7 @@ cat.app = function() {
 							},
 							scope : this
 						} ],
+						ctCls: 'view-win',
 						title : OpenLayers.i18n('mdEditor'),
 						id : 'editorWindow',
 						layout : 'fit',
@@ -306,7 +311,38 @@ cat.app = function() {
 				id : 'info'
 			} ]
 		});
-
+		tBar.add(new Ext.Action({
+            //text: OpenLayers.i18n('printSel'),
+            iconCls: 'md-mn-pdf',
+            tooltip: OpenLayers.i18n('printSel'),
+            handler: function(){
+                // Select all and print selection
+                this.catalogue.metadataSelectAll();
+                this.catalogue.pdfExport();
+            },
+            scope: this
+        }));
+        tBar.add(new Ext.Action({
+            id: 'newMdAction',
+            iconCls: 'addIcon',
+            hidden: true,
+            tooltip: OpenLayers.i18n('newMetadata'),
+            handler: function(){
+                var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                actionCtn.createMetadataAction.handler.apply(actionCtn);
+            },
+            scope: this
+        }));
+        tBar.add(new Ext.Action({
+            id: 'adminAction',
+            iconCls: 'configIcon',
+            hidden: true,
+            tooltip: OpenLayers.i18n('administration'),
+            handler: function(){
+                catalogue.admin();
+            },
+            scope: this
+        }));
 		// bBar = createToolBar();
 
 		resultPanel = new Ext.Panel({

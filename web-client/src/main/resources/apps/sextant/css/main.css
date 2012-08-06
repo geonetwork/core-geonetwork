@@ -141,25 +141,75 @@
 .search_label .cat-root-node{
 	float: none !important;
 }
-.result-panel .x-toolbar {
+
+.x-toolbar {
 	background-image:none;
 	border: none !important;
 	background-color: #DEDEDE;
 	
 }
-.result-panel .x-toolbar td.x-toolbar-cell,
-.result-panel .x-toolbar label,
-.result-panel .x-toolbar .xtb-text,
-.result-panel .x-toolbar .x-btn-text {
+.x-toolbar td.x-toolbar-cell,
+.x-toolbar label,
+.x-toolbar .xtb-text,
+.x-toolbar .x-btn-text {
 	color: #626262;
 	font-size: 12px;
 	font-family: Arial,Helvetica,sans-serif;
 	font-weight:700;
 }
-.result-panel .x-panel-tbar {
+.x-panel-tbar {
 	height:32px;
 	background-color: #DEDEDE;
 }
+
+
+/* Editor style */
+#editorWindow * .x-window-header {
+  margin-bottom: 2px;
+}
+.metadata * fieldset {
+  border-top : 1px solid #999;
+  border-bottom : none;
+  border-left : none;
+  border-right : none;
+  padding : 0px;
+  margin : 0px;
+}
+.metadata * legend {
+    width: 100%;
+    background-color: #AAA;
+    border: 1px solid #999;
+    color: white;
+    font-weight: bold;
+    height: 15px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.metadata fieldset * fieldset legend {
+    background-color: #dbdbdb !important;
+    border-color: #dbdbdb !important;
+    color: #3B3C3C !important;
+    padding-left: 23px;
+}
+
+.metadata fieldset * fieldset * fieldset legend {
+    background-color: #f4f4f4 !important;
+    border-color: #f4f4f4 !important;
+    color: #3B3C3C !important;
+    padding-left: 23px;
+}
+
+.metadata * legend a {
+    color: #ffffff !important;
+}
+.metadata * input, .metadata * textarea, .metadata * select {
+    border: 1px solid #dbdbdb;
+}
+.metadata * table.gn > tbody > tr > td, table.gn > tbody > tr > th {
+  color: #999;
+}
+
 /** WHERE Panel **/
 /*****************/
 .where-toolbar .x-toolbar {
@@ -348,30 +398,30 @@ div.no-icon-menu a.x-menu-item {
     padding-left: 3px;
 }
 
-.view-win .x-window-tl,
-.view-win .x-window-tc,
-.view-win .x-window-tr {
+.x-window-tl,
+.x-window-tc,
+.x-window-tr {
 	background-image: none;
 	background-color: white;
 	border-radius: 4px 4px 0 0;
 }
 
-.view-win .x-window-ml,
-.view-win .x-window-mc,
-.view-win .x-window-mr {
+.x-window-ml,
+.x-window-mc,
+.x-window-mr {
 	background-image: none;
 	background-color: white;
 }
 
-.view-win .x-window-bl,
-.view-win .x-window-bc,
-.view-win .x-window-br {
+.x-window-bl,
+.x-window-bc,
+.x-window-br {
 	background-image: none;
 	background-color: white;
 	border-radius: 0 0 4px 4px;
 }
 
-.view-win .x-window-header {
+.x-window-header {
     padding: 6px 12px 3px;
     position: relative;
     height: 16px;
@@ -383,23 +433,23 @@ div.no-icon-menu a.x-menu-item {
     margin-top: 2px;
 }
 
-.view-win .x-window-header span {
+.x-window-header span {
 	font-family:Arial,​Helvetica,​sans-serif;
 	font-size:12px;
 	font-weight:700px;
 	color: #444444;
 }
-.view-win .x-window-header .x-tool {
+.x-window-header .x-tool {
     float: right;
     margin-right: 2px;
 }
-.view-win .x-window-header .x-tool-close {
+.x-window-header .x-tool-close {
     background-image: url("../images/ui-icons_999999_256x240.png");
     background-position: -96px -128px;
     height:16px;
     width:16px;
 }
-.view-win .x-window-header .x-tool-close-over {
+.x-window-header .x-tool-close-over {
     background-image: url("../images/ui-icons_616161_256x240.png")
 }
 .west-panel-body {
@@ -411,4 +461,8 @@ hr {
     border: medium none;
     color: #AAAAAA;
     height: 1px;
+}
+.md-mn-pdf {
+  background-position: left !important;
+  background-image : url("../images/icons/file-pdf.png") !important;
 }
