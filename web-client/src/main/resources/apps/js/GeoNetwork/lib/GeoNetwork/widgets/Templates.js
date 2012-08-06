@@ -206,16 +206,19 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                     // FIXME : this call require the catalogue to be named catalogue, static call ?
                     // FIXME : ref to app
                         '<tpl for="links">',
-                            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
+                            '<tpl if="parent.dynamic==\'true\' && (values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\')">',
                                 '<a href="#" class="md-mn addLayer" title="' + OpenLayers.i18n('addToMap') + ' {title}" alt="Add layer to map" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{[escape(values.title)]}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
                             '</tpl>',
-                            '<tpl if="values.type == \'application/vnd.google-earth.kml+xml\'">',
+                            '<tpl if="parent.dynamic==\'true\' && values.type == \'application/vnd.google-earth.kml+xml\'">',
                                 '<a href="{href}" class="md-mn md-mn-kml" title="' + OpenLayers.i18n('viewKml') + ' {title}" alt="Open kml">&nbsp;</a>',
                             '</tpl>',
-                            '<tpl if="values.type == \'application/zip\' || values.type == \'application/x-compressed\'">',
+                            '<tpl if="parent.download==\'true\' && (values.type == \'application/zip\' || values.type == \'application/x-compressed\')">',
                                 '<a href="{href}" class="md-mn md-mn-zip" title="' + OpenLayers.i18n('downloadLink') + ' {title}" alt="Download">&nbsp;</a>',
                             '</tpl>',
-                            '<tpl if="values.type == \'text/html\'">',
+                            '<tpl if="parent.download==\'true\' && values.protocol.indexOf(\'WWW:DOWNLOAD\')!=-1">',
+	                            '<a href="{href}" class="md-mn md-mn-zip" title="' + OpenLayers.i18n('downloadLink') + ' {title}" alt="Download">&nbsp;</a>',
+	                        '</tpl>',
+	                        '<tpl if="values.type == \'text/html\'">',
                                 '<a href="{href}" class="md-mn md-mn-www" title="' + OpenLayers.i18n('webLink') + ' {title}" alt="Web link" target="_blank">&nbsp;</a>',
                             '</tpl>',
                             // FIXME : no else ops, how to display other links ?
