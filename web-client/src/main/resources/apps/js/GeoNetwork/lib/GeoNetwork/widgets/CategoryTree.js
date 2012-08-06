@@ -165,11 +165,10 @@ GeoNetwork.CategoryTreeNode = Ext.extend(Ext.tree.TreeNode, {
     },
     
     toggleCheck: function(n,c) {
-		if(c) {
-			Ext.each(n.childNodes, function(child){
-				child.getUI().toggleCheck(true);
-			});
-		}
+    	n.expand();
+		Ext.each(n.childNodes, function(child){
+			child.getUI().toggleCheck(c);
+		});
 	}
 });
 
