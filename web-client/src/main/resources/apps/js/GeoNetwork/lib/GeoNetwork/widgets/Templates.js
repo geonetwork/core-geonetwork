@@ -117,11 +117,11 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
 GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>' +
                                 '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
 GeoNetwork.Templates.RATING_TPL = '<tpl if="isharvested==\'n\' || harvestertype==\'geonetwork\'"><div class="rating">' +
-                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/>' + 
-                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/>' + 
-                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'3\'">checked="true"</tpl> value="3"/>' +
-                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'4\'">checked="true"</tpl> value="4"/>' +
-                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'5\'">checked="true"</tpl> value="5"/>' + 
+                                           '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/>' + 
+                                           '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/>' + 
+                                           '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'3\'">checked="true"</tpl> value="3"/>' +
+                                           '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'4\'">checked="true"</tpl> value="4"/>' +
+                                           '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'5\'">checked="true"</tpl> value="5"/>' + 
                                        '</div></tpl>'; 
 GeoNetwork.Templates.LOGO = '<div class="md-logo"><img src="{[catalogue.URL]}/images/logos/{source}.gif"/></div>';
 /** api: constructor 
