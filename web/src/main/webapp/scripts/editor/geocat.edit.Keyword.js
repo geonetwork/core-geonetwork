@@ -20,8 +20,8 @@ geocat.edit.Keyword = {
         if (!self.searchWindow) {
             var port = window.location.port === "" ? "": ':' + window.location.port;
             var keywordSelectionPanel = new app.KeywordSelectionPanel({
-                createKeyword: function() {
-                    doNewElementAction('/geonetwork/srv/eng/metadata.elem.add', ref, name, id);
+            	createNewXLink: function() {
+                    doNewElementAction('/geonetwork/srv/eng/metadata.elem.add', ref, name, id, "add");
                 },
                 addCreateXLinkButton: true,
                 listeners: {
