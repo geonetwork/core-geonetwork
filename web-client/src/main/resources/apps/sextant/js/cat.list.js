@@ -85,7 +85,7 @@ cat.list = function() {
 	                    // FIXME : ref to app
 		                	'<tpl for="links">',
 	                            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
-	                                '<div class="mdHiddenMenu wmsLink" title="' + OpenLayers.i18n('addToMap') + ' {title}">',
+	                                '<div class="mdHiddenMenu wmsLink dynamic-{parent.dynamic}" title="' + OpenLayers.i18n('addToMap') + ' {title}">',
 	                                // A title
 	                                '<tpl if="values.title">',
 	                                    '{title}',
@@ -97,7 +97,7 @@ cat.list = function() {
 	                                '</div>',
 	                            '</tpl>',
 	                            '<tpl if="values.type == \'DB\'">',
-	                                '<div class="mdHiddenMenu downloadLink" title="' + OpenLayers.i18n('viewKml') + ' {title}">{title}</div>',
+	                                '<div class="mdHiddenMenu downloadLink download-{parent.download}" title="' + OpenLayers.i18n('viewKml') + ' {title}">{title}</div>',
 	                            '</tpl>',
 	                            // FIXME : no else ops, how to display other links ?
 	                        //'|<a href="#" onclick="app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{id}\']]);">{type}</a>',
