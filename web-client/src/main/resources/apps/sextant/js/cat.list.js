@@ -83,15 +83,22 @@ cat.list = function() {
 
 	                    // FIXME : this call require the catalogue to be named catalogue, static call ?
 	                    // FIXME : ref to app
-	                        '<tpl for="links">',
-	                        	'<tpl if="title">',
-		                            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
-		                                '<div class="mdHiddenMenu wmsLink" title="' + OpenLayers.i18n('addToMap') + ' {title}">{title}</div>',
-		                            '</tpl>',
-		                            '<tpl if="values.type == \'DB\'">',
-		                                '<div class="mdHiddenMenu downloadLink" title="' + OpenLayers.i18n('viewKml') + ' {title}">{title}</div>',
-		                            '</tpl>',
-		                        '</tpl>',
+		                	'<tpl for="links">',
+	                            '<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
+	                                '<div class="mdHiddenMenu wmsLink" title="' + OpenLayers.i18n('addToMap') + ' {title}">',
+	                                // A title
+	                                '<tpl if="values.title">',
+	                                    '{title}',
+	                                '</tpl>',
+	                                // A default title
+	                                '<tpl if="values.title==\'\'">',
+	                                    OpenLayers.i18n('result-list-view'),
+	                                '</tpl>',
+	                                '</div>',
+	                            '</tpl>',
+	                            '<tpl if="values.type == \'DB\'">',
+	                                '<div class="mdHiddenMenu downloadLink" title="' + OpenLayers.i18n('viewKml') + ' {title}">{title}</div>',
+	                            '</tpl>',
 	                            // FIXME : no else ops, how to display other links ?
 	                        //'|<a href="#" onclick="app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{id}\']]);">{type}</a>',
 	                        '</tpl>',
