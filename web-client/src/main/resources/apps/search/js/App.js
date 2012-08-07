@@ -672,7 +672,7 @@ GeoNetwork.app = function(){
             
             // Extra stuffs
             infoPanel = createInfoPanel();
-            helpPanel = createHelpPanel();
+            createHelpPanel();
             tagCloudViewPanel = createTagCloud();
             
             createHeader();
