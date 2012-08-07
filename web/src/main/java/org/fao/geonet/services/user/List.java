@@ -78,20 +78,32 @@ public class List implements Service
 
 		java.util.List<Element> alToRemove = new ArrayList<Element>();
 
-		for(Iterator i=elUsers.getChildren().iterator(); i.hasNext(); )
-		{
-			Element elRec = (Element) i.next();
-
-			String userId = elRec.getChildText("id");
-			String profile= elRec.getChildText("profile");
-
-			if (!hsMyGroups.containsAll(getGroups(dbms, userId, profile)))
-				alToRemove.add(elRec);
-
-			if (!profileSet.contains(profile))
-				alToRemove.add(elRec);
+		if (!session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+			for(Iterator i=elUsers.getChildren().iterator(); i.hasNext(); )
+			{
+				Element elRec = (Element) i.next();
+	
+				String userId = elRec.getChildText("id");
+				String profile= elRec.getChildText("profile");
+				
+				Set<String> userGroups = getGroups(dbms, userId, profile);
+				// Is user belong to one of the current user admin group?
+				boolean isInCurrentUserAdminGroups = false;
+				for (String userGroup : userGroups) {
+					if (hsMyGroups.contains(userGroup)) {
+						isInCurrentUserAdminGroups = true;
+						break;
+					}
+				}
+				//if (!hsMyGroups.containsAll(userGroups))
+				if (!isInCurrentUserAdminGroups)
+					alToRemove.add(elRec);
+	
+				if (!profileSet.contains(profile))
+					alToRemove.add(elRec);
+				
+			}
 		}
-
 		//--- remove unwanted users
 
 		for (Element elem : alToRemove) elem.detach();
@@ -112,6 +124,8 @@ public class List implements Service
 		Element groups;
 		if (profile.equals(ProfileManager.ADMIN)) {
 			groups = dbms.select("SELECT id FROM Groups");
+		} if (profile.equals(Geonet.Profile.USER_ADMIN)) {
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", new Integer(id));
 		} else {
 			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", new Integer(id));
 		}

@@ -15,8 +15,11 @@
 			<xsl:with-param name="content">
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
+				<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
+				<xsl:variable name="isNotReviewer" select="not(/root/response/groups/group[id=$groupOwner and userProfile='Reviewer'])"/>
 				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
-
+				
+				
 				<div id="privileges">
 					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
 					<table>
@@ -37,21 +40,23 @@
 							<th/>
 						</tr>
 			
-						<!-- 'Internet', 'Intranet' and GUEST groups -->
-
+						<!-- 'Internet', 'Intranet' and GUEST groups 
+							Disabled if user is not an administrator
+							or if user is not a reviewer of the metadata group.
+						-->
 						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and ($profile != 'Reviewer')"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
 
 						<tr>
@@ -68,6 +73,9 @@
 							<xsl:sort select="name"/>
 							
 							<xsl:variable name="userGroup" select="@userGroup"/>
+							<!-- Display group if it's one of the user groups 
+							or not a user group but the usergrouponly catalog setting is false
+							-->
 							<xsl:if test="(/root/gui/env/metadataprivs/usergrouponly='false' and $userGroup!='true') or $userGroup='true'">
 								<xsl:if test="id!='0' and id!='1' and id!='-1'">
 									<xsl:variable name="groupId" select="id"/>

@@ -239,7 +239,8 @@ CREATE TABLE UserGroups
   (
     userId   int,
     groupId  int,
-    primary key(userId,groupId)
+    profile varchar(32),
+    primary key(userId,groupId,profile)
   );
 
 REM ======================================================================

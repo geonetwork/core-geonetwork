@@ -14,6 +14,7 @@
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
 
+    <isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Any language</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>

@@ -137,7 +137,7 @@
 	-->
 
 	<resources>
-	  <resource enabled="true">
+	  <resource enabled="false">
 	    <name>main-db</name>
 	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
@@ -759,6 +759,7 @@
 
 			<output sheet="user-update.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="groupsAndProfiles" class=".guiservices.groups.GetMineWithProfiles" />
 				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
 		</service>

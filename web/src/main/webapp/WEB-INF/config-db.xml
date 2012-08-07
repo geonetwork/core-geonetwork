@@ -68,6 +68,7 @@
       <java class="v280.MigrationTask"/>
     </version>
     <version id="290">
+      <file path="WEB-INF/classes/setup/sql/migrate/v290" filePrefix="migrate-db-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v290" filePrefix="migrate-"/>
     </version>
   </migrate>

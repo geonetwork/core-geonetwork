@@ -82,6 +82,7 @@ public class GetAdminOper implements Service
 			throw new MetadataNotFoundEx(id);
 
 		Element ownerId = new Element("ownerid").setText(info.owner);
+		Element groupOwner = new Element("groupOwner").setText(info.groupOwner);
 		Element hasOwner = new Element("owner"); 
 		if (am.isOwner(context,id)) 
 			hasOwner.setText("true");
@@ -95,7 +96,7 @@ public class GetAdminOper implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve groups operations
 
-		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 
@@ -106,16 +107,26 @@ public class GetAdminOper implements Service
 			Element el = (Element) list.get(i);
 			
 			el.setName(Geonet.Elem.GROUP);
+			String sGrpId = el.getChildText("id");
+			int grpId = Integer.parseInt(sGrpId);
+
+			//--- get all group informations (user member and user profile)
+			
+			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
+			
+			String query = "SELECT profile FROM UserGroups WHERE userId=? AND groupId=?";
+			Element profiles = dbms.select(query, context.getUserSession().getUserIdAsInt(), grpId);
+			List profilesList = profiles.getChildren();
+			for (Object aProfile : profilesList) {
+				Element pEl = (Element) aProfile;
+				String profile = pEl.getChildText("profile");
+				el.addContent(new Element("userProfile").setText(profile));
+			}
+
 
 			//--- get all operations that this group can do on given metadata
 
-			String sGrpId = el.getChildText("id");
-
-			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
-
-			int grpId = Integer.parseInt(sGrpId);
-
-			String query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
+			query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
 
 			List listAllow = dbms.select(query, new Integer(id), grpId).getChildren();
 
@@ -158,7 +169,8 @@ public class GetAdminOper implements Service
 										.addContent(elOper)
 										.addContent(elGroup)
 										.addContent(ownerId)
-										.addContent(hasOwner);
+										.addContent(hasOwner)
+										.addContent(groupOwner);
 
 		return elRes;
 	}

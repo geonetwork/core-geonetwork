@@ -242,7 +242,8 @@ CREATE TABLE UserGroups
   (
     userId   int not null,
     groupId  int not null,
-    primary key(userId,groupId)
+    profile varchar(32),
+    primary key(userId,groupId,profile)
   );
 
 -- ======================================================================

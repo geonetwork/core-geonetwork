@@ -29,20 +29,22 @@
 									<tr>
 										<td class="padded" align="left" colspan="2">
 											<xsl:variable name="profile" select="/root/gui/session/profile"/>
+											<xsl:variable name="userId" select="/root/gui/session/userId"/>
+											<xsl:variable name="isReviewer" select="count(/root/response/contentReviewers/record[userid=$userId]) > 0"/>
 
 											<input type="radio" name="status" value="{id}" id="st{id}">
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
 												</xsl:if>
 												<!-- status value submitted is disabled for reviewers  -->
-												<xsl:if test="$profile='Reviewer' or contains($profile,'Admin')">
+												<xsl:if test="$isReviewer or contains($profile,'Admin')">
 													<xsl:if test="name='submitted'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</xsl:if>
 
 												<!-- some status values are not available to Editors -->
-												<xsl:if test="$profile='Editor'">
+												<xsl:if test="/root/response/hasEditPermission = 'true' and not($isReviewer)">
 													<xsl:if test="name='approved' or name='retired' or name='rejected'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
