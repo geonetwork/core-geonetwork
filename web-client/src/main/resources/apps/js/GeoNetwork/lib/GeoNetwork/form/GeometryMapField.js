@@ -96,6 +96,10 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
      */
     nearYou : undefined,
     
+    /**
+     * boolean to display or not mouse position under the map
+     */
+    mousePosition: true,
     /** private: method[initStyle]
      *  Define default layer styles
      */
@@ -107,11 +111,10 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         this.layer_style.strokeWidth = 4;
     },
     createExtentControl: function() {
-        var action;
         
         // Restrict to map extent action or draw polygon control
         if (this.restrictToMapExtent) {
-            action = new Ext.form.Checkbox( {
+        	this.ExtAction = new Ext.form.Checkbox( {
                 boxLabel : OpenLayers.i18n('restrictSearchToMap'),
                 checked : this.activated ? true : false,
                 listeners : {
@@ -129,7 +132,6 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                     scope : panel
                 }
             });
-            this.getTopToolbar().add(action);
             
             if (this.activated) {
                 this.on('aftermapmove', this.setField, this);
@@ -140,7 +142,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                     wktelement: this.geometryField,
                     vectorLayerStyle: this.layer_style
              });
-            action = new GeoExt.Action({
+            this.ExtAction = new GeoExt.Action({
                 control: this.extentBox,
                 toggleGroup:  this.map.id + "move",
                 allowDepress: false,
@@ -153,7 +155,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                 iconCls: 'selextent'
             });
             this.vectorLayer = this.extentBox.getOrCreateLayer();
-            var clearAction = {
+            this.clearAction = {
                 iconCls: "clearPolygon",
                 tooltip: {
                     title: OpenLayers.i18n("clearExtentTooltipTitle"), 
@@ -165,14 +167,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                 },
                 scope: this
             };
-            this.getTopToolbar().add(action, clearAction);
         }
-        
-        if (this.nearYouControl) {
-            this.getTopToolbar().add(this.nearYou);
-        }
-        
-        return action;
     },
     /** private: method[createToolbar] 
      *  Create the default toolbar 
@@ -206,14 +201,14 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             }
         });
         
-        var zoomAllAction = new GeoExt.Action({
+        this.zoomAllAction = new GeoExt.Action({
             control: new OpenLayers.Control.ZoomToMaxExtent(),
             map: this.map,
             iconCls: 'zoomfull',
             tooltip: {title: OpenLayers.i18n("zoomToMaxExtentTooltipTitle"), text: OpenLayers.i18n("zoomToMaxExtentTooltipText")}
         });
         
-        var zoomInAction = new GeoExt.Action({
+        this.zoomInAction = new GeoExt.Action({
             control: new OpenLayers.Control.ZoomBox(),
             map: this.map,
             toggleGroup:  this.map.id + "move",
@@ -222,7 +217,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             tooltip: {title: OpenLayers.i18n("zoominTooltipTitle"), text: OpenLayers.i18n("zoominTooltipText")}
         });
 
-        var zoomOutAction = new GeoExt.Action({
+        this.zoomOutAction = new GeoExt.Action({
             control:  new OpenLayers.Control.ZoomBox({
                 displayClass: 'ZoomOut',
                 out: true
@@ -234,7 +229,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             iconCls: 'zoomout'
         });
 
-        var panAction = new GeoExt.Action({
+        this.panAction = new GeoExt.Action({
             control: new OpenLayers.Control.DragPan({
                     isDefault: true
                 }),
@@ -245,11 +240,19 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             iconCls: 'pan',
             tooltip:  {title: OpenLayers.i18n("dragTooltipTitle"), text: OpenLayers.i18n("dragTooltipText")}
         });
-        
-        items.push(zoomAllAction, zoomInAction, zoomOutAction, panAction,  '->');
-        
-        //this.getTopToolbar().add(items);
         return items;
+    },
+    
+    /**
+     * Default method to be overridden that organize all map buttons/actions of the map Panel
+     */
+    manageNavBar : function() {
+    	this.getTopToolbar().add(this.zoomAllAction, this.zoomInAction, this.zoomOutAction, this.panAction,  '->');
+    	this.getTopToolbar().add(this.ExtAction);
+    	this.getTopToolbar().add(this.clearAction);
+    	if (this.nearYouControl) {
+            this.getTopToolbar().add(this.nearYou);
+        }
     },
 
     /** api: property[mapOptions] 
@@ -301,7 +304,9 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         this.map = new OpenLayers.Map('search_map', options);
         this.map.addControl(new GeoNetwork.Control.ZoomWheel());
         this.map.addControl(new OpenLayers.Control.LoadingPanel());
-        this.map.addControl(new OpenLayers.Control.MousePosition());
+        if(this.mousePosition) {
+        	this.map.addControl(new OpenLayers.Control.MousePosition());
+        }
         
         this.tbar = this.createNavBar();
         
@@ -329,6 +334,8 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         GeoNetwork.form.GeometryMapField.superclass.initComponent.call(this);
         this.add(this.geometryField);
         this.createExtentControl();
+        this.manageNavBar();
+        
         // FIXME : can't trigger this after map rendered by MapPanel. Workaround used, this.setExtent
 //        this.on('afterlayout', function(el){
 //            if (this.activated) {

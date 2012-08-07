@@ -379,7 +379,8 @@ GeoNetwork.util.SearchFormTools = {
             name: 'E_sortBy',
             id: 'E_sortBy',
             inputType: 'hidden',
-            linkedCombo: combo
+            linkedCombo: combo,
+            value: defaultValue ? defaultValue.split('#')[0] : 'relevance'
         });
         var sortOrderField = new Ext.form.TextField({
             name: 'E_sortOrder',
@@ -388,6 +389,7 @@ GeoNetwork.util.SearchFormTools = {
             linkedCombo: combo
         });
         combo.setValue(defaultValue || 'relevance#');
+        
         return [sortByField, sortOrderField, combo];
     },
     /** api:method[getSortByStore]
@@ -831,7 +833,7 @@ GeoNetwork.util.SearchFormTools = {
     getDateRangeFields: function(nameFrom, labelFrom, idFrom, nameTo, labelTo, idTo, anyTime){
         GeoNetwork.util.SearchFormTools.registerDateVtype();
         var changeCb = function(field, newValue, oldValue){
-                    if (this && newValue !== '') {
+                    if (this && this!= field && newValue !== '') {
                         this.setValue(false);
                     }
                 };

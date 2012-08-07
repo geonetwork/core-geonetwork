@@ -136,6 +136,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return '';
         }
     }
+
+    function getCredit(v, record){
+        if (record.credit) {
+            return record.credit;
+        } else {
+            return '';
+        }
+    }
     
     function getPopularity(v, record){
         if (record.popularity) {
@@ -154,10 +162,18 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
     }
     
     function getDownload(v, record){
-        if (record.download) {
-            return record.download[0].value;
+        if (record.geonet_info && record.geonet_info.download) {
+            return record.geonet_info.download[0].value;
         } else {
-            return '';
+            return 'false';
+        }
+    }
+    
+    function getDynamic(v, record){
+        if (record.geonet_info && record.geonet_info.dynamic) {
+            return record.geonet_info.dynamic[0].value;
+        } else {
+            return 'false';
         }
     }
     
@@ -281,6 +297,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             name: 'contact',
             convert: getContact
         }, {
+            name: 'credit',
+            convert: getCredit
+        }, {
             name: 'thumbnail',
             convert: getThumbnails
         }, {
@@ -320,6 +339,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'download',
             convert: getDownload
+        }, {
+            name: 'dynamic',
+            convert: getDynamic
         }, {
             name: 'ownername',
             convert: getOwnerName

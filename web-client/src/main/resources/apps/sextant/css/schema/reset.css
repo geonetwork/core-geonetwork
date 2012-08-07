@@ -19,6 +19,9 @@
 	text-decoration: none;
 }
 
+.viewmd-panel * div#tabs {
+    display: none;
+}
 body {
 	height : 100%;
 	

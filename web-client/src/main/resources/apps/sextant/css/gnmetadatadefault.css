@@ -17,7 +17,7 @@
 .metadata * img.logo {
   max-height : 100px;
   max-width : 100px;
-  border : 1px solid #B3D4E6;
+  border : 1px solid #EFEFEF;
   margin : 5px;
 }
 
@@ -139,7 +139,7 @@ label + span {
   float:left;
 }
 */
-.metadata * fieldset {
+/*.metadata * fieldset {
   border-top : 1px solid #8c8c8c;
   border-bottom : none;
   border-left : none;
@@ -153,7 +153,7 @@ label + span {
   font-weight : bold;
   color : #016599;
   padding : 5px 0px 4px 0px;
-}
+}*/
 
 
 
@@ -292,11 +292,11 @@ table.related * ul {
 
 
 table.gn {
-  /*border : 1px solid #B3D4E6;*/
+  /*border : 1px solid #EFEFEF;*/
 }
 table.gn > tbody > tr > td,
 table.gn > tbody > tr > th {
-  border-bottom : 1px solid #B3D4E6;
+  border-bottom : 1px solid #EFEFEF;
   color : #069;
 }
 
@@ -307,7 +307,7 @@ table.gn > tbody > tr > td.complex {
 
 table.gn > tbody > tr > td.main,
 table.gn > tbody > tr > th.main {
-  background-color : #EBF5FA;
+  background-color : #FFF;
 }
 
 table.map > tbody > tr > td {
@@ -389,7 +389,7 @@ div.button {
   background-image : url(../images/default/page_white.png) !important;
 }
 .editing {
-  background-image : url(../images/default/page_white_edit.png) !important;
+/*  background-image : url(../images/default/page_white_edit.png) !important;*/
 }
 .saveMetadata {
   background-image : url(../images/default/page_save.png) !important;

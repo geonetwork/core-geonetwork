@@ -79,6 +79,12 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     sortByCombo: undefined,
     
+    /**
+     * Customise value for sortBy combo
+     * should have fields: ['id', 'name']
+     */
+    sortByStore: undefined,
+    
     mdSelectionInfo: 'md-selection-info',
     
     selectionActions: [],
@@ -114,20 +120,35 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     actionOnSelectionMenu: undefined,
     
     admin: false,
+    
+    /** config for elements display */
+    config : {
+		selectAction : true,
+		sortByAction : true,
+		templateView : true,
+		otherActions : true
+	},
     /** private: method[initComponent] 
      *  Initializes the toolbar results view.
      */
     initComponent: function(){
         var cmp = [];
-        cmp.push(this.createSelectionToolBar());
-        
+        if(this.config.selectAction) {
+        	cmp.push(this.createSelectionToolBar());
+            this.catalogue.on('selectionchange', this.updateSelectionInfo, this);
+            this.updateSelectionInfo(this.catalogue, 0);
+        }
         cmp.push(['->']);
         
         var sortOption = this.getSortByCombo();
         cmp.push(OpenLayers.i18n('sortBy'), sortOption, '|');
         
-        cmp.push(this.createTemplateMenu());
+        if(this.config.selectAction){
+        	cmp.push(this.createTemplateMenu());
+        }
+
         cmp.push(this.createOtherActionMenu());
+        
         
         // Permalink
         if(this.permalinkProvider) {
@@ -138,11 +159,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         GeoNetwork.MetadataResultsToolbar.superclass.initComponent.call(this);
         
         this.add(cmp);
-        this.catalogue.on('selectionchange', this.updateSelectionInfo, this);
         this.catalogue.on('afterLogin', this.updatePrivileges, this);
         this.catalogue.on('afterLogout', this.updatePrivileges, this);
-        
-        this.updateSelectionInfo(this.catalogue, 0);
     },
     getSortByCombo: function(){
         var tb = this;
@@ -151,9 +169,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             mode: 'local',
             id: 'sortByToolBar',
             triggerAction: 'all',
-            value: 'relevance',
+            value: 'relevance#',
             width: 130,
-            store: GeoNetwork.util.SearchFormTools.getSortByStore(),
+            store: this.sortByStore || GeoNetwork.util.SearchFormTools.getSortByStore(),
             valueField: 'id',
             displayField: 'name',
             listeners: {
@@ -175,7 +193,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 scope: tb
             }
         });
-        
         return this.sortByCombo;
     },
     clickTemplateMenu: function(item, pressed){
@@ -418,7 +435,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         this.actionOnSelectionMenu = new Ext.Button({
             text: OpenLayers.i18n('otherActions'),
-            menu: this.actionMenu
+            menu: this.actionMenu,
+            hidden: !this.config.otherActions
         });
         
         return this.actionOnSelectionMenu;

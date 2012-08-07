@@ -5,13 +5,23 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	
 	curMenu: undefined,
 	
-    /**
+	layer_style_hover: new OpenLayers.Style({
+        fillColor: "#000000",
+        fillOpacity: 0,
+        strokeColor: "blue",
+        strokeWidth: 2, 
+        strokeOpacity: 1,
+        graphicZIndex: 5000
+    }),
+    
+	/**
      * Get the element by the given type class (ex: 'wms' will get div.wmsMenu element)
      * and add a click event that will show the menu.
      */
     linkMenuInit: function(idx, node, type){
         var menuElt = Ext.get(Ext.DomQuery.selectNode('div.'+type+'Menu', node));
-        if(menuElt) {
+        if(menuElt && !menuElt.hasClass('unabled')) {
+        	menuElt.removeAllListeners();
         	menuElt.on('click', function(){
 
         		if(this.curMenu) this.curMenu.destroy();
@@ -33,9 +43,11 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	var its = new Array();
     	
     	for (var i=0;i<a.length;i++) {
-    		its.push({
-    			text: a[i].firstChild.wholeText
-    		});
+    		if(a[i].firstChild) {
+    			its.push({
+    				text: a[i].firstChild.wholeText
+    			});
+    		}
     	}
     	if(its.length == 0) {
     		return;
@@ -43,6 +55,8 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         return new Ext.menu.Menu({
         	floating: true,
             resultsView: dv,
+            showSeparator: false,
+            cls: 'no-icon-menu',
             items: its,
             listeners: {
             	mouseout: {
@@ -64,22 +78,48 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	cat.MetadataResultsView.superclass.resultsLoaded.apply(this, arguments);
     	
         var lis = Ext.DomQuery.jsSelect('li.md-full', this.el.dom);
-
+        var isAdmin = this.catalogue.isIdentified();
+        
         for(var i=0;i<lis.length;i++) {
         	var wmsMenu = Ext.DomQuery.jsSelect('div.wmsMenu', lis[i]);
         	var downloadMenu = Ext.DomQuery.jsSelect('div.downloadMenu', lis[i]);
+        	var adminMenu = Ext.DomQuery.jsSelect('div.md-action-menu', lis[i]);
         	
-        	var a = Ext.DomQuery.jsSelect('div.wmsLink', lis[i]);
-        	if(a && a.length > 0) {
-        		Ext.get(wmsMenu).removeClass('mdHiddenMenu');
-        	} else {
-        		Ext.get(wmsMenu).addClass('mdHiddenMenu');
+        	// Hide admin button (and sep)if not connected
+        	if(!isAdmin) {
+        		Ext.get(adminMenu).addClass('mdHiddenBtn');
+        		Ext.get(adminMenu[0]).next('div.btn-separator').addClass('mdHiddenBtn');
         	}
-        	a = Ext.DomQuery.jsSelect('div.downloadLink', lis[i]);
+        	
+        	// Hide button if doesn't contain any element
+        	// Unable button if elements have class dynamic-false (no privilege)
+        	var a = Ext.DomQuery.jsSelect('div.wmsLink', lis[i]);
+        	var elMenu = Ext.get(wmsMenu);
         	if(a && a.length > 0) {
-        		Ext.get(downloadMenu).removeClass('mdHiddenMenu');
+        		elMenu.removeClass('mdHiddenBtn');
+        		if(Ext.get(a[0]).hasClass('dynamic-false')) {
+        			elMenu.addClass('unabled');
+        		}
+        		if(a.length == 1) {
+        			elMenu.addClass('one-elt');
+        		}
         	} else {
-        		Ext.get(downloadMenu).addClass('mdHiddenMenu');
+        		elMenu.addClass('mdHiddenBtn');
+        	}
+        	
+        	a = Ext.DomQuery.jsSelect('div.downloadLink', lis[i]);
+        	elMenu = Ext.get(downloadMenu);
+        	if(a && a.length > 0) {
+        		elMenu.removeClass('mdHiddenBtn');
+        		if(Ext.get(a[0]).hasClass('download-false')) {
+        			elMenu.addClass('unabled');
+        		}
+        		if(a.length == 1) {
+        			elMenu.addClass('one-elt');
+        		}
+        	} else {
+        		elMenu.addClass('mdHiddenBtn');
+        		Ext.get(downloadMenu[0]).next('div.btn-separator').addClass('mdHiddenBtn');
         	}
         }
     },

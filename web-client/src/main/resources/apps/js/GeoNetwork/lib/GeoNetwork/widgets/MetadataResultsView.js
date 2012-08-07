@@ -156,7 +156,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             strokeWidth: 1,
             fillOpacity: 0,
             strokeColor: '${featurecolor}',
-            fillColor: '${featurecolor}'
+            fillColor: '${featurecolor}',
+            graphicZIndex: 1000
         }),
         
         /** api: property[layer_style_hover] 

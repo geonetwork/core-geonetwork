@@ -9,7 +9,13 @@ cat.lang.en = {
     "result-list-view": "View",
     "result-list-download": "Download",
     "essentielle": "Métadonnées essentielles",
-    "complete": "Métadonnées complètes"
+    "complete": "Métadonnées complètes",
+    "beginDate": "Begin date",
+    "endDate": "End date",
+    "group": "Companies",
+    "administrer": "Manage",
+    "Themes": "Themes",
+    "orgs": "Companies"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

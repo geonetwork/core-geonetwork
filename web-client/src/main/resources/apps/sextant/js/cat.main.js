@@ -75,9 +75,13 @@ cat.app = function() {
 		// Register events to set cookie values
 		catalogue.on('afterLogin', function() {
 			cookie.set('user', catalogue.identifiedUser);
+			Ext.getCmp('newMdAction').setVisible(catalogue.identifiedUser ? true : false);
+			Ext.getCmp('adminAction').setVisible(catalogue.identifiedUser ? true : false);
 		});
 		catalogue.on('afterLogout', function() {
 			cookie.set('user', undefined);
+			Ext.getCmp('newMdAction').setVisible(false);
+			Ext.getCmp('adminAction').setVisible(false);
 		});
 
 		// Refresh login form if needed
@@ -94,7 +98,7 @@ cat.app = function() {
 		var style = urlParameters.style || 'sextant';
 		
 		var win = new cat.view.ViewWindow({
-            serviceUrl: style == 'sextant' ? this.services.mdShow + '?uuid=' + escape(uuid) : null,
+            serviceUrl: style == 'sextant' ? this.services.mdView + '?uuid=' + escape(uuid) : null,
             formatterServiceUrl: this.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style,
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',
@@ -145,6 +149,7 @@ cat.app = function() {
 							},
 							scope : this
 						} ],
+						ctCls: 'view-win',
 						title : OpenLayers.i18n('mdEditor'),
 						id : 'editorWindow',
 						layout : 'fit',
@@ -181,13 +186,6 @@ cat.app = function() {
 		if (!resultsPanel.isVisible()) {
 			resultsPanel.show();
 		}
-
-		// Init map on first search to prevent error
-		// when user add WMS layer without initializing
-		// Visualization mode
-		// if (GeoNetwork.MapModule && !visualizationModeInitialized) {
-		// initMap();
-		// }
 	}
 
 	function createInfoPanel() {
@@ -241,7 +239,6 @@ cat.app = function() {
 				id : 'info'
 			} ]
 		});
-
 	}
 
 	function createResultsPanel(permalinkProvider) {
@@ -274,6 +271,7 @@ cat.app = function() {
 		metadataResultsView = new cat.MetadataResultsView({
 			catalogue : catalogue,
 			displaySerieMembers : true,
+			displayContextualMenu : false,
 			autoScroll : true,
 			templates : {
 	            SIMPLE: GeoNetwork.Templates.SIMPLE,
@@ -287,7 +285,7 @@ cat.app = function() {
 		});
 
 		catalogue.resultsView = metadataResultsView;
-
+		
 		tBar = new GeoNetwork.MetadataResultsToolbar({
 			catalogue : catalogue,
 			searchFormCmp : Ext.getCmp('searchForm'),
@@ -300,13 +298,53 @@ cat.app = function() {
 				templateView : true,
 				otherActions : false
 			},
+			sortByStore : new Ext.data.ArrayStore({
+	            id: 0,
+	            fields: ['id', 'name'],
+	            data: [['relevance#', OpenLayers.i18n('relevance')], 
+	                    ['title#reverse', OpenLayers.i18n('title')], 
+	                    ['changeDate#', OpenLayers.i18n('changeDate')]]
+	        }),
 			items : [ previousAction, '|', nextAction, '|', {
 				xtype : 'tbtext',
 				text : '',
 				id : 'info'
 			} ]
 		});
-
+		tBar.add(new Ext.Action({
+            //text: OpenLayers.i18n('printSel'),
+            iconCls: 'md-mn-pdf',
+            tooltip: OpenLayers.i18n('printSel'),
+            handler: function(){
+                // Select all and print selection
+                this.catalogue.metadataSelectAll(function(){
+                    this.catalogue.pdfExport();
+                });
+                
+            },
+            scope: this
+        }));
+        tBar.add(new Ext.Action({
+            id: 'newMdAction',
+            iconCls: 'addIcon',
+            hidden: true,
+            tooltip: OpenLayers.i18n('newMetadata'),
+            handler: function(){
+                var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                actionCtn.createMetadataAction.handler.apply(actionCtn);
+            },
+            scope: this
+        }));
+        tBar.add(new Ext.Action({
+            id: 'adminAction',
+            iconCls: 'configIcon',
+            hidden: true,
+            tooltip: OpenLayers.i18n('administration'),
+            handler: function(){
+                catalogue.admin();
+            },
+            scope: this
+        }));
 		// bBar = createToolBar();
 
 		resultPanel = new Ext.Panel({
@@ -343,9 +381,10 @@ cat.app = function() {
 		});
 
 		var formItems = [];
-		formItems.push(whereForm, whatForm, whenForm, whoForm,
-				GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
-						undefined));
+		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
+				undefined);
+		optionsPanel.setVisible(false);
+		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel);
 
 		// Add advanced mode criteria to simple form - end
 		var advandcedField = [];
@@ -407,7 +446,7 @@ cat.app = function() {
 			},
 			items : formItems
 		});
-
+		
 		// Manage header click event to toggle advanced or simple search
 		// criteria mode
 		searchForm.on('afterrender',function(cpt) {
@@ -507,6 +546,7 @@ cat.app = function() {
 				items : [ {
 					region : 'west',
 					id : 'west',
+					bodyCssClass: 'west-panel-body',
 					split : true,
 					border : true,
 					frame : false,
@@ -632,4 +672,9 @@ Ext.onReady(function() {
 	/* Focus on full text search field */
 	Ext.getDom('E_any').focus(true);
 
+	// Should be in Search field configuration
+	Ext.get('E_any').setWidth(254);
+	Ext.get('E_any').setHeight(30);
+	
+	initShortcut();
 });

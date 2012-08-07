@@ -42,10 +42,11 @@
 .search-panel .x-panel-header-text a:hover{
 	color: #FF7930;
 }
-.search-panel .olMap {
-	border-bottom-color: #D0D0D0;
-	border-style: solid;
-    border-width: 0 1px 1px 1px;
+.search-form-panel .olMap {
+    border-radius: 0;
+}
+.search-form-panel .where-toolbar .x-toolbar {
+    border: none;
 }
 .search-form-panel {
 	margin-bottom: 5px;
@@ -137,25 +138,78 @@
 	display : none;
 	background-image:url('ext/resources/images/default/s.gif') !important;
 }
-.result-panel .x-toolbar {
+.search_label .cat-root-node{
+	float: none !important;
+}
+
+.x-toolbar {
 	background-image:none;
 	border: none !important;
 	background-color: #DEDEDE;
 	
 }
-.result-panel .x-toolbar td.x-toolbar-cell,
-.result-panel .x-toolbar label,
-.result-panel .x-toolbar .xtb-text,
-.result-panel .x-toolbar .x-btn-text {
+.x-toolbar td.x-toolbar-cell,
+.x-toolbar label,
+.x-toolbar .xtb-text,
+.x-toolbar .x-btn-text {
 	color: #626262;
 	font-size: 12px;
 	font-family: Arial,Helvetica,sans-serif;
 	font-weight:700;
 }
-.result-panel .x-panel-tbar {
+.x-panel-tbar {
 	height:32px;
 	background-color: #DEDEDE;
 }
+
+
+/* Editor style */
+#editorWindow * .x-window-header {
+  margin-bottom: 2px;
+}
+.metadata * fieldset {
+  border-top : 1px solid #999;
+  border-bottom : none;
+  border-left : none;
+  border-right : none;
+  padding : 0px;
+  margin : 0px;
+}
+.metadata * legend {
+    width: 100%;
+    background-color: #AAA;
+    border: 1px solid #999;
+    color: white;
+    font-weight: bold;
+    height: 15px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.metadata fieldset * fieldset legend {
+    background-color: #dbdbdb !important;
+    border-color: #dbdbdb !important;
+    color: #3B3C3C !important;
+    padding-left: 23px;
+}
+
+.metadata fieldset * fieldset * fieldset legend {
+    background-color: #f4f4f4 !important;
+    border-color: #f4f4f4 !important;
+    color: #3B3C3C !important;
+    padding-left: 23px;
+}
+
+.metadata * legend a {
+    color: #ffffff !important;
+}
+.metadata * input, .metadata * textarea, .metadata * select {
+    border: 1px solid #dbdbdb;
+}
+.metadata * table.gn > tbody > tr > td, table.gn > tbody > tr > th {
+  color: #333;
+}
+
 /** WHERE Panel **/
 /*****************/
 .where-toolbar .x-toolbar {
@@ -258,6 +312,7 @@
 .result-list li .content div.md-contact span {
     font-size: 11.4px !important;
     font-style: normal !important;
+    color: #808080 !important;
 }
 .result-list li .content h1 {
     color: #F28033;
@@ -271,6 +326,11 @@
 }
 .result-list li .content h1 a:hover {
     text-decoration: none;
+}
+.result-list li .content hr {
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+    height: 1px;
 }
 .result-list li.md-full div.thumbnail {
     padding-left:10px !important;
@@ -288,12 +348,14 @@
 .result-list li.md-full div.mdHiddenMenu {
     display:none !important;
 }
+.result-list li.md-full div.mdHiddenBtn {
+    visibility: hidden !important;
+}
 
 .result-list li.md-full div.md-links div.wmsMenu, 
 .result-list li.md-full div.md-links div.downloadMenu, 
 .result-list li.md-full div.md-links div.md-action-menu {
     display:inline;
-	margin-left:10px;
     border: 1px solid #BBBBBB;
     border-radius: 4px 4px 4px 4px;
     color: #333333;
@@ -304,9 +366,22 @@
     background-color:#F8F8F8;
     cursor:pointer;
 }
+
+.result-list li.md-full div.md-links div.btn-separator {
+    background-image: url("../images/icons/button-separator.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: inline;
+    padding: 6px 12px;
+}
 .result-list li.md-full div.wmsMenu span,
-.result-list li.md-full div.downloadMenu span{
+.result-list li.md-full div.downloadMenu span,
+.result-list li.md-full div.md-action-menu span {
 	padding-left:16px;
+}
+.result-list li.md-full div.md-action-menu span.icon{
+    background-image: url("../images/icons/wrench.png");
+    margin-right: 4px;
 }
 .result-list li.md-full div.wmsMenu span.icon{
     background-image: url("../images/icons/view.png");
@@ -317,41 +392,58 @@
 	background-position: -16px 0;
 }
 
+.result-list li.md-full div.one-elt span.list-icon {
+	visibility: hidden;
+}
+
 .result-list li.md-full div.downloadMenu span.icon{
     background-image: url("../images/icons/cart-add.png");
     margin-right: 4px;
 }
 .result-list li.md-full div.wmsMenu span.list-icon,
-.result-list li.md-full div.downloadMenu span.list-icon {
+.result-list li.md-full div.downloadMenu span.list-icon,
+.result-list li.md-full div.md-action-menu span.list-icon {
     margin-left:4px;
     background-image: url("../images/ui-icons_f28033_256x240.png");
     background-position: 0 -2px;
 }
+.result-list li.md-full div.unabled {
+	opacity: 0.35 !important;
+	background-image: none !important;
+	cursor: default !important;
+}
+.result-list li.md-full div.unabled:hover span.icon {
+	background-position: 0 0 !important;
+}
 
-.view-win .x-window-tl,
-.view-win .x-window-tc,
-.view-win .x-window-tr {
+div.no-icon-menu a.x-menu-item {
+    padding-left: 3px;
+}
+
+.x-window-tl,
+.x-window-tc,
+.x-window-tr {
 	background-image: none;
 	background-color: white;
 	border-radius: 4px 4px 0 0;
 }
 
-.view-win .x-window-ml,
-.view-win .x-window-mc,
-.view-win .x-window-mr {
+.x-window-ml,
+.x-window-mc,
+.x-window-mr {
 	background-image: none;
 	background-color: white;
 }
 
-.view-win .x-window-bl,
-.view-win .x-window-bc,
-.view-win .x-window-br {
+.x-window-bl,
+.x-window-bc,
+.x-window-br {
 	background-image: none;
 	background-color: white;
 	border-radius: 0 0 4px 4px;
 }
 
-.view-win .x-window-header {
+.x-window-header {
     padding: 6px 12px 3px;
     position: relative;
     height: 16px;
@@ -363,24 +455,27 @@
     margin-top: 2px;
 }
 
-.view-win .x-window-header span {
+.x-window-header span {
 	font-family:Arial,​Helvetica,​sans-serif;
 	font-size:12px;
 	font-weight:700px;
 	color: #444444;
 }
-.view-win .x-window-header .x-tool {
+.x-window-header .x-tool {
     float: right;
     margin-right: 2px;
 }
-.view-win .x-window-header .x-tool-close {
+.x-window-header .x-tool-close {
     background-image: url("../images/ui-icons_999999_256x240.png");
     background-position: -96px -128px;
     height:16px;
     width:16px;
 }
-.view-win .x-window-header .x-tool-close-over {
+.x-window-header .x-tool-close-over {
     background-image: url("../images/ui-icons_616161_256x240.png")
+}
+.west-panel-body {
+	background-color: #DFDFDF;
 }
 
 hr {
@@ -388,4 +483,8 @@ hr {
     border: medium none;
     color: #AAAAAA;
     height: 1px;
+}
+.md-mn-pdf {
+  background-position: left !important;
+  background-image : url("../images/icons/file-pdf.png") !important;
 }

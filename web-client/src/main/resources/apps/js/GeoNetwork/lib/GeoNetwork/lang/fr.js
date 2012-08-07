@@ -496,7 +496,7 @@ GeoNetwork.Lang.fr = {
 	'About': "Sur",
 	'org': "Organisation",
 	'When': "Quand",
-	'Where': "Ou",
+	'Where': "Où",
 	'What': "Que",
 	'Searchforspatialdataon': "Rechercher des données spatiales sur les",
 	'fullTextSearch': "Recherche texte intégral",
