@@ -93,6 +93,7 @@ public class LDAPUtils {
 				
 				// Retrieve group id
 				String groupName = privilege.one();
+				String profile = privilege.two();
 				Element groupIdRequest = dbms.select("SELECT id FROM Groups WHERE name = ?", groupName);
 				Element groupRecord = groupIdRequest.getChild("record");
 				String groupId;
@@ -118,7 +119,7 @@ public class LDAPUtils {
 				}
 				
 				if (groupRecord != null || createNonExistingLdapGroup) {
-					Update.addGroup(dbms, id, groupId);
+					Update.addGroup(dbms, new Integer(id), new Integer(groupId), profile);
 				}
 			}
 		}
