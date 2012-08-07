@@ -22,25 +22,27 @@ cat.what = function() {
 			// using autocompletion
 			var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
-			var groupStore = GeoNetwork.data.GroupStore(services.getGroups),
-				tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
-			groupStore.load();
-			var config = {
-					name: 'E__groupPublished',
-					mode: 'local',
-					triggerAction: 'all',
-					fieldLabel: OpenLayers.i18n('Catalogue'),
-					store: groupStore,
-					valueField: 'name',
-					displayField: 'name',
-					tpl: tpl
-				};
-			Ext.apply(config, {
-				valueDelimiter: ' or ',
-				stackItems: true,
-				displayFieldTpl: '{[values.label.' + lang + ']}'});
-			//var catalogueField = new Ext.form.ComboBox(config); - Can't display translation
-			var catalogueField = new Ext.ux.form.SuperBoxSelect(config);
+			var groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+	            url: services.opensearchSuggest,
+	            rootId: 1,
+	            baseParams: {
+	                field: '_groupPublished'
+	            }
+	        });
+	        var catalogueField = new Ext.ux.form.SuperBoxSelect({
+	            hideLabel: false,
+	            minChars: 0,
+	            queryParam: 'q',
+	            hideTrigger: false,
+	            id: 'E__groupPublished',
+	            name: 'E__groupPublished',
+	            store: groupFieldStore,
+	            valueField: 'value',
+	            displayField: 'value',
+	            valueDelimiter: ' or ',
+	//            tpl: tpl,
+	            fieldLabel: OpenLayers.i18n('Catalogue')
+	        });
 			
 			var categoryTree = new GeoNetwork.CategoryTree({
 				url : services.getCategories,
