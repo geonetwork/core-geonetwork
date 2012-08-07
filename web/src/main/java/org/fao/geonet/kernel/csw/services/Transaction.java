@@ -245,7 +245,7 @@ public class Transaction extends AbstractOperation implements CatalogService
         // insert metadata
         //
         String docType = null, title = null, isTemplate = null;
-        boolean ufo = false, indexImmediate = false;
+        boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 

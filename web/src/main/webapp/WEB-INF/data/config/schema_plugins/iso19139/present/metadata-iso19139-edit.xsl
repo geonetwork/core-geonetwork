@@ -12,7 +12,6 @@
   xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:saxon="http://saxon.sf.net/"
   xmlns:exslt="http://exslt.org/common"
-  extension-element-prefixes="saxon"
   exclude-result-prefixes="#all">
 
   <xsl:include href="metadata-iso19139-utils.xsl"/>
@@ -2806,7 +2805,7 @@
     <id><xsl:value-of select="geonet:info/id"/></id>
     <uuid><xsl:value-of select="geonet:info/uuid"/></uuid>
     <title>
-      <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
+      <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
     </title>
@@ -3154,6 +3153,34 @@
     </xsl:choose>
   </xsl:template>
   
+<<<<<<< HEAD
+=======
+  <!-- In order to add profil specific tabs 
+    add a template in this mode.
+    
+    To add some more tabs.
+    <xsl:template name="iso19139.profileIdCompleteTab">
+    <xsl:param name="tabLink"/>
+    <xsl:param name="schema"/>
+    
+    Load iso19139 complete tab if needed
+    <xsl:call-template name="iso19139CompleteTab">
+      <xsl:with-param name="tabLink" select="$tabLink"/>
+      <xsl:with-param name="schema" select="$schema"/>
+    </xsl:call-template>
+    
+    Add Extra tabs
+    <xsl:call-template name="mainTab">
+      <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/tab"/>
+      <xsl:with-param name="default">profileId</xsl:with-param>
+      <xsl:with-param name="menu">
+      <item label="profileIdTab">profileId</item>
+      </xsl:with-param>
+    </xsl:call-template>
+    </xsl:template>
+  -->
+  
+>>>>>>> upstream/master
   
   <!-- ============================================================================= -->
   <!-- iso19139 complete tab template  -->

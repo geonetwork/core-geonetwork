@@ -58,6 +58,8 @@ function ConfigView(strLoader)
 		{ id:'ldap.port',         type:'integer',  minValue:80, maxValue:65535, empty:true },		
 		{ id:'ldap.baseDN',       type:'length',  minSize :1,  maxSize :200 },
 		{ id:'ldap.usersDN',      type:'length',  minSize :1,  maxSize :200 },
+		{ id:'ldap.bindDN',       type:'length',  minSize :1,  maxSize :200 },
+		{ id:'ldap.bindPW',       type:'length',  minSize :1,  maxSize :200 },
 		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 },
         { id:'ldap.uidAttr',      type:'length',  minSize :1,  maxSize :20 },
 
@@ -261,6 +263,10 @@ ConfigView.prototype.setData = function(data)
     $('ldap.uidAttr')     .value = data['LDAP_ATTR_UID'];
 	$('ldap.baseDN')      .value = data['LDAP_DN_BASE'];
 	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
+	$('ldap.subtree')   .checked = data['LDAP_SUBTREE'] == 'true' ;
+	$('ldap.anonBind')  .checked = data['LDAP_ANON_BIND'] == 'true' ; 
+	$('ldap.bindDN')      .value = data['LDAP_DN_BIND'];
+	$('ldap.bindPW')      .value = data['LDAP_PW_BIND'];
 	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
 	$('ldap.profileAttr') .value = data['LDAP_ATTR_PROFILE'];
 	$('ldap.groupAttr') .value = data['LDAP_ATTR_GROUP'];
@@ -390,6 +396,10 @@ ConfigView.prototype.getData = function()
         LDAP_ATTR_UID      : $F('ldap.uidAttr'),                
 		LDAP_DN_BASE       : $F('ldap.baseDN'),
 		LDAP_DN_USERS      : $F('ldap.usersDN'),
+		LDAP_SUBTREE       : $('ldap.subtree').checked,
+		LDAP_ANON_BIND     : $('ldap.anonBind').checked,
+		LDAP_DN_BIND       : $F('ldap.bindDN'),
+		LDAP_PW_BIND       : $F('ldap.bindPW'),
 		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
 		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr'),
         LDAP_ATTR_GROUP    : $F('ldap.groupAttr'),
