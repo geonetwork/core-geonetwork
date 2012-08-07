@@ -267,6 +267,17 @@ cat.app = function() {
 			},
 			scope : this
 		});
+		
+		var pdfAction = new Ext.Action({
+            iconCls: 'md-mn-pdf',
+            tooltip: OpenLayers.i18n('printSel'),
+            handler: function(){
+                this.catalogue.metadataSelectAll(function(){
+                    this.catalogue.pdfExport();
+                });
+            },
+            scope: this
+        });
 
 		metadataResultsView = new cat.MetadataResultsView({
 			catalogue : catalogue,
@@ -309,21 +320,9 @@ cat.app = function() {
 				xtype : 'tbtext',
 				text : '',
 				id : 'info'
-			} ]
+			}, ' ',' ', ' ', ' ', ' ', pdfAction ]
 		});
-		tBar.add(new Ext.Action({
-            //text: OpenLayers.i18n('printSel'),
-            iconCls: 'md-mn-pdf',
-            tooltip: OpenLayers.i18n('printSel'),
-            handler: function(){
-                // Select all and print selection
-                this.catalogue.metadataSelectAll(function(){
-                    this.catalogue.pdfExport();
-                });
-                
-            },
-            scope: this
-        }));
+		
         tBar.add(new Ext.Action({
             id: 'newMdAction',
             iconCls: 'addIcon',
@@ -345,7 +344,6 @@ cat.app = function() {
             },
             scope: this
         }));
-		// bBar = createToolBar();
 
 		resultPanel = new Ext.Panel({
 			id : 'resultsPanel',
@@ -403,12 +401,18 @@ cat.app = function() {
 			cls : 'search-panel',
 			buttonAlign : 'left',
 			title : '<span id="searchFormHeaderTitle" class="mainheader">'
-					+ OpenLayers.i18n('search-header-criteria-simple')
+					+ '&nbsp;' //OpenLayers.i18n('search-header-criteria-simple')
 					+ '</span>' + '<a id="searchFormHeaderLink" href="#">'
 					+ OpenLayers.i18n('search-header-advanced') + '</a>',
 			searchBt : new Ext.Button({
-				text : OpenLayers.i18n('search'),
-				cls : 'search-btn'
+				template: new Ext.Template(
+						'<div class="search-btn">',
+						'<div class="btnLeft">&nbsp;</div>',
+						'<div class="btnText"></div>',
+						'<div class="btnRight">&#160;</div>',
+						'</div>'),
+						buttonSelector: '.btnText',
+				text : OpenLayers.i18n('search')
 			}),
 			resetCb : function() {
 				this.getForm().reset();
@@ -417,8 +421,14 @@ cat.app = function() {
 			},
 			resetBt : new Ext.Button({
 				text : OpenLayers.i18n('reset'),
-				cls : 'search-btn'
-			}),
+				template: new Ext.Template(
+						'<div class="search-btn">',
+						'<div class="btnLeft">&nbsp;</div>',
+						'<div class="btnText"></div>',
+						'<div class="btnRight">&#160;</div>',
+						'</div>'),
+						buttonSelector: '.btnText',
+				}),
 			searchCb : function() {
 				if (metadataResultsView && Ext.getCmp('geometryMap')) {
 					metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
@@ -433,6 +443,8 @@ cat.app = function() {
 				search();
 			},
 			padding : 5,
+			height: Ext.getBody().getViewSize().height-120,
+			autoScroll: true,
 			defaults : {
 				padding : 15,
 				width : 180,
@@ -467,7 +479,7 @@ cat.app = function() {
 					item.setVisible(true);
 					whatForm.body.removeClass('hidden');
 				});
-				cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-advanced');
+				//cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-advanced');
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
 			});
 			cpt.on('simplemode',function() {
@@ -475,7 +487,7 @@ cat.app = function() {
 					item.setVisible(false);
 					whatForm.body.addClass('hidden');
 				});
-				cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-simple');
+				//cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-simple');
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
 			});
 		});
@@ -553,7 +565,7 @@ cat.app = function() {
 					minWidth : 300,
 					width : 400,
 					maxWidth : 500,
-					autoScroll : true,
+					//autoScroll : true,
 					collapsible : true,
 					hideCollapseTool : true,
 					collapseMode : 'mini',
