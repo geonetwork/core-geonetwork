@@ -98,7 +98,7 @@ cat.app = function() {
 		var style = urlParameters.style || 'sextant';
 		
 		var win = new cat.view.ViewWindow({
-            serviceUrl: style == 'sextant' ? this.services.mdShow + '?uuid=' + escape(uuid) : null,
+            serviceUrl: style == 'sextant' ? this.services.mdView + '?uuid=' + escape(uuid) : null,
             formatterServiceUrl: this.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style,
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',

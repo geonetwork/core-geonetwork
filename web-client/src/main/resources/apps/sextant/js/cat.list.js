@@ -109,6 +109,7 @@ cat.list = function() {
 	                        '</tpl>',
 	                    '</div>',
 	                    '</td></tr></table>',
+	                    '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '"><span></span><ul id="md-relation-{id}"></ul></div>',
 	            '</li>',
 	        '</tpl>',
 	    '</ul>',

@@ -207,7 +207,7 @@
     border: 1px solid #dbdbdb;
 }
 .metadata * table.gn > tbody > tr > td, table.gn > tbody > tr > th {
-  color: #999;
+  color: #333;
 }
 
 /** WHERE Panel **/
