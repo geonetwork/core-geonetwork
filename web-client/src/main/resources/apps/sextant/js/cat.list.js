@@ -88,7 +88,9 @@ cat.list = function() {
 			'<a href="#" onclick="catalogue.metadataPrepareDownload({id});" class="md-mn downloadAllIcon" title="'
 					+ OpenLayers.i18n('prepareDownload')
 					+ '" alt="download">&nbsp;</a>', '</tpl>', '</div>',
-			'</td></tr></table>', '</li>', '</tpl>', '</ul>', 
+			'</td></tr></table>', 
+			'<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '"><span></span><ul id="md-relation-{id}"></ul></div>',
+			'</li>', '</tpl>', '</ul>', 
 			
 			{
 				isFirstSource : function(idx) {
@@ -109,7 +111,7 @@ cat.list = function() {
 			}
 		);
 	};
-
+	
 	return {
 		getTemplate : function() {
 			if(!template) {
