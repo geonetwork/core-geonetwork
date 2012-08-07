@@ -3153,8 +3153,6 @@
     </xsl:choose>
   </xsl:template>
   
-<<<<<<< HEAD
-=======
   <!-- In order to add profil specific tabs 
     add a template in this mode.
     
@@ -3179,9 +3177,6 @@
     </xsl:call-template>
     </xsl:template>
   -->
-  
->>>>>>> upstream/master
-  
   <!-- ============================================================================= -->
   <!-- iso19139 complete tab template  -->
   <!-- ============================================================================= -->
