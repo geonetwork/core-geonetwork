@@ -34,10 +34,10 @@
 }
 .search-panel .search-panel-header .x-panel-header-text a{
 	color: #626262;
-    font-size: 80%;
+    font-size: 90%;
     font-weight: normal;
     float: right;
-    padding-right: 15px;
+    padding-right: 25px;
 }
 .search-panel .x-panel-header-text a:hover{
 	color: #FF7930;
@@ -57,15 +57,22 @@
 .search-panel .x-panel-footer {
 	background-color: #DEDEDE;
 }
-.search-panel .x-panel-footer .x-btn-over .x-btn-text {
-    color: #FF7930;
-}
-.search-panel .x-panel-footer .x-btn-over .x-btn-mc,
-.search-panel .x-panel-footer .x-btn-over .x-btn-ml,
-.search-panel .x-panel-footer .x-btn-over .x-btn-mr {
-	background-image: url("../images/bg_button_active.gif");
-	background-position: left bottom;
+.search-panel .x-panel-footer .search-btn .x-btn-text{
+    background-image: url("../images/bg_button_default.gif");
+    background-position: left bottom;
     background-repeat: repeat-x;
+    font-family: Arial,Helvetica,sans-serif;
+    border: 1px solid #000000;
+    color: #000000;
+    font-size: 13.2px;
+    font-weight: normal;
+    margin: 0 10px 5px 0;
+    padding: 0 16px;
+}
+.search-panel .x-panel-footer .search-btn .x-btn-text:hover {
+	background-image: url("../images/bg_button_active.gif");
+	color: #FF7930;
+	border-color: #FF7930;
 }
 .search-form-panel .x-panel-header {
     background: url("../images/ui-bg_inset-hard_75_999999_1x100.png") repeat-x scroll 50% 50% #999999;
@@ -215,6 +222,9 @@
 .where-toolbar .x-toolbar {
     background-image: none;
     background-color: #FFFFFF;
+}
+.where-toolbar .x-panel-tbar {
+	background-color: white !important;
 }
 .where-toolbar .zoomfull {
     background-image: url("../images/icons/zoom-default_minimap.png") !important;
@@ -484,7 +494,10 @@ hr {
     color: #AAAAAA;
     height: 1px;
 }
-.md-mn-pdf {
+.x-btn-icon .md-mn-pdf {
   background-position: left !important;
   background-image : url("../images/icons/file-pdf.png") !important;
+}
+.x-btn-over .md-mn-pdf {
+  background-position:-18px 0 !important;
 }

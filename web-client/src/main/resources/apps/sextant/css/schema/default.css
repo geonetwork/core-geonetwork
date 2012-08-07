@@ -223,7 +223,12 @@ div.result-metadata-modal-content table td {
     z-index: 5000;
     cursor:pointer;
 }
-
+.mdshow-tabpanel .file-xml:hover {
+  background-position:-19px 0;
+}
+.mdshow-tabpanel .file-pdf:hover {
+  background-position:-19px 0;
+}
 .ui-widget-content .button {
   background-image: none !important;
   border: none !important;
