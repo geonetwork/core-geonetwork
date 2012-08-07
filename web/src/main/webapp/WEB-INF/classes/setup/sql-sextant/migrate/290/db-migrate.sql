@@ -425,5 +425,31 @@ UPDATE IsoLanguages SET shortcode='vi' WHERE code='vie';
 
 
 
+INSERT INTO Settings VALUES (89,80,'bind',NULL);
+INSERT INTO Settings VALUES (102,86,'subtree','false');
+INSERT INTO Settings VALUES (140,89,'bindDn','cn=fake.name,ou=people,dc=fao,dc=org');
+INSERT INTO Settings VALUES (141,89,'bindPw','fake_password');
+INSERT INTO Settings VALUES (150,80,'anonBind','true');
+
+ALTER TABLE Users ADD security varchar(128);
+ALTER TABLE Users ADD authtype varchar(32);
+
+UPDATE Users SET security='update_hash_required';
+
+ALTER TABLE users ALTER "password" TYPE character varying(120);
+
+
+UPDATE Users SET password = '46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2' WHERE username = 'admin';
+UPDATE Users SET security = '' WHERE username = 'admin';
+
+ALTER TABLE usergroups ADD profile varchar(32);
+
+UPDATE usergroups SET profile = (SELECT profile from users WHERE id = userid);
+
+ALTER TABLE usergroups DROP CONSTRAINT usergroups_pkey;
+ALTER TABLE usergroups ADD PRIMARY KEY (userid, profile, groupid);
+
+
+
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
