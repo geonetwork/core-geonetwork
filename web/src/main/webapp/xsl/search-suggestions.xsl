@@ -21,16 +21,7 @@
         </xsl:call-template>
       </xsl:variable>
       "<xsl:value-of select="$value"/>" <xsl:if test="position()!=last()"
-<<<<<<< HEAD
-      >,</xsl:if>
-    </xsl:for-each> ]
-  <!-- Add Descriptions (not required) 
-    @freq is the number of occurences of this term in the index (could be more than the number of results)
-  , 
-    [<xsl:for-each select="/root/items/item"> "<xsl:value-of select="@freq"/>" <xsl:if test="position()!=last()">,</xsl:if>
-=======
         >,</xsl:if>
->>>>>>> upstream/master
     </xsl:for-each> ]
     <!-- Add Descriptions (not required) 
       @freq is the number of occurences of this term in the index (could be more than the number of results)
