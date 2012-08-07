@@ -126,9 +126,10 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public void loadProfiles(ServletContext servletContext, String file) throws Exception
+	public ProfileManager loadProfiles(ServletContext servletContext, String file) throws Exception
 	{
 		profilMan = new ProfileManager(servletContext, appPath, appPath + Jeeves.Path.WEBINF + file);
+		return profilMan;
 	}
 
 	//---------------------------------------------------------------------------
@@ -405,15 +406,6 @@ public class ServiceManager
 				//--- check access
 
 				String profile = ProfileManager.GUEST;
-
-				if (session.isAuthenticated())
-					profile = session.getProfile();
-
-				if (!profilMan.hasAccessTo(profile, srvName))
-				{
-					error("Service not allowed : "+ srvName);
-					throw new ServiceNotAllowedEx(srvName);
-				}
 
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
@@ -920,6 +912,7 @@ public class ServiceManager
 	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
+	public ProfileManager getProfileManager() { return profilMan; }
 }
 
 //=============================================================================

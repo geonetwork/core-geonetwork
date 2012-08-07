@@ -23,6 +23,10 @@
 
 package org.fao.geonet.services.login;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 import jeeves.exceptions.UserLoginEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -30,15 +34,15 @@ import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 //=============================================================================
 
@@ -53,6 +57,10 @@ import java.util.Map;
  */
 public class ShibLogin implements Service
 {
+	private static final String VIA_SHIBBOLETH = "Via Shibboleth";
+	private static final String SHIBBOLETH_FLAG = "SHIBBOLETH";
+
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -123,16 +131,18 @@ public class ShibLogin implements Service
 		if (list.size() == 0)
 			throw new UserLoginEx(username);
 
-		Element user = (Element) list.get(0);
+		Element userEl = (Element) list.get(0);
+	
+		GeonetworkUser user = new GeonetworkUser(context.getProfileManager(), username, userEl);
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
+		authentication.setDetails(user);
 
-		String sId       = user.getChildText(Geonet.Elem.ID);
-		String sName     = user.getChildText(Geonet.Elem.NAME);
-		String sSurname  = user.getChildText(Geonet.Elem.SURNAME);
-		String sProfile  = user.getChildText(Geonet.Elem.PROFILE);
-		String sEmailAdd = user.getChildText(Geonet.Elem.EMAIL);
+		if(SecurityContextHolder.getContext() == null) {
+			SecurityContextHolder.createEmptyContext();
+		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		context.info("User '"+ username +"' logged in as '"+ sProfile +"'");
-		context.getUserSession().authenticate(sId, username, sName, sSurname, sProfile, sEmailAdd);
+		context.info("User '"+ username +"' logged in as '"+ user.getProfile() +"'");
 
 		return new Element("ok");
 	}
@@ -179,9 +189,9 @@ public class ShibLogin implements Service
         }
 		//--- update user information into the database
 
-		String query = "UPDATE Users SET name=?, surname=?, profile=?, password=? WHERE username=?";
+		String query = "UPDATE Users SET name=?, surname=?, profile=?, password=?, authtype=? WHERE username=?";
 
-		int res = dbms.execute(query, firstname, surname, profile, "Via Shibboleth", username);
+		int res = dbms.execute(query, firstname, surname, profile, VIA_SHIBBOLETH, SHIBBOLETH_FLAG, username);
 
 		//--- if the user was not found --> add it
 
@@ -189,10 +199,10 @@ public class ShibLogin implements Service
 		{
 			userId = context.getSerialFactory().getSerial(dbms, "Users");
 
-			query = 	"INSERT INTO Users(id, username, name, surname, profile, password) "+
-						"VALUES(?,?,?,?,?,?)";
+			query = 	"INSERT INTO Users(id, username, name, surname, profile, password, authtype) "+
+						"VALUES(?,?,?,?,?,?,?)";
 
-			dbms.execute(query, userId, username, firstname, surname, profile, "Via Shibboleth");
+			dbms.execute(query, userId, username, firstname, surname, profile, VIA_SHIBBOLETH, SHIBBOLETH_FLAG);
 
             if (groupProvided) {
                 String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";

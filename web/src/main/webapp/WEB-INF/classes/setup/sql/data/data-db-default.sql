@@ -1014,4 +1014,5 @@ INSERT INTO Settings VALUES (955,952,'ignored','true');
 -- === Table: Users
 -- ======================================================================
 
-INSERT INTO Users VALUES  (1,'admin','d033e22ae348aeb566fc214aec3585c4da997','admin','admin','Administrator','','','','','','','','');
+INSERT INTO Users VALUES  (1,'admin','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','admin','admin','Administrator','','','','','','','','','', null);
+INSERT INTO Users VALUES  (2,'developer','b3e106a0375f9a74718df3916696e91952ad381807ffbae7a7ef1c77a0cf8892652714d859c7be27','developer','developer','Developer','','','','','','','','','', null);

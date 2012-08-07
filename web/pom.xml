@@ -76,12 +76,12 @@
       <artifactId>spring-jdbc</artifactId>
     </dependency>
 		-->
-    
-    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <artifactId>spring-context-support</artifactId>
     </dependency>
+    
+    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>

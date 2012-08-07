@@ -41,12 +41,6 @@
 			<xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
 
-		<!-- service not found -->
-
-		<error id="service-not-found" sheet="error.xsl" statusCode="404">
-			<xml name="error" file="xml/service-not-found-error.xml" />
-		</error>
-
 		<!-- no privileges to access the service -->
 
 		<error id="service-not-allowed" sheet="error.xsl" statusCode="403">
@@ -143,41 +137,41 @@
 	-->
 
 	<resources>
-		<resource enabled="true">
-			<name>main-db</name>
-			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-			<config>
-				<user>admin</user>
-				<password>gnos</password>
-				<driver>org.h2.Driver</driver>
-				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
-				<poolSize>33</poolSize>
-				<validationQuery>SELECT 1</validationQuery>
-			</config>
-		</resource>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		H2 database  http://www.h2database.com/
-		When GeoNetwork don't use H2 database, the listener DBStarter
-		section could be turned off (see web.xml).
-
-		Database is created according to jdbc url.
-
-		It may be relevant to turn on MVCC mode
-		http://www.h2database.com/html/advanced.html#mvcc
-		- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<resource enabled="false">
-			<name>main-db</name>
-			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-			<config>
-				<user>admin</user>
-				<password>gnos</password>
-				<driver>org.h2.Driver</driver>
-				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
-				<poolSize>33</poolSize>
-				<validationQuery>SELECT 1</validationQuery>
-			</config>
-		</resource>
-
+	  <resource enabled="true">
+	    <name>main-db</name>
+	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+	    <config>
+	      <user>admin</user>
+	      <password>gnos</password>
+	      <driver>org.h2.Driver</driver>
+	      <url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE</url>
+	      <poolSize>33</poolSize>
+	      <validationQuery>SELECT 1</validationQuery>
+	    </config>
+	  </resource>
+	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	    H2 database  http://www.h2database.com/
+	    When GeoNetwork don't use H2 database, the listener DBStarter
+	    section could be turned off (see web.xml).
+	    
+	    Database is created according to jdbc url.
+	    
+	    It may be relevant to turn on MVCC mode
+	    http://www.h2database.com/html/advanced.html#mvcc
+	    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	  <resource enabled="false">
+	    <name>main-db</name>
+	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+	    <config>
+	      <user>admin</user>
+	      <password>gnos</password>
+	      <driver>org.h2.Driver</driver>
+	      <url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE</url>
+	      <poolSize>33</poolSize>
+	      <validationQuery>SELECT 1</validationQuery> 
+	    </config>
+	  </resource>
+	  
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- JNDI through container -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -948,14 +942,8 @@
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.login">
-			<class name=".services.login.Login" />
-
-			<output forward="home" />
-
-			<error id="user-login" sheet="error.xsl" statusCode="401">
-				<xml name="error" file="xml/login-error.xml" />
-			</error>
+		<service name="login.form">
+			<output page="login-form.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1179,19 +1167,6 @@
 			</error>
 
 			<output forward="metadata.edit" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- XML services -->
-
-		<service name="xml.user.login">
-			<class name=".services.login.Login" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.user.logout">
-			<class name=".services.login.Logout" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

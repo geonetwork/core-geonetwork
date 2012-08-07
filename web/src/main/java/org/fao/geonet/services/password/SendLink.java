@@ -51,6 +51,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
@@ -127,7 +128,7 @@ public class SendLink implements Service {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
-		String changeKey = Util.scramble(scrambledPassword+todaysDate);
+		String changeKey = PasswordUtil.encode(context, scrambledPassword+todaysDate);
 
 		// generate email details using customisable stylesheet
 		// TODO: allow internationalised emails
