@@ -13,7 +13,8 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
+	
+	<isAdmin>Est administrateur ?</isAdmin>
     <anyLanguage>n'importe quelle langue</anyLanguage>
 	<nodata>Vide</nodata>
 	<!-- new strings - 2.7 -->
