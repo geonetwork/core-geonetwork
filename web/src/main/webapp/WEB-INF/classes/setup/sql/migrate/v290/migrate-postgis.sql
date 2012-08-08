@@ -1,1 +1,1 @@
-ALTER TABLE Users ALTER COLUMN password varchar(120) not null;
+ALTER TABLE users ALTER "password" TYPE character varying(120);
