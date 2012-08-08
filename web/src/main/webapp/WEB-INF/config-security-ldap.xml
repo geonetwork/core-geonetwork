@@ -13,16 +13,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           
 	<ctx:property-override location="WEB-INF/config-override.properties"/>
 	
-	<!-- override authenticationManager in congif-security-core -->
-	<bean id="authenticationManager"
-		class="org.springframework.security.authentication.ProviderManager">
-		<property name="providers">
-			<list>
-				<ref bean="geonetworkAuthenticationProvider" />
-				<ref bean="ldapAuthProvider" />
-			</list>
-		</property>
-	</bean>
     <!-- LDAP configuration-->
     <bean id="contextSource"
         class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">

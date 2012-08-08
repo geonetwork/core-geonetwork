@@ -14,45 +14,16 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <import resource="config-security-mapping.xml"/>
     <import resource="config-security-ldap.xml"/>
     <ctx:property-placeholder location="WEB-INF/config.properties"/>
-    <!-- <ctx:property-override location="WEB-INF/config-override.properties"/> -->
-    
-    <!-- <sec:http pattern="/apps/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/*.html" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/*.jsp" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/*.css" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/images/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/htmlcache/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/pdf/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/loc/**" create-session="stateless" security="none"></sec:http> -->
-    
-   <!--  <sec:http authentication-manager-ref="authenticationManager" use-expressions="true" 
-    			realm="Geonetwork" request-matcher="regex">
-        <sec:form-login username-parameter="username" password-parameter="password" login-page="/srv/eng/home"></sec:form-login>
-        <sec:http-basic></sec:http-basic>
-        <sec:logout delete-cookies="JSESSIONID"></sec:logout>
-        <sec:remember-me />
-        <sec:session-management invalid-session-url="/index.html">
-            <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="true"></sec:concurrency-control>
-        </sec:session-management>
 
-    </sec:http> -->
-    
-    
-    
-    <!-- GeoNetwork authentication -->
-     <!-- <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
-        <property name="providers">
-            <list>
-                <ref bean="geonetworkAuthenticationProvider" />
-                <ref bean="ldapAuthProvider" />
-            </list>
-        </property>
-    </bean>
+
+	<bean id="authenticationManager"
+		class="org.springframework.security.authentication.ProviderManager">
+		<property name="providers">
+			<list>
+				<ref bean="geonetworkAuthenticationProvider" />
+				<ref bean="ldapAuthProvider" />
+			</list>
+		</property>
+	</bean>
      
-    <sec:authentication-manager>
-        <sec:authentication-provider ref="geonetworkAuthenticationProvider"/>
-        <sec:authentication-provider ref="ldapAuthProvider"/>
-    </sec:authentication-manager> -->
 </beans>

@@ -25,7 +25,8 @@
 				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
 				<sec:filter-chain pattern="/loc/**" filters="" />
- 				<sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
+				<ref bean="coreFilterChain"/>
+ 				<!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
  				logoutFilter,
  				formLoginFilter,
 	            basicAuthenticationFilter,
@@ -33,8 +34,30 @@
  				anonymousFilter,
  				sessionMgmtFilter,
 	            exceptionTranslationFilter,
-	            filterSecurityInterceptor" />
+	            filterSecurityInterceptor" /> -->
 			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
+		<constructor-arg>
+			<bean class="org.springframework.security.web.util.AntPathRequestMatcher">
+				<constructor-arg value="/**"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<list>
+				<ref bean="securityContextPersistenceFilter"/>
+				<ref bean="logoutFilter"/>
+				<ref bean="formLoginFilter"/>
+				<ref bean="basicAuthenticationFilter"/>
+				<ref bean="requestCacheFilter"/>
+				<ref bean="anonymousFilter"/>
+				<ref bean="sessionMgmtFilter"/>
+				<ref bean="exceptionTranslationFilter"/>
+				<ref bean="filterSecurityInterceptor"/>
+			</list>
+			
 		</constructor-arg>
 	</bean>
 
@@ -109,15 +132,6 @@
 		<property name="errorPage" value="/accessDenied.htm" />
 	</bean>
 
-	<bean id="authenticationManager"
-		class="org.springframework.security.authentication.ProviderManager">
-		<property name="providers">
-			<list>
-				<ref bean="geonetworkAuthenticationProvider" />
-				<!-- <ref bean="ldapAuthProvider" /> -->
-			</list>
-		</property>
-	</bean>
 <!-- TODO remember me.  
 	<bean id="rememberMeFilter"
 		class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
