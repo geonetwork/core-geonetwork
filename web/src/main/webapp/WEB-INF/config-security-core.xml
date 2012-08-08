@@ -46,21 +46,24 @@
 			</bean>
 		</constructor-arg>
 		<constructor-arg>
-			<list>
-				<ref bean="securityContextPersistenceFilter"/>
-				<ref bean="logoutFilter"/>
-				<ref bean="formLoginFilter"/>
-				<ref bean="basicAuthenticationFilter"/>
-				<ref bean="requestCacheFilter"/>
-				<ref bean="anonymousFilter"/>
-				<ref bean="sessionMgmtFilter"/>
-				<ref bean="exceptionTranslationFilter"/>
-				<ref bean="filterSecurityInterceptor"/>
-			</list>
-			
+			<ref bean="filter"/>
 		</constructor-arg>
 	</bean>
-
+	<bean id="filter" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="securityContextPersistenceFilter" />
+				<ref bean="logoutFilter" />
+				<ref bean="formLoginFilter" />
+				<ref bean="basicAuthenticationFilter" />
+				<ref bean="requestCacheFilter" />
+				<ref bean="anonymousFilter" />
+				<ref bean="sessionMgmtFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<ref bean="filterSecurityInterceptor" />
+			</list>
+		</constructor-arg>
+	</bean>
 	<bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
 		<property name="securityContextRepository" ref="securityContextRepository" />
 	</bean>
