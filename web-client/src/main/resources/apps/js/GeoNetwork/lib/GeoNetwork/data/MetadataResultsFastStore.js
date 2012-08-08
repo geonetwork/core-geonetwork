@@ -234,21 +234,21 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
     }
     function getAbstract(v, record){
-        if (record['abstract']) {
+        if (record['abstract'] && record['abstract'][0]) {
             return record['abstract'][0].value;
         } else {
             return '';
         }
     }
     function getType(v, record){
-        if (record['type']) {
+        if (record['type'] && record['type'][0]) {
             return record['type'][0].value;
         } else {
             return '';
         }
     }
     function getSpatialRepresentationType(v, record){
-        if (record['spatialRepresentationType']) {
+        if (record['spatialRepresentationType'] && record['spatialRepresentationType'][0]) {
             return record['spatialRepresentationType'][0].value;
         } else {
             return '';
