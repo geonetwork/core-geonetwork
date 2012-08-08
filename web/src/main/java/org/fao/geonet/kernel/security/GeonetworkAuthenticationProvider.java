@@ -1,7 +1,5 @@
 package org.fao.geonet.kernel.security;
 
-import java.sql.SQLException;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;

@@ -831,6 +831,15 @@
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
             </connector>
+            <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+              <port>8443</port>
+              <keystore>${project.basedir}/keystore.jks</keystore>
+              <password>password</password>
+              <keyPassword>password</keyPassword>
+              <truststore>${project.basedir}/keystore.jks</truststore>
+              <trustPassword>password</trustPassword>
+              <maxIdleTime>60000</maxIdleTime>
+            </connector>
           </connectors>
           <webApp>${project.build.directory}/geonetwork</webApp>
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
