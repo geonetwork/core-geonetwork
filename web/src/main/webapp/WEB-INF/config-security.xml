@@ -451,7 +451,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
         <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
         
-        <property name="createNonExistingLdapGroup" value="true" />
+        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
     </bean>
     
     <bean id="scheduler"
