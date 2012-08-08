@@ -34,6 +34,8 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 public class GeoNetworkLDAPUserDetailsContextMapper implements
 		UserDetailsContextMapper, ApplicationContextAware {
 	
+	private static final String ALL_GROUP_INDICATOR = "*";
+
 	Map<String, String[]> mapping;
 	
 	private String privilegePattern;
@@ -102,7 +104,9 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 						// TODO : skip undeclared profil
 						if (group != null && profil != null) {
 							userDetails.setProfile(profil);
-							userDetails.addPrivilege(group, profil);
+							if (!group.equals(ALL_GROUP_INDICATOR)) {
+								userDetails.addPrivilege(group, profil);
+							}
 						}
 					} else {
 						System.out.println("LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
