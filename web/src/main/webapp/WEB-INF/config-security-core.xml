@@ -68,6 +68,15 @@
 		<property name="securityContextRepository" ref="securityContextRepository" />
 	</bean>
 
+	<bean id="authenticationManager"
+		class="org.springframework.security.authentication.ProviderManager">
+		<property name="providers">
+			<list>
+				<ref bean="geonetworkAuthenticationProvider" />
+			</list>
+		</property>
+	</bean>
+
 	<bean id="securityContextRepository" class='org.springframework.security.web.context.HttpSessionSecurityContextRepository'>
       <property name="allowSessionCreation" value="false" />
     </bean>

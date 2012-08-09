@@ -12,6 +12,13 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           xmlns="http://www.springframework.org/schema/beans">
           
 	<ctx:property-override location="WEB-INF/config-override.properties"/>
+
+	<!-- Add ldap authentication to authentication manager -->
+	<bean id="ldapAuthenticationProviderPostProcessor"
+		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
+		<constructor-arg ref="ldapAuthProvider"/>
+	</bean>
+	
 	
     <!-- LDAP configuration-->
     <bean id="contextSource"
