@@ -622,7 +622,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>r08</version>
+            <version>13.0</version>
         </dependency>
 
         <!-- Monitoring libraries -->

@@ -54,6 +54,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -1045,7 +1046,7 @@ public class SearchManager {
 					if (!term.term().field().equals(fieldName) || (++i > maxNumberOfTerms)) {
 						break;
                     }
-					if (term.docFreq() >= threshold && term.term().text().contains(searchValue)) {
+					if (term.docFreq() >= threshold && StringUtils.containsIgnoreCase(term.term().text(), searchValue)) {
 						TermFrequency freq = new TermFrequency(term.term().text(), term.docFreq());
 						termList.add(freq);
 					} 
