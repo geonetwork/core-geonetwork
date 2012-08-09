@@ -442,6 +442,7 @@
                </resources>
                <filters>
                  <filter>${basedir}/src/main/filters/${env}.properties</filter>
+                 <filter>${basedir}/src/main/filters/deployment/config_${server}.properties</filter>
                </filters>
                <overwrite>true</overwrite>
              </configuration>
@@ -863,6 +864,7 @@
       </activation>
       <properties>
         <env>prod</env>
+        <server>default</server>
       </properties>
     </profile>
     <profile>
@@ -875,6 +877,7 @@
       </activation>
       <properties>
         <env>dev</env>
+        <server>default</server>
       </properties>
     </profile>
     <profile>
@@ -887,8 +890,111 @@
       </activation>
       <properties>
         <env>inspire</env>
+        <server>default</server>
       </properties>
     </profile>
+    
+    <!-- Sextant configuration profile -->
+    <profile>
+      <id>ifr-extra</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-extra</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>ifr-inter</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-inter</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>ifr-intra</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-intra</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>ifr-visi1-sextant</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-visi1-sextant</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>pc55</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>pc55</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>karukera</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>dev</value>
+        </property>
+      </activation>
+      <properties>
+        <env>dev</env>
+        <server>karukera</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>titellus</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>titellus</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <!-- Sextant configuration porfile / end -->
+    
     <profile>
       <id>widgets</id>
       <properties>

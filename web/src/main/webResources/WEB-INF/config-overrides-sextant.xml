@@ -2,7 +2,7 @@
   xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
   xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
   xsi:noNamespaceSchemaLocation="config-overrides.xsd">
-  <import file="/WEB-INF/config-overrides-sextant-props-c2cpc55.xml"/>
+  <import file="/WEB-INF/config-overrides-sextant-props-${overrides.props}.xml"/>
   <file name=".*/WEB-INF/config-gui.xml">
     <replaceAtt xpath="client" attName="widget" value="true"/>
     <replaceAtt xpath="client" attName="url" value="${widget.url}"/>
