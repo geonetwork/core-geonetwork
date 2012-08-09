@@ -504,7 +504,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             }
         });
         
-        this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
+        this.mdSelectionInfoCmp && this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
     },
     /** api: method[updatePrivileges] 
      *  Update privileges after user login
