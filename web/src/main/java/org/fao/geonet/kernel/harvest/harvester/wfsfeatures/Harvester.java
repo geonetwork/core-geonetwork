@@ -56,7 +56,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 //=============================================================================
@@ -142,6 +144,7 @@ class Harvester
 		SettingInfo si = new SettingInfo(context);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+		ssParams.put("siteUrl", siteUrl);
 	}
 
 	//---------------------------------------------------------------------------
@@ -237,7 +240,7 @@ class Harvester
 			//--- 2.2)
 			stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema) + Geonet.Path.WFS_STYLESHEETS;
 	    if (!params.stylesheet.trim().equals("")) {
-	    	xml = Xml.transform(xml, stylesheetDirectory + "/" + params.stylesheet);
+	    	xml = Xml.transform(xml, stylesheetDirectory + "/" + params.stylesheet, ssParams);
 	    }
 	   
 		 	log.info("Applying "+stylesheetDirectory + "/" + params.stylesheet);
@@ -274,7 +277,7 @@ class Harvester
 	        
 	        while (reader.hasNext()) {
 						stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema) + Geonet.Path.WFS_STYLESHEETS;
-	    			Element records = Xml.transform(reader.next(), stylesheetDirectory + "/" + params.stylesheet);
+	    			Element records = Xml.transform(reader.next(), stylesheetDirectory + "/" + params.stylesheet, ssParams);
 	
 	    			harvest(records, fragmentHarvester);
 	        }
@@ -371,6 +374,7 @@ class Harvester
 	private UUIDMapper     localUuids;
 	private String	 		metadataGetService;
 	private String	 		 stylesheetDirectory;
+	private Map<String,String> ssParams = new HashMap<String,String>();
 }
 
 //=============================================================================
