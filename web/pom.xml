@@ -938,7 +938,7 @@
       </properties>
     </profile>
     <profile>
-      <id>ifr-visi1-sextant</id>
+      <id>ifr-visi1-sextant5</id>
       <activation>
         <property>
           <name>env</name>
@@ -947,7 +947,7 @@
       </activation>
       <properties>
         <env>prod</env>
-        <server>ifr-visi1-sextant</server>
+        <server>ifr-visi1-sextant5</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
