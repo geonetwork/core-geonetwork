@@ -1739,7 +1739,7 @@
     
   </element>
   <element name="gmd:extensionOnLineResource" id="304.0">
-    <label>Ressource en line sur les extensions</label>
+    <label>Ressource en ligne sur les extensions</label>
     <description>Information sur les sources en ligne décrivant le profil d'un domaine d'application spécifique ainsi que les extensions du modèle. Information sur tous les nouveaux éléments de métadonnées.</description>
     <help>Informations relatives à des sources en ligne contenant le profil de la communauté d'utilisateurs de même que des éléments de métadonnées étendus. Informations concernant tous les nouveaux éléments de métadonnées.</help>
     <condition/>    
@@ -3225,7 +3225,7 @@
       Nom caractéristique et souvent unique sous lequel la ressource est connue.
       
       Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
-    <helper>
+    <!-- <helper>
       <option value="COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services">COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</option>
       <option value="INSPIRE Data Specification on Administrative Units - Guidelines v3.0.1">Guide INSPIRE sur les unités administratives</option>
       <option value="INSPIRE Data Specification on Cadastral Parcels - Guidelines v 3.0.1">Guide INSPIRE sur les parcelles cadastrales</option>
@@ -3236,7 +3236,7 @@
       <option value="INSPIRE Data Specification on Addresses - Guidelines v 3.0.1">Guide INSPIRE sur les adresses</option>
       <option value="INSPIRE Specification on Coordinate Reference Systems - Guidelines v 3.1">Guide INSPIRE sur les référentiels de coordonnées</option>
       <option value="INSPIRE Specification on Geographical Grid Systems - Guidelines v 3.0.1">Guide INSPIRE sur les systèmes de maillage géographique</option>
-    </helper>
+    </helper>-->
       
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
     Les exigences de conformité seront remplies au moyen des éléments 

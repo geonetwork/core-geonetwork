@@ -122,7 +122,7 @@ app.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
 	            iconCls: 'addIcon',
 	            text: translate('create'),
 	            handler: function() {
-	            	createNewXLink();
+	            	this.createNewXLink();
 	            	this.ownerCt.hide();
 	            },
 	            scope: this

@@ -271,7 +271,7 @@
 
 	<xsl:template mode="simpleElement" match="@*"/>
 		
-    <xsl:template mode="simpleAttribute" match="@xlink:show" priority="5"/>
+    <xsl:template mode="simpleAttribute" match="@xlink:*" priority="5"/>
 	<xsl:template name="simpleAttribute" mode="simpleAttribute" match="@*" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
@@ -793,7 +793,9 @@
             select="$edit = true() and 
                    ((@name='contact' and @prefix='gmd' and count(parent::node()[@gco:isoType='gmd:MD_Metadata'])=1)
                     or
-                    (@name='userContactInfo' and @prefix='gmd' and count(parent::gmd:MD_Usage)=1))
+                    (@name='userContactInfo' and @prefix='gmd' and count(parent::gmd:MD_Usage)=1)
+                    or
+                    (@name='distributorContact' and @prefix='gmd' and count(parent::gmd:MD_Distributor)=1))
                             " />
                             
         

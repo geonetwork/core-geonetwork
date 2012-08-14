@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">tc-geocat0i.bgdi.admin.ch</stringProp>
+        <stringProp name="HTTPSampler.port">80</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout">500</stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        <stringProp name="HTTPSampler.protocol">http</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Add content type" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">content-type</stringProp>
+            <stringProp name="Header.value">application/xml;charset=UTF-8</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Search Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1343023590000</longProp>
+        <longProp name="ThreadGroup.end_time">1343023590000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="BBox Search Controller" enabled="true"/>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="bbox search" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">&lt;csw:GetRecords xmlns:csw=&quot;http://www.opengis.net/cat/csw/2.0.2&quot; service=&quot;CSW&quot; version=&quot;2.0.2&quot; resultType=&quot;results_with_summary&quot; startPosition=&quot;1&quot; maxRecords=&quot;10&quot;&gt;&#xd;
+  &lt;csw:Query typeNames=&quot;csw:Record&quot;&gt;&#xd;
+    &lt;csw:ElementSetName&gt;full&lt;/csw:ElementSetName&gt;&#xd;
+    &lt;ogc:SortBy xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;&gt;&#xd;
+      &lt;ogc:SortProperty&gt;&#xd;
+        &lt;ogc:PropertyName&gt;relevance&lt;/ogc:PropertyName&gt;&#xd;
+        &lt;ogc:SortOrder&gt;DESC&lt;/ogc:SortOrder&gt;&#xd;
+      &lt;/ogc:SortProperty&gt;&#xd;
+    &lt;/ogc:SortBy&gt;&#xd;
+    &lt;csw:Constraint version=&quot;1.0.0&quot;&gt;&#xd;
+&lt;ogc:Filter xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;&gt;&lt;ogc:And&gt;&lt;ogc:PropertyIsEqualTo&gt;&lt;ogc:PropertyName&gt;similarity&lt;/ogc:PropertyName&gt;&lt;ogc:Literal&gt;0.8&lt;/ogc:Literal&gt;&lt;/ogc:PropertyIsEqualTo&gt;&lt;ogc:Within&gt;&lt;ogc:PropertyName&gt;ows:BoundingBox&lt;/ogc:PropertyName&gt;&lt;gml:Box xmlns:gml=&quot;http://www.opengis.net/gml&quot;&gt;&lt;gml:coordinates decimal=&quot;.&quot; cs=&quot;,&quot; ts=&quot; &quot;&gt;7.3612157867203,46.90240469339154 9.429272407082555,47.791563290716795&lt;/gml:coordinates&gt;&lt;/gml:Box&gt;&lt;/ogc:Within&gt;&lt;/ogc:And&gt;&lt;/ogc:Filter&gt;    &lt;/csw:Constraint&gt;&#xd;
+  &lt;/csw:Query&gt;&#xd;
+&lt;/csw:GetRecords&gt;</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">500</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">5000</stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/geonetwork/srv/ger/csw</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+            <boolProp name="HTTPSampler.monitor">true</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="5 requests a second Timer" enabled="true">
+            <doubleProp>
+              <name>throughput</name>
+              <value>5.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+            <stringProp name="calcMode">this thread only</stringProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Edit Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1343027590000</longProp>
+        <longProp name="ThreadGroup.end_time">1343027590000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Edit Controller" enabled="true"/>
+        <hashTree>
+          <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+            <collectionProp name="CookieManager.cookies"/>
+            <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+          </CookieManager>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login Request" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">newadmin</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">newadmin</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">1000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/geonetwork/srv/ger/user.login</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit Request" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">&lt;csw:Transaction service=&quot;CSW&quot; version=&quot;2.0.2&quot; xmlns:csw=&quot;http://www.opengis.net/cat/csw/2.0.2&quot; xmlns:ogc=&quot;http://www.opengis.net/ogc&quot; &#xd;
+    xmlns:apiso=&quot;http://www.opengis.net/cat/csw/apiso/1.0&quot;&gt;&#xd;
+    &lt;csw:Update&gt;&#xd;
+&lt;che:CHE_MD_Metadata xmlns:che=&quot;http://www.geocat.ch/2008/che&quot; xmlns:gml=&quot;http://www.opengis.net/gml&quot; xmlns:gmd=&quot;http://www.isotc211.org/2005/gmd&quot; xmlns:srv=&quot;http://www.isotc211.org/2005/srv&quot; xmlns:gco=&quot;http://www.isotc211.org/2005/gco&quot; xmlns:geonet=&quot;http://www.fao.org/geonetwork&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; gco:isoType=&quot;gmd:MD_Metadata&quot;&gt;&#xd;
+  &lt;gmd:fileIdentifier xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gco:CharacterString&gt;1e7b6a37-9560-496b-aabc-e6cc2f2a3998&lt;/gco:CharacterString&gt;&#xd;
+  &lt;/gmd:fileIdentifier&gt;&#xd;
+  &lt;gmd:language xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gco:CharacterString&gt;deu&lt;/gco:CharacterString&gt;&#xd;
+  &lt;/gmd:language&gt;&#xd;
+  &lt;gmd:characterSet xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gmd:MD_CharacterSetCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode&quot; codeListValue=&quot;utf8&quot; /&gt;&#xd;
+  &lt;/gmd:characterSet&gt;&#xd;
+  &lt;gmd:hierarchyLevel xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gmd:MD_ScopeCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode&quot; codeListValue=&quot;dataset&quot; /&gt;&#xd;
+  &lt;/gmd:hierarchyLevel&gt;&#xd;
+  &lt;gmd:contact xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:show=&quot;embed&quot;&gt;&#xd;
+    &lt;che:CHE_CI_ResponsibleParty gco:isoType=&quot;gmd:CI_ResponsibleParty&quot;&gt;&#xd;
+      &lt;gmd:organisationName xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+        &lt;gmd:PT_FreeText&gt;&#xd;
+          &lt;gmd:textGroup&gt;&#xd;
+            &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Amt für Raumentwicklung und Geoinformation&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+          &lt;/gmd:textGroup&gt;&#xd;
+        &lt;/gmd:PT_FreeText&gt;&#xd;
+      &lt;/gmd:organisationName&gt;&#xd;
+      &lt;gmd:positionName xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+        &lt;gmd:PT_FreeText&gt;&#xd;
+          &lt;gmd:textGroup&gt;&#xd;
+            &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Sachbearbeiter&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+          &lt;/gmd:textGroup&gt;&#xd;
+        &lt;/gmd:PT_FreeText&gt;&#xd;
+      &lt;/gmd:positionName&gt;&#xd;
+      &lt;gmd:contactInfo&gt;&#xd;
+        &lt;gmd:CI_Contact&gt;&#xd;
+          &lt;gmd:phone&gt;&#xd;
+            &lt;che:CHE_CI_Telephone gco:isoType=&quot;gmd:CI_Telephone&quot;&gt;&#xd;
+              &lt;che:directNumber&gt;&#xd;
+                &lt;gco:CharacterString&gt;071 229 35 17&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/che:directNumber&gt;&#xd;
+              &lt;che:mobile gco:nilReason=&quot;missing&quot;&gt;&#xd;
+                &lt;gco:CharacterString /&gt;&#xd;
+              &lt;/che:mobile&gt;&#xd;
+            &lt;/che:CHE_CI_Telephone&gt;&#xd;
+          &lt;/gmd:phone&gt;&#xd;
+          &lt;gmd:address&gt;&#xd;
+            &lt;che:CHE_CI_Address gco:isoType=&quot;gmd:CI_Address&quot;&gt;&#xd;
+              &lt;gmd:city&gt;&#xd;
+                &lt;gco:CharacterString&gt;St. Gallen&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:city&gt;&#xd;
+              &lt;gmd:postalCode&gt;&#xd;
+                &lt;gco:CharacterString&gt;9001&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:postalCode&gt;&#xd;
+              &lt;gmd:country xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                &lt;gco:CharacterString&gt;CH&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:country&gt;&#xd;
+              &lt;gmd:electronicMailAddress&gt;&#xd;
+                &lt;gco:CharacterString&gt;martin.trummer@sg.ch&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:electronicMailAddress&gt;&#xd;
+              &lt;che:streetName&gt;&#xd;
+                &lt;gco:CharacterString&gt;Lämmlisbrunnenstrasse&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/che:streetName&gt;&#xd;
+              &lt;che:streetNumber&gt;&#xd;
+                &lt;gco:CharacterString&gt;54&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/che:streetNumber&gt;&#xd;
+            &lt;/che:CHE_CI_Address&gt;&#xd;
+          &lt;/gmd:address&gt;&#xd;
+          &lt;gmd:onlineResource&gt;&#xd;
+            &lt;gmd:CI_OnlineResource&gt;&#xd;
+              &lt;gmd:linkage xsi:type=&quot;che:PT_FreeURL_PropertyType&quot;&gt;&#xd;
+                &lt;che:PT_FreeURL&gt;&#xd;
+                  &lt;che:URLGroup&gt;&#xd;
+                    &lt;che:LocalisedURL locale=&quot;#DE&quot;&gt;http://www.sg.ch/home/bauen__raum___umwelt/raumentwicklung.html&lt;/che:LocalisedURL&gt;&#xd;
+                  &lt;/che:URLGroup&gt;&#xd;
+                &lt;/che:PT_FreeURL&gt;&#xd;
+              &lt;/gmd:linkage&gt;&#xd;
+              &lt;gmd:protocol&gt;&#xd;
+                &lt;gco:CharacterString&gt;text/html&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:protocol&gt;&#xd;
+              &lt;gmd:name xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                &lt;gmd:PT_FreeText&gt;&#xd;
+                  &lt;gmd:textGroup&gt;&#xd;
+                    &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot; /&gt;&#xd;
+                  &lt;/gmd:textGroup&gt;&#xd;
+                &lt;/gmd:PT_FreeText&gt;&#xd;
+              &lt;/gmd:name&gt;&#xd;
+              &lt;gmd:description xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                &lt;gmd:PT_FreeText&gt;&#xd;
+                  &lt;gmd:textGroup&gt;&#xd;
+                    &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot; /&gt;&#xd;
+                  &lt;/gmd:textGroup&gt;&#xd;
+                &lt;/gmd:PT_FreeText&gt;&#xd;
+              &lt;/gmd:description&gt;&#xd;
+            &lt;/gmd:CI_OnlineResource&gt;&#xd;
+          &lt;/gmd:onlineResource&gt;&#xd;
+        &lt;/gmd:CI_Contact&gt;&#xd;
+      &lt;/gmd:contactInfo&gt;&#xd;
+      &lt;gmd:role&gt;&#xd;
+        &lt;gmd:CI_RoleCode codeListValue=&quot;pointOfContact&quot; codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode&quot; /&gt;&#xd;
+      &lt;/gmd:role&gt;&#xd;
+      &lt;che:individualFirstName&gt;&#xd;
+        &lt;gco:CharacterString&gt;Martin&lt;/gco:CharacterString&gt;&#xd;
+      &lt;/che:individualFirstName&gt;&#xd;
+      &lt;che:individualLastName&gt;&#xd;
+        &lt;gco:CharacterString&gt;Trummer&lt;/gco:CharacterString&gt;&#xd;
+      &lt;/che:individualLastName&gt;&#xd;
+      &lt;che:organisationAcronym xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+        &lt;gmd:PT_FreeText&gt;&#xd;
+          &lt;gmd:textGroup&gt;&#xd;
+            &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;AREG&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+          &lt;/gmd:textGroup&gt;&#xd;
+        &lt;/gmd:PT_FreeText&gt;&#xd;
+      &lt;/che:organisationAcronym&gt;&#xd;
+    &lt;/che:CHE_CI_ResponsibleParty&gt;&#xd;
+  &lt;/gmd:contact&gt;&#xd;
+  &lt;gmd:dateStamp xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gco:DateTime&gt;2012-07-23T08:49:09&lt;/gco:DateTime&gt;&#xd;
+  &lt;/gmd:dateStamp&gt;&#xd;
+  &lt;gmd:metadataStandardName xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gco:CharacterString&gt;GM03 2+&lt;/gco:CharacterString&gt;&#xd;
+  &lt;/gmd:metadataStandardName&gt;&#xd;
+  &lt;gmd:locale xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gmd:PT_Locale id=&quot;DE&quot;&gt;&#xd;
+      &lt;gmd:languageCode&gt;&#xd;
+        &lt;gmd:LanguageCode codeList=&quot;#LanguageCode&quot; codeListValue=&quot;deu&quot;&gt;German&lt;/gmd:LanguageCode&gt;&#xd;
+      &lt;/gmd:languageCode&gt;&#xd;
+      &lt;gmd:characterEncoding&gt;&#xd;
+        &lt;gmd:MD_CharacterSetCode codeList=&quot;#MD_CharacterSetCode&quot; codeListValue=&quot;utf8&quot;&gt;UTF8&lt;/gmd:MD_CharacterSetCode&gt;&#xd;
+      &lt;/gmd:characterEncoding&gt;&#xd;
+    &lt;/gmd:PT_Locale&gt;&#xd;
+  &lt;/gmd:locale&gt;&#xd;
+  &lt;gmd:locale xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gmd:PT_Locale id=&quot;FR&quot;&gt;&#xd;
+      &lt;gmd:languageCode&gt;&#xd;
+        &lt;gmd:LanguageCode codeList=&quot;#LanguageCode&quot; codeListValue=&quot;fra&quot;&gt;French&lt;/gmd:LanguageCode&gt;&#xd;
+      &lt;/gmd:languageCode&gt;&#xd;
+      &lt;gmd:characterEncoding&gt;&#xd;
+        &lt;gmd:MD_CharacterSetCode codeList=&quot;#MD_CharacterSetCode&quot; codeListValue=&quot;utf8&quot;&gt;UTF8&lt;/gmd:MD_CharacterSetCode&gt;&#xd;
+      &lt;/gmd:characterEncoding&gt;&#xd;
+    &lt;/gmd:PT_Locale&gt;&#xd;
+  &lt;/gmd:locale&gt;&#xd;
+  &lt;gmd:locale xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gmd:PT_Locale id=&quot;IT&quot;&gt;&#xd;
+      &lt;gmd:languageCode&gt;&#xd;
+        &lt;gmd:LanguageCode codeList=&quot;#LanguageCode&quot; codeListValue=&quot;ita&quot;&gt;Italian&lt;/gmd:LanguageCode&gt;&#xd;
+      &lt;/gmd:languageCode&gt;&#xd;
+      &lt;gmd:characterEncoding&gt;&#xd;
+        &lt;gmd:MD_CharacterSetCode codeList=&quot;#MD_CharacterSetCode&quot; codeListValue=&quot;utf8&quot;&gt;UTF8&lt;/gmd:MD_CharacterSetCode&gt;&#xd;
+      &lt;/gmd:characterEncoding&gt;&#xd;
+    &lt;/gmd:PT_Locale&gt;&#xd;
+  &lt;/gmd:locale&gt;&#xd;
+  &lt;gmd:locale xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;gmd:PT_Locale id=&quot;EN&quot;&gt;&#xd;
+      &lt;gmd:languageCode&gt;&#xd;
+        &lt;gmd:LanguageCode codeList=&quot;#LanguageCode&quot; codeListValue=&quot;eng&quot;&gt;English&lt;/gmd:LanguageCode&gt;&#xd;
+      &lt;/gmd:languageCode&gt;&#xd;
+      &lt;gmd:characterEncoding&gt;&#xd;
+        &lt;gmd:MD_CharacterSetCode codeList=&quot;#MD_CharacterSetCode&quot; codeListValue=&quot;utf8&quot;&gt;UTF8&lt;/gmd:MD_CharacterSetCode&gt;&#xd;
+      &lt;/gmd:characterEncoding&gt;&#xd;
+    &lt;/gmd:PT_Locale&gt;&#xd;
+  &lt;/gmd:locale&gt;&#xd;
+  &lt;gmd:referenceSystemInfo&gt;&#xd;
+    &lt;gmd:MD_ReferenceSystem&gt;&#xd;
+      &lt;gmd:referenceSystemIdentifier&gt;&#xd;
+        &lt;gmd:RS_Identifier&gt;&#xd;
+          &lt;gmd:code xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+            &lt;gmd:PT_FreeText&gt;&#xd;
+              &lt;gmd:textGroup&gt;&#xd;
+                &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;EPSG:21781&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+              &lt;/gmd:textGroup&gt;&#xd;
+            &lt;/gmd:PT_FreeText&gt;&#xd;
+          &lt;/gmd:code&gt;&#xd;
+        &lt;/gmd:RS_Identifier&gt;&#xd;
+      &lt;/gmd:referenceSystemIdentifier&gt;&#xd;
+    &lt;/gmd:MD_ReferenceSystem&gt;&#xd;
+  &lt;/gmd:referenceSystemInfo&gt;&#xd;
+  &lt;gmd:identificationInfo xmlns:comp=&quot;http://www.geocat.ch/2003/05/gateway/GM03Comprehensive&quot; xmlns:xalan=&quot;http://xml.apache.org/xalan&quot;&gt;&#xd;
+    &lt;che:CHE_MD_DataIdentification gco:isoType=&quot;gmd:MD_DataIdentification&quot;&gt;&#xd;
+      &lt;gmd:citation&gt;&#xd;
+        &lt;gmd:CI_Citation&gt;&#xd;
+          &lt;gmd:title xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+            &lt;gmd:PT_FreeText&gt;&#xd;
+              &lt;gmd:textGroup&gt;&#xd;
+                &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Wanderwegplan (SG) JMETER&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+              &lt;/gmd:textGroup&gt;&#xd;
+            &lt;/gmd:PT_FreeText&gt;&#xd;
+          &lt;/gmd:title&gt;&#xd;
+          &lt;gmd:date&gt;&#xd;
+            &lt;gmd:CI_Date&gt;&#xd;
+              &lt;gmd:date&gt;&#xd;
+                &lt;gco:Date&gt;1997-12-31&lt;/gco:Date&gt;&#xd;
+              &lt;/gmd:date&gt;&#xd;
+              &lt;gmd:dateType&gt;&#xd;
+                &lt;gmd:CI_DateTypeCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode&quot; codeListValue=&quot;creation&quot; /&gt;&#xd;
+              &lt;/gmd:dateType&gt;&#xd;
+            &lt;/gmd:CI_Date&gt;&#xd;
+          &lt;/gmd:date&gt;&#xd;
+        &lt;/gmd:CI_Citation&gt;&#xd;
+      &lt;/gmd:citation&gt;&#xd;
+      &lt;gmd:abstract xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+        &lt;gmd:PT_FreeText&gt;&#xd;
+          &lt;gmd:textGroup&gt;&#xd;
+            &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Der kantonale Wanderwegplan enthält und unterscheidet die Wanderwege von kantonaler, regionaler und lokaler Bedeutung&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+          &lt;/gmd:textGroup&gt;&#xd;
+        &lt;/gmd:PT_FreeText&gt;&#xd;
+      &lt;/gmd:abstract&gt;&#xd;
+      &lt;gmd:status&gt;&#xd;
+        &lt;gmd:MD_ProgressCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode&quot; codeListValue=&quot;onGoing&quot; /&gt;&#xd;
+      &lt;/gmd:status&gt;&#xd;
+      &lt;gmd:pointOfContact xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:show=&quot;embed&quot;&gt;&#xd;
+        &lt;che:CHE_CI_ResponsibleParty gco:isoType=&quot;gmd:CI_ResponsibleParty&quot;&gt;&#xd;
+          &lt;gmd:organisationName xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+            &lt;gmd:PT_FreeText&gt;&#xd;
+              &lt;gmd:textGroup&gt;&#xd;
+                &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Amt für Raumentwicklung und Geoinformation&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+              &lt;/gmd:textGroup&gt;&#xd;
+            &lt;/gmd:PT_FreeText&gt;&#xd;
+          &lt;/gmd:organisationName&gt;&#xd;
+          &lt;gmd:positionName xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+            &lt;gmd:PT_FreeText&gt;&#xd;
+              &lt;gmd:textGroup&gt;&#xd;
+                &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Sachbearbeiter&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+              &lt;/gmd:textGroup&gt;&#xd;
+            &lt;/gmd:PT_FreeText&gt;&#xd;
+          &lt;/gmd:positionName&gt;&#xd;
+          &lt;gmd:contactInfo&gt;&#xd;
+            &lt;gmd:CI_Contact&gt;&#xd;
+              &lt;gmd:phone&gt;&#xd;
+                &lt;che:CHE_CI_Telephone gco:isoType=&quot;gmd:CI_Telephone&quot;&gt;&#xd;
+                  &lt;che:directNumber&gt;&#xd;
+                    &lt;gco:CharacterString&gt;071 229 35 17&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/che:directNumber&gt;&#xd;
+                  &lt;che:mobile gco:nilReason=&quot;missing&quot;&gt;&#xd;
+                    &lt;gco:CharacterString /&gt;&#xd;
+                  &lt;/che:mobile&gt;&#xd;
+                &lt;/che:CHE_CI_Telephone&gt;&#xd;
+              &lt;/gmd:phone&gt;&#xd;
+              &lt;gmd:address&gt;&#xd;
+                &lt;che:CHE_CI_Address gco:isoType=&quot;gmd:CI_Address&quot;&gt;&#xd;
+                  &lt;gmd:city&gt;&#xd;
+                    &lt;gco:CharacterString&gt;St. Gallen&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/gmd:city&gt;&#xd;
+                  &lt;gmd:postalCode&gt;&#xd;
+                    &lt;gco:CharacterString&gt;9001&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/gmd:postalCode&gt;&#xd;
+                  &lt;gmd:country xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                    &lt;gco:CharacterString&gt;CH&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/gmd:country&gt;&#xd;
+                  &lt;gmd:electronicMailAddress&gt;&#xd;
+                    &lt;gco:CharacterString&gt;martin.trummer@sg.ch&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/gmd:electronicMailAddress&gt;&#xd;
+                  &lt;che:streetName&gt;&#xd;
+                    &lt;gco:CharacterString&gt;Lämmlisbrunnenstrasse&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/che:streetName&gt;&#xd;
+                  &lt;che:streetNumber&gt;&#xd;
+                    &lt;gco:CharacterString&gt;54&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/che:streetNumber&gt;&#xd;
+                &lt;/che:CHE_CI_Address&gt;&#xd;
+              &lt;/gmd:address&gt;&#xd;
+              &lt;gmd:onlineResource&gt;&#xd;
+                &lt;gmd:CI_OnlineResource&gt;&#xd;
+                  &lt;gmd:linkage xsi:type=&quot;che:PT_FreeURL_PropertyType&quot;&gt;&#xd;
+                    &lt;che:PT_FreeURL&gt;&#xd;
+                      &lt;che:URLGroup&gt;&#xd;
+                        &lt;che:LocalisedURL locale=&quot;#DE&quot;&gt;http://www.sg.ch/home/bauen__raum___umwelt/raumentwicklung.html&lt;/che:LocalisedURL&gt;&#xd;
+                      &lt;/che:URLGroup&gt;&#xd;
+                    &lt;/che:PT_FreeURL&gt;&#xd;
+                  &lt;/gmd:linkage&gt;&#xd;
+                  &lt;gmd:protocol&gt;&#xd;
+                    &lt;gco:CharacterString&gt;text/html&lt;/gco:CharacterString&gt;&#xd;
+                  &lt;/gmd:protocol&gt;&#xd;
+                  &lt;gmd:name xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                    &lt;gmd:PT_FreeText&gt;&#xd;
+                      &lt;gmd:textGroup&gt;&#xd;
+                        &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot; /&gt;&#xd;
+                      &lt;/gmd:textGroup&gt;&#xd;
+                    &lt;/gmd:PT_FreeText&gt;&#xd;
+                  &lt;/gmd:name&gt;&#xd;
+                  &lt;gmd:description xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                    &lt;gmd:PT_FreeText&gt;&#xd;
+                      &lt;gmd:textGroup&gt;&#xd;
+                        &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot; /&gt;&#xd;
+                      &lt;/gmd:textGroup&gt;&#xd;
+                    &lt;/gmd:PT_FreeText&gt;&#xd;
+                  &lt;/gmd:description&gt;&#xd;
+                &lt;/gmd:CI_OnlineResource&gt;&#xd;
+              &lt;/gmd:onlineResource&gt;&#xd;
+            &lt;/gmd:CI_Contact&gt;&#xd;
+          &lt;/gmd:contactInfo&gt;&#xd;
+          &lt;gmd:role&gt;&#xd;
+            &lt;gmd:CI_RoleCode codeListValue=&quot;pointOfContact&quot; codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode&quot; /&gt;&#xd;
+          &lt;/gmd:role&gt;&#xd;
+          &lt;che:individualFirstName&gt;&#xd;
+            &lt;gco:CharacterString&gt;Martin&lt;/gco:CharacterString&gt;&#xd;
+          &lt;/che:individualFirstName&gt;&#xd;
+          &lt;che:individualLastName&gt;&#xd;
+            &lt;gco:CharacterString&gt;Trummer&lt;/gco:CharacterString&gt;&#xd;
+          &lt;/che:individualLastName&gt;&#xd;
+          &lt;che:organisationAcronym xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+            &lt;gmd:PT_FreeText&gt;&#xd;
+              &lt;gmd:textGroup&gt;&#xd;
+                &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;AREG&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+              &lt;/gmd:textGroup&gt;&#xd;
+            &lt;/gmd:PT_FreeText&gt;&#xd;
+          &lt;/che:organisationAcronym&gt;&#xd;
+        &lt;/che:CHE_CI_ResponsibleParty&gt;&#xd;
+      &lt;/gmd:pointOfContact&gt;&#xd;
+      &lt;gmd:spatialRepresentationType&gt;&#xd;
+        &lt;gmd:MD_SpatialRepresentationTypeCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode&quot; codeListValue=&quot;vector&quot; /&gt;&#xd;
+      &lt;/gmd:spatialRepresentationType&gt;&#xd;
+      &lt;gmd:language&gt;&#xd;
+        &lt;gco:CharacterString&gt;deu&lt;/gco:CharacterString&gt;&#xd;
+      &lt;/gmd:language&gt;&#xd;
+      &lt;gmd:characterSet&gt;&#xd;
+        &lt;gmd:MD_CharacterSetCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode&quot; codeListValue=&quot;utf8&quot; /&gt;&#xd;
+      &lt;/gmd:characterSet&gt;&#xd;
+      &lt;gmd:topicCategory&gt;&#xd;
+        &lt;gmd:MD_TopicCategoryCode&gt;planningCadastre&lt;/gmd:MD_TopicCategoryCode&gt;&#xd;
+      &lt;/gmd:topicCategory&gt;&#xd;
+      &lt;gmd:environmentDescription xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+        &lt;gmd:PT_FreeText&gt;&#xd;
+          &lt;gmd:textGroup&gt;&#xd;
+            &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;ESRI-ArcGIS&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+          &lt;/gmd:textGroup&gt;&#xd;
+        &lt;/gmd:PT_FreeText&gt;&#xd;
+      &lt;/gmd:environmentDescription&gt;&#xd;
+      &lt;gmd:extent xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:show=&quot;embed&quot;&gt;&#xd;
+        &lt;gmd:EX_Extent&gt;&#xd;
+          &lt;gmd:description xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+            &lt;gmd:PT_FreeText&gt;&#xd;
+              &lt;gmd:textGroup&gt;&#xd;
+                &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot;&gt;St. Gallen&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+              &lt;/gmd:textGroup&gt;&#xd;
+            &lt;/gmd:PT_FreeText&gt;&#xd;
+          &lt;/gmd:description&gt;&#xd;
+          &lt;gmd:geographicElement&gt;&#xd;
+            &lt;gmd:EX_GeographicDescription&gt;&#xd;
+              &lt;gmd:geographicIdentifier&gt;&#xd;
+                &lt;gmd:MD_Identifier&gt;&#xd;
+                  &lt;gmd:code xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                    &lt;gmd:PT_FreeText&gt;&#xd;
+                      &lt;gmd:textGroup&gt;&#xd;
+                        &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot;&gt;SG&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+                      &lt;/gmd:textGroup&gt;&#xd;
+                    &lt;/gmd:PT_FreeText&gt;&#xd;
+                  &lt;/gmd:code&gt;&#xd;
+                &lt;/gmd:MD_Identifier&gt;&#xd;
+              &lt;/gmd:geographicIdentifier&gt;&#xd;
+            &lt;/gmd:EX_GeographicDescription&gt;&#xd;
+          &lt;/gmd:geographicElement&gt;&#xd;
+          &lt;gmd:geographicElement&gt;&#xd;
+            &lt;gmd:EX_BoundingPolygon&gt;&#xd;
+              &lt;gmd:extentTypeCode&gt;&#xd;
+                &lt;gco:Boolean&gt;1&lt;/gco:Boolean&gt;&#xd;
+              &lt;/gmd:extentTypeCode&gt;&#xd;
+              &lt;gmd:polygon&gt;&#xd;
+                &lt;gml:MultiSurface gml:id=&quot;N915b13ffb94042408d41f2d9829cc192&quot;&gt;&#xd;
+                  &lt;gml:surfaceMember&gt;&#xd;
+                    &lt;gml:Polygon gml:id=&quot;Ne4e66bc509f74d7a90e30c985c09a144&quot;&gt;&#xd;
+                      &lt;gml:exterior&gt;&#xd;
+                        &lt;gml:LinearRing&gt;&#xd;
+                          &lt;gml:posList&gt;9.277 46.907 9.267 46.903 9.249 46.916 9.253 46.927 9.25 46.935 9.239 46.941 9.237 46.955 9.246 46.959 9.248 47.0 9.241 47.018 9.236 47.024 9.23 47.026 9.22 47.033 9.202 47.035 9.181 47.026 9.156 47.03 9.138 47.039 9.154 47.047 9.17 47.051 9.182 47.058 9.185 47.064 9.192 47.073 9.186 47.098 9.189 47.116 9.19 47.124 9.136 47.132 9.099 47.133 9.086 47.131 9.072 47.13 9.05 47.142 9.008 47.172 9.005 47.173 8.981 47.183 8.97 47.179 8.962 47.184 8.958 47.199 8.965 47.198 8.969 47.212 8.974 47.213 8.966 47.217 8.941 47.218 8.841 47.208 8.823 47.211 8.809 47.22 8.808 47.22 8.796 47.239 8.803 47.247 8.809 47.248 8.828 47.25 8.855 47.244 8.87 47.245 8.874 47.25 8.885 47.253 8.909 47.254 8.936 47.26 8.949 47.281 8.935 47.288 8.949 47.292 8.957 47.304 8.975 47.307 8.985 47.319 8.977 47.327 8.974 47.347 8.96 47.356 8.951 47.372 8.944 47.376 8.971 47.391 8.973 47.405 8.979 47.412 8.989 47.411 8.993 47.422 8.99 47.429 9.0 47.432 8.999 47.435 9.012 47.434 9.022 47.442 9.026 47.437 9.034 47.435 9.038 47.441 9.054 47.443 9.062 47.446 9.044 47.454 9.027 47.458 9.028 47.461 9.028 47.465 9.03 47.467 9.008 47.472 9.012 47.49 9.03 47.49 9.042 47.496 9.043 47.496 9.055 47.488 9.082 47.495 9.091 47.483 9.099 47.486 9.113 47.484 9.118 47.48 9.129 47.484 9.153 47.487 9.166 47.504 9.172 47.503 9.171 47.497 9.177 47.495 9.178 47.497 9.181 47.497 9.184 47.492 9.208 47.489 9.209 47.48 9.225 47.484 9.237 47.481 9.239 47.481 9.251 47.474 9.263 47.475 9.279 47.481 9.298 47.477 9.321 47.491 9.318 47.5 9.309 47.497 9.308 47.501 9.31 47.508 9.317 47.509 9.303 47.516 9.29 47.507 9.272 47.508 9.269 47.512 9.28 47.512 9.282 47.521 9.293 47.523 9.31 47.524 9.323 47.53 9.338 47.529 9.339 47.531 9.342 47.522 9.354 47.52 9.346 47.508 9.339 47.507 9.338 47.501 9.356 47.501 9.356 47.503 9.365 47.502 9.374 47.5 9.366 47.485 9.382 47.485 9.392 47.479 9.399 47.478 9.406 47.492 9.418 47.498 9.421 47.496 9.434 47.506 9.503 47.547 9.515 47.537 9.551 47.537 9.561 47.5 9.561 47.499 9.564 47.493 9.577 47.486 9.594 47.464 9.603 47.462 9.609 47.471 9.622 47.458 9.656 47.454 9.659 47.449 9.651 47.443 9.644 47.435 9.651 47.417 9.652 47.405 9.674 47.391 9.673 47.38 9.658 47.369 9.624 47.366 9.6 47.346 9.587 47.316 9.566 47.304 9.556 47.298 9.543 47.278 9.531 47.271 9.53 47.269 9.521 47.245 9.51 47.232 9.49 47.198 9.488 47.19 9.486 47.181 9.495 47.157 9.503 47.147 9.515 47.122 9.516 47.115 9.52 47.098 9.513 47.085 9.474 47.066 9.472 47.062 9.476 47.052 9.477 47.049 9.485 47.04 9.492 47.034 9.51 47.01 9.546 46.977 9.524 46.973 9.517 46.968 9.518 46.956 9.505 46.954 9.498 46.945 9.478 46.921 9.479 46.916 9.488 46.912 9.475 46.906 9.468 46.897 9.467 46.886 9.454 46.884 9.454 46.877 9.449 46.873 9.432 46.885 9.414 46.891 9.382 46.898 9.343 46.898 9.339 46.902 9.326 46.901 9.291 46.907 9.277 46.907&lt;/gml:posList&gt;&#xd;
+                        &lt;/gml:LinearRing&gt;&#xd;
+                      &lt;/gml:exterior&gt;&#xd;
+                      &lt;gml:interior&gt;&#xd;
+                        &lt;gml:LinearRing&gt;&#xd;
+                          &lt;gml:posList&gt;9.583 47.41 9.605 47.414 9.589 47.422 9.589 47.425 9.618 47.437 9.626 47.439 9.63 47.44 9.63 47.444 9.589 47.458 9.589 47.459 9.577 47.463 9.562 47.463 9.553 47.464 9.546 47.463 9.543 47.469 9.533 47.468 9.529 47.465 9.524 47.452 9.509 47.449 9.495 47.442 9.468 47.438 9.452 47.431 9.435 47.434 9.435 47.422 9.426 47.407 9.4 47.401 9.372 47.408 9.358 47.402 9.34 47.4 9.325 47.4 9.303 47.395 9.294 47.397 9.266 47.401 9.252 47.401 9.236 47.396 9.233 47.398 9.232 47.388 9.219 47.385 9.221 47.373 9.21 47.363 9.191 47.362 9.196 47.354 9.192 47.351 9.205 47.342 9.225 47.342 9.233 47.332 9.21 47.321 9.218 47.308 9.217 47.303 9.224 47.293 9.206 47.276 9.234 47.265 9.275 47.269 9.297 47.257 9.309 47.259 9.308 47.255 9.324 47.247 9.343 47.249 9.35 47.245 9.37 47.24 9.382 47.234 9.402 47.238 9.412 47.245 9.445 47.255 9.473 47.271 9.484 47.283 9.489 47.302 9.496 47.306 9.493 47.313 9.498 47.319 9.503 47.337 9.503 47.347 9.502 47.354 9.499 47.364 9.508 47.393 9.509 47.395 9.542 47.4 9.548 47.393 9.555 47.396 9.567 47.4 9.583 47.409 9.583 47.41&lt;/gml:posList&gt;&#xd;
+                        &lt;/gml:LinearRing&gt;&#xd;
+                      &lt;/gml:interior&gt;&#xd;
+                      &lt;gml:interior&gt;&#xd;
+                        &lt;gml:LinearRing&gt;&#xd;
+                          &lt;gml:posList&gt;9.464 47.484 9.476 47.489 9.449 47.501 9.45 47.492 9.465 47.487 9.464 47.484&lt;/gml:posList&gt;&#xd;
+                        &lt;/gml:LinearRing&gt;&#xd;
+                      &lt;/gml:interior&gt;&#xd;
+                    &lt;/gml:Polygon&gt;&#xd;
+                  &lt;/gml:surfaceMember&gt;&#xd;
+                &lt;/gml:MultiSurface&gt;&#xd;
+              &lt;/gmd:polygon&gt;&#xd;
+            &lt;/gmd:EX_BoundingPolygon&gt;&#xd;
+          &lt;/gmd:geographicElement&gt;&#xd;
+          &lt;gmd:geographicElement&gt;&#xd;
+            &lt;gmd:EX_GeographicBoundingBox&gt;&#xd;
+              &lt;gmd:extentTypeCode&gt;&#xd;
+                &lt;gco:Boolean&gt;1&lt;/gco:Boolean&gt;&#xd;
+              &lt;/gmd:extentTypeCode&gt;&#xd;
+              &lt;gmd:westBoundLongitude&gt;&#xd;
+                &lt;gco:Decimal&gt;8.796&lt;/gco:Decimal&gt;&#xd;
+              &lt;/gmd:westBoundLongitude&gt;&#xd;
+              &lt;gmd:eastBoundLongitude&gt;&#xd;
+                &lt;gco:Decimal&gt;9.674&lt;/gco:Decimal&gt;&#xd;
+              &lt;/gmd:eastBoundLongitude&gt;&#xd;
+              &lt;gmd:southBoundLatitude&gt;&#xd;
+                &lt;gco:Decimal&gt;46.873&lt;/gco:Decimal&gt;&#xd;
+              &lt;/gmd:southBoundLatitude&gt;&#xd;
+              &lt;gmd:northBoundLatitude&gt;&#xd;
+                &lt;gco:Decimal&gt;47.547&lt;/gco:Decimal&gt;&#xd;
+              &lt;/gmd:northBoundLatitude&gt;&#xd;
+            &lt;/gmd:EX_GeographicBoundingBox&gt;&#xd;
+          &lt;/gmd:geographicElement&gt;&#xd;
+        &lt;/gmd:EX_Extent&gt;&#xd;
+      &lt;/gmd:extent&gt;&#xd;
+      &lt;che:basicGeodataID&gt;&#xd;
+        &lt;gco:CharacterString&gt;79A/B&lt;/gco:CharacterString&gt;&#xd;
+      &lt;/che:basicGeodataID&gt;&#xd;
+      &lt;che:basicGeodataIDType&gt;&#xd;
+        &lt;che:basicGeodataIDTypeCode codeList=&quot;&quot; codeListValue=&quot;cantonal&quot; /&gt;&#xd;
+      &lt;/che:basicGeodataIDType&gt;&#xd;
+    &lt;/che:CHE_MD_DataIdentification&gt;&#xd;
+  &lt;/gmd:identificationInfo&gt;&#xd;
+  &lt;gmd:distributionInfo&gt;&#xd;
+    &lt;gmd:MD_Distribution&gt;&#xd;
+      &lt;gmd:distributionFormat xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:show=&quot;embed&quot;&gt;&#xd;
+        &lt;gmd:MD_Format&gt;&#xd;
+          &lt;gmd:name&gt;&#xd;
+            &lt;gco:CharacterString&gt;ESRI Shapefile&lt;/gco:CharacterString&gt;&#xd;
+          &lt;/gmd:name&gt;&#xd;
+          &lt;gmd:version&gt;&#xd;
+            &lt;gco:CharacterString&gt;-&lt;/gco:CharacterString&gt;&#xd;
+          &lt;/gmd:version&gt;&#xd;
+        &lt;/gmd:MD_Format&gt;&#xd;
+      &lt;/gmd:distributionFormat&gt;&#xd;
+      &lt;gmd:distributor&gt;&#xd;
+        &lt;gmd:MD_Distributor&gt;&#xd;
+          &lt;gmd:distributorContact xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:show=&quot;embed&quot;&gt;&#xd;
+            &lt;che:CHE_CI_ResponsibleParty gco:isoType=&quot;gmd:CI_ResponsibleParty&quot;&gt;&#xd;
+              &lt;gmd:organisationName xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                &lt;gmd:PT_FreeText&gt;&#xd;
+                  &lt;gmd:textGroup&gt;&#xd;
+                    &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Amt für Raumentwicklung und Geoinformation&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+                  &lt;/gmd:textGroup&gt;&#xd;
+                &lt;/gmd:PT_FreeText&gt;&#xd;
+              &lt;/gmd:organisationName&gt;&#xd;
+              &lt;gmd:positionName xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                &lt;gmd:PT_FreeText&gt;&#xd;
+                  &lt;gmd:textGroup&gt;&#xd;
+                    &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;Sachbearbeiter&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+                  &lt;/gmd:textGroup&gt;&#xd;
+                &lt;/gmd:PT_FreeText&gt;&#xd;
+              &lt;/gmd:positionName&gt;&#xd;
+              &lt;gmd:contactInfo&gt;&#xd;
+                &lt;gmd:CI_Contact&gt;&#xd;
+                  &lt;gmd:phone&gt;&#xd;
+                    &lt;che:CHE_CI_Telephone gco:isoType=&quot;gmd:CI_Telephone&quot;&gt;&#xd;
+                      &lt;che:directNumber&gt;&#xd;
+                        &lt;gco:CharacterString&gt;071 229 35 17&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/che:directNumber&gt;&#xd;
+                      &lt;che:mobile gco:nilReason=&quot;missing&quot;&gt;&#xd;
+                        &lt;gco:CharacterString /&gt;&#xd;
+                      &lt;/che:mobile&gt;&#xd;
+                    &lt;/che:CHE_CI_Telephone&gt;&#xd;
+                  &lt;/gmd:phone&gt;&#xd;
+                  &lt;gmd:address&gt;&#xd;
+                    &lt;che:CHE_CI_Address gco:isoType=&quot;gmd:CI_Address&quot;&gt;&#xd;
+                      &lt;gmd:city&gt;&#xd;
+                        &lt;gco:CharacterString&gt;St. Gallen&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/gmd:city&gt;&#xd;
+                      &lt;gmd:postalCode&gt;&#xd;
+                        &lt;gco:CharacterString&gt;9001&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/gmd:postalCode&gt;&#xd;
+                      &lt;gmd:country xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                        &lt;gco:CharacterString&gt;CH&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/gmd:country&gt;&#xd;
+                      &lt;gmd:electronicMailAddress&gt;&#xd;
+                        &lt;gco:CharacterString&gt;martin.trummer@sg.ch&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/gmd:electronicMailAddress&gt;&#xd;
+                      &lt;che:streetName&gt;&#xd;
+                        &lt;gco:CharacterString&gt;Lämmlisbrunnenstrasse&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/che:streetName&gt;&#xd;
+                      &lt;che:streetNumber&gt;&#xd;
+                        &lt;gco:CharacterString&gt;54&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/che:streetNumber&gt;&#xd;
+                    &lt;/che:CHE_CI_Address&gt;&#xd;
+                  &lt;/gmd:address&gt;&#xd;
+                  &lt;gmd:onlineResource&gt;&#xd;
+                    &lt;gmd:CI_OnlineResource&gt;&#xd;
+                      &lt;gmd:linkage xsi:type=&quot;che:PT_FreeURL_PropertyType&quot;&gt;&#xd;
+                        &lt;che:PT_FreeURL&gt;&#xd;
+                          &lt;che:URLGroup&gt;&#xd;
+                            &lt;che:LocalisedURL locale=&quot;#DE&quot;&gt;http://www.sg.ch/home/bauen__raum___umwelt/raumentwicklung.html&lt;/che:LocalisedURL&gt;&#xd;
+                          &lt;/che:URLGroup&gt;&#xd;
+                        &lt;/che:PT_FreeURL&gt;&#xd;
+                      &lt;/gmd:linkage&gt;&#xd;
+                      &lt;gmd:protocol&gt;&#xd;
+                        &lt;gco:CharacterString&gt;text/html&lt;/gco:CharacterString&gt;&#xd;
+                      &lt;/gmd:protocol&gt;&#xd;
+                      &lt;gmd:name xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                        &lt;gmd:PT_FreeText&gt;&#xd;
+                          &lt;gmd:textGroup&gt;&#xd;
+                            &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot; /&gt;&#xd;
+                          &lt;/gmd:textGroup&gt;&#xd;
+                        &lt;/gmd:PT_FreeText&gt;&#xd;
+                      &lt;/gmd:name&gt;&#xd;
+                      &lt;gmd:description xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                        &lt;gmd:PT_FreeText&gt;&#xd;
+                          &lt;gmd:textGroup&gt;&#xd;
+                            &lt;gmd:LocalisedCharacterString locale=&quot;#EN&quot; /&gt;&#xd;
+                          &lt;/gmd:textGroup&gt;&#xd;
+                        &lt;/gmd:PT_FreeText&gt;&#xd;
+                      &lt;/gmd:description&gt;&#xd;
+                    &lt;/gmd:CI_OnlineResource&gt;&#xd;
+                  &lt;/gmd:onlineResource&gt;&#xd;
+                &lt;/gmd:CI_Contact&gt;&#xd;
+              &lt;/gmd:contactInfo&gt;&#xd;
+              &lt;gmd:role&gt;&#xd;
+                &lt;gmd:CI_RoleCode codeListValue=&quot;pointOfContact&quot; codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode&quot; /&gt;&#xd;
+              &lt;/gmd:role&gt;&#xd;
+              &lt;che:individualFirstName&gt;&#xd;
+                &lt;gco:CharacterString&gt;Martin&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/che:individualFirstName&gt;&#xd;
+              &lt;che:individualLastName&gt;&#xd;
+                &lt;gco:CharacterString&gt;Trummer&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/che:individualLastName&gt;&#xd;
+              &lt;che:organisationAcronym xsi:type=&quot;gmd:PT_FreeText_PropertyType&quot;&gt;&#xd;
+                &lt;gmd:PT_FreeText&gt;&#xd;
+                  &lt;gmd:textGroup&gt;&#xd;
+                    &lt;gmd:LocalisedCharacterString locale=&quot;#DE&quot;&gt;AREG&lt;/gmd:LocalisedCharacterString&gt;&#xd;
+                  &lt;/gmd:textGroup&gt;&#xd;
+                &lt;/gmd:PT_FreeText&gt;&#xd;
+              &lt;/che:organisationAcronym&gt;&#xd;
+            &lt;/che:CHE_CI_ResponsibleParty&gt;&#xd;
+          &lt;/gmd:distributorContact&gt;&#xd;
+          &lt;gmd:distributionOrderProcess&gt;&#xd;
+            &lt;gmd:MD_StandardOrderProcess&gt;&#xd;
+              &lt;gmd:fees&gt;&#xd;
+                &lt;gco:CharacterString&gt;Pauschale Bearbeitungskosten&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:fees&gt;&#xd;
+              &lt;gmd:turnaround&gt;&#xd;
+                &lt;gco:CharacterString&gt;5 Arbeitstage&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:turnaround&gt;&#xd;
+            &lt;/gmd:MD_StandardOrderProcess&gt;&#xd;
+          &lt;/gmd:distributionOrderProcess&gt;&#xd;
+          &lt;gmd:distributorFormat&gt;&#xd;
+            &lt;gmd:MD_Format&gt;&#xd;
+              &lt;gmd:name&gt;&#xd;
+                &lt;gco:CharacterString&gt;ESRI Shapefile&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:name&gt;&#xd;
+              &lt;gmd:version&gt;&#xd;
+                &lt;gco:CharacterString&gt;-&lt;/gco:CharacterString&gt;&#xd;
+              &lt;/gmd:version&gt;&#xd;
+            &lt;/gmd:MD_Format&gt;&#xd;
+          &lt;/gmd:distributorFormat&gt;&#xd;
+        &lt;/gmd:MD_Distributor&gt;&#xd;
+      &lt;/gmd:distributor&gt;&#xd;
+    &lt;/gmd:MD_Distribution&gt;&#xd;
+  &lt;/gmd:distributionInfo&gt;&#xd;
+  &lt;gmd:metadataMaintenance&gt;&#xd;
+    &lt;che:CHE_MD_MaintenanceInformation gco:isoType=&quot;gmd:MD_MaintenanceInformation&quot;&gt;&#xd;
+      &lt;gmd:maintenanceAndUpdateFrequency&gt;&#xd;
+        &lt;gmd:MD_MaintenanceFrequencyCode codeList=&quot;http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode&quot; codeListValue=&quot;asNeeded&quot; /&gt;&#xd;
+      &lt;/gmd:maintenanceAndUpdateFrequency&gt;&#xd;
+    &lt;/che:CHE_MD_MaintenanceInformation&gt;&#xd;
+  &lt;/gmd:metadataMaintenance&gt;&#xd;
+&lt;/che:CHE_MD_Metadata&gt;&#xd;
+    &lt;/csw:Update&gt;&#xd;
+&lt;/csw:Transaction&gt;&#xd;
+&#xd;
+</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">500</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">5000</stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/geonetwork/srv/deu/csw-publication</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">true</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="4 requests a second Timer" enabled="true">
+            <stringProp name="calcMode">this thread only</stringProp>
+            <doubleProp>
+              <name>throughput</name>
+              <value>4.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

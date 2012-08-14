@@ -212,34 +212,6 @@
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Monitoring -->
-
-		<service name="monitoring.report">
-			<class name=".guiservices.monitoring.Get" />
-			<output sheet="monitoring.xsl" />
-
-			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
-				<xml name="error" file="xml/privileges-error.xml" />
-			</error>
-		</service>
-
-        <service name="monitoring" type="xml">
-			<class name=".services.monitoring.Check" />
-
-            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
-				<xml name="error" file="xml/privileges-error.xml" />
-			</error>
-		</service>
-
-        <service name="monitoring.indexing" type="xml">
-			<class name=".services.monitoring.services.IndexServiceMonitor" />
-
-            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
-				<xml name="error" file="xml/privileges-error.xml" />
-			</error>
-		</service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Add an xlink to a metadata                                    -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -537,6 +509,10 @@
             <class name=".services.thesaurus.Duplicate"/>
 
             <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
+        </service>
+
+        <service name="monitoring.indexing">
+            <class name=".services.metadata.IndexServiceMonitor"/>
         </service>
 
     </services>

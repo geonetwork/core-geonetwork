@@ -36,13 +36,11 @@ import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
-import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
@@ -86,7 +84,6 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.extent.ExtentManager;
-import org.fao.geonet.services.monitoring.services.ServiceMonitorManager;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
@@ -410,7 +407,6 @@ public class Geonetwork implements ApplicationHandler {
 		OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
         logger.info("  - Service monitor manager...");
-        ServiceMonitorManager smm = new ServiceMonitorManager(dbms, context, settingMan);
 
         Email email = new Email(settingMan, threadPool);
 
@@ -441,7 +437,6 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.app_context = app_context;
         gnContext.metadataNotifierMan = metadataNotifierMan;
 		gnContext.threadPool  = threadPool;
-        gnContext.monitorMan  = smm;
 		gnContext.xmlSerializer  = xmlSerializer;
 		gnContext.svnManager  = svnManager;
 		gnContext.statusActionsClass = statusActionsClass;

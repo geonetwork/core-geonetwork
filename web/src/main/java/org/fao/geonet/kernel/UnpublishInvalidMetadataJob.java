@@ -73,11 +73,11 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         try {
             Integer keepDuration = gc.getSettingManager().getValueAsInt("system/publish_tracking_duration");
             if (keepDuration == null) {
-                keepDuration = 14;
+                keepDuration = 100;
             }
 
             // clean up expired changes
-            dbms.execute("DELETE FROM publish_tracking where changedate < current_date-" + Math.min(1, keepDuration));
+            dbms.execute("DELETE FROM publish_tracking where changedate < current_date-" + Math.max(1, keepDuration));
 
             List<MetadataRecord> metadataids = lookUpMetadataIds(dbms);
 

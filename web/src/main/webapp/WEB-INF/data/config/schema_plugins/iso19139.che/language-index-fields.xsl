@@ -396,6 +396,9 @@
 			<Field name="parentUuid" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
 
+		<xsl:for-each select="gmd:dateStamp/gco:DateTime">
+			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
+		</xsl:for-each>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Reference system info === -->		
 

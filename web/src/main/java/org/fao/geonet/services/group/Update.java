@@ -112,9 +112,9 @@ public class Update implements Service
 		}
 		else 	//--- For Update
 		{
-			String query = "UPDATE Groups SET name=?, description=?, email=? WHERE id=?";
+			String query = "UPDATE Groups SET name=?, description=?, email=?, website=?, logoUuid=? WHERE id=?";
 
-			dbms.execute(query, name, descr, email, new Integer(id));
+			dbms.execute(query, name, descr, email, website, logoUUID, new Integer(id));
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

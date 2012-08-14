@@ -1,5 +1,5 @@
 <overrides>
-<override>${system_specific_overrides}</override>
-<override>${web_xml_main_config_overrides}</override>
-<override>${web_xml_widget_config_overrides}</override>
+	<override>${system.specific.overrides}</override>
+	<override>${web.xml.main.config.overrides}</override>
+	<override>${web.xml.widget.config.overrides}</override>
 </overrides>

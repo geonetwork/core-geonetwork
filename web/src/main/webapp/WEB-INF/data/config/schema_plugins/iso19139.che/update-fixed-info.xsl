@@ -44,10 +44,19 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="gmd:dateStamp">
-		<xsl:copy>
-			<gco:DateTime><xsl:value-of select="/root/env/changeDate"/></gco:DateTime>
-		</xsl:copy>
-	</xsl:template>
+        <xsl:choose>
+	        <xsl:when test="/root/env/changeDate">
+	            <xsl:copy>
+	                    <gco:DateTime>
+	                        <xsl:value-of select="/root/env/changeDate"/>
+	                    </gco:DateTime>
+	            </xsl:copy>
+	        </xsl:when>
+	        <xsl:otherwise>
+	            <xsl:copy-of select="."/>
+	        </xsl:otherwise>
+	    </xsl:choose>
+   	</xsl:template>
 
 	<!-- ================================================================= -->
 	
@@ -73,11 +82,13 @@
 		<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 		<xsl:variable name="charset">
 			<xsl:choose>
-				<xsl:when test="gmd:MD_CharacterSetCode">
-					<xsl:copy-of select="gmd:MD_CharacterSetCode"/>
+				<xsl:when test="normalize-space(gmd:characterEncoding/gmd:MD_CharacterSetCode/@codeListValue) != ''">
+					<xsl:copy-of select="gmd:characterEncoding"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+					<gmd:characterEncoding>
+						<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+					</gmd:characterEncoding>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -88,7 +99,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 				  <gmd:languageCode>
-				    <gmd:LanguageCode codeList="#LanguageCode" codeListValue="{gmd:languageCode/gmd:LanguageCode/@codeListValue}">
+				    <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="{gmd:languageCode/gmd:LanguageCode/@codeListValue}">
 				    	<xsl:value-of select="gmd:languageCode/gmd:LanguageCode"/>
 				    </gmd:LanguageCode>
   				</gmd:languageCode>
@@ -192,6 +203,16 @@
 			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
+	
+		<xsl:template match="che:*[@codeListValue]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+			  <xsl:value-of select="concat('#',local-name(.))"/>
+			</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+	
 
 	<!-- ================================================================= -->
 	<!-- online resources: download -->

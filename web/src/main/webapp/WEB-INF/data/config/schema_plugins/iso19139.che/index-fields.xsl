@@ -112,7 +112,11 @@
 						<Field name="_revisionDate" string="{$date[1]}" store="true" index="true" token="false"/>
 					</xsl:when>
 					<xsl:when test="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date/gco:Date">
-						<xsl:variable name="date" select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date"/>
+						<xsl:variable name="date" select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date/gco:Date"/>
+						<Field name="_revisionDate" string="{$date[1]}" store="true" index="true" token="false"/>
+					</xsl:when>
+					<xsl:when test="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date">
+						<xsl:variable name="date" select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date"/>
 						<Field name="_revisionDate" string="{$date[1]}" store="true" index="true" token="false"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -414,6 +418,9 @@
 			<Field name="parentUuid" string="{string(.)}" store="true" index="true" token="false"/>
 		</xsl:for-each>
 
+		<xsl:for-each select="gmd:dateStamp/gco:DateTime">
+			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
+		</xsl:for-each>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Reference system info === -->		
 

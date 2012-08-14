@@ -526,7 +526,7 @@ public class EditLib {
                     Log.debug(Geonet.EDITOR,"####     - has suggestion = "+hasSuggestion );
                 }
 
-                if (minCard > 0 || sugg.isSuggested(elemName, childName)) {
+                if (((minCard > 0) && !childName.equals("gmd:distributorContact"))  || sugg.isSuggested(elemName, childName)) {
 					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName,elemName));
 
 					//--- There can be 'or' elements with other 'or' elements inside them.

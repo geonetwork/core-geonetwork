@@ -21,42 +21,25 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.monitoring;
+package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.services.monitoring.services.ServiceMonitorReport;
 import org.jdom.Element;
 
-public class Check implements Service {
-    private ServiceConfig _config;
+/**
+ * Test if system is indexing
+ */
+public class IndexServiceMonitor implements Service {
 
-	public void init(String appPath, ServiceConfig config) throws Exception {
-		_config = config;
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+	public Element exec(Element params, ServiceContext context) throws Exception {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        ServiceMonitorReport report = new ServiceMonitorReport();
-        
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-        // Monitor services launch ServiceMonitorException if any error
-        gc.getServiceMonitorManager().checkServicesStatus(context, report);
-
-        // Services ok, return report
-        Element result = report.buildXmlReport();
-
-        Log.debug(Geocat.Module.MONITORING, "Monitoring report");
-        Log.debug(Geocat.Module.MONITORING, Xml.getString(result));
-
-        return result;       
-	}
+	    return new Element("IndexReport").setText(""+gc.getDataManager().isIndexing());
+    }
 }

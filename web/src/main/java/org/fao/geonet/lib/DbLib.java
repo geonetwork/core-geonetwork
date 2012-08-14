@@ -298,7 +298,9 @@ public class DbLib {
 
 		// --- load the dbms schema
         List<String> basicSchema = new ArrayList<String>(Lib.text.load(servletContext, appPath, file));
-        basicSchema.addAll(Lib.text.load(servletContext, appPath, gcFile));
+        if(gcFile != null && new File(gcFile).exists()) {
+            basicSchema.addAll(Lib.text.load(servletContext, appPath, gcFile));
+        }
 
 		return basicSchema;
 	}

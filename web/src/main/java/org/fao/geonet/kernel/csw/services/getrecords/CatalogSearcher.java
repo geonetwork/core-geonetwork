@@ -256,7 +256,7 @@ public class CatalogSearcher {
 				else return FieldSelectorResult.NO_LOAD;
 			}
 		};
-
+		
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary(
 					maxHits, 0, maxHits, Integer.MAX_VALUE,

@@ -145,6 +145,7 @@
 		<allow service="logo.set"/>
 
     <allow service="debug.openconnection.accessors"/>
+    <allow service="debug.filehandles"/>
     
     <!-- Allow a user to specify a XSL -->
     <allow service="metadata.formatter.register"/>
@@ -524,6 +525,9 @@
       <allow service="metadata.formatter.xml"/>
       <allow service="metadata.formatter.resource"/>
       <allow service="metadata.formatter.list"/>
+      
+      
+  		<allow service="monitoring.indexing"/>
     </profile>
 
     <!-- users that have access to monitor services only.  The access is controlled by  -->

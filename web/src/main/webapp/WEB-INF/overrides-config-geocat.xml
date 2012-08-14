@@ -20,6 +20,7 @@
     <file name=".*/WEB-INF/config.xml">
         <replaceText xpath="default/language">eng</replaceText>
         <replaceAtt xpath="appHandler/param[@name = 'preferredSchema']" attName="value" value="iso19139.che"/>
+        <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
         <addXML xpath="appHandler">
             <param name="postgisConfig">
                 <database>${postgis.db}</database>
@@ -150,11 +151,6 @@
             <allow service="metadata.formatter.files"/>
             <allow service="metadata.formatter.edit"/>
 
-            <!-- Monitoring services -->
-            <allow service="monitoring.indexing"/>
-            <allow service="monitoring.report"/>
-            <allow service="monitoring"/>
-            
             <!-- shared user services -->
 	        <allow service="shared.user.edit"/>
 	        <allow service="validated.shared.user.admin"/>

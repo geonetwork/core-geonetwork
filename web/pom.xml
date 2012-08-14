@@ -952,6 +952,33 @@
           <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
+    <profile>
+      <id>geocat-stable</id>
+      <properties>
+          <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
+          <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+          <env>inspire</env>
+          <system.specific.overrides>/WEB-INF/override-config-jenkins-stable.xml</system.specific.overrides>
+      </properties>
+    </profile>
+    <profile>
+      <id>geocat-trunk</id>
+      <properties>
+          <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
+          <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+          <env>inspire</env>
+          <system.specific.overrides>/WEB-INF/override-config-jenkins-trunk.xml</system.specific.overrides>
+      </properties>
+    </profile>
+    <profile>
+      <id>jeichar</id>
+      <properties>
+          <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
+          <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+          <env>inspire</env>
+          <system.specific.overrides>/WEB-INF/override-config-jeichar.xml</system.specific.overrides>
+      </properties>
+    </profile>
   </profiles>
   
   <reporting>
@@ -965,8 +992,8 @@
   </reporting>
 
   <properties>
-    <geonetwork_version>${project.version}</geonetwork_version>
-    <geonetwork_subversion>SNAPSHOT</geonetwork_subversion>
+    <geonetwork.version>${project.version}</geonetwork.version>
+    <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
