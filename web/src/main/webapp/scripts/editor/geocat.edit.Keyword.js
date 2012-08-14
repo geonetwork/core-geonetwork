@@ -21,7 +21,10 @@ geocat.edit.Keyword = {
             var port = window.location.port === "" ? "": ':' + window.location.port;
             var keywordSelectionPanel = new app.KeywordSelectionPanel({
             	createNewXLink: function() {
-                    doNewElementAction('/geonetwork/srv/eng/metadata.elem.add', ref, name, id, "add");
+            		 var self = geocat.edit.Keyword;
+            	        xlinks[0].href = "local://che.keyword.get?thesaurus=local._none_.non_validated&locales=fr,en,de,it";
+            	        self.searchWindow.hide();
+            	        geocat.edit.submitXLink();
                 },
                 addCreateXLinkButton: true,
                 listeners: {
@@ -36,7 +39,7 @@ geocat.edit.Keyword = {
                             var thesaurus = record.get("thesaurus");
                             var xlink = new XLink();
 
-                            xlink.href = "local://che.keyword.get?"+"thesaurus="+encodeURIComponent(thesaurus)+"&id="+encodeURIComponent(uri)+"&locales=fr,en,de,it";
+                            xlink.href = "local://che.keyword.get?thesaurus="+encodeURIComponent(thesaurus)+"&id="+encodeURIComponent(uri)+"&locales=fr,en,de,it";
                             xlinks.push(xlink);
                         });
 

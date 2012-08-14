@@ -271,7 +271,7 @@
 
 	<xsl:template mode="simpleElement" match="@*"/>
 		
-    <xsl:template mode="simpleAttribute" match="@xlink:show" priority="5"/>
+    <xsl:template mode="simpleAttribute" match="@xlink:*" priority="5"/>
 	<xsl:template name="simpleAttribute" mode="simpleAttribute" match="@*" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
