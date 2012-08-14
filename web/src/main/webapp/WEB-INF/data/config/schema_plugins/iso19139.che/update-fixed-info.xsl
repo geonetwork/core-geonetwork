@@ -203,6 +203,16 @@
 			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
+	
+		<xsl:template match="che:*[@codeListValue]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:attribute name="codeList">
+			  <xsl:value-of select="concat('#',local-name(.))"/>
+			</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+	
 
 	<!-- ================================================================= -->
 	<!-- online resources: download -->
