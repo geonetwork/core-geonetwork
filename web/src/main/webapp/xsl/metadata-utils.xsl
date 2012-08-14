@@ -142,6 +142,9 @@
 				<xsl:variable name="createThesaurus" select="concat(/root/gui/strings/createThesaurus,': ',$ltitle)"/>
 				<xsl:if test="contains(geonet:info/schema, 'iso19135')">
 				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.create.thesaurus.form?uuid={$metadata/geonet:info/uuid}','{$createThesaurus}',600,150)"><xsl:value-of select="/root/gui/strings/createThesaurus"/></button>
+
+					<xsl:variable name="extractRegisterItems" select="concat(/root/gui/strings/extractRegisterItems,': ',$ltitle)"/>
+				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.batch.extract.subtemplates?uuid={$metadata/geonet:info/uuid}&amp;xpath=/grg:RE_Register/grg:containedItem/*[gco:isoType%3D&quot;grg:RE_RegisterItem&quot;]|/grg:RE_Register/grg:containedItem/grg:RE_RegisterItem&amp;extractTitle={/root/gui/schemalist/name[text()='iso19135']/@schemaConvertDirectory}extract-title.xsl&amp;category=_none_&amp;doChanges=on','{$extractRegisterItems}',600,150)"><xsl:value-of select="/root/gui/strings/extractRegisterItems"/></button>
 				</xsl:if>	
 			</div>
 		</xsl:if>

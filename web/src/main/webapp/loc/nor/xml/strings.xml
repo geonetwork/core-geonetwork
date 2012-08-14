@@ -15,6 +15,18 @@
     <spa>Español</spa> <!-- Do not translate! -->
 
     <anyLanguage>alle språk</anyLanguage>
+	<nodata>Null</nodata>
+	<extractRegisterItems>Extract Register Items</extractRegisterItems>
+	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
+	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
+	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
+	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
+	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
+	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
+	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
+	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
+	<makeChanges>I really want to do this!</makeChanges>
+	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
 
 		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
@@ -279,6 +291,7 @@
 	<bookmarkStumbleUpon>Lag bokmerke på StumbleUpon</bookmarkStumbleUpon>
 	<linkedDataset>Relaterte datasett:</linkedDataset>	
 	<linkedServices> Metadata for tilknyttede tjenester:</linkedServices>
+	<errors>errors</errors>
 	<linkedServiceMetadataHelp>For å legge til kobling til en tjeneste, gå til ISO visning &gt; Distribution tab.</linkedServiceMetadataHelp>
 	<linkedParentMetadata> Overordnet/Underordnet metadata:</linkedParentMetadata>
 	<linkedParentMetadataHelp>For å legeg til kobling til overordnede metadata, gå til ISO visning &gt; Metadata tab.</linkedParentMetadataHelp>
@@ -302,7 +315,10 @@
 	<categoryManagement>Category management</categoryManagement>
 	<categoryManDes>Legg til/Endre/Slette og vis kategorier</categoryManDes>
 	<categoryNameMandatory>Et kategorinavn på fylles ut</categoryNameMandatory>
+	<changeDate>Metadata change date</changeDate>	
 	<checkusername>Kontrollér</checkusername>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>	
 	<choose>-Velg-</choose>
 	<chooseFile>Velg stedet hvor filen som skal lastes opp befinner seg</chooseFile>
 	<chooseLargeThumbnail>Velg sted for et store småbilde filen</chooseLargeThumbnail>
@@ -314,6 +330,7 @@
 	<completeTab>Avansert visning</completeTab>
 	<completeTabEditor>Avansert editor</completeTabEditor>
 	<confirmCancel>Er du sikker på at du vil gå ut av editoren? (Alt som ikke er lagret blir borte)</confirmCancel>
+    <confirmCancelCreate>Are you sure you want to cancel creating this metadata?</confirmCancelCreate>	
 	<confirmDelete>Er du sikker på at du vil slette metadataene fra databasen?</confirmDelete>
 	<confirmBatchDelete>Er du sikker på at du vil slette alle valgte metadata fra databasen?</confirmBatchDelete>
 	<confirmNewPassword>Bekreft nytt passord</confirmNewPassword>
@@ -328,6 +345,12 @@
 	<country>Land</country>
 	<create>opprett</create>
 	<createTip>Opprett nye metadata fra denne malen</createTip>
+	<crs code="EPSG:4326">WGS 84</crs>
+	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
+  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:4258">ETRS 89</crs>
+	<crs code="EPSG:900913">Google Mercator</crs>
+	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>	
 	<cswTest>CSW ISO test</cswTest>
 	<cswTestDesc>Test grensesnitt for CSW ISO katalog grensesnittet</cswTestDesc>
 	<dataQualityTab>Datakvalitet</dataQualityTab>
@@ -339,6 +362,7 @@
 	<dateRelChoice value="17">i løpet av eller etter</dateRelChoice>
 	<dateRelChoice value="18">etter</dateRelChoice>
 	<dateRelChoice/>
+	<datasetIssued>Temporal Extent</datasetIssued>	
 	<decline>Avslå</decline>
 	<definition>Definisjon</definition>
 	<del>fjern</del>
@@ -425,6 +449,7 @@
 	<harvestingManDes>Legg til/endre/slette/starte høsteoppgaver</harvestingManDes>
 	<help>Hjelp</help>
 	<helpComplete>Komplett hjelp</helpComplete>
+    <helpLinkTooltip js="true">Help</helpLinkTooltip>  	
 	<helperList>Forslag:</helperList>
 	<hideAdvancedOptions>Skjul avanserte opsjoner</hideAdvancedOptions>
 	<highlights>Høydepunkter</highlights>
@@ -544,6 +569,8 @@
 	<metadataInsertResults>Resultat av metadataimport</metadataInsertResults>
 	<metadataJSForm>Metadata fra JS skjema</metadataJSForm>
 	<metadataRecordsAdded>Totalt antall metadata poster lagt til:</metadataRecordsAdded>
+  <failOnError>Fail on error</failOnError>
+	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>	
 	<min>Minimum</min>
     <minor>Minor edit</minor>
 	<missing>MANGELER eller TOM</missing>
@@ -633,6 +660,12 @@
     <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
     <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
+  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
+  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
+    <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
+	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
     <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
@@ -712,6 +745,7 @@
 	<searchUnusedTitle>Søk etter ubrukte</searchUnusedTitle>
 	<select>Velg : </select>
 	<selectAll>Søk i alle metadata</selectAll>
+	<selectAllNotPossible>Too many hits! Must be less than </selectAllNotPossible>	
 	<selected> valgte</selected>
 	<selectedOnly>vis kun valgte</selectedOnly>
 	<selection>Utvalg</selection>
@@ -730,7 +764,7 @@
 	<siteId>Site ID</siteId>
 	<sizeBytes>Størrelse (bytes)</sizeBytes>
 	<sortBy>Sorter etter</sortBy>
-	<sortByType id="date">Change date</sortByType>
+	<sortByType id="changeDate">Change date</sortByType>
 	<sortByType id="popularity">Popularitet</sortByType>
 	<sortByType id="rating">Vurdering</sortByType>
 	<sortByType id="relevance">Relevans</sortByType>
@@ -749,6 +783,8 @@
 	<surName>Etternavn</surName>
 	<systemConfig>Systemkonfigurasjon</systemConfig>
 	<systemConfigDes>Tillater endring av noen systemparemetre</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>	
 	<template>Template</template>
 	<Term>Term</Term>
 	<thanks>Thank you for your effort. The GeoNetwork</thanks>
@@ -805,6 +841,13 @@
 	<xmlInsert>Import metadata record in XML or MEF format</xmlInsert>
 	<xmlInsertTitle>Metadata insert</xmlInsertTitle>
 	<xmlTab>XML visning</xmlTab>
+	<searchhelp>
+		<searchAllText>Enter free text here</searchAllText>
+		<rtitle>Enter title here</rtitle>
+		<abstract>Enter abstract here</abstract>
+		<keywords>Pick keywords from existing metadata records</keywords>
+		<thesaurus>Pick keywords from thesauri</thesaurus>
+	</searchhelp>	
     <inspireTab>INSPIRE view</inspireTab>
 	<inspireSection>
 		<identification>
@@ -1231,6 +1274,7 @@
     </inspire>
 
     <selectMetadataFileAlert>You must select a metadata file to insert</selectMetadataFileAlert>
+    <showMoreSearchFields>Show/Hide more search fields</showMoreSearchFields>	
     <searchEitherOfTheWords>Either of the words</searchEitherOfTheWords>
     <searchExactPhrase>Exact phrase</searchExactPhrase>
     <searchAllWords>All of the words</searchAllWords>

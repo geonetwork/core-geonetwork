@@ -5,12 +5,13 @@
   xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:srv="http://www.isotc211.org/2005/srv"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:exslt="http://exslt.org/common"
-  exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
+  exclude-result-prefixes="#all">
 
   <xsl:include href="metadata-iso19139-utils.xsl"/>
   <xsl:include href="metadata-iso19139-geo.xsl"/>
@@ -782,19 +783,43 @@
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     
-    <xsl:call-template name="iso19139Codelist">
-      <xsl:with-param name="schema" select="$schema"/>
-      <xsl:with-param name="edit"   select="$edit"/>
-    </xsl:call-template>
+    <xsl:variable name="elementName" select="name(.)"/>
+    
+    <!-- Multiple mode is activated only if cardinality for current element is > than 1
+    and editorMode attribute of codelist is set to 'select' -->
+    <xsl:variable name="multiple">
+      <xsl:choose>
+        <xsl:when test="geonet:element/@max > 1">
+          <xsl:variable name="codelist" select="geonet:getCodelist($schema, name(*[@codeListValue]), /root/gui)" />
+          <xsl:value-of select="if ($codelist/codelist/@editorMode='select') then true() else false()"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:choose>
+      <xsl:when test="$multiple=true()">
+        <xsl:variable name="firstElement" select="count(preceding-sibling::node()[name()=$elementName])=0"/>
+        <xsl:if test="$firstElement">
+          <xsl:call-template name="iso19139CodelistMultiple">
+            <xsl:with-param name="schema" select="$schema"/>
+            <xsl:with-param name="edit"   select="$edit"/>
+          </xsl:call-template>
+        </xsl:if>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="iso19139Codelist">
+          <xsl:with-param name="schema" select="$schema"/>
+          <xsl:with-param name="edit"   select="$edit"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
-
   
-  <!-- ============================================================================= -->
 
   <xsl:template name="iso19139Codelist">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
-    
     <xsl:apply-templates mode="simpleElement" select=".">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="edit"   select="$edit"/>
@@ -805,8 +830,79 @@
         </xsl:apply-templates>
       </xsl:with-param>
     </xsl:apply-templates>
+    
   </xsl:template>
   
+  <!-- 
+    One control for setting one or more codelist values. The form will set up 
+    XML fragments to be inserted into the record.
+    
+  -->
+  <xsl:template name="iso19139CodelistMultiple">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    
+    <xsl:variable name="elementName" select="name(.)"/>
+    <xsl:variable name="codeListElementName" select="name(*[@codeListValue])"/>
+    <xsl:variable name="max" select="geonet:element/@max"/>
+    <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
+    
+    <xsl:variable name="codelist" select="geonet:getCodelist($schema, $codeListElementName, /root/gui)" />
+    
+    <xsl:apply-templates mode="simpleElement" select=".">
+      <xsl:with-param name="schema" select="$schema"/>
+      <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="refs" select="concat(geonet:element/@ref, ',', string-join(following-sibling::node()[name()=$elementName]/geonet:element/@ref, ','))"/>
+      <xsl:with-param name="text">
+        <!-- An hidden textarea which contains XML fragments to be added according to select field. 
+        XML fragments is inserted in the parent of the element and replace existing children of same type.
+        
+        FIXME : in ajax mode, parent is not available in snippet and ../geonet:element/@ref is unresolved (see #122).
+        -->
+        <textarea id="X{geonet:element/@ref}" 
+                  name="_X{../geonet:element/@ref}_{replace($elementName, ':', 'COLON')}_replace"
+                  style="display:none;">
+          <xsl:element name="{$elementName}">
+            <xsl:element name="{$codeListElementName}">
+              <xsl:copy-of select="child::node()[@codeListValue]/@*"/>
+            </xsl:element>
+          </xsl:element></textarea>
+        
+        <xsl:variable name="element" select="."/>
+
+        <select id="{geonet:element/@ref}" class="md codelist_multiple" multiple="multiple" size="{if($max &lt; 7) then $max else '7'}">
+          <xsl:if test="$edit">
+            <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="$isXLinked">
+            <xsl:attribute name="disabled">disabled</xsl:attribute>
+          </xsl:if>
+          <option name=""/>
+          <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
+            <xsl:sort select="label"/>
+            <xsl:variable name="code" select="code"/>
+            <option>
+              <xsl:if test="count($element/../node()[name()=$elementName]/child::node()[@codeListValue=$code])!=0">
+                <xsl:attribute name="selected"/>
+              </xsl:if>
+              <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+              <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
+              <xsl:value-of select="label"/>
+            </option>
+          </xsl:for-each>
+          
+          <!-- Add non existing values -->
+          <xsl:for-each select="../node()[name()=$elementName]/child::node()[@codeListValue and not(@codeListValue=$codelist/codelist/entry/code)]">
+            <option selected="selected" value="{@codeListValue}"><xsl:value-of select="@codeListValue"/></option>
+          </xsl:for-each>
+        </select>
+      </xsl:with-param>
+    </xsl:apply-templates>
+    
+  </xsl:template>
+  
+  
+  <!-- ============================================================================= -->
   
   <!-- LanguageCode is a codelist, but retrieving
   the list of language as defined in the language database table
@@ -841,7 +937,43 @@
   
   
   <!-- ============================================================================= -->
-
+  <!-- 
+    Return a codelist entry from localization files.
+    If schema is an ISO profil, then the codelist is from the profil 
+    is returned if found. If not, the ISO19139 codelist is returned.
+  -->
+  <xsl:function name="geonet:getCodelist" as="node()">
+    <xsl:param name="schema" as="xs:string"/>
+    <xsl:param name="qname" as="xs:string"/>
+    <xsl:param name="labels" as="node()"/>
+      <!--
+      Get codelist from profil first and use use default one if not
+      available.
+    -->
+    <xsl:variable name="codelistProfil">
+      <xsl:choose>
+        <xsl:when test="starts-with($schema,'iso19139.')">
+          <xsl:copy-of
+            select="$labels/schemas/*[name(.)=$schema]/codelists/codelist[@name = $qname]" />
+        </xsl:when>
+        <xsl:otherwise />
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:variable name="codelistCore">
+      <xsl:choose>
+        <xsl:when test="normalize-space($codelistProfil)!=''">
+          <xsl:copy-of select="$codelistProfil" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of
+            select="$labels/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $qname]" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:copy-of select="exslt:node-set($codelistCore)"/>
+  </xsl:function>
+  
   <xsl:template mode="iso19139GetAttributeText" match="@*">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
@@ -857,68 +989,110 @@
         </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
-        <!--
-          Get codelist from profil first and use use default one if not
-          available.
-        -->
-        <xsl:variable name="codelistProfil">
-          <xsl:choose>
-            <xsl:when test="starts-with($schema,'iso19139.')">
-              <xsl:copy-of
-                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $qname]/*" />
-            </xsl:when>
-            <xsl:otherwise />
-          </xsl:choose>
-        </xsl:variable>
         
-        <xsl:variable name="codelistCore">
-          <xsl:choose>
-            <xsl:when test="normalize-space($codelistProfil)!=''">
-              <xsl:copy-of select="$codelistProfil" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:copy-of
-                select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $qname]/*" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
         
-        <xsl:variable name="codelist" select="exslt:node-set($codelistCore)" />
+        <xsl:variable name="codelist" select="geonet:getCodelist($schema, $qname, /root/gui)" />
         <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
-
+        
         <xsl:choose>
           <xsl:when test="$edit=true()">
-            <!-- codelist in edit mode -->
-            <select class="md" name="_{../geonet:element/@ref}_{name(.)}" id="_{../geonet:element/@ref}_{name(.)}" size="1">
-              <!-- Check element is mandatory or not -->
-              <xsl:if test="../../geonet:element/@min='1' and $edit">
-                <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
-              </xsl:if>
-              <xsl:if test="$isXLinked">
-                <xsl:attribute name="disabled">disabled</xsl:attribute>
-              </xsl:if>
-              <option name=""/>
-              <xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
-                <xsl:sort select="label"/>
-                <option>
-                  <xsl:if test="code=$value">
-                    <xsl:attribute name="selected"/>
+            <!-- codelist in edit mode 
+            Mode : 
+             * select one with combo = combo (default)
+             * select one with radio = radio
+             * select one with radio multilines = radio_linebreak
+             * select one with radio multilines and definition = radio_withdesc
+             * select one with select with size = select
+            -->
+            <xsl:variable name="mode" select="$codelist/codelist/@editorMode"/>
+            <xsl:variable name="oneOnly" select="../../geonet:element/@min='1'"/>
+            <xsl:variable name="defaultSize" select="xs:integer(7)"/>
+            <xsl:variable name="max" select="../../geonet:element/@max"/>
+            <xsl:variable name="name" select="concat('_', ../geonet:element/@ref, '_', name(.))"/>
+            
+            <xsl:choose>
+              <!-- 
+                Radio button modes
+              -->
+              <xsl:when test="contains($mode, 'radio')">
+                
+                <input class="md" type="radio" id="{$name}" name="{$name}" value="">
+                  <xsl:if test="$isXLinked">
+                    <xsl:attribute name="disabled">disabled</xsl:attribute>
                   </xsl:if>
-                  <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
-                  <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
-                  <xsl:value-of select="label"/>
-                </option>
-              </xsl:for-each>
-            </select>
+                </input>
+                <label for="{$name}"><xsl:value-of select="/root/gui/strings/nodata"/></label>
+                <xsl:if test="$mode='radio_linebreak' or $mode='radio_withdesc'"><br/></xsl:if>
+                <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
+                  <xsl:sort select="label"/>
+                  <input class="md" type="radio" name="{$name}" id="{$name}{position()}" value="{code}">
+                    <xsl:if test="$isXLinked">
+                      <xsl:attribute name="disabled">disabled</xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="code=$value">
+                      <xsl:attribute name="checked"/>
+                    </xsl:if>
+                  </input>
+                  <label for="{$name}{position()}" title="{description}"><xsl:value-of select="label"/></label>
+                  <xsl:if test="$mode='radio_withdesc'"> : <xsl:value-of select="description"/><br/></xsl:if>
+                  <xsl:if test="$mode='radio_linebreak'"><br/></xsl:if>
+                </xsl:for-each>
+                
+                <!-- Add non existing values -->
+                <xsl:if test="count($codelist/codelist/entry[code=$value])=0">
+                  <input class="md" type="radio" name="{$name}" id="{$name}{position()}" checked="checked" value="{$value}"/>
+                  <label for="{$name}{position()}"><xsl:value-of select="$value"/></label>
+                </xsl:if>
+              </xsl:when>
+              <!-- 
+                Select list modes
+              -->
+              <xsl:otherwise>
+                <select class="md" name="{$name}" id="{$name}">
+                  <xsl:if test="$mode='select'">
+                    <xsl:attribute name="size"><xsl:value-of select="if(count($codelist/codelist/entry[not(@hideInEditMode)]) &lt; $defaultSize) 
+                                                                      then count($codelist/codelist/entry[not(@hideInEditMode)]) 
+                                                                      else $defaultSize"/></xsl:attribute>
+                  </xsl:if>
+                  <!-- Check element is mandatory or not -->
+                  <xsl:if test="$oneOnly and $edit">
+                    <xsl:attribute name="onchange">validateNonEmpty(this);</xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="$isXLinked">
+                    <xsl:attribute name="disabled">disabled</xsl:attribute>
+                  </xsl:if>
+                  <option name=""/>
+                  <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
+                    <xsl:sort select="label"/>
+                    <option>
+                      <xsl:if test="code=$value">
+                        <xsl:attribute name="selected"/>
+                      </xsl:if>
+                      <xsl:attribute name="value"><xsl:value-of select="code"/></xsl:attribute>
+                      <xsl:attribute name="title"><xsl:value-of select="description"/></xsl:attribute>
+                      <xsl:value-of select="label"/>
+                    </option>
+                  </xsl:for-each>
+                  
+                  
+                  <!-- Add non existing values -->
+                  <xsl:if test="count($codelist/codelist/entry[code=$value])=0">
+                    <option selected="selected" value="{$value}"><xsl:value-of select="$value"/></option>
+                  </xsl:if>
+                </select>
+                
+              </xsl:otherwise>
+            </xsl:choose>
+            
           </xsl:when>
           <xsl:otherwise>
             <!-- codelist in view mode -->
             <xsl:if test="normalize-space($value)!=''">
-              <xsl:variable name="label" select="$codelist/entry[code = $value]/label"/>
+              <xsl:variable name="label" select="$codelist/codelist/entry[code = $value]/label"/>
               <xsl:choose>
                 <xsl:when test="normalize-space($label)!=''">
                   <b><xsl:value-of select="$label"/></b>
-                  <xsl:value-of select="concat(': ',$codelist/entry[code = $value]/description)"/>
+                  <xsl:value-of select="concat(': ',$codelist/codelist/entry[code = $value]/description)"/>
                 </xsl:when>
                 <xsl:otherwise>
                   <b><xsl:value-of select="$value"/></b>
@@ -2596,7 +2770,7 @@
     <id><xsl:value-of select="geonet:info/id"/></id>
     <uuid><xsl:value-of select="geonet:info/uuid"/></uuid>
     <title>
-      <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
+      <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
     </title>
@@ -2948,15 +3122,26 @@
     add a template in this mode.
     
     To add some more tabs.
-    <xsl:template mode="extraTab" match="iso19139.fraCompleteTab">
+    <xsl:template name="iso19139.profileIdCompleteTab">
     <xsl:param name="tabLink"/>
     <xsl:param name="schema"/>
-    <xsl:if test="$schema='iso19139.fra'">
-    ...
-    </xsl:if>
+    
+    Load iso19139 complete tab if needed
+    <xsl:call-template name="iso19139CompleteTab">
+      <xsl:with-param name="tabLink" select="$tabLink"/>
+      <xsl:with-param name="schema" select="$schema"/>
+    </xsl:call-template>
+    
+    Add Extra tabs
+    <xsl:call-template name="mainTab">
+      <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/tab"/>
+      <xsl:with-param name="default">profileId</xsl:with-param>
+      <xsl:with-param name="menu">
+      <item label="profileIdTab">profileId</item>
+      </xsl:with-param>
+    </xsl:call-template>
     </xsl:template>
   -->
-  <xsl:template mode="extraTab" match="/"/>
   
   
   <!-- ============================================================================= -->
@@ -2977,12 +3162,6 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    
-    <!-- To define profil specific tabs -->
-    <xsl:apply-templates mode="extraTab" select="/">
-      <xsl:with-param name="tabLink" select="$tabLink"/>
-      <xsl:with-param name="schema" select="$schema"/>
-    </xsl:apply-templates>
     
     <xsl:if test="/root/gui/env/metadata/enableIsoView = 'true'">
       <xsl:call-template name="mainTab">

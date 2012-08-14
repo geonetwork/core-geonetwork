@@ -76,10 +76,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CharacterCodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -103,13 +103,17 @@ public final class Xml
      * @return
      */
 	private static SAXBuilder getSAXBuilder(boolean validate) {
-
-		Resolver resolver = ResolverWrapper.getInstance();
-		SAXBuilder builder = new SAXBuilder(validate);
-		builder.setEntityResolver(resolver.getXmlResolver());
-
-		return builder;
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate);
+        Resolver resolver = ResolverWrapper.getInstance();
+        builder.setEntityResolver(resolver.getXmlResolver());
+        return builder;
 	}
+
+    private static SAXBuilder getSAXBuilderWithoutXMLResolver(boolean validate) {
+        SAXBuilder builder = new SAXBuilder(validate);
+        builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        return builder;
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -151,7 +155,7 @@ public final class Xml
      */
 	public static Element loadFile(URL url) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
 		Document   jdoc    = builder.build(url);
 
 		return (Element) jdoc.getRootElement().detach();
@@ -182,7 +186,7 @@ public final class Xml
 			out.print(getString(xmlQuery));
 			out.close();
 
-			SAXBuilder builder = new SAXBuilder();
+			SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
 			Document   jdoc    = builder.build(connection.getInputStream());
 
 			result = (Element)jdoc.getRootElement().detach();
@@ -205,7 +209,7 @@ public final class Xml
      */
 	public static Element loadFile(File file) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
 
 		String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
 
@@ -312,7 +316,7 @@ public final class Xml
 												throws IOException, JDOMException
 	{
 		//SAXBuilder builder = new SAXBuilder(validate);
-		SAXBuilder builder = getSAXBuilder(validate); // oasis catalogs are used
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate); // oasis catalogs are used
 		Document   jdoc    = builder.build(new StringReader(data));
 
 		return (Element) jdoc.getRootElement().detach();
@@ -330,7 +334,7 @@ public final class Xml
      */
 	public static Element loadStream(InputStream input) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
 		builder.setFeature("http://apache.org/xml/features/validation/schema",false);
 		builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
 		Document   jdoc    = builder.build(input);
@@ -1117,6 +1121,3 @@ public final class Xml
 
 
 }
-
-//=============================================================================
-

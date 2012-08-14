@@ -42,7 +42,8 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
         border: false,
         frame: false,
-        isTemplate: 'n'
+        isTemplate: 'n',
+        layout: 'anchor'
     },
     editor: undefined,
     getGroupUrl: undefined,
@@ -73,6 +74,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         this.createBt = new Ext.Button({
             text: OpenLayers.i18n('create'),
             iconCls: 'addIcon',
+            ctCls: 'gn-bt-main',
             disabled: true,
             handler: function(){
                 // FIXME could be improved
@@ -97,10 +99,12 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         // TODO filter internet and al groups
         this.groupStore.load();
         
+        var cmp = [];
+        
         // Only add template if not already defined (ie. duplicate action)
         if (!this.selectedTpl) {
-        	this.tplStore = GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore() : GeoNetwork.data.MetadataResultsStore();
-        	this.tplStore.setDefaultSort('displayOrder');
+            this.tplStore = GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore() : GeoNetwork.data.MetadataResultsFastStore();
+            this.tplStore.setDefaultSort('displayOrder');
             
             // Create grid with template list
             checkboxSM = new Ext.grid.CheckboxSelectionModel({
@@ -108,47 +112,64 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                 header: ''
             });
             
+            var tplDescription = function(value, p, record){
+                return String.format(
+                        '<span class="tplTitle">{0}</span><div class="tplDesc">{1}</div>',
+                        record.data.title, record.data['abstract']);
+            };
+            var tplType = function(value, p, record){
+                var label = OpenLayers.i18n(record.data.type) || '';
+                
+                if(record.data.spatialRepresentationType) {
+                    label += " / " + OpenLayers.i18n(record.data.spatialRepresentationType);
+                }
+                
+                return String.format('{0}',label);
+            };
+            
             colModel = new Ext.grid.ColumnModel({
                 defaults: {
                     sortable: true
                 },
                 columns: [
                     checkboxSM,
+                    {header: OpenLayers.i18n('metadatatype'), renderer: tplType, dataIndex: 'type'},
+                    {id: 'title', header: OpenLayers.i18n('tplTitle'), renderer: tplDescription, dataIndex: 'title'},
                     {header: 'Schema', dataIndex: 'schema'},
-                    {id: 'title', header: 'Title', dataIndex: 'title'},
                     {header: 'Order', hidden: true, dataIndex: 'displayOrder'}
                 ]});
             
-            this.add(new Ext.grid.GridPanel({
-                layout: 'fit',
-                title: OpenLayers.i18n('chooseTemplate'),
+            var grid = new Ext.grid.GridPanel({
                 border: false,
-                autoScroll: true,
-                height: 330,
+                anchor: '100% -30',
                 store: this.tplStore,
                 colModel: colModel,
                 sm: checkboxSM,
-                autoExpandColumn: 'title',
-                listeners: {
-                    rowclick: function(grid, rowIndex, e) {
-                        var data = grid.getStore().getAt(rowIndex).data;
-                        if (grid.getSelectionModel().getCount() !== 0) {
-                            this.selectedTpl = data.id;
-                        } else {
-                            this.selectedTpl = undefined;
-                        }
-                        this.validate();
-                    },
-                    scope : this
-                }
-            }));
+                autoExpandColumn: 'title'
+            });
             
+            grid.getSelectionModel().on('rowselect', function(sm, rowIndex, r) {
+                if (sm.getCount() !== 0) {
+                    this.selectedTpl = r.data.id;
+                } else {
+                    this.selectedTpl = undefined;
+                }
+                this.validate();
+            }, this);
+            
+            // Focus on first row
+            grid.getStore().on('load', function(store) {
+                grid.getSelectionModel().selectFirstRow();
+                grid.getView().focusEl.focus();
+            }, grid);
+            cmp.push(grid);
             this.catalogue.search({E_template: 'y'}, null, null, 1, true, this.tplStore, null);
         }
         
-        this.add(new Ext.form.ComboBox({
+        cmp.push(new Ext.form.ComboBox({
             name: 'E_group',
             mode: 'local',
+            anchor: '100%',
             emptyText: OpenLayers.i18n('chooseGroup'),
             triggerAction: 'all',
             fieldLabel: OpenLayers.i18n('group'),
@@ -166,12 +187,15 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             }
         }));
         
-        this.add({
+        cmp.push({
                     xtype: 'textfield',
                     name: 'isTemplate',
                     hidden: true,
                     value: this.isTemplate
                 });
+        
+        this.add(cmp);
+        
     }
 });
 

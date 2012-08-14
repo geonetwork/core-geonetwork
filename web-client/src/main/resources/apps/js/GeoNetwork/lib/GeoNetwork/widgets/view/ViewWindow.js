@@ -62,6 +62,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
          */
         printDefaultForTabs: false,
         printMode: undefined,
+        printUrl: 'print.html',
         /** api: config[relationTypes] 
          *  List of types of relation to be displayed in header. 
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
@@ -119,6 +120,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+            printUrl: this.printUrl,
             catalogue: this.catalogue,
             metadataUuid: this.metadataUuid,
             record: this.record,

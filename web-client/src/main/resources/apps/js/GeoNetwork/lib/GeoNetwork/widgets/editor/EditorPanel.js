@@ -949,6 +949,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         //console.log("metadata schema: " + this.metadataSchema.value + " type:" + this.metadataType.value + " tab:" + this.metadataCurrTab.value);
         
         this.initCalendar();
+        this.initMultipleSelect();
         this.validateMetadataFields();
         this.catalogue.extentMap.initMapDiv();
         
@@ -1106,6 +1107,35 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 
             }
         }
+    },
+    /** private: method[initMultipleSelect]
+     * 
+     *  Initialize all select with class codelist_multiple.
+     *  
+     *  Those select field on change will create an XML
+     *  codelist fragment to be inserted into the record.
+     *  It will allows when cardinality is greater than 1 to 
+     *  not to have to deal with (+) control to add multiple
+     *  values.
+     */
+    initMultipleSelect: function(){
+        var selects = Ext.DomQuery.select('select.codelist_multiple'), i;
+        Ext.each(selects, function(select){
+            var input = Ext.get('X' + select.id);
+            var tpl = input.dom.innerHTML;
+            onchangeEvent = function(){
+                input.dom.innerHTML = '';
+                Ext.each(this.options, function(option){
+                    if(option.selected){
+                        input.dom.innerHTML += (input.dom.innerHTML === '' ? '' : '&&&') 
+                                                   + tpl.replace(new RegExp('codeListValue=".*"'), 
+                                                   'codeListValue="' + option.value + '"');
+                    }
+                });
+            };
+            
+            select.onchange = onchangeEvent;
+        });
     },
     /** private: method[updateViewMenu]
      * 

@@ -381,7 +381,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Thesaurus...");
 
-		thesaurusMan = ThesaurusManager.getInstance(path, dataMan, context.getResourceManager(), thesauriDir);
+		thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
 		dataMan.setThesaurusManager(thesaurusMan);
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
@@ -518,7 +518,7 @@ public class Geonetwork implements ApplicationHandler {
      * @param appPath
      */
 	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
-		/*logger.info("  - Migration ...");
+		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
 		String dbVersion = settingMan.getValue("system/platform/version");
@@ -548,12 +548,20 @@ public class Geonetwork implements ApplicationHandler {
 		) {
 			logger.info("      Webapp version = Database version, no migration task to apply.");
 		} else {
-			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-			String dbType = Lib.db.getDBType(dbms);
-			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
-			
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
+			
+            try {
+            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
+            } catch (Exception e) {
+                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                e.printStackTrace();
+                anyMigrationError = true;
+            }
+
+			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+			String dbType = DatabaseType.lookup(dbms).toString();
+			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
             @SuppressWarnings(value = "unchecked")
@@ -565,17 +573,29 @@ public class Geonetwork implements ApplicationHandler {
                     @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
-                        String filePath = path + file.getAttributeValue("path");
-                        String filePrefix = file.getAttributeValue("filePrefix");
-                        anyMigrationAction = true;
-                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-                        try {
-                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-                        } catch (Exception e) {
-                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                            e.printStackTrace();
-                            anyMigrationError = true;
-                        }
+                    	if(file.getName().equals("java")) {
+	                        try {
+	                        	settingMan.refresh(dbms);
+	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
+	                            task.update(settingMan, dbms);
+	                        } catch (Exception e) {
+	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+	                            e.printStackTrace();
+	                            anyMigrationError = true;
+	                        }
+                    	} else {
+	                        String filePath = path + file.getAttributeValue("path");
+	                        String filePrefix = file.getAttributeValue("filePrefix");
+	                        anyMigrationAction = true;
+	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+	                        try {
+	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+	                        } catch (Exception e) {
+	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+	                            e.printStackTrace();
+	                            anyMigrationError = true;
+	                        }
+                    	}
                     }
                 }
             }
@@ -619,7 +639,7 @@ public class Geonetwork implements ApplicationHandler {
                 logger.warning("      Error occurs during migration. Check the log file for more details.");
             }
 			// TODO : Maybe some migration stuff has to be done in Java ?
-		}*/
+		}
 	}
 
 	/**
@@ -805,6 +825,10 @@ public class Geonetwork implements ApplicationHandler {
 			logger.error("  Message   : " +e.getMessage());
 			logger.error("  Stack     : " +Util.getStackTrace(e));
 		}
+
+			
+		logger.info("  - Harvest Manager...");
+		harvestMan.shutdown();
 
 		logger.info("  - Z39.50...");
 		Server.end();

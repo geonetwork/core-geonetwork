@@ -3370,7 +3370,7 @@
     
   </element>
   <element name="gmd:transferSize" id="276.0">
-    <label>Taille transfer</label>
+    <label>Taille de transfert</label>
     <description>Taille estimée d'une unité dans le format de transfert spécifié, exprimé en mégabits. La taille de transfert est &gt; 0.0</description>
     <help>Taille approchée d'un fichier (exprimée en mégaoctets) dans le format spécifié. La taille de transfert est &gt; 0.0</help>
     <condition/>

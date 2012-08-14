@@ -42,6 +42,8 @@ Ext.namespace("GeoNetwork.util");
  */
 GeoNetwork.util.SearchFormTools = {
 
+    groupField: null,
+
     /** api:method[getSimpleFormFields]
      *  :param services: Optional GeoNetwork services URL used for OpenSearch suggestion URL. If not defined, no suggestion fields.
      *  :return: A GeoNetwork simple form
@@ -216,7 +218,7 @@ GeoNetwork.util.SearchFormTools = {
         
         // Admin option
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl);
-        var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups);
+        this.groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField();
         var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories, null, true);
         
@@ -224,7 +226,7 @@ GeoNetwork.util.SearchFormTools = {
         
         fields.push(fullTextField, advancedTextField, titleField, abstractField, themekeyField, orgNameField, 
                         geoFields, types, mapTypes, denominatorField, when, 
-                        catalogueField, groupField, metadataTypeField, categoryField, options, accuracySettings);
+                        catalogueField, this.groupField, metadataTypeField, categoryField, options, accuracySettings);
         
         return fields;
     },
@@ -501,6 +503,8 @@ GeoNetwork.util.SearchFormTools = {
      *  Create a combo for group field
      */
     getGroupField: function(url, multi){
+        if (this.groupField != null) return this.groupField;
+
         var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var groupStore = GeoNetwork.data.GroupStore(url),
@@ -524,6 +528,17 @@ GeoNetwork.util.SearchFormTools = {
             return new Ext.ux.form.SuperBoxSelect(config);
         } else {
             return new Ext.form.ComboBox(config);
+        }
+    },
+    /**
+     * api:method[refreshGroupFieldValues]
+     *
+     *  Refreshes the group field values. Used after login/logout to refresh the groups for the user
+     */
+    refreshGroupFieldValues: function() {
+        if (this.groupField != null) {
+            this.groupField.store.removeAll();
+            this.groupField.store.reload();
         }
     },
     /** api:method[getMetadataTypeField]
@@ -878,31 +893,48 @@ GeoNetwork.util.SearchFormTools = {
         });
         
         // TODO : restore slider state
+        var middle = min+max/2;
         var slider = new Ext.slider.MultiSlider({
-            disabled: disabled ? true : false,
+            hidden: disabled ? true : false,
+            initialized: false,
             width: width,
             minValue: min,
             maxValue: max,
             increment: increment,
-            values: [min, max],
+            values: [middle, middle], // Set min, max. If not thumb.el in MS.setValue return undefined. And init position when displayed
             formFields: [denominatorFrom, denominatorTo],
             plugins: tip,
             listeners: {
+                'show': function(cmp){
+                    // Initialized thumbs when visible for the first time
+                    //
+                    // There is a bug on startup where min and max slider are not displayed
+                    // at the min and max values of the slider.
+                    // Set values to the middle on startup and move the thumbs when enabled
+                    // and located in the middle.
+                    if (!cmp.initialized) {
+                        cmp.setValue(0, min, false);
+                        cmp.setValue(1, max, false);
+                        cmp.initialized = true;
+                    }
+                },
                 'change': function(sliders, newValue, thumb){
                     sliders.formFields[thumb.index].setValue(newValue);
                 }
             }
         });
-        
         var scaleCk = new Ext.form.Checkbox({
             fieldLabel: OpenLayers.i18n('scale'),
             name: 'scaleOn',
             value: disabled ? true : false,
             handler: function (ch, checked){
-                slider.setDisabled(!checked);
+                slider.setVisible(checked);
                 if (!checked) {
                     denominatorFrom.setValue('');
                     denominatorTo.setValue('');
+                } else{
+                    denominatorFrom.setValue(slider.getValues()[0]);
+                    denominatorTo.setValue(slider.getValues()[1]);
                 }
             }
         });

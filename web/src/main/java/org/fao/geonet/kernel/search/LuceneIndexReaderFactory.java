@@ -14,7 +14,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import jeeves.utils.Log;
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/master
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.store.FSDirectory;

@@ -111,8 +111,8 @@ public class XmlFile implements GuiService
 		try {
 			result = (Element)xmlCache.get().clone();
 		} catch (Exception e) {
-            Log.error(Log.RESOURCES, "Error cloning the cached data");
-            Log.debug(Log.RESOURCES, "Error cloning the cached data",e);
+            Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language");
+            Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language", e);
 			String xmlDefaultLangFilePath = rootPath + File.separator + defaultLang + File.separator + file;
 			xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
             xmlCaches.put(language, xmlCache);

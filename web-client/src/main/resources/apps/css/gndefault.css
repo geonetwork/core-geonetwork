@@ -421,3 +421,12 @@ dl.xml {
 dl.xml * dd {
   padding-left : 2px;
 }
+.tplTitle {
+    font-weight: bold;
+}
+.tplDesc {
+    white-space: normal !important;
+}
+.gn-bt-main * button {
+    font-weight: bold;
+}

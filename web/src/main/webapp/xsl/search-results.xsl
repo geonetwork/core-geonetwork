@@ -19,51 +19,51 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-        <link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css"/>
 
 		<script language="JavaScript" type="text/javascript">
-            var translations = {
+			var translations = {
 				<xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
 			};
-		</script>
+		</script><xsl:text>&#10;</xsl:text>
 
-         <!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
-         <xsl:choose>
-            <xsl:when test="/root/request/debug">
-                <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
-            </xsl:when>
-            <xsl:otherwise>
-              <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>
-            </xsl:otherwise>
-        </xsl:choose>
+		<!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
+		<xsl:choose>
+			<xsl:when test="/root/request/debug">
+				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/>
+			</xsl:otherwise>
+		</xsl:choose>
 
 
-        <xsl:choose>
-            <xsl:when test="/root/request/debug">
-                <script src="{/root/gui/url}/scripts/ext/ext-all-debug.js"  type="text/javascript"/>
+		<xsl:choose>
+			<xsl:when test="/root/request/debug">
+				<script src="{/root/gui/url}/scripts/ext/ext-all-debug.js"  type="text/javascript"/>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
-            </xsl:when>
-            <xsl:otherwise>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/>
 
-		    	<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/>
 
-                <!-- Editor JS is still required here at least for batch operation -->
-        		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
+				<!-- Editor JS is still required here at least for batch operation -->
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/>
 
-            </xsl:otherwise>
-        </xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
 
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
@@ -75,50 +75,50 @@
 	<xsl:template name="content">
 		<h1 id="loadingMD" style="text-align: center; display: none; width:100%"><xsl:value-of select="/root/gui/strings/searching"/></h1>
 
-        <div id="metadata_search_pnl">
-		<table  width="100%" height="100%">
+		<div id="metadata_search_pnl">
+			<table  width="100%" height="100%">
 
-			<!-- title -->
-			<xsl:call-template name="formTitle">
-				<xsl:with-param name="title">
-					<xsl:value-of select="/root/gui/strings/resultsMatching"/>
-					&#160;
-					<xsl:value-of select="/root/response/summary/@count"/>
-					<!--
-					&#160;&#160;
-					<span id="nbselected">
-						<xsl:choose>
-							<xsl:when test="/root/response/@selected" >
-								<xsl:value-of select="/root/response/@selected"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="count(//geonet:info[selected='true'])"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</span> <xsl:value-of select="/root/gui/strings/selected"/>
-					-->
-				</xsl:with-param>
-				<xsl:with-param name="indent" select="50"/>
-			</xsl:call-template>
+				<!-- title -->
+				<xsl:call-template name="formTitle">
+					<xsl:with-param name="title">
+						<xsl:value-of select="/root/gui/strings/resultsMatching"/>
+							&#160;
+						<xsl:value-of select="/root/response/summary/@count"/>
+						<!--
+						&#160;&#160;
+						<span id="nbselected">
+							<xsl:choose>
+								<xsl:when test="/root/response/@selected" >
+									<xsl:value-of select="/root/response/@selected"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="count(//geonet:info[selected='true'])"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</span> <xsl:value-of select="/root/gui/strings/selected"/>
+						-->
+					</xsl:with-param>
+					<xsl:with-param name="indent" select="50"/>
+				</xsl:call-template>
 
-			<!-- list of metadata -->
+				<!-- list of metadata -->
 
-			<xsl:call-template name="hits"/>
+				<xsl:call-template name="hits"/>
 
-			<!-- page list -->
-			<xsl:call-template name="formSeparator"/>
-			<xsl:call-template name="formContent">
-				<xsl:with-param name="content">
-					<xsl:call-template name="pageList"/>
-				</xsl:with-param>
-				<xsl:with-param name="indent" select="50"/>
-			</xsl:call-template>
-			<xsl:call-template name="formFiller">
-				<xsl:with-param name="indent" select="50"/>
-			</xsl:call-template>
-			<tr><td class="blue-content" colspan="3"/></tr>
-		</table>
-        </div>
+				<!-- page list -->
+				<xsl:call-template name="formSeparator"/>
+				<xsl:call-template name="formContent">
+					<xsl:with-param name="content">
+						<xsl:call-template name="pageList"/>
+					</xsl:with-param>
+					<xsl:with-param name="indent" select="50"/>
+				</xsl:call-template>
+				<xsl:call-template name="formFiller">
+					<xsl:with-param name="indent" select="50"/>
+				</xsl:call-template>
+				<tr><td class="blue-content" colspan="3"/></tr>
+			</table>
+		</div>
 	</xsl:template>
 
 	<!--
