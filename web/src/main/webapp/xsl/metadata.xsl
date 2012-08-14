@@ -793,7 +793,9 @@
             select="$edit = true() and 
                    ((@name='contact' and @prefix='gmd' and count(parent::node()[@gco:isoType='gmd:MD_Metadata'])=1)
                     or
-                    (@name='userContactInfo' and @prefix='gmd' and count(parent::gmd:MD_Usage)=1))
+                    (@name='userContactInfo' and @prefix='gmd' and count(parent::gmd:MD_Usage)=1)
+                    or
+                    (@name='distributorContact' and @prefix='gmd' and count(parent::gmd:MD_Distributor)=1))
                             " />
                             
         
