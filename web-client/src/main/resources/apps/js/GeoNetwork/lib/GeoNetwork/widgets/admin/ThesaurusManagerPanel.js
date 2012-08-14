@@ -39,14 +39,16 @@ Ext.namespace('GeoNetwork.admin');
  */
 GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
-        autoWidth : true,
-        layout : 'border',
+        autoWidth: true,
+        layout: 'border',
         maxResults: 50,
         defaultThesaurusType: 'theme'
     },
     border: false,
     frame: false,
     selectedThesaurus: undefined,
+    kwLang: undefined,
+    langStore: undefined,
     layout: 'border',
     catalogue: undefined,
     toolbar: undefined,
@@ -59,7 +61,12 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
     createEmptyThesaurusForm: undefined,
     createThesaurusFromLocalFileForm: undefined,
     createThesaurusFromRemoteFileForm: undefined,
-
+    
+    // If set, the following 3 params allow a thesaurus and/or a keyword to be selected 
+    // for a certain language (resp. by its key / id / lang) after the corresponding stores are loaded.
+    thesaurus: undefined,
+    keywordId: undefined,
+    lang: undefined,
     
     /** private: method[initComponent] 
      *  Initializes the thesaurus manager panel.
@@ -73,7 +80,41 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
         // Thesaurus store
         // A store with the list of available thesauri
         this.thesaurusStore = new GeoNetwork.data.ThesaurusStore({
-            url: this.catalogue.services.getThesaurus});
+            url: this.catalogue.services.getThesaurus
+        });
+        
+        // select Thesaurus whose key is passed as a parameter:
+        this.thesaurusStore.on({
+            "load": {
+                fn: function(s) {
+                    if (this.thesaurus) {
+                        var idx = s.findExact('id', this.thesaurus);
+                        if (idx != -1) {
+                            var sm = this.thesaurusGrid.getSelectionModel();
+                            sm && sm.selectRecords([s.getAt(idx)]);
+                            this.keywordStore.setBaseParam('pKeyword', '*');
+                            if (this.lang) {
+                                 this.kwLang = this.lang;
+                                 // update lang selector
+                                 Ext.getCmp('kw_lang').setValue(this.lang);
+                                 // force displaying all keyword 
+                                 this.keywordStore.setBaseParam('maxResults', 500);
+                                 /* (workaround the lack of paging which would allow to display 
+                                 the subset of keywords containing the wanted keyword) */
+                                 // update maxResults field
+                                 Ext.getCmp('maxResults').setValue(500);
+                            }
+                            this.keywordStore.reload();
+                        }
+                    }
+                },
+                scope: this,
+                single: true
+            }
+        });
+        
+        // by default, the keyword lang is the default one:
+        this.kwLang = this.catalogue.lang;
 
         var Keyword = Ext.data.Record.create([{
             name: 'id'
@@ -99,14 +140,22 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
         this.keywordStore = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
                 url: this.catalogue.services.searchKeyword, // FIXME : global var
-                method: 'GET'
+                method: 'GET',
+                listeners: {
+                    'beforeload': function(proxy, params) {
+                        // be sure to request using the selected lang (2 letters)
+                        params.pLanguage = this.langStore.getAt(this.langStore.find('code',this.kwLang)).get('shortcode');
+                    },
+                    scope: this
+                }
             }),
             baseParams: {
                 pNewSearch: true,
                 pTypeSearch: 1,
                 pThesauri: '',
                 pMode: 'searchBox',
-                maxResults: this.maxResults
+                maxResults: this.maxResults,
+                pLanguage: this.kwLang
             },
             reader: new Ext.data.XmlReader({
                 record: 'keyword',
@@ -115,10 +164,32 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             fields: ["id", "value", "definition", "thesaurus", "uri", "east", "west", "south", "north"],
             sortInfo: {
                 field: "value"
+            }, 
+            listeners: {
+                "load": {
+                    fn: function(s) {
+                        if (this.keywordId) {
+                            var idx = s.findExact('uri', this.keywordId);
+                            if (idx != -1) {
+                                var sm = this.keywordGrid.getSelectionModel();
+                                // select column 0 of row idx by default:
+                                sm && sm.select(idx, 0); 
+                                var view = this.keywordGrid.getView();
+                                view && view.focusRow(idx);
+                            }
+                        }
+                    },
+                    scope: this
+                }   
             }
         });
 
         GeoNetwork.admin.ThesaurusManagerPanel.superclass.initComponent.call(this);
+
+        this.langStore = new Ext.data.ArrayStore({
+            data: [['fre', 'Fran\u00E7ais', 'fr'],['eng', 'English', 'en'], ['ger', 'Deutsch', 'de'], ['ita', 'Italiano', 'it']], // TODO: get this Array from Env object
+            fields: ['code', 'name', 'shortcode']
+        });
         
         this.initThesaurusView();
         this.initKeywordView();
@@ -146,7 +217,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
         
         this.add(thesaurusView);
         this.add(keywordView);
-                
+
     },
 
     /**
@@ -155,7 +226,6 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
      */
     initThesaurusView: function() {
         var panel = this;
-                
         var ynValues = [['y'], ['n']];
         
         var thColumnModel = new Ext.grid.ColumnModel({
@@ -179,10 +249,10 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 dataIndex: 'theme',
                 editable: false
             }, {
-              id: 'type',
-              header: OpenLayers.i18n('Type'),
-              dataIndex: 'type',
-              editable: false
+                id: 'type',
+                header: OpenLayers.i18n('Type'),
+                dataIndex: 'type',
+                editable: false
             }, {
                 id: 'activated',
                 header: OpenLayers.i18n('Activated'),
@@ -207,8 +277,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 })
             }]
         });
-
-
+        
         // Thesaurus grid
         this.thesaurusGrid = new Ext.grid.EditorGridPanel({
             layout: 'fit',
@@ -222,13 +291,13 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 scope: this,
                 afteredit: function(e) {
                     Ext.Ajax.request({
-                            scope: this,
-                            url: this.catalogue.services.thesaurusActivate + "?ref=" + e.record.data.id + "&activated=" + e.record.data.activated,
-                            failure: function() {
-                              // TODO: display a message describing the reason of the error
-                              Ext.Msg.alert('Fail');
-                            }
-                        });
+                        scope: this,
+                        url: this.catalogue.services.thesaurusActivate + "?ref=" + e.record.data.id + "&activated=" + e.record.data.activated,
+                        failure: function() {
+                            // TODO: display a message describing the reason of the error
+                            Ext.Msg.alert('Fail');
+                        }
+                    });
                 },
                 dblclick : function(e){
                     this.keywordStore.setBaseParam('pKeyword', '*');
@@ -255,35 +324,34 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                         xtype: 'menu',
                         plain: true,
                         items: [{
-                                    text: OpenLayers.i18n('emptyThesaurus'),
-                                    scope: this,
-                                    handler: function() {
-                                        if(!this.createEmptyThesaurusWindow){
-                                            this.createEmptyThesaurusWindow = this.getCreateEmptyThesaurusWindow();
-                                        }
-                                        this.createEmptyThesaurusWindow.show(this);
-                                    }
-                                }, {
-                                    text: OpenLayers.i18n('thesaurusFromFile'),
-                                    scope: this,
-                                    handler: function() {
-                                        if(!this.createThesaurusFromLocalFileWindow){
-                                            this.createThesaurusFromLocalFileWindow = this.getCreateThesaurusFromLocalFileWindow();
-                                        }
-                                        this.createThesaurusFromLocalFileWindow.show(this);
-                                    }
-                                }, {
-                                    text: OpenLayers.i18n('thesaurusFromURL'),
-                                    scope: this,
-                                    handler: function() {
-                                        if(!this.createThesaurusFromRemoteFileWindow){
-                                            this.createThesaurusFromRemoteFileWindow = this.getCreateThesaurusFromRemoteFileWindow();
-                                        }
-                                        this.createThesaurusFromRemoteFileWindow.show(this);
-                                    }
+                            text: OpenLayers.i18n('emptyThesaurus'),
+                            scope: this,
+                            handler: function() {
+                                if(!this.createEmptyThesaurusWindow){
+                                    this.createEmptyThesaurusWindow = this.getCreateEmptyThesaurusWindow();
                                 }
-                            ]
-                        }
+                                this.createEmptyThesaurusWindow.show(this);
+                            }
+                        }, {
+                            text: OpenLayers.i18n('thesaurusFromFile'),
+                            scope: this,
+                            handler: function() {
+                                if(!this.createThesaurusFromLocalFileWindow){
+                                    this.createThesaurusFromLocalFileWindow = this.getCreateThesaurusFromLocalFileWindow();
+                                }
+                                this.createThesaurusFromLocalFileWindow.show(this);
+                            }
+                        }, {
+                            text: OpenLayers.i18n('thesaurusFromURL'),
+                            scope: this,
+                            handler: function() {
+                                if(!this.createThesaurusFromRemoteFileWindow){
+                                    this.createThesaurusFromRemoteFileWindow = this.getCreateThesaurusFromRemoteFileWindow();
+                                }
+                                this.createThesaurusFromRemoteFileWindow.show(this);
+                            }
+                        }]
+                    }
                 },{
                     id:         'delete_thesaurus_button',
                     disabled:   true,
@@ -298,6 +366,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                                 this.thesaurusStore.reload();
                             },
                             failure: function(response){
+                                // TODO
                             }
                         });
                     },
@@ -308,7 +377,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                     text:       OpenLayers.i18n('download'),
                     iconCls: 'xmlIcon',
                     handler: function(){
-                        location.replace(this.catalogue.services.thesaurusDownload + "?ref=" + this.keywordStore.baseParams.pThesauri);
+                        window.location.replace(this.catalogue.services.thesaurusDownload + "?ref=" + this.keywordStore.baseParams.pThesauri);
                     },
                     scope: this
                 }]
@@ -327,19 +396,16 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             },
             columns: [{
                 id: 'id',
-                header: OpenLayers.i18n('id'),
+                header: OpenLayers.i18n('uri'),
+                width: 400,
                 dataIndex: 'uri',
                 editor: new Ext.form.TextField({
                     allowBlank: false
                 })
             }, {
                 id: 'hidden_id',
-                header: OpenLayers.i18n('uri'),
                 dataIndex: 'id',
-                hidden: true,
-                editor: new Ext.form.TextField({
-                    allowBlank: false
-                })
+                hidden: true
             }, {
                 id: 'value',
                 header: OpenLayers.i18n('label'),
@@ -349,11 +415,12 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 })
             }, {
                 id: 'definition',
-                header: OpenLayers.i18n('definition'),
+                //header: OpenLayers.i18n('definition'),
                 dataIndex: 'definition',
-                editor: new Ext.form.TextField({
-                    allowBlank: false
-                })
+                //editor: new Ext.form.TextField({
+                //    allowBlank: false
+                //})
+                hidden: true
             }, {
                 id: 'west',
                 header: OpenLayers.i18n('xmin'),
@@ -401,8 +468,18 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             sm: new Ext.grid.CellSelectionModel({
                 listeners: {
                     scope: this,
-                    selectionchange: function(smObj) {
+                    "selectionchange": function(smObj, selection) {
+                        if (selection && selection.record) {
+                            this.keywordId = selection.record.get('id');
+                        }
                         this.updateKeywordToolbar();
+                    },
+                    'beforecellselect': function(smObj, r, c) {
+                        // if clicked cell is already selected, unselect it
+                        if (smObj.selection != null && smObj.selection.cell[0] == r && smObj.selection.cell[1] == c) {
+                            smObj.clearSelections();
+                            return false;
+                        }
                     }
                 }
             }),
@@ -415,9 +492,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                     var namespace = tokens[0];
                     var newId = tokens[1];
                     var oldId = newId;
-                    // Edit keyword in current GUI language
-                    // TODO : improved to select the language to be updated
-                    var lang = this.catalogue.lang;
+                    var lang = this.kwLang;
                     var prefLab = e.record.data.value;
                     var definition = e.record.data.definition;
                     var requestPayLoad;
@@ -478,13 +553,13 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                         
                         // The uri of the new keyword is based on a timestamp in order to avoid
                         // two keywords with the same uri
-                        var newUri = '#' + new Date().getTime();
+                        var newUri = 'http://custom.shared.obj.ch/concept#' + new Date().getTime();
                         
                         // Send a request to add a new keyword in the database
                         var ref = this.keywordStore.baseParams.pThesauri;
                         var refType = ref.split(".")[1];
                         var newId = newUri.split("#")[1];
-                        var lang = this.catalogue.lang;
+                        var lang = this.kwLang;
                         var prefLab = OpenLayers.i18n('newLabel');
                         var definition = OpenLayers.i18n('newDefinition');
                         var requestPayLoad;
@@ -558,11 +633,38 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                         this.keywordGrid.store.removeAt(selectedCells[0]);
                     },
                     scope: this
+                },{
+                    id: 'duplicate_keyword_button',
+                    text: OpenLayers.i18n('duplicate'),
+                    iconCls: 'md-mn-copy',
+                    handler: function(){
+                        var selectedCells = this.keywordGrid.getSelectionModel().getSelectedCell();
+                        var rec = this.keywordGrid.store.getAt(selectedCells[0]);
+                        var thesaurus = this.keywordStore.baseParams.pThesauri;
+                        var id = rec.data.uri;
+                        
+                        var requestPayLoad = '<request><uuid>' + id + '</uuid><thesaurus>' + thesaurus + '</thesaurus></request>'
+                        Ext.Ajax.request({
+                            scope: this,
+                            url: this.catalogue.services.rootUrl+"keywords.duplicate",
+                              failure: function() {
+                                  // TODO: display a message describing the reason of the error
+                                  Ext.Msg.alert('Fail');
+                                  },
+                              xmlData: requestPayLoad
+                        });
+                    },
+                    scope: this
                 },
                 '->',
                 this.getKeyword(),
+                '-',
+                OpenLayers.i18n('keywordsLang'),
+                this.getLangInput(),
+                '-',
                 OpenLayers.i18n('maxResults') + ' ' + OpenLayers.i18n('perThesaurus'),
-                this.getLimitInput()]
+                this.getLimitInput()
+                ]
             }
         });
     },
@@ -589,6 +691,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             if (isLocal) {
                 var selectedCells = this.keywordGrid.getSelectionModel().getSelectedCell();
                 Ext.getCmp('delete_keyword_button').setDisabled(!selectedCells);
+                Ext.getCmp('duplicate_keyword_button').setDisabled(!selectedCells);
             }
         }
     },
@@ -630,7 +733,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             }
             Ext.getCmp('delete_keyword_button').setDisabled(!isLocal);
             Ext.getCmp('add_keyword_button').setDisabled(!isLocal);
-          
+            Ext.getCmp('duplicate_keyword_button').setDisabled(!isLocal);
         } else {
             this.keywordGrid.getTopToolbar().disable();
         }
@@ -701,7 +804,6 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 text:OpenLayers.i18n('add'),
                 scope: this,
                 handler: function(){
-                    console.log(this.createThesaurusFromLocalFileForm);
                     if (this.createThesaurusFromLocalFileForm.getForm().isValid()) {
                         this.createThesaurusFromLocalFileForm.getForm().getEl().dom.enctype="multipart/form-data";
                         this.createThesaurusFromLocalFileForm.bodyCfg.enctype="multipart/form-data";
@@ -800,44 +902,44 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
         return this.createEmptyThesaurusForm;
     },
 
-  getCreateThesaurusFromLocalFileForm: function(){
-  this.createThesaurusFromLocalFileForm = new Ext.form.FormPanel({
-      fileUpload: true,
-      region: 'center',
-      autoHeight: true,
-      baseCls: 'x-plain',
-      errorReader: new Ext.data.XmlReader({
-            record : 'record'
-        }, ['Thesaurus']
-      ),
-      labelWidth: 170,
-      split: true,
-      items: [{
-          xtype: 'fileuploadfield',
-          allowBlank: true,
-          fieldLabel: OpenLayers.i18n('thesaurusFilePath'),
-          id: 'local_fname',
-          name: 'fname',
-          buttonCfg: {
-              text: OpenLayers.i18n('selectFile')
-          }
-      }, this.createTypeCombo('local_themeCmb'), {
-        xtype: 'textfield',
-          fieldLabel: OpenLayers.i18n('thesaurusType'),
-          id: 'local_thesaurusType',
-          name: 'type',
-          value: 'external',
-          hidden: true,
-          anchor: '-15'
-      }, {
-          xtype: 'textfield',
-          hidden: true,
-          name: 'mode',
-          value: 'file'
-      }]
-  });
-  return this.createThesaurusFromLocalFileForm;
-},
+    getCreateThesaurusFromLocalFileForm: function(){
+        this.createThesaurusFromLocalFileForm = new Ext.form.FormPanel({
+            fileUpload: true,
+            region: 'center',
+            autoHeight: true,
+            baseCls: 'x-plain',
+            errorReader: new Ext.data.XmlReader({
+                  record : 'record'
+              }, ['Thesaurus']
+            ),
+            labelWidth: 170,
+            split: true,
+            items: [{
+                xtype: 'fileuploadfield',
+                allowBlank: true,
+                fieldLabel: OpenLayers.i18n('thesaurusFilePath'),
+                id: 'local_fname',
+                name: 'fname',
+                buttonCfg: {
+                    text: OpenLayers.i18n('selectFile')
+                }
+            }, this.createTypeCombo('local_themeCmb'), {
+              xtype: 'textfield',
+                fieldLabel: OpenLayers.i18n('thesaurusType'),
+                id: 'local_thesaurusType',
+                name: 'type',
+                value: 'external',
+                hidden: true,
+                anchor: '-15'
+            }, {
+                xtype: 'textfield',
+                hidden: true,
+                name: 'mode',
+                value: 'file'
+            }]
+        });
+        return this.createThesaurusFromLocalFileForm;
+    },
     
     getCreateThesaurusFromRemoteFileForm: function(){
         this.createThesaurusFromRemoteFileForm = new Ext.form.FormPanel({
@@ -915,6 +1017,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
         });
         return this.createThesaurusFromRemoteFileForm;
     },
+
     createTypeCombo: function(id) {
         
         return new Ext.form.ComboBox({
@@ -942,13 +1045,13 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 })
             });
     },
+
     /**
      * Method: getKeyword
      *
      *
      */
     getKeyword: function(){
-        
         return new GeoNetwork.form.SearchField({
             id: 'keywordSearchField',
             width: 240,
@@ -968,15 +1071,63 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             name: 'maxResults',
             id: 'maxResults',
             value: this.maxResults,
+            enableKeyEvents: true,
             width: 40,
             listeners: {
                 scope: this,
-                change: function(field, newValue, oldValue) {
-                    this.keywordStore.baseParams.maxResults = newValue;
+                render: function(cmp) {
+                    cmp.el.on('keyup',
+                        function(e,el) {
+                            this.keywordStore.setBaseParam('maxResults', el.value);
+                            this.keywordStore.reload();
+                        }, 
+                        this
+                    );
+                }
+            }
+        };
+    },
+    
+    /**
+     * Method: getLangInput
+     *
+     *
+     */
+    getLangInput: function(){
+        return {
+            xtype: 'combo',
+            name: 'kw_lang',
+            id: 'kw_lang',
+            value: this.kwLang,
+            mode: 'local',
+            displayField: 'name',
+            valueField: 'code',
+            store: this.langStore,
+            triggerAction: 'all',
+            editable: false,
+            width: 100,
+            listeners: {
+                scope: this,
+                "select": function(field, rec, idx) {
+
+                    this.kwLang = rec.get('code');
+
+                    // if a cell is selected, use it to do a search instead of a reload
+                    var sel = this.keywordGrid.selModel.getSelectedCell();
+                    if (sel != null) {
+                        var record = this.keywordGrid.getStore().getAt(sel[0]);
+                        var value = record.data.uri;
+                        var searcher = Ext.getCmp('keywordSearchField');
+                        searcher.setValue(value);
+                        searcher.onTrigger2Click();
+                    } else {
+                        this.keywordStore.reload();                    
+                    }                
                 }
             }
         };
     }
+
 });
 
 /** api: xtype = gn_admin_thesaurusmanagerpanel */
