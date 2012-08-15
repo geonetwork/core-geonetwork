@@ -526,6 +526,8 @@ public class DataManager {
             }
              if("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
             	try {
+            	    String parentUuid = null;
+                    updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms);
 	                ProcessParams processParameters = new ProcessParams(dbms, ReusableObjectLogger.THREAD_SAFE_LOGGER, id, md, md, thesaurusMan, extentMan, baseURL, settingMan, false, null,servContext);
 	                List<Element> modified = reusableObjMan.process(processParameters);
 
