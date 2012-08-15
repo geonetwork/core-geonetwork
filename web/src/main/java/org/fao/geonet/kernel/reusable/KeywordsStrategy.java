@@ -49,6 +49,8 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordSort;
+import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.ElementFinder;
@@ -97,7 +99,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
             KeywordsSearcher searcher = search(elem.two());
 
-            List keywords = searcher.getResults(new Element("params")).getChildren();
+            List keywords = searcher.getXmlResults().getChildren();
             if (!keywords.isEmpty()) {
                 Element keyword = (Element) keywords.get(0);
                 elem.one().detach();
@@ -173,7 +175,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
 
         searcher.search(null, searchParams);
-        searcher.sortResults("label");
+        searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         return searcher;
     }
 
@@ -189,10 +191,10 @@ public final class KeywordsStrategy extends ReplacementStrategy
         params.addContent(new Element("pKeyword").setText("*"));
         
         searcher.search(null, params);
-        searcher.sortResults("label");
+        searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
 
-        List<Element> results = searcher.getResults(new Element("params")).getChildren();
+        List<Element> results = searcher.getXmlResults().getChildren();
 
         Element keywords = new Element(REPORT_ROOT);
         for (Element element : results) {
@@ -281,7 +283,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
     private KeywordBean lookup(String id, UserSession session)
     {
         KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        KeywordBean concept = searcher.existsResult(id);
+        KeywordBean concept = searcher.getKeywordFromResults(id);
         return concept;
     }
 
@@ -290,7 +292,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
     {
         String base = oldHref.substring(0, oldHref.indexOf('?'));
         KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        KeywordBean concept = searcher.existsResult(id);
+        KeywordBean concept = searcher.getKeywordFromResults(id);
         String encoded = URLEncoder.encode(concept.getCode(), "utf-8");
         return base + "?thesaurus=" + GEOCAT_THESAURUS_NAME + "&id=" + encoded + "&locales=en,it,de,fr";
     }
@@ -306,13 +308,13 @@ public final class KeywordsStrategy extends ReplacementStrategy
         String[] langs = {"en", "fr","de", "it"};
         for (String id : ids) {
             idMap.put(id, id);
-            KeywordBean concept = searcher.existsResult(id);
+            KeywordBean concept = searcher.getKeywordFromResults(id);
             String code = concept.getCode();
             for(String lang : langs){
-                KeywordBean translation = searcher.searchById(code, NON_VALID_THESAURUS_NAME, lang, false);
+                KeywordBean translation = searcher.searchById(code, NON_VALID_THESAURUS_NAME, lang);
 
                 if(translation != null) {
-                    geocatThesaurus.addElement(translation.getNameSpaceCode(), translation.getRelativeCode(), translation.getValue(), translation.getDefinition(), lang);
+                    geocatThesaurus.addElement(translation);
                 }
             }
             
@@ -378,10 +380,18 @@ public final class KeywordsStrategy extends ReplacementStrategy
         URI uri = null;
         final String namespace = NAMESPACE;
         for (Pair<String, String> pair : words) {
+            String lang = pair.two();
+            String value = pair.one();
+            String definition = pair.one();
+            KeywordBean keyword = new KeywordBean()
+                .setNamespaceCode(namespace)
+                .setCode(code)
+                .setValue(value, lang)
+                .setDefinition(definition, lang);
             if (update) {
-                thesaurus.updateElement(namespace, code, pair.one(), pair.one(), pair.two());
+                thesaurus.updateElement(keyword, true);
             } else {
-                uri = thesaurus.addElement(namespace, code, pair.one(), pair.one(), pair.two());
+                uri = thesaurus.addElement(keyword);
             }
         }
         return uri;
@@ -436,9 +446,14 @@ public final class KeywordsStrategy extends ReplacementStrategy
          
         String code = UUID.randomUUID().toString();
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(NON_VALID_THESAURUS_NAME);
-        
-        String keyword = "";
-        String id = URLEncoder.encode(thesaurus.addElement(NAMESPACE, code, keyword , keyword, Geocat.DEFAULT_LANG).toString(), "UTF-8");
+
+        KeywordBean keywordBean = new KeywordBean()
+            .setNamespaceCode(NAMESPACE)
+            .setCode(code)
+            .setValue("", Geocat.DEFAULT_LANG)
+            .setDefinition("", Geocat.DEFAULT_LANG);
+
+        String id = URLEncoder.encode(thesaurus.addElement(keywordBean ).toString(), "UTF-8");
         
         return XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + NON_VALID_THESAURUS_NAME + "&id=" + id + "&locales=en,it,de,fr";
     }
@@ -451,7 +466,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
                     KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
                     try {
                         Integer.parseInt(id);
-                        KeywordBean concept = searcher.existsResult(id);
+                        KeywordBean concept = searcher.getKeywordFromResults(id);
                         return URLEncoder.encode(concept.getCode(), "UTF-8");
                     } catch(NumberFormatException e) {
                         return  URLEncoder.encode(NAMESPACE+id, "utf-8");

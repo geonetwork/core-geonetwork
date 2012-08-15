@@ -110,7 +110,8 @@ import com.vividsolutions.jts.geom.MultiPolygon;
   */
 public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
-	private String 				path;				
+	private String 				path;
+	private HarvestManager         harvestMan;
 	private SearchManager 		searchMan;
 	private ThesaurusManager 	thesaurusMan;
 	private MetadataNotifierControl metadataNotifierControl;
@@ -389,7 +390,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Harvest manager...");
 
-		HarvestManager harvestMan = new HarvestManager(context, settingMan, dataMan);
+		harvestMan = new HarvestManager(context, settingMan, dataMan);
 		dataMan.setHarvestManager(harvestMan);
 
 		//------------------------------------------------------------------------

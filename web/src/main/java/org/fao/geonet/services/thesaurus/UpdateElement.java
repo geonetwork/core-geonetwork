@@ -36,6 +36,7 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
@@ -87,20 +88,29 @@ public class UpdateElement implements Service {
 			}
 		}
 
+		KeywordBean bean = new KeywordBean()
+		    .setNamespaceCode(namespace)
+		    .setRelativeCode(newid)
+		    .setValue(prefLab, lang)
+		    .setDefinition(definition, lang);
+
 		if (thesaType.equals("place")) {
 			String east = Util.getParam(params, "east");
 			String west = Util.getParam(params, "west");
 			String south = Util.getParam(params, "south");
 			String north = Util.getParam(params, "north");
-			thesaurus.updateElement(namespace, newid, prefLab, definition, east,
-					west, south, north, lang);
-		} else {
-			thesaurus.updateElement(namespace, newid, prefLab, definition, lang);
+			bean.setCoordEast(east)
+			    .setCoordNorth(north)
+			    .setCoordSouth(south)
+			    .setCoordWest(west);
 		}
+
+		thesaurus.updateElement(bean, true);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
+
 		return elResp;
 	}
 }

@@ -1,5 +1,8 @@
 package org.fao.geonet.services.thesaurus;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
@@ -31,26 +34,68 @@ public class Duplicate implements Service {
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusName);
         KeywordsSearcher ks = new KeywordsSearcher(thesaurusManager);
         
-        KeywordBean bean = ks.searchById(uuid, thesaurusName, "*", true);
+        KeywordBean bean = ks.searchById(uuid, thesaurusName, "*");
         if(bean == null) {
             return new Element("uuid").setText(uuid);
         }
-        if(!(bean.getLanguages().contains("en") || bean.getLanguages().contains("eng"))) {
-            thesaurus.addElement(bean.getNameSpaceCode(), bean.getRelativeCode(), bean.getValue(), bean.getDefinition(), "eng");
+        
+        bean.setDefaultLang(mapLang(bean.getDefaultLang()));
+        HashMap<String, String> values = new HashMap<String,String>(bean.getValues());
+        HashMap<String, String> defs = new HashMap<String,String>(bean.getDefinitions());
+        
+        for (String lang : values.keySet()) {
+            bean.removeValue(lang);
+        }
+        for (String lang : defs.keySet()) {
+            bean.removeDefinition(lang);
         }
         
-        if(!(bean.getLanguages().contains("it") || bean.getLanguages().contains("ita"))) {
-            thesaurus.addElement(bean.getNameSpaceCode(), bean.getRelativeCode(), bean.getValue(), bean.getDefinition(), "ita");
+        for (Map.Entry<String, String> entry: values.entrySet()) {
+            bean.setValue(entry.getValue(), entry.getKey());
+        }
+        for (Map.Entry<String, String> entry: defs.entrySet()) {
+            bean.setDefinition(entry.getValue(), entry.getKey());
+        }
+
+        if(!(bean.getValues().containsValue("en") || bean.getValues().containsValue("eng"))) {
+            bean.setValue(bean.getDefaultValue(), "eng");
         }
         
-        if(!(bean.getLanguages().contains("fr") || bean.getLanguages().contains("fre") || bean.getLanguages().contains("fra"))) {
-            thesaurus.addElement(bean.getNameSpaceCode(), bean.getRelativeCode(), bean.getValue(), bean.getDefinition(), "fre");
+        if(!(bean.getValues().containsValue("it") || bean.getValues().containsValue("ita"))) {
+            bean.setValue(bean.getDefaultValue(), "ita");
         }
         
-        if(!(bean.getLanguages().contains("de") || bean.getLanguages().contains("deu") || bean.getLanguages().contains("ger"))) {
-            thesaurus.addElement(bean.getNameSpaceCode(), bean.getRelativeCode(), bean.getValue(), bean.getDefinition(), "ger");
+        if(!(bean.getValues().containsValue("fr") || bean.getValues().containsValue("fre") || bean.getValues().containsValue("fra"))) {
+            bean.setValue(bean.getDefaultValue(), "fre");
         }
+        
+        if(!(bean.getValues().containsValue("de") || bean.getValues().containsValue("deu") || bean.getValues().containsValue("ger"))) {
+            bean.setValue(bean.getDefaultValue(), "ger");
+        }
+        
+        thesaurus.updateElement(bean, true);
+        
         return new Element("uuid").setText(uuid);
+    }
+
+    private String mapLang(String lang) {
+        if(!("en".equalsIgnoreCase(lang) || "eng".equalsIgnoreCase(lang))) {
+            return "eng";
+        }
+        
+        if(!("it".equalsIgnoreCase(lang) || "ita".equalsIgnoreCase(lang))) {
+            return "ita";
+        }
+        
+        if(!("fr".equalsIgnoreCase(lang) || "fre".equalsIgnoreCase(lang) || "fra".equalsIgnoreCase(lang))) {
+            return "fre";
+        }
+        
+        if(!("de".equalsIgnoreCase(lang) || "deu".equalsIgnoreCase(lang) || "ger".equalsIgnoreCase(lang))) {
+            return "ger";
+        }
+
+        return lang;
     }
 
 }

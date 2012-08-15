@@ -34,6 +34,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordSort;
+import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 
 /**
@@ -66,8 +68,8 @@ public class GetKeywords implements Service {
 
             if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
 			searcher = new KeywordsSearcher(thesaurusMan);
-			searcher.search(context, params);
-			searcher.sortResults("label");
+			searcher.search(context.getLanguage(), params);
+			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			session
 					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
 							searcher);

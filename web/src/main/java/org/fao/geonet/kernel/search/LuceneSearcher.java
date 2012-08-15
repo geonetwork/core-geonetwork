@@ -107,6 +107,8 @@ import bak.pcj.map.ObjectKeyIntMap;
 import bak.pcj.map.ObjectKeyIntMapIterator;
 import bak.pcj.map.ObjectKeyIntOpenHashMap;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ranges;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import java.io.File;
@@ -1302,10 +1304,6 @@ public class LuceneSearcher extends MetaSearcher {
                         }
                     }
                 }
-            } catch (Exception e) {
-                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc,e);
-            }
-
         }
 
 		return summaryMaps;

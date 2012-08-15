@@ -23,6 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import static org.quartz.JobKey.jobKey;
+
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
@@ -32,38 +39,41 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
+import jeeves.utils.QuartzSchedulerUtils;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester;
-import org.fao.geonet.kernel.harvest.harvester.cgp.CGPHarvester;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
 import org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHarvester;
-import org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester;
 import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
 import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
 import org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester;
 import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
+import org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
-import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 
 //=============================================================================
 
-public abstract class AbstractHarvester
+public abstract class AbstractHarvester 
 {
+    private static final String SCHEDULER_ID = "abstractHarvester";
+    public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
+
     //---------------------------------------------------------------------------
 	//---
 	//--- Static API methods
@@ -76,7 +86,6 @@ public abstract class AbstractHarvester
 		register(context, Geonet20Harvester.class);
 		register(context, WebDavHarvester  .class);
 		register(context, CswHarvester     .class);
-		register(context, CGPHarvester     .class);
 		register(context, Z3950Harvester   .class);
 		register(context, Z3950ConfigHarvester   .class);
 		register(context, OaiPmhHarvester  .class);
@@ -90,7 +99,7 @@ public abstract class AbstractHarvester
 
 	//---------------------------------------------------------------------------
 
-	private static void register(ServiceContext context, Class harvester) throws Exception
+	private static void register(ServiceContext context, Class<?> harvester) throws Exception
 	{
 		try
 		{
@@ -118,7 +127,7 @@ public abstract class AbstractHarvester
 		if (type == null)
 			throw new BadParameterEx("type", type);
 
-		Class c = hsHarvesters.get(type);
+		Class<?> c = hsHarvesters.get(type);
 
 		if (c == null)
 			throw new BadParameterEx("type", type);
@@ -138,6 +147,7 @@ public abstract class AbstractHarvester
 		}
 	}
 
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -147,40 +157,54 @@ public abstract class AbstractHarvester
 	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		status   = Status.INACTIVE;
-		executor = null;
 		error    = null;
 		id       = doAdd(dbms, node);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void init(Element node) throws BadInputEx
+	public void init(Element node) throws BadInputEx, SchedulerException
 	{
 		id       = node.getAttributeValue("id");
 		status   = Status.parse(node.getChild("options").getChildText("status"));
-		executor = null;
 		error    = null;
 
 		//--- init harvester
 
 		doInit(node);
 
-		if (status == Status.ACTIVE)
-		{
-			executor = new Executor(this);
-			executor.setTimeout(getParams().every);
-			executor.start();
+		if (status == Status.ACTIVE) {
+		    doSchedule();
 		}
 	}
 
-	//--------------------------------------------------------------------------
-	/** Called when the application is shutdown */
+    private void doSchedule() throws SchedulerException {
+        Scheduler scheduler = getScheduler();
 
-	public void shutdown()
-	{
-		if (executor != null)
-			executor.terminate();
+        JobDetail jobDetail = getParams().getJob();
+        Trigger trigger = getParams().getTrigger();
+        scheduler.scheduleJob(jobDetail, trigger);
+    }
+
+    private void doUnschedule() throws SchedulerException {
+        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+    }
+
+    public static Scheduler getScheduler() throws SchedulerException {
+        return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID,true);
+    }
+
+	//--------------------------------------------------------------------------
+	/** Called when the application is shutdown 
+	 * @throws SchedulerException */
+
+	public void shutdown() throws SchedulerException {
+       getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
 	}
+	
+    public static void shutdownScheduler() throws SchedulerException {
+        getScheduler().shutdown(false);
+    }
 
 	//--------------------------------------------------------------------------
 	/** Called when the harvesting entry is removed from the system.
@@ -189,10 +213,7 @@ public abstract class AbstractHarvester
 
 	public synchronized void destroy(Dbms dbms) throws Exception
 	{
-		if (executor != null)
-			executor.terminate();
-
-		executor = null;
+	    doUnschedule();
 
 		//--- remove all harvested metadata
 
@@ -212,7 +233,7 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized OperResult start(Dbms dbms) throws SQLException
+	public synchronized OperResult start(Dbms dbms) throws SQLException, SchedulerException
 	{
 		if (status != Status.INACTIVE)
 			return OperResult.ALREADY_ACTIVE;
@@ -221,39 +242,37 @@ public abstract class AbstractHarvester
 
 		status     = Status.ACTIVE;
 		error      = null;
-		executor   = new Executor(this);
-		executor.setTimeout(getParams().every);
-		executor.start();
+		
+		doSchedule();
 
 		return OperResult.OK;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized OperResult stop(Dbms dbms) throws SQLException
+	public synchronized OperResult stop(Dbms dbms) throws SQLException, SchedulerException
 	{
 		if (status != Status.ACTIVE)
 			return OperResult.ALREADY_INACTIVE;
 
 		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.INACTIVE);
 
-		executor.terminate();
+		doUnschedule();
 		status   = Status.INACTIVE;
-		executor = null;
 
 		return OperResult.OK;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public synchronized OperResult run(Dbms dbms) throws SQLException {
+    public synchronized OperResult run(Dbms dbms) throws SQLException, SchedulerException {
 		if (status == Status.INACTIVE)
 			start(dbms);
 
-		if (executor.isRunning())
+		if (running)
 			return OperResult.ALREADY_RUNNING;
 
-		executor.interrupt();
+        getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
 
 		return OperResult.OK;
 	}
@@ -307,20 +326,18 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException
+	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException, SchedulerException
 	{
 		doUpdate(dbms, id, node);
 
 		if (status == Status.ACTIVE)
 		{
 			//--- stop executor
-			executor.terminate();
+			doUnschedule();
 
 			//--- restart executor
 			error      = null;
-			executor   = new Executor(this);
-			executor.setTimeout(getParams().every);
-			executor.start();
+			doSchedule();
 		}
 	}
 
@@ -337,10 +354,6 @@ public abstract class AbstractHarvester
 
 		//--- 'running'
 
-		boolean running = false;
-		if (status != null && executor != null) {
-			running = (status == Status.ACTIVE && executor.isRunning());
-		}
 		info.addContent(new Element("running").setText(running+""));
 
 		//--- harvester specific info
@@ -387,6 +400,8 @@ public abstract class AbstractHarvester
 
 	void harvest()
 	{
+	    running = true;
+	    try {
 		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
 
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
@@ -458,6 +473,9 @@ public abstract class AbstractHarvester
 				logger.error(" (C) Exc   : "+ dbe);
 			}
 		}
+	    } finally {
+	        running  = false;
+	    }
 
 	}
 
@@ -594,8 +612,8 @@ public abstract class AbstractHarvester
 	private String id;
 	private Status status;
 
-	private Executor  executor;
 	private Throwable error;
+    private boolean running = false;
 
 	protected ServiceContext context;
 	protected SettingManager settingMan;

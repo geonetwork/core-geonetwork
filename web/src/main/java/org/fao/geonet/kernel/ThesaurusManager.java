@@ -49,6 +49,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -57,7 +59,7 @@ import java.util.concurrent.Executors;
 
 //=============================================================================
 
-public class ThesaurusManager {
+public class ThesaurusManager implements ThesaurusFinder {
 
 	public synchronized static ThesaurusManager getInstance(ServiceContext context, String appPath, DataManager dm, ResourceManager rm, String thesauriRepository) throws Exception { 
 	 	if (_instance == null){ 
@@ -277,7 +279,7 @@ public class ThesaurusManager {
 
 			String id = dm.getMetadataId(dbms, uuid);
 			Element md = dm.getMetadata(dbms, id);
-			Processor.detachXLink(md);
+			Processor.detachXLink(md, ServiceContext.get());
 			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
 			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(), "");
 	
@@ -373,10 +375,12 @@ public class ThesaurusManager {
 		return thesauriDirectory;
 	}
 	
-	public ConcurrentHashMap<String, Thesaurus> getThesauriMap() {
-		return thesauriMap;
+	@Override
+    public Map<String, Thesaurus> getThesauriMap() {
+		return Collections.unmodifiableMap(thesauriMap);
 	}
 
+    @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriMap.get(thesaurusName);
 	}	
@@ -385,7 +389,8 @@ public class ThesaurusManager {
 	 * @param name
 	 * @return
 	 */
-	public boolean existsThesaurus(String name) {
+	@Override
+    public boolean existsThesaurus(String name) {
 		return (thesauriMap.get(name) != null);
 	}
 

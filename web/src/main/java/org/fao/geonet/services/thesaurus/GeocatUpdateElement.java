@@ -37,6 +37,7 @@ import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
@@ -85,22 +86,25 @@ public class GeocatUpdateElement implements Service {
 				return elResp;
 			}
 		}
-
+		KeywordBean bean = new KeywordBean().setNamespaceCode(namespace).setRelativeCode(newid);
 		if (thesaType.equals("place")) {
 			String east = Util.getParam(params, "east");
 			String west = Util.getParam(params, "west");
 			String south = Util.getParam(params, "south");
 			String north = Util.getParam(params, "north");
-			for (Map.Entry<String, String> entry : prefLab.entrySet()) {
-			    thesaurus.updateElement(namespace, newid, entry.getValue(), definition, east,
-			            west, south, north, entry.getKey());
-            }
-		} else {
-            for (Map.Entry<String, String> entry : prefLab.entrySet()) {
-                thesaurus.updateElement(namespace, newid, entry.getValue(), definition, entry.getKey());
-            }
+			bean.setCoordEast(east)
+			    .setCoordNorth(north)
+			    .setCoordSouth(south)
+			    .setCoordWest(west);
 		}
+		
+        for (Map.Entry<String, String> entry : prefLab.entrySet()) {
+            bean.setValue(entry.getValue(), entry.getKey());
+            bean.setDefinition(definition, entry.getKey());
+        }
 
+        thesaurus.updateElement(bean, true);
+        
         Processor.clearCache();
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);

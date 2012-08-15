@@ -206,12 +206,6 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-        <dependency>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-          <version>r08</version>
-        </dependency>
-
         <!-- rewrite url servletfilter -->
         <dependency>
             <groupId>org.tuckey</groupId>

@@ -31,6 +31,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
@@ -71,16 +72,30 @@ public class AddElement implements Service {
 
 		if (thesaurus.isFreeCode(namespace, newid)) {
 
+		    KeywordBean keyword;
 			if (thesaType.equals("place")) {
 				String east = Util.getParam(params, "east");
 				String west = Util.getParam(params, "west");
 				String south = Util.getParam(params, "south");
 				String north = Util.getParam(params, "north");
-				thesaurus
-						.addElement(newid, prefLab, definition, east, west, south, north, lang);
+				keyword = new KeywordBean()
+				    .setCode(newid)
+				    .setValue(prefLab, lang)
+                    .setDefinition(definition, lang)
+                    .setCoordEast(east)
+                    .setCoordNorth(north)
+                    .setCoordSouth(south)
+                    .setCoordWest(west);
 			} else {
-				thesaurus.addElement(namespace, newid, prefLab, definition, lang);
+                keyword = new KeywordBean()
+                    .setNamespaceCode(namespace)
+                    .setCode(newid)
+                    .setValue(prefLab, lang)
+                    .setDefinition(definition, lang);
+                
 			}
+			thesaurus.addElement(keyword);
+
 			elResp.addContent(new Element("selected").setText(ref));
 			elResp.addContent(new Element("mode").setText("edit"));
 		} else {

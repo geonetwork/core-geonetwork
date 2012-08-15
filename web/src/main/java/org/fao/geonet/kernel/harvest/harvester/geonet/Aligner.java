@@ -606,7 +606,8 @@ public class Aligner
             boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, updateDateStamp, false, false);
+            boolean processSharedObject = false;
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, updateDateStamp, processSharedObject);
 
 			result.updatedMetadata++;
 		}

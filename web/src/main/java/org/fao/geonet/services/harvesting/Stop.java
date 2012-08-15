@@ -31,8 +31,6 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-
 //=============================================================================
 
 public class Stop implements Service
@@ -55,7 +53,7 @@ public class Stop implements Service
 	{
 		return Util.exec(params, context, new Util.Job()
 		{
-			public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws SQLException
+			public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception
 			{
 				return hm.stop(dbms, id);
 			}

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.thesaurus;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -40,6 +41,9 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordRelation;
+import org.fao.geonet.kernel.search.keyword.KeywordSort;
+import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 
 //=============================================================================
@@ -77,20 +81,20 @@ public class GeocatEditElement implements Service {
 				UserSession session = context.getUserSession();
 				KeywordsSearcher searcher = (KeywordsSearcher) session
 					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-				kb = searcher.existsResult(id);
+				kb = searcher.getKeywordFromResults(id);
                 // need to get other translations
-				kb = searcher.searchById(kb.getCode(), ref, "*", true);
+				kb = searcher.searchById(kb.getCode(), ref, "*");
 			}else{
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 				KeywordsSearcher searcher = new KeywordsSearcher(thesaurusMan);
 
-				kb = searcher.searchById(uri, ref, lang, true);
+				kb = searcher.searchById(uri, ref, lang);
 
 			}
 			// Add info needed by thesaurus.edit
 			addLabels(elResp, kb);
-			elResp.addContent(new Element("definition").setText(kb.getDefinition()));
+			elResp.addContent(new Element("definition").setText(kb.getDefaultDefinition()));
 
 			elResp.addContent(new Element("relCode").setText(kb.getRelativeCode()));
 			elResp.addContent(new Element("nsCode").setText(kb.getNameSpaceCode()));
@@ -113,32 +117,32 @@ public class GeocatEditElement implements Service {
 
 		// Only if consult (ie. external thesaurus) search for related concept
 		if (mode.equals("consult")){
-			ArrayList<String> reqType = new ArrayList<String>();
-			reqType.add("broader");
-			reqType.add("narrower");
-			reqType.add("related");
+            ArrayList<KeywordRelation> reqType = new ArrayList<KeywordRelation>();
+            reqType.add(KeywordRelation.BROADER);
+            reqType.add(KeywordRelation.NARROWER);
+            reqType.add(KeywordRelation.RELATED);
 
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 			KeywordsSearcher searcherBNR = new KeywordsSearcher(thesaurusMan);
 
 			for (int i = 0; i <= reqType.size() - 1; i++) {
-				searcherBNR.searchBN(uri, ref, reqType.get(i), lang);
+			    searcherBNR.searchForRelated(uri, ref, reqType.get(i), lang);
+	            
+                searcherBNR.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 
-				searcherBNR.sortResults("label", context.getLanguage());
-				String type;
+                String type;
+                if(reqType.get(i) == KeywordRelation.BROADER)       // If looking for broader search concept in a narrower element
+                    type = "narrower";
+                else if(reqType.get(i) == KeywordRelation.NARROWER)
+                    type = "broader";
+                else 
+                    type = "related";
 
-				if(reqType.get(i).equals("broader"))		// If looking for broader search concept in a narrower element
-					type = "narrower";
-				else if(reqType.get(i).equals("narrower"))
-					type = "broader";
-				else
-					type = "related";
-
-				Element keywordType = new Element(type);
-				keywordType.addContent(searcherBNR.getResults(params));
-
-				elResp.addContent(keywordType);
+                Element keywordType = new Element(type);
+                keywordType.addContent(searcherBNR.getResults());
+                
+                elResp.addContent(keywordType);
 			}
 
 			searcherBNR = null;
@@ -160,8 +164,10 @@ public class GeocatEditElement implements Service {
 
         Element label = new Element("prefLab");
 
-        for (String language : kb.getLanguages()) {
-            label.addContent(new Element(language.toUpperCase()).setText(kb.getLabel(language)));
+        for (Map.Entry<String, String> entry : kb.getValues().entrySet()) {
+            String language = entry.getKey();
+            String value = entry.getValue();
+            label.addContent(new Element(language.toUpperCase()).setText(value));
         }
 
         elResp.addContent(label);

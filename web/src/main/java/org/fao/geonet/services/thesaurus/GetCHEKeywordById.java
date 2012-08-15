@@ -75,7 +75,7 @@ public class GetCHEKeywordById implements Service {
 		
 		searcher = new KeywordsSearcher(thesaurusMan);
 
-		KeywordBean kb = searcher.searchById(uri, sThesaurusName, "*", true);
+		KeywordBean kb = searcher.searchById(uri, sThesaurusName, "*");
 		if (kb == null)
 			return response;
 		else
