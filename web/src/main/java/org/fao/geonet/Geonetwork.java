@@ -79,6 +79,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
@@ -369,7 +370,7 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize iso languages mapper
          */
-        IsoLanguagesMapper.init(dbms);
+        IsoLanguagesMapper.getInstance().init(dbms);
         
         /**
          * Initialize language detector
@@ -503,69 +504,55 @@ public class Geonetwork implements ApplicationHandler {
         }
         return Integer.valueOf(number.replaceAll("\\.", ""));
     }
-    
-	/**
-	 * Checks if current database is running same version as the web application.
-	 * If not, apply migration SQL script :
-	 *  resources/sql/migration/{version}-to-{version}-{dbtype}.sql.
-	 * eg. 2.4.3-to-2.5.0-default.sql
-	 *
-     * @param servletContext
-     * @param dbms
-     * @param settingMan
-     * @param webappVersion
-     * @param subVersion
-     * @param appPath
-     */
-	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
-		logger.info("  - Migration ...");
-		
-		// Get db version and subversion
-		String dbVersion = settingMan.getValue("system/platform/version");
-		String dbSubVersion = settingMan.getValue("system/platform/subVersion");
-		
-		// Migrate db if needed
-		logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
-		logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
-		if (dbVersion == null || webappVersion == null) {
-			logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork database with data." + 
-							"      Migration step aborted.");
-			return;
-		}
-		
-		int from = 0, to = 0;
+    private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
+        logger.info("  - Migration ...");
+        
+        // Get db version and subversion
+        String dbVersion = settingMan.getValue("system/platform/version");
+        String dbSubVersion = settingMan.getValue("system/platform/subVersion");
+        
+        // Migrate db if needed
+        logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
+        logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
+        if (dbVersion == null || webappVersion == null) {
+            logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork database with data." + 
+                            "      Migration step aborted.");
+            return;
+        }
+        
+        int from = 0, to = 0;
 
-		try {
-		    from = parseVersionNumber(dbVersion);
-		    to = parseVersionNumber(webappVersion);
-		} catch(Exception e) {
-		    logger.warning("      Error parsing version numbers: " + e.getMessage());
+        try {
+            from = parseVersionNumber(dbVersion);
+            to = parseVersionNumber(webappVersion);
+        } catch(Exception e) {
+            logger.warning("      Error parsing version numbers: " + e.getMessage());
             e.printStackTrace();
-		}
-		
-		if (from == to
-				//&& subVersion.equals(dbSubVersion) Check only on version number
-		) {
-			logger.info("      Webapp version = Database version, no migration task to apply.");
-		} else {
-			boolean anyMigrationAction = false;
-			boolean anyMigrationError = false;
-			
+        }
+        
+        if (from == to
+                //&& subVersion.equals(dbSubVersion) Check only on version number
+        ) {
+            logger.info("      Webapp version = Database version, no migration task to apply.");
+        } else {
+            boolean anyMigrationAction = false;
+            boolean anyMigrationError = false;
+            
             try {
-            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
+                new UpdateHarvesterIdsTask().update(settingMan,dbms);
             } catch (Exception e) {
                 logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
                 e.printStackTrace();
                 anyMigrationError = true;
             }
 
-			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-			String dbType = DatabaseType.lookup(dbms).toString();
-			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
-			
-		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
+            // Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+            String dbType = DatabaseType.lookup(dbms).toString();
+            logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
+            
+            logger.info("      Loading SQL migration step configuration from config-db.xml ...");
             @SuppressWarnings(value = "unchecked")
-	        List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
+            List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
             for(Element version : versions) {
                 int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
                 if (versionNumber > from && versionNumber <= to) {
@@ -573,35 +560,35 @@ public class Geonetwork implements ApplicationHandler {
                     @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
-                    	if(file.getName().equals("java")) {
-	                        try {
-	                        	settingMan.refresh(dbms);
-	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
-	                            task.update(settingMan, dbms);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	} else {
-	                        String filePath = path + file.getAttributeValue("path");
-	                        String filePrefix = file.getAttributeValue("filePrefix");
-	                        anyMigrationAction = true;
-	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-	                        try {
-	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	}
+                        if(file.getName().equals("java")) {
+                            try {
+                                settingMan.refresh(dbms);
+                                DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(file.getAttributeValue("class")).newInstance();
+                                task.update(settingMan, dbms);
+                            } catch (Exception e) {
+                                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                                e.printStackTrace();
+                                anyMigrationError = true;
+                            }
+                        } else {
+                            String filePath = path + file.getAttributeValue("path");
+                            String filePrefix = file.getAttributeValue("filePrefix");
+                            anyMigrationAction = true;
+                            logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+                            try {
+                                Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+                            } catch (Exception e) {
+                                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                                e.printStackTrace();
+                                anyMigrationError = true;
+                            }
+                        }
                     }
                 }
             }
-			
-    		
-			// Refresh setting manager in case the migration task added some new settings.
+            
+            
+            // Refresh setting manager in case the migration task added some new settings.
             try {
                 settingMan.refresh(dbms);
             } catch (Exception e) {
@@ -609,22 +596,22 @@ public class Geonetwork implements ApplicationHandler {
                 e.printStackTrace();
                 anyMigrationError = true;
             }
-			
-			// Update the logo 
-			String siteId = settingMan.getValue("system/site/siteId");
-			initLogo(servletContext, dbms, siteId, appPath);
-			
-			// TODO : Maybe a force rebuild index is required in such situation.
-			
-			if (anyMigrationAction && !anyMigrationError) {
-			    logger.info("      Successfull migration.\n" +
+            
+            // Update the logo 
+            String siteId = settingMan.getValue("system/site/siteId");
+            initLogo(servletContext, dbms, siteId, appPath);
+            
+            // TODO : Maybe a force rebuild index is required in such situation.
+            
+            if (anyMigrationAction && !anyMigrationError) {
+                logger.info("      Successfull migration.\n" +
                         "      Catalogue administrator still need to update the catalogue\n" +
                         "      logo and data directory in order to complete the migration process.\n" +
                         "      Lucene index rebuild is also recommended after migration."
-			            );
-			}
-			
-			if (!anyMigrationAction) {
+                        );
+            }
+            
+            if (!anyMigrationAction) {
                 logger.warning("      No migration task found between webapp and database version.\n" +
                         "      The system may be unstable or may failed to start if you try to run \n" +
                         "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion + "\n" +
@@ -634,77 +621,77 @@ public class Geonetwork implements ApplicationHandler {
                         );
                 
             }
-			
-			if (anyMigrationError) {
+            
+            if (anyMigrationError) {
                 logger.warning("      Error occurs during migration. Check the log file for more details.");
             }
-			// TODO : Maybe some migration stuff has to be done in Java ?
-		}
-	}
+            // TODO : Maybe some migration stuff has to be done in Java ?
+        }
+    }
 
-	/**
-	 * Database initialization. If no table in current database
-	 * create the GeoNetwork database. If an existing GeoNetwork database 
-	 * exists, try to migrate the content.
-	 * 
-	 * @param context
-	 * @return Pair with Dbms channel and Boolean set to true if db created
-	 * @throws Exception
-	 */
-	private Pair<Dbms, Boolean> initDatabase(ServiceContext context) throws Exception {
-		Dbms dbms = null;
-		try {
-			dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		} catch (Exception e) {
-			logger.error("    Failed to open database connection, Check config.xml db file configuration.");
-			logger.error(Util.getStackTrace(e));
-			throw new IllegalArgumentException("No database connection");
-		}
-	
-		String dbURL = dbms.getURL();
-		logger.info("  - Database connection on " + dbURL + " ...");
+    /**
+     * Database initialization. If no table in current database
+     * create the GeoNetwork database. If an existing GeoNetwork database 
+     * exists, try to migrate the content.
+     * 
+     * @param context
+     * @return Pair with Dbms channel and Boolean set to true if db created
+     * @throws Exception
+     */
+    private Pair<Dbms, Boolean> initDatabase(ServiceContext context) throws Exception {
+        Dbms dbms = null;
+        try {
+            dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        } catch (Exception e) {
+            logger.error("    Failed to open database connection, Check config.xml db file configuration.");
+            logger.error(Util.getStackTrace(e));
+            throw new IllegalArgumentException("No database connection");
+        }
+    
+        String dbURL = dbms.getURL();
+        logger.info("  - Database connection on " + dbURL + " ...");
 
         ServletContext servletContext = null;
         if(context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
 
-		Boolean created = false;
-		// Create db if empty
-		if (!Lib.db.touch(dbms)) {
-			logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
+        Boolean created = false;
+        // Create db if empty
+        if (!Lib.db.touch(dbms)) {
+            logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
 
             @SuppressWarnings(value = "unchecked")
-			List<Element> createConfiguration = dbConfiguration.getChild("create").getChildren();
-			for(Element file : createConfiguration) {
-			    String filePath = path + file.getAttributeValue("path");
-			    String filePrefix = file.getAttributeValue("filePrefix");
-			    logger.info("         - SQL create file:" + filePath + " prefix:" + filePrefix + " ...");
+            List<Element> createConfiguration = dbConfiguration.getChild("create").getChildren();
+            for(Element file : createConfiguration) {
+                String filePath = path + file.getAttributeValue("path");
+                String filePrefix = file.getAttributeValue("filePrefix");
+                logger.info("         - SQL create file:" + filePath + " prefix:" + filePrefix + " ...");
                 // Do we need to remove object before creating the database ?
-    			Lib.db.removeObjects(servletContext, dbms, path, filePath, filePrefix);
-    			Lib.db.createSchema(servletContext, dbms, path, filePath, filePrefix);
-			}
-			
+                Lib.db.removeObjects(servletContext, dbms, path, filePath, filePrefix);
+                Lib.db.createSchema(servletContext, dbms, path, filePath, filePrefix);
+            }
+            
             @SuppressWarnings(value = "unchecked")
-	        List<Element> dataConfiguration = dbConfiguration.getChild("data").getChildren();
-	        for(Element file : dataConfiguration) {
+            List<Element> dataConfiguration = dbConfiguration.getChild("data").getChildren();
+            for(Element file : dataConfiguration) {
                 String filePath = path + file.getAttributeValue("path");
                 String filePrefix = file.getAttributeValue("filePrefix");
                 logger.info("         - SQL data file:" + filePath + " prefix:" + filePrefix + " ...");
                 Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	        }
-	        dbms.commit();
+            }
+            dbms.commit();
+            
+            // Copy logo
+            String uuid = UUID.randomUUID().toString();
+            initLogo(servletContext, dbms, uuid, context.getAppPath());
+            created = true;
+        } else {
+            logger.info("      Found an existing GeoNetwork database.");
+        }
 
-			// Copy logo
-			String uuid = UUID.randomUUID().toString();
-			initLogo(servletContext, dbms, uuid, context.getAppPath());
-			created = true;
-		} else {
-			logger.info("      Found an existing GeoNetwork database.");
-		}
-
-		return Pair.read(dbms, created);
-	}
+        return Pair.read(dbms, created);
+    }
 
 	/**
 	 * Copy the default dummy logo to the logo folder based on uuid
