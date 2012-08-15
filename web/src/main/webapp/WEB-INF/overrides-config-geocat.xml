@@ -92,7 +92,6 @@
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-gemeindenBB-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-kantoneBB-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-non_validated-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-publish_tracking-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-xlinks-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_columns-"/>		    
         </addXml>
