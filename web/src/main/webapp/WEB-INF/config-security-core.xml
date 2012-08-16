@@ -139,7 +139,7 @@
 
 	<bean id="authenticationEntryPoint"
 		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-		<property name="loginFormUrl" value="/srv/eng/home" />
+		<property name="loginFormUrl" value="/login.jsp" />
 	</bean>
 
 	<bean id="accessDeniedHandler"

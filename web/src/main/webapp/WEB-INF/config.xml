@@ -944,7 +944,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="login.form">
-			<output page="login-form.xsl"/>
+			<output sheet="login-form.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
