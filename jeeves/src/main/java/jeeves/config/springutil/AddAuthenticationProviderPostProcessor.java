@@ -5,8 +5,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 
-public class AddAuthenticationProviderPostProcessor implements
-		BeanPostProcessor {
+public class AddAuthenticationProviderPostProcessor implements BeanPostProcessor {
 
 	private final int addIndex;
 	private final AuthenticationProvider providerToAdd;

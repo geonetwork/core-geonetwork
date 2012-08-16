@@ -38,6 +38,7 @@ import javax.servlet.ServletContext;
 
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
@@ -307,10 +308,16 @@ public class Geonetwork implements ApplicationHandler {
 		String htmlCacheDir = handlerConfig
 				.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 		
+		SettingInfo settingInfo = new SettingInfo(settingMan);
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
 				dataStore, maxWritesInTransaction, 
-				new SettingInfo(settingMan), schemaMan, servletContext);
+				settingInfo, schemaMan, servletContext);
+		
+		 
+		 // if the validator exists the proxyCallbackURL needs to have the external host and
+		 // servlet name added so that the cas knows where to send the validation notice
+		 ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl()+baseURL, servletContext);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager

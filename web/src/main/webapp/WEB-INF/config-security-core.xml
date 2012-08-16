@@ -111,7 +111,7 @@
            
 	<bean id="logoutFilter"
 		class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<constructor-arg value="/index.html" />
+		<constructor-arg ref="logoutSuccessHandler" />
 		<constructor-arg>
 			<list>
 				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
@@ -126,6 +126,9 @@
 		</constructor-arg>
 	</bean>
 
+    <bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+    	<property name="defaultTargetUrl" value="${logout.success.url}"></property>
+    </bean>
     <bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter" />
 
 	<bean id="exceptionTranslationFilter"
@@ -191,5 +194,10 @@
 
 	<bean id="sessionMgmtFilter" class="org.springframework.security.web.session.SessionManagementFilter" >
 	    <constructor-arg ref="securityContextRepository" />
+	</bean>
+	
+	<!-- This bean is here to allow evaluation permissions of the current user by Geonetwork -->
+	<bean id="webPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
+		<constructor-arg ref="filterSecurityInterceptor"/>
 	</bean>
 </beans>

@@ -26,6 +26,7 @@ package org.fao.geonet.services.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
@@ -37,6 +38,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -96,6 +98,9 @@ public class Set implements Service
 			dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
         }
         
+        SettingInfo info = new SettingInfo(context);
+		ServerBeanPropertyUpdater.updateURL(info.getSiteUrl()+context.getBaseUrl(), context.getServlet().getServletContext());
+		
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 

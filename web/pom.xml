@@ -29,6 +29,10 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
+	  <dependency>
+      	<groupId>net.sf.ehcache</groupId>
+      	<artifactId>ehcache-core</artifactId>
+      </dependency>
 
       <!-- rewrite url servletfilter -->
       <dependency>
@@ -832,6 +836,10 @@
               <maxIdleTime>10000</maxIdleTime>
             </connector>
             <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+              <!-- Note: If another server needs to communicate with this one with
+                    https then it needs the environment variables set as follows:
+                    -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password
+                    -->
               <port>8443</port>
               <keystore>${project.basedir}/keystore.jks</keystore>
               <password>password</password>
