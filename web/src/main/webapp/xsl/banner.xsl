@@ -155,7 +155,10 @@
 						<td align="right" class="banner-login">
 							<xsl:choose>
 								<xsl:when test="java:existsBean('casEntryPoint')">
-									<a class="banner" href="{/root/gui/locUrl}/{/root/gui/reqService}?casLogin">
+									<xsl:variable name="casparams">
+										<xsl:apply-templates mode="casParams" select="root/request/*"></xsl:apply-templates>
+									</xsl:variable>
+									<a class="banner" href="{/root/gui/locService}/{/root/gui/reqService}?casLogin{$casparams}">
 										<xsl:value-of select="/root/gui/strings/login"/>
 									</a>
 								</xsl:when>
@@ -213,7 +216,8 @@
 			</tr>
 		</table>
 	</xsl:template>
-
+	<xsl:template mode="casParams" match="casLogin" priority="10"></xsl:template>
+	<xsl:template mode="casParams" match="*">&amp;<xsl:value-of select="name(.)"/><xsl:if test="normalize-space(text())!=''">=<xsl:value-of select="text()"/></xsl:if></xsl:template>
 
 </xsl:stylesheet>
 

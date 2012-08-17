@@ -16,6 +16,11 @@
   		<property name="accessDecisionManager" ref="accessDecisionManager"/>
 		<property name="securityMetadataSource">
 			<sec:filter-security-metadata-source use-expressions="true"  request-matcher="regex">
+		        <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
+		        <sec:intercept-url pattern="/.*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
+		        <sec:intercept-url pattern="/srv/.+/login.form(|!)" access="permitAll"></sec:intercept-url>
+		        <sec:intercept-url pattern="/srv/.+/.+\?casLogin.*" access="hasRole('RegisteredUser')"></sec:intercept-url>
+
 		        <sec:intercept-url pattern="/srv/.*/group.remove(|!).*" access="hasRole('Administrator')"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/group.update(|!).*" access="hasRole('Administrator')"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/category.remove(|!).*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -355,10 +360,6 @@
 		        <sec:intercept-url pattern="/srv/.*/metadata.formatter.xml(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/metadata.formatter.list(|!).*" access="permitAll"></sec:intercept-url>
-		        <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
-		        <sec:intercept-url pattern="/.*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
-		        <sec:intercept-url pattern="/.*login.form(|!)" access="permitAll"></sec:intercept-url>
-		        <sec:intercept-url pattern="/.*\?casLogin" access="hasRole('RegisteredUser')"></sec:intercept-url>
 		        <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
 			</sec:filter-security-metadata-source>
 		</property>
