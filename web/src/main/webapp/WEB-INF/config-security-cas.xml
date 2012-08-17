@@ -46,6 +46,7 @@
 				<entry key-ref="serviceProperties" value="service" />
 				<entry key-ref="casTicketValidator" value="proxyCallbackUrl" />
 				<entry key-ref="casFilter" value="proxyReceptorUrl" />
+				<entry key-ref="logoutSuccessHandler" value="defaultTargetUrl" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -102,7 +103,7 @@
 	<bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" /> 
 	<!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->
 	<bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<constructor-arg value="${cas.logout.url}" />
+		<constructor-arg ref="logoutSuccessHandler" />
 		<constructor-arg>
 			<array>
 				<bean class="jeeves.config.springutil.LogoutUserSessionHandler" />
@@ -112,7 +113,7 @@
 		<property name="filterProcessesUrl" value="/j_spring_security_logout" />
 	</bean>
 	<bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
-    	<property name="defaultTargetUrl" value="${cas.logout.success.url}"></property>
+    	<property name="defaultTargetUrl" value="${cas.logout.url}"></property>
     </bean>
 	<bean id="casStatelessTicketCache"
 		class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">

@@ -23,15 +23,22 @@
 
 package org.fao.geonet.services.main;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -41,14 +48,8 @@ import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
@@ -108,8 +109,9 @@ public class Info implements Service
 			if (!name.equals("type"))
 				throw new BadParameterEx(name, type);
 
-			if (type.equals("site"))
+			if (type.equals("site")) {
 				result.addContent(gc.getSettingManager().get("system", -1));
+			}
 
 			else if (type.equals("inspire"))
 				result.addContent(gc.getSettingManager().get("system/inspire", -1));
@@ -143,7 +145,10 @@ public class Info implements Service
 
 			else if (type.equals("me"))
 				result.addContent(getMyInfo(context));
-
+			
+			else if (type.equals("auth"))
+				result.addContent(getAuth(context));
+			
 			else
 				throw new BadParameterEx("type", type);
 		}
@@ -152,6 +157,16 @@ public class Info implements Service
 
 		return Xml.transform(result, xslPath +"/info.xsl");
 	}
+
+	private Element getAuth(ServiceContext context) {
+		Element auth = new Element("auth");
+		Element cas = new Element("casEnabled").setText(Boolean.toString(XslUtil.isCasEnabled()));
+		auth.addContent(cas);
+
+		return auth;
+	}
+
+	
 
 	//--------------------------------------------------------------------------
 	//---

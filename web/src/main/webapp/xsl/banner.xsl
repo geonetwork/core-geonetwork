@@ -154,7 +154,7 @@
 					<xsl:otherwise>
 						<td align="right" class="banner-login">
 							<xsl:choose>
-								<xsl:when test="java:existsBean('casEntryPoint')">
+								<xsl:when test="java:isCasEnabled()">
 									<xsl:variable name="casparams">
 										<xsl:apply-templates mode="casParams" select="root/request/*"></xsl:apply-templates>
 									</xsl:variable>

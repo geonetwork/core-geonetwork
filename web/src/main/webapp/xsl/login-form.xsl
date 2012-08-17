@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="#all">
 
 	<xsl:include href="main.xsl" />
 
 	<xsl:template name="content">
 		<xsl:choose>
+			<xsl:when test="string(/root/gui/session/userId)!='' and java:isCasEnabled()">
+				<script type="text/javascript">
+					window.close();
+				</script>
+			</xsl:when>
 			<xsl:when test="string(/root/gui/session/userId)!=''">
 				<script type="text/javascript">
 					window.location = '<xsl:value-of select="/root/gui/url"/>';

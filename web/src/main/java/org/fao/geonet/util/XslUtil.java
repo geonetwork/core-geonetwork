@@ -64,6 +64,9 @@ public final class XslUtil
         return result;
     }
     
+    public static boolean isCasEnabled() {
+    	return existsBean("casEntryPoint");
+    }
     /** 
      * Check if bean is defined in the context
      * 

@@ -224,6 +224,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     selectedRecords: 0,
     
+    /**
+     * private: property[casEnabled]
+     *  ``Boolean``	If is cas is the authentication
+     *  mechanism. getInfo will set this property
+     */
+    casEnabled : false,
+    
     /** private: method[constructor]
      *  Initializes the catalogue connection configuration
      *  and service URL.
@@ -338,7 +345,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getRegions: serviceUrl + 'xml.info?type=regions',
             getSources: serviceUrl + 'xml.info?type=sources',
             getUsers: serviceUrl + 'xml.info?type=users',
-            getSiteInfo: serviceUrl + 'xml.info?type=site',
+            getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth',
             getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             getIsoLanguages: serviceUrl + 'isolanguages',
             schemaInfo: serviceUrl + 'xml.schema.info',
@@ -482,11 +489,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     /** api: method[getInfo]
      *  
-     *  Return catalogue information (site name, organization, id).
+     *  Return catalogue information (site name, organization, id, casEnabled).
      */
     getInfo: function(){
         var info = {};
-        var properties = ['name', 'organization', 'siteId'];
+        var properties = ['name', 'organization', 'siteId', 'casEnabled'];
         var request = OpenLayers.Request.GET({
             url: this.services.getSiteInfo,
             async: false
@@ -501,6 +508,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             });
         }
+        this.casEnabled = info.casEnabled === 'true';
         return info;
     },
     /** api: method[getInspireInfo]
@@ -1100,21 +1108,39 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     login: function(username, password){
         var app = this, user;
-		OpenLayers.Request.POST({
-		    url: this.services.login,
-		    data: OpenLayers.Util.getParameterString({username: username,password: password}),
-		    headers: {
-		        "Content-Type": "application/x-www-form-urlencoded"
-		    },
-            success: function(response){
-            	app.isLoggedIn();  // will get the user information and trigger after login event
-            },
-            failure: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterBadLogin();
-                // TODO : Get Exception from GeoNetwork
-            }
-        });
+    	var intervalID;
+    	var loginAttempts = 0;
+    	var loginWindow;
+        if (this.casEnabled) {
+        	loginWindow = window.open(this.URL+'/srv/'+this.LANG+'/login.form?casLogin', '_casLogin', 'menubar=no,location=no,toolbar=no', true);
+        	intervalID = setInterval(function (){
+        		loginAttempts += 1;
+        		if(loginAttempts > (5*60*2)) {
+        			clearInterval (intervalID);
+        			app.identifiedUser = undefined;
+	                app.onAfterBadLogin();
+        		} else if(loginWindow.closed) {
+        			clearInterval (intervalID);
+        			app.isLoggedIn();
+        		}
+        	}, 500);
+        } else {
+			OpenLayers.Request.POST({
+			    url: this.services.login,
+			    data: OpenLayers.Util.getParameterString({username: username,password: password}),
+			    headers: {
+			        "Content-Type": "application/x-www-form-urlencoded"
+			    },
+	            success: function(response){
+	            	app.isLoggedIn();  // will get the user information and trigger after login event
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogin();
+	                // TODO : Get Exception from GeoNetwork
+	            }
+	        });
+        }
     },
     /**	api: method[logout]
      *	Log out from the catalogue.
@@ -1122,18 +1148,22 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Fires the afterLogout or afterBadLogout events
      */
     logout: function(){
-        var app = this;
-        OpenLayers.Request.GET({
-            url: this.services.logout,
-            success: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterLogout();
-            },
-            failure: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterBadLogout();
-            }
-        });
+    	if (this.casEnabled) {
+        	window.location = this.services.logout;
+        } else {
+	        var app = this;
+	        OpenLayers.Request.GET({
+	            url: this.services.logout,
+	            success: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterLogout();
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogout();
+	            }
+	        });
+        }
     },
     /** api: method[checkError]
      *  Check if catalogue started correctly
