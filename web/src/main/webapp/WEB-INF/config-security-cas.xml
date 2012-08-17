@@ -104,9 +104,12 @@
 	<bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<constructor-arg value="${cas.logout.url}" />
 		<constructor-arg>
-			<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+			<array>
+				<bean class="jeeves.config.springutil.LogoutUserSessionHandler" />
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+			</array>
 		</constructor-arg>
-		<property name="filterProcessesUrl" value="/j_spring_cas_security_logout" />
+		<property name="filterProcessesUrl" value="/j_spring_security_logout" />
 	</bean>
 	<bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
     	<property name="defaultTargetUrl" value="${cas.logout.success.url}"></property>

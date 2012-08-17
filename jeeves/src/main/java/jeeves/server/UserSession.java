@@ -69,7 +69,7 @@ public class UserSession
 	/**
 	 * @param sHttpSession the sHttpSession to set
 	 */
-	public void setsHttpSession(HttpSession sHttpSession) {
+	public void setsHtṯpSession(HttpSession sHttpSession) {
 		this.sHttpSession = sHttpSession;
 	}
 
@@ -103,9 +103,11 @@ public class UserSession
      * Clears user session properties and authentication.
      */
     public void clear() {
-        htProperties = new Hashtable(10, .75f);
+        htProperties.clear();
        	SecurityContextHolder.clearContext();
-       	sHttpSession.invalidate();
+       	if(sHttpSession != null) {
+       		sHttpSession.invalidate();
+       	}
     }
 
 	//--------------------------------------------------------------------------

@@ -244,8 +244,6 @@
 		        <sec:intercept-url pattern="/srv/.*/metadata.show.embedded(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/remote.show(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/rating.popup(|!).*" access="permitAll"></sec:intercept-url>
-		        <sec:intercept-url pattern="/srv/.*/user.login(|!).*" access="permitAll"></sec:intercept-url>
-		        <sec:intercept-url pattern="/srv/.*/user.logout(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/shib.user.login(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/user.privileges.error(|!).*" access="permitAll"></sec:intercept-url>
 		        <sec:intercept-url pattern="/srv/.*/res(|!).*" access="permitAll"></sec:intercept-url>
