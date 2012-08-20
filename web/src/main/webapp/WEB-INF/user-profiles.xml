@@ -1,5 +1,5 @@
 <profiles>
-	<profile name="Developer" extends="Administrator"/>
+    <profile name="Developer" extends="Administrator"></profile>
     <profile extends="UserAdmin,Monitor" name="Administrator"></profile>
     <profile extends="Reviewer" name="UserAdmin"></profile>
     <profile extends="Editor" name="Reviewer"></profile>

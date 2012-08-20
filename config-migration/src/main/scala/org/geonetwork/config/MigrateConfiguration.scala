@@ -7,71 +7,63 @@ import scala.xml._
 import org.apache.commons.io.IOUtils
 import scala.xml.transform.RewriteRule
 import java.io.FileWriter
+import scalax.io.Resource.fromFile
 
 class MigrateConfiguration {
-  def migrate(configDir: String, throwException: Boolean) = {
-    migrateUserProfiles(configDir,throwException)
+  def migrate(webInfDir:String, configDir: String, throwException: Boolean) = {
+    migrateUserProfiles(webInfDir, configDir,throwException)
   }
   
-  def migrateUserProfiles(configDir: String, throwException: Boolean) = {
+  def migrateUserProfiles(webInfDir:String, configDir: String, throwException: Boolean) = {
     val userProfiles = new File(configDir, "user-profiles.xml")
-    val springSecFile = new File(configDir, "config-security.xml") 
-    if (!springSecFile.exists() && userProfiles.exists) {
+    val configSecurityMappingFile = new File(configDir, "config-security-mapping.xml")
+    if (!configSecurityMappingFile.exists() && userProfiles.exists) {
       val original = XML.loadFile(userProfiles)
       userProfiles.renameTo(new File(configDir,"user-profiles-old.xml"))
       
       val springSecXml =
-<beans xmlns:sec="http://www.springframework.org/schema/security"
-    xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
 
-    <!-- <sec:debug/> -->
-    <sec:http pattern="/apps/**" security="none" create-session="stateless"/>
-    <sec:http pattern="/" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/*.html" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/*.jsp" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/*.css" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/images/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/htmlcache/**" create-session="stateless" security="none"></sec:http>
-    <sec:http pattern="/scripts/**" create-session="stateless" security="none"></sec:http>
-      <sec:http pattern="/pdf/**" create-session="stateless" security="none"></sec:http>
-      <sec:http pattern="/loc/**" create-session="stateless" security="none"></sec:http>
+	<bean id="filterSecurityInterceptor"
+		class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+  		<property name="authenticationManager" ref="authenticationManager"/>
+  		<property name="accessDecisionManager" ref="accessDecisionManager"/>
+		<property name="securityMetadataSource">
+			<sec:filter-security-metadata-source use-expressions="true"  request-matcher="regex">
+		        <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
+		        <sec:intercept-url pattern="/.*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
+		        <sec:intercept-url pattern="/srv/.+/login.form(|!)" access="permitAll"></sec:intercept-url>
+		        <sec:intercept-url pattern="/srv/.+/.+\?casLogin.*" access="hasRole('RegisteredUser')"></sec:intercept-url>
 
-    <sec:http use-expressions="true" realm="Geonetwork" request-matcher="regex">
-        <sec:form-login password-parameter="password" username-parameter="username" login-page="/srv/eng/home"/>
-        <sec:http-basic />
-        <sec:logout delete-cookies="JSESSIONID"></sec:logout>
-        <!-- <sec:remember-me /> -->
-        <sec:session-management invalid-session-url="/index.html">
-            <sec:concurrency-control max-sessions="1" error-if-maximum-exceeded="false" />
-        </sec:session-management>
-
-        {(original \ "profile") map interceptUrls }
-        <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
-        <sec:intercept-url pattern="/.+healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
-        <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
-    </sec:http>
-
-    <sec:authentication-manager>
-        <sec:authentication-provider ref="geonetworkAuthenticationProvider"/>
-    </sec:authentication-manager>
-
-    <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
-    <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
-        <constructor-arg value="SHA-256"></constructor-arg>
-        <constructor-arg value="secret-hash-salt="></constructor-arg>
+                {(original \ "profile") map interceptUrls }
+            </sec:filter-security-metadata-source>
+      	</property>
     </bean>
-    <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider"/>
 </beans>
 
-      write(springSecFile, springSecXml)
+      write(configSecurityMappingFile, springSecXml)
       write(userProfiles, <profiles><profile name="Developer" extends="Administrator"/>{original \ "profile" map { _.asInstanceOf[Elem].copy(child=Nil)}}</profiles>)
+      copy(webInfDir, configDir, "config-security.xml")
+      copy(webInfDir, configDir, "config-security-ldap.xml")
+      copy(webInfDir, configDir, "config-security-cas.xml")
+      copy(webInfDir, configDir, "config-security-cas-ldap.xml")
+      copy(webInfDir, configDir, "config-security-cas-database.xml")
+      copy(webInfDir, configDir, "config-security-cas-database.xml")
     }
   }
-
+  def copy(webInfDir:String, configDir:String, fileName:String) {
+    val from = fromFile(new File(webInfDir, fileName))
+    val to = fromFile(new File(configDir, fileName))
+    to write from.byteArray
+  }
   def write(file: File, xml: Node) = {
     val out = new FileWriter(file)
     try {
