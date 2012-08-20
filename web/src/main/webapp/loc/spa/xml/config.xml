@@ -132,22 +132,7 @@
 
 	<authentication>Autenticación</authentication>
 	
-	<loginuses>Usar Login</loginuses>
 	<otherlogins>Permitir a otros usuarios hacer login usando</otherlogins>
-
-	<geonetworkdb>GeoNetwork Autenticación</geonetworkdb>
-		
-	<ldap>LDAP Autenticación</ldap>
-	<defProfile>Default profile</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
-	<profile>Profile</profile>
 
 	<shib>Shibboleth Autenticación</shib>
 	<path>Path</path>

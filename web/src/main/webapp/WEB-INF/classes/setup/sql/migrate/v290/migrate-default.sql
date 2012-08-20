@@ -5,5 +5,13 @@ UPDATE Users SET security='update_hash_required';
 
 ALTER TABLE Users ALTER COLUMN password varchar(120) not null;
 
+-- Delete LDAP settings
+DELETE FROM Settings WHERE parentid=86;
+DELETE FROM Settings WHERE parentid=87;
+DELETE FROM Settings WHERE parentid=89;
+DELETE FROM Settings WHERE parentid=80;
+DELETE FROM Settings WHERE id=80;
+
+
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

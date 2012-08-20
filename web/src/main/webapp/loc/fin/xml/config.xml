@@ -119,23 +119,7 @@
 		
 	<authentication>Autentikointi</authentication>
 	
-	<loginuses>Kirjautuminen</loginuses>
 	<otherlogins>Salli muiden käyttäjien kirjautua</otherlogins>
-
-	<geonetworkdb>GeoNetwork-autentikointi</geonetworkdb>
-	
-	<metadataPrivs>Metadata privileges</metadataPrivs>
-	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
-	<ldap>LDAP</ldap>
-	<defProfile>Default profile</defProfile>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
-	<profile>Profile</profile>
 
 	<shib>Shibboleth</shib>
 	<path>Osoite</path>

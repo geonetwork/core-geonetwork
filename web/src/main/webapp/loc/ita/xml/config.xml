@@ -129,25 +129,7 @@
 		<dir>Directory</dir>
 	<authentication>Autenticazione</authentication>
 	
-	<loginuses>Utilizza Login</loginuses>
 	<otherlogins>Permetti agli utenti di effettuare il login da</otherlogins>
-
-	<geonetworkdb>Autenticazione di GeoNetwork</geonetworkdb>
-		
-	<ldap>Autenticazione LDAP</ldap>
-	<defProfile>Profilo predefinito</defProfile>
-	<uidAttr>Attributo Uid</uidAttr>
-	<login>Login</login>
-	<userDN>Utente DN</userDN>
-	<distNames>Nomi distinti</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Utenti</usersDN>
-	<userAttribs>Attributi dell'utente</userAttribs>
-	<name>Nome</name> <!-- (?) not in EN file-->
-	<password>Password</password>
-	<profile>Profilo</profile>
-	<group>Gruppo</group>
-	<defGroup>Gruppo di default</defGroup>
 
 	<shib>Shibboleth</shib>
 	<path>Percorso</path>

@@ -132,24 +132,7 @@
 
 	<authentication>Autenticação</authentication>
 	
-	<loginuses>Login usa</loginuses>
 	<otherlogins>Permitir outros utilizadores de iniciar uma sessão de</otherlogins>
-
-	<geonetworkdb>Autenticação GeoNetwork</geonetworkdb>
-		
-	<ldap>Autenticação LDAP</ldap>
-	<defProfile>Perfil pré-definido</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
-	<login>Iniciar sessão</login>
-	<userDN>DN de utilizador</userDN>
-	<distNames>Nomes distintos</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Utilizadores</usersDN>
-	<userAttribs>Atributos dos utilizadores</userAttribs>
-	<password>Palavra-passe</password>
-	<profile>Perfil</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
 
 	<shib>Autenticação Shibboleth</shib>
 	<path>Caminho</path>

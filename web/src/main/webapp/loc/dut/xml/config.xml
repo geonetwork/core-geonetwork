@@ -132,24 +132,7 @@
 		
 	<authentication>Authentication</authentication>
 	
-	<loginuses>Login gebruikt</loginuses>
 	<otherlogins>Sta andere gebruikers toe om in te loggen via</otherlogins>
-
-	<geonetworkdb>GeoNetwork Authenticatie</geonetworkdb>
-		
-	<ldap>LDAP Authenticatie</ldap>
-	<defProfile>Standaard profiel</defProfile>
-    <uidAttr>Uid attribuut</uidAttr>
-	<login>Login</login>
-	<userDN>Gebruiker DN</userDN>
-	<distNames>Gedist. Namen</distNames>
-	<baseDN>Basis</baseDN>
-	<usersDN>Gebruikers</usersDN>
-	<userAttribs>Gebruikers eigenschappen</userAttribs>
-	<password>Wachtwoord</password>
-	<profile>Profiel</profile>
-    <group>Groep</group>
-    <defGroup>Standaard groep</defGroup>
 
 	<shib>Shibboleth Authenticatie</shib>
 	<path>Locatie</path>

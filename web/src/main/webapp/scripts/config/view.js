@@ -53,14 +53,6 @@ function ConfigView(strLoader)
 
 		{ id:'removedMd.dir', type:'length', minSize :0,  maxSize :200 },
 		
-		{ id:'ldap.host',         type:'length',   minSize :0, maxSize :200 },
-		{ id:'ldap.host',         type:'hostname' },
-		{ id:'ldap.port',         type:'integer',  minValue:80, maxValue:65535, empty:true },		
-		{ id:'ldap.baseDN',       type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.usersDN',      type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 },
-        { id:'ldap.uidAttr',      type:'length',  minSize :1,  maxSize :20 },
-
 		{ id:'shib.path',              type:'length',   minSize :0, maxSize :256 },
 		{ id:'shib.attrib.username',   type:'length',   minSize :0, maxSize :150 },
 		{ id:'shib.attrib.surname',    type:'length',   minSize :0, maxSize :150 },
@@ -77,10 +69,6 @@ function ConfigView(strLoader)
 
 	this.indexOptimizerShower = new Shower('indexoptimizer.enable', 'indexoptimizer.subpanel');
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
-
-	var targetIds = ['ldap.subpanel', 'geonetworkdb.subpanel'];
-	this.ldapShower  = new RadioShower('ldap.use',     'ldap.subpanel', targetIds);
-	this.geonetworkdbShower  = new RadioShower('geonetworkdb.use',     'geonetworkdb.subpanel', targetIds);
 
 	this.shibShower  = new Shower('shib.use',     'shib.subpanel');
     this.inspireShower  = new Shower('inspire.enable',     'inspire.subpanel');
@@ -254,18 +242,6 @@ ConfigView.prototype.setData = function(data)
 	
 	$('removedMd.dir').value = data['REMOVEDMD_DIR'];
 
-	$('ldap.use')       .checked = data['LDAP_USE'] == 'true';
-	$('ldap.host')        .value = data['LDAP_HOST'];
-	$('ldap.port')        .value = data['LDAP_PORT'];
-	$('ldap.defProfile')  .value = data['LDAP_DEF_PROFILE'];
-    $('ldap.uidAttr')     .value = data['LDAP_ATTR_UID'];
-	$('ldap.baseDN')      .value = data['LDAP_DN_BASE'];
-	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
-	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
-	$('ldap.profileAttr') .value = data['LDAP_ATTR_PROFILE'];
-	$('ldap.groupAttr') .value = data['LDAP_ATTR_GROUP'];
-    $('ldap.defGroup')  .value = data['LDAP_DEF_GROUP'];
-
 	$('shib.use')           .checked = data['SHIB_USE'] == 'true';
 	$('shib.path')            .value = data['SHIB_PATH'];
 	$('shib.attrib.username') .value = data['SHIB_ATTRIB_USERNAME'];
@@ -275,17 +251,13 @@ ConfigView.prototype.setData = function(data)
     $('shib.attrib.group')    .value = data['SHIB_ATTRIB_GROUP'];
     $('shib.defGroup')  .value = data['SHIB_DEF_GROUP'];
 
-	$('geonetworkdb.use').checked = data['LDAP_USE'] != 'true';
-
-	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true' && data['LDAP_USE'] != 'true';
+	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true';
 
 	this.z3950Shower.update();
 	this.indexOptimizerShower.update();
 	this.proxyShower.update();
-	this.ldapShower.update();
 	this.shibShower.update();
-	this.geonetworkdbShower.update();
-    this.inspireShower.update();
+	this.inspireShower.update();
 
     if (!$('inspire.enable').checked) {
 	    $('metadata.enableInspireView').checked = false;
@@ -383,18 +355,6 @@ ConfigView.prototype.getData = function()
 
 		REMOVEDMD_DIR : $('removedMd.dir').value,
 		
-		LDAP_USE           : $('ldap.use').checked,
-		LDAP_HOST          : $F('ldap.host'),
-		LDAP_PORT          : $F('ldap.port'),
-		LDAP_DEF_PROFILE   : $F('ldap.defProfile'),
-        LDAP_ATTR_UID      : $F('ldap.uidAttr'),                
-		LDAP_DN_BASE       : $F('ldap.baseDN'),
-		LDAP_DN_USERS      : $F('ldap.usersDN'),
-		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
-		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr'),
-        LDAP_ATTR_GROUP    : $F('ldap.groupAttr'),
-        LDAP_DEF_GROUP    : $F('ldap.defGroup'),
-
 		SHIB_USE              : $('shib.use').checked,
 		SHIB_PATH             : $('shib.path').value,
 		SHIB_ATTRIB_USERNAME  : $('shib.attrib.username').value,
@@ -404,7 +364,7 @@ ConfigView.prototype.getData = function()
         SHIB_ATTRIB_GROUP     : $('shib.attrib.group').value,
         SHIB_DEF_GROUP    : $F('shib.defGroup'),
 
-		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked && $('geonetworkdb.use').checked
+		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked
 
 	}
 	
