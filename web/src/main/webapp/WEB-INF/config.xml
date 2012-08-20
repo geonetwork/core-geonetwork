@@ -358,22 +358,27 @@
 
 		<!-- The maximum number of writes in a transaction on the spatial index
 
+			Set to 1 forces the spatialIndexWriter to commit after each spatial
+			feature is written. Set to a large number and commits are delayed until
+			that number of spatial features is written. Be aware that setting this 
+			number to anything other than 1 can cause problems if the connection
+			to the database is closed (eg. if the db admin shuts the database
+			for maintenance reasons). There are also performance implications that  
+			are especially relevant to bulk loading records:
+
 			For the Apache Commons DBCP provider:
-			When using PostGIS on machines with fast/large pipe to disk, set
-			this number to 1 which means that the auto_commit transaction is
-			used. Also if having a long running transaction causes issues eg.
-			when database connections are reset by a firewall then set this
-			number to 1
+			Set this number to 1 for best performance. This is kind of counter 
+			intuitive so if you have a different experience please pass it on as
+			a documentation fix.
 
 			For the JNDI database provider:
-			Set this number to something large eg. 1000  - setting this number
-			to 1 (=auto_commit) with a JNDI provider will cause database
-			connections involving the spatialindexwriter to be left open due
-			to what appears to be a bug in the GeoTools feature store when
-			using the auto_commit transaction. Curiously the
-			JNDI provider with maxWritesInTransaction set to 1000 is actually
-			faster to load and index records than ApacheDBCP provider
-			with PostgisDataStoreFactory and maxWritesInTransaction set to 1 -->
+			Set this number to something large eg. 1000 - the JNDI provider
+			is actually faster to load and index records with this setting than 
+			if it is set to 1. This is what you would expect but you
+			may have problems that will require you to restart GeoNetwork and 
+			reindex some or all of your metadata if the database connection is 
+			interrupted.
+		-->
 		<param name="maxWritesInTransaction" value="1000" />
 
 		<param name="useSubversion" value="true"/>
