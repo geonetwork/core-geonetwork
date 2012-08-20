@@ -944,7 +944,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="login.form">
-			<output page="login-form.xsl"/>
+			<output sheet="login-form.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -957,13 +957,6 @@
 			<error id="user-login" sheet="error.xsl" statusCode="401">
 				<xml name="error" file="xml/login-error.xml" />
 			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.logout">
-			<class name=".services.login.Logout" />
-			<output forward="home" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

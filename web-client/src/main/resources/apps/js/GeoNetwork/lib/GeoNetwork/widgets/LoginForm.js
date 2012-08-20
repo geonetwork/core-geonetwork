@@ -190,9 +190,13 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
      */
     login: function(cat, user){
         var status = user ? true : false;
-        
+        var loginForm = this; 
         Ext.each(this.toggledFields, function(item) {
-        	item.setVisible(!status);
+        	var visible = !status;
+        	if (item == loginForm.password || item == loginForm.username) {
+        		visible = visible && !cat.casEnabled
+        	}
+        	item.setVisible(visible);
         });
         Ext.each(this.toggledFieldsOff, function(item) {
         	item.setVisible(status);

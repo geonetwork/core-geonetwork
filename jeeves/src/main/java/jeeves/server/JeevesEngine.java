@@ -174,7 +174,7 @@ public class JeevesEngine
 			 profileManager.setApplicationContext(jeevesAppContext);
 			 jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
 			 jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
-
+		
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
 

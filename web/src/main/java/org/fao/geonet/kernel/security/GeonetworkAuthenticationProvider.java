@@ -1,7 +1,5 @@
 package org.fao.geonet.kernel.security;
 
-import java.sql.SQLException;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
@@ -19,11 +17,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
-	implements ApplicationContextAware {
+	implements ApplicationContextAware, UserDetailsService {
 
 	private ApplicationContext applicationContext;
 	private PasswordEncoder encoder;
@@ -57,10 +56,12 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			Element selectRequest = dbms.select("SELECT * FROM Users WHERE username=? AND authtype IS NULL", username);
 			Element userXml = selectRequest.getChild("record");
 			if (userXml != null) {
-				String oldPassword = authentication.getCredentials().toString();
-				Integer iUserId = new Integer(userXml.getChildText(Geonet.Elem.ID));
-				if(PasswordUtil.hasOldHash(userXml)) {
-					userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
+				if (authentication != null) {
+					String oldPassword = authentication.getCredentials().toString();
+					Integer iUserId = new Integer(userXml.getChildText(Geonet.Elem.ID));
+					if(PasswordUtil.hasOldHash(userXml)) {
+						userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
+					}
 				}
 
 				ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
@@ -95,6 +96,12 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			throws BeansException {
 		this.applicationContext = applicationContext; 
 		this.encoder = (PasswordEncoder) applicationContext.getBean(PasswordUtil.ENCODER_ID);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username)
+			throws UsernameNotFoundException {
+		return retrieveUser(username, null);
 	}
 
 }

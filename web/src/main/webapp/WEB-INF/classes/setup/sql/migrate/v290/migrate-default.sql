@@ -14,5 +14,13 @@ ALTER TABLE Users ALTER COLUMN password varchar(120) not null;
 -- Add current user profile to all its groups
 UPDATE usergroups SET profile = (SELECT profile from users WHERE id = userid);
 
+-- Delete LDAP settings
+DELETE FROM Settings WHERE parentid=86;
+DELETE FROM Settings WHERE parentid=87;
+DELETE FROM Settings WHERE parentid=89;
+DELETE FROM Settings WHERE parentid=80;
+DELETE FROM Settings WHERE id=80;
+
+
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

@@ -9,13 +9,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           xmlns:ctx="http://www.springframework.org/schema/context"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
           xmlns="http://www.springframework.org/schema/beans">
-     <!-- <sec:debug/> -->
-    <import resource="config-security-core.xml"/>
-    <import resource="config-security-mapping.xml"/>
-    <import resource="config-security-ldap.xml"/>
-    <!-- <import resource="config-security-cas.xml"/>
-    <import resource="config-security-cas-ldap.xml"/> -->
-    <!-- <import resource="config-security-cas-database.xml"/> -->
-    <ctx:property-placeholder location="WEB-INF/config.properties"/>
 
+	<alias name="geonetworkAuthenticationProvider" alias="casUserService"/>
 </beans>

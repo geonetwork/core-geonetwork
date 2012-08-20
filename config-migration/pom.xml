@@ -56,6 +56,11 @@
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
     </dependency>
+	<dependency>
+		<groupId>com.github.scala-incubator.io</groupId>
+		<artifactId>scala-io-core_${scala.version}</artifactId>
+		<version>0.4.1-seq</version>
+	</dependency>
   </dependencies>
 
   <build>

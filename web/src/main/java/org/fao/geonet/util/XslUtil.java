@@ -63,6 +63,23 @@ public final class XslUtil
         String result = src.toString().replaceAll(pattern.toString(), substitution.toString());
         return result;
     }
+    
+    public static boolean isCasEnabled() {
+    	return existsBean("casEntryPoint");
+    }
+    /** 
+     * Check if bean is defined in the context
+     * 
+     * @param beanId id of the bean to look up
+     */
+    public static boolean existsBean(String beanId) {
+    	ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+    	ServletContext servletContext = serviceContext.getServlet().getServletContext();
+    	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+    	if(springContext == null) return true;
+    	return springContext.containsBean(beanId);
+    }
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then
      * the methods will return true.  So only use to show url links, not check if a user has access

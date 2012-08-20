@@ -129,44 +129,8 @@
 		<dir>Directory</dir>
 	<authentication>Autenticazione</authentication>
 	
-	<loginuses>Utilizza Login</loginuses>
 	<otherlogins>Permetti agli utenti di effettuare il login da</otherlogins>
 
-	<geonetworkdb>Autenticazione di GeoNetwork</geonetworkdb>
-		
-	<ldap>Autenticazione LDAP</ldap>
-	<defProfile>Profilo predefinito</defProfile>
-	<uidAttr>Attributo Uid</uidAttr>
-	<login>Login</login>
-	<userDN>Utente DN</userDN>
-	<distNames>Nomi distinti</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Utenti</usersDN>
-	<userAttribs>Attributi dell'utente</userAttribs>
-	<name>Nome</name> <!-- (?) not in EN file-->
-	<password>Password</password>
-	<profile>Profilo</profile>
-	<group>Gruppo</group>
-	<defGroup>Gruppo di default</defGroup>
-	<subtree>Search Subtree</subtree>
-	<bindInfo>LDAP Bind Credentials</bindInfo>
-	<anonBind>Anonymous Bind</anonBind>
-	<bindDN>Bind DN</bindDN>
-	<bindPW>Bind Password</bindPW>
-	
-	<tip id="ldap.anonBind">
-		If set, the server does not need a valid set of credentials to connect to LDAP.
-	</tip>
-	<tip id="ldap.bindDN">
-		A valid user to use on initial connection to LDAP.
-	</tip>
-	<tip id="ldap.bindPW">
-		Password to use for initial connection to LDAP.
-	</tip>
-	<tip id="ldap.subtree">
-		When set, searches for users in the entire subtree rooted at the location specified by the distinguished names.
-	</tip>
-	
 	<shib>Shibboleth</shib>
 	<path>Percorso</path>
 	<attributes>Mappaggio attributi Shibboleth</attributes>

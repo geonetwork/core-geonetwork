@@ -63,7 +63,7 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
 		String configPath = appPath + "WEB-INF" + File.separator;
 
 		// migrate from old configuration to new spring configuration if needed
-		new MigrateConfiguration().migrate(configPath, true);
+		new MigrateConfiguration().migrate(configPath, configPath, true);
 		
 		super.contextInitialized(event);
 		Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());

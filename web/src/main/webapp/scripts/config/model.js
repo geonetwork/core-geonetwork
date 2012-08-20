@@ -96,22 +96,6 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port'),
 			REMOVEDMD_DIR     : xml.evalXPath(node, 'removedMetadata/dir'),
 
-			LDAP_USE          : xml.evalXPath(node, 'ldap/use'),
-			LDAP_HOST         : xml.evalXPath(node, 'ldap/host'),
-			LDAP_PORT         : xml.evalXPath(node, 'ldap/port'),
-			LDAP_DEF_PROFILE  : xml.evalXPath(node, 'ldap/defaultProfile'),
-            LDAP_ATTR_UID     : xml.evalXPath(node, 'ldap/uidAttr'),
-			LDAP_DN_BASE      : xml.evalXPath(node, 'ldap/distinguishedNames/base'),
-			LDAP_DN_USERS     : xml.evalXPath(node, 'ldap/distinguishedNames/users'),
-			LDAP_SUBTREE      : xml.evalXPath(node, 'ldap/distinguishedNames/subtree'),
-			LDAP_ANON_BIND    : xml.evalXPath(node, 'ldap/anonBind'),
-			LDAP_DN_BIND      : xml.evalXPath(node, 'ldap/bind/bindDn'),
-			LDAP_PW_BIND      : xml.evalXPath(node, 'ldap/bind/bindPw'),
-			LDAP_ATTR_NAME    : xml.evalXPath(node, 'ldap/userAttribs/name'),
-			LDAP_ATTR_PROFILE : xml.evalXPath(node, 'ldap/userAttribs/profile'),
-            LDAP_ATTR_GROUP   : xml.evalXPath(node, 'ldap/userAttribs/group'),
-            LDAP_DEF_GROUP    : xml.evalXPath(node, 'ldap/defaultGroup'),
-
 			SHIB_USE              : xml.evalXPath(node, 'shib/use'),
 			SHIB_PATH             : xml.evalXPath(node, 'shib/path'),
 			SHIB_ATTRIB_USERNAME  : xml.evalXPath(node, 'shib/attrib/username'),
@@ -262,29 +246,6 @@ ConfigModel.updateTemp =
 '	<removedMetadata>'+
 '		<dir>{REMOVEDMD_DIR}</dir>'+
 '	</removedMetadata>'+
-'	<ldap>'+
-'		<use>{LDAP_USE}</use>'+
-'		<host>{LDAP_HOST}</host>'+
-'		<port>{LDAP_PORT}</port>'+
-'		<defaultProfile>{LDAP_DEF_PROFILE}</defaultProfile>'+
-'		<defaultGroup>{LDAP_DEF_GROUP}</defaultGroup>'+
-'		<uidAttr>{LDAP_ATTR_UID}</uidAttr>'+        
-'		<distinguishedNames>'+
-'			<base>{LDAP_DN_BASE}</base>'+
-'			<users>{LDAP_DN_USERS}</users>'+
-'			<subtree>{LDAP_SUBTREE}</subtree>'+
-'		</distinguishedNames>'+
-'		<anonBind>{LDAP_ANON_BIND}</anonBind>'+
-'		<bind>'+
-'			<bindDn>{LDAP_DN_BIND}</bindDn>'+
-'			<bindPw>{LDAP_PW_BIND}</bindPw>'+
-'		</bind>'+
-'		<userAttribs>'+
-'			<name>{LDAP_ATTR_NAME}</name>'+
-'			<profile>{LDAP_ATTR_PROFILE}</profile>'+
-'			<group>{LDAP_ATTR_GROUP}</group>'+
-'		</userAttribs>'+
-'	</ldap>'+
 '	<shib>'+
 '		<use>{SHIB_USE}</use>'+
 '		<path>{SHIB_PATH}</path>'+

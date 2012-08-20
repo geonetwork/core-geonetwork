@@ -147,22 +147,38 @@
 							</form>
 						</td>
 					</xsl:when>
+					<xsl:when test="string(/root/gui/reqService) = 'login.form'">
+					<!-- let login page display fields -->
+					<td align="right" class="banner-login"></td>
+					</xsl:when>
 					<xsl:otherwise>
 						<td align="right" class="banner-login">
-							<form name="login" action="{/root/gui/url}/j_spring_security_check" method="post">
-								<xsl:if test="string(/root/gui/env/shib/use)='true'">
-									<a class="banner" href="{/root/gui/env/shib/path}">
-										<xsl:value-of select="/root/gui/strings/shibLogin"/>
+							<xsl:choose>
+								<xsl:when test="java:isCasEnabled()">
+									<xsl:variable name="casparams">
+										<xsl:apply-templates mode="casParams" select="root/request/*"></xsl:apply-templates>
+									</xsl:variable>
+									<a class="banner" href="{/root/gui/locService}/{/root/gui/reqService}?casLogin{$casparams}">
+										<xsl:value-of select="/root/gui/strings/login"/>
 									</a>
-									|
-								</xsl:if>
-								<input type="submit" style="display: none;" />
-								<xsl:value-of select="/root/gui/strings/username"/>
-								<input class="banner" type="text" id="username" name="username" size="10" onkeypress="return entSub('login')"/>
-								<xsl:value-of select="/root/gui/strings/password"/>
-								<input class="banner" type="password" id="password" name="password" size="10" onkeypress="return entSub('login')"/>
-								<button class="banner" onclick="goSubmit('login')"><xsl:value-of select="/root/gui/strings/login"/></button>
-							</form>
+								</xsl:when>
+								<xsl:otherwise>
+									<form name="login" action="{/root/gui/url}/j_spring_security_check" method="post">
+										<xsl:if test="string(/root/gui/env/shib/use)='true'">
+											<a class="banner" href="{/root/gui/env/shib/path}">
+												<xsl:value-of select="/root/gui/strings/shibLogin"/>
+											</a>
+											|
+										</xsl:if>
+										<input type="submit" style="display: none;" />
+										<xsl:value-of select="/root/gui/strings/username"/>
+										<input class="banner" type="text" id="username" name="username" size="10" onkeypress="return entSub('login')"/>
+										<xsl:value-of select="/root/gui/strings/password"/>
+										<input class="banner" type="password" id="password" name="password" size="10" onkeypress="return entSub('login')"/>
+										<button class="banner" onclick="goSubmit('login')"><xsl:value-of select="/root/gui/strings/login"/></button>
+									</form>
+								</xsl:otherwise>
+							</xsl:choose>
 						</td>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -200,7 +216,8 @@
 			</tr>
 		</table>
 	</xsl:template>
-
+	<xsl:template mode="casParams" match="casLogin" priority="10"></xsl:template>
+	<xsl:template mode="casParams" match="*">&amp;<xsl:value-of select="name(.)"/><xsl:if test="normalize-space(text())!=''">=<xsl:value-of select="text()"/></xsl:if></xsl:template>
 
 </xsl:stylesheet>
 
