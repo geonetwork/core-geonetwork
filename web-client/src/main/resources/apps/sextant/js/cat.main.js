@@ -70,18 +70,20 @@ cat.app = function() {
 			layout : 'hbox',
 			hideLoginLabels : GeoNetwork.hideLoginLabels
 		});
-
+		
+//		catalogue.on('afterBadLogin', loginAlert, this);
+		
 		// Store user info in cookie to be displayed if user reload the page
 		// Register events to set cookie values
 		catalogue.on('afterLogin', function() {
 			cookie.set('user', catalogue.identifiedUser);
-			Ext.getCmp('newMdAction').setVisible(catalogue.identifiedUser ? true : false);
-			Ext.getCmp('adminAction').setVisible(catalogue.identifiedUser ? true : false);
+//			Ext.getCmp('newMdAction').setVisible(catalogue.identifiedUser ? true : false);
+//			Ext.getCmp('adminAction').setVisible(catalogue.identifiedUser ? true : false);
 		});
 		catalogue.on('afterLogout', function() {
 			cookie.set('user', undefined);
-			Ext.getCmp('newMdAction').setVisible(false);
-			Ext.getCmp('adminAction').setVisible(false);
+//			Ext.getCmp('newMdAction').setVisible(false);
+//			Ext.getCmp('adminAction').setVisible(false);
 		});
 
 		// Refresh login form if needed
@@ -528,7 +530,9 @@ cat.app = function() {
 				metadataEditFn: edit,
 				metadataShowFn: showMD
 			});
-
+			
+			catalogue.getInfo();
+			
 			// Extra stuffs
 			infoPanel = createInfoPanel();
 			// helpPanel = createHelpPanel();
