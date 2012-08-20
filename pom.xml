@@ -548,6 +548,12 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-annotations</artifactId>
         <version>3.2.0.ga</version>
+        <exclusions>
+          <exclusion>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>javax.media</groupId>
