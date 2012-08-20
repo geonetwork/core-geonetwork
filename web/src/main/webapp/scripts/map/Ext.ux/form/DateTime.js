@@ -96,8 +96,10 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         var dateConfig = Ext.apply({}, {
              id:this.id + '-date'
             ,format:this.dateFormat || Ext.form.DateField.prototype.format
+            ,altFormats:this.dateAltFormats || Ext.form.DateField.prototype.altFormats
             ,width:this.timeWidth
             ,selectOnFocus:this.selectOnFocus
+            ,beforeBlur: function(){} // don't perform check on blur which may changes the value.
             ,listeners:{
                   blur:{scope:this, fn:this.onBlur}
                  ,focus:{scope:this, fn:this.onFocus}
@@ -106,11 +108,13 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         this.df = new Ext.form.DateField(dateConfig);
         this.df.ownerCt = this;
         delete(this.dateFormat);
+        delete(this.dateAltFormats);
 
         // create TimeField
         var timeConfig = Ext.apply({}, {
              id:this.id + '-time'
             ,format:this.timeFormat || Ext.form.TimeField.prototype.format
+            ,altFormats:this.timeAltFormats || Ext.form.DateField.prototype.altFormats
             ,width:this.timeWidth
             ,selectOnFocus:this.selectOnFocus
             ,listeners:{
@@ -121,6 +125,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         this.tf = new Ext.form.TimeField(timeConfig);
         this.tf.ownerCt = this;
         delete(this.timeFormat);
+        delete(this.timeAltFormats);
 
         // relay events
         this.relayEvents(this.df, ['focus', 'specialkey', 'invalid', 'valid']);
@@ -478,6 +483,8 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      * Sets the value of this field
      */
     ,setValue:function(val) {
+        var newDateVal=val;
+
         if(!val && true === this.emptyToNow) {
             this.setValue(new Date());
             return;
@@ -489,28 +496,65 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
             return;
         }
         if ('number' === typeof val) {
-          val = new Date(val);
+          newDateVal = new Date(newDateVal);
         }
         else if('string' === typeof val && this.hiddenFormat) {
-            val = Date.parseDate(val, this.hiddenFormat)
+            newDateVal = Date.parseDate(newDateVal, this.hiddenFormat);
         }
         val = val ? val : new Date(1970, 0 ,1, 0, 0, 0);
         var da, time;
-        if(val instanceof Date) {
-            this.setDate(val);
-            this.setTime(val);
-            this.dateValue = new Date(val);
+        if(newDateVal && newDateVal instanceof Date) {
+            this.setDate(newDateVal);
+            this.setTime(newDateVal);
+            this.dateValue = new Date(newDateVal);
         }
         else {
+            //Try to split the date into date/time if they can be parsed based on the supplied format then we will use it.
             da = val.split(this.dtSeparator);
-            this.setDate(da[0]);
-            if(da[1]) {
+            // Attempt to parse the date.
+            var d = Date.parseDate(da[0], this.df.format),
+                af = this.df.altFormats,
+                afa = this.df.altFormatsArray;
+
+            if (!d && af) {
+               afa = afa || af.split("|");
+
+               for (var i = 0, len = afa.length; i < len && !d; i++) {
+                   d = Date.parseDate(da[0], afa[i]);
+               }
+            }
+            // Attempt to parse the time
+            var t;
+            if (d && da[1]) {
                 if(da[2]) {
                     // add am/pm part back to time
                     da[1] += da[2];
                 }
-                this.setTime(da[1]);
+
+               da[1]=da[1];
+
+               t = Date.parseDate(da[1], this.tf.format);
+               var  af = this.tf.altFormats,
+                    afa = this.tf.altFormatsArray;
+ 
+               if (!t && af) {
+                  afa = afa || af.split("|");
+
+                  for (var i = 0, len = afa.length; i < len && !t; i++) {
+                      t = Date.parseDate(da[1], afa[i]);
+                  }
+               }
             }
+            // If we successfully parsed the date and time then lets set it.
+            if(d && t) {
+                this.setDate(da[0]);
+                this.setTime(da[1]);            }
+            else {
+                // This is a freeform date so lets null the value.
+                this.setDate('');
+                // Set the value in the superclass so the user can see it...
+                Ext.form.DateField.superclass.setValue.call(this.df, val);
+                }
         }
         this.updateValue();
     } // eo function setValue
@@ -549,16 +593,36 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
 
         var d = this.df.getValue();
         if(d) {
-            if(!(this.dateValue instanceof Date)) {
-                this.initDateValue();
-                if(!this.tf.getValue()) {
-                    this.setTime(this.dateValue);
+            var t = this.tf.getValue();
+            // If we parse the date and it does not look like the raw value then it is 
+            // most likely a freeform value so we will use it instead
+            // If there is a time then this does not apply.
+            if (this.df.formatDate(this.df.parseDate(d))!==this.df.getRawValue()) {
+                this.dateValue = this.df.getRawValue();
                 }
+            // If we have an existance of T then this should be a valid date.
+            if(!(this.dateValue instanceof Date) && t) {
+                if (d  instanceof Date)
+                    this.dateValue=d;
+                else
+                    this.initDateValue();
+                // Since the time exist in "t" lets make sure it did not change
+                if(!(t instanceof Date)) {
+                    t = Date.parseDate(t, this.tf.format);
+                }
+                this.dateValue.setHours(t.getHours());
+                this.dateValue.setMinutes(t.getMinutes());
+                this.dateValue.setSeconds(t.getSeconds());
+                // Now update the fields.
+                this.setDate(this.dateValue);
+                 this.setTime(this.dateValue)
+                }
+            if((this.dateValue instanceof Date)) {
+               this.dateValue.setMonth(0); // because of leap years
+               this.dateValue.setFullYear(d.getFullYear());
+               this.dateValue.setMonth(d.getMonth(), d.getDate());
+//               this.dateValue.setDate(d.getDate());
             }
-            this.dateValue.setMonth(0); // because of leap years
-            this.dateValue.setFullYear(d.getFullYear());
-            this.dateValue.setMonth(d.getMonth(), d.getDate());
-//            this.dateValue.setDate(d.getDate());
         }
         else {
             this.dateValue = '';
@@ -573,6 +637,11 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      */
     ,updateTime:function() {
         var t = this.tf.getValue();
+
+        // Need to call updateDate as this will make sure that the date is in the correct format.
+        if(t && t!== null && t.trim() != '' && !(this.dateValue instanceof Date) && t) {
+           this.updateDate();
+        }
         if(t && !(t instanceof Date)) {
             t = Date.parseDate(t, this.tf.format);
         }
@@ -601,7 +670,23 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
     ,updateHidden:function() {
         if(this.isRendered) {
             var value = this.dateValue instanceof Date ? this.dateValue.format(this.hiddenFormat) : '';
-            this.el.dom.value = value;
+            // If we only have a date without a time then lets assume it is a freeform. If the user is going to put a time then we will ensure it is in hiddenFormat
+            if    ((this.dateValue instanceof Date)
+                && this.df.getRawValue() !== null 
+                && this.tf.getRawValue() !== null 
+                && this.df.getRawValue().trim() !== '' 
+                && this.tf.getRawValue().trim() !== '') {
+                var value = this.dateValue instanceof Date ? this.dateValue.format(this.hiddenFormat) : '';
+                this.el.dom.value = value;
+            }
+            else {
+                  this.el.dom.value = this.df.getRawValue().trim();
+                  if   (this.el.dom.value !== null   // Don't allow time without Date
+                     && this.el.dom.value !== '' 
+                     && this.tf.getValue() !== null 
+                     && this.tf.getValue().trim() !== '')
+                     this.el.dom.value+= this.dtSeparator + this.tf.getValue().trim();
+            }
         }
     }
     // }}}
