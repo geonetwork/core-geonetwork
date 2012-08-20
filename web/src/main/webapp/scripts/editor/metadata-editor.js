@@ -929,6 +929,8 @@ function initCalendar() {
 				    value : value,
 		            dateFormat : 'Y-m-d',
 		            timeFormat : 'H:i',
+		            dateAltFormats:null,
+		            timeAltFormats:null,
 		            hiddenFormat : 'Y-m-d\\TH:i:s',
 		            dtSeparator : 'T'
 				});
@@ -939,7 +941,9 @@ function initCalendar() {
 				    id : id,
 				    width : 160, 
 				    value : value,
-				    format : 'Y-m-d'
+				    format : 'Y-m-d',
+				    altFormats:null,
+				    beforeBlur: function(){} // don't perform check on blur which may changes the value.
 				});
 			}
 			
