@@ -133,10 +133,12 @@
 	   		style="resources/iso_svrl_for_xslt2.xsl" 
 			in="rules/schematron-rules-${rules}.sch" 
 			out="${buildDir}/schematron-rules-${rules}.xsl"> 
-			<classpath>
-                <!-- FIXME should be handle with maven dependency -->
-				<pathelement location="saxon9.jar"/>
-			</classpath> 
+                        <!-- FIXME should be handle with maven dependency -->
+                        <classpath>
+                                <pathelement location="../maven_repo/net/sf/saxon/saxon-dom/9.1.0.8b/saxon-dom-9.1.0.8b.jar"/>
+                                <pathelement location="../maven_repo/net/sf/saxon/saxon/9.1.0.8b-patch/saxon-9.1.0.8b-patch.jar"/>
+                                <pathelement location="saxonTransformer.jar"/>
+                        </classpath>
 	   </xslt>
 	</target>
 
