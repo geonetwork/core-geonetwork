@@ -259,14 +259,14 @@
         concat(gmd:westBoundLongitude/gco:Decimal, ' ', gmd:southBoundLatitude/gco:Decimal)
         ">
       </xsl:variable>
-      <dct:spatial><dct:spatial>
+      <dct:spatial>
         <ogc:Polygon>
           <ogc:asWKT rdf:datatype="http://www.opengis.net/rdf#WKTLiteral">
             &lt;http://www.opengis.net/def/crs/OGC/1.3/CRS84&gt;
             Polygon((<xsl:value-of select="string-join($coords, ', ')"/>))
           </ogc:asWKT>
         </ogc:Polygon>
-      </dct:spatial></dct:spatial>
+      </dct:spatial>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox --> 
     
