@@ -60,7 +60,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="mapping">
             <map/>
          </property>
-        
+        <property name="profilMapping">
+            <map/>
+        </property>
         <!-- Privileges extraction
          * current trunk only support one group.
          * here we support more than one group
