@@ -7,7 +7,7 @@
  * @author      Ing. Jozef Sakáloš
  * @copyright (c) 2008, Ing. Jozef Sakáloš
  * @version   2.0
- * @revision  $Id: Ext.ux.form.DateTime.js 603 2009-03-04 22:27:06Z jozo $
+ * @revision  $Id: Ext.ux.form.DateTime.js 813 2010-01-29 23:32:36Z jozo $
  *
  * @license Ext.ux.form.DateTime is licensed under the terms of
  * the Open Source LGPL 3.0 license.  Commercial use is permitted to the extent
@@ -38,14 +38,15 @@ Ext.ns('Ext.ux.form');
  */
 Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
     /**
+     * @cfg {Function} dateValidator A custom validation function to be called during date field
+     * validation (defaults to null)
+     */
+     dateValidator:null
+    /**
      * @cfg {String/Object} defaultAutoCreate DomHelper element spec
      * Let superclass to create hidden field instead of textbox. Hidden will be submittend to server
      */
-     defaultAutoCreate:{tag:'input', type:'hidden'}
-    /**
-     * @cfg {Number} timeWidth Width of time field in pixels (defaults to 100)
-     */
-    ,timeWidth:100
+    ,defaultAutoCreate:{tag:'input', type:'hidden'}
     /**
      * @cfg {String} dtSeparator Date - Time separator. Used to split date and time (defaults to ' ' (space))
      */
@@ -69,13 +70,30 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      */
     ,timePosition:'right' // valid values:'below', 'right'
     /**
+     * @cfg {Function} timeValidator A custom validation function to be called during time field
+     * validation (defaults to null)
+     */
+    ,timeValidator:null
+    /**
+     * @cfg {Number} timeWidth Width of time field in pixels (defaults to 100)
+     */
+    ,timeWidth:100
+    /**
      * @cfg {String} dateFormat Format of DateField. Can be localized. (defaults to 'm/y/d')
      */
     ,dateFormat:'m/d/y'
     /**
+     * @cfg {String} dateAltFormats altFormats of DateField. Can be localized. (defaults to DateField value)
+     */
+    ,dateAltFormats:Ext.form.DateField.prototype.altFormats
+    /**
      * @cfg {String} timeFormat Format of TimeField. Can be localized. (defaults to 'g:i A')
      */
     ,timeFormat:'g:i A'
+    /**
+     * @cfg {String} timeAltFormats altFormats of TimeField. Can be localized. (defaults to TimeField value)
+     */
+    ,timeAltFormats:Ext.form.TimeField.prototype.altFormats
     /**
      * @cfg {Object} dateConfig Config for DateField constructor.
      */
@@ -99,6 +117,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
             ,altFormats:this.dateAltFormats || Ext.form.DateField.prototype.altFormats
             ,width:this.timeWidth
             ,selectOnFocus:this.selectOnFocus
+            ,validator:this.dateValidator
             ,beforeBlur: function(){} // don't perform check on blur which may changes the value.
             ,listeners:{
                   blur:{scope:this, fn:this.onBlur}
@@ -114,9 +133,10 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         var timeConfig = Ext.apply({}, {
              id:this.id + '-time'
             ,format:this.timeFormat || Ext.form.TimeField.prototype.format
-            ,altFormats:this.timeAltFormats || Ext.form.DateField.prototype.altFormats
+            ,altFormats:this.timeAltFormats || Ext.form.TimeField.prototype.altFormats
             ,width:this.timeWidth
             ,selectOnFocus:this.selectOnFocus
+            ,validator:this.timeValidator
             ,listeners:{
                   blur:{scope:this, fn:this.onBlur}
                  ,focus:{scope:this, fn:this.onFocus}
@@ -130,6 +150,8 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         // relay events
         this.relayEvents(this.df, ['focus', 'specialkey', 'invalid', 'valid']);
         this.relayEvents(this.tf, ['focus', 'specialkey', 'invalid', 'valid']);
+
+        this.on('specialkey', this.onSpecialKey, this);
 
     } // eo function initComponent
     // }}}
@@ -174,21 +196,30 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         this.tf.render(t.child('td.ux-datetime-time'));
 
         // workaround for IE trigger misalignment bug
-        if(Ext.isIE && Ext.isStrict) {
-            t.select('input').applyStyles({top:0});
-        }
+        // see http://extjs.com/forum/showthread.php?p=341075#post341075
+//        if(Ext.isIE && Ext.isStrict) {
+//            t.select('input').applyStyles({top:0});
+//        }
 
-        this.on('specialkey', this.onSpecialKey, this);
         this.df.el.swallowEvent(['keydown', 'keypress']);
         this.tf.el.swallowEvent(['keydown', 'keypress']);
 
         // create icon for side invalid errorIcon
         if('side' === this.msgTarget) {
             var elp = this.el.findParent('.x-form-element', 10, true);
-            this.errorIcon = elp.createChild({cls:'x-form-invalid-icon'});
+            if(elp) {
+                this.errorIcon = elp.createChild({cls:'x-form-invalid-icon'});
+            }
 
-            this.df.errorIcon = this.errorIcon;
-            this.tf.errorIcon = this.errorIcon;
+            var o = {
+                 errorIcon:this.errorIcon
+                ,msgTarget:'side'
+                ,alignErrorIcon:this.alignErrorIcon.createDelegate(this)
+            };
+            Ext.apply(this.df, o);
+            Ext.apply(this.tf, o);
+//            this.df.errorIcon = this.errorIcon;
+//            this.tf.errorIcon = this.errorIcon;
         }
 
         // setup name for submit
@@ -372,6 +403,8 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         }
         this.updateHidden();
 
+        this.validate();
+
         // fire events later
         (function() {
             if(!this.df.hasFocus && !this.tf.hasFocus) {
@@ -424,6 +457,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
                 e.stopEvent();
                 this.df.focus();
             }
+            this.updateValue();
         }
         // otherwise it misbehaves in editor grid
         if(key === e.ENTER) {
@@ -431,6 +465,16 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         }
 
     } // eo function onSpecialKey
+    // }}}
+    // {{{
+    /**
+     * Resets the current field value to the originally loaded value 
+     * and clears any validation messages. See Ext.form.BasicForm.trackResetOnLoad
+     */
+    ,reset:function() {
+        this.df.setValue(this.originalValue);
+        this.tf.setValue(this.originalValue);
+    } // eo function reset
     // }}}
     // {{{
     /**
@@ -502,11 +546,11 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
             newDateVal = Date.parseDate(newDateVal, this.hiddenFormat);
         }
         val = val ? val : new Date(1970, 0 ,1, 0, 0, 0);
-        var da, time;
+        var da;
         if(newDateVal && newDateVal instanceof Date) {
             this.setDate(newDateVal);
             this.setTime(newDateVal);
-            this.dateValue = new Date(newDateVal);
+            this.dateValue = new Date(Ext.isIE ? val.getTime() : val);
         }
         else {
             //Try to split the date into date/time if they can be parsed based on the supplied format then we will use it.
