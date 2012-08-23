@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.security.ldap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -144,23 +145,37 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				// 2. a privilegePattern is defined which define a 
 				// combination of group and profile pair.
 				ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
-				
-				for (String privilegeDefinition : privileges) {
-					Matcher m = pattern.matcher(privilegeDefinition);
-					boolean b = m.matches();
-					if (b) {
-						String group = m.group(groupIndexInPattern);
-						String profile = m.group(profilIndexInPattern);
-						
-						if (group != null && profile != null && profileManager.exists(profile)) {
-							userDetails.setProfile(profile);
-							if (!group.equals(ALL_GROUP_INDICATOR)) {
-								userDetails.addPrivilege(group, profile);
+				if (privileges != null) {
+					Set<String> profileList = new HashSet<String>();
+					
+					for (String privilegeDefinition : privileges) {
+						Matcher m = pattern.matcher(privilegeDefinition);
+						boolean b = m.matches();
+						if (b) {
+							String group = m.group(groupIndexInPattern);
+							String profile = m.group(profilIndexInPattern);
+							
+							if (group != null && profile != null && profileManager.exists(profile)) {
+								if (!group.equals(ALL_GROUP_INDICATOR)) {
+									if (Log.isDebugEnabled(Geonet.LDAP)){
+										Log.debug(Geonet.LDAP, "  Adding profile " + profile + " for group " + group);
+									}
+									userDetails.addPrivilege(group, profile);
+									profileList.add(profile);
+								}
 							}
+						} else {
+							Log.error(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 						}
-					} else {
-						Log.error(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 					}
+					String highestUserProfile = profileManager.getHighestProfile(profileList);
+					if (highestUserProfile != null){
+						if (Log.isDebugEnabled(Geonet.LDAP)){
+							Log.debug(Geonet.LDAP, "  Highest user profile is " + highestUserProfile);
+						}
+						userDetails.setProfile(highestUserProfile);
+					}
+
 				}
 			}
 		} else {
