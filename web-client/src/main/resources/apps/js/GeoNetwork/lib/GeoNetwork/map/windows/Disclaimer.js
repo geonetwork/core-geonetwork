@@ -73,7 +73,7 @@ Ext.extend(GeoNetwork.DisclaimerWindow, Ext.Window, {
                     this.close();
                 }, this);
 
-        if (this.disclaimer.startsWith("http://")) {
+        if (OpenLayers.String.startsWith(this.disclaimer, "http://")) {
             this.on("show", this.showDisclaimerUrl);
             
         } else {

@@ -552,12 +552,12 @@ GeoNetwork.map.ExtentMap = function(){
                 // * clear
                 // * rollback
                 if (edit) {
-                    var control, tbarItems = [];
+                    var tbarItems = [];
                     
                     
                     // Bbox drawing control
                     if (mode === 'bbox') {
-                        control = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.RegularPolygon, {
+                        var control = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.RegularPolygon, {
                             handlerOptions: {
                                 irregular: true,
                                 sides: 4
@@ -620,16 +620,17 @@ GeoNetwork.map.ExtentMap = function(){
                     }
                     // Polygon drawing control 
                     else if (mode === 'polygon') {
-                        control = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.Polygon, {
+                        var polyControl = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.Polygon, {
                             featureAdded: function(feature){
                                 // Update form input
                                 document.getElementById('_X' + this).value = convertToGml(feature, mainProjCode);
+                                polyControl.deactivate();
                             }.bind(targetPolygon)
                         });
                         
                         tbarItems.push(new GeoExt.Action({
                             map: maps[eltRef],
-                            control: control,
+                            control: polyControl,
                             text: OpenLayers.i18n('drawPolygon'),
                             tooltip: OpenLayers.i18n('drawPolygonTT'),
                             pressed: false,
@@ -645,6 +646,7 @@ GeoNetwork.map.ExtentMap = function(){
                             featureAdded: function(feature){
                                 // Update form input
                                 document.getElementById('_X' + this).value = convertToGml(feature, mainProjCode);
+                                control.deactivate();
                             }.bind(targetPolygon)
                         });
                         

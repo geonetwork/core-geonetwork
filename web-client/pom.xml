@@ -186,7 +186,6 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/WMSGetFeatureInfo.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Request.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Request/XMLHttpRequest.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Ajax.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/LonLat.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Size.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Pixel.js</include>
@@ -227,7 +226,6 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/DrawFeature.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Rule.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Hover.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/MouseDefaults.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/MousePosition.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/RegularPolygon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Renderer/VML.js</include>
