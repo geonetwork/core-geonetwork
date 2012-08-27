@@ -37,7 +37,7 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 public class GeoNetworkLDAPUserDetailsContextMapper implements
 		UserDetailsContextMapper, ApplicationContextAware {
 	
-	private static final String ALL_GROUP_INDICATOR = "*";
+	private static final String ALL_GROUP_INDICATOR = "ALL";
 
 	Map<String, String[]> mapping;
 
