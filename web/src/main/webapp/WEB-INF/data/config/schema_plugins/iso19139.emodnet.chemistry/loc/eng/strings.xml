@@ -3,7 +3,6 @@
     <tab>EMODNET view</tab>
     <emodnet.chemistryTab>EMODNET view</emodnet.chemistryTab>
     <DisseminationLevelTitle>Dissemination level</DisseminationLevelTitle>
-    <ParamsMeasuredTitle>Parameters in dataset (SDN Discovery par. P021 list)</ParamsMeasuredTitle>
     <PositioningInstrsTitle>Positioning instruments (SDN L56)</PositioningInstrsTitle>
     <MeasuringInstrsTitle>Measuring Instruments (SDN L54)</MeasuringInstrsTitle>
     <DimensionsTitle>Dimensions</DimensionsTitle>
