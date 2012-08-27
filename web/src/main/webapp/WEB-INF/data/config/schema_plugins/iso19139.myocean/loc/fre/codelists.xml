@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+    <codelist name="gmd:MD_ProgressCode">
+        <entry>
+            <code>ready</code>
+            <label>Ready</label>
+            <description>Not used</description>
+        </entry>
+        <entry>
+            <code>inDemonstration</code>
+            <label>inDemonstration</label>
+            <description>Non operational production</description>
+        </entry>
+        <entry>
+            <code>operational</code>
+            <label>Operational</label>
+            <description>Operational production (OLA provided)</description>
+        </entry>
+        <entry>
+            <code>retired</code>
+            <label>Retired</label>
+            <description>Not any more operational</description>
+        </entry>
+    </codelist>
+</codelists>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>  
+  <field name="gmd:contactInstructions">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:FileName"/>
+  </field>
+  
+  <field name="gmd:otherCitationDetails">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:FileName"/>
+    <suggest name="gmx:Anchor"/>
+  </field>
+  
+ <!-- <field name="gmd:keyword">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:Anchor"/>
+  </field>-->
+  
+  <field name="gmx:Anchor">
+    <suggest name="xlink:href"/>
+  </field>
+  
+  <field name="gmd:code">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:FileName"/>
+    <suggest name="gmx:Anchor"/>
+  </field>
+
+  <field name="gmd:language">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmd:LanguageCode"/>
+  </field>
+  
+  <field name="gmx:FileName">
+    <suggest name="src"/>
+  </field> 
+  
+  <!-- Service -->
+  <field name="srv:coupledResource">
+    <suggest name="srv:SV_CoupledResource"/>
+  </field>
+  
+  <field name="srv:parameters">
+    <suggest name="srv:SV_Parameter"/>
+  </field>
+  
+  <field name="srv:direction">
+    <suggest name="srv:SV_ParameterDirection"/>
+  </field>
+  
+  <field name="gmd:CI_OnlineResource">
+    <suggest name="gmd:protocol"/>
+    <suggest name="gmd:name"/>
+    <suggest name="gmd:description"/>
+    <!-- EMODNET -->
+    <suggest name="gmd:function"/>
+  </field>
+  
+  <!-- Add a distribution format / INSPIRE requirement
+  <field name="gmd:distributionInfo">
+    <suggest name="gmd:MD_Distribution"/>
+  </field>
+  <field name="gmd:MD_Distribution">
+    <suggest name="gmd:distributionFormat"/>
+    <suggest name="gmd:transferOptions"/>
+  </field>
+  <field name="gmd:distributionFormat">
+    <suggest name="gmd:MD_Format"/>
+    </field> -->
+
+    <field name="gmd:transferOptions">
+        <suggest name="gmd:MD_DigitalTransferOptions"/>
+    </field>
+
+    <field name="gmd:MD_DigitalTransferOptions">
+        <suggest name="gmd:onLine"/>
+    </field>
+  
+  
+  <!-- Contact info: suggest all by default. -->
+  <field name="gmd:CI_ResponsibleParty">
+    <suggest name="gmd:individualName"/>
+    <suggest name="gmd:organisationName"/>
+    <suggest name="gmd:contactInfo"/>
+  </field>
+  
+  <field name="gmd:CI_Contact">
+    <suggest name="gmd:address"/>
+  </field>
+  
+  <field name="gmd:CI_Address">
+    <suggest name="gmd:electronicMailAddress"/>
+  </field>
+  
+  <field name="gmd:MD_Keywords">
+    <suggest name="gmd:type"/>
+  </field>
+  
+  <field name="gmd:EX_Extent">
+    <suggest name="gmd:temporalElement"/>
+    <suggest name="gmd:geographicElement"/>
+    <suggest name="gmd:verticalElement"/>
+  </field>
+
+  <field name="gmd:EX_TemporalExtent">
+    <suggest name="gmd:extent"/>
+  </field>
+  
+  <field name="gmd:polygon">
+    <suggest name="gml:Polygon"/>
+  </field>
+  
+  <field name="gmd:extent">
+    <suggest name="gmd:EX_Extent"/>
+  </field>
+  
+  <field name="gml:TimePeriod">
+    <suggest name="gml:beginPosition"/>
+    <suggest name="gml:endPosition"/>  
+  </field>
+  
+  <field name="gmd:EX_GeographicBoundingBox">
+    <suggest name="gmd:westBoundLongitude"/>
+    <suggest name="gmd:eastBoundLongitude"/>  
+    <suggest name="gmd:southBoundLatitude"/>
+    <suggest name="gmd:northBoundLatitude"/>
+  </field>
+
+  <field name="gmd:attributes">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:features">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureInstances">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:attributeInstances">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:propertyType">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureType">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:featureAttribute">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="srv:operatesOn">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="gmd:source">
+    <suggest name="uuidref"/>
+  </field>
+  
+  <field name="gmd:featureCatalogueCitation">
+    <suggest name="uuidref"/>
+  </field>
+  
+  <field name="gml:Polygon">
+    <suggest name="srsName"/>
+  </field>
+
+  <field name="gml:descriptionReference">
+    <suggest name="xlink:href"/>
+  </field>
+
+
+  <field name="gmd:MD_Constraints">
+    <suggest name="gmd:useLimitation"/>
+  </field>
+  
+  <field name="gmd:MD_LegalConstraints">
+    <suggest name="gmd:useLimitation"/>
+    <suggest name="gmd:accessConstraints"/>
+    <suggest name="gmd:useConstraints"/>
+    <suggest name="gmd:otherContraints"/>
+  </field>
+  
+  <field name="gmd:MD_SecurityContraints">
+    <suggest name="gmd:classification"/>
+    <suggest name="gmd:useLimitation"/>
+  </field>
+  
+  <!-- EMODNET -->
+  <field name="gmd:hierarchyLevelName">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gmx:Anchor"/>
+  </field>
+  
+  <field name="gmx:Anchor">
+    <suggest name="xlink:href"/>
+  </field>
+</fields>
