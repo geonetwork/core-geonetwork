@@ -10,7 +10,7 @@
     <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
   </gmd:characterSet>
   <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
+    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="series"/>
   </gmd:hierarchyLevel>
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
@@ -18,7 +18,7 @@
         <gco:CharacterString/>
       </gmd:individualName>
       <gmd:organisationName gco:nilReason="missing">
-        <gco:CharacterString/>
+        <gco:CharacterString>Myocean</gco:CharacterString>
       </gmd:organisationName>
       <gmd:contactInfo>
         <gmd:CI_Contact>
@@ -40,11 +40,22 @@
     <gco:DateTime>2012-08-27T10:25:28</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString>ISO 19115:2003/19139 - MYOCEAN</gco:CharacterString>
+    <gco:CharacterString>ISO 19139, MyOcean profile</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
-    <gco:CharacterString>1.0</gco:CharacterString>
+    <gco:CharacterString>2.0</gco:CharacterString>
   </gmd:metadataStandardVersion>
+  <gmd:referenceSystemInfo>
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:code>
+            <gco:CharacterString>urn:ogc:def:crs:EPSG::4326</gco:CharacterString>
+          </gmd:code>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
   <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
       <gmd:citation>
@@ -53,7 +64,7 @@
             <gco:CharacterString>Template for MyOcean product (Short description)</gco:CharacterString>
           </gmd:title>
           <gmd:alternateTitle>
-            <gco:CharacterString>For example &apos;org.eu.coriolis/2&apos; (previously known as MIS name, is the same as the identifier use for dataCite registration)</gco:CharacterString>
+            <gco:CharacterString>For example  'INSITU_GLO_UV_NRT_OBSERVATIONS_013_003'</gco:CharacterString>
           </gmd:alternateTitle>
           <gmd:date>
             <gmd:CI_Date>
