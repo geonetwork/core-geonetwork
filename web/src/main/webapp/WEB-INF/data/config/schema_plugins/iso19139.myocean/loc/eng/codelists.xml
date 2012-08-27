@@ -22,4 +22,54 @@
             <description>Not any more operational</description>
         </entry>
     </codelist>
+    
+    <codelist name="gmd:MD_KeywordTypeCode">
+        <entry>
+            <code>discipline</code>
+            <label>Discipline</label>
+            <description>Keyword identifies a branch of instruction or specialized
+                learning</description>
+        </entry>
+        <entry>
+            <code>place</code>
+            <label>Place</label>
+            <description>Keyword identifies a location</description>
+        </entry>
+        <entry>
+            <code>stratum</code>
+            <label>Stratum</label>
+            <description>Keyword identifies the layer(s) of any deposited substance</description>
+        </entry>
+        <entry>
+            <code>temporal</code>
+            <label>Temporal</label>
+            <description>Keyword identifies a time period related to the dataset</description>
+        </entry>
+        <entry>
+            <code>theme</code>
+            <label>Theme</label>
+            <description>Keyword identifies a particular subject or topic</description>
+        </entry>
+        <!-- MyOcean extension -->
+        <entry>
+            <code>parametersGroup</code>
+            <label>Parameter Groups</label>
+            <description>Seadatanet (P021) SeaDataNet Agreed Parameter Groups</description>
+        </entry>
+        <entry>
+            <code>parameter</code>
+            <label>Parameter</label>
+            <description>ocean variable from CF standard names (see P071 in seadatanet)</description>
+        </entry>
+        <entry>
+            <code>verticalLevels</code>
+            <label>Vertical Levels</label>
+            <description></description>
+        </entry>
+        <entry>
+            <code>areaOfBenefit</code>
+            <label>Area Of Benefit</label>
+            <description>Domain for which the current product is applicable : marine safety, marine resources, coastal and marine environment, weather, climate and seasonal forecasting</description>
+        </entry>
+    </codelist>
 </codelists>

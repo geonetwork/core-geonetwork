@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <myoceanTab>Vue MyOcean</myoceanTab>
-    <myocean.simpleTab>Vue MyOcean (Upstream product)</myocean.simpleTab>
+    <myoceanTab>MyOcean view</myoceanTab>
+    <myocean.simpleTab>MyOcean view (Upstream product)</myocean.simpleTab>
     
-    <metadataInfoTitle>Informations sur la métadonnée</metadataInfoTitle>
-    <identificationTitle>Identification des données</identificationTitle>
-    <keywordTitle>Thématique et mots clés</keywordTitle>
-    <geoLocationTitle>Localisation géographique</geoLocationTitle>
-    <tempRefTitle>Référence temporelle</tempRefTitle>
-    <qualityTitle>Qualité des données</qualityTitle>
-    <conformityTitle>Conformité à la directive Inspire</conformityTitle>
-    <limitationsTitle>Contraintes d'accès et d'utilisation des données</limitationsTitle>
-    <respOrgaTitle>Contacts sur la donnée</respOrgaTitle>
-    <inspireTheme>Thème Inspire</inspireTheme>
-    <accessUseConstraints>Conditions applicables à l’accès et à l’utilisation//Contraintes légales</accessUseConstraints>
-    <publicAccessConstraints>Restrictions concernant l’accès public//Contraintes sur la ressource</publicAccessConstraints>
+    <creationDate>Creation date</creationDate>
+    
+    <identification>Identification</identification>
+    <quicklookAndKeywords>Quicklooks and descriptive keywords</quicklookAndKeywords>
+    <spatioTemporalCoverage>Spatiotemporal coverages</spatioTemporalCoverage>
+    <processingOperation>Processing operation</processingOperation>
+    <org>Organizations responsible for management and processing, point of contact</org>
+    <metadataInfo>Metadata date stamps and versions</metadataInfo>
+    
+    <geoCoverage>Geographical coverage</geoCoverage>
+    <verticalCoverage>Vertical coverage</verticalCoverage>
+    <temporalCoverage>Temporal coverage</temporalCoverage>
+    
+    <orgOriginator>Organization in charge, point of contact</orgOriginator>
+    <orgCustodian>Coordinator, point of contact</orgCustodian>
 </strings>
