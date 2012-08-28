@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/product/database#">
+        <dc:title>Seadatanet (L131), vertical coverages</dc:title>
+        <dc:description>Is a restriction of the SeaDataNet/L131 list.</dc:description>
+        <dcterms:issued>2009-09-09</dcterms:issued>
+        <dcterms:modified>2009-09-09</dcterms:modified>
+    </skos:ConceptScheme>
+    <!-- TODO : FR translation -->
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/vertical-layer#water_column">
+        <skos:prefLabel xml:lang="en">water_column</skos:prefLabel>
+        <skos:definition xml:lang="en">The entire body of water between the bed and the
+            atmosphere.</skos:definition>
+        <skos:prefLabel xml:lang="fr">water_column</skos:prefLabel>
+        <skos:definition xml:lang="fr">The entire body of water between the bed and the
+            atmosphere.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/vertical-layer#water_column_boundary
+        ">
+        <skos:prefLabel xml:lang="en">water_column_boundary </skos:prefLabel>
+        <skos:definition xml:lang="en">The zone of the water column that is significantly influenced
+            by the atmosphere. Typically the top 10m of the water column. </skos:definition>
+        <skos:prefLabel xml:lang="fr">water_column_boundary </skos:prefLabel>
+        <skos:definition xml:lang="fr">The zone of the water column that is significantly influenced
+            by the atmosphere. Typically the top 10m of the water column. </skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/vertical-layer#atmosphere">
+        <skos:prefLabel xml:lang="en">atmosphere</skos:prefLabel>
+        <skos:definition xml:lang="en">The envelope of gases surrounding the
+            Earth.</skos:definition>
+        <skos:prefLabel xml:lang="fr">atmosphere</skos:prefLabel>
+        <skos:definition xml:lang="fr">The envelope of gases surrounding the
+            Earth.</skos:definition>
+    </skos:Concept>
+</rdf:RDF>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/product/database#">
+        <dc:title>MyOcean product type</dc:title>
+        <dc:description>Origin of data among in-situ or remote-sensing observation or numerical
+            models.</dc:description>
+        <dcterms:issued>2008-06-01</dcterms:issued>
+        <dcterms:modified>2008-06-01</dcterms:modified>
+    </skos:ConceptScheme>
+    <!-- TODO : FR translation -->
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/product/database#in-situ-observation">
+        <skos:prefLabel xml:lang="en">in-situ-observation</skos:prefLabel>
+        <skos:definition xml:lang="en">The product is made of an collection, process and
+            qualification of in-situ observations </skos:definition>
+        <skos:prefLabel xml:lang="fr">in-situ-observation</skos:prefLabel>
+        <skos:definition xml:lang="fr">The product is made of an collection, process and
+            qualification of in-situ observations </skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/product/database#remote-sensing-observation">
+        <skos:prefLabel xml:lang="en">remote-sensing-observation</skos:prefLabel>
+        <skos:definition xml:lang="en">The product is made of an collection, process and
+            qualification of remote-sensing observations</skos:definition>
+        <skos:prefLabel xml:lang="fr">remote-sensing-observation</skos:prefLabel>
+        <skos:definition xml:lang="fr">The product is made of an collection, process and
+            qualification of remote-sensing observations</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/product/database#in-situ">
+        <skos:prefLabel xml:lang="en">numerical-model</skos:prefLabel>
+        <skos:definition xml:lang="en">The product is made of numerical model computing results
+            (e.g. forecasts or analysis). </skos:definition>
+        <skos:prefLabel xml:lang="fr">numerical-model</skos:prefLabel>
+        <skos:definition xml:lang="fr">The product is made of numerical model computing results
+            (e.g. forecasts or analysis). </skos:definition>
+    </skos:Concept>
+</rdf:RDF>
