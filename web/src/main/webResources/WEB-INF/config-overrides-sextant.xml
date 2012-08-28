@@ -23,6 +23,7 @@
       <emodnet.chemistry flat="true"/>
       <emodnet.hydrography flat="true"/>
       <myocean.simple flat="true"/>
+      <myocean flat="true"/>
     </addXML>
 
   </file>
