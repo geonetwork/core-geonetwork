@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/product/database#">
+        <dc:title>MyOcean product scales</dc:title>
+        <dc:description>Geographical scale or domain.</dc:description>
+        <dcterms:issued>2008-07-28</dcterms:issued>
+        <dcterms:modified>2008-07-28</dcterms:modified>
+    </skos:ConceptScheme>
+    <!-- TODO : FR translation -->
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/scale#global">
+        <skos:prefLabel xml:lang="en">global</skos:prefLabel>
+        <skos:definition xml:lang="en">For global coverages of the oceans, help to understand global
+            phenomenons (e.g. thermohaline circulation)</skos:definition>
+        <skos:prefLabel xml:lang="fr">global</skos:prefLabel>
+        <skos:definition xml:lang="fr">For global coverages of the oceans, help to understand global
+            phenomenons (e.g. thermohaline circulation)</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/scale#regional">
+        <skos:prefLabel xml:lang="en">regional</skos:prefLabel>
+        <skos:definition xml:lang="en">For basin coverage of the oceans, help to understand basin
+            scale phenonomons (e.g. geostrophic)</skos:definition>
+        <skos:prefLabel xml:lang="fr">regional</skos:prefLabel>
+        <skos:definition xml:lang="fr">For basin coverage of the oceans, help to understand basin
+            scale phenonomons (e.g. geostrophic)</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/scale#local">
+        <skos:prefLabel xml:lang="en">local</skos:prefLabel>
+        <skos:definition xml:lang="en">For coastal coverage (e.g. tides)</skos:definition>
+        <skos:prefLabel xml:lang="fr">local</skos:prefLabel>
+        <skos:definition xml:lang="fr">For coastal coverage (e.g. tides)</skos:definition>
+    </skos:Concept>
+</rdf:RDF>

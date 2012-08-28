@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/product/database#">
+        <dc:title>MyOcean delay modes</dc:title>
+        <dc:description>Temporal scale or domain.</dc:description>
+        <dcterms:issued>2009-06-12</dcterms:issued>
+        <dcterms:modified>2009-06-12</dcterms:modified>
+    </skos:ConceptScheme>
+    <!-- TODO : FR translation -->
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/delay-mode#invariant*">
+        <skos:prefLabel xml:lang="en">invariant*</skos:prefLabel>
+        <skos:definition xml:lang="en">Reference datasets (e.g. bathymetry)</skos:definition>
+        <skos:prefLabel xml:lang="fr">invariant*</skos:prefLabel>
+        <skos:definition xml:lang="fr">Reference datasets (e.g. bathymetry)</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/delay-mode#climatological">
+        <skos:prefLabel xml:lang="en">climatological</skos:prefLabel>
+        <skos:definition xml:lang="en">Updated annually or less frequently. Latest information may
+            be more than one-year old. </skos:definition>
+        <skos:prefLabel xml:lang="fr">climatological</skos:prefLabel>
+        <skos:definition xml:lang="fr">Updated annually or less frequently. Latest information may
+            be more than one-year old. </skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/delay-mode#delayed-time">
+        <skos:prefLabel xml:lang="en">delayed-time</skos:prefLabel>
+        <skos:definition xml:lang="en">Updated weekly to n-monthly . Latest information may be more
+            than n-months old.</skos:definition>
+        <skos:prefLabel xml:lang="fr">delayed-time</skos:prefLabel>
+        <skos:definition xml:lang="fr">Updated weekly to n-monthly . Latest information may be more
+            than n-months old.</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/delay-mode#near-real-time">
+        <skos:prefLabel xml:lang="en">near-real-time</skos:prefLabel>
+        <skos:definition xml:lang="en">Updated daily to n-daily. Latest information may be more than
+            n-day old.</skos:definition>
+        <skos:prefLabel xml:lang="fr">near-real-time</skos:prefLabel>
+        <skos:definition xml:lang="fr">Updated daily to n-daily. Latest information may be more than
+            n-day old.</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/delay-mode#real-time">
+        <skos:prefLabel xml:lang="en">real-time</skos:prefLabel>
+        <skos:definition xml:lang="en">Updated hourly. Latest information may be more than n-hours
+            old.</skos:definition>
+        <skos:prefLabel xml:lang="fr">real-time</skos:prefLabel>
+        <skos:definition xml:lang="fr">Updated hourly. Latest information may be more than n-hours
+            old.</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast">
+        <skos:prefLabel xml:lang="en">forecast</skos:prefLabel>
+        <skos:definition xml:lang="en">Provides information for the future.</skos:definition>
+        <skos:prefLabel xml:lang="fr">forecast</skos:prefLabel>
+        <skos:definition xml:lang="fr">Provides information for the future.</skos:definition>
+    </skos:Concept>
+</rdf:RDF>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#">
+        <dc:title>MyOcean area of benefit</dc:title>
+        <dc:description>Origin of data among coastal-marine-environment or remote-sensing observation or numerical
+            models.</dc:description>
+        <dcterms:issued>2009-09-09</dcterms:issued>
+        <dcterms:modified>2009-09-09</dcterms:modified>
+    </skos:ConceptScheme>
+    <!-- TODO : FR translation -->
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#maritime-safety">
+        <skos:prefLabel xml:lang="en">maritime-safety</skos:prefLabel>
+        <skos:definition xml:lang="en">Maritime safety</skos:definition>
+        <skos:prefLabel xml:lang="fr">maritime-safety</skos:prefLabel>
+        <skos:definition xml:lang="fr">Maritime safety</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#marine-resources">
+        <skos:prefLabel xml:lang="en">marine-resources</skos:prefLabel>
+        <skos:definition xml:lang="en">MMarine resources</skos:definition>
+        <skos:prefLabel xml:lang="fr">marine-resources</skos:prefLabel>
+        <skos:definition xml:lang="fr">Marine resources</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#coastal-marine-environment">
+        <skos:prefLabel xml:lang="en">coastal-marine-environment</skos:prefLabel>
+        <skos:definition xml:lang="en">Coastal & marine environment</skos:definition>
+        <skos:prefLabel xml:lang="fr">coastal-marine-environment</skos:prefLabel>
+        <skos:definition xml:lang="fr">Coastal & marine environment</skos:definition>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#weather-climate-and-seasonal-forecasting">
+        <skos:prefLabel xml:lang="en">weather-climate-and-seasonal-forecasting</skos:prefLabel>
+        <skos:definition xml:lang="en"Weather climate and seasonal forecasting</skos:definition>
+        <skos:prefLabel xml:lang="fr">weather-climate-and-seasonal-forecasting</skos:prefLabel>
+        <skos:definition xml:lang="fr">Weather climate and seasonal forecasting</skos:definition>
+    </skos:Concept>
+</rdf:RDF>

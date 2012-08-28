@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <myoceanTab>MyOcean view</myoceanTab>
+    <myocean.simpleTab>MyOcean view (Upstream product)</myocean.simpleTab>
+    
+    <creationDate>Creation date</creationDate>
+    
+    <identification>Identification</identification>
+    <quicklookAndKeywords>Quicklooks and descriptive keywords</quicklookAndKeywords>
+    <spatioTemporalCoverage>Spatiotemporal coverages</spatioTemporalCoverage>
+    <processingOperation>Processing operation</processingOperation>
+    <org>Organizations responsible for management and processing, point of contact</org>
+    <metadataInfo>Metadata date stamps and versions</metadataInfo>
+    
+    <geoCoverage>Geographical coverage</geoCoverage>
+    <verticalCoverage>Vertical coverage</verticalCoverage>
+    <temporalCoverage>Temporal coverage</temporalCoverage>
+    
+    <orgOriginator>Organization in charge, point of contact</orgOriginator>
+    <orgCustodian>Coordinator, point of contact</orgCustodian>
+</strings>
