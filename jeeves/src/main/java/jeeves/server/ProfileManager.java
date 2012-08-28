@@ -141,7 +141,26 @@ public class ProfileManager
 	}
 
 	//--------------------------------------------------------------------------
-
+	/**
+	 * Return the highest profile in the list by checking the number
+	 * of extended profiles for each.
+	 * 
+	 * @param profiles The list of profiles to analyze
+	 * @return The highest profile in the list
+	 */
+	public String getHighestProfile(Set<String> profiles) {
+		String highestProfile = null;
+		int numberOfProfilesExtended = 0;
+		
+		for (String p : profiles) {
+			Set<String> currentProfileSet = getProfilesSet(p);
+			if (currentProfileSet.size() > numberOfProfilesExtended) {
+				highestProfile = p;
+				numberOfProfilesExtended = currentProfileSet.size();
+			}
+		}
+		return highestProfile;
+	}
 	public Set<String> getProfilesSet(String profile)
 	{
 		HashSet<String>   hs = new HashSet<String>();

@@ -23,10 +23,6 @@ public class LDAPUtils {
 	/**
 	 * Save or update an LDAP user to the local GeoNetwork database.
 	 * 
-	 * TODO : Shouldn't we flag LDAP (or shib) user ? with an LDAP user id column ?
-	 * trunk is adding "(LDAP)" in surname (but surname is displayed in the UI) so
-	 * it's maybe not the best option.
-	 * 
 	 * TODO : test when a duplicate username is in the local DB and from an LDAP
 	 * Unique key constraint should return errors.
 	 * 
@@ -36,7 +32,7 @@ public class LDAPUtils {
 	 * @throws Exception 
 	 */
 	static void saveUser(LDAPUser user, Dbms dbms, SerialFactory serialFactory, boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup) throws Exception {
-		Element selectRequest = dbms.select("SELECT * FROM Users where username=?", user.getUsername());
+		Element selectRequest = dbms.select("SELECT * FROM Users WHERE username=?", user.getUsername());
 		Element userXml = selectRequest.getChild("record");
 		String id;
 		if (Log.isDebugEnabled(Geonet.LDAP)){
@@ -96,7 +92,7 @@ public class LDAPUtils {
 				String profile = privilege.two();
 				Element groupIdRequest = dbms.select("SELECT id FROM Groups WHERE name = ?", groupName);
 				Element groupRecord = groupIdRequest.getChild("record");
-				String groupId;
+				String groupId = null;
 				
 				if (groupRecord == null && createNonExistingLdapGroup) {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
@@ -104,22 +100,26 @@ public class LDAPUtils {
 					}
 					
 					// If LDAP group does not exist in local database, create it
-//					Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Groups");
-//					groupId = nextIdRequest.getChild("record").getChildText("max");
 					groupId = serialFactory.getSerial(dbms, "Groups") + "";
 					String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
 					dbms.execute(query, new Integer(groupId), groupName);
 					Lib.local.insert(dbms, "Groups", new Integer(groupId), groupName);
-				} else {
+				} else if (groupRecord != null) {
 					groupId = groupRecord.getChildText("id");
 				}
 				
-				if (Log.isDebugEnabled(Geonet.LDAP)){
-					Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
-				}
-				
-				if (groupRecord != null || createNonExistingLdapGroup) {
+
+				if (groupId != null || createNonExistingLdapGroup) {
+					if (Log.isDebugEnabled(Geonet.LDAP)){
+						Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
+					}
+					
 					Update.addGroup(dbms, new Integer(id), new Integer(groupId), profile);
+				} else {
+					if (Log.isDebugEnabled(Geonet.LDAP)){
+						Log.debug(Geonet.LDAP, "  - Can't create LDAP group " + groupName + " for user. " +
+												"Group does not exist in local database or createNonExistingLdapGroup is set to false.");
+					}
 				}
 			}
 		}
@@ -155,7 +155,6 @@ public class LDAPUtils {
 				}
 			}
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return userInfo;

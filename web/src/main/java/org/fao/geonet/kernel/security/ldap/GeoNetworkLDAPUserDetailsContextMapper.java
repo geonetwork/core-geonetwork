@@ -2,7 +2,10 @@ package org.fao.geonet.kernel.security.ldap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,11 +37,14 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 public class GeoNetworkLDAPUserDetailsContextMapper implements
 		UserDetailsContextMapper, ApplicationContextAware {
 	
-	private static final String ALL_GROUP_INDICATOR = "*";
+	private static final String ALL_GROUP_INDICATOR = "ALL";
 
 	Map<String, String[]> mapping;
+
+	Map<String, String> profilMapping;
 	
 	private String privilegePattern;
+	private Pattern pattern;
 	private int groupIndexInPattern;
 	private int profilIndexInPattern;
 	private boolean importPrivilegesFromLdap;
@@ -58,6 +64,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		SerialFactory serialFactory = applicationContext.getBean(SerialFactory.class);
 
 		String defaultProfile = (mapping.get("profile")[1] != null ? mapping.get("profile")[1] : Profile.REGISTERED_USER);
+		String defaultGroup = mapping.get("privilege")[1];
 		
 		Map<String, ArrayList<String>> userInfo = LDAPUtils.convertAttributes(userCtx.getAttributes()
 				.getAll());
@@ -79,47 +86,108 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				// 1. no privilegePattern defined. In that case the user 
 				// has the same profile for all groups. The list of groups 
 				// is retreived from the privilegeAttribute content
-				userDetails.setProfile(getUserInfo(userInfo, mapping.get("profile")[0]));
-				for (String group : userInfo.get(mapping.get("privilege")[0])) {
-					userDetails.addPrivilege(group, userDetails.getProfile());
+				// getUserInfo(userInfo, mapping.get("profile")[0]));
+				
+				// Usually only one profile is defined in the profile attribute
+				List<String> ldapProfiles = userInfo.get(mapping.get("profile")[0]);
+				if (ldapProfiles != null) {
+					for (String profile : ldapProfiles) {
+						if (Log.isDebugEnabled(Geonet.LDAP)){
+							Log.debug(Geonet.LDAP, "  User profile " + profile + " found in attribute " + mapping.get("profile")[0]);
+						}
+						
+						// Check if profile exist in profile mapping table
+						String mappedProfile = profilMapping.get(profile);
+						if (mappedProfile != null) {
+							profile = mappedProfile;
+						}
+						
+						if (Log.isDebugEnabled(Geonet.LDAP)){
+							Log.debug(Geonet.LDAP, "  Assigning profile " + profile);
+						}
+						if (profileManager.exists(profile)) {
+							userDetails.setProfile(profile);
+						} else {
+							Log.error(Geonet.LDAP, "  Profile " + profile + " does not exist.");
+						}
+					}
 				}
 				
-				// Set default privileges
-				if (userDetails.getPrivileges().size() == 0) {
-					userDetails.addPrivilege(mapping.get("privilege")[1], defaultProfile);
+				// If no profile defined, use default profile
+				if (userDetails.getProfile() == null) {
+					if (Log.isDebugEnabled(Geonet.LDAP)){
+						Log.debug(Geonet.LDAP, "  No profile defined in LDAP, using default profile " + defaultProfile);
+					}
+					userDetails.setProfile(defaultProfile);
+				}
+				
+				
+				if (userDetails.getProfile() != Profile.ADMINISTRATOR) {
+					List<String> ldapGroups = userInfo.get(mapping.get("privilege")[0]);
+					if (ldapGroups != null) {
+						for (String group : ldapGroups) {
+							if (Log.isDebugEnabled(Geonet.LDAP)){
+								Log.debug(Geonet.LDAP, "  Define group privilege for group " + group + " as " + userDetails.getProfile());
+							}
+							userDetails.addPrivilege(group, userDetails.getProfile());
+						}
+					}
+					
+					// Set default privileges
+					if (userDetails.getPrivileges().size() == 0 && defaultGroup != null) {
+						if (Log.isDebugEnabled(Geonet.LDAP)){
+							Log.debug(Geonet.LDAP, "  No privilege defined, setting privilege for group " + defaultGroup + " as " + userDetails.getProfile());
+						}
+						userDetails.addPrivilege(defaultGroup, userDetails.getProfile());
+					}
 				}
 			} else {
 				// 2. a privilegePattern is defined which define a 
 				// combination of group and profile pair.
-				Pattern p = Pattern.compile(privilegePattern);
 				ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
-				
-				for (String privilegeDefinition : privileges) {
-					Matcher m = p.matcher(privilegeDefinition);
-					boolean b = m.matches();
-					if (b) {
-						String group = m.group(groupIndexInPattern);
-						String profil = m.group(profilIndexInPattern);
-						
-						// TODO : skip undeclared profil
-						if (group != null && profil != null) {
-							userDetails.setProfile(profil);
-							if (!group.equals(ALL_GROUP_INDICATOR)) {
-								userDetails.addPrivilege(group, profil);
+				if (privileges != null) {
+					Set<String> profileList = new HashSet<String>();
+					
+					for (String privilegeDefinition : privileges) {
+						Matcher m = pattern.matcher(privilegeDefinition);
+						boolean b = m.matches();
+						if (b) {
+							String group = m.group(groupIndexInPattern);
+							String profile = m.group(profilIndexInPattern);
+							
+							if (group != null && profile != null && profileManager.exists(profile)) {
+								if (!group.equals(ALL_GROUP_INDICATOR)) {
+									if (Log.isDebugEnabled(Geonet.LDAP)){
+										Log.debug(Geonet.LDAP, "  Adding profile " + profile + " for group " + group);
+									}
+									userDetails.addPrivilege(group, profile);
+									profileList.add(profile);
+								}
 							}
+						} else {
+							Log.error(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 						}
-					} else {
-						System.out.println("LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 					}
+					String highestUserProfile = profileManager.getHighestProfile(profileList);
+					if (highestUserProfile != null){
+						if (Log.isDebugEnabled(Geonet.LDAP)){
+							Log.debug(Geonet.LDAP, "  Highest user profile is " + highestUserProfile);
+						}
+						userDetails.setProfile(highestUserProfile);
+					}
+
 				}
 			}
 		} else {
 			Dbms dbms = null;
+			// If user already exist in database, retrieve his profile information
 			try {
 				dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
 				Element dbUserProfilRequest = dbms.select("SELECT profile FROM Users WHERE username=?", userDetails.getUsername());
-				String dbUserProfil = dbUserProfilRequest.getChild("record").getChildText("profile");
-				userDetails.setProfile(dbUserProfil);
+				if (dbUserProfilRequest.getChild("record") != null) {
+					String dbUserProfil = dbUserProfilRequest.getChild("record").getChildText("profile");
+					userDetails.setProfile(dbUserProfil);
+				}
 			} catch (Exception e) {
 				try {
 					resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
@@ -142,9 +210,17 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			}
 		}
 		
-		// Assign default profile if not set by LDAP info
+		// Assign default profile if not set by LDAP info  or local database
 		if (userDetails.getProfile() == null) {
 			userDetails.setProfile(defaultProfile);
+		}
+		// Check that user profile is defined and fallback to registered user
+		// in order to avoid inconsistent JeevesUser creation
+		Set<String> checkProfile = profileManager.getProfilesSet(userDetails.getProfile());
+		if (checkProfile == null) {
+			Log.error(Geonet.LDAP, "  User profile " + userDetails.getProfile() + " is not set in Jeeves registered profiles." + 
+									" Assigning registered user profile.");
+			userDetails.setProfile(Profile.REGISTERED_USER);
 		}
 		
 		Dbms dbms = null;
@@ -221,6 +297,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 	
 	public void setPrivilegePattern(String privilegePattern) {
 		this.privilegePattern = privilegePattern;
+		this.pattern = Pattern.compile(privilegePattern);
 	}
 	
 	public int getGroupIndexInPattern() {
@@ -258,7 +335,19 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 	public Map<String, String[]> getMapping() {
 		return mapping;
 	}
-
+	
+	public String getProfilMappingValue(String key) {
+		return profilMapping.get(key);
+	}
+	
+	public void setProfilMapping(Map<String, String> profileMapping) {
+		this.profilMapping = profileMapping;
+	}
+	
+	public Map<String, String> getProfilMapping() {
+		return profilMapping;
+	}
+	
 	public boolean isImportPrivilegesFromLdap() {
 		return importPrivilegesFromLdap;
 	}
