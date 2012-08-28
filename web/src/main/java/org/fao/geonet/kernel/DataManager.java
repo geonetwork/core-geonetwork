@@ -2152,9 +2152,11 @@ public class DataManager {
 		
 		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 		String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
+		String baseUrl = context.getBaseUrl();
 		
 		env.addContent(new Element("host").setText(host));
 		env.addContent(new Element("port").setText(port));
+		env.addContent(new Element("baseUrl").setText(baseUrl));
 		
 		manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL);
 	}
