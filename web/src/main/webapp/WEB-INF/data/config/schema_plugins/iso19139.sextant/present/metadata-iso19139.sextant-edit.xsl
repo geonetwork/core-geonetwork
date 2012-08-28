@@ -40,7 +40,7 @@
 
 		<!-- process in profile mode first -->
 		<xsl:variable name="profileElements">
-			<xsl:if test="$currTab='emodnet.hydrography'">
+			<xsl:if test="$currTab='sextant'">
 				<xsl:apply-templates mode="iso19139.sextant" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit" select="$edit"/>
@@ -275,6 +275,7 @@
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
+		
 	</xsl:template>
 
 

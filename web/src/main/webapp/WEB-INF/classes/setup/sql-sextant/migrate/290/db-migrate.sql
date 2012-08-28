@@ -25,8 +25,6 @@
 
 
 -- Sextant specific
---  * For the time being, move all records to iso19139 schema (no Ifremer profiles support)
-UPDATE metadata SET schemaid = 'iso19139' WHERE schemaid like 'iso19139.%';
 --  * Drop unused columns
 ALTER TABLE groups DROP COLUMN extent;
 ALTER TABLE groups DROP COLUMN public_group;
