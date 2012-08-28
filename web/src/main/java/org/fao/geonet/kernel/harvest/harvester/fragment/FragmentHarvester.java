@@ -269,8 +269,9 @@ public class FragmentHarvester {
 		
 		if (uuid == null || uuid.equals("")) {
 			uuid = UUID.randomUUID().toString(); 
+			if(log.isDebugEnabled())
+				log.debug("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(fragment));
 			fragment.setAttribute("uuid", uuid);
-			log.warning("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(fragment));
 		}
 
 		// Add schema as an attribute (if not already present)
