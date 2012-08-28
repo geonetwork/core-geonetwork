@@ -27,13 +27,13 @@
     </skos:Concept>
     <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#coastal-marine-environment">
         <skos:prefLabel xml:lang="en">coastal-marine-environment</skos:prefLabel>
-        <skos:definition xml:lang="en">Coastal & marine environment</skos:definition>
+        <skos:definition xml:lang="en">Coastal &amp; marine environment</skos:definition>
         <skos:prefLabel xml:lang="fr">coastal-marine-environment</skos:prefLabel>
-        <skos:definition xml:lang="fr">Coastal & marine environment</skos:definition>
+        <skos:definition xml:lang="fr">Coastal &amp; marine environment</skos:definition>
     </skos:Concept>
     <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#weather-climate-and-seasonal-forecasting">
         <skos:prefLabel xml:lang="en">weather-climate-and-seasonal-forecasting</skos:prefLabel>
-        <skos:definition xml:lang="en"Weather climate and seasonal forecasting</skos:definition>
+        <skos:definition xml:lang="en">Weather climate and seasonal forecasting</skos:definition>
         <skos:prefLabel xml:lang="fr">weather-climate-and-seasonal-forecasting</skos:prefLabel>
         <skos:definition xml:lang="fr">Weather climate and seasonal forecasting</skos:definition>
     </skos:Concept>
