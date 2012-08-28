@@ -20,6 +20,10 @@
         <label>Version</label>
         <description>Version of the cited resource</description>
     </element>
+    <element name="gmd:supplementalInformation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation">
+        <label>Temporal coverage</label>
+        <description></description>
+    </element>
     
     <element name="gmd:abstract">
         <label>Overview</label>
