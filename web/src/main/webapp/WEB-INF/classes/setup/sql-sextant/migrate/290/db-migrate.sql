@@ -423,11 +423,6 @@ UPDATE IsoLanguages SET shortcode='vi' WHERE code='vie';
 
 
 
-INSERT INTO Settings VALUES (89,80,'bind',NULL);
-INSERT INTO Settings VALUES (102,86,'subtree','false');
-INSERT INTO Settings VALUES (140,89,'bindDn','cn=fake.name,ou=people,dc=fao,dc=org');
-INSERT INTO Settings VALUES (141,89,'bindPw','fake_password');
-INSERT INTO Settings VALUES (150,80,'anonBind','true');
 
 ALTER TABLE Users ADD security varchar(128);
 ALTER TABLE Users ADD authtype varchar(32);
