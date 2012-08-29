@@ -34,6 +34,9 @@ ALTER TABLE groups DROP COLUMN public_group;
 --  * Add a GeoNetwork default admin/admin account
 INSERT INTO Users VALUES  (2,'admin','d033e22ae348aeb566fc214aec3585c4da997','admin','admin','Administrator','','','','','','','','');
 
+UPDATE metadata SET schemaId = 'iso19139.emodnet.chemistry' WHERE schemaId = 'iso19139.EMODNET.CHEMISTRY';
+UPDATE metadata SET schemaId = 'iso19139.emodnet.hydrography' WHERE schemaId = 'iso19139.EMODNET.HYDROGRAPHY';
+UPDATE metadata SET schemaId = 'iso19139.emodnet.sextant' WHERE schemaId = 'iso19139.SEXTANT';
 
 
 -- 2.6.x series
