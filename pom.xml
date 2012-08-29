@@ -882,7 +882,7 @@
         <module>web-itest</module>
       </modules>
     </profile>
-    <profile>
+    <!--<profile>
       <id>gast</id>
       <activation>
         <file>
@@ -903,7 +903,7 @@
       <modules>
         <module>geoserver</module>
       </modules>
-    </profile>
+    </profile>-->
   </profiles>
 
   <distributionManagement>
