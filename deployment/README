@@ -1,0 +1,80 @@
+Installation instruction for Ifremer Sextant
+============================================
+
+Download tomcat from http://tomcat.apache.org/download-70.cgi
+Download liferay as WAR from http://www.liferay.com/downloads/liferay-portal/additional-files
+
+Create liferay DB:
+------------------
+
+Create a postgresql db for liferay sextant5-liferay for user www-data
+
+Build Sextant:
+--------------
+ * CAS: 
+  * configure cas/src/main/webapp/WEB-INF/cas.properties (TODO use filter)
+  * build
+cd cas
+mvn clean install
+ * Liferay: configure deployment/liferay/config/portal-ext.properties (TODO use filter)
+ * Tomcat: configure server.xml - relative path to keystore does not work 
+ * Build all
+cd ..
+mvn clean install
+
+
+Create bundle:
+--------------
+
+Edit install.sh to match the target platform
+
+./install.sh
+
+
+Run:
+----
+
+cd apache-tomcat-7.0.29/bin/
+./startup.sh
+
+
+go to http://localhost:8080/
+click Finish configuration
+click Go to myportal
+
+./shutdown.sh
+./startup.sh
+
+Connect as test/test
+Potal settings > Authentification > LDAP > LDAP server > defaults
+Save (to avoid Error importing LDAP users and groups)
+Logout
+Login using an LDAP account through CAS
+
+
+Hints:
+------
+
+Error importing LDAP users and groups
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If
+07:15:18,148 ERROR [localhost-startStop-1][PortalLDAPImporterImpl:205] Error importing LDAP users and groups
+java.lang.NullPointerException
+   at com.liferay.portal.kernel.io.unsync.UnsyncStringReader.<init>(UnsyncStringReader.java:34)
+   at com.liferay.portal.kernel.util.PropertiesUtil.load(PropertiesUtil.java:208)
+   at com.liferay.portal.kernel.util.PropertiesUtil.load(PropertiesUtil.java:201)
+   at com.liferay.portal.security.ldap.LDAPSettingsUtil.getUserExpandoMappings(LDAPSettingsUtil.java:121)
+
+Add in portal-ext.properties, depending on your ldap id:
+ldap.user.custom.mappings.10427=
+ldap.contact.mappings.10427=
+ldap.contact.custom.mappings.10427=
+
+See http://www.liferay.com/community/forums/-/message_boards/message/8246721
+
+If it does not work, go to Portal Configuration, update LDAP user mapping and save it.
+
+Restart tomcat.
+
+
