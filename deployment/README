@@ -17,10 +17,9 @@ Build Sextant:
 cd cas
 mvn clean install
  * Liferay: configure deployment/liferay/config/portal-ext.properties (TODO use filter)
- * Tomcat: configure server.xml - relative path to keystore does not work 
  * Build all
 cd ..
-mvn clean install
+mvn clean install -Pyourprofil
 
 
 Create bundle:
