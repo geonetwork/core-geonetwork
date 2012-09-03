@@ -1532,7 +1532,7 @@ public class DataManager {
         //--- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadata);
 
-        if (ufo && !"y".equals(isTemplate)) {
+        if (ufo && "n".equals(isTemplate)) {
             String parentUuid = null;
             metadata = updateFixedInfo(schema, id$, uuid, metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         }

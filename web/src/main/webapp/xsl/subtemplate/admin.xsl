@@ -34,7 +34,7 @@
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/LightBox/lightbox.js"/>
 
-				<script type="text/javascript" src="{$widgetPath}/js/OpenLayers/OpenLayers.js"/>
+				<script type="text/javascript" src="{$widgetPath}/js/OpenLayers/lib/OpenLayers.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/GeoExt/script/GeoExt.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork.js"/>
 			</xsl:when>

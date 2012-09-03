@@ -779,8 +779,8 @@ public class SearchManager {
 
            StringBuilder sb = new StringBuilder();
 			allText(metadata, sb);
-			SearchManager.addField(xmlDoc, LuceneIndexField.TITLE, title, true, true);
-			SearchManager.addField(xmlDoc, LuceneIndexField.ANY, sb.toString(), true, true);
+			SearchManager.addField(defaultDoc, LuceneIndexField.TITLE, title, true, true);
+			SearchManager.addField(defaultDoc, LuceneIndexField.ANY, sb.toString(), true, true);
 		}
         else {
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
