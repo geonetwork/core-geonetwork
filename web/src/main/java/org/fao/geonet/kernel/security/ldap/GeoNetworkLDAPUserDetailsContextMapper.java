@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.ldap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 
 	Map<String, String[]> mapping;
 
-	Map<String, String> profilMapping;
+	Map<String, String> profileMapping;
 	
 	private String privilegePattern;
 	private Pattern pattern;
@@ -103,7 +104,23 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			.setCity(getUserInfo(userInfo, "city"))
 			.setCountry(getUserInfo(userInfo, "country"));
 		
-		// Set privileges for the user:
+		setProfilesAndPrivileges(resourceManager, profileManager,
+				defaultProfile, defaultGroup, userInfo, userDetails);
+		
+		saveUser(resourceManager, serialFactory, userDetails);
+		
+		return userDetails;
+	}
+
+	private void setProfilesAndPrivileges(ResourceManager resourceManager,
+			ProfileManager profileManager, String defaultProfile,
+			String defaultGroup, Map<String, ArrayList<String>> userInfo,
+			LDAPUser userDetails) {
+		Map<String, Set<String>> userProfilesAndPrivileges = new HashMap<String, Set<String>>();
+		
+		
+		// Set privileges for the user. If not, privileges are handled
+		// in local database
 		if (importPrivilegesFromLdap) {
 			if ("".equals(privilegePattern)) {
 				// 1. no privilegePattern defined. In that case the user 
@@ -121,7 +138,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 						}
 						
 						// Check if profile exist in profile mapping table
-						String mappedProfile = profilMapping.get(profile);
+						String mappedProfile = profileMapping.get(profile);
 						if (mappedProfile != null) {
 							profile = mappedProfile;
 						}
@@ -246,7 +263,10 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 									" Assigning registered user profile.");
 			userDetails.setProfile(Profile.REGISTERED_USER);
 		}
-		
+	}
+
+	private void saveUser(ResourceManager resourceManager,
+			SerialFactory serialFactory, LDAPUser userDetails) {
 		Dbms dbms = null;
 		try {
 			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
@@ -271,8 +291,6 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				}
 			}
 		}
-		
-		return userDetails;
 	}
 	private String getUserInfo (Map<String, ArrayList<String>> userInfo, String attributeName) {
 		return getUserInfo(userInfo, attributeName, "");
@@ -360,16 +378,16 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		return mapping;
 	}
 	
-	public String getProfilMappingValue(String key) {
-		return profilMapping.get(key);
+	public String getProfileMappingValue(String key) {
+		return profileMapping.get(key);
 	}
 	
-	public void setProfilMapping(Map<String, String> profileMapping) {
-		this.profilMapping = profileMapping;
+	public void setProfileMapping(Map<String, String> profileMapping) {
+		this.profileMapping = profileMapping;
 	}
 	
-	public Map<String, String> getProfilMapping() {
-		return profilMapping;
+	public Map<String, String> getProfileMapping() {
+		return profileMapping;
 	}
 	
 	public boolean isImportPrivilegesFromLdap() {
