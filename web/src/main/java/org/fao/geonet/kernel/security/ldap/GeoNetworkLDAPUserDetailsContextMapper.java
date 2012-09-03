@@ -203,6 +203,8 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 									}
 									userDetails.addPrivilege(group, profile);
 									profileList.add(profile);
+								} else {
+									profileList.add(profile);
 								}
 							}
 						} else {
