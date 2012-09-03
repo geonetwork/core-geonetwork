@@ -60,7 +60,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="mapping">
             <map/>
          </property>
-        <property name="profilMapping">
+        <property name="profileMapping">
             <map/>
         </property>
         <!-- Privileges extraction
