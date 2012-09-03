@@ -1,7 +1,31 @@
+//=============================================================================
+//===	Copyright (C) 2001-2012 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +65,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 
 	Map<String, String[]> mapping;
 
-	Map<String, String> profilMapping;
+	Map<String, String> profileMapping;
 	
 	private String privilegePattern;
 	private Pattern pattern;
@@ -80,7 +104,23 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			.setCity(getUserInfo(userInfo, "city"))
 			.setCountry(getUserInfo(userInfo, "country"));
 		
-		// Set privileges for the user:
+		setProfilesAndPrivileges(resourceManager, profileManager,
+				defaultProfile, defaultGroup, userInfo, userDetails);
+		
+		saveUser(resourceManager, serialFactory, userDetails);
+		
+		return userDetails;
+	}
+
+	private void setProfilesAndPrivileges(ResourceManager resourceManager,
+			ProfileManager profileManager, String defaultProfile,
+			String defaultGroup, Map<String, ArrayList<String>> userInfo,
+			LDAPUser userDetails) {
+		Map<String, Set<String>> userProfilesAndPrivileges = new HashMap<String, Set<String>>();
+		
+		
+		// Set privileges for the user. If not, privileges are handled
+		// in local database
 		if (importPrivilegesFromLdap) {
 			if ("".equals(privilegePattern)) {
 				// 1. no privilegePattern defined. In that case the user 
@@ -91,13 +131,14 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				// Usually only one profile is defined in the profile attribute
 				List<String> ldapProfiles = userInfo.get(mapping.get("profile")[0]);
 				if (ldapProfiles != null) {
+					Collections.sort(ldapProfiles);
 					for (String profile : ldapProfiles) {
 						if (Log.isDebugEnabled(Geonet.LDAP)){
 							Log.debug(Geonet.LDAP, "  User profile " + profile + " found in attribute " + mapping.get("profile")[0]);
 						}
 						
 						// Check if profile exist in profile mapping table
-						String mappedProfile = profilMapping.get(profile);
+						String mappedProfile = profileMapping.get(profile);
 						if (mappedProfile != null) {
 							profile = mappedProfile;
 						}
@@ -162,6 +203,8 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 									}
 									userDetails.addPrivilege(group, profile);
 									profileList.add(profile);
+								} else {
+									profileList.add(profile);
 								}
 							}
 						} else {
@@ -222,7 +265,10 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 									" Assigning registered user profile.");
 			userDetails.setProfile(Profile.REGISTERED_USER);
 		}
-		
+	}
+
+	private void saveUser(ResourceManager resourceManager,
+			SerialFactory serialFactory, LDAPUser userDetails) {
 		Dbms dbms = null;
 		try {
 			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
@@ -247,8 +293,6 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				}
 			}
 		}
-		
-		return userDetails;
 	}
 	private String getUserInfo (Map<String, ArrayList<String>> userInfo, String attributeName) {
 		return getUserInfo(userInfo, attributeName, "");
@@ -336,16 +380,16 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		return mapping;
 	}
 	
-	public String getProfilMappingValue(String key) {
-		return profilMapping.get(key);
+	public String getProfileMappingValue(String key) {
+		return profileMapping.get(key);
 	}
 	
-	public void setProfilMapping(Map<String, String> profileMapping) {
-		this.profilMapping = profileMapping;
+	public void setProfileMapping(Map<String, String> profileMapping) {
+		this.profileMapping = profileMapping;
 	}
 	
-	public Map<String, String> getProfilMapping() {
-		return profilMapping;
+	public Map<String, String> getProfileMapping() {
+		return profileMapping;
 	}
 	
 	public boolean isImportPrivilegesFromLdap() {

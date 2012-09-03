@@ -107,6 +107,9 @@ public class Info implements Service
 			String type = el.getText();
 
 
+			if (!name.equals("type"))
+				continue;
+
 			if (type.equals("site")) {
 				result.addContent(gc.getSettingManager().get("system", -1));
 			}
