@@ -3426,17 +3426,40 @@
 							<xsl:when test="contains($fileName ,'://')">
 								<image type="unknown"><xsl:value-of select="$fileName"/></image>
 							</xsl:when>
-						  <!-- GN 2.0.x only retrieve the XML not the MEF. So link thumbnail to remote resources.get service -->
-						  <xsl:when test="$info/smallThumbnail">
-						    <image type="thumbnail">
-						      <xsl:value-of select="concat($info/smallThumbnail, $fileName)"/>
-						    </image>
-						  </xsl:when>
-						  <xsl:otherwise>
-						    <image type="thumbnail">
-						      <xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
-						    </image>
-						  </xsl:otherwise>
+
+							<!-- GN 2.0.x only retrieve the XML not the MEF. So link thumbnail to remote resources.get service -->
+							<!-- small thumbnail -->
+							<xsl:when test="$fileDescr='thumbnail'">	      
+								<xsl:choose>
+									<xsl:when test="$info/smallThumbnail">
+										<image type="thumbnail">
+											<xsl:value-of select="concat($info/smallThumbnail, $fileName)"/>
+										</image>
+									</xsl:when>
+									<xsl:otherwise>
+										<image type="thumbnail">
+											<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										</image>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+
+							<!-- large thumbnail -->
+
+							<xsl:when test="$fileDescr='large_thumbnail'">
+								<xsl:choose>
+									<xsl:when test="$info/largeThumbnail">
+										<image type="overview">
+											<xsl:value-of select="concat($info/largeThumbnail, $fileName)"/>
+										</image>
+									</xsl:when>
+									<xsl:otherwise>
+										<image type="overview">
+											<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										</image>
+								</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
 						</xsl:choose>
 					</xsl:if>
 				</xsl:for-each>
