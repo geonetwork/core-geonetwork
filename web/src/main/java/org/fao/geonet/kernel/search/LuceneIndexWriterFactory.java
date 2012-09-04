@@ -7,12 +7,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import jeeves.utils.Log;
 
-import org.apache.lucene.DocumentBuilder;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.index.CategoryDocumentBuilder;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
-import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyWriter;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -36,7 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LuceneIndexWriterFactory {
 
     protected final Map<String, IndexWriter> _writers = new HashMap<String, IndexWriter>();
-    protected volatile LuceneTaxonomyWriter _taxoIndexWriter;
+    protected volatile DirectoryTaxonomyWriter _taxoIndexWriter;
     protected volatile int _count;
     private final File _luceneDir;
     private File _taxoDir;
@@ -220,7 +219,7 @@ public class LuceneIndexWriterFactory {
                 Log.debug(Geonet.INDEX_ENGINE, "Null taxonomy writer, creating it from directory " + _taxoDir.getPath());
             }
             try {
-                _taxoIndexWriter = new LuceneTaxonomyWriter(FSDirectory.open(_taxoDir));
+                _taxoIndexWriter = new DirectoryTaxonomyWriter(FSDirectory.open(_taxoDir));
             } catch (CorruptIndexException e) {
                 e.printStackTrace();
             } catch (LockObtainFailedException e) {

@@ -227,8 +227,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					if (!reader.getFieldNames(IndexReader.FieldOption.ALL)
-							.contains(property))
+					if (reader.getFieldInfos().fieldInfo(property) == null)
 						continue;
 					
 					boolean isRange = false;

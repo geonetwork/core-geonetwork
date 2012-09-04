@@ -15,8 +15,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import jeeves.utils.Log;
 
+import org.apache.lucene.facet.taxonomy.InconsistentTaxonomyException;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
-import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyReader;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
@@ -86,22 +87,22 @@ public class LuceneIndexReaderFactory {
                          Log.debug(Geonet.LUCENE_TRACKING, "opening lucene reader "+id);
                     }
                 }
-                @Override
-                public synchronized void decRef() throws IOException {
-                    super.decRef();
-                    if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
-                        if(getRefCount() > 0) {
-                            Log.debug(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id+", new ref count is "+getRefCount());
-                        } else {
-                            Log.debug(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)");
-                        }
-                        if(getRefCount() > 0) {
-                            Log.trace(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id, new DecrementingReaderTracking());
-                        } else {
-                            Log.trace(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)", new CloseReaderTracking());
-                        }
-                    }
-                }
+//                @Override
+//                public synchronized void decRef() throws IOException {
+//                    super.decRef();
+//                    if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
+//                        if(getRefCount() > 0) {
+//                            Log.debug(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id+", new ref count is "+getRefCount());
+//                        } else {
+//                            Log.debug(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)");
+//                        }
+//                        if(getRefCount() > 0) {
+//                            Log.trace(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id, new DecrementingReaderTracking());
+//                        } else {
+//                            Log.trace(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)", new CloseReaderTracking());
+//                        }
+//                    }
+//                }
             };
         } finally {
             lock.unlock();
@@ -118,7 +119,7 @@ public class LuceneIndexReaderFactory {
     public TaxonomyReader getTaxonomyReader() {
         if (currentTaxoReader == null) {
             try {
-                currentTaxoReader = new LuceneTaxonomyReader(
+                currentTaxoReader = new DirectoryTaxonomyReader(
                         FSDirectory.open(taxoDir));
             } catch (CorruptIndexException e) {
                 Log.warning(Geonet.SEARCH_ENGINE, "Taxonomy index is corrupted. Error is " + e.getMessage());
@@ -221,7 +222,12 @@ public class LuceneIndexReaderFactory {
         // After a reopen() on the IndexReader, refresh() the TaxonomyReader. 
         // No search should be performed on the new IndexReader until refresh() has finished.
         if (reopened) {
-            getTaxonomyReader().refresh();
+            try {
+                getTaxonomyReader().refresh();
+            } catch (InconsistentTaxonomyException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
     

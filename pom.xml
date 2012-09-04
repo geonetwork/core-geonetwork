@@ -878,6 +878,6 @@
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>2.7.4</geotools.version>
-    <lucene.version>3.4.0</lucene.version>
+    <lucene.version>3.6.1</lucene.version>
   </properties>
 </project>

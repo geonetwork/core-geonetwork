@@ -68,8 +68,8 @@ import org.apache.lucene.document.NumericField;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
-import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyReader;
-import org.apache.lucene.facet.taxonomy.lucene.LuceneTaxonomyWriter;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -1331,7 +1331,7 @@ public class SearchManager {
                 // reason for calling this is a side-effect, probably the call to maybeReopen() inside there
                 _indexReader.getReader(null);
                 // TODO : false if one or the other is in bad shape
-                TaxonomyReader taxoReader = new LuceneTaxonomyReader(FSDirectory.open(_luceneTaxonomyDir));
+                TaxonomyReader taxoReader = new DirectoryTaxonomyReader(FSDirectory.open(_luceneTaxonomyDir));
                 taxoReader.close();
                 badIndex = false;
             }
@@ -1350,7 +1350,7 @@ public class SearchManager {
 			if (!_luceneTaxonomyDir.exists()) {
 				_luceneTaxonomyDir.mkdirs();
 			}
-			TaxonomyWriter taxoWriter = new LuceneTaxonomyWriter(FSDirectory.open(_luceneTaxonomyDir), OpenMode.CREATE);
+			TaxonomyWriter taxoWriter = new DirectoryTaxonomyWriter(FSDirectory.open(_luceneTaxonomyDir), OpenMode.CREATE);
 			taxoWriter.close();
 		}
 	}
