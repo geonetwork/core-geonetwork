@@ -54,15 +54,14 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 /**
  * Map LDAP user information to GeoNetworkUser information.
  * 
- * Create the GeoNetworkUser in local database on first login.
+ * Create the GeoNetworkUser in local database on first login
+ * and update all user information on subsequent login.
  * 
  * @author francois
  */
 public class GeoNetworkLDAPUserDetailsContextMapper implements
 		UserDetailsContextMapper, ApplicationContextAware {
 	
-	private static final String ALL_GROUP_INDICATOR = "ALL";
-
 	Map<String, String[]> mapping;
 
 	Map<String, String> profileMapping;
@@ -107,6 +106,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 		setProfilesAndPrivileges(resourceManager, profileManager,
 				defaultProfile, defaultGroup, userInfo, userDetails);
 		
+		
 		saveUser(resourceManager, serialFactory, userDetails);
 		
 		return userDetails;
@@ -116,8 +116,6 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 			ProfileManager profileManager, String defaultProfile,
 			String defaultGroup, Map<String, ArrayList<String>> userInfo,
 			LDAPUser userDetails) {
-		Map<String, Set<String>> userProfilesAndPrivileges = new HashMap<String, Set<String>>();
-		
 		
 		// Set privileges for the user. If not, privileges are handled
 		// in local database
@@ -197,7 +195,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 							String profile = m.group(profilIndexInPattern);
 							
 							if (group != null && profile != null && profileManager.exists(profile)) {
-								if (!group.equals(ALL_GROUP_INDICATOR)) {
+								if (!group.equals(LDAPConstants.ALL_GROUP_INDICATOR)) {
 									if (Log.isDebugEnabled(Geonet.LDAP)){
 										Log.debug(Geonet.LDAP, "  Adding profile " + profile + " for group " + group);
 									}
@@ -211,7 +209,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 							Log.error(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 						}
 					}
-					String highestUserProfile = profileManager.getHighestProfile(profileList);
+					String highestUserProfile = profileManager.getHighestProfile(profileList.toArray(new String[0]));
 					if (highestUserProfile != null){
 						if (Log.isDebugEnabled(Geonet.LDAP)){
 							Log.debug(Geonet.LDAP, "  Highest user profile is " + highestUserProfile);
