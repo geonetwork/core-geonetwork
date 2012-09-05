@@ -133,6 +133,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             id: 'username',
             name: 'username',
             width: 70,
+            autoCreate: {tag: 'input'},
             hideLabel: false,
             allowBlank: false,
             fieldLabel: OpenLayers.i18n('username'),
