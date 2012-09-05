@@ -292,7 +292,13 @@ GeoNetwork.util.SearchTools = {
      */
     addFilterImpl: function(filters, type, name, value){
         if (type.charAt(0) === 'E') { // equals
-            filters.push(name + "=" + encodeURIComponent(value) + "");
+            if (typeof(value) == 'object') {
+                 for (var i=0; i< value.length; i++) {
+                     filters.push(name + "=" + encodeURIComponent(value[i]) + "");
+                 }
+            } else {
+                filters.push(name + "=" + encodeURIComponent(value) + "");
+            }
         } else if (type === 'B') { //boolean
             filters.push(name + "=" + (value ? 'on' : 'off') + "");
         } else if (type === 'O') { //optional boolean
@@ -382,7 +388,7 @@ GeoNetwork.util.SearchTools = {
                 } else if (cur.isXType('multislider')) {
                 } else {
                     if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
-                        result[cur.getName()] = cur.getValue();
+                        GeoNetwork.util.SearchTools.addFieldValue(result, cur.getName(), cur.getValue());
                     } else { 
                         
                     }
@@ -391,6 +397,13 @@ GeoNetwork.util.SearchTools = {
             return true;
         });
         return result;
+    },
+    addFieldValue: function (result, name, value) {
+        if (result[name] === undefined) {
+            result[name] = new Array(value);
+        } else {
+            result[name].push(value);
+        }
     },
     parseFacets: function(response) {
         var facets = response.responseXML.childNodes[0].childNodes[1];

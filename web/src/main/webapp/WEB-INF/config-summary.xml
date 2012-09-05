@@ -12,11 +12,11 @@
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" order="name" type="string" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" order="name"
 				type="number" max="10"/>
-			<item name="spatialRepresentation" plural="spatialRepresentations"
-				indexKey="spatialRepresentation" type="string" order="freq" max="10"/>
-			<item name="organizationName" plural="organizationNames" indexKey="orgName" order="freq"
+			<item name="spatialRepresentationType" plural="spatialRepresentationTypes"
+				indexKey="spatialRepresentationType" type="string" order="freq" max="10"/>
+			<item name="orgName" plural="orgNames" indexKey="orgName" order="freq"
 				type="string" max="50"/>
-			<item name="metadataAuthor" plural="metadataAuthors" indexKey="metadataPOC" order="freq"
+			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" order="freq"
 				type="string" max="50"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType" order="freq"
 				type="string" max="10"/>
@@ -40,7 +40,7 @@
 				max="10"/>
 			<item name="spatialRepresentation" plural="spatialRepresentations"
 				indexKey="spatialRepresentation" type="string" order="freq" max="10"/>
-			<item name="organisationName" plural="organisationNames" indexKey="orgName" order="freq"
+			<item name="orgName" plural="orgNames" indexKey="orgName" order="freq"
 				type="string" max="10"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType" order="freq"
 				type="string" max="10"/>

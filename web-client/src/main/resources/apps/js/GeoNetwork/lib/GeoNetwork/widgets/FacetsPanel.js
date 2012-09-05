@@ -43,44 +43,82 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
          *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
          */
         lang: 'en',
+        /** api: config[facetListOrder] 
+         *  Array of facets to display on the client side. This could be used to restrict the facet provided by 
+         *  the server. Example: [{name: 'keywords', count: 15}, {name: 'spatialRepresentations', count: 2}]
+         *  will display 15 keywords and all spatial representation types.
+         */
+        facetListOrder: [],
         autoScroll: true
     },
+    /** private: property[facetsStore]
+     * Store containing current facet for the search.
+     */
     facetsStore: new Ext.data.JsonStore({
         fields : [ 'facet', 'node', 'count' ]
     }),
+    /** private: property[startFacetsStore]
+     * Store the facet for first search used to provide facet switcher on breadcrumb.
+     */
+    startFacetsStore: new Ext.data.JsonStore({
+        fields : [ 'facet', 'node', 'count' ]
+    }),
+    /** private: property[currentFilter]
+     * Store current filter. This is used to not display current filter in facet list.
+     */
+    currentFilter: {},
+    counter: 0,
     searchForm: null,
     serviceUrl: null,
     catalogue: null,
     afterFacetClick: function(){
         
     },
-    
     refresh: function (response) {
         var facets = response.responseXML.childNodes[0].childNodes[1],
-            zappette = '<div id="breadcrumb"></div>', store = this.facetsStore, recId = 0;
+            zappette = '<div id="breadcrumb"></div>', 
+            panel = this, 
+            store = this.facetsStore, 
+            currentFilter = this.currentFilter;
         
         store.removeAll();
-
+        
         if (facets.nodeName === 'summary') {
             // TODO : Use template
-            Ext.each(facets.childNodes, function(facet) {
-                if (facet.nodeName != '#text' && facet.childNodes.length > 0) {
-                    zappette += "<h1 class='facet'>" + OpenLayers.i18n(facet.nodeName) + "</h1>";
-                    Ext.each(facet.childNodes, function(node) {
-                        if (node.getAttribute) {
-                            var data = {
-                                facet : node.nodeName,
-                                node : node.getAttribute('name'),
-                                count : node.getAttribute('count')
-                            };
-                            var r = new store.recordType(data, ++recId); 
-                            store.add(r);
-                            zappette += "<h2><a href='javascript:void(0);' class='facet' id='" + recId + "'>" 
-                                + node.getAttribute('name') + "&nbsp;(" + node.getAttribute('count') + ")</a></h2>"
+            if (this.facetListOrder.length > 0) {
+                // Display only client requested facet
+                Ext.each(this.facetListOrder, function (facetToDisplay) {
+                    Ext.each(facets.getElementsByTagName(facetToDisplay.name), function(facet) {
+                        if (facet.nodeName != '#text' && facet.childNodes.length > 0) {
+                            var nodeCount = 0;
+                            var facetList = "";
+                            Ext.each(facet.childNodes, function(node) {
+                                if (this.count == undefined || (this.count && nodeCount < this.count)) {
+                                	facetList += panel.displayFacetValue (node, currentFilter, store);
+                                }
+                            }, this);
+                            if (facetList !== "") {
+                                zappette += "<h1 class='facet'>" + OpenLayers.i18n(facet.nodeName) + "</h1>";
+                                zappette += facetList;
+                            }
                         }
-                    });
-                }
-            });
+                    }, facetToDisplay);
+                });
+            } else {
+                // Display all
+                Ext.each(facets.childNodes, function(facet) {
+                    if (facet.nodeName != '#text' && facet.childNodes.length > 0) {
+                        var facetList = "";
+                        Ext.each(facet.childNodes, function(node) {
+                            facetList += panel.displayFacetValue (node, currentFilter, store);
+                        });
+                        if (facetList !== "") {
+                            zappette += "<h1 class='facet'>" + OpenLayers.i18n(facet.nodeName) + "</h1>";
+                            zappette += facetList;
+                        }
+                    }
+                });
+            }
         }
         Ext.getDom('facets').innerHTML = zappette;
         
@@ -93,35 +131,55 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             });
         });
     },
+    displayFacetValue: function (node, currentFilter, store) {
+        if (node.getAttribute) {
+            var data = {
+                facet : node.nodeName,
+                node : node.getAttribute('name'),
+                count : node.getAttribute('count')
+            };
+            // Only display a facet if it's not part of current filter
+            if (currentFilter[data.facet] === undefined ||
+                  currentFilter[data.facet].indexOf(data.node) === -1) {
+                var recId = store.getCount() + 1,
+                     r = new store.recordType(data, recId); 
+                store.add(r);
+                return "<h2><a href='javascript:void(0);' class='facet' id='" + recId + "'>" 
+                    + data.node + "&nbsp;(" + data.count + ")</a></h2>"
+            }
+        }
+        return "";
+    },
     addFacet: function(id) {
-        var r = this.facetsStore.getById(id);
-        var form = this.searchForm;
-        // FIXME HACK 
-        var key = (r.get('facet') === 'organizationName' ? "orgName" : r.get('facet'));
+        var r = this.facetsStore.getById(id),
+            form = this.searchForm,
+            key = r.get('facet'),
+            value = r.get('node');
         
         var field = Ext.getCmp('E_' + key);
-        
-        if (field) {
-            // TODO
-            alert('More than one criteria on a facet is not yet supported.');
-            return;
-            // TODO field.setValue(field.getValue() + ' AND ' + r.get('node') + '');
+        this.counter ++;
+        var id = 'facet_' + this.counter;
+        if (this.currentFilter[key] === undefined) {
+            this.currentFilter[key] = new Array(value);
         } else {
-            form.insert(0, new Ext.form.TextField({
-                id: 'E_' +key,
-                name: 'E_' + key,
-                value: r.get('node'),
-                inputType: 'hidden'
-            }));
+            this.currentFilter[key].push(value);
         }
+        
+        form.insert(0, new Ext.form.TextField({
+            id: 'field_' + id,
+            name: 'E_' + key,
+            value: value,
+            // Switch to text for debugging
+            inputType: 'hidden'
+        }));
         
         // TODO escape '
         if (Ext.getDom('breadcrumb')) {
             // TODO : i18n
-            var id = 'facet_' + key + '_' + id;
-            Ext.getDom('breadcrumb').innerHTML += '<div class="bcfacet" id="' + id + '" title="Click to remove filter.">'
+           
+            Ext.getDom('breadcrumb').innerHTML += '<div class="bcfacet" id="' + id + '" title="' + OpenLayers.i18n('removeFilter') + '">'
             + '<a href="javascript:void(0);">' 
-            + OpenLayers.i18n(r.get('facet')) + ": " + r.get('node') + "</a>&nbsp;>&nbsp;</div>";
+            + OpenLayers.i18n(r.get('facet')) + ": " + r.get('node') + "</a></div>";
             // TODO no > sign on last facet
             // FIXME : register event only on the newly created one 
             var items = Ext.DomQuery.select('div.bcfacet');
@@ -136,10 +194,16 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
     },
 
     removeFacet: function(id) {
-        Ext.getDom('breadcrumb') && Ext.get(id).remove();
-        var field = Ext.getCmp('E_' + id.split('_')[1]);
+        // Remove breadcrumb reference
+        Ext.getDom('breadcrumb') && Ext.get(id) && Ext.get(id).remove();
+        
+        // Remove search form reference
+        var field = Ext.getCmp('field_' + id);
         this.searchForm.remove(field);
         this.searchForm.fireEvent('search');
+        
+        this.currentFilter[key].splice(this.currentFilter[key].indexOf(value), 1);
+
     },
     init: function(){
         this.update('<div id="breadcrumb" class="breadcrumb"></div><div id="facets" class="facets"></div>');
