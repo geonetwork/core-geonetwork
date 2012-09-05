@@ -3427,9 +3427,8 @@
 								<image type="unknown"><xsl:value-of select="$fileName"/></image>
 							</xsl:when>
 
-							<!-- GN 2.0.x only retrieve the XML not the MEF. So link thumbnail to remote resources.get service -->
 							<!-- small thumbnail -->
-							<xsl:when test="$fileDescr='thumbnail'">	      
+							<xsl:when test="string($fileDescr)='thumbnail'">
 								<xsl:choose>
 									<xsl:when test="$info/smallThumbnail">
 										<image type="thumbnail">
@@ -3446,7 +3445,7 @@
 
 							<!-- large thumbnail -->
 
-							<xsl:when test="$fileDescr='large_thumbnail'">
+							<xsl:when test="string($fileDescr)='large_thumbnail'">
 								<xsl:choose>
 									<xsl:when test="$info/largeThumbnail">
 										<image type="overview">
