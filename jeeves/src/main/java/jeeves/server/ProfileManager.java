@@ -140,7 +140,6 @@ public class ProfileManager
 		return elResult;
 	}
 
-	//--------------------------------------------------------------------------
 	/**
 	 * Return the highest profile in the list by checking the number
 	 * of extended profiles for each.
@@ -148,7 +147,28 @@ public class ProfileManager
 	 * @param profiles The list of profiles to analyze
 	 * @return The highest profile in the list
 	 */
-	public String getHighestProfile(Set<String> profiles) {
+	public String getLowestProfile(String[] profiles) {
+		String lowestProfile = null;
+		int numberOfProfilesExtended = getProfilesSet(ADMIN).size();
+		
+		for (String p : profiles) {
+			Set<String> currentProfileSet = getProfilesSet(p);
+			if (currentProfileSet.size() < numberOfProfilesExtended) {
+				lowestProfile = p;
+				numberOfProfilesExtended = currentProfileSet.size();
+			}
+		}
+		return lowestProfile;
+	}
+	
+	/**
+	 * Return the highest profile in the list by checking the number
+	 * of extended profiles for each.
+	 * 
+	 * @param profiles The list of profiles to analyze
+	 * @return The highest profile in the list
+	 */
+	public String getHighestProfile(String[] profiles) {
 		String highestProfile = null;
 		int numberOfProfilesExtended = 0;
 		

@@ -22,18 +22,17 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.ArrayList;
-
 import jeeves.guiservices.session.JeevesUser;
 import jeeves.server.ProfileManager;
 
-import org.fao.geonet.kernel.search.spatial.Pair;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 public class LDAPUser extends JeevesUser {
 	
 	private static final long serialVersionUID = -5390558007347570517L;
 	
-	private ArrayList<Pair<String, String>> groupsAndProfile = new ArrayList<Pair<String, String>>();
+	private Multimap<String, String> groupsAndProfile = HashMultimap.create();
 	
 	public LDAPUser(ProfileManager profileManager, String username) {
 		super(profileManager);
@@ -43,12 +42,12 @@ public class LDAPUser extends JeevesUser {
 	}
 	
 	public void addPrivilege(String group, String profile) {
-		groupsAndProfile.add(Pair.read(group, profile));
+		groupsAndProfile.put(group, profile);
 	}
-	public void setPrivileges(ArrayList<Pair<String, String>> privileges) {
+	public void setPrivileges(Multimap<String, String> privileges) {
 		groupsAndProfile = privileges;
 	}
-	public ArrayList<Pair<String, String>> getPrivileges() {
+	public Multimap<String, String> getPrivileges() {
 		return groupsAndProfile;
 	}
 }

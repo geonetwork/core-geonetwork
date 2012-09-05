@@ -66,11 +66,6 @@ public class LDAPUtils {
 				Log.debug(Geonet.LDAP, "  - Create LDAP user " + user.getUsername() + " in local database.");
 			}
 			 
-			// FIXME : how to access to the serial factory ?
-			// When clustering GeoNetwork proposal is committed, only a UUID will be required
-			// so it will be easier.
-//			Element nextIdRequest = dbms.select("SELECT max(id)+1 as max FROM Users");
-//			id = nextIdRequest.getChild("record").getChildText("max");
 			id = serialFactory.getSerial(dbms, "Users") + "";
 			
 			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
@@ -106,12 +101,14 @@ public class LDAPUtils {
 		// Add user groups
 		if (importPrivilegesFromLdap && !Profile.ADMINISTRATOR.equals(user.getProfile())) {
 			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
-			for(Pair<String, String> privilege : user.getPrivileges()) {
+			for(Map.Entry<String, String> privilege : user.getPrivileges().entries()) {
 				// TODO : add profile info if multiple profile proposal pass the CFV
 				
 				// Retrieve group id
-				String groupName = privilege.one();
-				String profile = privilege.two();
+
+				String groupName = privilege.getKey();
+				String profile = privilege.getValue();
+
 				Element groupIdRequest = dbms.select("SELECT id FROM Groups WHERE name = ?", groupName);
 				Element groupRecord = groupIdRequest.getChild("record");
 				String groupId = null;
