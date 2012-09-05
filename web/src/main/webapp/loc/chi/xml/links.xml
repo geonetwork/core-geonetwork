@@ -11,17 +11,8 @@
 		<a target="_blank" href="http://www.gsdi.org/">全球空间数据基础设施(GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">开放地理空间协会(OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> 地理信息<br/>
-		<h3>地理信息元数据标准（ISO-19115）相关信息</h3>
-		<p>
-			UNGIWG ISO 19115元数据模板草案1.0<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(XML模板及实例数据)</a>
-			&#160;&#160;
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.doc">(描述性MS-word文档)</a>
-		</p>
-		<p>
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/ReferenceServices.htm','Online Resource References">ISO19115在线资源推荐</a>
-		</p>
 		<h3>制图项目</h3>
-		<a target="_blank" href="http://www.digitalearth.gov/">数字地球</a><br/>
+		<a target="_blank" href="http://www.digitalearth-isde.org/">数字地球</a><br/>
 		<a target="_blank" href="http://www.iscgm.org/">全球测图</a><br/>
 		<p/>
 		<h3>其它相关网站</h3>
@@ -31,7 +22,7 @@
 		<h3>外部空间数据源</h3>
 		<a target="_blank" href="http://earlywarning.usgs.gov/adds/">非洲数据分发服务</a><br/>
 		<a target="_blank" href="http://www.ngdc.noaa.gov/">NOAA国家数据中心(NGDC)</a><br/>
-		<a target="_blank" href="http://www.nima.mil/">美国国家影像制图局(NIMA)</a><br/>
-		<a target="_blank" href="http://www.esri.com/data/">ESRI ArcData 在线</a>
+		<a target="_blank" href="http://www.nga.mil/">美国国家地理空间情报局 (NGA)</a><br/>
+		<a target="_blank" href="http://www.esri.com/find-data/data/">ESRI ArcData 在线</a>
 	</content>
 </links>
