@@ -3,7 +3,7 @@
 	xmlns:exslt="http://exslt.org/common"
 	xmlns:geonet="http://www.fao.org/geonetwork">
 	
-  <xsl:include href="metadata-iso19115-fop.xsl"/>
+  <xsl:include href="metadata-fop.xsl"/>
   
 	<!-- main template - the way into processing iso19115 -->
   <xsl:template name="metadata-iso19115">

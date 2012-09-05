@@ -20,7 +20,7 @@
     xmlns:geonet="http://www.fao.org/geonetwork"
     exclude-result-prefixes="gfc gmx gmd gco geonet">
 
-  <xsl:include href="metadata-iso19110-fop.xsl"/>
+  <xsl:include href="metadata-fop.xsl"/>
   
 	<!-- main template - the way into processing iso19110 -->
 	<xsl:template name="metadata-iso19110">

@@ -5,7 +5,7 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	exclude-result-prefixes="exslt geonet">
 
-  <xsl:include href="metadata-fgdc-std-fop.xsl"/>
+  <xsl:include href="metadata-fop.xsl"/>
   
 	<!-- main template - the way into processing fgdc-std -->
 	<xsl:template name="metadata-fgdc-std">
