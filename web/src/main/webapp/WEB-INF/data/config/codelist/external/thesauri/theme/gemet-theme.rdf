@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common" xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+  <skos:ConceptScheme rdf:about="http://geonetwork-opensource.org/gemet-theme">
+    <dc:title>GEMET themes</dc:title>
+    <dc:description>GEMET themes thesaurus for GeoNetwork opensource.</dc:description>
+    <dc:creator>
+      <foaf:Organization>
+        <foaf:name>EEA</foaf:name>
+      </foaf:Organization>
+    </dc:creator>
+    <dc:uri>http://www.eionet.europa.eu/gemet/about?langcode=en</dc:uri>
+    <dc:rights>http://www.eionet.europa.eu/gemet/about?langcode=en</dc:rights>
+    <dcterms:issued>Fry Sep 22 07:57:15 CEST 2009</dcterms:issued>
+    <dcterms:modified>2009-09-22 07:57:15</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/4">
+    <skos:prefLabel xml:lang="en">biology</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">biologie</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">biologia</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Biosphäre - Organismen, biologische Systeme und Prozesse</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">biologie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">биология</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">أحياء</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/1">
+    <skos:prefLabel xml:lang="en">administration</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">administration</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">administración</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Verwaltung, Organisation, Institutionen, Planung, Politik und -vollzug, immaterielle Massnahmen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">overheid</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">администрация</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">إدارة</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/28">
+    <skos:prefLabel xml:lang="en">radiations</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">rayonnements</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">radiaciones</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Strahlungen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">straling</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">излучение</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">إشعاعات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/9">
+    <skos:prefLabel xml:lang="en">economics</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">économie</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">economía</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Wirtschaft, Ökonomie und Finanzen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">economie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">экономика</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">اقتصاد</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/30">
+    <skos:prefLabel xml:lang="en">research</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">recherche</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">investigación</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Wissen, Wissenschaft, Forschung, Informationsgewinnung</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">onderzoek</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">исследования</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">بحوث</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/38">
+    <skos:prefLabel xml:lang="en">urban environment, urban stress</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">environnement urbain, stress urbain</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">medio ambiente urbano, tensión urbana ("stress urbano")</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Urbane Umwelt, urbane Belastungen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">stedelijk leefmilieu, stedelijke druk</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">городская среда, неблагоприятные факторы в условиях города</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">بيئة حضرية، ضغط حضري</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/33">
+    <skos:prefLabel xml:lang="en">trade, services</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">commerce, services</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">comercio, servicios</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Handel, Dienstleistungen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">handel, diensten</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">торговля, услуги</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">تجارة، خدمات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/35">
+    <skos:prefLabel xml:lang="en">soil</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">sol</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">suelo</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Boden</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">bodem</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">почва</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">تربة</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/18">
+    <skos:prefLabel xml:lang="en">animal husbandry</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">élevage</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">cría de animales</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Tierzucht</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">veeteelt</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">животноводство</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">تربية حيوانات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/14">
+    <skos:prefLabel xml:lang="en">forestry</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">sylviculture</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">silvicultura</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Forstwirtschaft</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">bosbouw</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">лесное хозяйство</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">تشجير</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/21">
+    <skos:prefLabel xml:lang="en">legislation</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">législation</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">legislación</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Gesetzgebung</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">wetgeving</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">законодательство</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">تشريع</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/26">
+    <skos:prefLabel xml:lang="en">pollution</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">pollution</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">contaminación</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Umweltverschmutzung, Schadstoffe</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">vervuiling</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">загрязнение</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">تلوث</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/16">
+    <skos:prefLabel xml:lang="en">geography</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">géographie</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">geografía</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geographie</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">aardrijkskunde, geografie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">география</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">جغرافيا</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/34">
+    <skos:prefLabel xml:lang="en">social aspects, population</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">aspects sociaux, population</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">aspectos sociales, población</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Soziale Aspekte, Bevölkerung</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">sociale aspecten, bevolking</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">социальные аспекты, население</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">جوانب اجتماعية، سكان</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/22">
+    <skos:prefLabel xml:lang="en">military aspects</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">aspects militaires</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">aspectos militares</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Militär und Umwelt</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">landsverdediging(defensie) en milieu</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">военные аспекты</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">جوانب عسكرية</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/8">
+    <skos:prefLabel xml:lang="en">natural dynamics</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">dynamique naturelle</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">dinámica natural</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Naturprozesse, Naturereignisse</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">natuurlijke processen</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">природная динамика</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">ديناميات طبيعية</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/2">
+    <skos:prefLabel xml:lang="en">agriculture</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">agriculture</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">agricultura</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Landwirtschaft</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">landbouw</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">сельское хозяйство</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">زراعة</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/29">
+    <skos:prefLabel xml:lang="en">tourism</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">tourisme</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">turismo</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Tourismus und Freizeit</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">toerisme</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">туризм</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">سياحة</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/11">
+    <skos:prefLabel xml:lang="en">environmental policy</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">politique environnementale</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">política ambiental</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Umweltpolitik</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">milieubeleid</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">экологическая политика</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">سياسة بيئية</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/17">
+    <skos:prefLabel xml:lang="en">human health</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">santé humaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">salud humana</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Gesundheit, Hygiene, Ernährung</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">menselijke gezondheid</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">здоровье человека</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">صحة بشرية</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/19">
+    <skos:prefLabel xml:lang="en">industry</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">industrie</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">industria</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Industrie, Aktivitäten und Prozesse</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">nijverheid, industrie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">промышленность</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">صناعة</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/12">
+    <skos:prefLabel xml:lang="en">fishery</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">pêche</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">pesca</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Fischerei</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">visserij</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">рыболовство</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">صيد</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/24">
+    <skos:prefLabel xml:lang="en">noise, vibrations</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bruit, vibrations</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">ruido, vibraciones</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Lärm, Erschütterungen</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">geluid,lawaai,trillingen</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">шум, вибрация</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">ضوضاء، اهتزازات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/10">
+    <skos:prefLabel xml:lang="en">energy</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">énergie</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">energía</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Energie</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">energie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">энергия</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">طاقة</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/15">
+    <skos:prefLabel xml:lang="en">general</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">généralités</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">general</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Allgemeine Angelegenheiten</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">algemeen</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">общее</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">عموميات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/13">
+    <skos:prefLabel xml:lang="en">food, drinking water</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">alimentation, eau potable</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">alimento, agua potable</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Nahrungsmittel, Trinkwasser</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">voeding, voedingsmiddel, voedsel, drinkwater</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">продукты питания, питьевая вода</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">غذاء، مياه شرب</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/36">
+    <skos:prefLabel xml:lang="en">space</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">espace</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">espacio</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Weltraum</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">ruimte</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">космос</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">فضاء</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/25">
+    <skos:prefLabel xml:lang="en">physics</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">physique</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">física</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Physikalische Erscheinungen und Prozesse</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">natuurkunde, fysica</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">физика</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">فيزياء</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/32">
+    <skos:prefLabel xml:lang="en">disasters, accidents, risk</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">catastrophes, accidents, risques</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">desastres, accidentes, riesgo</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Katastrophen, Unfälle, Risiken</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">rampen, ongevallen, gevaren, risico</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">бедствия, аварии, риск</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">كوارث، حوادث، مخاطر</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/6">
+    <skos:prefLabel xml:lang="en">chemistry</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">chimie</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">química</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Chemische Stoffe und Prozesse</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">scheikunde,chemie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">химия</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">كيمياء</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/40">
+    <skos:prefLabel xml:lang="en">water</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">eau</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">agua</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Wasser</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">water</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">вода</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">ماء</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/5">
+    <skos:prefLabel xml:lang="en">building</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">bâtiment</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">edificación</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Bauwesen und gebaute Umwelt</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">bouw</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">строительство</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">مبنى</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/39">
+    <skos:prefLabel xml:lang="en">waste</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">déchets</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">residuo</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Abfall</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">afval</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">отходы</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">مخلفات، نفايات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/20">
+    <skos:prefLabel xml:lang="en">information</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">information</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">información</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Information, Ausbildung, Kultur</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">informatie</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">информация</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">معلومات</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/7">
+    <skos:prefLabel xml:lang="en">climate</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">climat</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">clima</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Klima</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">klimaat</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">климат</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">مناخ</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/23">
+    <skos:prefLabel xml:lang="en">natural areas, landscape, ecosystems</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">zones naturelles, paysages, écosystèmes</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">areas naturales, paisaje, ecosistemas</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Natürliche Lebensräume, Landschaft, Ökosysteme</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">natuurgebieden, landschap, ecosystemen</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">природные зоны, ландшафт, экосистемы</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">مناطق طبيعية، مناظر طبيعية، أنظمة إيكولوجية</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/27">
+    <skos:prefLabel xml:lang="en">materials</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">matériaux</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">materiales</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Produkte, Materialien, Werkstoffe</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">materialen</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">материалы</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">مواد</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/31">
+    <skos:prefLabel xml:lang="en">resources</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">ressources</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">recursos</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Ressourcen, Ressourcennutzung</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">grondstoffen</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">ресурсы</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">موارد</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/37">
+    <skos:prefLabel xml:lang="en">transport</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">transport</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">transportes</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Verkehr</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">vervoer</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">транспорт</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">نقل</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.eionet.europa.eu/gemet/theme/3">
+    <skos:prefLabel xml:lang="en">air</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">air</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">aire</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Luft, Atmosphäre</skos:prefLabel>
+    <skos:prefLabel xml:lang="nl">lucht</skos:prefLabel>
+    <skos:prefLabel xml:lang="ru">воздух</skos:prefLabel>
+    <skos:prefLabel xml:lang="ar">هواء</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>
+
