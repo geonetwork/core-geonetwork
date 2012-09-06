@@ -506,10 +506,6 @@ public class CatalogSearcher {
 		// LuceneSearcher already contains all docs)
 		int i = 0;
 		int iMax = hits.scoreDocs.length;
-		if (buildSummary) {
-			i = startPosition -1;
-			iMax = Math.min(hits.scoreDocs.length, i + maxRecords); 
-		}
 		for (;i < iMax; i++) {
 			Document doc = _reader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");
