@@ -27,15 +27,18 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Element;
-import org.jdom.Namespace;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
 //==============================================================================
 
@@ -158,9 +161,9 @@ public class MetadataSchema
 	  	Logger.log();
 			childType = hmElements.get(elem);
 			if (childType == null) { 
-				System.out.println("ERROR: Mismatch between schema and xml: No type for 'element' : "+oldelem+" with parent "+parent);
-				System.out.println("Returning xs:string");
-			  return "xs:string";
+			    Log.warning(Geonet.SCHEMA_MANAGER, "ERROR: Mismatch between schema and xml: No type for 'element' : "
+			                    + oldelem + " with parent " + parent + ". Returning xs:string");
+			    return "xs:string";
 			}
 		}
 		if (childType.size() == 1) return childType.get(0);
