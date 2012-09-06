@@ -191,7 +191,7 @@ public final class Xml
 
 			result = (Element)jdoc.getRootElement().detach();
 		} catch (Exception e) {
-			System.out.println("Threw exception "+e);
+		    Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception "+e);
 			e.printStackTrace();
 		}
 		return result;
@@ -465,7 +465,7 @@ public final class Xml
 			// Add the following to get timing info on xslt transformations
 			//transFact.setAttribute(FeatureKeys.TIMING,true);
 		} catch (IllegalArgumentException e) {
-			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+		    Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
 			//e.printStackTrace();
 		} finally {
 			Transformer t = transFact.newTransformer(srcSheet);
@@ -490,7 +490,7 @@ public final class Xml
 			Method cacheMethod = transFact.getClass().getDeclaredMethod("clearCache", null);
 			cacheMethod.invoke(transFact, new Object[0]);
 		} catch (Exception e) {
-			System.out.println("Failed to find/invoke clearCache method - continuing ("+e.getMessage()+")");
+			Log.error(Log.ENGINE, "Failed to find/invoke clearCache method - continuing ("+e.getMessage()+")");
 		}
 
 	}
@@ -529,7 +529,7 @@ public final class Xml
 			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);
 			factory.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
 		} catch (IllegalArgumentException e) {
-			System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+		    Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
 			//e.printStackTrace();
 		} finally {
    		Transformer transformer = factory.newTransformer(xslt);
