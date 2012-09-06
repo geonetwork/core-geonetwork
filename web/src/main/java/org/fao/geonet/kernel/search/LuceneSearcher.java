@@ -1076,7 +1076,7 @@ public class LuceneSearcher extends MetaSearcher {
             	buildFacetSummary(elSummary, summaryConfig, facetCollector);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Log.warning(Geonet.SEARCH_ENGINE, "buildFacetSummary error. " + e.getMessage());
+				Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage());
 			}
 			
         } else {
@@ -1084,7 +1084,9 @@ public class LuceneSearcher extends MetaSearcher {
         }
 		elSummary.setAttribute("count", tfc.getTotalHits()+"");
 		elSummary.setAttribute("type", "local");
-
+		if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+            Log.debug(Geonet.SEARCH_ENGINE, " Get top docs from " + startHit + " ... " + endHit + " (total: " + tfc.getTotalHits() + ")");
+		}
 		TopDocs tdocs = tfc.topDocs(startHit, endHit);
 
 		return Pair.read(tdocs,elSummary);
@@ -1131,12 +1133,12 @@ public class LuceneSearcher extends MetaSearcher {
 					}
 				}
 				elSummary.addContent(facets);
-				if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
-					Log.debug(Geonet.SEARCH_ENGINE, facetsInfo);
+				if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+					Log.debug(Geonet.FACET_ENGINE, facetsInfo);
 				}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
-			Log.error(Geonet.SEARCH_ENGINE, "Check facet configuration. This may happen when a facet is configured"
+			Log.error(Geonet.FACET_ENGINE, "Check facet configuration. This may happen when a facet is configured"
 					+ " but does not exist in the taxonomy index. Error is: " + e.getMessage(), e);
 			e.printStackTrace();
 		}
