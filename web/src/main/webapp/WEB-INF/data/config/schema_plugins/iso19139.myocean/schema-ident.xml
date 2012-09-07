@@ -10,9 +10,6 @@
 			<gmd:metadataStandardName>
 				<gco:CharacterString>ISO 19139, MyOcean profile</gco:CharacterString>
 			</gmd:metadataStandardName>
-			<gmd:metadataStandardVersion>
-				<gco:CharacterString>2.0</gco:CharacterString>
-			</gmd:metadataStandardVersion>
 		</elements>
 	</autodetect>
 </schema>
