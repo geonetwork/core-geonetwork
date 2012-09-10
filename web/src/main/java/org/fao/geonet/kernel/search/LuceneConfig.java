@@ -26,6 +26,9 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
+import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
+import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
@@ -125,7 +128,7 @@ public class LuceneConfig {
 	private Map<String, String> fieldSpecificSearchAnalyzers = new HashMap<String, String>();
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
-    private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
+	private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
 	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
 
 	private String boostQueryClass;
@@ -133,8 +136,8 @@ public class LuceneConfig {
 	private Map<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
 
 	private String documentBoostClass;
-    private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-    private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
+	private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
 
 	private Element luceneConfig;
 
@@ -157,11 +160,11 @@ public class LuceneConfig {
 	 * 
 	 * @param appPath
 	 * @param servletContext
-   * @param luceneConfigXmlFile
+	 * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-            Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
+	    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) 
+	        Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load(servletContext, luceneConfigXmlFile);
@@ -421,31 +424,37 @@ public class LuceneConfig {
 				String name = summaryElement.getAttributeValue("name");
 				String plural = summaryElement.getAttributeValue("plural");
 				String key = summaryElement.getAttributeValue("indexKey");
-				String order = summaryElement.getAttributeValue("order");
+				String sortBy = summaryElement.getAttributeValue("sortBy");
+                String sortOrder = summaryElement.getAttributeValue("sortOrder");
+                SortBy facetSortBy;
+                SortOrder facetSortOrder;
 				String maxString = summaryElement.getAttributeValue("max");
-				String type = summaryElement.getAttributeValue("type");
-				if (order == null) {
-					order = "freq";
-				}
 				int max;
 				if (maxString == null) {
 					max = MAX_SUMMARY_KEY_DEFAULT_NUMBER;
 				} else {
 					max = Integer.parseInt(maxString);
 				}
-				
 				max = Math.min(MAX_SUMMARY_KEY, max);
-				if( type==null ){
-					type = "string";
+				
+				
+				if ("asc".equals(sortOrder)) {
+				    facetSortOrder = SortOrder.ASCENDING;
+                } else {
+                    facetSortOrder = SortOrder.DESCENDING;
+                }
+                if("value".equals(sortBy)){
+					facetSortBy = SortBy.ORDINAL;
+				} else {
+				    facetSortBy = SortBy.VALUE;
 				}
 	
 				Map<String,Object> values = new HashMap<String,Object>();
 				values.put("name", name);
 				values.put("plural", plural);
 				values.put("max", max);
-				values.put("order", order);
-				values.put("type", type);
-				// TODO values.put("typeConfig", summaryConfig.getChild("typeConfig"));
+				values.put("sortOrder", facetSortOrder);
+				values.put("sortBy", facetSortBy);
 				results.put(key,values);
 			}
 		}

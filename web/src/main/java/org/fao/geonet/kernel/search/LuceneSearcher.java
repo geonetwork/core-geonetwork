@@ -46,6 +46,8 @@ import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.facet.search.FacetsCollector;
 import org.apache.lucene.facet.search.params.CountFacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
 import org.apache.lucene.facet.search.params.FacetSearchParams;
 import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
 import org.apache.lucene.facet.search.results.FacetResult;
@@ -1159,15 +1161,11 @@ public class LuceneSearcher extends MetaSearcher {
 			
 			int max = (Integer) config.get("max");
 			
-			CountFacetRequest facetRequest = new CountFacetRequest(
+			FacetRequest facetRequest = new CountFacetRequest(
 					new CategoryPath(key), max);
-			if (config.get("order").toString().equals("freq")) {
-				facetRequest.setSortBy(SortBy.VALUE);
-			} else {
-				facetRequest.setSortBy(SortBy.ORDINAL);
-			}
+			facetRequest.setSortBy((SortBy) config.get("sortBy"));
+			facetRequest.setSortOrder((SortOrder) config.get("sortOrder"));
 			fsp.addFacetRequest(facetRequest);
-			// TODO add depth support ?
 		}
 		return fsp;
 	}
