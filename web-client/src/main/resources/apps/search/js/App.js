@@ -669,9 +669,21 @@ GeoNetwork.app = function(){
             // Register events on the catalogue
             
             var margins = '35 0 0 0';
-            facetsPanel = new GeoNetwork.FacetsPanel({
-                searchForm: searchForm
+            var breadcrumb = new Ext.Panel({
+                layout:'table',
+                cls: 'breadcrumb',
+                defaultType: 'button',
+                border: false,
+                split: false,
+                layoutConfig: {
+                    columns:3
+                }
             });
+            facetsPanel = new GeoNetwork.FacetsPanel({
+                searchForm: searchForm,
+                breadcrumb: breadcrumb
+            });
+            
             var viewport = new Ext.Viewport({
                 layout: 'border',
                 id: 'vp',
@@ -692,7 +704,7 @@ GeoNetwork.app = function(){
                     layoutConfig: {
                         animate: true
                     },
-                    items: [searchForm, facetsPanel]
+                    items: [searchForm, breadcrumb, facetsPanel]
                 }, {
                     region: 'center',
                     id: 'center',
