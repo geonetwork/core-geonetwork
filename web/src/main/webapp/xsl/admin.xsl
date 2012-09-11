@@ -6,10 +6,10 @@
   <!-- Use the link parameter to display a custom hyperlink instead of 
   a default GeoNetwork Jeeves service URL. -->
 	<xsl:template name="addrow">
-	  <xsl:param name="service"/>
-	  <xsl:param name="link"/>
+		<xsl:param name="service"/>
+		<xsl:param name="link"/>
 		<xsl:param name="args" select="''"/>
-	  <xsl:param name="displayLink" select="true()"/>
+		<xsl:param name="displayLink" select="true()"/>
 		<xsl:param name="title"/>
 		<xsl:param name="desc"/>
 		<xsl:param name="icon"/>
@@ -28,10 +28,10 @@
 
 		<xsl:if test="/root/gui/services/service/@name=$service">
 			<xsl:variable name="url">
-			  <xsl:choose>
-			    <xsl:when test="normalize-space($link)!=''">
-			      <xsl:value-of select="$link"/>
-			    </xsl:when>
+				<xsl:choose>
+					<xsl:when test="normalize-space($link)!=''">
+						<xsl:value-of select="$link"/>
+					</xsl:when>
 					<xsl:when test="normalize-space($args)='' and normalize-space($modalArg)=''">
 						<xsl:value-of select="concat(/root/gui/locService,'/',$service)"/>
 					</xsl:when>
@@ -49,9 +49,9 @@
 				</td>
 				<td class="padded">
 					<xsl:choose>
-					  <xsl:when test="not($displayLink)">
-					      <xsl:value-of select="$title"/>
-					  </xsl:when>
+						<xsl:when test="not($displayLink)">
+							<xsl:value-of select="$title"/>
+						</xsl:when>
 						<xsl:when test="/root/request/modal">
 							<a onclick="popAdminWindow('{$url}');" href="javascript:void(0);">
 								<xsl:value-of select="$title"/>
@@ -73,7 +73,6 @@
 			</tr>
 		</xsl:if>
 	</xsl:template>
-
 
 
 	<xsl:template name="addTitle">
@@ -107,12 +106,12 @@
 					<xsl:variable name="mdServices">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.create.form'"/>
-						  <xsl:with-param name="link">
-						    <!-- When client application is the widget redirect to that app 
-						    FIXME : hl parameter is only available for GUI widget experimental client.
-						    -->
-						    <xsl:if test="/root/gui/config/client/@widget='true'"><xsl:value-of select="concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, /root/gui/config/client/@createParameter)"/></xsl:if>
-						  </xsl:with-param>
+							<xsl:with-param name="link">
+								<!-- When client application is the widget redirect to that app 
+								FIXME : hl parameter is only available for GUI widget experimental client.
+								-->
+								<xsl:if test="/root/gui/config/client/@widget='true'"><xsl:value-of select="concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, /root/gui/config/client/@createParameter)"/></xsl:if>
+							</xsl:with-param>
 							<xsl:with-param name="title" select="/root/gui/strings/newMetadata"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/newMdDes"/>
 							<xsl:with-param name="icon">page_add.png</xsl:with-param>
@@ -194,19 +193,18 @@
 
 						<xsl:if test="count(/root/gui/schemalist/name[@plugin='true'])>0">
 							<xsl:call-template name="addrow">
-	<xsl:with-param name="service" select="'metadata.schema.update.form'"/>
-	<xsl:with-param name="title" select="/root/gui/strings/updateSchema"/>
-	<xsl:with-param name="desc" select="/root/gui/strings/updateSchemaDes"/>
+								<xsl:with-param name="service" select="'metadata.schema.update.form'"/>
+								<xsl:with-param name="title" select="/root/gui/strings/updateSchema"/>
+								<xsl:with-param name="desc" select="/root/gui/strings/updateSchemaDes"/>
 							</xsl:call-template>
-	
+
 							<xsl:call-template name="addrow">
-	<xsl:with-param name="service" select="'metadata.schema.delete.form'"/>
-	<xsl:with-param name="title" select="/root/gui/strings/deleteSchema"/>
-	<xsl:with-param name="desc" select="/root/gui/strings/deleteSchemaDes"/>
+								<xsl:with-param name="service" select="'metadata.schema.delete.form'"/>
+								<xsl:with-param name="title" select="/root/gui/strings/deleteSchema"/>
+								<xsl:with-param name="desc" select="/root/gui/strings/deleteSchemaDes"/>
 							</xsl:call-template>
 						</xsl:if>
 					</xsl:variable>
-
 
 					<!-- Template administration -->
 					<xsl:variable name="mdTemplate">
@@ -281,13 +279,9 @@
 									</table>
 								</xsl:with-param>
 							</xsl:call-template>
-							
-							
-							
+
 						</xsl:with-param>
 					</xsl:call-template>
-
-
 
 					<xsl:variable name="io">
 
@@ -321,13 +315,11 @@
 						</xsl:call-template>
 					</xsl:variable>
 
-
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">connect.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/io"/>
 						<xsl:with-param name="content" select="$io"/>
 					</xsl:call-template>
-
 
 					<xsl:variable name="catalogueConfiguration">
 
@@ -384,8 +376,6 @@
 					</xsl:call-template>
 
 
-
-
 					<!-- user and group services -->
 					<xsl:variable name="persInfoServices">
 						<xsl:call-template name="addrow">
@@ -433,8 +423,6 @@
 					</xsl:call-template>
 
 
-
-
 					<xsl:variable name="classification">
 
 						<xsl:call-template name="addrow">
@@ -452,18 +440,18 @@
 							/>
 						</xsl:call-template>
 
-            <!-- Only add the subtemplate if the client is widget based -->
-					  <xsl:if test="/root/gui/config/client/@widget">
-  					  <tr>
-  					    <td class="spacer"/>
-  					  </tr>
-  					  
-  					  <xsl:call-template name="addrow">
-  					    <xsl:with-param name="service" select="'subtemplate.admin'"/>
-  					    <xsl:with-param name="title" select="/root/gui/strings/subtemplate.admin"/>
-  					    <xsl:with-param name="desc" select="/root/gui/strings/subtemplate.admin.desc"/>
-  					  </xsl:call-template>
-            </xsl:if>
+						<!-- Only add the subtemplate if the client is widget based -->
+						<xsl:if test="/root/gui/config/client/@widget">
+							<tr>
+								<td class="spacer"/>
+							</tr>
+
+							<xsl:call-template name="addrow">
+								<xsl:with-param name="service" select="'subtemplate.admin'"/>
+								<xsl:with-param name="title" select="/root/gui/strings/subtemplate.admin"/>
+								<xsl:with-param name="desc" select="/root/gui/strings/subtemplate.admin.desc"/>
+							</xsl:call-template>
+						</xsl:if>
 					</xsl:variable>
 
 					<xsl:call-template name="addTitle">
@@ -487,13 +475,11 @@
 
 					<!-- samples and tests services 
 					<xsl:variable name="adminServices">
-						
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'test.csw'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/cswTest"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/cswTestDesc"/>
 						</xsl:call-template>
-						
 					</xsl:variable>
 
 					<xsl:call-template name="addTitle">
@@ -502,32 +488,28 @@
 						<xsl:with-param name="content" select="$adminServices"/>
 					</xsl:call-template>
 					</xsl:variable>
-					
 					-->
-					
+
 					<xsl:variable name="i18n">
-						
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'localization'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/localiz"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/localizDes"/>
 						</xsl:call-template>
-						
+
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'test.i18n'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/i18n"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/i18nDesc"/>
 						</xsl:call-template>
-						
 					</xsl:variable>
-					
+
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">comment.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/localiz"/>
 						<xsl:with-param name="content" select="$i18n"/>
 					</xsl:call-template>
-					
-					
+
 				</table>
 				<p/>
 			</xsl:with-param>
@@ -601,7 +583,6 @@
 				</td>
 			</tr>
 		</xsl:if>
-
 
 	</xsl:template>
 

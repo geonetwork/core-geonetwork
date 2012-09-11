@@ -57,16 +57,19 @@ public class AjaxEditUtils extends EditUtils {
      * <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
      * <li>XElementId=ElementValue</li>
      * <li>XElementId_ElementName=ElementValue</li>
+     * <li>XElementId_ElementName_replace=ElementValue</li>
      * </ul>
      * 
      * ElementName MUST contain "{@value #COLON_SEPARATOR}" instead of ":" for prefixed elements.
      * 
      * <p>
-     * When using X key, value could contains many XML fragments (eg. 
+     * When using X key ElementValue could contains many XML fragments (eg. 
      * &lt;gmd:keywords .../&gt;{@value #XML_FRAGMENT_SEPARATOR}&lt;gmd:keywords .../&gt;)
      * separated by {@link #XML_FRAGMENT_SEPARATOR}. All those fragments are inserted
      * to the last element of this type in its parent if ElementName is set.
      * If not, the element with ElementId is replaced.
+     * If _replace suffix is used, then all elements having the same type than elementId are removed before insertion.
+     * 
      * <p>
      * 
      * @param dbms
@@ -176,8 +179,16 @@ public class AjaxEditUtils extends EditUtils {
                         if (name != null) {
                             if(Log.isDebugEnabled(Geonet.EDITOR))
                                 Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + ref);
+                            
+                            int unIndex = name.indexOf('_');
+                            boolean replaceExisting = false;
+                            if (unIndex != -1) {
+                                replaceExisting = true;
+                                name = name.substring(0, unIndex);
+                            }
+                            
                             name = name.replace(COLON_SEPARATOR, ":");
-                            editLib.addFragment(schema, el, name, fragment);
+                            editLib.addFragment(schema, el, name, fragment, replaceExisting);
                         } else {
                             if(Log.isDebugEnabled(Geonet.EDITOR))
                                 Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment

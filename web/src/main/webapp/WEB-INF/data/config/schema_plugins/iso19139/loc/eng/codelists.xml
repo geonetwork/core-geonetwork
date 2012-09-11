@@ -14,6 +14,15 @@
  in local node and needs to be displayed in view mode).
  
  By default, this attribute is not used.
+ 
+ * editorMode attribute allows to configure the editor form field.
+ 
+ * - not set -: simple combo box
+ * radio : radio button in one line
+ * radio_linebreak : radio button with line break
+ * radio_withdesc : radion button with line break and codelist entry description
+ * select : select box with size set to the number of items if lower than 7 entries.
+ 
 -->
 <codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
 	<!-- ==================================================== -->

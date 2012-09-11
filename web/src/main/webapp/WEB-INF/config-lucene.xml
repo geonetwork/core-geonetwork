@@ -84,6 +84,7 @@
       <field name="type" tagName="type"/>
       <field name="image" tagName="image"/>
       <field name="link" tagName="link"/>
+      <field name="credit" tagName="credit"/>
       <field name="responsibleParty" tagName="responsibleParty"/>
       <field name="accessConstr" tagName="Constraints"/>
       <field name="otherConstr" tagName="Constraints"/>
@@ -165,6 +166,7 @@
 
     <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
     <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
   </fieldSpecificAnalyzer>
   
   <fieldSpecificSearchAnalyzer>

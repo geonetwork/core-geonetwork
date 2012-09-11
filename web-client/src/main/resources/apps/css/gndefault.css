@@ -465,3 +465,12 @@ div.facets h2 {
     height: 10px;
     width: 10px;
 }
+.tplTitle {
+    font-weight: bold;
+}
+.tplDesc {
+    white-space: normal !important;
+}
+.gn-bt-main * button {
+    font-weight: bold;
+}

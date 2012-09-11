@@ -108,16 +108,17 @@
 
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/SingleFile.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Util.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Class.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Bounds.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/Rico/Corner.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Console.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Util.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/Rico/Corner.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/CSWGetRecords.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Events.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Icon.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Animation.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Marker.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Popup.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Popup/Anchored.js</include>
@@ -125,6 +126,11 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Feature.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Feature/Vector.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/XML.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/XML/VersionedOGC.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/JSON.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/GeoJSON.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/Context.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_0_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC.js</include>
@@ -186,7 +192,6 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/WMSGetFeatureInfo.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Request.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Request/XMLHttpRequest.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Ajax.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/LonLat.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Size.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Pixel.js</include>
@@ -227,7 +232,6 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/DrawFeature.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Rule.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Hover.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/MouseDefaults.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/MousePosition.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/RegularPolygon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Renderer/VML.js</include>

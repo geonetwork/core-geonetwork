@@ -521,14 +521,18 @@ public class DataManager {
 
             // get privileges
             List operations = dbms
-                                .select("SELECT groupId, operationId FROM OperationAllowed WHERE metadataId = ? ORDER BY operationId ASC", id$)
-                                    .getChildren();
+                              .select("SELECT groupId, operationId, g.name FROM OperationAllowed o, groups g WHERE g.id = o.groupId AND metadataId = ? ORDER BY operationId ASC", id$)
+                                 .getChildren();
 
             for (Object operation1 : operations) {
                 Element operation = (Element) operation1;
                 String groupId = operation.getChildText("groupid");
                 String operationId = operation.getChildText("operationid");
                 moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
+                if(operationId.equals("0")) {
+                	String name = operation.getChildText("name");
+                	moreFields.add(SearchManager.makeField("_groupPublished", name, true, true));
+                }
             }
             // get categories
             List categories = dbms
@@ -1527,7 +1531,7 @@ public class DataManager {
         //--- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadata);
 
-        if (ufo && isTemplate.equals("n")) {
+        if (ufo && "n".equals(isTemplate)) {
             String parentUuid = null;
             metadata = updateFixedInfo(schema, id$, uuid, metadata, parentUuid, DataManager.UpdateDatestamp.no, dbms);
         }
@@ -2147,7 +2151,15 @@ public class DataManager {
 		Element env = new Element("env");
 		env.addContent(new Element("file").setText(file));
 		env.addContent(new Element("ext").setText(ext));
-
+		
+		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
+		String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
+		String baseUrl = context.getBaseUrl();
+		
+		env.addContent(new Element("host").setText(host));
+		env.addContent(new Element("port").setText(port));
+		env.addContent(new Element("baseUrl").setText(baseUrl));
+		
 		manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL);
 	}
 
@@ -2207,6 +2219,15 @@ public class DataManager {
      * @throws Exception
      */
 	private void transformMd(Dbms dbms, ServiceContext context, String id, Element md, Element env, String schema, String styleSheet) throws Exception {
+		
+		if(env.getChild("host")==null){
+			String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
+			String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
+			
+			env.addContent(new Element("host").setText(host));
+			env.addContent(new Element("port").setText(port));
+		}
+		
 		//--- setup root element
 		Element root = new Element("root");
 		root.addContent(md);

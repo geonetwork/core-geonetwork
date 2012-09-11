@@ -15,9 +15,9 @@
 	<default>
 		<service>home</service>
 		<!-- the following service is called if there is an exception raised
-		     during the initialization of resources or 
-				 the appHandler org.fao.geonet.Geonetwork
-				 -->
+			during the initialization of resources or
+			the appHandler org.fao.geonet.Geonetwork
+		-->
 		<startupErrorService>main.error</startupErrorService>
 		<language>eng</language>
 		<localized>true</localized>
@@ -27,7 +27,7 @@
 			<xml name="strings" file="xml/strings.xml" />
 			<xml name="countries" file="xml/countries.xml" />
 
-             <call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
+			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
 			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
@@ -38,7 +38,7 @@
 			<!-- this service adds labels and codelists from all schemas -->
 			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
 
-	    <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
+			<xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
 
 		<!-- service not found -->
@@ -70,15 +70,15 @@
 	<!-- ====================================================================== -->
 	<!-- 
 		The resources section defines the database to be used by GeoNetwork.
-		
+
 		Update the enabled attribute to true to use a connection.
 		Only one resource can be enabled at a time, the others must be disabled.
 
 		GeoNetwork uses Apache Commons Database Connection Pooling (DBCP) code.
 		You can specify a JNDI datasource and place the DBCP config params in the 
-    container context.xml (eg. for tomcat this is conf/context.xml) or 
- 		you can config a subset of the DBCP parameters explicitly for h2, mckoi, 
-    oracle, postgres/gis, db2 and sql-server as follows:
+		container context.xml (eg. for tomcat this is conf/context.xml) or 
+		you can config a subset of the DBCP parameters explicitly for h2, mckoi, 
+		oracle, postgres/gis, db2 and sql-server as follows:
 
 		maxActive - pool size/maximum number of active connections (default 10)
 		maxIdle   - pool size/maximum number of idle connections 
@@ -86,17 +86,16 @@
 		minIdle   - pool size/minimum number of idle connections (default 0)
 		maxWait   - number of milliseconds to wait for a connection to become
 		            available (default 200)
-        validationQuery - optional, sql statement for verifying a connection, 
-                    the statement must return a least one row, empty 
-                    result sets may cause problems
+		validationQuery - optional, sql statement for verifying a connection, 
+								the statement must return a least one row, empty 
+								result sets may cause problems
 		timeBetweenEvictionRunsMillis - time between eviction runs 
-		                          (default -1 which means the next three params 
-															 are ignored)
+								(default -1 which means the next three params are ignored)
 		testWhileIdle - test connections when idle (default false)
 		minEvictableIdleTimeMillis - idle time before connection can be evicted 
-		                          (default 30 x 60 x 1000 millisecs)
+								(default 30 x 60 x 1000 millisecs)
 		numTestsPerEvictionRun - number of connections tested per eviction run
-		                          (default 3)
+								(default 3)
 
 		The following params are set by GeoNetwork:
 
@@ -109,8 +108,8 @@
 		initialSize - maxActive
 
 		Note: Some firewalls kill idle connections to databases after say
-	  1 hour (= 3600 secs) 
-	  to keep idle connections alive by testing them with 'select 1', 
+		1 hour (= 3600 secs) 
+		to keep idle connections alive by testing them with 'select 1', 
 		set minEvictableIdleTimeMillis to something less than timeout
 		interval (eg. 2 mins = 120 secs = 120000 millisecs), 
 		set testWhileIdle to true and 
@@ -142,68 +141,68 @@
 		
 					!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!
 	-->
-  
+
 	<resources>
-	  <resource enabled="true">
-	    <name>main-db</name>
-	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-	    <config>
-	      <user>admin</user>
-	      <password>gnos</password>
-	      <driver>org.h2.Driver</driver>
-	      <url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
-	      <poolSize>33</poolSize>
-	      <validationQuery>SELECT 1</validationQuery>
-	    </config>
-	  </resource>
-	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	    H2 database  http://www.h2database.com/
-	    When GeoNetwork don't use H2 database, the listener DBStarter
-	    section could be turned off (see web.xml).
-	    
-	    Database is created according to jdbc url.
-	    
-	    It may be relevant to turn on MVCC mode
-	    http://www.h2database.com/html/advanced.html#mvcc
-	    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	  <resource enabled="false">
-	    <name>main-db</name>
-	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-	    <config>
-	      <user>admin</user>
-	      <password>gnos</password>
-	      <driver>org.h2.Driver</driver>
-	      <url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
-	      <poolSize>33</poolSize>
-	      <validationQuery>SELECT 1</validationQuery> 
-	    </config>
-	  </resource>
-	  
+		<resource enabled="true">
+			<name>main-db</name>
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+			<config>
+				<user>admin</user>
+				<password>gnos</password>
+				<driver>org.h2.Driver</driver>
+				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
+				<poolSize>33</poolSize>
+				<validationQuery>SELECT 1</validationQuery>
+			</config>
+		</resource>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		H2 database  http://www.h2database.com/
+		When GeoNetwork don't use H2 database, the listener DBStarter
+		section could be turned off (see web.xml).
+
+		Database is created according to jdbc url.
+
+		It may be relevant to turn on MVCC mode
+		http://www.h2database.com/html/advanced.html#mvcc
+		- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<resource enabled="false">
+			<name>main-db</name>
+			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+			<config>
+				<user>admin</user>
+				<password>gnos</password>
+				<driver>org.h2.Driver</driver>
+				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
+				<poolSize>33</poolSize>
+				<validationQuery>SELECT 1</validationQuery>
+			</config>
+		</resource>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- JNDI through container -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<resource enabled="false">
-      <name>main-db</name>
-      <provider>jeeves.resources.dbms.JNDIPool</provider>
-      <config>
-        <context>java:/comp/env</context>
-        <resourceName>jdbc/geonetwork</resourceName>
+			<name>main-db</name>
+			<provider>jeeves.resources.dbms.JNDIPool</provider>
+			<config>
+				<context>java:/comp/env</context>
+				<resourceName>jdbc/geonetwork</resourceName>
 				<url>jdbc:postgresql_postGIS://localhost:5432/gndb4</url>
-				<!-- if the database has a spatialindex table with fid, id and 
-				     multipolygon geometry fields (eg. see postgis) then specify true 
-						 here and GeoNetwork will use the database for its spatial index
-						 otherwise specify false or leave the parameter out and a 
-						 shapefile will be used for the spatial index -->
+				<!--	if the database has a spatialindex table with fid, id and
+						multipolygon geometry fields (eg. see postgis) then specify true
+						here and GeoNetwork will use the database for its spatial index
+						otherwise specify false or leave the parameter out and a
+						shapefile will be used for the spatial index -->
 				<provideDataStore>true</provideDataStore>
 				<!-- set this value to -1 if you don't want prepared statements to
-				     be cached when querying/maintaining the spatial index 
-						 (note this is only applicable when
-						 provideDataStore is set to true) -->
+				be cached when querying/maintaining the spatial index
+				(note this is only applicable when
+				provideDataStore is set to true) -->
 				<maxOpenPreparedStatements>300</maxOpenPreparedStatements>
-				<!-- NOTE any other parameter specified here is ignored as this 
-             should be handled in the container -->
-      </config>
-    </resource>	
+				<!-- NOTE any other parameter specified here is ignored as this
+				should be handled in the container -->
+			</config>
+		</resource>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- mckoi standalone -->
@@ -217,7 +216,7 @@
 				<driver>com.mckoi.JDBCDriver</driver>
 				<url>jdbc:mckoi://localhost:9157/</url>
 				<poolSize>10</poolSize>
-        <validationQuery>SELECT 1</validationQuery> 
+				<validationQuery>SELECT 1</validationQuery>
 			</config>
 
 
@@ -234,9 +233,9 @@
 				<user>admin</user>
 				<password>admin</password>
 				<driver>com.mysql.jdbc.Driver</driver>
-			  <url>jdbc:mysql://localhost:3306/geonetwork</url>
+				<url>jdbc:mysql://localhost:3306/geonetwork</url>
 				<poolSize>10</poolSize>
-        <validationQuery>SELECT 1</validationQuery>
+				<validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 
@@ -274,11 +273,11 @@
 			</config>
 		</resource>
 
-	    
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- postgresql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+
 		<resource enabled="false">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
@@ -286,9 +285,9 @@
 				<user>www-data</user>
 				<password>www-data</password>
 				<!-- we use org.postgis.DriverWrapper in place of
-				     org.postgresql.Driver to support both postgresql and postgis -->
-			  <driver>org.postgresql.Driver</driver>
-				<!-- 					
+				org.postgresql.Driver to support both postgresql and postgis -->
+				<driver>org.postgresql.Driver</driver>
+				<!--
 					jdbc:postgresql:database
 					jdbc:postgresql://host/database
 					jdbc:postgresql://host:port/database
@@ -299,13 +298,13 @@
 					jdbc:postgresql_postGIS://host:port/database
 					
 				-->
-			  <url>jdbc:postgresql://localhost:5432/geonetwork</url>
+				<url>jdbc:postgresql://localhost:5432/geonetwork</url>
 				<poolSize>10</poolSize>
-        <validationQuery>SELECT 1</validationQuery>
+				<validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- sqlserver 2008 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -316,30 +315,30 @@
 				<user>www-data</user>
 				<password>www-data</password>
 				<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
-                <url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
+				<url>jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;</url>
 				<poolSize>10</poolSize>
-        <validationQuery>SELECT 1</validationQuery>
+				<validationQuery>SELECT 1</validationQuery>
 			</config>
 		</resource>
-	    
+
 	</resources>
 
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
-        <!-- language profiles for automatic language detection -->
-        <param name="languageProfilesDir" value="resources/language-profiles" />
+		<!-- language profiles for automatic language detection -->
+		<param name="languageProfilesDir" value="resources/language-profiles" />
 
 		<param name="licenseDir" value="WEB-INF/licenses" />
-	  <param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-    <param name="guiConfig" value="WEB-INF/config-gui.xml" />        
-    <param name="luceneConfig" value="WEB-INF/config-lucene.xml" />        
+		<param name="summaryConfig" value="WEB-INF/config-summary.xml" />
+		<param name="guiConfig" value="WEB-INF/config-gui.xml" />
+		<param name="luceneConfig" value="WEB-INF/config-lucene.xml" />
 
 		<!-- Preferred schema parameter is used on import
 			when a ZIP or MEF file is imported with more than one
 			xml files. For example, export produce one file for
 			iso19139 and on file for the ISO profil (eg. fra, che).
-			
+
 			Recommanded value is iso19139 if user is not 
 			interested for having metadata in a specific
 			ISO profil.
@@ -357,24 +356,29 @@
 		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
 		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
 
-		<!-- The maximum number of writes in a transaction on the spatial index 
-				
-         For the Apache Commons DBCP provider:
-         When using PostGIS on machines with fast/large pipe to disk, set 
-         this number to 1 which means that the auto_commit transaction is
-         used. Also if having a long running transaction causes issues eg. 
-         when database connections are reset by a firewall then set this
-         number to 1 
-         
-         For the JNDI database provider:
-         Set this number to something large eg. 1000  - setting this number 
-         to 1 (=auto_commit) with a JNDI provider will cause database 
-         connections involving the spatialindexwriter to be left open due 
-         to what appears to be a bug in the GeoTools feature store when 
-         using the auto_commit transaction. Curiously the
-         JNDI provider with maxWritesInTransaction set to 1000 is actually
-         faster to load and index records than ApacheDBCP provider
-         with PostgisDataStoreFactory and maxWritesInTransaction set to 1 -->	
+		<!-- The maximum number of writes in a transaction on the spatial index
+
+			Set to 1 forces the spatialIndexWriter to commit after each spatial
+			feature is written. Set to a large number and commits are delayed until
+			that number of spatial features is written. Be aware that setting this 
+			number to anything other than 1 can cause problems if the connection
+			to the database is closed (eg. if the db admin shuts the database
+			for maintenance reasons). There are also performance implications that  
+			are especially relevant to bulk loading records:
+
+			For the Apache Commons DBCP provider:
+			Set this number to 1 for best performance. This is kind of counter 
+			intuitive so if you have a different experience please pass it on as
+			a documentation fix.
+
+			For the JNDI database provider:
+			Set this number to something large eg. 1000 - the JNDI provider
+			is actually faster to load and index records with this setting than 
+			if it is set to 1. This is what you would expect but you
+			may have problems that will require you to restart GeoNetwork and 
+			reindex some or all of your metadata if the database connection is 
+			interrupted.
+		-->
 		<param name="maxWritesInTransaction" value="1000" />
 
 		<param name="useSubversion" value="true"/>
@@ -389,11 +393,11 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-	  
-	  <service name="home">
-	    <output sheet="home.xsl"/>
-	  </service>
-	  
+
+		<service name="home">
+			<output sheet="home.xsl"/>
+		</service>
+
 		<service name="main.home">
 			<output sheet="main-page.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
@@ -455,62 +459,62 @@
 			<output forward="main.present" />
 		</service>
 
- 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
- 		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
 
- 		<service name="main.search.embedded">
- 			<class name=".services.main.Search">
- 				<param name="maxSummaryKeys" value="10" />
+		<service name="main.search.embedded">
+			<class name=".services.main.Search">
+				<param name="maxSummaryKeys" value="10" />
 				<param name="maxHitsInSummary" value="1000" />
- 			</class>
+			</class>
 
- 			<output forward="main.present.embedded" />
+			<output forward="main.present.embedded" />
 
 			<error id="unauthorized" sheet="xml-error.xsl" statusCode="403">
 				<xml name="error" file="xml/unauthorized.xml" />
 			</error>
- 		</service>
+		</service>
 
 		<service name="main.search.suggest">
 			<class name=".services.main.SearchSuggestion">
 				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
 				<param name="threshold" value="2" />
 				<!--
-				 Max number of term's values to look in the index. For large catalogue
-				 this value should be increased in order to get better results. If this
-				 value is too high, then looking for terms could take more times. The use
-				 of good analyzer should allow to reduce the number of useless values like
-				 (a, the, ...).
+					Max number of term's values to look in the index. For large catalogue
+					this value should be increased in order to get better results. If this
+					value is too high, then looking for terms could take more times. The use
+					of good analyzer should allow to reduce the number of useless values like
+					(a, the, ...).
 				-->
 				<param name="max_number_of_terms" value="100000" />
 				<!-- Default field to search in. any is full-text search field. -->
 				<param name="default_search_field" value="any" />
 			</class>
-			
+
 			<output sheet="search-suggestions.xsl" contentType="application/json; charset=UTF-8" />
 		</service>
-		
+
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="main.present.embedded">
- 			<class name=".services.main.Result">
- 				<param name="maxRecords" value="10" />
- 				<param name="syntax" value="f" />
- 			</class>
+			<class name=".services.main.Result">
+				<param name="maxRecords" value="10" />
+				<param name="syntax" value="f" />
+			</class>
 
- 			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
+			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
- 				<call name="groups" class=".guiservices.groups.GetMine" />
- 				<call name="sources" class=".guiservices.util.Sources" />
- 				<call name="services" class="jeeves.guiservices.services.Get" />
+				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="sources" class=".guiservices.util.Sources" />
+				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="config" class=".services.config.Get" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
 				</call>
- 			</output>
+			</output>
 
- 		</service>
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -634,10 +638,10 @@
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
 		</service>
-		
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Selection search services for filtering -->
-		
+
 		<service name="selection.search">
 			<class name=".services.main.SelectionSearch" />
 			<output forward="main.present.embedded" />
@@ -669,7 +673,7 @@
 			<class name=".services.metadata.ImportFromDir" />
 
 			<output sheet="metadata-insert-results.xsl" />
-				
+
 			<error sheet="error.xsl">
 				<xml name="error" file="xml/validation-error.xml" />
 				<xml name="validation" file="xml/metadata-validate.xml" />
@@ -690,7 +694,7 @@
 
 		<service name="password.forgotten.submit">
 			<class name=".services.password.SendLink" />
-			
+
 			<error id="user-not-found" sheet="error-modal.xsl">
 				<xml name="error" file="xml/user-not-found-error.xml" />
 			</error>
@@ -698,7 +702,7 @@
 			<error id="operation-not-allowed" sheet="error-modal.xsl">
 				<xml name="error" file="xml/registered-users-only.xml" />
 			</error>
-			
+
 			<error sheet="error-modal.xsl"/>
 
 			<output sheet="infomodal.xsl">
@@ -756,7 +760,7 @@
 			<output sheet="user-new.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-				</output>
+			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1000,10 +1004,10 @@
 					<param name="query" value="SELECT * FROM Users ORDER BY name" />
 				</call>
 
-                <call name="groups" class="jeeves.services.db.Select">
-                    <param name="db" value="main-db" />
-                    <param name="query" value="SELECT * FROM Groups WHERE ID > 1 ORDER BY name" />
-                </call>
+				<call name="groups" class="jeeves.services.db.Select">
+					<param name="db" value="main-db" />
+					<param name="query" value="SELECT * FROM Groups WHERE ID > 1 ORDER BY name" />
+				</call>
 			</output>
 		</service>
 
@@ -1037,7 +1041,7 @@
 		<service name="xml.config.info">
 			<class name=".services.config.GetInfo" />
 		</service>
- 
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="config.info">
@@ -1045,7 +1049,7 @@
 			<output sheet="config/info.xsl">
 				<xml name="config" file="xml/config.xml" />
 			</output>
-		</service>	
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Localization                                                  -->
@@ -1201,13 +1205,13 @@
 			<class name=".services.main.XmlSearch" />
 
 			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
-		  
-		  <error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
+
+			<error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
 		</service>
 
-    <service name="q">
-      <class name=".services.main.XmlSearch" />
-    </service>
+		<service name="q">
+			<class name=".services.main.XmlSearch" />
+		</service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.get">
@@ -1271,40 +1275,40 @@
 			<class name=".services.main.CswPublicationDispatcher" />
 		</service>
 
-        <service name="csw.config.get">
-            <class name=".guiservices.csw.Get" />
+		<service name="csw.config.get">
+			<class name=".guiservices.csw.Get" />
 
-            
-            <output sheet="csw/config.xsl">
-                <call name="languages" class=".guiservices.languages.Get" />
 
-                <call name="users" class="jeeves.services.db.Select">
+			<output sheet="csw/config.xsl">
+				<call name="languages" class=".guiservices.languages.Get" />
+
+				<call name="users" class="jeeves.services.db.Select">
 					<param name="db" value="main-db" />
 					<param name="query" value="SELECT * FROM Users ORDER BY name" />
 				</call>
-            </output>
-        </service>
-
-        <service name="csw.config.set">
-            <class name=".guiservices.csw.Set" />
-
-            <output sheet="admin.xsl">
-                    <call name="services" class="jeeves.guiservices.services.Get" />
-            </output>
-        </service>
-
-        <service name="csw.customelementset.get">
-			<output sheet="csw/customize-elementset.xsl">
-                <call name="customelementsets" class=".guiservices.csw.customelementset.Get"/>
 			</output>
-        </service>
+		</service>
 
-        <service name="csw.customelementset.set">
-            <class name=".guiservices.csw.customelementset.Set" />
-            <output sheet="admin.xsl">
-                    <call name="services" class="jeeves.guiservices.services.Get" />
-            </output>
-        </service>
+		<service name="csw.config.set">
+			<class name=".guiservices.csw.Set" />
+
+			<output sheet="admin.xsl">
+				<call name="services" class="jeeves.guiservices.services.Get" />
+			</output>
+		</service>
+
+		<service name="csw.customelementset.get">
+			<output sheet="csw/customize-elementset.xsl">
+				<call name="customelementsets" class=".guiservices.csw.customelementset.Get"/>
+			</output>
+		</service>
+
+		<service name="csw.customelementset.set">
+			<class name=".guiservices.csw.customelementset.Set" />
+			<output sheet="admin.xsl">
+				<call name="services" class="jeeves.guiservices.services.Get" />
+			</output>
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
@@ -1351,7 +1355,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- KML services -->
-		
+
 		<!-- Show WMS service in GE -->
 		<service name="google.kml">
 			<class name=".services.metadata.Show" />
@@ -1368,21 +1372,21 @@
 
 		<service name="mef.import">
 			<class name=".services.mef.Import" />
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" /> 
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="mef.import.ui">
+		<service name="mef.import.ui">
 			<class name=".services.mef.Import" />
 
 
-            <output sheet="metadata-insert-results.xsl" />
+			<output sheet="metadata-insert-results.xsl" />
 
 			<error sheet="error.xsl">
-                <xml name="error" file="xml/validation-error.xml" />
-                <xml name="validation" file="xml/metadata-validate.xml" />
-            </error>
+				<xml name="error" file="xml/validation-error.xml" />
+				<xml name="validation" file="xml/metadata-validate.xml" />
+			</error>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1395,18 +1399,18 @@
 
 
 
-       <!-- Service to export a GeoNetwork query in a text file output. -->
+		<!-- Service to export a GeoNetwork query in a text file output. -->
 		<service name="csv.search">
-		   <class name=".services.main.SelectionSearch">
-		       <param name="fast" value="false" />
-		   </class>
-		   <output forward="csv.present" />
+			<class name=".services.main.SelectionSearch">
+				<param name="fast" value="false" />
+			</class>
+			<output forward="csv.present" />
 		</service>
 		<service name="csv.present">
-		   <class name=".services.main.Result">
-			 		<param name="range" value="all" />
-				</class>
-		   <output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
+			<class name=".services.main.Result">
+				<param name="range" value="all" />
+			</class>
+			<output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1423,12 +1427,12 @@
 		<service name="xml.relation.insert">
 			<class name=".services.relations.Insert" />
 		</service>
-		
+
 		<service name="xml.relation.delete">
 			<class name=".services.relations.Remove" />
 		</service>
-		
-		
+
+
 		<service name="crs.search">
 			<class name=".services.crs.Search" />
 		</service>
@@ -1440,22 +1444,22 @@
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 
-        <service name="sequential.execution.set">
-            <class name=".services.config.SetSequentialExecution" />
-        </service>
+		<service name="sequential.execution.set">
+			<class name=".services.config.SetSequentialExecution" />
+		</service>
 
-        <service name="isolanguages">
-            <class name="org.fao.geonet.guiservices.isolanguages.Get" />
-        </service>
+		<service name="isolanguages">
+			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
+		</service>
 	</services>
 
 	<!-- ====================================================================== -->
 
 	<include>config-metadata.xml</include>
-    <include>config-metadata-experimental.xml</include>
-    <include>config-subtemplate.xml</include>
-    <include>config-thesaurus.xml</include>
-    <include>config-harvesting.xml</include>
+	<include>config-metadata-experimental.xml</include>
+	<include>config-subtemplate.xml</include>
+	<include>config-thesaurus.xml</include>
+	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
 	<include>config-statistics.xml</include>
@@ -1463,8 +1467,8 @@
 	<include>config-test.xml</include>
 	<include>config-csw.xml</include>
 	<include>config-sru.xml</include>
-    <include>config-csw-servers.xml</include>
-    <include>config-monitoring.xml</include>
+	<include>config-csw-servers.xml</include>
+	<include>config-monitoring.xml</include>
 
 	<!-- ====================================================================== -->
 

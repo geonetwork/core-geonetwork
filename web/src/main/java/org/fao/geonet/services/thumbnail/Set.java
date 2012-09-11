@@ -273,8 +273,7 @@ public class Set implements Service
 
 		//--- remove file
 
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
-
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
 		if (!new File(file).delete())
 			context.error("Error while deleting thumbnail : "+file);
 	}
@@ -366,6 +365,22 @@ public class Set implements Service
 		return t.getImage(0);
 	}
 
+	/**
+	 * Return file name from full url thumbnail formated as
+	 * http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
+	 * @param file
+	 * @return
+	 */
+	private String getFileName(String file)
+	{
+		if(file.indexOf(FNAME_PARAM) < 0) {
+			return file;
+		}
+		else {
+			return file.substring(file.lastIndexOf(FNAME_PARAM)+FNAME_PARAM.length());
+		}
+	}
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -374,6 +389,7 @@ public class Set implements Service
 
 	private static final String IMAGE_TYPE   = "png";
 	private static final String SMALL_SUFFIX = "_s";
+	private static final String FNAME_PARAM   = "fname=";
 
 }
 

@@ -779,4 +779,25 @@ public class KeywordBean {
         return this;
     }
 
+    /**
+     * Remove the value with the provided language from this keyword
+     * 
+     * @param lang language of value to remove
+     * @return this
+     */
+    public KeywordBean removeValue(String lang) {
+        values.remove(lang);
+        return this;
+    }
+
+    /**
+     * Remove the definition with the provided language from this keyword
+     * 
+     * @param lang language of definition to remove
+     * @return this
+     */
+    public KeywordBean removeDefinition(String lang) {
+        definitions.remove(lang);
+        return this;
+    }
 }

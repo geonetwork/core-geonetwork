@@ -49,9 +49,8 @@
 			</td>
 			<td class="padded">
 				<xsl:for-each select="/root/gui/harvesting/dayofweek/day">
-					<input class="content {$type}_day" id="{$type}.{text()}" type="checkbox" value="" checked="true">
-						<xsl:value-of select="@label" />
-					</input>
+					<input class="content {$type}_day" id="{$type}.{text()}" type="checkbox" value="" checked="true"/>
+					<label for="{$type}.{text()}"><xsl:value-of select="@label" /></label>
 					&#160;
 				</xsl:for-each>
 			</td>

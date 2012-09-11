@@ -361,7 +361,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Thesaurus...");
 
-		thesaurusMan = ThesaurusManager.getInstance(path, dataMan, context.getResourceManager(), thesauriDir);
+		thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem

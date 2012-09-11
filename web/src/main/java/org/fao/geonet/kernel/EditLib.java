@@ -324,11 +324,11 @@ public class EditLib {
      * @param el The element
      * @param qname The qualified name of the element
      * @param fragment XML fragment
-     * 
+     * @param removeExisting Remove element of the same type before insertion
      * @throws Exception
      * @throws IllegalStateException Fail to parse the fragment.
      */
-    public void addFragment(String schema, Element el, String qname, String fragment) throws Exception {
+    public void addFragment(String schema, Element el, String qname, String fragment, boolean removeExisting) throws Exception {
         
         MetadataSchema mdSchema = scm.getSchema(schema);
         String parentName = getParentNameFromChild(el);
@@ -352,11 +352,15 @@ public class EditLib {
         Vector<Element> children = new Vector<Element>();
         
         for (int i = 0; i < type.getElementCount(); i++) {
+            // Add existing children of all types
             List<Element> list = getChildren(el, type.getElementAt(i));
-            for (Element aList : list) {
-                children.add(aList);
+            if (qname.equals(type.getElementAt(i)) && removeExisting) {
+                // Remove all existing children of the type of element to add
+            } else {
+                for (Element aList : list) {
+                    children.add(aList);
+                }
             }
-            
             if (qname.equals(type.getElementAt(i)))
                 children.add(fragElt);
         }
