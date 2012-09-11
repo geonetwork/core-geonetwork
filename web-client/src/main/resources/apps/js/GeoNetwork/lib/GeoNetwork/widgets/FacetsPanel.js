@@ -65,10 +65,10 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
     startFacetsStore: new Ext.data.JsonStore({
         fields : [ 'facet', 'node', 'count' ]
     }),
-    /** private: property[currentFilter]
-     * Store current filter. This is used to not display current filter in facet list.
+    /** private: property[currentFilterStore]
+     * Store current filters. This is used to not display current filter in facet list.
      */
-    currentFilter: {},
+    currentFilterStore: null,
     counter: 0,
     searchForm: null,
     serviceUrl: null,
@@ -84,8 +84,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         var facets = response.responseXML.childNodes[0].childNodes[1],
             zappette = '', 
             panel = this, 
-            store = this.facetsStore, 
-            currentFilter = this.currentFilter;
+            store = this.facetsStore;
         
         // Clean previous facets
         store.removeAll();
@@ -101,7 +100,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                             var facetList = "";
                             Ext.each(facet.childNodes, function (node) {
                                 if (this.count === undefined || (this.count && nodeCount < this.count)) {
-                                    facetList += panel.displayFacetValue(node, currentFilter, store);
+                                    facetList += panel.displayFacetValue(node, store);
                                 }
                             }, this);
                             if (facetList !== "") {
@@ -117,7 +116,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                     if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
                         var facetList = "";
                         Ext.each(facet.childNodes, function (node) {
-                            facetList += panel.displayFacetValue(node, currentFilter, store);
+                            facetList += panel.displayFacetValue(node, store);
                         });
                         if (facetList !== "") {
                             zappette += "<h1 class='facet'>" + OpenLayers.i18n(facet.nodeName) + "</h1>";
@@ -141,7 +140,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         // If no filter applied yet save all facet and values in a store
         // use for switching facet value in breadcrumb.
         // TODO : cross browser test
-        if (Object.keys(currentFilter).length === 0) {
+        if (this.currentFilterStore.getCount() === 0) {
             var records = [];
             store.each(function (r) {
                 records.push(r.copy());
@@ -152,7 +151,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             this.startFacetsStore.add(records);
         }
     },
-    displayFacetValue: function (node, currentFilter, store) {
+    displayFacetValue: function (node, store) {
         if (node.getAttribute) {
             var data = {
                 facet : node.nodeName,
@@ -160,8 +159,9 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 count : node.getAttribute('count')
             };
             // Only display a facet if it's not part of current filter
-            if (currentFilter[data.facet] === undefined ||
-                  currentFilter[data.facet].indexOf(data.node) === -1) {
+            
+            if (this.currentFilterStore.getCount() === 0 ||
+            		this.currentFilterStore.query('value', data.node).length === 0) {
                 var recId = store.getCount() + 1,
                      r = new store.recordType(data, recId); 
                 store.add(r);
@@ -173,25 +173,22 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
     },
     addFacet: function (recordId) {
         var r = this.facetsStore.getById(recordId),
-            form = this.searchForm,
-            key = r.get('facet'),
-            value = r.get('node'),
-            field = Ext.getCmp('E_' + key),
-            groupId;
+            form = this.searchForm, id = 'facet_' + this.counter ++;
         
-        this.counter ++;
-        var id = 'facet_' + this.counter;
-        
-        if (this.currentFilter[key] === undefined) {
-            this.currentFilter[key] = [value];
-        } else {
-            this.currentFilter[key].push(value);
-        }
+        var data = {
+             id: id, 
+             facet: r.get('facet'), 
+             value: r.get('node'), 
+             bcid: 'bc_' + id, 
+             fieldid: 'field_' + id
+        };
+        var filter = new this.currentFilterStore.recordType(data, this.currentFilterStore.getCount() + 1);
+        this.currentFilterStore.insert(0, filter);
         
         form.insert(0, new Ext.form.TextField({
-            id: 'field_' + id,
-            name: 'E_' + key,
-            value: value,
+            id: data.fieldid,
+            name: 'E_' + data.facet,
+            value: data.value,
             // Switch to text for debugging
             inputType: 'hidden'
         }));
@@ -201,22 +198,20 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             
             var scrollMenu = new Ext.menu.Menu({cls: 'breadcrumb-mn'});
             scrollMenu.add({
-                id: id + '-' + key,
                 text: OpenLayers.i18n('removeFilter') + ' ' + OpenLayers.i18n(r.get('facet')),
                 iconCls: 'md-mn-reset',
                 handler: function (b, e) {
-                    this.removeFacet(b.getId());
+                    this.removeFacet(data.id);
                 },
                 scope: panel
             });
             scrollMenu.add('-');
             // Switch facet value
             var i = 0;
-            this.startFacetsStore.query('facet', key).each(function (item, idx) {
-                groupId = id + '-' + key;
+            this.startFacetsStore.query('facet', data.facet).each(function (item, idx) {
                 scrollMenu.add({
-                    group: groupId + '#',
-                    id: groupId + '#' + i++,
+                    group: data.id + '#',
+                    id: data.id + '#' + i++,
                     altText : item.get('node'),
                     checked: item.get('node') === r.get('node') ? true : false,
                     text: item.get('node'),
@@ -227,9 +222,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 });
             });
             this.breadcrumb.add(new Ext.Button({
-                id: 'bc_' + groupId,
-                altText: r.get('node'),
-                text: r.get('node'),
+                id: data.bcid,
+                text: data.value,
                 menu: scrollMenu
             }));
             this.breadcrumb.doLayout();
@@ -240,41 +234,59 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      * elemId is scrolling menu item id with structure: id-key#i
      */
     switchFacet: function (elem) {
-        var elemId = elem.getId(), params = elemId.split('-'), 
-            id = params[0], facet = params[1].split('#')[0], 
-            btId = 'bc_' + elemId.split('#')[0], switcher = Ext.getCmp(btId);
-
-        // Replace reference in current filter
-        this.currentFilter[this.currentFilter[facet].indexOf(switcher.altText)] = elem.altText
+        var elemId = elem.getId(), filterKey = elemId.split('#')[0], newValue = elem.text;
         
+        // Search in current filter
+        var filter = this.currentFilterStore.query('id', filterKey).get(0);
+        
+        var field = Ext.getCmp(filter.get('fieldid')),
+            switcher = Ext.getCmp(filter.get('bcid'));
+        
+        // Update current filter
+        filter.set('value', newValue);
         // Update value of search field
-        var field = Ext.getCmp('field_' + id);
-        field.setValue(elem.altText);
-        
+        field.setValue(newValue);
         // Update switcher label
-        switcher.setText(elem.text);
-        switcher.altText = elem.text;
+        switcher.setText(newValue);
         
         this.searchForm.fireEvent('search');
     },
     /**
      * elemId is remove facet button id with structure: id-key
+     * silent: do not trigger search event
      */
-    removeFacet: function (elemId) {
-        var params = elemId.split('-'), facet = params[1], id = params[0], 
-            value = Ext.get(elemId) && Ext.get(elemId).getAttribute('alt');
+    removeFacet: function (filterKey, silent) {
+        // Search in current filter
+        var filter = this.currentFilterStore.query('id', filterKey).get(0);
         
-        // Remove breadcrumb reference
-        this.breadcrumb && this.breadcrumb.remove(Ext.getCmp('bc_' + elemId));
+        var field = Ext.getCmp(filter.get('fieldid')),
+            switcher = Ext.getCmp(filter.get('bcid'));
         
         // Remove search form reference
-        var field = Ext.getCmp('field_' + id);
         this.searchForm.remove(field);
-        this.searchForm.fireEvent('search');
+        // Remove breadcrumb reference
+        this.breadcrumb && this.breadcrumb.remove(switcher);
         
-        this.currentFilter[facet].splice(this.currentFilter[facet].indexOf(value), 1);
+        this.currentFilterStore.remove(filter);
+        
+        if (!silent) {
+            this.searchForm.fireEvent('search');
+        }
+    },
+    /**
+     * Clear all current filter in search form, breadcrumb
+     */
+    reset: function () {
+       this.currentFilterStore.each(function (r) {
+           this.removeFacet(r.get('id'), true)
+       });
     },
     init: function () {
+        this.currentFilterStore = new Ext.data.ArrayStore({
+            fields: ['id', 'facet', 'value', 'fieldid', 'bcid'],
+            idIndex: 0
+        });
+        
         this.update('<div id="facets" class="facets"></div>');
     },
     /** private: method[initComponent] 
