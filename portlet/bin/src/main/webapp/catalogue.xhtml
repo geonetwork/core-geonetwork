@@ -1,0 +1,311 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:mf="http://mapfaces.org/taglib">
+
+    <head>
+    <c:set var="contextPath" value="#{facesContext.externalContext.requestContextPath}" />
+      
+    <!-- Meta Tags -->
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="#{contextPath}/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="#{contextPath}/css/jquery-ui-1.8.2/sextant/jquery-ui-1.8.2.custom.css" type="text/css" />
+    <link rel="stylesheet" href="#{contextPath}/js/lib/selectmenu/ui.selectmenu.css" type="text/css" />
+    <link rel="stylesheet" href="#{contextPath}/js/lib/loadmask/jquery.loadmask.css" type="text/css" />
+    <link rel="stylesheet" href="#{contextPath}/css/main.css" type="text/css" />
+    <!--<link rel="stylesheet" href="#{contextPath}/css/jquery-jstree-1.0RC2/sextant/style.css" type="text/css" />-->
+    <!--[if IE 6]>
+    <style type="text/css"> @import url(#{contextPath}/css/ie6.css); </style>
+    <![endif]-->
+    <!--[if IE 7]>
+    <style type="text/css"> @import url(#{contextPath}/css/ie7.css); </style>
+    <![endif]-->
+
+    </head>
+    <body>
+            <form id="fakeform" action="#" method="post" target="_blank"></form> <!-- used so that cas/js/common_rosters.js does not create problems at init time -->
+            <form id="catalogPDF" action="#" method="post" target="_blank">
+              <input type="hidden" name="data" id="catalogPDF-hidden" value="" />
+            </form>
+            <div id="catalogTab" class="ui-widget ui-widget-content ui-corner-all" style="background-color:#D9D9D9;">
+            <iframe id="catalog-geonetwork" name="catalog-geonetwork" frameborder="0" width="0" height="0" style="visibility:hidden;"></iframe>
+            <h:form id="catalogForm">
+              <h:outputText value="#{catalogue.initCatalogue}" />
+              <h:inputHidden value="#{catalogue.layername}" id="layername" />
+              <h:inputHidden value="#{catalogue.wmsurl}" id="wmsurl" />
+              <h:inputHidden value="#{catalogue.layergroup}" id="layergroup" />
+              <h:inputHidden value="#{catalogue.wmsversion}" id="wmsversion" />
+              <h:inputHidden value="#{catalogue.getrecordbyidurl}" id="getrecordbyidurl" />
+              <h:inputHidden value="#{catalogue.geonetworkurl}" id="configgeonetwork" />
+              <h:inputHidden value="#{catalogue.maxextent}" id="configmaxextent" />
+              <h:inputHidden value="#{catalogue.cswurl}" id="configcsw" />
+              <h:inputHidden value="#{catalogue.what}" id="configwhat" />
+              <h:inputHidden value="#{catalogue.who}" id="configwho" />
+              <input type="hidden" id="configmdviewerurl" value="#{catalogue.mdviewerurl}" />
+              <input type="hidden" id="configgeoviewerurl" value="#{catalogue.geoviewerurl}" />
+              <input type="hidden" id="configpanierurl" value="#{catalogue.panierurl}" />
+                                                  
+              <h:panelGroup id="nbLayersBox" style="display:none;">
+                <h:outputText value="#{catalogue.nbPanierLayers}" id="nbPanierLayers" style="display:none;" />
+                <h:outputText value="#{catalogue.nbViewerLayers}" id="nbViewerLayers" style="display:none;" />                
+              </h:panelGroup>
+
+              <a4j:commandLink style="display:none;" id="viewerButton" action="#{catalogue.sendLayerToGeoviewer}" reRender="nbLayersBox" oncomplete="javascript:cat.modal.openModal('GEOVIEWER');cat.ipc.displayLayersNumber();" />
+              <a4j:commandLink style="display:none;" id="panierButton" action="#{catalogue.sendLayerToPanier}" reRender="nbLayersBox" oncomplete="javascript:cat.modal.openModal('CART');cat.ipc.displayLayersNumber();" />
+                
+              <input type="hidden" name="data" id="catalogForm-hidden" value=""/>
+              <div class="ui-layout-center">
+
+                <div class="ui-layout-header">
+                  <div class="toolbar ui-helper-clearfix">
+                    
+                    <div id="cat-navigation" class="float-left display-none">
+                        <div id="catalogForm-header-prev" class="cat-nav">
+                            <a href='#' id="cat-page-begin">&lt;&lt;</a>      <a href='#' id="cat-page-prev">&lt;</a>
+                        </div>
+                        <div id="catalogForm-header-nbItems" class="float-left"></div>
+                        <div id="catalogForm-header-next" class="cat-nav">
+                            <a href='#' id="cat-page-next">&gt;</a>   <a href='#' id="cat-page-end">&gt;&gt;</a>
+                        </div>
+                    </div>
+                    
+                    <div id="catalogForm-header-sort" style="float:right;" class="field select display-none"></div>
+                    
+                    <a href="#" id="catalogForm-header-pdf" title="Export PDF" style="background:transparent;border:none;" class="button button-icon-solo ui-state-default display-none">
+                      <span style="height:18px;width:18px;" class="icon file-pdf"> </span>
+                      PDF
+                    </a>
+                  </div>
+                </div>
+                <!-- FIN catalog/layout-center/layout-header -->
+                
+                <!-- Titre H3 dans "content" remplacé par "search-results" -->
+                <div class="ui-layout-content">
+                  <div id="cat-loading" style="text-align:center;margin-top:20px"></div>
+                  <p id="logo-sextant-big">
+                    <img src="#{contextPath}/img/logo-sextant-big.png" alt="Sextant" title="Sextant" />
+                  </p>
+                </div>
+                <!-- FIN catalog/layout-center/layout-content -->
+
+              </div>
+              <!-- FIN catalog/layout-center -->
+
+              <!-- Sidebar -->
+              <div class="ui-layout-west visibility-none">
+              
+                <div class="ui-layout-header" id="criteria-switch"></div>
+                <!-- FIN catalog/layout-west (sidebar)/layout-header -->
+                
+                <div class="ui-layout-content">
+                  <div id="catalogWhere" class="collapsible expanded">
+                    <div id="catalogWhere-first"></div>
+                    <div>
+                      <div id="whereMap">
+                        <div class="toolbar ui-helper-clearfix">
+                          <div class="set01 buttonSet-single ui-helper-clearfix">
+                            <a href="#" class="button button-icon-solo ui-state-default button-toggleable">
+                              <span id="cat-where-pan" class="icon move"> </span>
+                            </a>
+                            <a href="#" class="button button-icon-solo ui-state-default button-toggleable">
+                              <span id="cat-where-zoomin" class="icon zoom-in"> </span>
+                            </a>
+                            <a href="#" class="button button-icon-solo ui-state-default button-toggleable">
+                              <span id="cat-where-zoomout" class="icon zoom-out"> </span>
+                            </a>                 
+                            <a href="#" class="button button-icon-solo ui-state-default button-toggleable">
+                              <span id="cat-where-draw" class="icon select-add"> </span>
+                            </a>
+                          </div>
+                          <div class="set02 buttonSet ui-helper-clearfix">
+                            <a href="#" class="button button-icon-solo ui-state-default">
+                              <span id="cat-where-delete" class="icon select-remove"> </span>
+                            </a>
+                            <a href="#" class="button button-icon-solo ui-state-default">
+                              <span id="cat-where-maxextent" class="icon zoom-default"> </span>
+                            </a>
+                          </div>
+                        </div>
+                        <!--<img class="map" src="#{contextPath}/img/carte.jpg" alt="Carte"/>-->
+                        <div id="cat-where-map"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- FIN catalog/layout-west (sidebar)/layout-content/collapsible-where -->
+
+                  <div id="catalogWhat" class="collapsible expanded">
+                    <div id="catalogWhat-first"></div>
+                    <div>
+                    
+                      <div id="catalogForm-freeSearch" class="field text">
+                        <label></label>
+                        <input id="catalogForm-freeSearch-input" class="text" type="text" value="" name="freeSearch" />
+                      </div>
+                      
+                      <div id="catalogForm-catalogs" class="field display-none">
+                        <hr />
+                        <label></label>
+                        <select>
+                          <option value='' selected='selected'></option>
+                        </select>
+                      </div>
+                      
+                      <div id="catalogForm-themes" class="field checkbox display-none">
+                        <hr />
+                        <label></label>
+                        <div class="checkboxTree"></div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <!-- FIN catalog/layout-west (sidebar)/layout-content/collapsible-what -->
+
+                  <div id="catalogWho" class="collapsible display-none">
+                    <div id="catalogWho-first"></div>
+                    <div>
+                      <div id="catalogForm-organizations" class="field checkbox">
+                        <label></label>
+                        <div class="checkboxTree"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- FIN catalog/layout-west (sidebar)/layout-content/collapsible-who -->
+
+                  <div id="catalogWhen" class="collapsible display-none">
+                    <div id="catalogWhen-first"></div>
+                    <div>
+                      <fieldset>
+                        <div id="catalogForm-beginDate" class="field datepicker">
+                          <label></label>
+                          <input type="text" class="datepicker" id="catalogForm-beginDate-input" />
+                        </div>
+                        <div id="catalogForm-endDate" class="field datepicker">
+                          <label></label>
+                          <input type="text" class="datepicker" id="catalogForm-endDate-input" />
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <!-- FIN catalog/layout-west (sidebar)/layout-content/collapsible-when -->
+                </div>
+                <!-- FIN catalog/layout-west (sidebar)/layout-content -->
+
+                <div class="ui-layout-footer">
+                  <div class="actions ui-helper-clearfix">
+                    <a href="#" id="catalogForm-reset" class="action button ui-state-default">reset</a>
+                    <a href="#" id="catalogForm-send"  class="action button ui-state-default">search</a>
+                  </div>
+                </div>
+                <!-- FIN catalog/layout-west (sidebar)/layout-footer -->
+
+              </div>
+              <!-- FIN catalog/layout-west (sidebar) -->
+
+            <div style="display:none;" id="cat-dialog"></div>
+            </h:form>
+          </div>
+          <!-- FIN catalog -->
+
+      	  <!--  Modal Popup to redirect to panier or viewer -->
+	  <div id="osx-modal-content">
+		<div id="osx-modal-title"></div>
+		<div class="close"><a href="#" class="simplemodal-close"></a></div>
+		<div id="osx-modal-data">
+			<p class="osx-modal-data-msg"><a href="#" class="simplemodal-open hopen"></a></p>
+		</div>
+	  </div>
+      
+      <c:choose>
+        <c:when test="#{!empty param.debug}">
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery-1.4.2.min.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery-ui-1.8.2-all/jquery-ui-1.8.2.all.min.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery-ui-1.8.2-all/jquery.ui.datepicker-fr.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery.layout-1.3.0RC29.1.min.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery.jstree-1.0RC2.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery.collapsible.v1.0.0.min.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/selectmenu/ui.selectmenu.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/loadmask/jquery.loadmask.min.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery.template.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery.spinner.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/jquery.cookie.js"></script>
+	  <script type="text/javascript" src="#{contextPath}/js/lib/jquery.simplemodal.1.4.2.min.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/lib/openlayers/lib/OpenLayers.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.lang/fr.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.lang/en.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.CSWRecord.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.ThemesCookie.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.csw.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.list.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.metadata.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.where.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.when.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.what.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.who.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.config.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.nav.js"></script>
+          <script type="text/javascript" src="#{contextPath}/js/cat.ipc.js"></script>
+	  <script type="text/javascript" src="#{contextPath}/js/cat.modal.js"></script>
+        </c:when>
+        <c:otherwise>
+          <!-- prod -->
+          <script type="text/javascript" src="#{contextPath}/js/minified/app.cc.js"></script>
+          <script type="text/javascript" src="#{contextPath}/faces/rfResorg.ajax4jsf.javascript.AjaxScript"></script>
+          <script type="text/javascript" src="#{contextPath}/mfRes/org/ajax4jsf/javascript/JSFAJAX.js"></script>          
+        </c:otherwise>
+      </c:choose>
+      
+   
+      
+      
+      
+    <script type="text/javascript">
+    	cat.imgPath = '#{contextPath}';
+    	cat.lang = ("#{facesContext.externalContext.requestLocale}").split('_')[0];
+    </script>
+
+    <!--[if lt IE 9]>
+    <script type="text/javascript">var IE7_PNG_SUFFIX=".png";</script>
+    <script src="#{contextPath}/js/lib/ie7-2.1b4/src/IE9.js"></script>
+    <script src="#{contextPath}/js/lib/ie7-2.1b4/src/ie7-squish.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+        (function() {
+            var maxExtent = $('input[id*=configmaxextent]').val();
+            if (maxExtent) {
+                cat.config.setValue('MAPMAXEXTENT', maxExtent);
+            }
+            
+            var geonetworkCsw = $('input[id*=configgeonetwork]').val();
+            if (geonetworkCsw) {
+                cat.config.setValue('GEONETWORK_URL', geonetworkCsw);
+            }
+            
+            var csw = $('input[id*=configcsw]').val();
+            if (csw) {
+                cat.config.setValue('CSW_URL', csw);
+            }
+            
+            var what = $('input[id*=configwhat]').val();
+            if (what) {
+                cat.config.setValue('WHAT', what);
+            }
+            
+            var who = $('input[id*=configwho]').val();
+            if (who) {
+                var reg = new RegExp("[,;]+", "g");
+                var whoArray = who.split(reg);
+                cat.config.setValue('WHO', whoArray);
+            }
+        })();
+    </script>
+    
+    </body>
+</html>

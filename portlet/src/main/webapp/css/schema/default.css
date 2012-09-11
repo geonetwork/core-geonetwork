@@ -1,0 +1,299 @@
+.tpl-sextant .ui-layout-content { 	
+	height: 100% !important;
+}
+div.ui-dialog-titlebar .ui-state-hover, div.ui-dialog-titlebar .ui-state-active, div.ui-dialog-titlebar .ui-state-focus {
+  border: none;
+  background: none;
+  background-image: none;
+}
+
+.mdshow-tabpanel {
+	padding: 6px 12px;
+}
+.mdshow-tabpanel .x-tab-panel-header{
+	background-color: white !important;
+	border-bottom: medium none;
+}
+.mdshow-tabpanel span.x-tab-strip-text {
+	font-family: Arial,​Helvetica,​sans-serif !important;
+	font-size: 12px !important;
+	font-weight: bold !important;
+	color: #616161 !important;
+	line-height: 15.6px !important;
+	padding: 7px 11px 4px 8px !important;
+}
+.mdshow-tabpanel .x-tab-strip-active span.x-tab-strip-text {
+	color: #FFFFFF !important;
+}
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-right,
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-left,
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-strip-inner {
+	background: url("../../images/ui-bg_inset-hard_75_999999_1x100.png") repeat-x scroll 50% 50% #999999 !important;
+}
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-right {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-left {
+	border-top-right-radius: 4px;
+}
+.mdshow-tabpanel ul.x-tab-strip-top {
+	background-color: white !important;
+	border-top-left-radius: 4px !important;
+}
+.mdshow-tabpanel ul.x-tab-strip-top {
+	border-bottom: none;
+}
+.mdshow-tabpanel ul.x-tab-strip li{
+	margin-right:2px;
+	margin-left:0;
+}
+
+div.ui-dialog-content {
+  margin: 10px 0 20px 0;
+}
+
+div.ui-tabs {
+}
+
+div.ui-tabs .toolbar {
+  position:absolute;
+  right:0px;
+  top:11px;
+}
+
+div.ui-tabs .toolbar .button{
+  float:right;
+  background : transparent none;
+}
+
+div.ui-tabs-nav {
+}
+
+div.ui-tabs-panel {
+  background-color: #EFEFEF;
+}
+
+.tpl-sextant h3 {
+  font-size : 1.4em;
+  font-weight : bold;
+  background-color : grey;
+  margin : 1em 0;
+  padding: 1em;
+}
+
+.tpl-sextant h4 {
+  float : left;
+}
+
+.tpl-sextant h5 {
+  background-color: #aaa !important;
+  border:1px solid #999999 !important;
+  color:#FFFFFF;
+  font-weight:bold;
+  height: 15px;
+  padding-left: 10px !important;
+  padding-top: 5px !important;
+}
+
+.tpl-sextant p {
+  margin : 1em !important;
+  margin-left : 0px !important;
+}
+
+.tpl-sextant hr {
+  margin: 1em 0 1.5em 0;
+  clear : both;
+}
+
+div.result-metadata-modal-utils {
+  text-align : right;
+  padding : 0 0.5em;
+}
+
+div.result-metadata-modal-title {
+  padding : 1em 0.5em 0.5em 0;
+}
+
+div.result-metadata-modal-title img {
+  border:1px solid #AAAAAA;
+}
+
+div.result-metadata-modal-title h4 {
+  margin-top : 0.5em;
+  margin-left : 4em;
+  float : none;
+}
+
+div.result-metadata-modal-resume {
+  padding : 0 0 0.5em 0;
+}
+
+div.result-metadata-modal-targets {
+  padding : 0 0 0.5em 0;
+}
+
+div.result-metadata-modal-content {
+  padding : 0 0 0.5em 0;
+}
+
+div.result-metadata-modal-content table {
+  width: auto;
+  border: 0 none;
+  text-align: center;
+}
+
+div.result-metadata-modal-content table td {
+  vertical-align: middle;
+  border: 0 none;
+}
+
+.result-metadata-modal-content li {
+  padding-left: 2em;
+}
+
+.ui-dialog h6 {
+  margin-right: 20px;
+  float: left;
+}
+
+.tpl-sextant .button {
+  cursor : pointer;
+  position: relative;
+  float : left;
+  font-size : 12px;
+  font-family : serif;
+  line-height : 16px;
+  text-decoration:none !important;
+  text-align : center;
+  outline: 0;
+  padding : 2px 4px 2px 4px;
+}
+
+/* solo icon buttons must have block properties for the text-indent to work */
+.tpl-sextant .button-icon-solo {
+  display:block;
+  width:24px;
+  height : 24px;
+  text-indent: -9999px;
+  float: left;
+}
+
+
+/* icones */
+.tpl-sextant .icon {
+  background-repeat:no-repeat;
+  height:24px;
+  width:24px;
+  display:block;
+  overflow:hidden;
+  text-indent:-99999px;
+}
+
+.tpl-sextant .button .ui-icon, /* jQuery CSS Framework */
+.tpl-sextant .button .icon {   /* MP CSS Framework */
+  position: absolute;
+  margin-left : -12px;
+  margin-top : -12px;
+  left : 50%;
+  top : 50%;
+}
+
+
+.mdshow-tabpanel .file-pdf {
+  background-image:url("../../images/icons/file-pdf.png");
+  border: medium none;
+    height: 16px;
+    position: absolute;
+    right: 30px;
+    top: 14px;
+    width: 16px;
+    z-index: 5000;
+    cursor:pointer;
+}
+
+.mdshow-tabpanel .file-xml {
+  background-image:url("../../images/icons/file-xml.png");
+  border: medium none;
+    height: 16px;
+    position: absolute;
+    right: 60px;
+    top: 14px;
+    width: 16px;
+    z-index: 5000;
+    cursor:pointer;
+}
+.mdshow-tabpanel .file-xml:hover {
+  background-position:-19px 0;
+}
+.mdshow-tabpanel .file-pdf:hover {
+  background-position:-19px 0;
+}
+.ui-widget-content .button {
+  background-image: none !important;
+  border: none !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.ui-widget-content .ui-state-hover  {
+  background-color: #efefef;
+}
+
+.ui-widget-content .ui-state-hover .icon  {
+  background-position : -18px 0;
+}
+
+.ui-widget-content .ui-state-active {
+  background-color: #efefef;
+}
+
+.ui-widget-content .ui-state-disabled {
+  background-color: #efefef;
+}
+
+.folder-open{ 
+	background-image:url("themes/classic/d.png"); 
+	background-repeat:no-repeat; 
+	background-color:transparent; 
+	background-position:-56px -36px;
+}
+.folder-closed{ 
+	background-image:url("themes/classic/d.png"); 
+	background-repeat:no-repeat; 
+	background-color:transparent; 
+	background-position:-56px -19px;
+}
+
+
+div.result-metadata-modal-content div.result-metadata-modal-content a {
+  color : #F28033;
+}
+
+div.result-metadata-modal-content div.result-metadata-modal-content ul {
+	list-style: disc inside;	
+}
+
+div.result-metadata-modal-content div.result-metadata-modal-content ol {
+	list-style: decimal inside;	
+}
+
+div.result-metadata-modal-content div.result-metadata-modal-content li {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+div.result-metadata-modal-content div.result-metadata-modal-content table {
+  width: auto;
+  border: 1px solid #a0a0a0 !important;
+  text-align: left !important;
+  color: #3b3c3c !important;
+}
+
+div.result-metadata-modal-content div.result-metadata-modal-content table th,
+div.result-metadata-modal-content div.result-metadata-modal-content table td {
+	border: 1px solid #A0A0A0 !important;
+	padding: 5px 10px !important;
+}
+

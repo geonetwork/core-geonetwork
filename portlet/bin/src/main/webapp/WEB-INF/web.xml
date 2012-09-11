@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+        http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+   <display-name>catalogue</display-name>
+   <description>Sextant Catalogue</description>
+
+   <servlet>
+       <servlet-name>sxt-catalogue</servlet-name>
+       <servlet-class>com.liferay.portal.kernel.servlet.PortletServlet</servlet-class>
+       <init-param>
+           <param-name>catalogue-class</param-name>
+           <param-value>javax.portlet.faces.GenericFacesPortlet</param-value>
+       </init-param>
+       <load-on-startup>0</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+       <servlet-name>sxt-catalogue</servlet-name>
+       <url-pattern>/sxt-catalogue/*</url-pattern>
+   </servlet-mapping>
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/faces-config*</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    <context-param>
+        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-value>.xhtml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+    <context-param>
+       <param-name>com.sun.faces.validateXml</param-name>
+       <param-value>true</param-value>
+   </context-param>
+   <context-param>
+       <param-name>com.sun.faces.verifyObjects</param-name>
+       <param-value>false</param-value>
+   </context-param>
+    
+    <error-page>
+        <exception-type>javax.servlet.ServletException</exception-type>
+        <location>/faces/error.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/error.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.FacesException</exception-type>
+        <location>/faces/error.xhtml</location>
+    </error-page>
+
+   <context-param>
+       <param-name>javax.portlet.faces.RENDER_POLICY</param-name>
+       <param-value>ALWAYS_DELEGATE</param-value>
+   </context-param>
+
+    <context-param>
+      <param-name>org.ajax4jsf.VIEW_HANDLERS</param-name>
+      <param-value>org.jboss.portletbridge.application.FaceletPortletViewHandler</param-value>
+   </context-param>
+
+   <context-param>
+       <param-name>org.jboss.portletbridge.WRAP_SCRIPTS</param-name>
+       <param-value>true</param-value>
+   </context-param>
+
+   <context-param>
+       <param-name>org.ajax4jsf.RESOURCE_URI_PREFIX</param-name>
+       <param-value>rfRes</param-value>
+   </context-param>
+
+    <context-param>
+        <param-name>org.richfaces.LoadStyleStrategy</param-name>
+        <param-value>NONE</param-value>
+    </context-param>
+   <context-param>
+       <param-name>org.richfaces.LoadScriptStrategy</param-name>
+       <param-value>NONE</param-value>
+   </context-param>
+
+   <context-param>
+       <param-name>A4J.AJAX.Push.URL</param-name>
+       <param-value>/portlets/faces/a4j.push</param-value>
+   </context-param>
+
+   <filter>
+       <display-name>Ajax4jsf Filter</display-name>
+       <filter-name>ajax4jsf</filter-name>
+       <filter-class>org.ajax4jsf.Filter</filter-class>
+   </filter>
+   
+   <filter-mapping>
+       <filter-name>ajax4jsf</filter-name>
+       <servlet-name>Faces Servlet</servlet-name>
+       <dispatcher>FORWARD</dispatcher>
+       <dispatcher>REQUEST</dispatcher>
+       <dispatcher>INCLUDE</dispatcher>
+   </filter-mapping>
+   
+    <!-- Mandatory -->
+   <servlet>
+       <servlet-name>Map Resource Servlet</servlet-name>
+       <servlet-class>org.mapfaces.servlet.ResourceServlet</servlet-class>
+       <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+       <servlet-name>Map Resource Servlet</servlet-name>
+       <url-pattern>/mfRes/*</url-pattern>
+   </servlet-mapping>
+   
+
+   <listener>
+       <listener-class>com.liferay.portal.kernel.servlet.PortletContextListener</listener-class>
+   </listener>
+  
+   <login-config>
+       <auth-method>BASIC</auth-method>
+   </login-config>
+</web-app>

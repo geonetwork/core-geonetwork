@@ -1,0 +1,25 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head><title>Register a new harvester</title>
+      <link rel="stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+      <link rel="stylesheet" type="text/css" href="../resources/css/metadata-view.css" />
+      
+      <script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+      <script type="text/javascript" src="../../ext/ext-all-debug.js"></script>
+      <script type="text/javascript" src="../../OpenLayers/lib/OpenLayers.js"></script>
+      <script type="text/javascript" src="../../GeoExt/script/GeoExt.js"></script>
+      <script type="text/javascript" src="../lib/GeoNetwork.js"></script>
+      <script type="text/javascript" src="example.js"></script>
+      <script type="text/javascript" src="quick-harvester-register.js"></script>      
+  </head>
+    <body>
+        <h1>Simple widget to register an OGC WxS harvester</h1>
+        <p>
+        This example show how to register an OGC WMS to the catalogue. For the time being, you need to add xml.havesting.add, 
+        xml.havesting.start and xml.havesting.run to guest user if you want to make that service publicly available. You also
+        need a quite flexible proxy for GetCapabilities calls. 
+        </p>
+        <div id="qr">
+        </div>
+    </body>
+</html>
