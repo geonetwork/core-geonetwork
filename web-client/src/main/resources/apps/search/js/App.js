@@ -360,6 +360,12 @@ GeoNetwork.app = function(){
             defaults: {
                 width : 180
             },
+            listeners: {
+                onreset: function () {
+                    resultsPanel.hide();
+                    infoPanel.show();
+                }
+            },
             items: formItems
         });
     }
