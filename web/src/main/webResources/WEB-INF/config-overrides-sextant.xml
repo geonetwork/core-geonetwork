@@ -3,6 +3,11 @@
   xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
   xsi:noNamespaceSchemaLocation="config-overrides.xsd">
   <import file="/WEB-INF/config-overrides-sextant-props-${overrides.props}.xml"/>
+  
+  <properties>
+    <gn.webapp.dir>${gn.webappdir}</gn.webapp.dir>
+  </properties>
+  
   <file name=".*/WEB-INF/config-gui.xml">
     <replaceAtt xpath="client" attName="widget" value="true"/>
     <replaceAtt xpath="client" attName="url" value="${widget.url}"/>
@@ -52,6 +57,25 @@
     </replaceXML>
   </file>
 
+  <!-- Full path to user_xsl to avoid to try to get it from the data directory.
+  -->
+  <file name=".*/WEB-INF/config-metadata.xml">
+    <!--
+      This is not filtered by maven ?
+      <replaceAtt xpath="//param[@name = 'user_xsl_dir']" attName="value" value="${gn.webappdir}/WEB-INF/data/data/user_xsl"/>-->
+    <replaceAtt xpath="services/service[@name='metadata.formatter.register']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.admin']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.list']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.update']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.files']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.edit']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.remove']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.download']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.resource']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.html']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+    <replaceAtt xpath="services/service[@name='metadata.formatter.xml']/class/param[@name = 'user_xsl_dir']" attName="value" value="${gn.webapp.dir}/WEB-INF/data/data/user_xsl"/>
+  </file>
+      
   <!-- Add custom CSW service -->
   <file name=".*/WEB-INF/config-csw-servers.xml">
     <addXML xpath="services">
