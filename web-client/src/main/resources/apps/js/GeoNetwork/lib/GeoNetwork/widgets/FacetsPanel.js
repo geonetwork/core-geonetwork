@@ -45,12 +45,12 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
          *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
          */
         lang: 'en',
-        /** api: config[facetListOrder] 
+        /** api: config[facetListConfig] 
          *  Array of facets to display on the client side. This could be used to restrict the facet provided by 
          *  the server. Example: [{name: 'keywords', count: 15}, {name: 'spatialRepresentations', count: 2}]
          *  will display 15 keywords and all spatial representation types.
          */
-        facetListOrder: [],
+        facetListConfig: [],
         autoScroll: true
     },
     /** private: property[facetsStore]
@@ -91,9 +91,9 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         
         if (facets.nodeName === 'summary') {
             // TODO : Use template
-            if (this.facetListOrder.length > 0) {
+            if (this.facetListConfig.length > 0) {
                 // Display only client requested facet
-                Ext.each(this.facetListOrder, function (facetToDisplay) {
+                Ext.each(this.facetListConfig, function (facetToDisplay) {
                     Ext.each(facets.getElementsByTagName(facetToDisplay.name), function (facet) {
                         if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
                             var nodeCount = 0;
@@ -277,9 +277,9 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      * Clear all current filter in search form, breadcrumb
      */
     reset: function () {
-       this.currentFilterStore.each(function (r) {
-           this.removeFacet(r.get('id'), true)
-       });
+        this.currentFilterStore.each(function (r) {
+            this.removeFacet(r.get('id'), true);
+        }, this);
     },
     init: function () {
         this.currentFilterStore = new Ext.data.ArrayStore({

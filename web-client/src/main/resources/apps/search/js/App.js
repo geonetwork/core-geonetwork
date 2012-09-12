@@ -362,9 +362,8 @@ GeoNetwork.app = function(){
             },
             listeners: {
                 onreset: function () {
-                    resultsPanel.hide();
-                    infoPanel.show();
                     facetsPanel.reset();
+                    this.fireEvent('search');
                 }
             },
             items: formItems
@@ -688,7 +687,8 @@ GeoNetwork.app = function(){
             });
             facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,
-                breadcrumb: breadcrumb
+                breadcrumb: breadcrumb,
+                facetListConfig: GeoNetwork.Settings.facetListConfig || []
             });
             
             var viewport = new Ext.Viewport({
