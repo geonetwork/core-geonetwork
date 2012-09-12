@@ -502,7 +502,7 @@ cat.app = function() {
 			if(window.location.href.indexOf('https') == 0 ){
 				GeoNetwork.URL = 'https://localhost:8443/geonetwork';
 			}
-			else (window.location.href.indexOf('http') == 0 ){
+			else if (window.location.href.indexOf('http') == 0 ){
 				GeoNetwork.URL = 'http://localhost:8080/geonetwork';
 			}
 			urlParameters = GeoNetwork.Util.getParameters(location.href);
