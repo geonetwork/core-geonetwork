@@ -973,6 +973,20 @@
       </properties>
     </profile>
     <profile>
+      <id>ifr-sextant-myocean</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-sextant-myocean</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
       <id>pc55</id>
       <activation>
         <property>
