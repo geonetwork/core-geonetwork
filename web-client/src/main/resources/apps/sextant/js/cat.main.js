@@ -445,7 +445,7 @@ cat.app = function() {
 				search();
 			},
 			padding : 5,
-			height: Ext.getBody().getViewSize().height-120,
+			//height: Ext.getBody().getViewSize().height-120,
 			autoScroll: true,
 			defaults : {
 				padding : 15,
@@ -498,12 +498,15 @@ cat.app = function() {
 
 	return {
 		init : function() {
-
-			geonetworkUrl = GeoNetwork.URL
-					|| window.location.href.match(/(http.*\/.*)\/apps\/sextant.*/,
-							'')[1];
-
+			
+			if(window.location.href.indexOf('https') == 0 ){
+				GeoNetwork.URL = 'https://localhost:8443/geonetwork';
+			}
+			else (window.location.href.indexOf('http') == 0 ){
+				GeoNetwork.URL = 'http://localhost:8080/geonetwork';
+			}
 			urlParameters = GeoNetwork.Util.getParameters(location.href);
+			
 			var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
 			if (urlParameters.extent) {
 				urlParameters.bounds = new OpenLayers.Bounds(
@@ -555,7 +558,8 @@ cat.app = function() {
 			// Search result
 			resultsPanel = createResultsPanel(permalinkProvider);
 
-			var viewport = new Ext.Viewport({
+			var viewport = new Ext.Panel({
+				renderTo: 'main-viewport',
 				layout : 'border',
 				id : 'vp',
 				cls : 'cat_layout',
@@ -573,7 +577,7 @@ cat.app = function() {
 					collapsible : true,
 					hideCollapseTool : true,
 					collapseMode : 'mini',
-					margins : '40 0 20 30',
+					//margins : '0 0 20 30',
 					layoutConfig : {
 						animate : true
 					},
@@ -582,9 +586,31 @@ cat.app = function() {
 					region : 'center',
 					id : 'center',
 					split : true,
-					margins : '40 30 20 0',
+					//margins : '40 30 20 0',
 					items : [ infoPanel, resultsPanel ]
-				} ]
+				} ],
+				listeners: {
+					afterrender: {
+						fn: function(o) {
+							var portletContainer = Ext.Element.select('.portlet-content');
+							var height=0
+							if(portletContainer.getCount()==1) {
+								var d = Ext.get('main-viewport');
+								height=Ext.getBody().getViewSize().height -d.getY() - 100;
+							}
+							else if (portletContainer.getCount()>1) {
+								height=400;
+								o.setHeight(400);
+							}
+							else if (portletContainer.getCount()==0) {
+								height=Ext.getBody().getViewSize().height-100;
+							}
+							o.setHeight(height);
+							searchForm.setHeight(height);
+							
+						}
+					}
+				}
 			});
 			
 			if (urlParameters.mode) {
@@ -674,12 +700,15 @@ Ext.onReady(function() {
 	GeoNetwork.Util.setLang(lang && lang[1], '..');
 
 	Ext.QuickTips.init();
-	setTimeout(function() {
-		Ext.get('loading').remove();
-		Ext.get('loading-mask').fadeOut({
-			remove : true
-		});
-	}, 250);
+	var loadDiv = Ext.get('loading');
+	if(loadDiv) {
+		setTimeout(function() {
+			loadDiv.remove();
+			Ext.get('loading-mask').fadeOut({
+				remove : true
+			});
+		}, 250);
+	}
 
 	app = new cat.app();
 	app.init();

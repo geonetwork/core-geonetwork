@@ -3,9 +3,9 @@ GeoNetwork.Settings = {};
 // Default to absolute path without apps/search
 // GeoNetwork.URL = '../..';
 
-OpenLayers.ProxyHostURL = '/cgi-bin/proxy.cgi?url=';
+//OpenLayers.ProxyHostURL = '/cgi-bin/proxy.cgi?url=';
 // GeoNetwork proxy is much more permissive than OL one
-//OpenLayers.ProxyHostURL = '../../proxy?url=';
+OpenLayers.ProxyHostURL = '../../proxy?url=';
 
 OpenLayers.ProxyHost = function(url){
     /**
@@ -74,4 +74,4 @@ GeoNetwork.WMSList = [['Geoserver', 'http://localhost/geoserver/wms?']];
 
 GeoNetwork.defaultViewMode = 'view-simple';
 
-Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
+Ext.BLANK_IMAGE_URL = 'lib/ext/resources/images/default/s.gif';

@@ -18,7 +18,7 @@
 
 	<properties>
 		<minify.verbose>false</minify.verbose>
-		<build.webapp.resources>${basedir}/src/main/webapp/js/lib</build.webapp.resources>
+		<build.webapp.resources>${basedir}/src/main/webapp</build.webapp.resources>
 		<liferay.auto.deploy.dir>../bundles/liferay-portal-6.0/deploy</liferay.auto.deploy.dir>
 		<liferay.version>6.0.5</liferay.version>
 		<jsf.version>1.2_15</jsf.version>
@@ -227,6 +227,28 @@
 				<version>2.5</version>
 				<executions>
 					<execution>
+						<id>copy-GeonetworkUI</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>false</includeEmptyDirs>
+							<outputDirectory>${build.webapp.resources}/js/lib</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../web-client/src/main/resources/apps/js</directory>
+									<filtering>false</filtering>
+									<targetPath>${build.webapp.resources}/js/lib</targetPath>
+									<excludes>
+										<exclude>**/.svn</exclude>
+									</excludes>
+								</resource>
+							</resources>
+							<overwrite>true</overwrite>
+						</configuration>
+					</execution>
+					<execution>
 						<id>copy-filter-webResource</id>
 						<phase>process-resources</phase>
 						<goals>
@@ -237,7 +259,7 @@
 							<outputDirectory>${build.webapp.resources}</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/../web-client/src/main/resources/apps/js</directory>
+									<directory>${basedir}/../web-client/src/main/resources/apps/sextant</directory>
 									<filtering>false</filtering>
 									<targetPath>${build.webapp.resources}</targetPath>
 									<excludes>
