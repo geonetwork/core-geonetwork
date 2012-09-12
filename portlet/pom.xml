@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>org.geonetwork-opensource</groupId>
+		<artifactId>geonetwork</artifactId>
+		<version>2.9.0-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.geonetwork-opensource</groupId>
+	<artifactId>geonetwork-portlet</artifactId>
+	<packaging>war</packaging>
+	<name>GeoNetwork Portlet</name>
+	<description> GeoNetwork portlet for Sextant V5</description>
+
+	<properties>
+		<minify.verbose>false</minify.verbose>
+		<build.webapp.resources>${basedir}/src/main/webapp</build.webapp.resources>
+		<liferay.auto.deploy.dir>../bundles/liferay-portal-6.0/deploy</liferay.auto.deploy.dir>
+		<liferay.version>6.0.5</liferay.version>
+		<jsf.version>1.2_15</jsf.version>
+		<portletbridge.version>2.0.0.FINAL</portletbridge.version>
+		<mapfaces.version>0.44.1-SNAPSHOT</mapfaces.version>
+		<utils.version>1.0-SNAPSHOT</utils.version>
+	</properties>
+
+	<dependencies>
+		<!-- JSF -->
+		<dependency>
+			<groupId>com.sun.facelets</groupId>
+			<artifactId>jsf-facelets</artifactId>
+			<version>1.1.15</version>
+		</dependency>
+		<!-- JSF -->
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>${jsf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>${jsf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-api</artifactId>
+			<version>2.1.5</version>
+		</dependency>
+		<!-- Mapfaces -->
+		<dependency>
+			<groupId>org.mapfaces</groupId>
+			<artifactId>mapfaces-core</artifactId>
+			<version>${mapfaces.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapfaces</groupId>
+			<artifactId>mapfaces-portlet</artifactId>
+			<version>${mapfaces.version}</version>
+		</dependency>
+
+		<!-- JBOSS Portlet Bridge -->
+		<dependency>
+			<groupId>org.jboss.portletbridge</groupId>
+			<artifactId>portletbridge-api</artifactId>
+			<version>${portletbridge.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.portletbridge</groupId>
+			<artifactId>portletbridge-impl</artifactId>
+			<version>${portletbridge.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>portal-service</artifactId>
+			<version>${liferay.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>util-bridges</artifactId>
+			<version>${liferay.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>util-taglib</artifactId>
+			<version>${liferay.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>util-java</artifactId>
+			<version>${liferay.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>fr.ifremer</groupId>
+			<artifactId>portlet-util</artifactId>
+			<version>${utils.version}</version>
+		</dependency>
+
+		<!-- Xalan dependency. necessary for deployment of portlets.war by liferay 
+			admin interface if you change the version, verify you can still deploy the 
+			war -->
+		<!-- <dependency> <groupId>xalan</groupId> <artifactId>xalan</artifactId> 
+			</dependency> -->
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>java.net.1</id>
+			<name>java.net community</name>
+			<url>http://download.java.net/maven/1</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<!-- <layout>legacy</layout> -->
+		</repository>
+		<repository>
+			<id>java.net.2</id>
+			<name>java.net community</name>
+			<url>http://download.java.net/maven/2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>jboss</id>
+			<name>JBoss Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<!--SNAPSHOT repositories -->
+		<repository>
+			<id>geomatys</id>
+			<name>Geomatys et ses dépendances spécifiques</name>
+			<url>http://maven.geomatys.com</url>
+		</repository>
+		<repository>
+			<id>geotoolkit</id>
+			<name>Geotoolkit</name>
+			<url>http://maven.geotoolkit.org/</url>
+		</repository>
+
+		<repository>
+			<id>spring-milestone</id>
+			<name>Spring Portfolio Milestone Repository</name>
+			<url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<!-- Default profile -->
+		<profile>
+			<id>classic</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<!-- Sextant config -->
+				<dependency>
+					<groupId>fr.ifremer</groupId>
+					<artifactId>config-util</artifactId>
+					<version>${utils.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<!-- Sextant profile -->
+		<profile>
+			<id>sextant</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<dependencies>
+				<!-- Sextant config -->
+				<dependency>
+					<groupId>fr.ifremer</groupId>
+					<artifactId>config-util</artifactId>
+					<version>${utils.version}</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>copy-GeonetworkUI</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>false</includeEmptyDirs>
+							<outputDirectory>${build.webapp.resources}/js/lib</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../web-client/src/main/resources/apps/js</directory>
+									<filtering>false</filtering>
+									<targetPath>${build.webapp.resources}/js/lib</targetPath>
+									<excludes>
+										<exclude>**/.svn</exclude>
+									</excludes>
+								</resource>
+							</resources>
+							<overwrite>true</overwrite>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-filter-webResource</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>false</includeEmptyDirs>
+							<outputDirectory>${build.webapp.resources}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../web-client/src/main/resources/apps/sextant</directory>
+									<filtering>false</filtering>
+									<targetPath>${build.webapp.resources}</targetPath>
+									<excludes>
+										<exclude>**/.svn</exclude>
+									</excludes>
+								</resource>
+							</resources>
+							<overwrite>true</overwrite>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>com.liferay.maven.plugins</groupId>
+				<artifactId>liferay-maven-plugin</artifactId>
+				<version>${liferay.version}</version>
+				<configuration>
+					<autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+</project>

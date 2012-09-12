@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="1.2" 
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+              xmlns:bridge="http://myfaces.apache.org/portletbridge">
+
+    <application>
+        <view-handler> org.jboss.portletbridge.application.PortletViewHandler</view-handler>
+        <state-manager>org.jboss.portletbridge.application.PortletStateManager</state-manager>
+
+    </application>
+    <managed-bean>
+        <description>Catalogue Controller Bean</description>
+        <managed-bean-name>catalogue</managed-bean-name>
+        <managed-bean-class>fr.ifremer.seagis.catalogue.controller.CatalogueController</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+</faces-config>

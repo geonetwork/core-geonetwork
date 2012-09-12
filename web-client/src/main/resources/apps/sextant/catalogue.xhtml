@@ -1,3 +1,4 @@
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -33,10 +34,13 @@
               <input type="hidden" name="data" id="catalogPDF-hidden" value="" />
             </form>
             
-            <div id="loading-mask"></div>
+            <!-- <div id="loading-mask"></div>
 		    <div id="loading">
 		      <div class="loading-indicator">Loading ...</div>
-		    </div>
+		    </div> -->
+		    <div id="login-form"></div>
+            <div id="lang-form"></div>
+            
 		    <div id="main-viewport"></div>
 		  
 		    <div id="infoContent"></div>
@@ -108,6 +112,10 @@
     <script type="text/javascript" src="#{contextPath}/js/cat.when.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/cat.where.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/cat.who.js"></script>
+	<script type="text/javascript" src="#{contextPath}/js/cat.edit.js"></script>
+	<script type="text/javascript" src="#{contextPath}/js/cat.ViewWindow.js"></script>
+	<script type="text/javascript" src="#{contextPath}/js/cat.ViewPanel.js"></script>
+	<script type="text/javascript" src="#{contextPath}/js/cat.MetadataResultsView.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/cat.list.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/cat.main.js"></script>
 
