@@ -97,6 +97,9 @@
             <gmd:abstract>
                 <gco:CharacterString>Elaborated based on myOcean_prodSpecProfile_v2.0.</gco:CharacterString>
             </gmd:abstract>
+            <gmd:credit>
+                <gco:CharacterString>Exposure rate</gco:CharacterString>
+            </gmd:credit>
             <gmd:status>
                 <gmd:MD_ProgressCode codeListValue="operational" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ProgressCode"/>
             </gmd:status>
@@ -153,6 +156,9 @@
                     <gmd:maintenanceAndUpdateFrequency>
                         <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue=""/>
                     </gmd:maintenanceAndUpdateFrequency>
+                    <gmd:maintenanceNote>
+                        <gco:CharacterString>Update schedule</gco:CharacterString>
+                    </gmd:maintenanceNote>
                 </gmd:MD_MaintenanceInformation>
             </gmd:resourceMaintenance>
             <gmd:graphicOverview>

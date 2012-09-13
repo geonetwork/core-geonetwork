@@ -10,13 +10,17 @@
             production unit label is the domain name related to the email address of the point of contact and 
             internal metadata id is computed by the system and unique for every metadata in the system.</description>
     </element>
+    <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
+        <label>Product internal permanent shortname</label>
+        <description>For example 'ifremer.fr/2' (previously known as MIS name, is now the same as the identifier
+            use for dataCite registration). This field is automatically computed by the system. 
+            The field is computed as {production unit label}/{internal metadata id} knowing that 
+            production unit label is the domain name related to the email address of the point of contact and 
+            internal metadata id is computed by the system and unique for every metadata in the system.</description>
+    </element>
     <element name="gmd:alternateTitle" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
         <label>Product external shortname</label>
         <description>For example 'INSITU_GLO_UV_NRT_OBSERVATIONS_013_003'</description>
-    </element>
-    <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
-        <label>Product internal permanent shortname</label>
-        <description>For example 'ifremer.fr/2' (previously known as MIS name, is now the same as the identifier use for dataCite registration</description>
     </element>
     
     <element name="gmd:code" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code">
@@ -32,10 +36,17 @@
         <label>Temporal coverage</label>
         <description></description>
     </element>
-    
-    <element name="gmd:abstract">
+    <element name="gmd:abstract" context="gmd:MD_DataIdentification">
         <label>Overview</label>
         <description>Brief narrative summary of the content of the resource(s)</description>
+    </element>
+    <element name="gmd:maintenanceNote" context="gmd:MD_MaintenanceInformation">
+        <label>Update schedule</label>
+        <description></description>
+    </element>
+    <element name="gmd:credit" context="gmd:MD_DataIdentification">
+        <label>Exposure rate</label>
+        <description></description>
     </element>
     <element name="gmd:status">
         <label>Status</label>
