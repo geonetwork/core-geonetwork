@@ -19,18 +19,21 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 
-			<xsl:choose>
-				<xsl:when test="gmd:fileIdentifier">
-					<xsl:copy-of select="gmd:fileIdentifier"/>
-				</xsl:when>
-				<xsl:when test="/root/env/uuid!=''">
-					<gmd:fileIdentifier>
-						<gco:CharacterString>
-							<xsl:value-of select="/root/env/uuid"/>
-						</gco:CharacterString>
-					</gmd:fileIdentifier>
-				</xsl:when>
-			</xsl:choose>
+			<!-- 
+			    The field is computed as “<production unit label> / <internal metadata id>” knowing that  :
+			    production unit label is the domain name related to the email address of the point of contact (see 6.2.3)
+			    internal metadata id is computed by the system and unique for every metadata in the system.
+			    -->
+			<xsl:variable name="domainName" select="normalize-space(substring-after(gmd:identificationInfo/*/
+				gmd:pointOfContact[1]/gmd:CI_ResponsibleParty/gmd:contactInfo/
+				gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
+				, '@'))"/>
+			<xsl:variable name="identifier" select="concat($domainName, '/', /root/env/id)"></xsl:variable>
+			<gmd:fileIdentifier>
+				<gco:CharacterString>
+					<xsl:value-of select="$identifier"/>
+				</gco:CharacterString>
+			</gmd:fileIdentifier>
 
 
 			<xsl:apply-templates select="gmd:language"/>
@@ -353,7 +356,9 @@
 			<xsl:apply-templates select="node()"/>
 		</xsl:element>
 	</xsl:template>
-
+	
+	
+	
 	<!-- ================================================================= -->
 	<!-- Adjust the namespace declaration - In some cases name() is used to get the 
 		element. The assumption is that the name is in the format of  <ns:element> 
@@ -380,7 +385,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template match="gmd:*">
 		<xsl:call-template name="correct_ns_prefix">
 			<xsl:with-param name="element" select="."/>
