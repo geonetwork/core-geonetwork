@@ -3,6 +3,7 @@
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:myocean="http://myocean.org/geonetwork" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
@@ -14,7 +15,12 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
-
+	<xsl:function name="myocean:buildIdentifier" as="xs:string">
+		<xsl:param name="domainName" as="xs:string"/>
+		<xsl:param name="id" as="xs:string"/>
+		<xsl:value-of select="concat(normalize-space($domainName), '/', $id)"/>
+	</xsl:function>
+	
 	<xsl:template match="gmd:MD_Metadata">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
@@ -24,14 +30,12 @@
 			    production unit label is the domain name related to the email address of the point of contact (see 6.2.3)
 			    internal metadata id is computed by the system and unique for every metadata in the system.
 			    -->
-			<xsl:variable name="domainName" select="normalize-space(substring-after(gmd:identificationInfo/*/
-				gmd:pointOfContact[1]/gmd:CI_ResponsibleParty/gmd:contactInfo/
-				gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
-				, '@'))"/>
-			<xsl:variable name="identifier" select="concat($domainName, '/', /root/env/id)"></xsl:variable>
 			<gmd:fileIdentifier>
 				<gco:CharacterString>
-					<xsl:value-of select="$identifier"/>
+					<xsl:value-of select="myocean:buildIdentifier(substring-after(gmd:identificationInfo/*/
+							gmd:pointOfContact[1]/gmd:CI_ResponsibleParty/gmd:contactInfo/
+							gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
+							, '@'), /root/env/id)"/>
 				</gco:CharacterString>
 			</gmd:fileIdentifier>
 
@@ -357,7 +361,17 @@
 		</xsl:element>
 	</xsl:template>
 	
-	
+	<xsl:template match="gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/gmd:MD_Identifier/gmd:code" priority="99">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<gco:CharacterString>
+				<xsl:value-of select="myocean:buildIdentifier(substring-after(ancestor::node()[name()='gmd:identificationInfo']/*/
+					gmd:pointOfContact[1]/gmd:CI_ResponsibleParty/gmd:contactInfo/
+					gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
+					, '@'), /root/env/id)"/>
+			</gco:CharacterString>
+		</xsl:copy>
+	</xsl:template>
 	
 	<!-- ================================================================= -->
 	<!-- Adjust the namespace declaration - In some cases name() is used to get the 
