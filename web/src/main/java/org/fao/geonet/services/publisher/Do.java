@@ -147,6 +147,12 @@ public class Do implements Service {
 			String url = node.getChildText("adminUrl");
 			String namespacePrefix = node.getChildText("namespacePrefix");
 			String namespaceUrl = node.getChildText("namespaceUrl");
+            String user = node.getChildText("user");
+			String password = node.getChildText("password");
+
+			// sanitize data that will be returned when the list action is requested
+			node.removeChild("user");
+			node.removeChild("password");
 
 			GeoServerNode g = new GeoServerNode(id, name, url, namespacePrefix,
 					namespaceUrl, user, password);
@@ -220,10 +226,6 @@ public class Do implements Service {
 				String[] userInfo = dbUserInfo[0].split(":");
 				String user = userInfo[0];
 				String password = userInfo[1];
-				
-				// sanitize data that will be returned when the list action is requested
-				node.removeChild("user");
-				node.removeChild("password");
 				
 				String[] dbInfo = dbUserInfo[1].split("#");
 				String db = dbInfo[0]; 
