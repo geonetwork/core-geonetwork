@@ -67,7 +67,7 @@
                         <gco:CharacterString>Template for MyOcean product</gco:CharacterString>
                     </gmd:title>
                     <gmd:alternateTitle>
-                        <gco:CharacterString>for example &apos;org.eu.coriolis/2&apos; (previously known as MIS name, is now the same as the identifier use for dataCite registration)</gco:CharacterString>
+                        <gco:CharacterString>For example 'INSITU_GLO_UV_NRT_OBSERVATIONS_013_003'.</gco:CharacterString>
                     </gmd:alternateTitle>
                     <gmd:date>
                         <gmd:CI_Date>
