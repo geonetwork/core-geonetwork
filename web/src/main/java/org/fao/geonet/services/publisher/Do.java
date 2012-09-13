@@ -147,6 +147,8 @@ public class Do implements Service {
 			String url = node.getChildText("adminUrl");
 			String namespacePrefix = node.getChildText("namespacePrefix");
 			String namespaceUrl = node.getChildText("namespaceUrl");
+			String user = node.getChildText("user");
+			String password = node.getChildText("password");
 
 			GeoServerNode g = new GeoServerNode(id, name, url, namespacePrefix,
 					namespaceUrl, user, password);
