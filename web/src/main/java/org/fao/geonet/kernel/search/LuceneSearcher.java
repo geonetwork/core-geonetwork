@@ -28,16 +28,21 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.text.CharacterIterator;
+import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import jeeves.constants.Jeeves;
@@ -99,6 +104,8 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.search.LuceneConfig.Facet;
+import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
@@ -126,7 +133,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Ranges;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -1173,7 +1183,7 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @throws Exception hmm
 	 */
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
-			Map<String, Map<String, Object>> summaryConfig, IndexReader reader, 
+			Map<String, FacetConfig> summaryConfig, IndexReader reader, 
 			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
 			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
 	{
@@ -1230,69 +1240,137 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @param facetCollector
 	 * @throws IOException
 	 */
-	private static void buildFacetSummary(Element elSummary,
-			Map<String, Map<String, Object>> summaryConfigValues,
-			FacetsCollector facetCollector) throws IOException {
-		StringBuffer facetsInfo = new StringBuffer("Facets: ");
-		try {
-			facetsInfo.append(facetCollector.getFacetResults().size());
-			
-			for (Iterator<FacetResult> iterator = facetCollector.getFacetResults().iterator(); iterator.hasNext();) {
-				FacetResult result = (FacetResult) iterator.next();
-				String label = result.getFacetResultNode().getLabel().toString();
-				
-				facetsInfo.append("\n  label: ");
-				facetsInfo.append(label);
-				facetsInfo.append("\n  subresults: ");
-				facetsInfo.append(result.getFacetResultNode().getNumSubResults());
-				
-				Map<String, Object> config = summaryConfigValues.get(label);
-				Element facets = new Element(config.get("plural").toString());
-				FacetResultNode frn = result.getFacetResultNode();
-				if (frn.getNumSubResults() != 0) {
-					for (Iterator subresults = frn.getSubResults().iterator(); subresults.hasNext();) {
-						FacetResultNode node = (FacetResultNode) subresults.next();
-						facetsInfo.append("\n   * ");
-						facetsInfo.append(node.toString());
-						
-						Element facet = new Element(config.get("name").toString());
-						int count = (int) node.getValue();
-						facet.setAttribute("count", count + "");
-						facet.setAttribute("name", node.getLabel().lastComponent());
-						facets.addContent(facet);
-					}
-				}
-				elSummary.addContent(facets);
-				if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
-					Log.debug(Geonet.FACET_ENGINE, facetsInfo);
-				}
-			}
-		} catch (ArrayIndexOutOfBoundsException e) {
-			Log.error(Geonet.FACET_ENGINE, "Check facet configuration. This may happen when a facet is configured"
-					+ " but does not exist in the taxonomy index. Error is: " + e.getMessage(), e);
-			e.printStackTrace();
-		}
-	}
+    private static void buildFacetSummary(Element elSummary,
+            Map<String, FacetConfig> summaryConfigValues,
+            FacetsCollector facetCollector) throws IOException {
+        DecimalFormat doubleFormat = new DecimalFormat("0");
+
+        try {
+            for (Iterator<FacetResult> iterator = facetCollector
+                    .getFacetResults().iterator(); iterator.hasNext();) {
+                FacetResult result = (FacetResult) iterator.next();
+
+                String label = result.getFacetResultNode().getLabel()
+                        .toString();
+                FacetConfig config = summaryConfigValues.get(label);
+                String facetName = config.getPlural();
+
+                Element facets = new Element(facetName);
+                FacetResultNode frn = result.getFacetResultNode();
+                if (frn.getNumSubResults() != 0) {
+
+                    Map<String, Double> facetValues = new LinkedHashMap<String, Double>();
+
+                    // facetValues = new TreeMap<String, Double>(comparator)
+                    for (Iterator subresults = frn.getSubResults().iterator(); subresults
+                            .hasNext();) {
+                        FacetResultNode node = (FacetResultNode) subresults
+                                .next();
+                        facetValues.put(node.getLabel().lastComponent(),
+                                node.getValue());
+                    }
+                    List<Entry<String, Double>> entries = new ArrayList<Entry<String, Double>>(
+                            facetValues.entrySet());
+
+                    if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+                        Log.debug(Geonet.FACET_ENGINE, facetName
+                                + ":\tSorting facet by " + config.getSortBy().toString()
+                                + " (" + config.getSortOrder().toString() + ")");
+                    }
+
+                    // No need for a custom comparator Lucene facet request is
+                    // made by count descending order
+                    if (Facet.SortBy.COUNT != config.getSortBy()) {
+                        Comparator c = null;
+                        if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
+                            // Create a numeric comparator
+                            c = new Comparator<Entry<String, Double>>() {
+                                public int compare(
+                                        final Entry<String, Double> e1,
+                                        final Entry<String, Double> e2) {
+                                    try {
+                                        Double d1 = Double.valueOf(e1.getKey());
+                                        Double d2 = Double.valueOf(e2.getKey());
+
+                                        return d1.compareTo(d2);
+                                    } catch (NumberFormatException e) {
+                                        // String comparison
+                                        Log.warning(
+                                                Geonet.FACET_ENGINE,
+                                                "Failed to compare numeric values ("
+                                                        + e1.getKey()
+                                                        + " / "
+                                                        + e2.getKey()
+                                                        + ") for facet. Check sortBy option in summary configuration.");
+                                        return e1.getKey().compareTo(
+                                                e2.getKey());
+                                    }
+                                }
+                            };
+                        } else {
+                            c = new Comparator<Entry<String, Double>>() {
+                                public int compare(
+                                        final Entry<String, Double> e1,
+                                        final Entry<String, Double> e2) {
+                                    return e1.getKey().compareTo(e2.getKey());
+                                }
+                            };
+                        }
+                        Collections.sort(entries, c);
+
+                        if (Facet.SortOrder.DESCENDING == config.getSortOrder()) {
+                            Collections.reverse(entries);
+                        }
+                    }
+                    for (Entry<String, Double> entry : entries) {
+                        String facetValue = entry.getKey();
+                        String facetCount = doubleFormat.format(entry
+                                .getValue());
+
+                        if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+                            Log.debug(Geonet.FACET_ENGINE, " - " + facetValue
+                                    + " (" + facetCount + ")");
+                        }
+                        Element facet = new Element(config.getName());
+                        facet.setAttribute("count", facetCount);
+                        facet.setAttribute("name", facetValue);
+                        facets.addContent(facet);
+                    }
+                }
+                elSummary.addContent(facets);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.error(
+                    Geonet.FACET_ENGINE,
+                    "Check facet configuration. This may happen when a facet is configured"
+                            + " but does not exist in the taxonomy index. Error is: "
+                            + e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * Build facet search params according to the summary configuration file.
+	 * 
+	 * FacetRequest sort order and sort by option is the default (ie. by count descending).
+	 * Then the results may be sorted when creating the summary {@link #buildFacetSummary(Element, Map, FacetsCollector)}.
 	 * 
 	 * @param summaryConfigValues
 	 * @return
 	 */
 	private static FacetSearchParams buildFacetSearchParams(
-			Map<String, Map<String, Object>> summaryConfigValues) {
+			Map<String, FacetConfig> summaryConfigValues) {
 		FacetSearchParams fsp = new FacetSearchParams();
 		
 		for (String key : summaryConfigValues.keySet()) {
-			Map<String,Object> config = summaryConfigValues.get(key);
+			FacetConfig config = summaryConfigValues.get(key);
 			
-			int max = (Integer) config.get("max");
+			int max = config.getMax();
 			
 			FacetRequest facetRequest = new CountFacetRequest(
 					new CategoryPath(key), max);
-			facetRequest.setSortBy((SortBy) config.get("sortBy"));
-			facetRequest.setSortOrder((SortOrder) config.get("sortOrder"));
+			facetRequest.setSortBy(SortBy.VALUE);
+			facetRequest.setSortOrder(SortOrder.DESCENDING);
 			fsp.addFacetRequest(facetRequest);
 		}
 		return fsp;

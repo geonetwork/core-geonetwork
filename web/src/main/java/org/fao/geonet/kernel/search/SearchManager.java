@@ -84,6 +84,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.function.DocumentBoosting;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
@@ -135,7 +136,7 @@ public class SearchManager {
 
 	private final File _stylesheetsDir;
     private static File _stopwordsDir;
-	Map<String, Map<String,Object>> _summaryConfigValues = null;
+	Map<String, FacetConfig> _summaryConfigValues = null;
 
 	private LuceneConfig _luceneConfig;
 	private File _luceneDir;

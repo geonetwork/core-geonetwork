@@ -18,14 +18,14 @@
 		<hits>
 			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
-			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc"/>
+			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType"/>
 			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
 			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
 			<item name="type" plural="types" indexKey="type"/>
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
-				sortBy="value" sortOrder="asc" max="40"/>
+				sortBy="value" sortOrder="desc" max="40"/>
 		</hits>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
