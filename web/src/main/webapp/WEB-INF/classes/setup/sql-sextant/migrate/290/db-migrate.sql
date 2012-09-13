@@ -452,6 +452,7 @@ DELETE FROM Settings WHERE parentid=89;
 DELETE FROM Settings WHERE parentid=80;
 DELETE FROM Settings WHERE id=80;
 
+ALTER TABLE Settings ALTER COLUMN name TYPE varchar(64);
 
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
