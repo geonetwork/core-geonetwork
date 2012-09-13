@@ -72,4 +72,17 @@
             <description>Domain for which the current product is applicable : marine safety, marine resources, coastal and marine environment, weather, climate and seasonal forecasting</description>
         </entry>
     </codelist>
+    
+    <codelist name="gmd:DS_AssociationTypeCode">
+        <entry>
+            <code>production</code>
+            <label>Production</label>
+            <description></description>
+        </entry>
+        <entry>
+            <code>validation</code>
+            <label>Validation</label>
+            <description></description>
+        </entry>
+    </codelist>
 </codelists>

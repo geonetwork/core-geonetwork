@@ -36,6 +36,10 @@
         <label>Temporal coverage</label>
         <description></description>
     </element>
+    <element name="gco:LocalName" context="gmd:featureTypes">
+        <label>Feature type</label>
+        <description></description>
+    </element>
     <element name="gmd:abstract" context="gmd:MD_DataIdentification">
         <label>Overview</label>
         <description>Brief narrative summary of the content of the resource(s)</description>

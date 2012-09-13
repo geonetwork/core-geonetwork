@@ -11,7 +11,8 @@
     <processingOperation>Processing operation</processingOperation>
     <org>Organizations responsible for management and processing, point of contact</org>
     <metadataInfo>Metadata date stamps and versions</metadataInfo>
-    
+    <metadataInfoTitle>Identification</metadataInfoTitle>
+    <ancillaryInfo>Ancillary information</ancillaryInfo>
     <geoCoverage>Geographical coverage</geoCoverage>
     <verticalCoverage>Vertical coverage</verticalCoverage>
     <temporalCoverage>Temporal coverage</temporalCoverage>
