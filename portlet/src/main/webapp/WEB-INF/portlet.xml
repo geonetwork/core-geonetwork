@@ -24,8 +24,8 @@
             <portlet-mode>VIEW</portlet-mode>
         </supports>
         <portlet-info>
-            <title>sxt-catalogueV5</title>
-            <short-title>sxt-catalogueV5</short-title>
+            <title>sxt-catalogue</title>
+            <short-title>sxt-catalogue</short-title>
             <keywords>catalogue</keywords>
         </portlet-info>
         <security-role-ref>
