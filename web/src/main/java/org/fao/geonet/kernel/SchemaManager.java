@@ -298,9 +298,10 @@ public class SchemaManager {
 			String nsUri = schema.getMetadataSchema().getPrimeNS();
 			String schemaLoc  = schema.getSchemaLocation();
 			String schemaFile = schema.getDir() + "schema.xsd";
+
       if (schemaLoc.equals("")) {
 				if (new File(schemaFile).exists()) { // build one 
-					String schemaUrl = getSchemaUrl(context, schemaFile);
+					String schemaUrl = getSchemaUrl(context, name);
 					if (nsUri == null || nsUri.equals("")) {
 						out = new Attribute("noNamespaceSchemaLocation", schemaUrl, Csw.NAMESPACE_XSI);
 					} else {
@@ -1621,7 +1622,7 @@ public class SchemaManager {
 	private String getSchemaUrl(ServiceContext context, String schemaName) {
 		SettingInfo si = new SettingInfo(context);
 
-		String relativePath = Geonet.Path.SCHEMAS + schemaName; 
+		String relativePath = Geonet.Path.SCHEMAS + schemaName + "/schema.xsd"; 
 		return si.getSiteUrl() + context.getBaseUrl() + "/" + relativePath;
 	}
 
