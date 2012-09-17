@@ -32,19 +32,69 @@ Ext.namespace('GeoNetwork');
 /** api: constructor 
  *  .. class:: FacetsPanel(config)
  *
- *     Create a faceted search panel
- *
- *   TODO : On form reset should be empty
- *   TODO : Load all on startup
+ *     Create a faceted search panel which aims to provide a "Narrow your search" module 
+ *     aka as faceted search (http://en.wikipedia.org/wiki/Faceted_search). This module 
+ *     allows aggregation based on criteria (e.g. keywords, organization, dates, ...) 
+ *     with frequency for the current search.
+ *     
+ *     On the client side, user interacts with facets using:
+ *     
+ *      * the facets summary used to select new filter
+ *      * the facet breadcrumb which indicates which filter has been applied
+ *     
+ *     To customize default facet configuration provided by the server, the facetListConfig
+ *     properties could be use to overrides the server configuration.
+ *     
+ *     TODO : Add a maxDisplayedItem preperties to display by facet (with a more link to display all)
+ *     TODO : Add support for permalink with facet
+ *     
+ *  .. code-block:: javascript
+ *     
+ *       GeoNetwork.Settings.facetListConfig = [
+ *          {name: 'orgNames'}, 
+ *          {name: 'types'}, 
+ *          {name: 'denominators'}, 
+ *          {name: 'keywords'}, 
+ *          {name: 'createDateYears'}];
+ *          
+ *    ...
+ *    
+ *    
  */
+/** api: example
+*
+*
+*  .. code-block:: javascript
+*  
+*      var breadcrumb = new Ext.Panel({
+*                layout:'table',
+*                cls: 'breadcrumb',
+*                defaultType: 'button',
+*                border: false,
+*                split: false,
+*                layoutConfig: {
+*                    columns:3
+*                }
+*            });
+*      var facetsPanel = new GeoNetwork.FacetsPanel({
+*                searchForm: searchForm,
+*                breadcrumb: breadcrumb,
+*                facetListConfig: GeoNetwork.Settings.facetListConfig || []
+*            });
+*      ...
+*/
 GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
         border: false,
-        breadcrumb: null,
-        /** api: config[lang] 
-         *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
+        /** api: config[searchForm] 
+         *  The search form to link the facet to. When clicking on a facet a hidden field
+         *  is added to the search form panel and search event triggered.
          */
-        lang: 'en',
+        searchForm: null,
+        /** api: config[breadcrumb] 
+         *  The breadcrumb panel use to display active filters.
+         */
+        breadcrumb: null,
         /** api: config[facetListConfig] 
          *  Array of facets to display on the client side. This could be used to restrict the facet provided by 
          *  the server. Example: [{name: 'keywords', count: 15}, {name: 'spatialRepresentations', count: 2}]
@@ -66,19 +116,23 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         fields : [ 'facet', 'node', 'count' ]
     }),
     /** private: property[currentFilterStore]
-     * Store current filters. This is used to not display current filter in facet list.
+     * Store current filters. This store is used to not display current filter in facet list
+     * and to keep track of active filter and related elements in the search form and the 
+     * breadcrumb.
      */
     currentFilterStore: null,
+    /** private: property[counter]
+     * Facet counter.
+     */
     counter: 0,
-    searchForm: null,
-    serviceUrl: null,
-    catalogue: null,
-    afterFacetClick: function (){
+    afterFacetClick: function () {
         
     },
-    /**
-     * Read the response, populate the facet selector, activate click event
-     * and populate the store. If no filter applied, copy the store to the startFacetStore.
+    /** private: method[refresh]
+     *  :param response: ``Object`` the facet response object.
+     *  
+     *   Read the response, populate the facet selector, activate click event
+     *   and populate the store. If no filter applied, copy the store to the startFacetStore.
      */
     refresh: function (response) {
         var facets = response.responseXML.childNodes[0].childNodes[1],
@@ -100,7 +154,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                             var facetList = "";
                             Ext.each(facet.childNodes, function (node) {
                                 if (this.count === undefined || (this.count && nodeCount < this.count)) {
-                                    facetList += panel.displayFacetValue(node, store);
+                                    facetList += panel.displayFacetValue(node);
                                 }
                             }, this);
                             if (facetList !== "") {
@@ -151,7 +205,12 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             this.startFacetsStore.add(records);
         }
     },
-    displayFacetValue: function (node, store) {
+    /** private: method[displayFacetValue]
+     *  :param node: ``String`` the key of the facet to add
+     *  
+     *  Return a facet value as HTML.
+     */
+    displayFacetValue: function (node) {
         if (node.getAttribute) {
             var data = {
                 facet : node.nodeName,
@@ -161,26 +220,33 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             // Only display a facet if it's not part of current filter
             
             if (this.currentFilterStore.getCount() === 0 ||
-            		this.currentFilterStore.query('value', data.node).length === 0) {
-                var recId = store.getCount() + 1,
-                     r = new store.recordType(data, recId); 
-                store.add(r);
+                    this.currentFilterStore.query('value', data.node).length === 0) {
+                var recId = this.facetsStore.getCount() + 1,
+                     r = new this.facetsStore.recordType(data, recId); 
+                this.facetsStore.add(r);
                 return "<h2><a href='javascript:void(0);' class='facet' id='" + recId + "'>" + 
                               data.node + "&nbsp;(" + data.count + ")</a></h2>";
             }
         }
         return "";
     },
+    /** private: method[addFacet]
+     *  :param recordId: ``String`` the id of the facet to add in the facetsStore
+     *  
+     *  Add a new facet value filter.
+     *  
+     *  All active filters are registered in currentFilterStore.
+     */
     addFacet: function (recordId) {
         var r = this.facetsStore.getById(recordId),
             form = this.searchForm, id = 'facet_' + this.counter ++;
         
         var data = {
-             id: id, 
-             facet: r.get('facet'), 
-             value: r.get('node'), 
-             bcid: 'bc_' + id, 
-             fieldid: 'field_' + id
+            id: id, 
+            facet: r.get('facet'), 
+            value: r.get('node'), 
+            bcid: 'bc_' + id, 
+            fieldid: 'field_' + id
         };
         var filter = new this.currentFilterStore.recordType(data, this.currentFilterStore.getCount() + 1);
         this.currentFilterStore.insert(0, filter);
@@ -230,8 +296,12 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         }
         this.searchForm.fireEvent('search');
     },
-    /**
-     * elemId is scrolling menu item id with structure: id-key#i
+    /** private: method[switchFacet]
+     *  :param elem: ``String`` the key of the facet to be removed
+     *  
+     *  Switch from one facet value to another updating the related
+     *  element in the search form, updating the switcher label
+     *  and triggering the search again.
      */
     switchFacet: function (elem) {
         var elemId = elem.getId(), filterKey = elemId.split('#')[0], newValue = elem.text;
@@ -251,9 +321,13 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         
         this.searchForm.fireEvent('search');
     },
-    /**
-     * elemId is remove facet button id with structure: id-key
-     * silent: do not trigger search event
+    
+    /** private: method[removeFacet]
+     *  :param filterKey: ``String`` the key of the facet to be removed
+     *  :param silent: ``Boolean`` do not trigger search event of related search form
+     *  
+     *  Remove a facet from current filter list.
+     *  
      */
     removeFacet: function (filterKey, silent) {
         // Search in current filter
@@ -273,8 +347,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             this.searchForm.fireEvent('search');
         }
     },
-    /**
-     * Clear all current filter in search form, breadcrumb
+    /** public: method[reset]
+     *  Clear all current filter in search form and breadcrumb (if set)
      */
     reset: function () {
         this.currentFilterStore.each(function (r) {
