@@ -1,9 +1,9 @@
 <overrides>
 	<properties>
     <db.user>sxtcatal</db.user>
-    <db.pass>sxtdba</db.pass>
+    <db.pass>password</db.pass>
     <db.driver>org.postgresql.Driver</db.driver>
-    <db.url>jdbc:postgresql://visi1-common-php5:5432/sextant5</db.url>
+    <db.url>jdbc:postgresql://localhost:5434/sextant</db.url>
     <widget.url>../../apps/sextant/index_debug.html</widget.url>
     <widget.parameters>hl=fre</widget.parameters>
   </properties>
