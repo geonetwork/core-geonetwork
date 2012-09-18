@@ -1527,7 +1527,7 @@ public class LuceneQueryTest extends TestCase {
 
 	/**
 	 * 'groupOwner' parameter with multiple values (it should be ignored and not go into the query).
-	 */
+
 	public void testMultipleGroupOwner() {
 		// create request object
 		JDOMFactory factory = new DefaultJDOMFactory();
